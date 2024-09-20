@@ -1,0 +1,55 @@
+{
+    "trm": "https://www.ti.com/lit/spruj53",
+    "productPages": [
+        {
+            "gpn": "TMS320F28P559SJ9-Q1",
+            "link": "https://www.ti.com/product/TMS320F28P559SJ9-Q1"
+        },
+        {
+            "gpn": "TMS320F28P550SJ9",
+            "link": "https://www.ti.com/product/TMS320F28P550SJ9"
+        },
+        {
+            "gpn": "TMS320F28P559SJ2-Q1",
+            "link": "https://www.ti.com/product/TMS320F28P559SJ2-Q1"
+        },
+        {
+            "gpn": "TMS320F28P550SG9",
+            "link": "https://www.ti.com/product/TMS320F28P550SG9"
+        },
+        {
+            "gpn": "TMS320F28P550SG8",
+            "link": "https://www.ti.com/product/TMS320F28P550SG8"
+        },
+        {
+            "gpn": "TMS320F28P559SG2-Q1",
+            "link": "https://www.ti.com/product/TMS320F28P559SG2-Q1"
+        },
+        {
+            "gpn": "TMS320F28P550SD7",
+            "link": "https://www.ti.com/product/TMS320F28P550SD7"
+        },
+        {
+            "gpn": "TMS320F28P550SD4",
+            "link": "https://www.ti.com/product/TMS320F28P550SD4"
+        },
+        {
+            "gpn": "TMS320F28P550SC4",
+            "link": "https://www.ti.com/product/TMS320F28P550SC4"
+        },
+        {
+            "gpn": "TMS320F28P559SG9-Q1",
+            "link": "https://www.ti.com/product/TMS320F28P559SG9-Q1"
+        },
+        {
+            "gpn": "TMS320F28P559SG8-Q1",
+            "link": "https://www.ti.com/product/TMS320F28P559SG8-Q1"
+        }
+    ],
+    "datasheet": {
+        "pdf": "https://www.ti.com/lit/sprsp85",
+        "html": "https://www.ti.com/document-viewer/TMS320F28P550SJ/datasheet",
+        "blockDiagram": "https://www.ti.com/document-viewer/TMS320F28P550SJ/datasheet#GUID-52C58C92-6FBC-4A8E-8B75-F13B031E95DD/TITLE-SPRSP45SPRS945_DETAILEDDESC_SEC",
+        "pinout": "https://www.ti.com/document-viewer/TMS320F28P550SJ/datasheet#GUID-ECDE38E2-71F9-488B-8729-DB68526CA16E/TITLE-SPRSP45SPRS945_PINDIAG_SEC"
+    }
+}

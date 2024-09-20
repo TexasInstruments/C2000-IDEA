@@ -1,0 +1,63 @@
+{
+    "trm": "https://www.ti.com/lit/sprui33",
+    "productPages": [
+        {
+            "gpn": "TMS320F280040C-Q1",
+            "link": "https://www.ti.com/product/TMS320F280040C-Q1"
+        },
+        {
+            "gpn": "TMS320F280040-Q1",
+            "link": "https://www.ti.com/product/TMS320F280040-Q1"
+        },
+        {
+            "gpn": "TMS320F280041C",
+            "link": "https://www.ti.com/product/TMS320F280041C"
+        },
+        {
+            "gpn": "TMS320F280041C-Q1",
+            "link": "https://www.ti.com/product/TMS320F280041C-Q1"
+        },
+        {
+            "gpn": "TMS320F280041",
+            "link": "https://www.ti.com/product/TMS320F280041"
+        },
+        {
+            "gpn": "TMS320F280041-Q1",
+            "link": "https://www.ti.com/product/TMS320F280041-Q1"
+        },
+        {
+            "gpn": "TMS320F280045",
+            "link": "https://www.ti.com/product/TMS320F280045"
+        },
+        {
+            "gpn": "TMS320F280048C-Q1",
+            "link": "https://www.ti.com/product/TMS320F280048C-Q1"
+        },
+        {
+            "gpn": "TMS320F280048-Q1",
+            "link": "https://www.ti.com/product/TMS320F280048-Q1"
+        },
+        {
+            "gpn": "TMS320F280049C",
+            "link": "https://www.ti.com/product/TMS320F280049C"
+        },
+        {
+            "gpn": "TMS320F280049C-Q1",
+            "link": "https://www.ti.com/product/TMS320F280049C-Q1"
+        },
+        {
+            "gpn": "TMS320F280049",
+            "link": "https://www.ti.com/product/TMS320F280049"
+        },
+        {
+            "gpn": "TMS320F280049-Q1",
+            "link": "https://www.ti.com/product/TMS320F280049-Q1"
+        }
+    ],
+    "datasheet": {
+        "pdf": "https://www.ti.com/lit/sprs945",
+        "html": "https://www.ti.com/document-viewer/TMS320F280049C-Q1/datasheet",
+        "blockDiagram": "https://www.ti.com/document-viewer/TMS320F280049C-Q1/datasheet#GUID-0E9474D7-29AB-4978-A1AD-3D9DEB36EC80/TITLE-SPRS945SPRS945_DETAILEDDESC_SEC",
+        "pinout": "https://www.ti.com/document-viewer/TMS320F280049C-Q1/datasheet#GUID-5E63C23A-F586-4DCB-A496-FE4C1F9EDC62/TITLE-SPRS945SPRS945_PINDIAG_SEC"
+    }
+}

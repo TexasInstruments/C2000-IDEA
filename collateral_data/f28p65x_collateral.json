@@ -1,0 +1,39 @@
+{
+    "trm": "https://www.ti.com/lit/spruiz1",
+    "productPages": [
+        {
+            "gpn": "TMS320F28P650DK",
+            "link": "https://www.ti.com/product/TMS320F28P650DK"
+        },
+        {
+            "gpn": "TMS320F28P650SK",
+            "link": "https://www.ti.com/product/TMS320F28P650SK"
+        },
+        {
+            "gpn": "TMS320F28P650DK-Q1",
+            "link": "https://www.ti.com/product/TMS320F28P650DK-Q1"
+        },
+        {
+            "gpn": "TMS320F28P650DH-Q1",
+            "link": "https://www.ti.com/product/TMS320F28P650DH-Q1"
+        },
+        {
+            "gpn": "TMS320F28P650SH-Q1",
+            "link": "https://www.ti.com/product/TMS320F28P650SH-Q1"
+        },
+        {
+            "gpn": "TMS320F28P650DH",
+            "link": "https://www.ti.com/product/TMS320F28P650DH"
+        },
+        {
+            "gpn": "TMS320F28P650SH",
+            "link": "https://www.ti.com/product/TMS320F28P650SH"
+        }
+    ],
+    "datasheet": {
+        "pdf": "https://www.ti.com/lit/sprsp69",
+        "html": "https://www.ti.com/document-viewer/TMS320F28P650SK/datasheet",
+        "blockDiagram": "https://www.ti.com/document-viewer/TMS320F28P650SK/datasheet#GUID-9028A727-86FA-455C-8DC9-F2E6DB527B94/TITLE-SPRSP14SPRSP145117",
+        "pinout": "https://www.ti.com/document-viewer/TMS320F28P650SK/datasheet#GUID-E0B88E7B-AC9F-4E59-9E14-4E6183BC18A7/TITLE-SPRSP14SPRSP14_PINDIAG_SEC"
+    }
+}

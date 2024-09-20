@@ -1,0 +1,41 @@
+let F2807X = {
+	modules: [
+		"adc",
+		"analogsubsys",
+		"can",
+		"cla",
+		"clb",
+		"clbxbar",
+		"cmpss",
+		"cputimer",
+		"dac",
+		"dcsm",
+		"device",
+		"dma",
+		"ecap",
+		"emif",
+		"epwm",
+		"epwm_xbar",
+		"eqep",
+		"flash",
+		"gpio",
+		"i2c",
+		"input_xbar",
+		"mcbsp",
+		"memconfig",
+		"nmiintrupt",
+		"otp",
+		"output_xbar",
+		"piectrl",
+		"pievect",
+		"sci",
+		"sdfm",
+		"spi",
+		"sysctrl",
+		"xbar",
+		"xint",
+	]
+};
+module.exports = {
+	f2807x: F2807X
+};

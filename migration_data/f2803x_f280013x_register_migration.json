@@ -1,0 +1,257 @@
+{
+    "reg": [
+        {
+            "INTSEL1N2" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL1N2"],
+                "fixMsg" : "The correct bitfield ADCINTSEL1N2 should be used."
+            }
+        },
+        {
+            "INTSEL3N4" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL3N4"],
+                "fixMsg" : "The correct bitfield ADCINTSEL3N4 should be used." 
+            }
+        },
+        {
+            "SOCPRICTL" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCSOCPRICTL"],
+                "fixMsg" : "The correct bitfield ADCSOCPRICTL should be used." 
+            }
+        },
+        {
+            "COMPHYSTCTL" : {
+                "msg" : "This functionality has been moved to the Comparator Subsystem.",
+                "fix" : ["Cmpss1Regs.COMPHYSCTL"],
+                "fixMsg" : "The correct register Cmpss1Regs.COMPHYSCTL should be used. See the Comparator Subsystem (CMPSS) Registers Section of the TRM for more information."
+            }
+        },
+        {
+            "ADCCTL1.TEMPCONV" : {
+                "msg" : "This functionality has been moved to the Analog Subsystem.",
+                "fix" : ["AnalogSubsysRegs.TSNSCTL.bit.ENABLE"],
+                "fixMsg" : "The correct bitfield AnalogSubsysRegs.TSNSCTL.bit.ENABLE should be used. See the Analog Subsystem Registers Section of the TRM for more information."
+            }
+        },
+        {
+            "ADCCTL1.ADCREFSEL" : {
+                "msg" : "This functionality has been moved to the Analog Subsystem.",
+                "fix" : ["AnalogSubsysRegs.ANAREFCTL.bit.ANAREFSEL"],
+                "fixMsg" : "The correct bitfield AnalogSubsysRegs.ANAREFCTL.bit.ANAREFSEL should be used. See the Analog Subsystem Registers Section of the TRM for more information."
+            }
+        },
+        {
+            "ADCCTL1.ADCPWDN" : {
+                "msg" : "This functionality has been moved.",
+                "fix" : ["ADCCTL1.bit.ADCPWDNZ"],
+                "fixMsg" : "The correct bit ADCCTL1.bit.ADCPWDNZ should be used." 
+            }
+        },
+        {
+            "ADCCTL2.CLKDIV2EN" : {
+                "msg" : "This functionality has been moved.",
+                "fix" : ["ADCCTL2.bit.PRESCALE"],
+                "fixMsg" : "The correct bit ADCCTL2.bit.PRESCALE should be used." 
+            }
+        },
+        {
+            "INTSEL1N2.INT1SEL" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL1N2.bit.INT1SEL"],
+                "fixMsg" : "The correct bitfield ADCINTSEL1N2.bit.INT1SEL should be used." 
+            }
+        },
+        {
+            "INTSEL1N2.INT1E" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL1N2.bit.INT1E"],
+                "fixMsg" : "The correct bitfield ADCINTSEL1N2.bit.INT1E should be used." 
+            }
+        },
+        {
+            "INTSEL1N2.INT1CONT" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL1N2.bit.INT1CONT"],
+                "fixMsg" : "The correct bitfield ADCINTSEL1N2.bit.INT1CONT should be used." 
+            }
+        },
+        {
+            "INTSEL1N2.INT2SEL" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL1N2.bit.INT2SEL"],
+                "fixMsg" : "The correct bitfield ADCINTSEL1N2.bit.INT2SEL should be used." 
+            }
+        },
+        {
+            "INTSEL1N2.INT2E" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL1N2.bit.INT2E"],
+                "fixMsg" : "The correct bitfield ADCINTSEL1N2.bit.INT2E should be used." 
+            }
+        },
+        {
+            "INTSEL1N2.INT2CONT" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL1N2.bit.INT2CONT"],
+                "fixMsg" : "The correct bitfield ADCINTSEL1N2.bit.INT2CONT should be used." 
+            }
+        },
+        {
+            "INTSEL3N4.INT3SEL" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL3N4.bit.INT3SEL"],
+                "fixMsg" : "The correct bitfield ADCINTSEL3N4.bit.INT3SEL should be used." 
+            }
+        },
+        {
+            "INTSEL3N4.INT3E" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL3N4.bit.INT3E"],
+                "fixMsg" : "The correct bitfield ADCINTSEL3N4.bit.INT3E should be used." 
+            }
+        },
+        {
+            "INTSEL3N4.INT3CONT" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL3N4.bit.INT3CONT"],
+                "fixMsg" : "The correct bitfield ADCINTSEL3N4.bit.INT3CONT should be used." 
+            }
+        },
+        {
+            "INTSEL3N4.INT4SEL" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL3N4.bit.INT4SEL"],
+                "fixMsg" : "The correct bitfield ADCINTSEL3N4.bit.INT4SEL should be used." 
+            }
+        },
+        {
+            "INTSEL3N4.INT4E" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL3N4.bit.INT4E"],
+                "fixMsg" : "The correct bitfield ADCINTSEL3N4.bit.INT4E should be used." 
+            }
+        },
+        {
+            "INTSEL3N4.INT4CONT" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCINTSEL3N4.bit.INT4CONT"],
+                "fixMsg" : "The correct bitfield ADCINTSEL3N4.bit.INT4CONT should be used." 
+            }
+        },
+        {
+            "SOCPRICTL.SOCPRIORITY" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCSOCPRICTL.bit.SOCPRIORITY"],
+                "fixMsg" : "The correct bitfield ADCSOCPRICTL.bit.SOCPRIORITY should be used." 
+            }
+        },
+        {
+            "SOCPRICTL.RRPOINTER" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCSOCPRICTL.bit.RRPOINTER"],
+                "fixMsg" : "The correct bitfield ADCSOCPRICTL.bit.RRPOINTER should be used." 
+            }
+        },
+        {
+            "SOCPRICTL.ONESHOT" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["ADCBURSTCTL.bit.BURSTEN"],
+                "fixMsg" : "The correct bitfield ADCBURSTCTL.bit.BURSTEN should be used." 
+            }
+        },
+        {
+            "COMPHYSTCTL.COMP1_HYST_DISABLE" : {
+                "msg" : "This functionality has been moved to the Comparator Subsystem.",
+                "fix" : ["Cmpss1Regs.COMPHYSCTL.bit.COMPHYS"],
+                "fixMsg" : "The correct bitfield Cmpss1Regs.COMPHYSCTL.bit.COMPHYS should be used. NOTE: There is only 1 Comparator Subsystem in f280013x. See the Comparator Subsystem (CMPSS) Section of the TRM for more information."
+            }
+        },
+        {
+            "TBPHS" : {
+                "msg" : "This register has expanded in size in order to include the High Resolution (HR) functionality of PWM.",
+                "fix" : ["TBPHS.bit.TBPHS"],
+                "fixMsg" : "The correct bit TBPHS.bit.TBPHS should be used."
+            }
+        },
+        {
+            "CMPA" : {
+                "msg" : "This register has expanded in size in order to include the High Resolution (HR) functionality of PWM.",
+                "fix" : ["CMPA.bit.CMPA"],
+                "fixMsg" : "The correct bit CMPA.bit.CMPA should be used." 
+            }
+        },
+        {
+            "CMPB" : {
+                "msg" : "This register has expanded in size in order to include the High Resolution (HR) functionality of PWM.",
+                "fix" : ["CMPB.bit.CMPB"],
+                "fixMsg" : "The correct bit CMPB.bit.CMPB should be used." 
+            }
+        },
+        {
+            "TBCTL.SYNCOSEL" : {
+                "msg" : "This functionality has moved to EPWMSYNCOUTEN register.",
+                "fix" : ["EPWMSYNCOUTEN.bit.ZEROEN", "EPWMSYNCOUTEN.bit.CMPBEN"],
+                "fixMsg" : "The correct bit in EPWMSYNCOUTEN register should be used based on your design. See the EPWMSYNCOUTEN Register Description in the TRM for more options and information." 
+            }
+        },
+        {
+            "HRPWR.MEPOFF" : { 
+                "msg" : "This functionality has moved to CALPWRON bitfield.",
+                "fix" : ["HRPWR.bit.CALPWRON"],
+                "fixMsg" : "The correct bit HRPWR.bit.CALPWRON should be used. NOTE: Logic of this bitfield functionally has changed. See the HRPWR Register Description in the TRM for more information"
+            }
+        },
+        {
+            "TBPRDM" : { 
+                "msg" : "This functionality has been removed.",
+                "fix" : ["TBPRD"],
+                "fixMsg" : "The correct bit TBPRD should be used. By default, the shadow register is automatically written to through TBPRD. See the TBPRD Register Description in the TRM for more information." 
+            }
+        },
+        {
+            "CMPAM" : {
+                "msg" : "This functionality has been removed.",
+                "fix" : ["CMPA"],
+                "fixMsg" : "The correct bit CMPA should be used. By default, the shadow register is automatically written to through CMPA. See the CMPA Register Description in the TRM for more information." 
+            }
+        },
+        {
+            "I2CEMDR.BCM" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["I2CEMDR.bit.BC"],
+                "fixMsg" : "The correct bitfield I2CEMDR.bit.BC should be used."
+            }
+        },
+        {
+            "SCIRXBUF.RXDT" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["SCIRXBUF.bit.SAR"],
+                "fixMsg" : "The correct bitfield SCIRXBUF.bit.SAR should be used." 
+            }
+        },
+        {
+            "SCIFFTX.TXFIFOXRESET" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["SCIFFTX.bit.TXFIFORESET"],
+                "fixMsg" : "The correct bitfield SCIFFTX.bit.TXFIFORESET should be used." 
+            }
+        },
+        {
+            "SCIPRI.FREE" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["SCIPRI.bit.FREESOFT"],
+                "fixMsg" : "The correct bitfield SCIPRI.bit.FREESOFT should be used. See Serial Communications Interface (SCI) Priority Control Section in TRM for more information."
+            }
+        },
+        {
+            "SCIPRI.SOFT" : {
+                "msg" : "This functionality has moved.",
+                "fix" : ["SCIPRI.bit.FREESOFT"],
+                "fixMsg" : "The correct bitfield SCIPRI.bit.FREESOFT should be used. See Serial Communications Interface (SCI) Priority Control Section in TRM for more information."
+            }
+        }
+
+    ]
+}

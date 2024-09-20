@@ -1,0 +1,59 @@
+{
+    "trm": "https://confluence.itg.ti.com/display/C2000PreRelease/C2000+Pre-Release+Resources?preview=/727714465/984218238/SPRUJ79_F29H85xF29H58x_TRM_06142024.pdf",
+    "productPages": [
+        {
+            "gpn": "TMS320F29H850TU9",
+            "link": "https://www.ti.com/product/TMS320F29H850TU9"
+        },
+        {
+            "gpn": "TMS320F29H850TU8",
+            "link": "https://www.ti.com/product/TMS320F29H850TU8"
+        },
+        {
+            "gpn": "TMS320F29H859TU8",
+            "link": "https://www.ti.com/product/TMS320F29H859TU8"
+        },
+        {
+            "gpn": "TMS320F29H850TM9",
+            "link": "https://www.ti.com/product/TMS320F29H850TM9"
+        },
+        {
+            "gpn": "TMS320F29H850TM8",
+            "link": "https://www.ti.com/product/TMS320F29H850TM8"
+        },
+        {
+            "gpn": "TMS320F29H859TM8",
+            "link": "https://www.ti.com/product/TMS320F29H859TM8"
+        },
+        {
+            "gpn": "TMS320F29H850DU7",
+            "link": "https://www.ti.com/product/TMS320F29H850DU7"
+        },
+        {
+            "gpn": "TMS320F29H850DU6",
+            "link": "https://www.ti.com/product/TMS320F29H850DU6"
+        },
+        {
+            "gpn": "TMS320F29H859DU6",
+            "link": "https://www.ti.com/product/TMS320F29H859DU6"
+        },
+        {
+            "gpn": "TMS320F29H850DM7",
+            "link": "https://www.ti.com/product/TMS320F29H850DM7"
+        },
+        {
+            "gpn": "TMS320F29H850DM6",
+            "link": "https://www.ti.com/product/TMS320F29H850DM6"
+        },
+        {
+            "gpn": "TMS320F29H859DM6",
+            "link": "https://www.ti.com/product/TMS320F29H859DM6"
+        }
+    ],
+    "datasheet": {
+        "pdf": "https://confluence.itg.ti.com/display/C2000PreRelease/C2000+Pre-Release+Resources?preview=/727714465/984218237/SPRSP93_DS_DRAFT_PREVIEW_VER_0p5_2024Jun17.pdf",
+        "html": "",
+        "blockDiagram": "GUID-611B8260-A863-4396-8837-543E3A58D5C6/TITLE-SPRSP14SPRSP145117",
+        "pinout": "GUID-8727279B-4D17-4EC1-81B9-CA26950BE7DA/TITLE-SPRSP14SPRSP14_PINDIAG_SEC"
+    }
+}

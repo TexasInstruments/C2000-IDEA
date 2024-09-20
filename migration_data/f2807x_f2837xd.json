@@ -1,0 +1,2377 @@
+{
+    "removed": [],
+    "added": [
+        {
+            "code": "ANAREFTRIMC",
+            "type": "reg",
+            "category": "asysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ANAREFTRIMC.BGVALTRIM",
+            "type": "reg",
+            "category": "asysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ANAREFTRIMC.BGSLOPETRIM",
+            "type": "reg",
+            "category": "asysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ANAREFTRIMC.IREFTRIM",
+            "type": "reg",
+            "category": "asysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PUMPREQUEST",
+            "type": "reg",
+            "category": "flash",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PUMPREQUEST.PUMP_OWNERSHIP",
+            "type": "reg",
+            "category": "flash",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PUMPREQUEST.KEY",
+            "type": "reg",
+            "category": "flash",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS0",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS1",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS2",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS3",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS4",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS5",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS6",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS7",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS8",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS9",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS10",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS11",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS12",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS13",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS14",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS15",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "EMIF1MSEL",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "EMIF1MSEL.MSEL_EMIF1",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "EMIF1MSEL.KEY",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLG.CPU2HWBISTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLG.PIEVECTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLG.CPU2WDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLG.CPU2NMIWDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLGCLR.CPU2HWBISTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLGCLR.PIEVECTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLGCLR.CPU2WDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLGCLR.CPU2NMIWDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLGFRC.CPU2HWBISTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLGFRC.PIEVECTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLGFRC.CPU2WDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLGFRC.CPU2NMIWDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SHDFLG.CPU2HWBISTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SHDFLG.PIEVECTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SHDFLG.CPU2WDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SHDFLG.CPU2NMIWDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL0",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL7",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL8",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL9",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL10",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL11",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL12",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL13",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL14",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DC1.CPU2_FPU_TMU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DC1.CPU2_VCU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DC1.CPU2_CLA1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DC19",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DC19.LS0_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DC19.LS1_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DC19.LS2_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DC19.LS3_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DC19.LS4_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DC19.LS5_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PERCNF1.ADC_C_MODE",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SOFTPRES0.CPU2_CLA1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SOFTPRES13.ADC_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0.EPWM1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0.EPWM2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0.EPWM3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0.EPWM4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0.EPWM5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0.EPWM6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0.EPWM7",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0.EPWM8",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0.EPWM9",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0.EPWM10",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0.EPWM11",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL0.EPWM12",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL1.ECAP1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL1.ECAP2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL1.ECAP3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL1.ECAP4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL1.ECAP5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL1.ECAP6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL2.EQEP1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL2.EQEP2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL2.EQEP3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL4.SD1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL4.SD2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL5.SCI_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL5.SCI_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL5.SCI_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL5.SCI_D",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL6.SPI_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL6.SPI_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL6.SPI_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL7",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL7.I2C_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL7.I2C_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL8",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL8.CAN_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL8.CAN_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL9",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL9.MCBSP_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL9.MCBSP_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL11",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL11.ADC_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL11.ADC_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL11.ADC_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL11.ADC_D",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL12",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL12.CMPSS1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL12.CMPSS2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL12.CMPSS3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL12.CMPSS4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL12.CMPSS5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL12.CMPSS6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL12.CMPSS7",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL12.CMPSS8",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL14",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL14.DAC_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL14.DAC_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPUSEL14.DAC_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPU2RESCTL",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPU2RESCTL.RESET",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPU2RESCTL.KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RSTSTAT",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RSTSTAT.CPU2RES",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RSTSTAT.CPU2NMIWDRST",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RSTSTAT.CPU2HWBISTRST0",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RSTSTAT.CPU2HWBISTRST1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "LPMSTAT",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "LPMSTAT.CPU2LPMSTAT",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CLKSEM",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CLKSEM.SEM",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CLKSEM.KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PCLKCR0.GTBCLKSYNC",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PCLKCR13.ADC_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLG2.ADCCEVT1",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLG3.ADCCEVT2",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLG3.ADCCEVT3",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLG3.ADCCEVT4",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PID",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PERCTL",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PERCTL.FREE",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PERCTL.SOFT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PERCTL.RTEMU",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PERCTL.PEREN",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PERCTL.SOFTRST",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "PERCTL.DMAST",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHCTL",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHCTL.MODE",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHCTL.SDRTXILA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHCTL.DEMUXA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHCTL.DRA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IFCFG",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IFCFG.STARTPOLA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IFCFG.ENAPOLA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IFCFG.WAITPOLA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IFCFG.STARTA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IFCFG.ENAA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IFCFG.WAITA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IFCFG.CLKDIVA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IFCFG.CLKINVA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IFCFG.TRISENA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IFIVAL",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IFIVAL.VALA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "THCFG",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "THCFG.RDSIZEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "THCFG.RDSIZEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "THCFG.TXSIZEA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RAWINTST",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RAWINTST.DPEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RAWINTST.UOEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RAWINTST.EOWI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RAWINTST.EOLI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RAWINTST.DPEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RAWINTST.UOEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RAWINTST.EOWQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "RAWINTST.EOLQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ENINTST",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ENINTST.DPEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ENINTST.UOEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ENINTST.EOWI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ENINTST.EOLI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ENINTST.DPEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ENINTST.UOEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ENINTST.EOWQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ENINTST.EOLQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENSET",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENSET.DPEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENSET.UOEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENSET.EOWI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENSET.EOLI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENSET.DPEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENSET.UOEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENSET.EOWQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENSET.EOLQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENCLR",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENCLR.DPEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENCLR.UOEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENCLR.EOWI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENCLR.EOLI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENCLR.DPEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENCLR.UOEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENCLR.EOWQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "INTENCLR.EOLQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIDESC0",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIDESC1",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIDESC1.BCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIDESC1.LCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIDESC2",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIDESC2.LOFFSET",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIST0",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIST1",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIST1.BCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIST1.LCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIST2",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIST2.ACT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIST2.PEND",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHIST2.WM",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQDESC0",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQDESC1",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQDESC1.BCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQDESC1.LCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQDESC2",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQDESC2.LOFFSET",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQST0",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQST1",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQST1.BCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQST1.LCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQST2",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQST2.ACT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQST2.PEND",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CHQST2.WM",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GINTEN",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GINTEN.GINTEN",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GINTFLG",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GINTFLG.GINTFLG",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GINTCLR",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GINTCLR.GINTCLR",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DLYCTL",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DLYCTL.DLYDIS",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DLYCTL.DLYCTL",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADC_CH_ADCIN0_ADCIN1",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADC_CH_ADCIN2_ADCIN3",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADC_CH_ADCIN4_ADCIN5",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADC_CH_ADCIN6_ADCIN7",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADC_CH_ADCIN8_ADCIN9",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADC_CH_ADCIN10_ADCIN11",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADC_CH_ADCIN12_ADCIN13",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADC_CH_ADCIN14_ADCIN15",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADC_TRIGGER_CPU2_TINT0",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADC_TRIGGER_CPU2_TINT1",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADC_TRIGGER_CPU2_TINT2",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CLA_TRIGGER_ADCC1",
+            "type": "enum",
+            "category": "cla",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CLA_TRIGGER_ADCC2",
+            "type": "enum",
+            "category": "cla",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CLA_TRIGGER_ADCC3",
+            "type": "enum",
+            "category": "cla",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CLA_TRIGGER_ADCC4",
+            "type": "enum",
+            "category": "cla",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CLA_TRIGGER_ADCCEVT",
+            "type": "enum",
+            "category": "cla",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CLB_LOCAL_IN_MUX_CPU2_TBCLKSYNC",
+            "type": "enum",
+            "category": "clb",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CLB_LOCAL_IN_MUX_CPU2_HALT",
+            "type": "enum",
+            "category": "clb",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DMA_TRIGGER_ADCC1",
+            "type": "enum",
+            "category": "dma",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DMA_TRIGGER_ADCC2",
+            "type": "enum",
+            "category": "dma",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DMA_TRIGGER_ADCC3",
+            "type": "enum",
+            "category": "dma",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DMA_TRIGGER_ADCC4",
+            "type": "enum",
+            "category": "dma",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "DMA_TRIGGER_ADCCEVT",
+            "type": "enum",
+            "category": "dma",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GPIO_CORE_CPU2",
+            "type": "enum",
+            "category": "gpio",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GPIO_CORE_CPU2_CLA1",
+            "type": "enum",
+            "category": "gpio",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "MEMCFG_SECT_MSGCPUTOCPU",
+            "type": "enum",
+            "category": "memcfg",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADCCRESULT_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_TX_MSG_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_RX_MSG_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADCC_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GS8_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GS9_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GS10_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GS11_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GS12_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GS13_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GS14_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "GS15_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPU2_TO_CPU1_MSG_RAM_BASE 0x0003F800",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "CPU1_TO_CPU2_MSG_RAM_BASE 0x0003FC00",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "EMIF2_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "IPC_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "FLASHPUMPSEMAPHORE_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "EMIF2CONFIG_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SYSCTL_NMI_CPU2HWBISTERR",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SYSCTL_NMI_PIEVECTERR",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SYSCTL_NMI_CPU2WDRSN",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SYSCTL_NMI_CPU2NMIWDRSN",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SYSCTL_PERIPH_CLK_GTBCLKSYNC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SYSCTL_PERIPH_CLK_ADCC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SYSCTL_PERIPH_RES_CPU2CLA1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "SYSCTL_PERIPH_RES_ADCC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB1_OUT4",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB1_OUT5",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB2_OUT4",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB2_OUT5",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB3_OUT4",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB3_OUT5",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB4_OUT4",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB4_OUT5",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_32_CYCLE_NOP",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_CPU_TX_MSGRAM_STARTADDR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_CPU_RX_MSGRAM_STARTADDR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_CLK_NOT_INVERTED",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_CLK_INVERTED",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_DDR_DEMUX_DISABLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_DDR_DEMUX_ENABLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_DMA_TX_MSGRAM_STARTADDR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_DMA_RX_MSGRAM_STARTADDR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_DMA_CHANNEL_I",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_DMA_CHANNEL_Q",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_DATA_RATE_SDR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_DATA_RATE_DDR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_EMULATIONMODE_HARDSTOP",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_EMULATIONMODE_RUNFREE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_EMULATIONMODE_SOFTSTOP",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INT_CHI_DMA_PROG_ERR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INT_CHI_UNDER_OVER_RUN",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INT_CHI_END_OF_WINDOW",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INT_CHI_END_OF_LINE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INT_CHQ_DMA_PROG_ERR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INT_CHQ_UNDER_OVER_RUN",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INT_CHQ_END_OF_WINDOW",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INT_CHQ_END_OF_LINE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INT_M",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INPUT_DLY_4",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INPUT_DLY_6",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INPUT_DLY_9",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_INPUT_DLY_14",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_RECEIVE_MODE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_TRANSMIT_MODE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_SIGNAL_POLARITY_M",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_SOFT_FREE_M",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_SIGNAL_DISABLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_SIGNAL_ENABLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_SIGNAL_POLARITY_HIGH",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_SIGNAL_POLARITY_LOW",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_THR_SIZE_64BYTE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_THR_SIZE_128BYTE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_THR_SIZE_256BYTE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_TX_IDLE_DATA_IDLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_TX_IDLE_DATA_TRISTATED",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_TX_SDR_INTERLEAVE_DISABLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "UPP_TX_SDR_INTERLEAVE_ENABLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This option is only available in f2837xd"
+        },
+        {
+            "code": "ADC_setMode",
+            "type": "function",
+            "category": "adc",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "ADC_setINLTrim",
+            "type": "function",
+            "category": "adc",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "ADC_setOffsetTrim",
+            "type": "function",
+            "category": "adc",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "EMIF_isEMIF2ConfigBaseValid",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "EMIF_selectController",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "Flash_isPumpSemBaseValid",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "Flash_claimPumpSemaphore",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "Flash_releasePumpSemaphore",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "MemCfg_setGSRAMControllerSel",
+            "type": "function",
+            "category": "memcfg",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "SysCtl_selectCPUForPeripheralInstance",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "SysCtl_selectCPUForPeripheral",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "SysCtl_lockCPUSelectRegs",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        }
+    ],
+    "changed": [
+        {
+            "code": "ADC_isBaseValid",
+            "type": "function",
+            "category": "adc",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "ADC_readResult",
+            "type": "function",
+            "category": "adc",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "ADC_readPPBResult",
+            "type": "function",
+            "category": "adc",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "EMIF_isBaseValid",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "EMIF_setAccessProtection",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "EMIF_commitAccessConfig",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "EMIF_lockAccessConfig",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "EMIF_unlockAccessConfig",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "EMIF_setAsyncMode",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "EMIF_enableAsyncExtendedWait",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "EMIF_setAsyncTimingParams",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "EMIF_setAsyncDataBusWidth",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "Flash_initModule",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "Flash_powerDown",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "GPIO_isPinValid",
+            "type": "function",
+            "category": "gpio",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "SysCtl_enterHaltMode",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "SysCtl_enterHibernateMode",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "SysCtl_isNMIFlagSet",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "SysCtl_clearNMIStatus",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "SysCtl_forceNMIFlags",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "SysCtl_isNMIShadowFlagSet",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        },
+        {
+            "code": "XBAR_setInputPin",
+            "type": "function",
+            "category": "xbar",
+            "msg": "Function content does not match between f2807x and f2837xd"
+        }
+    ]
+}

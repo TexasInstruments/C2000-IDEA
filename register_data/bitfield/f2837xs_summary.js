@@ -1,0 +1,42 @@
+let F2837XS = {
+	modules: [
+		"adc",
+		"analogsubsys",
+		"can",
+		"cla",
+		"clb",
+		"clbxbar",
+		"cmpss",
+		"cputimer",
+		"dac",
+		"dcsm",
+		"device",
+		"dma",
+		"ecap",
+		"emif",
+		"epwm",
+		"epwm_xbar",
+		"eqep",
+		"flash",
+		"gpio",
+		"i2c",
+		"input_xbar",
+		"mcbsp",
+		"memconfig",
+		"nmiintrupt",
+		"otp",
+		"output_xbar",
+		"piectrl",
+		"pievect",
+		"sci",
+		"sdfm",
+		"spi",
+		"sysctrl",
+		"upp",
+		"xbar",
+		"xint",
+	]
+};
+module.exports = {
+	f2837xs: F2837XS
+};

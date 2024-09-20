@@ -1,0 +1,35 @@
+{
+    "trm": "https://www.ti.com/lit/spruiy4",
+    "productPages": [
+        {
+            "gpn": "TMS320F2800153-Q1",
+            "link": "https://www.ti.com/product/TMS320F2800153-Q1"
+        },
+        {
+            "gpn": "TMS320F2800155-Q1",
+            "link": "https://www.ti.com/product/TMS320F2800155-Q1"
+        },
+        {
+            "gpn": "TMS320F2800157-Q1",
+            "link": "https://www.ti.com/product/TMS320F2800157-Q1"
+        },
+        {
+            "gpn": "TMS320F2800155",
+            "link": "https://www.ti.com/product/TMS320F2800155"
+        },
+        {
+            "gpn": "TMS320F280015-Q1",
+            "link": "https://www.ti.com/product/TMS320F280015-Q1"
+        },
+        {
+            "gpn": "TMS320F2800157",
+            "link": "https://www.ti.com/product/TMS320F2800157"
+        }
+    ],
+    "datasheet": {
+        "pdf": "https://www.ti.com/lit/sprsp68",
+        "html": "https://www.ti.com/document-viewer/TMS320F2800157-Q1/datasheet",
+        "blockDiagram": "https://www.ti.com/document-viewer/TMS320F2800157-Q1/datasheet#GUID-2BECAFEC-1A5D-4C5D-9FE4-38A724F5532B/GUID-A0F2D4D5-2F47-4D2D-A0D5-D900DF65F144",
+        "pinout": "https://www.ti.com/document-viewer/TMS320F2800157-Q1/datasheet#GUID-F0420E5D-BC99-47E6-B7EF-86EB6C3C741A/GUID-31DD3B0B-D6C9-451F-8937-DB6E283C0C1D"
+    }
+}

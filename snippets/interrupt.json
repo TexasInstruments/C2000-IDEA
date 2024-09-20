@@ -1,0 +1,34 @@
+{
+	"C28x Interrupt Service Routine Template": {
+		"prefix": "interrupt",
+		"body": [
+			"interrupt void INT_${1:name}_ISR(void)",
+			"{",
+			"\t${0}",
+			"\t//",
+			"\t// The ACK group corresponding to this interrupt must be cleared",
+			"\t// If the interrupt is setup using C2000 SysConfig, the ACK group",
+			"\t// is available in the form of INT_<interrupt name>_INTERRUPT_ACK_GROUP",
+			"\t//",
+			"\tInterrupt_clearACKGroup(INTERRUPT_ACK_GROUP${2|1,2,3,4,5,6,7,8,9,10,11,12|});",
+			"}",
+			""
+		],
+		"description": "C28x PIE Interrupt service routine template for C2000 devices"
+	},
+	"C29x Interrupt Service Routine Template": {
+		"prefix": "interrupt",
+		"body": [
+			"__attribute__((interrupt(\"INT\"))) void INT_${1:name}_ISR(void);",
+			"void INT_${1}_ISR(void)",
+			"{",
+			"\t${0}",
+			"\t//",
+			"\t// Ensure to clear all interrupt flags", 
+			"\t//",
+			"}",
+			""
+		],
+		"description": "C29x PIPE Interrupt service routine template for C2000 devices"
+	}
+}

@@ -1,0 +1,31 @@
+{
+    "trm": "https://www.ti.com/lit/spruix1",
+    "productPages": [
+        {
+            "gpn": "TMS320F2800132",
+            "link": "https://www.ti.com/product/TMS320F2800132"
+        },
+        {
+            "gpn": "TMS320F2800133",
+            "link": "https://www.ti.com/product/TMS320F2800133"
+        },
+        {
+            "gpn": "TMS320F2800135",
+            "link": "https://www.ti.com/product/TMS320F2800135"
+        },
+        {
+            "gpn": "TMS320F2800135V",
+            "link": "https://www.ti.com/product/TMS320F2800135V"
+        },
+        {
+            "gpn": "TMS320F2800137",
+            "link": "https://www.ti.com/product/TMS320F2800137"
+        }
+    ],
+    "datasheet": {
+        "pdf": "https://www.ti.com/lit/sprsp63",
+        "html": "https://www.ti.com/document-viewer/TMS320F2800137/datasheet",
+        "blockDiagram": "https://www.ti.com/document-viewer/TMS320F2800137/datasheet#GUID-3100E9AA-039E-4959-9A4C-C3609DF25DB0/GUID-86332418-0F08-42AF-BE8A-86102D69610D",
+        "pinout": "https://www.ti.com/document-viewer/TMS320F2800137/datasheet#GUID-38713015-F26F-4FB6-ADE1-CDA2FCA643EE/GUID-31DD3B0B-D6C9-451F-8937-DB6E283C0C1D"
+    }
+}

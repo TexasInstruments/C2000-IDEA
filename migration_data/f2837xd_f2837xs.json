@@ -1,0 +1,1532 @@
+{
+    "removed": [
+        {
+            "code": "GSXMSEL",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS0",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS1",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS2",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS3",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS4",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS5",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS6",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS7",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS8",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS9",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS10",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS11",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS12",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS13",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS14",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS15",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "EMIF1MSEL",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "EMIF1MSEL.MSEL_EMIF1",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "EMIF1MSEL.KEY",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLG.CPU2HWBISTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLG.PIEVECTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLG.CPU2WDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLG.CPU2NMIWDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLGCLR.CPU2HWBISTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLGCLR.PIEVECTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLGCLR.CPU2WDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLGCLR.CPU2NMIWDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLGFRC.CPU2HWBISTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLGFRC.PIEVECTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLGFRC.CPU2WDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLGFRC.CPU2NMIWDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SHDFLG.CPU2HWBISTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SHDFLG.PIEVECTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SHDFLG.CPU2WDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SHDFLG.CPU2NMIWDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL0",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL7",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL8",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL9",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL10",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL11",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL12",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL13",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL14",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DC1.CPU2_FPU_TMU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DC1.CPU2_VCU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DC1.CPU2_CLA1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DC19",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DC19.LS0_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DC19.LS1_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DC19.LS2_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DC19.LS3_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DC19.LS4_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "DC19.LS5_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SOFTPRES0.CPU2_CLA1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0.EPWM1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0.EPWM2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0.EPWM3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0.EPWM4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0.EPWM5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0.EPWM6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0.EPWM7",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0.EPWM8",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0.EPWM9",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0.EPWM10",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0.EPWM11",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL0.EPWM12",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL1.ECAP1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL1.ECAP2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL1.ECAP3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL1.ECAP4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL1.ECAP5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL1.ECAP6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL2.EQEP1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL2.EQEP2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL2.EQEP3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL4.SD1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL4.SD2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL5.SCI_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL5.SCI_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL5.SCI_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL5.SCI_D",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL6.SPI_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL6.SPI_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL6.SPI_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL7",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL7.I2C_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL7.I2C_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL8",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL8.CAN_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL8.CAN_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL9",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL9.MCBSP_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL9.MCBSP_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL11",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL11.ADC_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL11.ADC_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL11.ADC_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL11.ADC_D",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL12",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL12.CMPSS1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL12.CMPSS2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL12.CMPSS3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL12.CMPSS4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL12.CMPSS5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL12.CMPSS6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL12.CMPSS7",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL12.CMPSS8",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL14",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL14.DAC_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL14.DAC_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPUSEL14.DAC_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPU2RESCTL",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPU2RESCTL.RESET",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPU2RESCTL.KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "RSTSTAT",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "RSTSTAT.CPU2RES",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "RSTSTAT.CPU2NMIWDRST",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "RSTSTAT.CPU2HWBISTRST0",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "RSTSTAT.CPU2HWBISTRST1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "LPMSTAT",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "LPMSTAT.CPU2LPMSTAT",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CLKSEM",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CLKSEM.SEM",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CLKSEM.KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "PCLKCR0.GTBCLKSYNC",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "ADC_TRIGGER_CPU2_TINT0",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "ADC_TRIGGER_CPU2_TINT1",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "ADC_TRIGGER_CPU2_TINT2",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CLB_LOCAL_IN_MUX_CPU2_TBCLKSYNC",
+            "type": "enum",
+            "category": "clb",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CLB_LOCAL_IN_MUX_CPU2_HALT",
+            "type": "enum",
+            "category": "clb",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "EMIF_CONTROLLER_CPU1_NG",
+            "type": "enum",
+            "category": "emif",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "EMIF_CONTROLLER_CPU1_G",
+            "type": "enum",
+            "category": "emif",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "EMIF_CONTROLLER_CPU2_G",
+            "type": "enum",
+            "category": "emif",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "EMIF_CONTROLLER_CPU1_NG2",
+            "type": "enum",
+            "category": "emif",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLASH_CPU1_WRAPPER",
+            "type": "enum",
+            "category": "flash",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "FLASH_CPU2_WRAPPER",
+            "type": "enum",
+            "category": "flash",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GPIO_CORE_CPU2",
+            "type": "enum",
+            "category": "gpio",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "GPIO_CORE_CPU2_CLA1",
+            "type": "enum",
+            "category": "gpio",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "MEMCFG_SECT_MSGCPUTOCPU",
+            "type": "enum",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "MEMCFG_GSRAMCONTROLLER_CPU1",
+            "type": "enum",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "MEMCFG_GSRAMCONTROLLER_CPU2",
+            "type": "enum",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPU2_TO_CPU1_MSG_RAM_BASE 0x0003F800",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "CPU1_TO_CPU2_MSG_RAM_BASE 0x0003FC00",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "IPC_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_NMI_CPU2HWBISTERR",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_NMI_PIEVECTERR",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_NMI_CPU2WDRSN",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_NMI_CPU2NMIWDRSN",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CPU1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CPU2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM3",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM4",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM5",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM6",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM7",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM8",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM9",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM10",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM11",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM12",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ECAP1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ECAP2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ECAP3",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ECAP4",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ECAP5",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ECAP6",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EQEP1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EQEP2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EQEP3",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SD1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SD2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SCIA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SCIB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SCIC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SCID",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SPIA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SPIB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SPIC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_I2CA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_I2CB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CANA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CANB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_MCBSPA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_MCBSPB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ADCA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ADCB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ADCC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ADCD",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS3",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS4",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS5",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS6",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS7",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS8",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_DACA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_DACB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_DACC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL0_EPWM",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL1_ECAP",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL2_EQEP",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL4_SD",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL5_SCI",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL6_SPI",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL7_I2C",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL8_CAN",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL9_MCBSP",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL11_ADC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL12_CMPSS",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_CPUSEL14_DAC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_PERIPH_CLK_GTBCLKSYNC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "SYSCTL_PERIPH_RES_CPU2CLA1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2837xs"
+        },
+        {
+            "code": "EMIF_selectController",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function does not exist in f2837xs but exists in f2837xd"
+        },
+        {
+            "code": "MemCfg_setGSRAMControllerSel",
+            "type": "function",
+            "category": "memcfg",
+            "msg": "Function does not exist in f2837xs but exists in f2837xd"
+        },
+        {
+            "code": "SysCtl_selectCPUForPeripheralInstance",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f2837xs but exists in f2837xd"
+        },
+        {
+            "code": "SysCtl_selectCPUForPeripheral",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f2837xs but exists in f2837xd"
+        },
+        {
+            "code": "SysCtl_lockCPUSelectRegs",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f2837xs but exists in f2837xd"
+        }
+    ],
+    "added": [
+        {
+            "code": "Z1_GRABSECTR.GRAB_BANK1",
+            "type": "reg",
+            "category": "dcsm",
+            "msg": "This option is only available in f2837xs"
+        },
+        {
+            "code": "Z1_EXEONLYSECTR.EXEONLY_BANK1",
+            "type": "reg",
+            "category": "dcsm",
+            "msg": "This option is only available in f2837xs"
+        },
+        {
+            "code": "Z2_GRABSECTR.GRAB_BANK1",
+            "type": "reg",
+            "category": "dcsm",
+            "msg": "This option is only available in f2837xs"
+        },
+        {
+            "code": "Z2_EXEONLYSECTR.EXEONLY_BANK1",
+            "type": "reg",
+            "category": "dcsm",
+            "msg": "This option is only available in f2837xs"
+        },
+        {
+            "code": "SECTSTAT.STATUS_BANK1",
+            "type": "reg",
+            "category": "dcsm",
+            "msg": "This option is only available in f2837xs"
+        },
+        {
+            "code": "DCSM_BANK1",
+            "type": "enum",
+            "category": "dcsm",
+            "msg": "This option is only available in f2837xs"
+        },
+        {
+            "code": "FLASH_BANK0_WRAPPER",
+            "type": "enum",
+            "category": "flash",
+            "msg": "This option is only available in f2837xs"
+        },
+        {
+            "code": "FLASH_BANK1_WRAPPER",
+            "type": "enum",
+            "category": "flash",
+            "msg": "This option is only available in f2837xs"
+        },
+        {
+            "code": "FLASH1CTRL_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xs"
+        },
+        {
+            "code": "FLASH1ECC_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This option is only available in f2837xs"
+        }
+    ],
+    "changed": [
+        {
+            "code": "Flash_wakeFromLPM",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function content does not match between f2837xd and f2837xs"
+        },
+        {
+            "code": "Flash_isCtrlBaseValid",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function content does not match between f2837xd and f2837xs"
+        },
+        {
+            "code": "Flash_isECCBaseValid",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function content does not match between f2837xd and f2837xs"
+        },
+        {
+            "code": "SysCtl_enterHaltMode",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2837xd and f2837xs"
+        },
+        {
+            "code": "SysCtl_enterHibernateMode",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2837xd and f2837xs"
+        },
+        {
+            "code": "SysCtl_isNMIFlagSet",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2837xd and f2837xs"
+        },
+        {
+            "code": "SysCtl_clearNMIStatus",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2837xd and f2837xs"
+        },
+        {
+            "code": "SysCtl_forceNMIFlags",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2837xd and f2837xs"
+        },
+        {
+            "code": "SysCtl_isNMIShadowFlagSet",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2837xd and f2837xs"
+        }
+    ]
+}

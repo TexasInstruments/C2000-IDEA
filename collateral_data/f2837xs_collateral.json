@@ -1,0 +1,43 @@
+{
+    "trm": "https://www.ti.com/lit/spruhx5",
+    "productPages": [
+        {
+            "gpn": "TMS320F28374S",
+            "link": "https://www.ti.com/product/TMS320F28374S"
+        },
+        {
+            "gpn": "TMS320F28375S",
+            "link": "https://www.ti.com/product/TMS320F28375S"
+        },
+        {
+            "gpn": "TMS320F28375S-Q1",
+            "link": "https://www.ti.com/product/TMS320F28375S-Q1"
+        },
+        {
+            "gpn": "TMS320F28376S",
+            "link": "https://www.ti.com/product/TMS320F28376S"
+        },
+        {
+            "gpn": "TMS320F28377S-Q1",
+            "link": "https://www.ti.com/product/TMS320F28377S-Q1"
+        },
+        {
+            "gpn": "TMS320F28377S",
+            "link": "https://www.ti.com/product/TMS320F28377S"
+        },
+        {
+            "gpn": "TMS320F28378S",
+            "link": "https://www.ti.com/product/TMS320F28378S"
+        },
+        {
+            "gpn": "TMS320F28379S",
+            "link": "https://www.ti.com/product/TMS320F28379S"
+        }
+    ],
+    "datasheet": {
+        "pdf": "https://www.ti.com/lit/sprs881",
+        "html": "https://www.ti.com/document-viewer/TMS320F28379S/datasheet",
+        "blockDiagram": "https://www.ti.com/document-viewer/TMS320F28379S/datasheet#GUID-4CCE7CAE-F202-4045-BBBC-9A5F3917DD27/TITLE-SPRS880SPRS8815117",
+        "pinout": "https://www.ti.com/document-viewer/TMS320F28379S/datasheet#GUID-1495323F-0F47-4981-A01A-A49512C7BB64/TITLE-SPRS880SPRS8809203"
+    }
+}

@@ -1,0 +1,2851 @@
+{
+    "removed": [
+        {
+            "code": "ANAREFTRIMC",
+            "type": "reg",
+            "category": "asysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ANAREFTRIMC.BGVALTRIM",
+            "type": "reg",
+            "category": "asysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ANAREFTRIMC.BGSLOPETRIM",
+            "type": "reg",
+            "category": "asysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ANAREFTRIMC.IREFTRIM",
+            "type": "reg",
+            "category": "asysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PUMPREQUEST",
+            "type": "reg",
+            "category": "flash",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PUMPREQUEST.PUMP_OWNERSHIP",
+            "type": "reg",
+            "category": "flash",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PUMPREQUEST.KEY",
+            "type": "reg",
+            "category": "flash",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS0",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS1",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS2",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS3",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS4",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS5",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS6",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS7",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS8",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS9",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS10",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS11",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS12",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS13",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS14",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GSXMSEL.MSEL_GS15",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "EMIF1MSEL",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "EMIF1MSEL.MSEL_EMIF1",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "EMIF1MSEL.KEY",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLG.CPU2HWBISTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLG.PIEVECTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLG.CPU2WDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLG.CPU2NMIWDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLGCLR.CPU2HWBISTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLGCLR.PIEVECTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLGCLR.CPU2WDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLGCLR.CPU2NMIWDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLGFRC.CPU2HWBISTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLGFRC.PIEVECTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLGFRC.CPU2WDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLGFRC.CPU2NMIWDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SHDFLG.CPU2HWBISTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SHDFLG.PIEVECTERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SHDFLG.CPU2WDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SHDFLG.CPU2NMIWDRSN",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL0",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL7",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL8",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL9",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL10",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL11",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL12",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL13",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DEVCFGLOCK1.CPUSEL14",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DC1.CPU2_FPU_TMU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DC1.CPU2_VCU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DC1.CPU2_CLA1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DC19",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DC19.LS0_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DC19.LS1_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DC19.LS2_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DC19.LS3_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DC19.LS4_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DC19.LS5_2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PERCNF1.ADC_C_MODE",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SOFTPRES0.CPU2_CLA1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SOFTPRES13.ADC_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0.EPWM1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0.EPWM2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0.EPWM3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0.EPWM4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0.EPWM5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0.EPWM6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0.EPWM7",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0.EPWM8",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0.EPWM9",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0.EPWM10",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0.EPWM11",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL0.EPWM12",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL1.ECAP1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL1.ECAP2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL1.ECAP3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL1.ECAP4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL1.ECAP5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL1.ECAP6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL2.EQEP1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL2.EQEP2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL2.EQEP3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL4.SD1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL4.SD2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL5.SCI_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL5.SCI_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL5.SCI_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL5.SCI_D",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL6.SPI_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL6.SPI_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL6.SPI_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL7",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL7.I2C_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL7.I2C_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL8",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL8.CAN_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL8.CAN_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL9",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL9.MCBSP_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL9.MCBSP_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL11",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL11.ADC_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL11.ADC_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL11.ADC_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL11.ADC_D",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL12",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL12.CMPSS1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL12.CMPSS2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL12.CMPSS3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL12.CMPSS4",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL12.CMPSS5",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL12.CMPSS6",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL12.CMPSS7",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL12.CMPSS8",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL14",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL14.DAC_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL14.DAC_B",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPUSEL14.DAC_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPU2RESCTL",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPU2RESCTL.RESET",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPU2RESCTL.KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RSTSTAT",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RSTSTAT.CPU2RES",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RSTSTAT.CPU2NMIWDRST",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RSTSTAT.CPU2HWBISTRST0",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RSTSTAT.CPU2HWBISTRST1",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "LPMSTAT",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "LPMSTAT.CPU2LPMSTAT",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CLKSEM",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CLKSEM.SEM",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CLKSEM.KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PCLKCR0.GTBCLKSYNC",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PCLKCR13.ADC_C",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PID",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PERCTL",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PERCTL.FREE",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PERCTL.SOFT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PERCTL.RTEMU",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PERCTL.PEREN",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PERCTL.SOFTRST",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "PERCTL.DMAST",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHCTL",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHCTL.MODE",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHCTL.SDRTXILA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHCTL.DEMUXA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHCTL.DRA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IFCFG",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IFCFG.STARTPOLA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IFCFG.ENAPOLA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IFCFG.WAITPOLA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IFCFG.STARTA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IFCFG.ENAA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IFCFG.WAITA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IFCFG.CLKDIVA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IFCFG.CLKINVA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IFCFG.TRISENA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IFIVAL",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IFIVAL.VALA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "THCFG",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "THCFG.RDSIZEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "THCFG.RDSIZEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "THCFG.TXSIZEA",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RAWINTST",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RAWINTST.DPEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RAWINTST.UOEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RAWINTST.EOWI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RAWINTST.EOLI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RAWINTST.DPEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RAWINTST.UOEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RAWINTST.EOWQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "RAWINTST.EOLQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ENINTST",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ENINTST.DPEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ENINTST.UOEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ENINTST.EOWI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ENINTST.EOLI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ENINTST.DPEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ENINTST.UOEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ENINTST.EOWQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ENINTST.EOLQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENSET",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENSET.DPEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENSET.UOEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENSET.EOWI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENSET.EOLI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENSET.DPEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENSET.UOEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENSET.EOWQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENSET.EOLQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENCLR",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENCLR.DPEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENCLR.UOEI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENCLR.EOWI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENCLR.EOLI",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENCLR.DPEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENCLR.UOEQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENCLR.EOWQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "INTENCLR.EOLQ",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIDESC0",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIDESC1",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIDESC1.BCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIDESC1.LCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIDESC2",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIDESC2.LOFFSET",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIST0",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIST1",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIST1.BCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIST1.LCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIST2",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIST2.ACT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIST2.PEND",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHIST2.WM",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQDESC0",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQDESC1",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQDESC1.BCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQDESC1.LCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQDESC2",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQDESC2.LOFFSET",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQST0",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQST1",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQST1.BCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQST1.LCNT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQST2",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQST2.ACT",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQST2.PEND",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CHQST2.WM",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GINTEN",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GINTEN.GINTEN",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GINTFLG",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GINTFLG.GINTFLG",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GINTCLR",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GINTCLR.GINTCLR",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DLYCTL",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DLYCTL.DLYDIS",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DLYCTL.DLYCTL",
+            "type": "reg",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLG2.ADCCEVT1",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLG3.ADCCEVT2",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLG3.ADCCEVT3",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLG3.ADCCEVT4",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_CH_ADCIN0_ADCIN1",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_CH_ADCIN2_ADCIN3",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_CH_ADCIN4_ADCIN5",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_CH_ADCIN6_ADCIN7",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_CH_ADCIN8_ADCIN9",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_CH_ADCIN10_ADCIN11",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_CH_ADCIN12_ADCIN13",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_CH_ADCIN14_ADCIN15",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_RESOLUTION_12BIT",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_RESOLUTION_16BIT",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_MODE_SINGLE_ENDED",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_MODE_DIFFERENTIAL",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_TRIGGER_CPU2_TINT0",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_TRIGGER_CPU2_TINT1",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_TRIGGER_CPU2_TINT2",
+            "type": "enum",
+            "category": "adc",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CLA_TRIGGER_ADCC1",
+            "type": "enum",
+            "category": "cla",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CLA_TRIGGER_ADCC2",
+            "type": "enum",
+            "category": "cla",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CLA_TRIGGER_ADCC3",
+            "type": "enum",
+            "category": "cla",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CLA_TRIGGER_ADCC4",
+            "type": "enum",
+            "category": "cla",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CLA_TRIGGER_ADCCEVT",
+            "type": "enum",
+            "category": "cla",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CLB_LOCAL_IN_MUX_CPU2_TBCLKSYNC",
+            "type": "enum",
+            "category": "clb",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CLB_LOCAL_IN_MUX_CPU2_HALT",
+            "type": "enum",
+            "category": "clb",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DMA_TRIGGER_ADCC1",
+            "type": "enum",
+            "category": "dma",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DMA_TRIGGER_ADCC2",
+            "type": "enum",
+            "category": "dma",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DMA_TRIGGER_ADCC3",
+            "type": "enum",
+            "category": "dma",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DMA_TRIGGER_ADCC4",
+            "type": "enum",
+            "category": "dma",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "DMA_TRIGGER_ADCCEVT",
+            "type": "enum",
+            "category": "dma",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "EMIF_ACCPROT0_MASK_EMIF2",
+            "type": "enum",
+            "category": "emif",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "EMIF_CONTROLLER_CPU1_NG",
+            "type": "enum",
+            "category": "emif",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "EMIF_CONTROLLER_CPU1_G",
+            "type": "enum",
+            "category": "emif",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "EMIF_CONTROLLER_CPU2_G",
+            "type": "enum",
+            "category": "emif",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "EMIF_CONTROLLER_CPU1_NG2",
+            "type": "enum",
+            "category": "emif",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLASH_PUMP_KEY",
+            "type": "enum",
+            "category": "flash",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLASH_CPU1_WRAPPER",
+            "type": "enum",
+            "category": "flash",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLASH_CPU2_WRAPPER",
+            "type": "enum",
+            "category": "flash",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GPIO_CORE_CPU2",
+            "type": "enum",
+            "category": "gpio",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GPIO_CORE_CPU2_CLA1",
+            "type": "enum",
+            "category": "gpio",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "MEMCFG_SECT_MSGCPUTOCPU",
+            "type": "enum",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "MEMCFG_GSRAMCONTROLLER_CPU1",
+            "type": "enum",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "MEMCFG_GSRAMCONTROLLER_CPU2",
+            "type": "enum",
+            "category": "memcfg",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADCCRESULT_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_TX_MSG_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_RX_MSG_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADCC_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GS8_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GS9_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GS10_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GS11_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GS12_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GS13_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GS14_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "GS15_RAM_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPU2_TO_CPU1_MSG_RAM_BASE 0x0003F800",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "CPU1_TO_CPU2_MSG_RAM_BASE 0x0003FC00",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "EMIF2_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "IPC_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "FLASHPUMPSEMAPHORE_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "EMIF2CONFIG_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_NMI_CPU2HWBISTERR",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_NMI_PIEVECTERR",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_NMI_CPU2WDRSN",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_NMI_CPU2NMIWDRSN",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CPU1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CPU2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM3",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM4",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM5",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM6",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM7",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM8",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM9",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM10",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM11",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EPWM12",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ECAP1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ECAP2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ECAP3",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ECAP4",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ECAP5",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ECAP6",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EQEP1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EQEP2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_EQEP3",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SD1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SD2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SCIA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SCIB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SCIC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SCID",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SPIA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SPIB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_SPIC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_I2CA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_I2CB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CANA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CANB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_MCBSPA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_MCBSPB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ADCA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ADCB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ADCC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_ADCD",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS3",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS4",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS5",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS6",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS7",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_CMPSS8",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_DACA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_DACB",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL_DACC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL0_EPWM",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL1_ECAP",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL2_EQEP",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL4_SD",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL5_SCI",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL6_SPI",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL7_I2C",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL8_CAN",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL9_MCBSP",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL11_ADC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL12_CMPSS",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_CPUSEL14_DAC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_CLK_GTBCLKSYNC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_CLK_ADCC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_RES_CPU2CLA1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_RES_ADCC",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_32_CYCLE_NOP",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_CPU_TX_MSGRAM_STARTADDR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_CPU_RX_MSGRAM_STARTADDR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_CLK_NOT_INVERTED",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_CLK_INVERTED",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_DDR_DEMUX_DISABLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_DDR_DEMUX_ENABLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_DMA_TX_MSGRAM_STARTADDR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_DMA_RX_MSGRAM_STARTADDR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_DMA_CHANNEL_I",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_DMA_CHANNEL_Q",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_DATA_RATE_SDR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_DATA_RATE_DDR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_EMULATIONMODE_HARDSTOP",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_EMULATIONMODE_RUNFREE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_EMULATIONMODE_SOFTSTOP",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INT_CHI_DMA_PROG_ERR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INT_CHI_UNDER_OVER_RUN",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INT_CHI_END_OF_WINDOW",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INT_CHI_END_OF_LINE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INT_CHQ_DMA_PROG_ERR",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INT_CHQ_UNDER_OVER_RUN",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INT_CHQ_END_OF_WINDOW",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INT_CHQ_END_OF_LINE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INT_M",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INPUT_DLY_4",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INPUT_DLY_6",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INPUT_DLY_9",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_INPUT_DLY_14",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_RECEIVE_MODE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_TRANSMIT_MODE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_SIGNAL_POLARITY_M",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_SOFT_FREE_M",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_SIGNAL_DISABLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_SIGNAL_ENABLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_SIGNAL_POLARITY_HIGH",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_SIGNAL_POLARITY_LOW",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_THR_SIZE_64BYTE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_THR_SIZE_128BYTE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_THR_SIZE_256BYTE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_TX_IDLE_DATA_IDLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_TX_IDLE_DATA_TRISTATED",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_TX_SDR_INTERLEAVE_DISABLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "UPP_TX_SDR_INTERLEAVE_ENABLE",
+            "type": "enum",
+            "category": "upp",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB1_OUT4",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB1_OUT5",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB2_OUT4",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB2_OUT5",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB3_OUT4",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB3_OUT5",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB4_OUT4",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_CLB4_OUT5",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f2807x"
+        },
+        {
+            "code": "ADC_setMode",
+            "type": "function",
+            "category": "adc",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "ADC_setINLTrim",
+            "type": "function",
+            "category": "adc",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "ADC_setOffsetTrim",
+            "type": "function",
+            "category": "adc",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "EMIF_isEMIF2ConfigBaseValid",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "EMIF_selectController",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "Flash_isPumpSemBaseValid",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "Flash_claimPumpSemaphore",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "Flash_releasePumpSemaphore",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "MemCfg_setGSRAMControllerSel",
+            "type": "function",
+            "category": "memcfg",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "SysCtl_selectCPUForPeripheralInstance",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "SysCtl_selectCPUForPeripheral",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        },
+        {
+            "code": "SysCtl_lockCPUSelectRegs",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f2807x but exists in f2837xd"
+        }
+    ],
+    "added": [],
+    "changed": [
+        {
+            "code": "ADC_isBaseValid",
+            "type": "function",
+            "category": "adc",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "ADC_readResult",
+            "type": "function",
+            "category": "adc",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "ADC_readPPBResult",
+            "type": "function",
+            "category": "adc",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "EMIF_isBaseValid",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "EMIF_setAccessProtection",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "EMIF_commitAccessConfig",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "EMIF_lockAccessConfig",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "EMIF_unlockAccessConfig",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "EMIF_setAsyncMode",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "EMIF_enableAsyncExtendedWait",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "EMIF_setAsyncTimingParams",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "EMIF_setAsyncDataBusWidth",
+            "type": "function",
+            "category": "emif",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "Flash_initModule",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "Flash_powerDown",
+            "type": "function",
+            "category": "flash",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "GPIO_isPinValid",
+            "type": "function",
+            "category": "gpio",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "SysCtl_enterHaltMode",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "SysCtl_enterHibernateMode",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "SysCtl_isNMIFlagSet",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "SysCtl_clearNMIStatus",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "SysCtl_forceNMIFlags",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "SysCtl_isNMIShadowFlagSet",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        },
+        {
+            "code": "XBAR_setInputPin",
+            "type": "function",
+            "category": "xbar",
+            "msg": "Function content does not match between f2837xd and f2807x"
+        }
+    ]
+}

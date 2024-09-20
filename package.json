@@ -1,0 +1,648 @@
+{
+  "name": "c2000-idea",
+  "displayName": "C2000 IDEA",
+  "description": "C2000 Real-Time Controller IDE ASSIST",
+  "version": "0.0.3",
+  "engines": {
+    "vscode": "^1.76.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TexasInstruments/C2000-IDEA"
+  },
+  "icon": "resources/dark/c2000-idea-icon.png",
+  "categories": [
+    "Programming Languages", "Snippets", "Linters"
+  ],
+  "keywords": [
+    "ti", "texas instruments", "c2000", "asm", "f28", "f29", "c28", "c29"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "publisher": "ti-asm",
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "c2000-idea.openWalkthrough",
+        "title": "C2000: Help Walkthrough",
+        "icon": "$(question)"
+      },
+      {
+        "command": "c2000-idea.openInterruptCoderWalkthrough",
+        "title": "C2000: Help Interrupt Coder Walkthrough"
+      },
+      {
+        "command": "c2000-idea.openRegisterCoderWalkthrough",
+        "title": "C2000: Help Register Coder Walkthrough"
+      },
+      {
+        "command": "c2000-idea.openRegisterVisionWalkthrough",
+        "title": "C2000: Help Register Vision Walkthrough"
+      },
+      {
+        "command": "c2000-idea.openViewContainer",
+        "title": "C2000: Open C2000-IDEA Extension View"
+      },
+      {
+        "command": "c2000-idea.openCollateral",
+        "title": "C2000: Open Collateral"
+      },
+      {
+        "command": "c2000-idea.setupProjectCurrentDevice",
+        "title": "C2000: Manually Set Up Project's Current Device",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "c2000-idea.setupMigration",
+        "title": "C2000: Set Up Migration Settings",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "c2000-idea.getProjects",
+        "title": "C2000: Get Projects",
+        "icon": "$(symbol-folder)"
+      },
+      {
+        "command": "c2000-idea.clearProjects",
+        "title": "C2000: Clear All Projects and Reset",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "c2000-idea.updateProjectDevices",
+        "title": "C2000: Update Project Devices",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "c2000-idea.debug",
+        "title": "C2000: Debug Migration"
+      },
+      {
+        "command": "c2000-idea.clearAllMigrationData",
+        "title": "C2000: Clear All Migration Results",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "c2000-idea.openAnyToAnyMigrationGuide",
+        "title": "C2000: Open Any-to-Any Migration Guide",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "c2000-idea.exportMigrationReport",
+        "title": "C2000: Export Migration Report",
+        "icon": "$(export)"
+      },
+      {
+        "command": "c2000-idea.runMigrationCheck",
+        "title": "C2000: Run Migration Check on File",
+        "enablement": "!c2000-idea.isContinuousMigrationCheckMode",
+        "icon": {
+          "light": "resources/light/c2000-idea-migrate.png",
+          "dark": "resources/dark/c2000-idea-migrate.png"
+        }
+      },
+      {
+        "command": "c2000-idea.enableContininuousMigrationCheck",
+        "title": "C2000: Enable Continuous Migration Check on Current File",
+        "enablement": "!c2000-idea.isContinuousMigrationCheckMode",
+        "icon": {
+          "light": "resources/light/c2000-idea-continuous-migrate.png",
+          "dark": "resources/dark/c2000-idea-continuous-migrate.png"
+        }
+      },
+      {
+        "command": "c2000-idea.disableContininuousMigrationCheck",
+        "enablement": "c2000-idea.isContinuousMigrationCheckMode",
+        "title": "C2000: Disable Continuous Migration Check on Current File",
+        "icon": "$(stop)"
+      },
+      {
+        "command": "c2000-idea.runMigrationCheckOnProject",
+        "enablement": "!c2000-idea.isContinuousMigrationCheckMode",
+        "title": "C2000: Run Migration Check on Project",
+        "icon": {
+          "light": "resources/light/c2000-idea-project-migrate.png",
+          "dark": "resources/dark/c2000-idea-project-migrate.png"
+        }
+      },
+      {
+        "command": "c2000-idea.runProjectMigrationF28toF29",
+        "title": "C2000: Run F28 to F29 Project Migration",
+        "icon": {
+          "light": "resources/light/c2000-idea-project-migrate.png",
+          "dark": "resources/dark/c2000-idea-project-migrate.png"
+        }
+      },
+      {
+        "command": "c2000-idea.runRegisterVision",
+        "title": "C2000: Run Driverlib Register Vision on Current File",
+        "icon": {
+          "dark": "resources/dark/c2000-idea-vision.png",
+          "light": "resources/light/c2000-idea-vision.png"
+        }
+      },
+      {
+        "command": "c2000-idea.runBitfieldRegisterVision",
+        "title": "C2000: Run Bitfield Register Vision on Current File",
+        "icon": {
+          "dark": "resources/dark/c2000-idea-vision.png",
+          "light": "resources/light/c2000-idea-vision.png"
+        }
+      },
+      {
+        "command": "c2000-idea.runBitfieldRegisterToDriverlibMigration",
+        "title": "C2000: Run Bitfield Register to Driverlib Migration on Current File",
+        "icon": "$(compare-changes)"
+      },
+      {
+        "command": "c2000-idea.clearAllRegisterInfo",
+        "title": "C2000: Clear All Register Info",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "c2000-idea.enableRegisterCoder",
+        "title": "C2000: Enable Register Code Write/Read",
+        "icon": "$(pass-filled)",
+        "enablement": "!c2000-idea.isRegisterCodeEnabled"
+      },
+      {
+        "command": "c2000-idea.disableRegisterCoder",
+        "title": "C2000: Disable Register Code Write/Read",
+        "icon": "$(stop)",
+        "enablement": "c2000-idea.isRegisterCodeEnabled"
+      },
+      {
+        "command": "c2000-idea.enableInterruptCoder",
+        "title": "C2000: Enable Interrupt Code Templates",
+        "icon": "$(pass-filled)",
+        "enablement": "!c2000-idea.isInterruptCodeEnabled"
+      },
+      {
+        "command": "c2000-idea.disableInterruptCoder",
+        "title": "C2000: Disable Interrupt Code Templates",
+        "icon": "$(stop)",
+        "enablement": "c2000-idea.isInterruptCodeEnabled"
+      },
+      {
+        "command": "c2000-idea.projectTreeView.refreshEntry",
+        "title": "C2000: Project Tree View Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "c2000-idea.runBitfieldMigrationCheck",
+        "title": "C2000: Run Bitfield Migration Check on File",
+        "icon": {
+          "light": "resources/light/c2000-idea-migrate.png",
+          "dark": "resources/dark/c2000-idea-migrate.png"
+        }
+      }
+    ],
+    "views": {
+      "c2000-idea-activitybarViewContainer": [
+        {
+          "id": "c2000-idea.collateralTreeView",
+          "name": "C2000 Collaterals"
+        },
+        {
+          "id": "c2000-idea.collateralAdditionalView",
+          "name": "C2000 Additional Resources"
+        },
+        {
+          "id": "c2000-idea.featureTreeView",
+          "name": "C2000 IDEA - Features"
+        },
+        {
+          "id": "c2000-idea.projectTreeView",
+          "name": "C2000 IDEA - Projects"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "title": "C2000 IDE Assist",
+          "id": "c2000-idea-activitybarViewContainer",
+          "icon": "resources/dark/c2000-idea-icon.png"
+        }
+      ]
+    },
+    "walkthroughs": [
+      {
+        "when": "true",
+        "id": "c2000-idea.basicWalkthrough",
+        "title": "C2000 IDEA",
+        "description": "Walkthough for C2000 IDE Assist extension",
+        "steps": [
+          {
+            "id": "openViewContainer",
+            "title": "Open C2000-IDEA View",
+            "description": "This step will open the C2000-IDEA's main view.\n[Run Command](command:c2000-idea.openViewContainer)",
+            "media": {
+              "image": "resources/common/c2000-idea-view.png",
+              "altText": "C2000 IDEA Main View"
+            },
+            "completionEvents": [
+              "onCommand:c2000-idea.openViewContainer"
+            ]
+          },
+          {
+            "id": "stepProjectSetup",
+            "title": "Get C2000 Projects Information",
+            "description": "This step will run a command and check your workspace folder for C2000 embedded CCS projects.\n[Run Command](command:c2000-idea.getProjects)",
+            "media": {
+              "image": "resources/common/c2000-get-projects.gif",
+              "altText": "C2000 Get Projects"
+            },
+            "completionEvents": [
+              "onCommand:c2000-idea.getProjects"
+            ]
+          },
+          {
+            "id": "refreshProjects",
+            "title": "View and Refresh the Detected C2000 Project",
+            "description": "This step will you how to view the detected C2000 embedded CCS projects in your workspace.\n[Run Command](command:c2000-idea.projectTreeView.refreshEntry)",
+            "media": {
+              "image": "resources/common/c2000-projects-treeview.gif",
+              "altText": "C2000 Refresh Projects"
+            },
+            "completionEvents": [
+              "onCommand:c2000-idea.projectTreeView.refreshEntry"
+            ]
+          },
+          {
+            "id": "reviewOtherWalkthroughs",
+            "title": "View Other Walkthroughs for Various C2000-IDEA Features",
+            "description": "Other feature walkthroughs:\n[Interrupt Code Templates](command:c2000-idea.openInterruptCoderWalkthrough)\n[Register Code Templates](command:c2000-idea.openRegisterCoderWalkthrough)\n[Register Vision Support](command:c2000-idea.openRegisterVisionWalkthrough)",
+            "media": {
+              "image": "resources/common/c2000-idea-features.png",
+              "altText": "C2000 IDEA Features"
+            }
+          }
+        ]
+      },
+      {
+        "when": "true",
+        "id": "c2000-idea.interruptWalkthrough",
+        "title": "C2000 IDEA Interrupt Coder",
+        "description": "Walkthough for C2000 IDE Assist interrupt code template",
+        "steps": [
+          {
+            "id": "enableInterruptCoder",
+            "title": "Enable C2000 Interrupt Coder",
+            "description": "This step will enable C2000 interrupt coder.\n[Run Command](command:c2000-idea.enableInterruptCoder)",
+            "media": {
+              "image": "resources/common/c2000-interrupt-coder-enable.png",
+              "altText": "C2000 IDEA Enable Interrupt Coder"
+            },
+            "completionEvents": [
+              "onCommand:c2000-idea.enableInterruptCoder"
+            ]
+          },
+          {
+            "id": "openInterruptCoderFile",
+            "title": "Open a C2000 application C-Code File",
+            "description": "Open a C-Code file inside a detected C2000 project",
+            "media": {
+              "image": "resources/common/c2000-coder-file.png",
+              "altText": "C2000 IDEA Open File in Detected Project"
+            }
+          },
+          {
+            "id": "interruptCoderAutoComplete",
+            "title": "Execute Interrupt Auto Code-Completion",
+            "description": "At the bottom of the file, on an empty line, turn on code completion (Ctrl + SPACE), and type in 'interrupt'",
+            "media": {
+              "image": "resources/common/c2000-interrupt-coder-completion.png",
+              "altText": "C2000 IDEA Turn on Interrupt Coder Auto-Completion"
+            }
+          },
+          {
+            "id": "interruptCoderUseTab",
+            "title": "Use TAB to Navigate the Interrupt Template Code",
+            "description": "Use the TAB key on the keyboard to go to the next configurable place in the interrupt code template",
+            "media": {
+              "image": "resources/common/c2000-interrupt-coder-tab.png",
+              "altText": "C2000 IDEA Interrupt Template Tab Navigation"
+            }
+          }
+        ]
+      },
+      {
+        "when": "true",
+        "id": "c2000-idea.registerWalkthrough",
+        "title": "C2000 IDEA Register Coder",
+        "description": "Walkthough for C2000 IDE Assist register code template",
+        "steps": [
+          {
+            "id": "enableRegisterCoder",
+            "title": "Enable C2000 Register Coder",
+            "description": "This step will enable C2000 register coder.\n[Run Command](command:c2000-idea.enableRegisterCoder)",
+            "media": {
+              "image": "resources/common/c2000-register-coder-enable.png",
+              "altText": "C2000 IDEA Enable Register Coder"
+            },
+            "completionEvents": [
+              "onCommand:c2000-idea.enableRegisterCoder"
+            ]
+          },
+          {
+            "id": "openRegisterCoderFile",
+            "title": "Open a C2000 application C-Code File",
+            "description": "Open a C-Code file inside a detected C2000 project",
+            "media": {
+              "image": "resources/common/c2000-coder-file.png",
+              "altText": "C2000 IDEA Open File in Detected Project"
+            }
+          },
+          {
+            "id": "registerCoderAutoComplete",
+            "title": "Execute Register Auto Code-Completion",
+            "description": "In the file, on an empty line, turn on code completion (Ctrl + SPACE), and type in the name of a peripheral followed by write/read register action ex: 'EPWM write register'",
+            "media": {
+              "image": "resources/common/c2000-register-coder-completion.png",
+              "altText": "C2000 IDEA Turn on Register Coder Auto-Completion"
+            }
+          },
+          {
+            "id": "registerCoderUseTab",
+            "title": "Use TAB to Navigate the Register Template Code",
+            "description": "Use the TAB key on the keyboard to go to the next configurable place in the register code template",
+            "media": {
+              "image": "resources/common/c2000-register-coder-tab.png",
+              "altText": "C2000 IDEA Register Template Tab Navigation"
+            }
+          }
+        ]
+      },
+      {
+        "when": "true",
+        "id": "c2000-idea.registerVisionsWalkthrough",
+        "title": "C2000 IDEA Register Usage Identification",
+        "description": "Walkthough for C2000 IDE Assist register identification and TRM links",
+        "steps": [
+          {
+            "id": "openRegisterCoderFile",
+            "title": "Open a C2000 application C-Code File",
+            "description": "Open a C-Code file inside a detected C2000 project",
+            "media": {
+              "image": "resources/common/c2000-coder-file.png",
+              "altText": "C2000 IDEA Open File in Detected Project"
+            }
+          },
+          {
+            "id": "runRegisterVision",
+            "title": "Run Driverlib register vision",
+            "description": "This step will identify all of the registers used in the source file. It will assume driverlib register names are used <module>_O_<register name>.\n",
+            "media": {
+              "image": "resources/common/c2000-register-vision-driverlib.png",
+              "altText": "C2000 IDEA Run Driverlib Register Vision"
+            }
+          },
+          {
+            "id": "hoverOverRegisters",
+            "title": "Hover over the identified regsiter",
+            "description": "The text at the bottom of the hover will show a link to the register definition.",
+            "media": {
+              "image": "resources/common/c2000-register-vision-driverlib_links.png",
+              "altText": "C2000 IDEA View Register Defintion Hover Link"
+            }
+          },
+          {
+            "id": "openRegisterDefinition",
+            "title": "Click on the link and the register defintion in online TRM is openned (exact section of the TRM)",
+            "description": "Register defintion in online TRM is openned and the exact section of the TRM is shown.",
+            "media": {
+              "image": "resources/common/c2000-register-vision-driverlib_def.png",
+              "altText": "C2000 IDEA Open the Register Defintion TRM"
+            }
+          },
+          {
+            "id": "runBitfieldRegisterVision",
+            "title": "Register bitifled register vision",
+            "description": "Bitfield style usage of registers are also supported and can be used.",
+            "media": {
+              "image": "resources/common/c2000-register-vision-bitfield.png",
+              "altText": "C2000 IDEA Register Bitfield Vision"
+            }
+          }
+        ]
+      }
+    ],
+    "menus": {
+      "explorer/context": [],
+      "editor/title": [
+        {
+          "when": "!c2000-idea.isContinuousMigrationCheckMode && c2000-idea.isC2000Project",
+          "command": "c2000-idea.runMigrationCheck",
+          "group": "navigation"
+        },
+        {
+          "when": "!c2000-idea.isContinuousMigrationCheckMode && c2000-idea.isC2000Project",
+          "command": "c2000-idea.enableContininuousMigrationCheck"
+        },
+        {
+          "when": "c2000-idea.isContinuousMigrationCheckMode  && c2000-idea.isC2000Project",
+          "command": "c2000-idea.disableContininuousMigrationCheck"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "c2000-idea.projectTreeView.refreshEntry",
+          "when": "view == c2000-idea.projectTreeView",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "c2000-idea.openWalkthrough",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.openWalkthrough",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.runRegisterVision",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.runRegisterVision",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.enableRegisterCoder",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.registerCoder",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.disableRegisterCoder",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.registerCoder",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.runBitfieldRegisterVision",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.runBitfieldRegisterVision",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.runBitfieldRegisterToDriverlibMigration",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.runBitfieldRegisterToDriverlibMigration",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.clearAllRegisterInfo",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.clearAllRegisterInfo",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.enableInterruptCoder",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.interruptCoder",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.disableInterruptCoder",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.interruptCoder",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.getProjects",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.getProjects",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.updateProjectDevices",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.updateProjectDevices",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.clearProjects",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.clearProjects",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.setupProjectCurrentDevice",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.setupProjectCurrentDevice",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.setupMigration",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.setupMigration",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.clearAllMigrationData",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.clearAllMigrationData",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.openAnyToAnyMigrationGuide",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.openAnyToAnyMigrationGuide",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.runMigrationCheck",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.runMigrationCheck",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.enableContininuousMigrationCheck",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.continuousMigrationCheck",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.disableContininuousMigrationCheck",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.continuousMigrationCheck",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.exportMigrationReport",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.exportMigrationReport",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.runMigrationCheckOnProject",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.migrationCheckOnProject",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.exportMigrationReport",
+          "when": "view == c2000-idea.projectTreeView && viewItem == c2000-idea.projectTreeView.migrationDevices",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.runMigrationCheckOnProject",
+          "when": "view == c2000-idea.projectTreeView && viewItem == c2000-idea.projectTreeView.migrationDevices",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.setupProjectCurrentDevice",
+          "when": "view == c2000-idea.projectTreeView && viewItem == c2000-idea.projectTreeView.currentDevice",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.setupMigration",
+          "when": "view == c2000-idea.projectTreeView && viewItem == c2000-idea.projectTreeView.migrationDevices",
+          "group": "inline"
+        }
+      ]
+    },
+    "snippets": [
+      {
+        "language": "c",
+        "path": "./snippets/interrupt.json"
+      }
+    ],
+    "configuration": {
+      "title": "C2000 IDEA",
+      "properties": {
+        "c2000-idea.project.defaultDevice": {
+          "type": "string",
+          "scope": "window",
+          "default": "None",
+          "enum": [
+            "None",
+            "F29H85x",
+            "F28P55x",
+            "F28P65x",
+            "F28002x",
+            "F28004x",
+            "F28003x",
+            "F280013x",
+            "F280015x",
+            "F2838x",
+            "F2837xD",
+            "F2837xS",
+            "F2807x"
+          ],
+          "description": "When working on a projectless file, what device should the tool default back to"
+        },
+        "c2000-idea.migration.ignorePathPatterns": {
+          "type": "string",
+          "scope": "resource",
+          "default": "",
+          "description": "File path patterns to ignore when running migration check on folders"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.76.0",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "@vscode/test-electron": "^2.2.3",
+    "eslint": "^8.34.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "vsce": "^2.15.0",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+  }
+}

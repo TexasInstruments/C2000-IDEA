@@ -1,0 +1,5438 @@
+{
+    "removed": [
+        {
+            "code": "COMPDACHCTL.RAMPDIR",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "COMPDACHCTL2",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "COMPDACHCTL2.XTRIGCFG",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CTRIPLFILCTL.FILTINSEL",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CTRIPHFILCTL.FILTINSEL",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "COMPDACLCTL",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "COMPDACLCTL.DACSOURCE",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "COMPDACLCTL.RAMPSOURCE",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "COMPDACLCTL.RAMPLOADSEL",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "COMPDACLCTL.BLANKSOURCE",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "COMPDACLCTL.BLANKEN",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "COMPDACLCTL.RAMPDIR",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RAMPLREFA",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RAMPLREFS",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RAMPLSTEPVALA",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RAMPLSTEPVALS",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RAMPLSTS",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RAMPLDLYA",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RAMPLDLYA.DELAY",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RAMPLDLYS",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RAMPLDLYS.DELAY",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CTRIPLFILCLKCTL2",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CTRIPLFILCLKCTL2.CLKPRESCALEU",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CTRIPHFILCLKCTL2",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CTRIPHFILCLKCTL2.CLKPRESCALEU",
+            "type": "reg",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "Z1OTP_CRCLOCK",
+            "type": "reg",
+            "category": "dcsm",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "Z2OTP_CRCLOCK",
+            "type": "reg",
+            "category": "dcsm",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "Z1_OTPSECLOCK.CRCLOCK",
+            "type": "reg",
+            "category": "dcsm",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "Z2_OTPSECLOCK.CRCLOCK",
+            "type": "reg",
+            "category": "dcsm",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "UID_UNIQUE_31_0",
+            "type": "reg",
+            "category": "dcsm",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "UID_UNIQUE_63_32",
+            "type": "reg",
+            "category": "dcsm",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PARTIDH",
+            "type": "reg",
+            "category": "dcsm",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAQSEL1.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAQSEL1.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAQSEL2.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAQSEL2.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAQSEL2.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAQSEL2.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAQSEL2.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAMUX1.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAMUX1.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAMUX2.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAMUX2.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAMUX2.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAMUX2.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAMUX2.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADIR.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADIR.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADIR.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADIR.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADIR.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADIR.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADIR.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAPUD.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAPUD.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAPUD.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAPUD.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAPUD.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAPUD.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAPUD.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAINV.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAINV.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAINV.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAINV.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAINV.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAINV.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAINV.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAODR.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAODR.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAODR.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAODR.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAODR.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAODR.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAODR.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAGMUX1.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAGMUX1.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAGMUX2.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAGMUX2.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAGMUX2.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAGMUX2.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPAGMUX2.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPALOCK.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPALOCK.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPALOCK.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPALOCK.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPALOCK.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPALOCK.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPALOCK.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACR.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACR.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACR.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACR.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACR.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACR.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACR.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCTRL.QUALPRD2",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBQSEL1.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBQSEL1.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBQSEL1.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBQSEL1.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBQSEL1.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBQSEL1.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBQSEL2",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBQSEL2.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBQSEL2.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBMUX1.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBMUX1.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBMUX1.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBMUX1.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBMUX1.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBMUX1.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBMUX2",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBMUX2.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBMUX2.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDIR.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDIR.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDIR.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDIR.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDIR.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDIR.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDIR.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDIR.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBPUD.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBPUD.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBPUD.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBPUD.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBPUD.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBPUD.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBPUD.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBPUD.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBINV.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBINV.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBINV.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBINV.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBINV.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBINV.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBINV.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBINV.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBODR.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBODR.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBODR.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBODR.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBODR.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBODR.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBODR.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBODR.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBGMUX1.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBGMUX1.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBGMUX1.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBGMUX1.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBGMUX1.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBGMUX1.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBGMUX2",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBGMUX2.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBGMUX2.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBLOCK.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBLOCK.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBLOCK.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBLOCK.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBLOCK.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBLOCK.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBLOCK.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBLOCK.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCR.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCR.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCR.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCR.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCR.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCR.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCR.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCR.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADAT.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADAT.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADAT.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADAT.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADAT.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADAT.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPADAT.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPASET.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPASET.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPASET.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPASET.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPASET.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPASET.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPASET.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACLEAR.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACLEAR.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACLEAR.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACLEAR.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACLEAR.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACLEAR.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPACLEAR.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPATOGGLE.GPIO14",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPATOGGLE.GPIO15",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPATOGGLE.GPIO25",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPATOGGLE.GPIO26",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPATOGGLE.GPIO27",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPATOGGLE.GPIO30",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPATOGGLE.GPIO31",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDAT.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDAT.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDAT.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDAT.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDAT.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDAT.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDAT.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBDAT.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBSET.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBSET.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBSET.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBSET.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBSET.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBSET.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBSET.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBSET.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCLEAR.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCLEAR.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCLEAR.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCLEAR.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCLEAR.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCLEAR.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCLEAR.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBCLEAR.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBTOGGLE.GPIO34",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBTOGGLE.GPIO42",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBTOGGLE.GPIO43",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBTOGGLE.GPIO44",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBTOGGLE.GPIO45",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBTOGGLE.GPIO46",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBTOGGLE.GPIO48",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GPBTOGGLE.GPIO49",
+            "type": "reg",
+            "category": "gpio",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR0",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR0.RESET",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.COMMMODE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.TIMINGMODE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.PARITYENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.PARITY",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.STOP",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.CLK_MASTER",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.LINMODE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.SWNRST",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.SLEEP",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.ADAPT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.MBUFMODE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.CTYPE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.HGENCTRL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.STOPEXTFRAME",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.LOOPBACK",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.CONT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.RXENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR1.TXENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR2",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR2.POWERDOWN",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR2.GENWU",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR2.SC",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIGCR2.CC",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETBRKDTINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETWAKEUPINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETTIMEOUTINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETTOAWUSINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETTOA3WUSINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETTXINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETRXINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETIDINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SET_TX_DMA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SET_RX_DMA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SET_RX_DMA_ALL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETPEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETOEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETFEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETNREINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETISFEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETCEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETPBEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINT.SETBEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRBRKDTINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRWAKEUPINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRTIMEOUTINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRTOAWUSINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRTOA3WUSINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRTXINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRRXINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRIDINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRTXDMA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.SETRXDMA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRPEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLROEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRFEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRNREINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRISFEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRCEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRPBEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINT.CLRBEINT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETBRKDTINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETWAKEUPINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETTIMEOUTINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETTOAWUSINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETTOA3WUSINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETTXINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETRXINTOVO",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETIDINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETPEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETOEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETFEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETNREINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETISFEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETCEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETPBEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCISETINTLVL.SETBEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRBRKDTINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRWAKEUPINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRTIMEOUTINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRTOAWUSINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRTOA3WUSINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRTXINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRRXINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRIDINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRPEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLROEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRFEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRNREINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRISFEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRCEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRPBEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCICLEARINTLVL.CLRBEINTLVL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.BRKDT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.WAKEUP",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.IDLE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.BUSY",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.TIMEOUT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.TOAWUS",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.TOA3WUS",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.TXRDY",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.RXRDY",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.TXWAKE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.TXEMPTY",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.RXWAKE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.IDTXFLAG",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.IDRXFLAG",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.PE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.OE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.FE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.NRE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.ISFE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.CE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.PBE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFLR.BE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIINTVECT0",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIINTVECT0.INTVECT0",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIINTVECT1",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIINTVECT1.INTVECT1",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFORMAT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFORMAT.CHAR",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIFORMAT.LENGTH",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "BRSR",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "BRSR.SCI_LIN_PSL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "BRSR.SCI_LIN_PSH",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "BRSR.M",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "BRSR.U",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIED",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIED.ED",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIRD",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIRD.RD",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCITD",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCITD.TD",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIPIO0",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIPIO0.RXFUNC",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIPIO0.TXFUNC",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIPIO2",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIPIO2.RXIN",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SCIPIO2.TXIN",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "COMP",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "COMP.SBREAK",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "COMP.SDEL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RD0",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RD0.RD3",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RD0.RD2",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RD0.RD1",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RD0.RD0",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RD1",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RD1.RD7",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RD1.RD6",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RD1.RD5",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "RD1.RD4",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "MASK",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "MASK.TXIDMASK",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "MASK.RXIDMASK",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "ID",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "ID.IDBYTE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "ID.IDSLAVETASKBYTE",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "ID.RECEIVEDID",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "TD0",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "TD0.TD3",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "TD0.TD2",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "TD0.TD1",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "TD0.TD0",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "TD1",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "TD1.TD7",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "TD1.TD6",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "TD1.TD5",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "TD1.TD4",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "MBRSR",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "MBRSR.MBR",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL.RXPENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL.LPBENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL.IODFTENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL.TXSHIFT",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL.PINSAMPLEMASK",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL.BRKDTERRENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL.PERRENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL.FERRENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL.ISFERRENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL.CERRENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL.PBERRENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "IODFTCTRL.BERRENA",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GLB_INT_EN",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GLB_INT_EN.GLBINT0_EN",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GLB_INT_EN.GLBINT1_EN",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GLB_INT_FLG",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GLB_INT_FLG.INT0_FLG",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GLB_INT_FLG.INT1_FLG",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GLB_INT_CLR",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GLB_INT_CLR.INT0_FLG_CLR",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "GLB_INT_CLR.INT1_FLG_CLR",
+            "type": "reg",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "ROM_LOCK.LOCK_SECUREROM",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "ROM_TEST.TEST_SECUREROM",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "ROM_FORCE_ERROR.FORCE_SECUREROM_ERROR",
+            "type": "reg",
+            "category": "memcfg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "FLG.REGPARITYERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "FLG.LSCMPERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "FLGCLR.REGPARITYERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "FLGCLR.LSCMPERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "FLGFRC.REGPARITYERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "FLGFRC.LSCMPERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SHDFLG.REGPARITYERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SHDFLG.LSCMPERR",
+            "type": "reg",
+            "category": "nmi",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBMC",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBMC.RW",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBMC.SLAVE_ADDR",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBMC.BYTE_COUNT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBMC.CMD_ENA",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBMC.EXT_CMD",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBMC.PEC_ENA",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBMC.GRP_CMD",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBMC.PRC_CALL",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTXBUF",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBRXBUF",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBACK",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBACK.ACK",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.RD_BYTE_COUNT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.DATA_READY",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.DATA_REQUEST",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.EOM",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.NACK",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.PEC_VALID",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.CLK_LOW_TIMEOUT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.CLK_HIGH_DETECTED",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.SLAVE_ADDR_READY",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.RPT_START",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.UNIT_BUSY",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.BUS_FREE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.LOST_ARB",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.MASTER",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.ALERT_EDGE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.CONTROL_EDGE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.ALERT_RAW",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.CONTROL_RAW",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.SDA_RAW",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSTS.SCL_RAW",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBINTM",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBINTM.BUS_FREE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBINTM.BUS_LOW_TIMEOUT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBINTM.DATA_READY",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBINTM.DATA_REQUEST",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBINTM.SLAVE_ADDR_READY",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBINTM.EOM",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBINTM.ALERT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBINTM.CONTROL",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBINTM.LOST_ARB",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBINTM.CLK_HIGH_DETECT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSC",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSC.SLAVE_ADDR",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSC.MAN_SLAVE_ACK",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSC.SLAVE_MASK",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSC.PEC_ENA",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSC.TX_COUNT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSC.TX_PEC",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSC.MAN_CMD",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBSC.RX_BYTE_ACK_CNT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBHSA",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBHSA.SLAVE_RW",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBHSA.SLAVE_ADDR",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.RESET",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.ALERT_EN",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.BUS_LO_INT_EDGE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.FAST_MODE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.CNTL_INT_EDGE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.ALERT_MODE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.ALERT_VALUE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.ALERT_DIR",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.CNTL_MODE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.CNTL_VALUE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.CNTL_DIR",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.SDA_MODE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.SDA_VALUE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.SDA_DIR",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.SCL_MODE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.SCL_VALUE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.SCL_DIR",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.CLK_LO_DIS",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.SLAVE_EN",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.MASTER_EN",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.CLKDIV",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBCTRL.I2CMODE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMCTL",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMCTL.TIM_OVERRIDE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMCLK",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMCLK.CLK_HIGH_LIMIT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMCLK.CLK_FREQ",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMSTSETUP",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMSTSETUP.TSU_STA",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMBIDLE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMBIDLE.BUSIDLE",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMLOWTIMOUT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMLOWTIMOUT.CLKLOWTIMOUT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMHIGHTIMOUT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBTIMHIGHTIMOUT.CLKHIGHTIMOUT",
+            "type": "reg",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SOFTPRES3.ECAP3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SOFTPRES4.EQEP2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SOFTPRES10.MCAN_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SOFTPRES19",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SOFTPRES19.LIN_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SOFTPRES20",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SOFTPRES20.PMBUS_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CLKCFGLOCK1.AUXCLKDIVSEL",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CLKSRCCTL2.MCANABCLKSEL",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "AUXCLKDIVSEL",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "AUXCLKDIVSEL.MCANCLKDIV",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CPUSYSLOCK1.PCLKCR19",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CPUSYSLOCK2.LSEN",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CPUSYSLOCK2.CMPSSLPMSEL",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PCLKCR3.ECAP3",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PCLKCR4.EQEP2",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PCLKCR10.MCAN_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PCLKCR19",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PCLKCR19.LIN_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PCLKCR20",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PCLKCR20.PMBUS_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LSEN",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LSEN.ENABLE",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSSLPMSEL",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSSLPMSEL.CMPSS1H",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSSLPMSEL.CMPSS1L",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSSLPMSEL.CMPSS2H",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSSLPMSEL.CMPSS2L",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSSLPMSEL.CMPSS3H",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSSLPMSEL.CMPSS3L",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSSLPMSEL.CMPSS4H",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSSLPMSEL.CMPSS4L",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "MCANWAKESTATUS",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "MCANWAKESTATUS.WAKE",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "MCANWAKESTATUSCLR",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "MCANWAKESTATUSCLR.WAKE",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CLKSTOPREQ",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CLKSTOPREQ.MCAN_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CLKSTOPREQ.KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CLKSTOPACK",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CLKSTOPACK.MCAN_A",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG.GERR",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG.CPU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG.CLR_GERR",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG.CLR_CPU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG.SET_CPU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG.SET_KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG_CLR",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG_CLR.GERR",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG_CLR.CPU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG_SET",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG_SET.CPU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LCM_ERR_FLG_SET.KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG.GERR",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG.CPU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG.CLR_GERR",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG.CLR_CPU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG.SET_CPU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG.SET_KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG.MASK_CPU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG.MASK_KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG_CLR",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG_CLR.GERR",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG_CLR.CPU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG_SET",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG_SET.CPU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG_SET.KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG_MASK",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG_MASK.CPU",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "REGPARITY_ERR_FLG_MASK.KEY",
+            "type": "reg",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "FLG2.ECAP3_OUT",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "FLG4.MCANA_FEVT0",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "FLG4.MCANA_FEVT1",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "FLG4.MCANA_FEVT2",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CLR2.ECAP3_OUT",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CLR4.MCANA_FEVT0",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CLR4.MCANA_FEVT1",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CLR4.MCANA_FEVT2",
+            "type": "reg",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_FILTIN_COMPOUT",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_FILTIN_EXT_H1",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_FILTIN_EXT_H2",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_FILTIN_EXT_H3",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_FILTIN_EXT_H4",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_FILTIN_EXT_H5",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_FILTIN_EXT_H6",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_FILTIN_EXT_H7",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_RAMP_DIR_DOWN",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_RAMP_DIR_UP",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_RAMP_XTRIGGER_DISABLE",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_RAMP_XTRIGGER_RAMPH_EOR",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_RAMP_XTRIGGER_RAMPL_EOR",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "DCSM_OTPSECLOCK_CRCLOCK",
+            "type": "enum",
+            "category": "dcsm",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "ECAP_INPUT_ECAP3_GPTRIP9",
+            "type": "enum",
+            "category": "ecap",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "ECAP_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP3",
+            "type": "enum",
+            "category": "ecap",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_MCANARX",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_LINARX",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_SCIARX",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_SCIBRX",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_SCICRX",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_EQEP1A",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_EQEP1B",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_EQEP1I",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_EQEP1S",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_EQEP2A",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_EQEP2B",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_EQEP2I",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_DATAIN_EQEP2S",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_MX_SEL_LOCK_REG_MXSEL0",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EPG_MX_SEL_LOCK_REG_MXSEL1",
+            "type": "enum",
+            "category": "epg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_ANALOG_LOOP_NONE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_ANALOG_LOOP_TX",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_ANALOG_LOOP_RX",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_CHECKSUM_CLASSIC",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_CHECKSUM_ENHANCED",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_COMM_LIN_USELENGTHVAL",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_COMM_LIN_ID4ID5LENCTL",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_DEBUG_FROZEN",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_DEBUG_COMPLETE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_BREAK",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_WAKEUP",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_IDLE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_BUSY",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_TO",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_TOAWUS",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_TOA3WUS",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_TXRDY",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_RXRDY",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_TXWAKE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_TXEMPTY",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_RXWAKE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_TXID",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_RXID",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_PE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_OE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_FE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_NRE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_ISFE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_CE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_PBE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_FLAG_BE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_WAKEUP",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_TO",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_TOAWUS",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_TOA3WUS",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_TX",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_RX",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_ID",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_PE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_OE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_FE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_NRE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_ISFE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_CE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_PBE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_BE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INT_ALL",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INTERRUPT_LINE0",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_INTERRUPT_LINE1",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_MODE_LIN_RESPONDER",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_MODE_LIN_COMMANDER",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_LOOPBACK_DIGITAL",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_LOOPBACK_ANALOG",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_MSG_FILTER_IDBYTE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_MSG_FILTER_IDRESPONDER",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_PINMASK_NONE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_PINMASK_CENTER",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_PINMASK_CENTER_SCLK",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_PINMASK_CENTER_2SCLK",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_PINTYPE_TX",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_PINTYPE_RX",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_ALL_ERRORS",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_FRAME_ERROR",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_PARITY_ERROR",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_BREAK_ERROR",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_COMM_SCI_IDLELINE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_COMM_SCI_ADDRBIT",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_PAR_ODD",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_PAR_EVEN",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_STOP_ONE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_STOP_TWO",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_INT_BREAK",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_INT_WAKEUP",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_INT_TX",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_INT_RX",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_INT_TX_DMA",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_INT_RX_DMA",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_INT_RX_DMA_ALL",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_INT_PARITY",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_INT_OVERRUN",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_INT_FRAME",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_SCI_INT_ALL",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_NONE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_WAKEUP",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_ISFE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_PE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_ID",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_PBE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_FE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_BREAK",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_CE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_OE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_BE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_RX",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_TX",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_NRE",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_TOAWUS",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_TOA3WUS",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "LIN_VECT_TO",
+            "type": "enum",
+            "category": "lin",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "MEMCFG_SECT_ROMSECURE",
+            "type": "enum",
+            "category": "memcfg",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "EQEP2_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "ECAP3_BASE",
+            "type": "enum",
+            "category": "memmap",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_CONTROLLER_ENABLE_PRC_CALL",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_CONTROLLER_ENABLE_GRP_CMD",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_CONTROLLER_ENABLE_PEC",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_CONTROLLER_ENABLE_EXT_CMD",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_CONTROLLER_ENABLE_CMD",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_CONTROLLER_ENABLE_READ",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INCLUDE_CRC8_TABLE",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INT_BUS_FREE",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INT_CLK_LOW_TIMEOUT",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INT_DATA_READY",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INT_DATA_REQUEST",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INT_TARGET_ADDR_READY",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INT_EOM",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INT_ALERT",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INT_CONTROL",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INT_LOST_ARB",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INT_CLK_HIGH_DETECT",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INT_ALL",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INTSRC_BUS_FREE",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INTSRC_CLK_LOW_TIMEOUT",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INTSRC_DATA_READY",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INTSRC_DATA_REQUEST",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INTSRC_TARGET_ADDR_READY",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INTSRC_EOM",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INTSRC_ALERT",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INTSRC_CONTROL",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INTSRC_LOST_ARB",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INTSRC_CLK_HIGH_DETECT",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_TARGET_ENABLE_MANUAL_ACK",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_TARGET_ENABLE_PEC_PROCESSING",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_TARGET_TRANSMIT_PEC",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_TARGET_ENABLE_MANUAL_CMD_ACK",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_TARGET_DISABLE_ADDRESS_MASK",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_TARGET_AUTO_ACK_1_BYTES",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_TARGET_AUTO_ACK_2_BYTES",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_TARGET_AUTO_ACK_3_BYTES",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_TARGET_AUTO_ACK_4_BYTES",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_CLOCKMODE_STANDARD",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_CLOCKMODE_FAST",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_ACCESSTYPE_WRITE",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_ACCESSTYPE_READ",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INTEDGE_FALLING",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "PMBUS_INTEDGE_RISING",
+            "type": "enum",
+            "category": "pmbus",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_NMI_REGPARITYERR",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_NMI_LSCMPERR",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_CMPSSLPMSEL_CMPSS_1H",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_CMPSSLPMSEL_CMPSS_1L",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_CMPSSLPMSEL_CMPSS_2H",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_CMPSSLPMSEL_CMPSS_2L",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_CMPSSLPMSEL_CMPSS_3H",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_CMPSSLPMSEL_CMPSS_3L",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_CMPSSLPMSEL_CMPSS_4H",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_CMPSSLPMSEL_CMPSS_4L",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_REG_SEL_AUXCLKDIVSEL",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_REG_SEL_PCLKCR19",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_REG_SEL_LSEN",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_REG_SEL_CMPSSLPMSEL",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_1",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_3",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_4",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_5",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_6",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_7",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_8",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_9",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_10",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_11",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_12",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_13",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_14",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_15",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_16",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_17",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_18",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_19",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_MCANCLK_DIV_20",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_CLK_ECAP3",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_CLK_EQEP2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_CLK_MCANA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_CLK_LINA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_CLK_PMBUSA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_RES_ECAP3",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_RES_EQEP2",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_RES_MCANA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_RES_LINA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "SYSCTL_PERIPH_RES_PMBUSA",
+            "type": "enum",
+            "category": "sysctl",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "XBAR_EPWM_MUX04_ECAP3_OUT",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "XBAR_EPWM_MUX25_MCAN_FEVT0",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "XBAR_EPWM_MUX27_MCAN_FEVT1",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "XBAR_EPWM_MUX29_MCAN_FEVT2",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_ECAP3_OUT",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_MCANA_FEVT0",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_MCANA_FEVT1",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "XBAR_INPUT_FLG_MCANA_FEVT2",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "XBAR_OUT_MUX04_ECAP3_OUT",
+            "type": "enum",
+            "category": "xbar",
+            "msg": "This selection is not available on f280013x"
+        },
+        {
+            "code": "CMPSS_configRampHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_configRampLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_configDACHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_configDACLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_configureFilterInputHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_configureFilterInputLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_setRampDirectionHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_setRampReferenceHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_getRampReferenceHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_setRampStepHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_getRampStepHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_setRampDelayHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_getRampDelayHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_setRampDirectionLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_setRampReferenceLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_getRampReferenceLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_setRampStepLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_getRampStepLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_setRampDelayLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_getRampDelayLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_configureRampXTriggerHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_configureSyncSourceHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_configureSyncSourceLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_configBlankingSourceHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_enableBlankingHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_disableBlankingHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_configBlankingSourceLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_enableBlankingLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "CMPSS_disableBlankingLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "staticinlinevoidCMPSSLITE_configDACHigh",
+            "type": "function",
+            "category": "cmpss_lite",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "DCSM_getDeviceUIDLow",
+            "type": "function",
+            "category": "dcsm",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "DCSM_getDeviceUIDHigh",
+            "type": "function",
+            "category": "dcsm",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "DCSM_getDevicePartID",
+            "type": "function",
+            "category": "dcsm",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "SysCtl_setMCANClk",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "SysCtl_isMCANWakeStatusSet",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "SysCtl_clearMCANWakeStatus",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "SysCtl_enableLockStep",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "SysCtl_disableLockStep",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "SysCtl_getLCMErrorFlag",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "SysCtl_clearLCMErrorFlag",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "SysCtl_setLCMErrorFlag",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "SysCtl_getRegParityErrorFlag",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "SysCtl_clearRegParityErrorFlag",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        },
+        {
+            "code": "SysCtl_setRegParityErrorFlag",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function does not exist in f280013x but exists in f280015x"
+        }
+    ],
+    "added": [
+        {
+            "code": "CMPSSLITE_STS_HI_FILTOUT",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This option is only available in f280013x"
+        },
+        {
+            "code": "CMPSSLITE_STS_HI_LATCHFILTOUT",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This option is only available in f280013x"
+        },
+        {
+            "code": "CMPSSLITE_STS_LO_FILTOUT",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This option is only available in f280013x"
+        },
+        {
+            "code": "CMPSSLITE_STS_LO_LATCHFILTOUT",
+            "type": "enum",
+            "category": "cmpss",
+            "msg": "This option is only available in f280013x"
+        }
+    ],
+    "changed": [
+        {
+            "code": "CMPSS_configFilterHigh",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function content does not match between f280015x and f280013x"
+        },
+        {
+            "code": "CMPSS_configFilterLow",
+            "type": "function",
+            "category": "cmpss",
+            "msg": "Function content does not match between f280015x and f280013x"
+        },
+        {
+            "code": "DCSM_getZone1OTPSecureLockStatus",
+            "type": "function",
+            "category": "dcsm",
+            "msg": "Function content does not match between f280015x and f280013x"
+        },
+        {
+            "code": "DCSM_getZone2OTPSecureLockStatus",
+            "type": "function",
+            "category": "dcsm",
+            "msg": "Function content does not match between f280015x and f280013x"
+        },
+        {
+            "code": "ECAP_isBaseValid",
+            "type": "function",
+            "category": "ecap",
+            "msg": "Function content does not match between f280015x and f280013x"
+        },
+        {
+            "code": "EPG_selectEPGDataOut",
+            "type": "function",
+            "category": "epg",
+            "msg": "Function content does not match between f280015x and f280013x"
+        },
+        {
+            "code": "EQEP_isBaseValid",
+            "type": "function",
+            "category": "eqep",
+            "msg": "Function content does not match between f280015x and f280013x"
+        },
+        {
+            "code": "GPIO_isPinValid",
+            "type": "function",
+            "category": "gpio",
+            "msg": "Function content does not match between f280015x and f280013x"
+        },
+        {
+            "code": "HRPWM_isBaseValid",
+            "type": "function",
+            "category": "hrpwm",
+            "msg": "Function content does not match between f280015x and f280013x"
+        },
+        {
+            "code": "SysCtl_isNMIFlagSet",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f280015x and f280013x"
+        },
+        {
+            "code": "SysCtl_clearNMIStatus",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f280015x and f280013x"
+        },
+        {
+            "code": "SysCtl_forceNMIFlags",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f280015x and f280013x"
+        },
+        {
+            "code": "SysCtl_isNMIShadowFlagSet",
+            "type": "function",
+            "category": "sysctl",
+            "msg": "Function content does not match between f280015x and f280013x"
+        }
+    ]
+}
