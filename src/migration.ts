@@ -7,11 +7,14 @@ import * as deviceData from './deviceData';
 import * as register from './register';
 import path = require('path');
 
+const outputChannel = vscode.window.createOutputChannel("My Extension Logs");
 const C2000_MIGRATION_DIAGNOSTIC_COLLECTION_NAME = "C2000 Migration";
 const C2000_MIGRATION_INCOMPAT_CODE = "C2000_MIGRATION_INCOMPAT";
 const C2000_MIGRATION_INCOMPAT_SOURCE = "C2000 Migration Check";
 const C2000_MIGRATION_C2000WARE_VERSION = "C2000Ware_5_02_00_00";
 const C2000_AUTO_MIGRATION_GUIDE_LINK = "https://dev.ti.com/tirex/content/" + C2000_MIGRATION_C2000WARE_VERSION + "/docs/" + C2000_MIGRATION_C2000WARE_VERSION + "_Migration_Guides/html_pages/";
+
+const LastMigrationCheckTimestampPerURI: {[uri:string]: number } = {}; //Object to store duration time for each file
 
 const C2000_MIGRATION_IS_CONTINUOUS_CHECK_MODE_CONTEXT = 'c2000-idea.isContinuousMigrationCheckMode';
 let migrationIsContinuousCheckStatus = false;
@@ -49,6 +52,32 @@ export function migrationGetAutoMigrationGuideMainPage()
     return C2000_AUTO_MIGRATION_GUIDE_LINK + "MainDriverlib.html";
 }
 
+function migrationRunMigrationCheckOnProjectWithProgress(context: vscode.ExtensionContext, projectName?: string) {
+	return vscode.window.withProgress({
+		location: vscode.ProgressLocation.Notification,
+		title: "Running Project Migration",
+		cancellable: true
+	}, (progress, token) => {
+		token.onCancellationRequested(() => {
+			console.log("User canceled the migration check.");
+		});
+
+	return migrationRunMigrationCheckOnProject(context, projectName, progress, token) || Promise.resolve();
+	});
+
+};
+
+function migrationRunMigrationCheckOnActiveTextEditorWithProgress(context: vscode.ExtensionContext) {
+	return vscode.window.withProgress({
+		location: vscode.ProgressLocation.Notification,
+		title: "Running Migration Check on File",
+		cancellable: false
+	}, async (progress) => {
+		await migrationRunMigrationCheckOnActiveTextEditor(context, progress);
+	});
+
+};
+
 export function migrationSetup(context: vscode.ExtensionContext)
 {
     migrationDiagnosticsCollection = vscode.languages.createDiagnosticCollection(C2000_MIGRATION_DIAGNOSTIC_COLLECTION_NAME);
@@ -82,26 +111,26 @@ export function migrationSetup(context: vscode.ExtensionContext)
 	});
 
 	let runMigrationCheckDisposable = vscode.commands.registerCommand(info.C2000_IDEA_CMD_RUN_MIGRATION_CHECK, () => {
-		migrationRunMigrationCheckOnActiveTextEditor(context);
+		migrationRunMigrationCheckOnActiveTextEditorWithProgress(context);
     });
 
+
 	let runProjectMigrationCheckDisposable = vscode.commands.registerCommand(info.C2000_IDEA_CMD_RUN_MIGRATION_CHECK_ON_PROJECT, (args) => {
-		if (args && args.treeItem && args.projectInfo)
-		{
-			migrationRunMigrationCheckOnProject(context, args.projectInfo.name);
-		}
-		else {
-			migrationRunMigrationCheckOnProject(context);
+	
+		if (args && args.treeItem && args.projectInfo) {
+			migrationRunMigrationCheckOnProjectWithProgress(context, args.projectInfo.name);
+		} else {
+			migrationRunMigrationCheckOnProjectWithProgress(context, undefined);
 		}
 	});
-
+	
 	let setUpMigrationCommand = vscode.commands.registerCommand(info.C2000_IDEA_CMD_SETUP_MIGRATION, (args) => {
 		if (args && args.treeItem && args.projectInfo)
 		{
 			migrationSetupProjectMigrationSettings(context, args.projectInfo.name);
 		}
 		else {
-			migrationSetupProjectMigrationSettings(context);
+			migrationSetupProjectMigrationSettings(context, undefined);
 		}
 	});
 
@@ -136,10 +165,21 @@ export function migrationSetup(context: vscode.ExtensionContext)
 		}
 	);
 
+	// Added this ignoreMigrationFolderIncompatDisposal function for future enhancement of ignoring a file from explorer window 
+	let ignoreMigrationFolderIncompatDisposal = vscode.commands.registerCommand(info.C2000_IDEA_CMD_IGNORE_FOLDER_MIGRATION_INCOMPAT, 
+		( args : {
+			code:string, 
+			projectInfo:project.ProjectInfo
+			}
+		) => {
+			project.addMigrationCheckFolderException(args.code, args.projectInfo);
+		}
+	);
+
 	let exportMigrationDisposal = vscode.commands.registerCommand(info.C2000_IDEA_CMD_EXPORT_MIGRATION_REPORT, (args)=>{
 		if (args && args.treeItem && args.projectInfo)
 		{
-			exportProjectMigrationDiagnostics(args.projectInfo);
+			exportProjectMigrationDiagnostics(args.projectInfo, LastMigrationCheckTimestampPerURI);
 		}
 		else {
 			exportMigrationDiagnostics();
@@ -156,7 +196,8 @@ export function migrationSetup(context: vscode.ExtensionContext)
 		setUpProjectCurrentDeviceCommand,
 		clearAllDisposal,
 		exportMigrationDisposal,
-		ignoreMigrationIncompatDisposal
+		ignoreMigrationIncompatDisposal,
+		ignoreMigrationFolderIncompatDisposal
 	);
 
 }
@@ -288,6 +329,12 @@ export async function migrationSetupProjectMigrationSettings(context: vscode.Ext
 					</fieldset>
 				</div>
 			</div>
+			</br>
+			<fieldset class="full-width">  
+				<legend>Migration Check Folders and Files Exception (the following folders and files will be ignored - Seperate each with ";")</legend> 
+				<textarea id="migrationCheckFolderExceptions" rows="5"></textarea>
+			</fieldset>
+			</br>
 			</br>
 			<fieldset class="full-width">  
 				<legend>Migration Check Exceptions (the following symbols will be ignored)</legend> 
@@ -457,8 +504,9 @@ async function migrationEnableContininuousMigrationCheck(context: vscode.Extensi
     );
 }
 
-export async function migrationRunMigrationCheckOnProject(context: vscode.ExtensionContext, projectName?:string)
+export async function migrationRunMigrationCheckOnProject(context: vscode.ExtensionContext, projectName?:string, progress?: vscode.Progress<{ message?: string; increment?: number }>, token?: vscode.CancellationToken)
 {
+	outputChannel.appendLine("Starting migrationRunMigrationCheckOnProject...");
 	var selectedProject: string | undefined;
 
 	if (projectName)
@@ -469,22 +517,76 @@ export async function migrationRunMigrationCheckOnProject(context: vscode.Extens
 	{
 		selectedProject = await project.selectProject();
 	}
+
 	if (selectedProject)
 	{
-		var projectInfo = project.allProjectInfos.filter(projectInfo => projectInfo.name === selectedProject)[0];
+        var projectInfo = project.allProjectInfos.filter(projectInfo => projectInfo.name === selectedProject)[0];
+
+		// Log the entire projectInfo object
+		//outputChannel.appendLine("Project Info: " + JSON.stringify(projectInfo));
+
 		var currentDevice = projectInfo.migrationState.currentDevice;
 		var migrationDevices = projectInfo.migrationState.migrationDevices;
-		var projectCCodeUris = await utils.getFileTypesInFolder(projectInfo.uri, [".c", ".h"]);
+        var projectUri = projectInfo.uri; 
+        const projectFsPath = projectUri.fsPath || projectUri.path;
+		var projectFsPathUri = vscode.Uri.file(projectFsPath);
+		var projectCCodeUris = await utils.getFileTypesInFolder(projectFsPathUri, [".c", ".h"]);	
+		var projectCCodeUrisIgnored = await utils.getIgnoredProjectCCodeUris(projectFsPath, projectInfo.migrationState.migrationCheckFolderExceptions || []);
 		
 		migrationCodeActions = [];
 		migrationCodeLenses = [];
 		migrationDiagnosticsCollection.clear();
-		for (var ccodeUri of projectCCodeUris)
-		{
-			await migrationRunMigrationCheckOnUri(context, ccodeUri, currentDevice, migrationDevices);
-		}
-	}
 
+		// If there are files to process, report progress
+		if (progress) {
+			progress.report({ increment: 0, message: "Starting migration check..." });
+		}
+
+		const totalFilesafterignoring = (projectCCodeUris.length - projectCCodeUrisIgnored.length); 
+		outputChannel.appendLine("Total Project Files :"+ projectCCodeUris.length);
+		outputChannel.appendLine("Total Project Files to Migrate:"+ totalFilesafterignoring);
+
+		if(totalFilesafterignoring < 0){
+			vscode.window.showErrorMessage("Error: " + projectName + " - Wrong info on Migration Check Folders and Files Exception");
+			return;
+		}
+
+		let MigrationFilesIndex = 0;
+		for (let projectCCodeUrisIndex = 0; projectCCodeUrisIndex < projectCCodeUris.length; projectCCodeUrisIndex++) {
+			if (token?.isCancellationRequested) {
+				outputChannel.appendLine("Migration check was cancelled.");
+				vscode.window.showInformationMessage("Migration check cancelled on " + projectName + " project");
+                return; 
+            }
+			var ccodeUri = projectCCodeUris[projectCCodeUrisIndex]; 
+			if(!(projectCCodeUrisIgnored.map(uri => uri.toString()).includes(ccodeUri.toString()))){
+				try {
+					outputChannel.appendLine(`Processing file: ${ccodeUri.fsPath}`);
+					await migrationRunMigrationCheckOnUri(context, ccodeUri, currentDevice, migrationDevices);
+					outputChannel.appendLine(`Migration Time taken: ${LastMigrationCheckTimestampPerURI[ccodeUri.fsPath] || "N/A"} seconds`);
+					const increment = Math.round(((1) / totalFilesafterignoring) * 100);
+					const incrementStatus = Math.round(((MigrationFilesIndex + 1) / totalFilesafterignoring) * 100);
+					if (progress) {
+						progress.report({ increment: increment, message: `Processing(${incrementStatus}%)  ${ccodeUri.fsPath}` });
+					}
+				} 
+				catch (error) {
+				}
+				MigrationFilesIndex++;
+			}
+		}
+		outputChannel.appendLine(`Migration check completed on ${projectName}`);
+
+		// Final progress report
+		if (progress) 
+			{
+				progress.report({ increment: 100, message: "Migration check completed." });
+				vscode.window.showInformationMessage("Migration check completed on " + projectName + " project");
+			}
+	}
+	else {
+    }
+	outputChannel.show();
 }
 
 
@@ -501,6 +603,7 @@ export async function getMigrationJSON(context: vscode.ExtensionContext, current
 
 export async function getMigrationResolutionJSON(context: vscode.ExtensionContext, currentDevice: string, migrationDevice:  string)
 {
+
 	var jsonMigrationResolutionDataName = currentDevice.toLowerCase() + "_" + migrationDevice.toLocaleLowerCase() + "_register_migration.json";
 	var jsonMigrationResolutionData = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", jsonMigrationResolutionDataName));
 	const jsonMigrationResolutionDataContent = Buffer.from(jsonMigrationResolutionData).toString('utf8');
@@ -519,9 +622,30 @@ export async function getMigrationDriverlibResolutionJSON(context: vscode.Extens
 	return jsonMigrationDriverlibResolution;
 }
 
+function migrationFindAllLineNumbersWithCodeChange(documentText: string, allCodesSet: Set<string>): number[] {
+
+	allCodesSet.add('_DEVICE_MIGRATION_');
+	const allCodesSetArray = Array.from(allCodesSet).map(code => code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+	const regexPattern = `\\b(${allCodesSetArray.join('|')})\\b`;
+	const regex = new RegExp(`.*?(${regexPattern}).*`, 'gm'); 
+	const relevantLineNumbers: number[] = [];
+	let match;
+
+	while ((match = regex.exec(documentText)) !== null) {
+    	const lineNumber= documentText.substr(0, match.index).split('\n').length; // Calculate line number
+		if (!relevantLineNumbers.includes(lineNumber)) {
+			relevantLineNumbers.push(lineNumber);
+		}
+	}
+
+	return relevantLineNumbers.length > 0 ? relevantLineNumbers.map(lineNumber => lineNumber - 1) : [-1];
+
+}
 
 export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionContext, uri: vscode.Uri, currentDevice: string, migrationDevices: string[])
 {
+	const start_time = new Date();
+	console.time("MCURI " + path.basename(uri.fsPath));
 	var projectInfo = project.projectGetUriProjectInfo(uri);
 	if (currentDevice && migrationDevices && (migrationDevices.length > 0))
 	{
@@ -535,6 +659,7 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 			migrationDriverlibResolutionData : MigrationDriverlibResolutionData
 		}[] = [];
 
+		console.time("MCURI JSON " + path.basename(uri.fsPath));
 		for (let migrationDevice of migrationDevices)
 		{
 			var jsonMigration = await getMigrationJSON(context, currentDevice, migrationDevice);
@@ -545,6 +670,7 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 				migrationDriverlibResolutionData:jsonDriverlibResolutionMigration
 			});
 		}
+		console.timeEnd("MCURI JSON " + path.basename(uri.fsPath));
 
 		var currentAndMigrationDeviceList = [currentDevice].concat(migrationDevices);
 
@@ -557,350 +683,391 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 		var currnetContext : preprocessor.PreprocessorContext|undefined = topContext;
 		let contextToolTip = "Detected by the C2000 Migration tool - Do NOT modify the format\nNo parenthesis or inversion (!) allowed";
 		var document = await vscode.workspace.openTextDocument(uri);
+		let documentText = document.getText();
 		
-		for (let lineNumber = 0; lineNumber < document.lineCount; lineNumber++)
+		
+		console.time("MCURI LINEBYLINE " + path.basename(uri.fsPath));
+		for (var deviceMigrationData of devicesMigrationData) 
 		{
-			let line = document.lineAt(lineNumber);
-			let lineText = line.text;
-			let lineEnumChangeCount = 0;
-			let lineAllEnumChangeQuickFixMessage;
-			const All_FIX_THRESHOLD = 1;
-
-			//Line has multiple code change (codeChange1, codeChange2, codeChange3) with fixes (fix1, fix2, fix3)
-			//Let lineText1 will be line with fix1 replaced for codechnage1 in line
-			//lineText2 will be fix2 replaced for codechange2 in lineText1
-
-			// Array to store code for multiple fixes in a line 
-			// codeForLineWithMultiFix[3] = {codeChange1,codeChange2,codeChange3}
-			let codeForLineWithMultiFix: string[] = []; 
-
-			// Array to store fix for multiple fixes in a line
-			//fixForLineWithMultiFix[3] = {fix1, fix2, fix3}
-			let fixForLineWithMultiFix: string[] = []; 
-
-			// Array to store line with each fix appended
-			//lineWithChangesApplied[3] = {line, lineText1, lineText2}
-			let lineWithChangesApplied: string[] = []; 
-
-			let diagnosticsForThisLine: vscode.Diagnostic[] = [];
-			let diagnosticsEnumsOnlyForThisLine: vscode.Diagnostic[] = [];
-			let lastMigrationDevice: string = "";
-
-			let leadingSpaces = countLeadingSpaces(lineText); // leading spaces count in a line
-			let leadingSpacesString = ' '.repeat(leadingSpaces); 
-			let trimmedLineText = lineText.trimStart();  // line without leading spaces
-
-			if (currnetContext)
+			let allRemoved = deviceMigrationData.migrationData.removed;
+			let allChanged = deviceMigrationData.migrationData.changed;
+			let allRemovedDriverlibResolution = deviceMigrationData.migrationDriverlibResolutionData.removed;
+			let allChangedDriverlibResolution = deviceMigrationData.migrationDriverlibResolutionData.changed;
+			let allCodesSet = new Set([
+				...allRemoved.map(removedChanged => removedChanged.code),
+				...allChanged.map(removedChanged => removedChanged.code),
+				...allRemovedDriverlibResolution.map(removedChangedResolution => removedChangedResolution.code),
+				...allChangedDriverlibResolution.map(removedChangedResolution => removedChangedResolution.code)
+			]);
+		
+			let lineNumbersWithCodeChange =	migrationFindAllLineNumbersWithCodeChange(documentText, allCodesSet);
+			for(let lineNumber of lineNumbersWithCodeChange)
 			{
-				if (lineText.includes("#if") && lineText.includes("//_DEVICE_MIGRATION_")){
-					let ifContent = lineText.replace("#if", "").replace(/\/\/_DEVICE_MIGRATION_.*/, "").trim();
-					let ifContentNoWS = ifContent.replace(/\s/g,'');
-					let deviceList = ifContentNoWS.split("||");
-					deviceList = deviceList.filter(item => currentAndMigrationDeviceList.includes(item));
-
-					let newContext : preprocessor.PreprocessorContext = {
-						activeContext: deviceList,
-						inverseContext: currentAndMigrationDeviceList.filter(item => !(deviceList.includes(item))),
-						parentContext: currnetContext
-					};
-					currnetContext = newContext;
-					
-					let lens = new vscode.CodeLens(
-						new vscode.Range(
-							new vscode.Position(lineNumber, 0), 
-							new vscode.Position(lineNumber, 0)), {
-						title: "Start of device specific migration code - " + currnetContext.activeContext.join("/"),
-						tooltip: contextToolTip,
-						command: ""
-					});
-					migrationCodeLenses.push({
-						uri: uri,
-						codeLens: lens
-					});
-
-					// if (currnetContext)
-					// {
-					// 	console.log("After line " + lineNumber + " wraps " + getCombinedParentContext(currnetContext));
-					// }
-				}
-				if (lineText.includes("#elif") && lineText.includes("//_DEVICE_MIGRATION_")){
-					let ifContent = lineText.replace("#elif", "").replace(/\/\/_DEVICE_MIGRATION_.*/, "").trim();
-					let ifContentNoWS = ifContent.replace(/\s/g,'');
-					let deviceList = ifContentNoWS.split("||");
-					deviceList = deviceList.filter(item => currentAndMigrationDeviceList.includes(item));
-
-					currnetContext.inverseContext = currnetContext.inverseContext.filter(item => !(deviceList.includes(item)));
-					currnetContext.activeContext = deviceList;
-
-					let lens = new vscode.CodeLens(
-						new vscode.Range(
-							new vscode.Position(lineNumber, 0), 
-							new vscode.Position(lineNumber, 0)), {
-						title: "Change of device specific migration code - " + currnetContext.activeContext.join("/"),
-						tooltip: contextToolTip,
-						command: ""
-					});
-					migrationCodeLenses.push({
-						uri: uri,
-						codeLens:lens
-					});
-
-					// if (currnetContext)
-					// {
-					// 	console.log("After line " + lineNumber + " wraps " + getCombinedParentContext(currnetContext));
-					// }
-				}
-				if (lineText.includes("#else")  && lineText.includes("//_DEVICE_MIGRATION_"))
-				{
-					currnetContext.activeContext = currnetContext.inverseContext;
-					currnetContext.inverseContext = [];
-
-					let lens = new vscode.CodeLens(
-						new vscode.Range(
-							new vscode.Position(lineNumber, 0), 
-							new vscode.Position(lineNumber, 0)), {
-						title: "Change of device specific migration code - " + currnetContext.activeContext.join("/"),
-						tooltip: contextToolTip,
-						command: ""
-					});
-					migrationCodeLenses.push({
-						uri: uri,
-						codeLens:lens
-					});
-					
-					// if (currnetContext)
-					// {
-					// 	console.log("After line " + lineNumber + " wraps " + getCombinedParentContext(currnetContext));
-					// }
-				}
-				if (lineText.includes("#endif") && lineText.includes("//_DEVICE_MIGRATION_"))
-				{
-					currnetContext = currnetContext.parentContext;
-
-					let lens = new vscode.CodeLens(
-						new vscode.Range(
-							new vscode.Position(lineNumber, 0), 
-							new vscode.Position(lineNumber, 0)), {
-						title: "End of device specific migration code - " + currnetContext?.activeContext.join("/"),
-						tooltip: contextToolTip,
-						command: ""
-					});
-					migrationCodeLenses.push({
-						uri: uri,
-						codeLens:lens
-					});
-
-					// if (currnetContext)
-					// {
-					// 	console.log("After line " + lineNumber + " wraps " + getCombinedParentContext(currnetContext));
-					// }
-				}
-			}
-
-			for (var deviceMigrationData of devicesMigrationData)
-			{
-				let allRemoved = deviceMigrationData.migrationData.removed;
-				let allChanged = deviceMigrationData.migrationData.changed;
-				let allRemovedDriverlibResolution = deviceMigrationData.migrationDriverlibResolutionData.removed;
-				let allChangedDriverlibResolution = deviceMigrationData.migrationDriverlibResolutionData.changed;
-				
-				let severity = vscode.DiagnosticSeverity.Error;
-				for (var allRemovedChanged of [allRemoved, allChanged])
-				{
-					for (let removedChanged of allRemovedChanged)
+				let line = document.lineAt(lineNumber);
+				let lineText = line.text;
+				if (currnetContext)
 					{
-						let code = removedChanged.code;
-						let msg = removedChanged.msg;
-						let type = removedChanged.type;
-						let category = removedChanged.category;
+						if (lineText.includes("#if") && lineText.includes("//_DEVICE_MIGRATION_")){
+							let ifContent = lineText.replace("#if", "").replace(/\/\/_DEVICE_MIGRATION_.*/, "").trim();
+							let ifContentNoWS = ifContent.replace(/\s/g,'');
+							let deviceList = ifContentNoWS.split("||");
+							deviceList = deviceList.filter(item => currentAndMigrationDeviceList.includes(item));
+		
+							let newContext : preprocessor.PreprocessorContext = {
+								activeContext: deviceList,
+								inverseContext: currentAndMigrationDeviceList.filter(item => !(deviceList.includes(item))),
+								parentContext: currnetContext
+							};
+							currnetContext = newContext;
+							
+							let lens = new vscode.CodeLens(
+								new vscode.Range(
+									new vscode.Position(lineNumber, 0), 
+									new vscode.Position(lineNumber, 0)), {
+								title: "Start of device specific migration code - " + currnetContext.activeContext.join("/"),
+								tooltip: contextToolTip,
+								command: ""
+							});
+							migrationCodeLenses.push({
+								uri: uri,
+								codeLens: lens
+							});
+		
+							// if (currnetContext)
+							// {
+							// 	console.log("After line " + lineNumber + " wraps " + getCombinedParentContext(currnetContext));
+							// }
+						}
+						if (lineText.includes("#elif") && lineText.includes("//_DEVICE_MIGRATION_")){
+							let ifContent = lineText.replace("#elif", "").replace(/\/\/_DEVICE_MIGRATION_.*/, "").trim();
+							let ifContentNoWS = ifContent.replace(/\s/g,'');
+							let deviceList = ifContentNoWS.split("||");
+							deviceList = deviceList.filter(item => currentAndMigrationDeviceList.includes(item));
+		
+							currnetContext.inverseContext = currnetContext.inverseContext.filter(item => !(deviceList.includes(item)));
+							currnetContext.activeContext = deviceList;
+		
+							let lens = new vscode.CodeLens(
+								new vscode.Range(
+									new vscode.Position(lineNumber, 0), 
+									new vscode.Position(lineNumber, 0)), {
+								title: "Change of device specific migration code - " + currnetContext.activeContext.join("/"),
+								tooltip: contextToolTip,
+								command: ""
+							});
+							migrationCodeLenses.push({
+								uri: uri,
+								codeLens:lens
+							});
+		
+							// if (currnetContext)
+							// {
+							// 	console.log("After line " + lineNumber + " wraps " + getCombinedParentContext(currnetContext));
+							// }
+						}
+						if (lineText.includes("#else")  && lineText.includes("//_DEVICE_MIGRATION_"))
+						{
+							currnetContext.activeContext = currnetContext.inverseContext;
+							currnetContext.inverseContext = [];
+		
+							let lens = new vscode.CodeLens(
+								new vscode.Range(
+									new vscode.Position(lineNumber, 0), 
+									new vscode.Position(lineNumber, 0)), {
+								title: "Change of device specific migration code - " + currnetContext.activeContext.join("/"),
+								tooltip: contextToolTip,
+								command: ""
+							});
+							migrationCodeLenses.push({
+								uri: uri,
+								codeLens:lens
+							});
+							
+							// if (currnetContext)
+							// {
+							// 	console.log("After line " + lineNumber + " wraps " + getCombinedParentContext(currnetContext));
+							// }
+						}
+						if (lineText.includes("#endif") && lineText.includes("//_DEVICE_MIGRATION_"))
+						{
+							currnetContext = currnetContext.parentContext;
+		
+							let lens = new vscode.CodeLens(
+								new vscode.Range(
+									new vscode.Position(lineNumber, 0), 
+									new vscode.Position(lineNumber, 0)), {
+								title: "End of device specific migration code - " + currnetContext?.activeContext.join("/"),
+								tooltip: contextToolTip,
+								command: ""
+							});
+							migrationCodeLenses.push({
+								uri: uri,
+								codeLens:lens
+							});
+		
+							// if (currnetContext)
+							// {
+							// 	console.log("After line " + lineNumber + " wraps " + getCombinedParentContext(currnetContext));
+							// }
+						}
+					}
+				if (Array.from(allCodesSet).some(code => lineText.includes(code))) 
+				{
+		
+					let leadingSpaces = countLeadingSpaces(lineText); // leading spaces count in a line
+					let leadingSpacesString = ' '.repeat(leadingSpaces); 
+					let trimmedLineText = lineText.trimStart();  // line without leading spaces
+		
+					let lineEnumChangeCount = 0;
+					let lineAllEnumChangeQuickFixMessage;
+		
+					const All_FIX_THRESHOLD = 1;
+		
+					//Line has multiple code change (codeChange1, codeChange2, codeChange3) with fixes (fix1, fix2, fix3)
+					//Let lineText1 will be line with fix1 replaced for codechnage1 in line
+					//lineText2 will be fix2 replaced for codechange2 in lineText1
+				
+					// Array to store code for multiple fixes in a line 
+					// codeForLineWithMultiFix[3] = {codeChange1,codeChange2,codeChange3}
+					let codeForLineWithMultiFix: string[] = []; 
+				
+					// Array to store fix for multiple fixes in a line
+					//fixForLineWithMultiFix[3] = {fix1, fix2, fix3}
+					let fixForLineWithMultiFix: string[] = []; 
+				
+					// Array to store line with each fix appended
+					//lineWithChangesApplied[3] = {line, lineText1, lineText2}
+					let lineWithChangesApplied: string[] = []; 
+					let diagnosticsForThisLine: vscode.Diagnostic[] = [];
+					let diagnosticsEnumsOnlyForThisLine: vscode.Diagnostic[] = [];
+					
+					let severity = vscode.DiagnosticSeverity.Error;
+					const processedCodes = new Set();
 
-						let fix:string = "Not Applicable";
-						let compatible;
-						let driverlibChange = 0;
-						let alternateCodeMessage = "//Enter alternate code";
+						for (var allRemovedChangedWithDriverlibResolution of [allRemoved, allChanged, allChangedDriverlibResolution, allChangedDriverlibResolution])
+						{
+							for (let removedChanged of allRemovedChangedWithDriverlibResolution)
+							{
+								let code = removedChanged.code;
 
-						if(await utils.isDeviceInMigrationResolutionList(deviceMigrationData.migrationDevice)){
-							for (var allRemovedChangedDriverlibResolution of [allRemovedDriverlibResolution, allChangedDriverlibResolution])
-								{
-									for (let removedChangedDriverlibResolution of allRemovedChangedDriverlibResolution)
-									{
-										let code_driverlib = removedChangedDriverlibResolution.code; 
-										if (code == code_driverlib){
-											msg = removedChangedDriverlibResolution.fixMsg;
-											fix = removedChangedDriverlibResolution.fix;
-											compatible = removedChangedDriverlibResolution.compatible;
-											driverlibChange = 1;
+								if (processedCodes.has(code)){
+									continue;
+								}
+								let msg = "";
+								let type = removedChanged.type;
+								let category = "";
+									
+								let fix:string = "Not Applicable";
+								let compatible;
+								let driverlibChange = 0;
+								let alternateCodeMessage = "//Enter alternate code";
+		
+								if(utils.isDeviceInMigrationResolutionList(deviceMigrationData.migrationDevice)){
+									for (var allRemovedChangedDriverlibResolution of [allRemovedDriverlibResolution, allChangedDriverlibResolution]){
+										for (let removedChangedDriverlibResolution of allRemovedChangedDriverlibResolution){
+											let codeDriverlib = removedChangedDriverlibResolution.code; 
+											if (code === codeDriverlib){
+												msg = removedChangedDriverlibResolution.fixMsg;
+												fix = removedChangedDriverlibResolution.fix;
+												compatible = removedChangedDriverlibResolution.compatible;
+												driverlibChange = 1;
+											}
 										}
 									}
 								}
-						}
-
-						if (type === "reg")
-						{
-							code = getRegisterMigrationDriverlibCode(removedChanged);
-						}
-
-						let bookmark = "";
-						if (type === "function")
-						{
-							bookmark = code;
-						}
-						else if (type === "enum")
-						{
-							bookmark = category + "_Enums";
-						}
-						else if (type === "reg")
-						{
-							bookmark = category + "_Registers";
-						}
-
-
-						if (lineText.includes(code) && (!projectInfo || !projectInfo.migrationState.migrationCheckExceptions?.includes(code)) &&
-							(!currnetContext || preprocessor.getCombinedParentContext(currnetContext).includes(deviceMigrationData.migrationDevice)))
-						{
-							let codeDetectedIndex = lineText.indexOf(code);
-							let startPos: vscode.Position = new vscode.Position(lineNumber, codeDetectedIndex);
-							let wordRange = document.getWordRangeAtPosition(startPos);
-
-							if (driverlibChange == All_FIX_THRESHOLD){
-								if ((type === "enum")) {
-									alternateCodeMessage = "// " + "Suggested replacement: " + trimmedLineText.replace(code,fix);
-									lineEnumChangeCount++;
-									if (lineEnumChangeCount > All_FIX_THRESHOLD) { 
-										codeForLineWithMultiFix[lineEnumChangeCount - 1] = code; 
-										fixForLineWithMultiFix[lineEnumChangeCount - 1] = fix;
-										lineWithChangesApplied[0] = trimmedLineText.replace(codeForLineWithMultiFix[0],fixForLineWithMultiFix[0]);
-										lastMigrationDevice = deviceMigrationData.migrationDevice;
-									}
-									else {
-										codeForLineWithMultiFix[0] = code;
-										fixForLineWithMultiFix[0] = fix;
+								if (!driverlibChange){
+									for (var allRemovedChanged of [allRemoved, allChanged]) {
+										for (let removedChangedWithoutDriverlibResolution of allRemovedChanged){
+											if (code === removedChangedWithoutDriverlibResolution.code){
+												msg = removedChangedWithoutDriverlibResolution.msg;
+												category = removedChangedWithoutDriverlibResolution.category;
+											}
+										}
 									}
 								}
-								else if (type === "function")
+
+								if (type === "reg" && removedChanged) {
+									const isMigrationElement = (item: any): item is MigrationElement => {
+									return 'category' in item && 'msg' in item;
+									};
+									if (isMigrationElement(removedChanged)){
+										const isRemoved = allRemoved.some(isMigrationElement) && allRemoved.includes(removedChanged);
+										const isChanged = allChanged.some(isMigrationElement) && allChanged.includes(removedChanged);
+										if (isRemoved || isChanged){
+   											 code = getRegisterMigrationDriverlibCode(removedChanged as MigrationElement);
+										}
+									}
+								}
+		
+								let bookmark = "";
+								if (type === "function")
 								{
-									if (compatible){
-										alternateCodeMessage = "// " + "Suggested replacement: " + trimmedLineText;
-									}
-									else { 
-										alternateCodeMessage = "// " + "Suggested replacement: " + fix;
-									}
+									bookmark = code;
 								}
-							}
-
-							if (!wordRange)
-							{
-								wordRange = line.range;
-							}
-
-							let wordText = document.getText(wordRange);
-							
-							//
-							// Ensure it is not a situation where forexample ABC_OPT1 and ABC_OPT1_MORE
-							// both esists in the code and we want to make sure we dont get an extra "code" hit with
-							// a search of ADC_OPT1 TWICE.
-							//
-							if ((wordText === code) || (type === "reg")) {
-
-								let diagnostic = new vscode.Diagnostic(wordRange, type + " " + code + ": " + msg,
-									severity);
-								diagnostic.code = C2000_MIGRATION_INCOMPAT_CODE;
-								diagnostic.source = C2000_MIGRATION_INCOMPAT_SOURCE;
-								diagnosticsForThisLine.push(diagnostic);
-
-								if (type === "enum"){
-									diagnosticsEnumsOnlyForThisLine.push(diagnostic);
+								else if (type === "enum")
+								{
+									bookmark = category + "_Enums";
 								}
-
-								let codeActionReviewCollateral = new vscode.CodeAction("Review migration collateral for " + currentDevice + " to " + deviceMigrationData.migrationDevice, vscode.CodeActionKind.QuickFix);
-								codeActionReviewCollateral.command = { command: info.C2000_IDEA_CMD_OPEN_COLLATERAL, title: 'C2000: Open Collateral', arguments:[
-									{
-										link: C2000_AUTO_MIGRATION_GUIDE_LINK + "diff_reports/" + C2000_MIGRATION_C2000WARE_VERSION + "_" + 
-											currentDevice.toLowerCase() + 
-											"_vs_" + C2000_MIGRATION_C2000WARE_VERSION + "_" + 
-											deviceMigrationData.migrationDevice.toLowerCase() + 
-											"_driverlib.html#" + bookmark,
-										html:true
+								else if (type === "reg")
+								{
+									bookmark = category + "_Registers";
+								}
+		
+		
+								if (lineText.includes(code) && (!projectInfo || !projectInfo.migrationState.migrationCheckExceptions?.includes(code)) &&
+									(!currnetContext || preprocessor.getCombinedParentContext(currnetContext).includes(deviceMigrationData.migrationDevice)))
+								{
+									let codeDetectedIndex = lineText.indexOf(code);
+									let startPos: vscode.Position = new vscode.Position(lineNumber, codeDetectedIndex);
+									let wordRange = document.getWordRangeAtPosition(startPos);
+		
+									if (driverlibChange === All_FIX_THRESHOLD){
+										if ((type === "enum")) {
+											alternateCodeMessage = "// " + "Suggested replacement: " + trimmedLineText.replace(code,fix);
+											lineEnumChangeCount++;
+											if (lineEnumChangeCount > All_FIX_THRESHOLD) { 
+												codeForLineWithMultiFix[lineEnumChangeCount - 1] = code; 
+												fixForLineWithMultiFix[lineEnumChangeCount - 1] = fix;
+												lineWithChangesApplied[0] = trimmedLineText.replace(codeForLineWithMultiFix[0],fixForLineWithMultiFix[0]);
+											}
+											else {
+												codeForLineWithMultiFix[0] = code;
+												fixForLineWithMultiFix[0] = fix;
+											}
+										}
+										else if (type === "function")
+										{
+											if (compatible){
+												alternateCodeMessage = "// " + "Suggested replacement: " + trimmedLineText;
+											}
+											else { 
+												alternateCodeMessage = "// " + "Suggested replacement: " + fix;
+											}
+										}
 									}
-								]};
-								codeActionReviewCollateral.diagnostics = [diagnostic];
-								codeActionReviewCollateral.isPreferred = false;
+		
+									if (!wordRange)
+									{
+										wordRange = line.range;
+									}
+		
+									let wordText = document.getText(wordRange);
 								
-								let codeActionIgnoreIncompatibility = new vscode.CodeAction("Ignore " + code + " related errors", vscode.CodeActionKind.QuickFix);
-								codeActionIgnoreIncompatibility.command = { command: info.C2000_IDEA_CMD_IGNORE_MIGRATION_INCOMPAT, title: 'C2000: Ignore Migration Incompatibility', arguments:[
-									{
-										code: code,
-										projectInfo: projectInfo
-									}
-								]};
-								codeActionIgnoreIncompatibility.diagnostics = [diagnostic];
-								codeActionIgnoreIncompatibility.isPreferred = false;
+									//
+									// Ensure it is not a situation where forexample ABC_OPT1 and ABC_OPT1_MORE									
+									// both esists in the code and we want to make sure we dont get an extra "code" hit with
+									// a search of ADC_OPT1 TWICE.
+									//
+									if (((wordText === code) || (type === "reg")) && (msg !== "")) {
+											
+										let diagnostic = new vscode.Diagnostic(wordRange, type + " " + code + ": " + msg,
+												severity);
+										diagnostic.code = C2000_MIGRATION_INCOMPAT_CODE;
+										diagnostic.source = C2000_MIGRATION_INCOMPAT_SOURCE;
+										diagnosticsForThisLine.push(diagnostic);
+		
+										if (type === "enum"){
+											diagnosticsEnumsOnlyForThisLine.push(diagnostic);
+										}
+		
+										let codeActionReviewCollateral = new vscode.CodeAction("Review migration collateral for " + currentDevice + " to " + deviceMigrationData.migrationDevice, vscode.CodeActionKind.QuickFix);
+										codeActionReviewCollateral.command = { command: info.C2000_IDEA_CMD_OPEN_COLLATERAL, title: 'C2000: Open Collateral', arguments:[
+											{
+												link: C2000_AUTO_MIGRATION_GUIDE_LINK + "diff_reports/" + C2000_MIGRATION_C2000WARE_VERSION + "_" + 
+													currentDevice.toLowerCase() + 
+													"_vs_" + C2000_MIGRATION_C2000WARE_VERSION + "_" + 
+													deviceMigrationData.migrationDevice.toLowerCase() + 
+													"_driverlib.html#" + bookmark,
+												html:true
+											}
+										]};
+										codeActionReviewCollateral.diagnostics = [diagnostic];
+										codeActionReviewCollateral.isPreferred = false;
+									
+										let codeActionIgnoreIncompatibility = new vscode.CodeAction("Ignore " + code + " related errors", vscode.CodeActionKind.QuickFix);
+										codeActionIgnoreIncompatibility.command = { command: info.C2000_IDEA_CMD_IGNORE_MIGRATION_INCOMPAT, title: 'C2000: Ignore Migration Incompatibility', arguments:[
+											{
+												code: code,
+												projectInfo: projectInfo
+											}
+										]};
+										codeActionIgnoreIncompatibility.diagnostics = [diagnostic];
+										codeActionIgnoreIncompatibility.isPreferred = false;
 
-								let codeActionWrapInIfDef = new vscode.CodeAction("Wrap in device specific #IFDEF for " + currentDevice + " and " + deviceMigrationData.migrationDevice, vscode.CodeActionKind.QuickFix);
-								codeActionWrapInIfDef.edit = new vscode.WorkspaceEdit();
-								codeActionWrapInIfDef.edit.replace(uri, 
-									new vscode.Range(new vscode.Position(lineNumber, 0), new vscode.Position(lineNumber, lineText.length)), 
-									"#if " + currentDevice + " //_DEVICE_MIGRATION_\n" + lineText + "\n" +
-									"#elif " + deviceMigrationData.migrationDevice + " //_DEVICE_MIGRATION_\n" + leadingSpacesString + alternateCodeMessage + "\n" +
-									"#endif //_DEVICE_MIGRATION_" + "\n");
-								codeActionWrapInIfDef.diagnostics = [diagnostic];
-								codeActionWrapInIfDef.isPreferred = false;
-								
-								migrationCodeActions.push(
-									{
-										uri: uri,
-										codeAction: codeActionReviewCollateral, 
-									},
-									{
-										uri: uri,
-										codeAction: codeActionWrapInIfDef
-									},
-									{
-										uri: uri,
-										codeAction: codeActionIgnoreIncompatibility
+										let codeActionWrapInIfDef = new vscode.CodeAction("Wrap in device specific #IFDEF for " + currentDevice + " and " + deviceMigrationData.migrationDevice, vscode.CodeActionKind.QuickFix);
+										codeActionWrapInIfDef.edit = new vscode.WorkspaceEdit();
+										codeActionWrapInIfDef.edit.replace(uri, 
+											new vscode.Range(new vscode.Position(lineNumber, 0), new vscode.Position(lineNumber, lineText.length)), 
+											"#if " + currentDevice + " //_DEVICE_MIGRATION_\n" + lineText + "\n" +
+											"#elif " + deviceMigrationData.migrationDevice + " //_DEVICE_MIGRATION_\n" + leadingSpacesString + alternateCodeMessage + "\n" +
+											"#endif //_DEVICE_MIGRATION_" + "\n");
+										codeActionWrapInIfDef.diagnostics = [diagnostic];
+										codeActionWrapInIfDef.isPreferred = false;
+
+										migrationCodeActions.push(
+											{
+												uri: uri,
+												codeAction: codeActionReviewCollateral, 
+											},
+											{
+												uri: uri,
+												codeAction: codeActionWrapInIfDef
+											},
+											{
+												uri: uri,
+												codeAction: codeActionIgnoreIncompatibility
+											}
+										);
 									}
-								);
+								
+								}
+								processedCodes.add(code);
 							}
+							severity = vscode.DiagnosticSeverity.Warning;
 						}
-					}
-					severity = vscode.DiagnosticSeverity.Warning;
+						// Combined ENUM Fix
+						if ((lineEnumChangeCount > All_FIX_THRESHOLD) && deviceMigrationData.migrationDevice){
+							for(let i = 1; i < lineEnumChangeCount; i++){
+									lineWithChangesApplied[i] = lineWithChangesApplied[i-1].replace(codeForLineWithMultiFix[i],fixForLineWithMultiFix[i]);
+									lineAllEnumChangeQuickFixMessage = "// " + "Suggested replacement:" + lineWithChangesApplied[i];
+								}
+		
+							let codeActionWrapInIfDefcombined = new vscode.CodeAction("All Enum fixes Wrap in device specific #IFDEF for " + currentDevice + " and " + deviceMigrationData.migrationDevice , vscode.CodeActionKind.QuickFix);
+							codeActionWrapInIfDefcombined.edit = new vscode.WorkspaceEdit();
+							codeActionWrapInIfDefcombined.edit.replace(uri, 
+								new vscode.Range(new vscode.Position(lineNumber, 0), new vscode.Position(lineNumber, lineText.length)), 
+								"#if " + currentDevice + " //_DEVICE_MIGRATION_\n" + lineText + "\n" +
+								"#elif " + deviceMigrationData.migrationDevice + " //_DEVICE_MIGRATION_\n" + leadingSpacesString + lineAllEnumChangeQuickFixMessage + "\n" +
+								"#endif //_DEVICE_MIGRATION_" + "\n");
+							codeActionWrapInIfDefcombined.diagnostics = diagnosticsEnumsOnlyForThisLine;
+							codeActionWrapInIfDefcombined.isPreferred = false;
+		
+							migrationCodeActions.push(
+							{
+								uri: uri,
+								codeAction: codeActionWrapInIfDefcombined
+							}
+							);
+						}
+		
+							// Add all collected diagnostics and code actions for this line
+							migrationDiagnostics.push(...diagnosticsForThisLine);   
 				}
-			}
-			//
-			// Combined ENUM Fix
-			//
-			if ((lineEnumChangeCount > All_FIX_THRESHOLD) && lastMigrationDevice){
-				for(let i = 1; i < lineEnumChangeCount; i++){
-					lineWithChangesApplied[i] = lineWithChangesApplied[i-1].replace(codeForLineWithMultiFix[i],fixForLineWithMultiFix[i]);
-					lineAllEnumChangeQuickFixMessage = "// " + "Suggested replacement:" + lineWithChangesApplied[i];
-				}
-
-				let codeActionWrapInIfDefcombined = new vscode.CodeAction("All Enum fixes Wrap in device specific #IFDEF for " + currentDevice + " and " + lastMigrationDevice , vscode.CodeActionKind.QuickFix);
-				codeActionWrapInIfDefcombined.edit = new vscode.WorkspaceEdit();
-				codeActionWrapInIfDefcombined.edit.replace(uri, 
-					new vscode.Range(new vscode.Position(lineNumber, 0), new vscode.Position(lineNumber, lineText.length)), 
-					"#if " + currentDevice + " //_DEVICE_MIGRATION_\n" + lineText + "\n" +
-					"#elif " + lastMigrationDevice + " //_DEVICE_MIGRATION_\n" + leadingSpacesString + lineAllEnumChangeQuickFixMessage + "\n" +
-					"#endif //_DEVICE_MIGRATION_" + "\n");
-				codeActionWrapInIfDefcombined.diagnostics = diagnosticsEnumsOnlyForThisLine;
-				codeActionWrapInIfDefcombined.isPreferred = false;
-
-				migrationCodeActions.push(
-				{
-					uri: uri,
-					codeAction: codeActionWrapInIfDefcombined
-				}
-				);
-			}
-
-			// Add all collected diagnostics and code actions for this line
-			migrationDiagnostics.push(...diagnosticsForThisLine);
+		
+			} 
 		}
+		
+		console.timeEnd("MCURI LINEBYLINE " + path.basename(uri.fsPath));
+
 		migrationDiagnosticsCollection.set(uri, migrationDiagnostics);
 	}
+	console.timeEnd("MCURI " + path.basename(uri.fsPath));
+	const end_time = new Date();
+	const duration_time = (end_time.getTime() - start_time.getTime())/1000;
+	LastMigrationCheckTimestampPerURI[uri.fsPath] = duration_time;
 }
 
-export async function migrationRunMigrationCheckOnActiveTextEditor(context: vscode.ExtensionContext)
+export async function migrationRunMigrationCheckOnActiveTextEditor(context: vscode.ExtensionContext,  progress?: vscode.Progress<{ message?: string}>)
 {
 	if (vscode.window.activeTextEditor)
 	{
@@ -921,7 +1088,15 @@ export async function migrationRunMigrationCheckOnActiveTextEditor(context: vsco
 			migrationDevices = projectInfo.migrationState.migrationDevices;
 		}
 
+		if (progress) {
+			progress.report({message: `Processing  ${vscode.window.activeTextEditor.document.uri.fsPath}` });
+		}
 		await migrationRunMigrationCheckOnUri(context, vscode.window.activeTextEditor.document.uri, currentDevice, migrationDevices);
+		if (progress) {
+			progress.report({message: "Migration check completed" });
+			vscode.window.showInformationMessage("Migration check completed");
+		}
+
 		migrationCodelensProvider.codeLensesEventEmitter.fire();
 	}
 }
@@ -1008,14 +1183,23 @@ function exportMigrationDiagnostics()
 
 }
 
-function exportProjectMigrationDiagnostics(projectInfo: project.ProjectInfo)
+function exportProjectMigrationDiagnostics(projectInfo: project.ProjectInfo, LastMigrationCheckTimestampPerURI: { [uri: string]: number})
 {
 	let exportText = "";
+	var projectUri = projectInfo.uri;
+	const projectFsPath = projectUri.fsPath || projectUri.path;
 
 	exportText += "Migration Info\n";
 	exportText += "From: " + projectInfo.migrationState.currentDevice + "\n";
 	exportText += "To: " + projectInfo.migrationState.migrationDevices.join(", ") + "\n";
-	exportText += "Ignores the following migration incompatibilities: " + projectInfo.migrationState.migrationCheckExceptions?.join(", ") + "\n";
+	const ignoredSymbols = projectInfo.migrationState.migrationCheckExceptions;
+	const ignoredFolders = projectInfo.migrationState.migrationCheckFolderExceptions;
+	if(ignoredSymbols && ignoredSymbols.length > 0){
+		exportText += "Ignores the following migration incompatibilities: " + ignoredSymbols?.join(", ") + "\n";
+	}
+	if(ignoredFolders && ignoredFolders.length > 0){
+	exportText += "Ignores the following folders: " + ignoredFolders?.map(exceptionpath => projectFsPath + "/" + exceptionpath).join("; ") + "\n";
+	}
 
 	migrationDiagnosticsCollection.forEach((
 		uri: vscode.Uri, 
@@ -1024,22 +1208,30 @@ function exportProjectMigrationDiagnostics(projectInfo: project.ProjectInfo)
 			if (uri.path.includes(projectInfo.uri.path))
 			{
 				exportText += "File: " + uri.fsPath + "\n";
+				exportText += "Migration time taken: " + (LastMigrationCheckTimestampPerURI[uri.fsPath] || "N/A")+ "seconds\n";
 				for (let diagnostic of diagnostics){
-					exportText += vscode.DiagnosticSeverity[diagnostic.severity].toString() + " - " + diagnostic.message + "\n";
+					const { start } = diagnostic.range;
+					const line = start.line + 1;
+					const column = start.character + 1; 
+					exportText += vscode.DiagnosticSeverity[diagnostic.severity].toString() + " - " + diagnostic.message + "[Ln " + line + ", Col " + column +"]" +"\n";
 				}
 				exportText += "\n";
 			}
 	});
+
+	const filename = `${projectInfo.name}_migration_report.txt`; 
 
 	vscode.workspace.openTextDocument().then((textDoc: vscode.TextDocument) => {
 		vscode.window.showTextDocument(textDoc, 2, false).then(textEditor => {
 			textEditor.edit(edit => {
 				edit.insert(new vscode.Position(0, 0), exportText);
 			});
+		vscode.window.showInformationMessage(`Opened report: ${filename}`);
 		});
 	}, (error: any) => {
 
 	});
+
 
 }
 

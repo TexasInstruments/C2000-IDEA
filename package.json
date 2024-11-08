@@ -2,7 +2,7 @@
   "name": "c2000-idea",
   "displayName": "C2000 IDEA",
   "description": "C2000 Real-Time Controller IDE ASSIST",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
     "vscode": "^1.76.0"
   },
@@ -12,10 +12,19 @@
   },
   "icon": "resources/dark/c2000-idea-icon.png",
   "categories": [
-    "Programming Languages", "Snippets", "Linters"
+    "Programming Languages",
+    "Snippets",
+    "Linters"
   ],
   "keywords": [
-    "ti", "texas instruments", "c2000", "asm", "f28", "f29", "c28", "c29"
+    "ti",
+    "texas instruments",
+    "c2000",
+    "asm",
+    "f28",
+    "f29",
+    "c28",
+    "c29"
   ],
   "activationEvents": [
     "*"
@@ -152,7 +161,7 @@
       },
       {
         "command": "c2000-idea.runBitfieldRegisterToDriverlibMigration",
-        "title": "C2000: Run Bitfield Register to Driverlib Migration on Current File",
+        "title": "C2000: Run Bitfield Register to Driverlib Migration on Current File (BETA)",
         "icon": "$(compare-changes)"
       },
       {
@@ -643,6 +652,5 @@
     "vsce": "^2.15.0",
     "typescript": "^4.9.5"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

@@ -32,16 +32,17 @@ export const BITFIELD_DEVICE_LIST : string [] = [
 	"F2803x"
 ];
 
-export const BITFIELD_MIGRATION_FROM_DEVICE_LIST = [
-	"F2803x"
-];
+export const BITFIELD_MIGRATION_PAIRS : Record<string, string[]> = {
+	"F2803x" : ["F280013x"],
+	//"F2837xD" : ["F28P65x"]
+}
 
-export const BITFIELD_MIGRATION_TO_DEVICE_LIST = [
-	"F280013x"
-];
+export const BITFIELD_MIGRATION_RESOLUTIONS : Record<string, string[]> = {
+	"F2803x" : ["F280013x"]
+}
 
 export const NO_REGISTER_LINK_DEVICE_LIST = [
-	"F29H85x","F2803x"
+	"F2803x"
 ];
 
 export const MIGRATION_RESOLUTION_DEVICE_LIST : string [] = [

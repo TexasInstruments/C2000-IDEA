@@ -1,0 +1,1762 @@
+{
+    "adc": {
+        "ADCCTL2": [
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "7",
+                "reset value": "0"
+            }
+        ],
+        "ADCOFFTRIM": [
+            {
+                "bits": "11..8",
+                "reset value": "0"
+            }
+        ]
+    },
+    "can": {
+        "CAN_CTL": [
+            {
+                "bits": "24",
+                "reset value": "0"
+            },
+            {
+                "bits": "25",
+                "reset value": "0"
+            }
+        ]
+    },
+    "cla": {
+        "SOFTINTEN": [
+            {
+                "bits": "15..8",
+                "reset value": "0"
+            }
+        ],
+        "SOFTINTFRC": [
+            {
+                "bits": "15..8",
+                "reset value": "0"
+            }
+        ]
+    },
+    "clb": {
+        "CLB_COUNT_RESET": [
+            {
+                "bits": "31..15",
+                "reset value": "0"
+            }
+        ],
+        "CLB_COUNT_MODE_1": [
+            {
+                "bits": "31..15",
+                "reset value": "0"
+            }
+        ],
+        "CLB_COUNT_MODE_0": [
+            {
+                "bits": "31..15",
+                "reset value": "0"
+            }
+        ],
+        "CLB_COUNT_EVENT": [
+            {
+                "bits": "31..15",
+                "reset value": "0"
+            }
+        ],
+        "CLB_FSM_EXTRA_IN0": [
+            {
+                "bits": "31..15",
+                "reset value": "0"
+            }
+        ],
+        "CLB_FSM_EXTERNAL_IN0": [
+            {
+                "bits": "31..15",
+                "reset value": "0"
+            }
+        ],
+        "CLB_FSM_EXTERNAL_IN1": [
+            {
+                "bits": "31..15",
+                "reset value": "0"
+            }
+        ],
+        "CLB_FSM_EXTRA_IN1": [
+            {
+                "bits": "31..15",
+                "reset value": "0"
+            }
+        ],
+        "CLB_LUT4_IN0": [
+            {
+                "bits": "31..15",
+                "reset value": "0"
+            }
+        ],
+        "CLB_LUT4_IN1": [
+            {
+                "bits": "31..15",
+                "reset value": "0"
+            }
+        ],
+        "CLB_LUT4_IN2": [
+            {
+                "bits": "31..15",
+                "reset value": "0"
+            }
+        ],
+        "CLB_LUT4_IN3": [
+            {
+                "bits": "31..15",
+                "reset value": "0"
+            }
+        ],
+        "CLB_FSM_LUT_FN2": [
+            {
+                "bits": "31..16",
+                "reset value": "0"
+            }
+        ],
+        "CLB_LUT4_FN2": [
+            {
+                "bits": "31..16",
+                "reset value": "0"
+            }
+        ],
+        "CLB_OUTPUT_LUT_0": [
+            {
+                "bits": "31..23",
+                "reset value": "0"
+            }
+        ],
+        "CLB_OUTPUT_LUT_1": [
+            {
+                "bits": "31..23",
+                "reset value": "0"
+            }
+        ],
+        "CLB_OUTPUT_LUT_2": [
+            {
+                "bits": "31..23",
+                "reset value": "0"
+            }
+        ],
+        "CLB_OUTPUT_LUT_3": [
+            {
+                "bits": "31..23",
+                "reset value": "0"
+            }
+        ],
+        "CLB_OUTPUT_LUT_4": [
+            {
+                "bits": "31..23",
+                "reset value": "0"
+            }
+        ],
+        "CLB_OUTPUT_LUT_5": [
+            {
+                "bits": "31..23",
+                "reset value": "0"
+            }
+        ],
+        "CLB_OUTPUT_LUT_6": [
+            {
+                "bits": "31..23",
+                "reset value": "0"
+            }
+        ],
+        "CLB_OUTPUT_LUT_7": [
+            {
+                "bits": "31..23",
+                "reset value": "0"
+            }
+        ],
+        "CLB_DBG_OUT_2": [
+            {
+                "bits": "31..16",
+                "reset value": "0"
+            }
+        ]
+    },
+    "dac": {
+        "DACTRIM": [
+            {
+                "bits": "11..8",
+                "reset value": "0"
+            }
+        ]
+    },
+    "dcc": {
+        "DCCGCTRL": [
+            {
+                "bits": "31..16",
+                "reset value": "0"
+            }
+        ]
+    },
+    "dma": {
+        "CONTROL": [
+            {
+                "bits": "5",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            }
+        ]
+    },
+    "epwm": {
+        "TBCTL2": [
+            {
+                "bits": "5",
+                "reset value": "0"
+            }
+        ],
+        "HRCNFG": [
+            {
+                "bits": "15..14",
+                "reset value": "0x0"
+            }
+        ],
+        "HRPWR": [
+            {
+                "bits": "1..0",
+                "reset value": "0x0"
+            },
+            {
+                "bits": "2",
+                "reset value": "0"
+            },
+            {
+                "bits": "3",
+                "reset value": "0"
+            },
+            {
+                "bits": "5",
+                "reset value": "0"
+            },
+            {
+                "bits": "9..6",
+                "reset value": "0"
+            }
+        ],
+        "HRCNFG2": [
+            {
+                "bits": "14",
+                "reset value": "0"
+            },
+            {
+                "bits": "15",
+                "reset value": "0"
+            }
+        ],
+        "HRPCTL": [
+            {
+                "bits": "3",
+                "reset value": "0"
+            }
+        ],
+        "DCAHTRIPSEL": [
+            {
+                "bits": "12",
+                "reset value": "0"
+            }
+        ],
+        "DCALTRIPSEL": [
+            {
+                "bits": "12",
+                "reset value": "0"
+            }
+        ],
+        "DCBHTRIPSEL": [
+            {
+                "bits": "12",
+                "reset value": "0"
+            }
+        ],
+        "DCBLTRIPSEL": [
+            {
+                "bits": "12",
+                "reset value": "0"
+            }
+        ]
+    },
+    "erad": {
+        "HWBP_CNTL": [
+            {
+                "bits": "11",
+                "reset value": "0"
+            }
+        ],
+        "CTM_CNTL": [
+            {
+                "bits": "8",
+                "reset value": "0"
+            }
+        ]
+    },
+    "pga": {
+        "PGACTL": [
+            {
+                "bits": "15..8",
+                "reset value": "0"
+            }
+        ]
+    },
+    "pmbus": {
+        "PMBCTRL": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "18",
+                "reset value": "0"
+            },
+            {
+                "bits": "19",
+                "reset value": "0"
+            }
+        ]
+    },
+    "gpio": {
+        "GPAAMSEL": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            },
+            {
+                "bits": "1",
+                "reset value": "0"
+            },
+            {
+                "bits": "2",
+                "reset value": "0"
+            },
+            {
+                "bits": "3",
+                "reset value": "0"
+            },
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "5",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "7",
+                "reset value": "0"
+            },
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            },
+            {
+                "bits": "10",
+                "reset value": "0"
+            },
+            {
+                "bits": "11",
+                "reset value": "0"
+            },
+            {
+                "bits": "12",
+                "reset value": "0"
+            },
+            {
+                "bits": "13",
+                "reset value": "0"
+            },
+            {
+                "bits": "14",
+                "reset value": "0"
+            },
+            {
+                "bits": "15",
+                "reset value": "0"
+            },
+            {
+                "bits": "16",
+                "reset value": "0"
+            },
+            {
+                "bits": "17",
+                "reset value": "0"
+            },
+            {
+                "bits": "18",
+                "reset value": "0"
+            },
+            {
+                "bits": "19",
+                "reset value": "0"
+            },
+            {
+                "bits": "20",
+                "reset value": "0"
+            },
+            {
+                "bits": "21",
+                "reset value": "0"
+            },
+            {
+                "bits": "24",
+                "reset value": "0"
+            },
+            {
+                "bits": "25",
+                "reset value": "0"
+            },
+            {
+                "bits": "26",
+                "reset value": "0"
+            },
+            {
+                "bits": "27",
+                "reset value": "0"
+            },
+            {
+                "bits": "28",
+                "reset value": "0"
+            },
+            {
+                "bits": "29",
+                "reset value": "0"
+            },
+            {
+                "bits": "30",
+                "reset value": "0"
+            },
+            {
+                "bits": "31",
+                "reset value": "0"
+            }
+        ],
+        "GPBQSEL1": [
+            {
+                "bits": "9..8",
+                "reset value": "0"
+            },
+            {
+                "bits": "13..12",
+                "reset value": "0"
+            }
+        ],
+        "GPBQSEL2": [
+            {
+                "bits": "25..24",
+                "reset value": "0"
+            },
+            {
+                "bits": "27..26",
+                "reset value": "0"
+            },
+            {
+                "bits": "29..28",
+                "reset value": "0"
+            },
+            {
+                "bits": "31..30",
+                "reset value": "0"
+            }
+        ],
+        "GPBMUX1": [
+            {
+                "bits": "9..8",
+                "reset value": "0"
+            },
+            {
+                "bits": "13..12",
+                "reset value": "0"
+            }
+        ],
+        "GPBMUX2": [
+            {
+                "bits": "25..24",
+                "reset value": "0"
+            },
+            {
+                "bits": "27..26",
+                "reset value": "0"
+            },
+            {
+                "bits": "29..28",
+                "reset value": "0"
+            },
+            {
+                "bits": "31..30",
+                "reset value": "0"
+            }
+        ],
+        "GPBDIR": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "28",
+                "reset value": "0"
+            },
+            {
+                "bits": "29",
+                "reset value": "0"
+            },
+            {
+                "bits": "30",
+                "reset value": "0"
+            },
+            {
+                "bits": "31",
+                "reset value": "0"
+            }
+        ],
+        "GPBPUD": [
+            {
+                "bits": "4",
+                "reset value": "1"
+            },
+            {
+                "bits": "6",
+                "reset value": "1"
+            },
+            {
+                "bits": "28",
+                "reset value": "1"
+            },
+            {
+                "bits": "29",
+                "reset value": "1"
+            },
+            {
+                "bits": "30",
+                "reset value": "1"
+            },
+            {
+                "bits": "31",
+                "reset value": "1"
+            }
+        ],
+        "GPBINV": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "28",
+                "reset value": "0"
+            },
+            {
+                "bits": "29",
+                "reset value": "0"
+            },
+            {
+                "bits": "30",
+                "reset value": "0"
+            },
+            {
+                "bits": "31",
+                "reset value": "0"
+            }
+        ],
+        "GPBODR": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "28",
+                "reset value": "0"
+            },
+            {
+                "bits": "29",
+                "reset value": "0"
+            },
+            {
+                "bits": "30",
+                "reset value": "0"
+            },
+            {
+                "bits": "31",
+                "reset value": "0"
+            }
+        ],
+        "GPBGMUX1": [
+            {
+                "bits": "9..8",
+                "reset value": "0"
+            },
+            {
+                "bits": "13..12",
+                "reset value": "0"
+            }
+        ],
+        "GPBGMUX2": [
+            {
+                "bits": "25..24",
+                "reset value": "0"
+            },
+            {
+                "bits": "27..26",
+                "reset value": "0"
+            },
+            {
+                "bits": "29..28",
+                "reset value": "0"
+            },
+            {
+                "bits": "31..30",
+                "reset value": "0"
+            }
+        ],
+        "GPBCSEL1": [
+            {
+                "bits": "19..16",
+                "reset value": "0"
+            },
+            {
+                "bits": "27..24",
+                "reset value": "0"
+            }
+        ],
+        "GPBCSEL4": [
+            {
+                "bits": "19..16",
+                "reset value": "0"
+            },
+            {
+                "bits": "23..20",
+                "reset value": "0"
+            },
+            {
+                "bits": "27..24",
+                "reset value": "0"
+            },
+            {
+                "bits": "31..28",
+                "reset value": "0"
+            }
+        ],
+        "GPBLOCK": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "28",
+                "reset value": "0"
+            },
+            {
+                "bits": "29",
+                "reset value": "0"
+            },
+            {
+                "bits": "30",
+                "reset value": "0"
+            },
+            {
+                "bits": "31",
+                "reset value": "0"
+            }
+        ],
+        "GPHCTRL": [
+            {
+                "bits": "31..24",
+                "reset value": "0"
+            }
+        ],
+        "GPHQSEL2": [
+            {
+                "bits": "17..16",
+                "reset value": "0"
+            },
+            {
+                "bits": "19..18",
+                "reset value": "0"
+            },
+            {
+                "bits": "21..20",
+                "reset value": "0"
+            },
+            {
+                "bits": "23..22",
+                "reset value": "0"
+            },
+            {
+                "bits": "25..24",
+                "reset value": "0"
+            },
+            {
+                "bits": "27..26",
+                "reset value": "0"
+            },
+            {
+                "bits": "29..28",
+                "reset value": "0"
+            },
+            {
+                "bits": "31..30",
+                "reset value": "0"
+            }
+        ],
+        "GPBDAT": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "28",
+                "reset value": "0"
+            },
+            {
+                "bits": "29",
+                "reset value": "0"
+            },
+            {
+                "bits": "30",
+                "reset value": "0"
+            },
+            {
+                "bits": "31",
+                "reset value": "0"
+            }
+        ],
+        "GPBSET": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "28",
+                "reset value": "0"
+            },
+            {
+                "bits": "29",
+                "reset value": "0"
+            },
+            {
+                "bits": "30",
+                "reset value": "0"
+            },
+            {
+                "bits": "31",
+                "reset value": "0"
+            }
+        ],
+        "GPBCLEAR": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "28",
+                "reset value": "0"
+            },
+            {
+                "bits": "29",
+                "reset value": "0"
+            },
+            {
+                "bits": "30",
+                "reset value": "0"
+            },
+            {
+                "bits": "31",
+                "reset value": "0"
+            }
+        ],
+        "GPBTOGGLE": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "28",
+                "reset value": "0"
+            },
+            {
+                "bits": "29",
+                "reset value": "0"
+            },
+            {
+                "bits": "30",
+                "reset value": "0"
+            },
+            {
+                "bits": "31",
+                "reset value": "0"
+            }
+        ]
+    },
+    "memcfg": {
+        "DxACCPROT0": [
+            {
+                "bits": "16",
+                "reset value": "0"
+            },
+            {
+                "bits": "17",
+                "reset value": "0"
+            },
+            {
+                "bits": "24",
+                "reset value": "0"
+            },
+            {
+                "bits": "25",
+                "reset value": "0"
+            }
+        ],
+        "DxTEST": [
+            {
+                "bits": "5..4",
+                "reset value": "0"
+            },
+            {
+                "bits": "7..6",
+                "reset value": "0"
+            }
+        ],
+        "DxINIT": [
+            {
+                "bits": "2",
+                "reset value": "0"
+            },
+            {
+                "bits": "3",
+                "reset value": "0"
+            }
+        ],
+        "GSxLOCK": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "5",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "7",
+                "reset value": "0"
+            },
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            },
+            {
+                "bits": "10",
+                "reset value": "0"
+            },
+            {
+                "bits": "11",
+                "reset value": "0"
+            },
+            {
+                "bits": "12",
+                "reset value": "0"
+            },
+            {
+                "bits": "13",
+                "reset value": "0"
+            },
+            {
+                "bits": "14",
+                "reset value": "0"
+            },
+            {
+                "bits": "15",
+                "reset value": "0"
+            }
+        ],
+        "GSxACCPROT1": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            },
+            {
+                "bits": "1",
+                "reset value": "0"
+            },
+            {
+                "bits": "2",
+                "reset value": "0"
+            },
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            },
+            {
+                "bits": "10",
+                "reset value": "0"
+            },
+            {
+                "bits": "16",
+                "reset value": "0"
+            },
+            {
+                "bits": "17",
+                "reset value": "0"
+            },
+            {
+                "bits": "18",
+                "reset value": "0"
+            },
+            {
+                "bits": "24",
+                "reset value": "0"
+            },
+            {
+                "bits": "25",
+                "reset value": "0"
+            },
+            {
+                "bits": "26",
+                "reset value": "0"
+            }
+        ],
+        "GSxACCPROT2": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            },
+            {
+                "bits": "1",
+                "reset value": "0"
+            },
+            {
+                "bits": "2",
+                "reset value": "0"
+            },
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            },
+            {
+                "bits": "10",
+                "reset value": "0"
+            },
+            {
+                "bits": "16",
+                "reset value": "0"
+            },
+            {
+                "bits": "17",
+                "reset value": "0"
+            },
+            {
+                "bits": "18",
+                "reset value": "0"
+            },
+            {
+                "bits": "24",
+                "reset value": "0"
+            },
+            {
+                "bits": "25",
+                "reset value": "0"
+            },
+            {
+                "bits": "26",
+                "reset value": "0"
+            }
+        ],
+        "GSxACCPROT3": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            },
+            {
+                "bits": "1",
+                "reset value": "0"
+            },
+            {
+                "bits": "2",
+                "reset value": "0"
+            },
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            },
+            {
+                "bits": "10",
+                "reset value": "0"
+            },
+            {
+                "bits": "16",
+                "reset value": "0"
+            },
+            {
+                "bits": "17",
+                "reset value": "0"
+            },
+            {
+                "bits": "18",
+                "reset value": "0"
+            },
+            {
+                "bits": "24",
+                "reset value": "0"
+            },
+            {
+                "bits": "25",
+                "reset value": "0"
+            },
+            {
+                "bits": "26",
+                "reset value": "0"
+            }
+        ],
+        "GSxTEST": [
+            {
+                "bits": "9..8",
+                "reset value": "0"
+            },
+            {
+                "bits": "11..10",
+                "reset value": "0"
+            },
+            {
+                "bits": "13..12",
+                "reset value": "0"
+            },
+            {
+                "bits": "15..14",
+                "reset value": "0"
+            },
+            {
+                "bits": "17..16",
+                "reset value": "0"
+            },
+            {
+                "bits": "19..18",
+                "reset value": "0"
+            },
+            {
+                "bits": "21..20",
+                "reset value": "0"
+            },
+            {
+                "bits": "23..22",
+                "reset value": "0"
+            },
+            {
+                "bits": "25..24",
+                "reset value": "0"
+            },
+            {
+                "bits": "27..26",
+                "reset value": "0"
+            },
+            {
+                "bits": "29..28",
+                "reset value": "0"
+            },
+            {
+                "bits": "31..30",
+                "reset value": "0"
+            }
+        ],
+        "GSxINIT": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "5",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "7",
+                "reset value": "0"
+            },
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            },
+            {
+                "bits": "10",
+                "reset value": "0"
+            },
+            {
+                "bits": "11",
+                "reset value": "0"
+            },
+            {
+                "bits": "12",
+                "reset value": "0"
+            },
+            {
+                "bits": "13",
+                "reset value": "0"
+            },
+            {
+                "bits": "14",
+                "reset value": "0"
+            },
+            {
+                "bits": "15",
+                "reset value": "0"
+            }
+        ],
+        "MSGxLOCK": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            }
+        ],
+        "MSGxTEST": [
+            {
+                "bits": "1..0",
+                "reset value": "0"
+            },
+            {
+                "bits": "7..6",
+                "reset value": "0"
+            },
+            {
+                "bits": "9..8",
+                "reset value": "0"
+            }
+        ],
+        "MSGxINIT": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            },
+            {
+                "bits": "3",
+                "reset value": "0"
+            },
+            {
+                "bits": "4",
+                "reset value": "0"
+            }
+        ],
+        "EMIF1LOCK": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            }
+        ],
+        "EMIF1MSEL": [
+            {
+                "bits": "1..0",
+                "reset value": "0"
+            }
+        ],
+        "EMIF1ACCPROT0": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            },
+            {
+                "bits": "1",
+                "reset value": "0"
+            },
+            {
+                "bits": "2",
+                "reset value": "0"
+            }
+        ],
+        "EMIF2LOCK": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            }
+        ],
+        "EMIF2ACCPROT0": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            },
+            {
+                "bits": "1",
+                "reset value": "0"
+            }
+        ],
+        "NMAVSET": [
+            {
+                "bits": "7",
+                "reset value": "0"
+            },
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            }
+        ],
+        "NMAVCLR": [
+            {
+                "bits": "7",
+                "reset value": "0"
+            },
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            }
+        ],
+        "NMAVINTEN": [
+            {
+                "bits": "3",
+                "reset value": "0"
+            },
+            {
+                "bits": "7",
+                "reset value": "0"
+            },
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            }
+        ],
+        "UCERRSET": [
+            {
+                "bits": "3",
+                "reset value": "0"
+            }
+        ],
+        "UCERRCLR": [
+            {
+                "bits": "3",
+                "reset value": "0"
+            }
+        ],
+        "CERRSET": [
+            {
+                "bits": "3",
+                "reset value": "0"
+            }
+        ],
+        "CERRCLR": [
+            {
+                "bits": "3",
+                "reset value": "0"
+            }
+        ]
+    },
+    "nmi": {
+        "NMIFLGCLR": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "5",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "7",
+                "reset value": "0"
+            },
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            },
+            {
+                "bits": "10",
+                "reset value": "0"
+            },
+            {
+                "bits": "11",
+                "reset value": "0"
+            },
+            {
+                "bits": "12",
+                "reset value": "0"
+            }
+        ],
+        "NMIFLGFRC": [
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "5",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "7",
+                "reset value": "0"
+            },
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            },
+            {
+                "bits": "10",
+                "reset value": "0"
+            },
+            {
+                "bits": "11",
+                "reset value": "0"
+            },
+            {
+                "bits": "12",
+                "reset value": "0"
+            }
+        ]
+    },
+    "sysctl": {
+        "PARTIDL": [
+            {
+                "bits": "2..0",
+                "reset value": "0"
+            },
+            {
+                "bits": "4..3",
+                "reset value": "0"
+            },
+            {
+                "bits": "5",
+                "reset value": "0"
+            }
+        ],
+        "PARTIDH": [
+            {
+                "bits": "3..0",
+                "reset value": "0"
+            },
+            {
+                "bits": "7..4",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES0": [
+            {
+                "bits": "1",
+                "reset value": "0"
+            },
+            {
+                "bits": "2",
+                "reset value": "0"
+            },
+            {
+                "bits": "3",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES2": [
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            },
+            {
+                "bits": "10",
+                "reset value": "0"
+            },
+            {
+                "bits": "11",
+                "reset value": "0"
+            },
+            {
+                "bits": "12",
+                "reset value": "0"
+            },
+            {
+                "bits": "13",
+                "reset value": "0"
+            },
+            {
+                "bits": "14",
+                "reset value": "0"
+            },
+            {
+                "bits": "15",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES3": [
+            {
+                "bits": "7",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES4": [
+            {
+                "bits": "2",
+                "reset value": "0"
+            },
+            {
+                "bits": "3",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES6": [
+            {
+                "bits": "1",
+                "reset value": "0"
+            },
+            {
+                "bits": "2",
+                "reset value": "0"
+            },
+            {
+                "bits": "3",
+                "reset value": "0"
+            },
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "5",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            },
+            {
+                "bits": "7",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES7": [
+            {
+                "bits": "2",
+                "reset value": "0"
+            },
+            {
+                "bits": "3",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES8": [
+            {
+                "bits": "2",
+                "reset value": "0"
+            },
+            {
+                "bits": "3",
+                "reset value": "0"
+            },
+            {
+                "bits": "16",
+                "reset value": "0"
+            },
+            {
+                "bits": "17",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES9": [
+            {
+                "bits": "1",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES13": [
+            {
+                "bits": "3",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES14": [
+            {
+                "bits": "7",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES15": [
+            {
+                "bits": "7",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES16": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            },
+            {
+                "bits": "1",
+                "reset value": "0"
+            },
+            {
+                "bits": "2",
+                "reset value": "0"
+            },
+            {
+                "bits": "3",
+                "reset value": "0"
+            },
+            {
+                "bits": "18",
+                "reset value": "0"
+            },
+            {
+                "bits": "19",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES17": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            },
+            {
+                "bits": "1",
+                "reset value": "0"
+            },
+            {
+                "bits": "2",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES18": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            },
+            {
+                "bits": "1",
+                "reset value": "0"
+            },
+            {
+                "bits": "2",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES20": [
+            {
+                "bits": "1",
+                "reset value": "0"
+            }
+        ],
+        "SOFTPRES21": [
+            {
+                "bits": "0",
+                "reset value": "0"
+            },
+            {
+                "bits": "1",
+                "reset value": "0"
+            }
+        ],
+        "RESCCLR": [
+            {
+                "bits": "5",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            }
+        ],
+        "CLB1_AC": [
+            {
+                "bits": "5..4",
+                "reset value": "0x3"
+            }
+        ],
+        "CLB2_AC": [
+            {
+                "bits": "5..4",
+                "reset value": "0x3"
+            }
+        ],
+        "CLB3_AC": [
+            {
+                "bits": "5..4",
+                "reset value": "0x3"
+            }
+        ],
+        "CLB4_AC": [
+            {
+                "bits": "5..4",
+                "reset value": "0x3"
+            }
+        ],
+        "CLA1PROMCRC_AC": [
+            {
+                "bits": "5..4",
+                "reset value": "0x3"
+            }
+        ],
+        "DCANA_AC": [
+            {
+                "bits": "3..2",
+                "reset value": "0x3"
+            }
+        ],
+        "DCANB_AC": [
+            {
+                "bits": "3..2",
+                "reset value": "0x3"
+            }
+        ],
+        "SYNCSELECT": [
+            {
+                "bits": "8..6",
+                "reset value": "0x7"
+            }
+        ],
+        "ADCSOCOUTSELECT": [
+            {
+                "bits": "8",
+                "reset value": "0"
+            },
+            {
+                "bits": "9",
+                "reset value": "0"
+            },
+            {
+                "bits": "10",
+                "reset value": "0"
+            },
+            {
+                "bits": "11",
+                "reset value": "0"
+            },
+            {
+                "bits": "24",
+                "reset value": "0"
+            },
+            {
+                "bits": "25",
+                "reset value": "0"
+            },
+            {
+                "bits": "26",
+                "reset value": "0"
+            },
+            {
+                "bits": "27",
+                "reset value": "0"
+            }
+        ]
+    },
+    "xbar": {
+        "XBARCLR3": [
+            {
+                "bits": "3",
+                "reset value": "0"
+            },
+            {
+                "bits": "4",
+                "reset value": "0"
+            },
+            {
+                "bits": "5",
+                "reset value": "0"
+            },
+            {
+                "bits": "6",
+                "reset value": "0"
+            }
+        ],
+        "XBARCLR4": [
+            {
+                "bits": "8",
+                "reset value": "0"
+            }
+        ]
+    }
+}

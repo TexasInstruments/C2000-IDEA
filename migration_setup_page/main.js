@@ -2,6 +2,7 @@ const vscode = acquireVsCodeApi();
 
 var migrateToDeviceCheckboxes = document.querySelectorAll('input[name=migrateToDevice]');
 var currentDeviceRadios = document.querySelectorAll('input[name=currentDevice]');
+var migrationCheckFolderExceptions = document.getElementById('migrationCheckFolderExceptions');
 
 var migrationState = vscode.getState();
 loadUIFromMigrationState();
@@ -29,6 +30,8 @@ function newMigrationDeviceSaveClick() {
     }
     var migrationCheckExceptions = document.getElementById('migrationCheckExceptions');
     migrationState.migrationCheckExceptions = migrationCheckExceptions.value.replace(/\s/g, '').split(";").filter(e => e);
+    migrationState.migrationCheckFolderExceptions = migrationCheckFolderExceptions.value.replace(/\s/g, '').split(";").filter(e => e);
+
 
     vscode.setState(migrationState);
     if (migrationState)
@@ -71,6 +74,10 @@ function loadUIFromMigrationState()
         {
             var migrationCheckExceptions = document.getElementById('migrationCheckExceptions');
             migrationCheckExceptions.value = migrationState.migrationCheckExceptions.join(";");
+        }
+        if (migrationState.migrationCheckFolderExceptions)
+        {
+            migrationCheckFolderExceptions.value = migrationState.migrationCheckFolderExceptions.join(";");
         }
     }
 }

@@ -29,6 +29,11 @@ interface RegisterCodeActions {
 }
 var registerCodeActions : RegisterCodeActions[] = [];
 
+interface Dictionary<T> {
+    [key: string]: T;
+}
+  
+
 enum RegisterDataBase {
 	Driverlib = "driverlib",
 	Bitfield = "bitfield"
@@ -57,7 +62,6 @@ export class RegisterCodeActionProvider implements vscode.CodeActionProvider {
 
 		return codeActionsForThisDiagnostic;
 	}
-
 }
 
 let registerCoderStatus = false;
@@ -107,6 +111,11 @@ const registerBitfieldDecorationType = vscode.window.createTextEditorDecorationT
 		color: 'lightblue'
 	}
 });
+const bitfieldToDriverlibIpMappings: Dictionary<string> = {
+    "sysctrl" : "sysctl",
+
+};
+
 
 export function isRegisterNamePrependedWithModuleName(moduleName: string)
 {
@@ -162,6 +171,7 @@ interface RegisterBitfieldsFound {
 	registerInfo: Register,
 	registerLink: string,
 	registerBitInfo?: RegisterBit,
+	vulnerableBits: number,
 
 	registerName: string,
 	registerStartPos: vscode.Position,
@@ -180,6 +190,7 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 {
 	let registersFoundInfo : RegisterBitfieldsFound[] = [];
 	const text = document.getText();
+	//If device isn't autodetected in project or hasn't previously been input, prompt user to input
 	if (!device)
 	{
 		device = project.projectGetCurrentDevice();
@@ -190,25 +201,33 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 	}
 	if (device)
 	{
+		//Get list of all bitfield ip names found in the current device
 		var registerSummary = getDeviceRegisterSummary(device, RegisterDataBase.Bitfield);
+		//Get starting URL link
 		let deviceTRMUrl = await getDeviceTRMUrl(device);
+		//Get list of all register links for the current device - indexed according to driverlib c2000 ip names
 		let deviceRegisterLinks = deviceData.NO_REGISTER_LINK_DEVICE_LIST.includes(device) ? null : await getDeviceRegisterLinks(device);
-
+		//Get list of all reserved writable bits in current device registers - indexed according to driverlib c2000 ip names
+		let rsvdWritableRegBits = getDeviceRegisterRsvdWritableBits(device);
 		
 		if (registerSummary)
 		{
 			var registerWordRangedFound : vscode.Range[] = [];
+			//Loop through all ips found in this device
 			for (var module of registerSummary.modules)
 			{
+				//Load in register data from register_data/bitfield file/ path from file corresponding to the current ip
+				//Convert ip name to bitfield name if needed
 				var registers = getDeviceModuleRegisters(device, module, RegisterDataBase.Bitfield);
 				const regEx = RegExp("(\\.all|\\.bit\\.)", "g");
 				let match: RegExpExecArray | null;
+				//Check all locations in the text string of the file that use bitfield access format
 				while ((match = regEx.exec(text))) {
 					const startPosRegister = document.positionAt(match.index - 1);
 					const wordRangeRegister = document.getWordRangeAtPosition(startPosRegister);
 					if (wordRangeRegister) {
+						//Get register name found from bitfield access in document
 						const registerName = document.getText(wordRangeRegister);
-
 						if (registers)
 						{
 							let registerInfo: Register | undefined;
@@ -218,6 +237,7 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 							// let registerInfos = registers.filter(register => 
 							// 	(((isRegisterNamePrependedWithModuleName(module)?module.toUpperCase():"") + register.name) === registerName)
 							// );
+							//Get all registers in register_data database that match register name in editor (ideally is only one match)
 							let registerInfos = registers.filter(register => register.name === registerName);
 							if (registerInfos.length < 1)
 							{
@@ -243,7 +263,6 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 									wordRangeRegisterBit = document.getWordRangeAtPosition(startPosRegisterBit);
 									if (wordRangeRegisterBit){
 										bitName = document.getText(wordRangeRegisterBit);
-
 										let registerBitInfos = registerInfos[0].bits.filter(bit => 
 											(bit.name === bitName)
 										);
@@ -266,18 +285,25 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 
 								//
 								// Get the link (if it is valid)
+								// Convert bitfield ip name to driverlib name before searching for link
 								//
-								let registerUrl = findRegisterLink(deviceRegisterLinks, module, registerName);
+
+								let registerUrl = findRegisterLink(deviceRegisterLinks, bitfieldToDriverlibIpMappings[module] != undefined ? bitfieldToDriverlibIpMappings[module] : module, registerName);
 								let link = "";
 								if(registerUrl !== ""){
 									link = deviceTRMUrl + registerUrl;
 								}
+
+								//Get rsvd bit data 
+								let vulnerableBitsMask = findRsvdBits(rsvdWritableRegBits, bitfieldToDriverlibIpMappings[module] != undefined ? bitfieldToDriverlibIpMappings[module] : module, registerName);
+
 								registersFoundInfo.push({
 									module: module,
 
 									registerInfo: registerInfo,
 									registerLink: link,
 									registerBitInfo: registerBitInfo,
+									vulnerableBits: vulnerableBitsMask,
 
 									registerName: registerName,
 									registerStartPos: startPosRegister,
@@ -345,18 +371,23 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 
 								//
 								// Get the link (if its valid)
+								// Convert bitfield ip name to driverlib name before searching for link
 								//
-								let registerUrl = findRegisterLink(deviceRegisterLinks, module, registerName);
+								let registerUrl = findRegisterLink(deviceRegisterLinks, bitfieldToDriverlibIpMappings[module] != undefined ? bitfieldToDriverlibIpMappings[module] : module, registerName);
 								let link = "";
 								if(registerUrl !== ""){
 									link = deviceTRMUrl + registerUrl;
 								}
+
+								//Get rsvd bit data 
+								let vulnerableBitsMask = findRsvdBits(rsvdWritableRegBits, bitfieldToDriverlibIpMappings[module] != undefined ? bitfieldToDriverlibIpMappings[module] : module, registerName);
 								registersFoundInfo.push({
 									module: module,
 
 									registerInfo: registerInfo,
 									registerLink: link,
 									registerBitInfo: registerBitInfo,
+									vulnerableBits: vulnerableBitsMask,
 
 									registerName: registerName,
 									registerStartPos: startPosRegister,
@@ -577,7 +608,7 @@ async function registerBitfieldVisionUpdateDecorations() {
 			openCollateralMarkdown.appendMarkdown(regFound.module.toUpperCase() + ' register bit access **' + regFound.registerName + '**' + 
 			" bit " + regFound.bitName);
 			const decorationBit = { 
-				range: regFound.bitWordRange, 
+				range: regFound.registerWordRange, 
 				hoverMessage: openCollateralMarkdown 
 			};
 			regDecorations.push(decorationBit);
@@ -716,21 +747,21 @@ function findRegisterLink(deviceRegisterLinks: any, module: string, bitfieldRegN
 
 async function getDeviceTRMUrl(device: string){
 	// Read in internal and external device links
-	let trmLinksInternalName = "device_register_internal.json";
+	// let trmLinksInternalName = "device_register_internal.json";
 	let trmLinksExternalName = "device_register_external.json";
-	let trmLinksInternal = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(extensionContext.extensionUri, "register_links", trmLinksInternalName));
+	// let trmLinksInternal = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(extensionContext.extensionUri, "register_links", trmLinksInternalName));
 	let trmLinksExternal = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(extensionContext.extensionUri, "register_links", trmLinksExternalName));
-	const trmLinksInternalContent = Buffer.from(trmLinksInternal).toString('utf8');
+	// const trmLinksInternalContent = Buffer.from(trmLinksInternal).toString('utf8');
 	const trmLinksExternalContent = Buffer.from(trmLinksExternal).toString('utf8');
-	var jsonInternalRegisterLinks : any = JSON.parse(trmLinksInternalContent);
+	// var jsonInternalRegisterLinks : any = JSON.parse(trmLinksInternalContent);
 	var jsonExternalRegisterLinks : any = JSON.parse(trmLinksExternalContent);
 
 	if(device in jsonExternalRegisterLinks){
 		return jsonExternalRegisterLinks[device];
 	}
-	else if(device in jsonInternalRegisterLinks && info.C2000_IDEA_INTERNAL){	//If no external link exists, use internal link (if operating in internal mode)
-		return jsonInternalRegisterLinks[device];
-	}
+	// else if(device in jsonInternalRegisterLinks && info.C2000_IDEA_INTERNAL){	//If no external link exists, use internal link (if operating in internal mode)
+	// 	return jsonInternalRegisterLinks[device];
+	// }
 	else{
 		return ""
 	}
@@ -744,6 +775,45 @@ async function getDeviceRegisterLinks(device: string)
 	const jsonRegisterLinksContent = Buffer.from(jsonRegisterLinks).toString('utf8');
 	var jsonLinks : any = JSON.parse(jsonRegisterLinksContent);
 	return jsonLinks;
+}
+
+async function getDeviceRegisterRsvdWritableBits(device: string)
+{
+	var jsonRegisterRsvdName = device.toLowerCase() + "_rsvd_nonzero_regs.json";
+	var jsonRegisterRsvd = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(extensionContext.extensionUri, "register_rsvd_data", jsonRegisterRsvdName));
+	const jsonRegisterRsvdContent = Buffer.from(jsonRegisterRsvd).toString('utf8');
+	var jsonRsvd : any = JSON.parse(jsonRegisterRsvdContent);
+	return jsonRsvd;
+}
+
+function findRsvdBits(deviceRsvdRegBits: any, module: string, bitfieldRegName: string)
+{
+	let vulnerableBitsMask :number = 0;
+	if(deviceRsvdRegBits)
+	{
+		let moduleRegisterRsvd = deviceRsvdRegBits[module];
+		if (moduleRegisterRsvd) {
+			let ipRegistersWithVulnerableBits = Object.keys(moduleRegisterRsvd);
+			let foundRegisterNames = ipRegistersWithVulnerableBits.filter(rn => rn.toLowerCase() === bitfieldRegName.toLowerCase());
+			if (foundRegisterNames.length > 0)
+			{
+				for(let bfield in moduleRegisterRsvd[foundRegisterNames[0]]){
+					if(bfield.includes("..")) {
+						let startEndBits = bfield.split("..", 1)
+						for(let bit = Number(startEndBits[0]); bit <= Number(startEndBits[0]); bit++){
+							vulnerableBitsMask = vulnerableBitsMask | (1 << bit);
+						}
+					}
+					else{
+						vulnerableBitsMask = vulnerableBitsMask | (1 << Number(bfield));
+					}
+				}
+				return vulnerableBitsMask;
+			}
+		}
+	}
+	
+	return vulnerableBitsMask;
 }
 
 export function registerSetup(context: vscode.ExtensionContext)
@@ -830,7 +900,7 @@ export function registerSetup(context: vscode.ExtensionContext)
 			vscode.window.showInformationMessage("Bitfield migration cancelled");
 			return;
 		}
-		let migrationDevice = await utils.selectBitfieldMigrationToDeviceFamily();
+		let migrationDevice = await utils.selectBitfieldMigrationToDeviceFamily(currentDevice);
 		if (!migrationDevice)
 		{
 			vscode.window.showInformationMessage("Bitfield migration cancelled");
@@ -894,24 +964,35 @@ async function runRegisterBitfieldMigrationOnDocument(currentDevice: string, mig
 	//
 	let registersFoundInfo = await registerFindBitfieldRegisters(document, currentDevice);
 
-	const migrationJsonContent: MigrationData = await migration.getMigrationJSON(extensionContext, currentDevice, migrationDevice);
-	const resolutionJsonContent = await migration.getMigrationResolutionJSON(extensionContext, currentDevice, migrationDevice);
 	let diffRegs = new Map<string, MigrationElement>();
 	let resolutionRegs = new Map<string, MigrationResolutionElement>();
 
+	// Get register migration changes
+	const migrationJsonContent: MigrationData = await migration.getMigrationJSON(extensionContext, currentDevice, migrationDevice);
+
+	// Check if resolutions exist for this device combination
+	let resolutionsExist = false;
+	if(currentDevice in deviceData.BITFIELD_MIGRATION_RESOLUTIONS){
+		if(migrationDevice in deviceData.BITFIELD_MIGRATION_RESOLUTIONS[currentDevice]){
+			resolutionsExist = true;
+		}
+	}
+	if(resolutionsExist){
+		const resolutionJsonContent = await migration.getMigrationResolutionJSON(extensionContext, currentDevice, migrationDevice);
+		resolutionJsonContent.reg.forEach((reg) => {
+			let regName = Object.keys(reg)[0];
+			resolutionRegs.set(regName, reg[regName]);
+		});
+	}
+	// Push all register differences to diffRegs
 	migrationJsonContent.removed.forEach((migEl) => {
 		diffRegs.set(migEl.code, migEl);
 	});
-
 	migrationJsonContent.changed.forEach((migEl) => {
 		diffRegs.set(migEl.code, migEl);
 	});
 
-	resolutionJsonContent.reg.forEach((reg) => {
-		let regName = Object.keys(reg)[0];
-		resolutionRegs.set(regName, reg[regName]);
-	});
-	
+	// Loop through all registers found in the document
 	registersFoundInfo.forEach((reg) => {
 		let bitfieldName = reg.bitName !== ""? reg.registerName + "." + reg.bitName : reg.registerName;
 		
@@ -921,21 +1002,26 @@ async function runRegisterBitfieldMigrationOnDocument(currentDevice: string, mig
 		}
 
 		let diffReg = diffRegs.get(bitfieldName);
-		let resReg = resolutionRegs.get(bitfieldName);
+
+		//Check if a difference exists
 		if(diffReg)
 		{
+			// Construct Diagnostic message
 			let diagnosticMsg: string = bitfieldName + " :";
 			if (diffReg.msg)
 			{
 				diagnosticMsg += " " + diffReg.msg;
 			}
-			if (resReg && resReg.msg)
-			{
-				diagnosticMsg += " " + resReg.msg;
+			if(resolutionsExist){
+				let resReg = resolutionRegs.get(bitfieldName);
+				if (resReg && resReg.msg)
+				{
+					diagnosticMsg += " " + resReg.msg;
+				}
 			}
-			
+
 			let decorationRange = reg.bitWordRange? reg.bitWordRange : reg.registerWordRange;
-			let diagnosticSeverity = diffReg.changeType && !resReg? vscode.DiagnosticSeverity.Warning : vscode.DiagnosticSeverity.Error;
+			let diagnosticSeverity = diffReg.changeType ? vscode.DiagnosticSeverity.Warning : vscode.DiagnosticSeverity.Error;
 
 			let diagnostic: vscode.Diagnostic = {
 				code: C2000_REGISTER_DIAGNOSTIC_MIGRATION_BFIELD_CODE,
@@ -980,83 +1066,84 @@ async function runRegisterBitfieldMigrationOnDocument(currentDevice: string, mig
 				}
 			);
 
-			if (resReg){
-				//
-				// We have a fix
-				//
-				
-				let fixMsg: string = bitfieldName;
-				if (resReg.fixMsg)
-				{
-					fixMsg += ": " + resReg.fixMsg;
-				} 
-				else if (resReg.msg)
-				{
-					fixMsg += ": " + resReg.msg;
-				}
-
-				let codeActionResolution : vscode.CodeAction = new vscode.CodeAction(fixMsg, vscode.CodeActionKind.QuickFix);
-				codeActionResolution.command = {
-					command: info.C2000_IDEA_CMD_RUN_BITFIELD_MIGRATION_CHECK,
-					title: "",
-					arguments: [{
-						currentDevice: currentDevice,
-						migrationDevice: migrationDevice,
-						document: document
-					}]
-				};
-				codeActionResolution.diagnostics = [diagnostic];
-				codeActionResolution.edit = new vscode.WorkspaceEdit();
-
-				//
-				// The edit here is what we can use to inset or delete or modify text in the source code
-				//
-
-				let lineBeginningPos: vscode.Position = new vscode.Position(diagnostic.range.start.line, 0);
-				let fixText: string = "//\n//";
-				let lineCharacterLen = 90 ;
-				let fixMsgInd = 0;
-				// if(fixMsg.length < lineCharacterLen + 10)
-				// {
-				// 	fixText += " " + fixMsg + "\n//";
-				// }
-				// else {
-					while(fixMsgInd < fixMsg.length)
-						{
-							let msgSubstr = fixMsg.substring(fixMsgInd, fixMsgInd + lineCharacterLen);
-							if(fixMsgInd + lineCharacterLen > fixMsg.length)
-							{
-								fixText += " " + msgSubstr + "\n//";
-								break;
-							}
-							else 
-							{
-								let lastSpaceInd = msgSubstr.lastIndexOf(" ");
-								fixText += " " + fixMsg.substring(fixMsgInd, fixMsgInd + lastSpaceInd) + "\n//";
-								fixMsgInd += lastSpaceInd + 1 ;
-							}
-							
-							
-						}
-				// }
-				
-				
-				fixText += " SUGGESTION: Use the fix(es) below in place of the original code:\n//";
-				resReg.fix.forEach((fix) => {
-					fixText += " " + fix + "\n//";
-				});
-				fixText += "\n";
-				
-				codeActionResolution.edit.insert(document.uri, lineBeginningPos, fixText);
-				
-				registerCodeActions.push(
+			if (resolutionsExist){
+				let resReg = resolutionRegs.get(bitfieldName);
+				if(resReg){
+					//
+					// We have a fix
+					//
+					let fixMsg: string = bitfieldName;
+					if (resReg.fixMsg)
 					{
-						uri: document.uri,
-						codeAction: codeActionResolution
+						fixMsg += ": " + resReg.fixMsg;
+					} 
+					else if (resReg.msg)
+					{
+						fixMsg += ": " + resReg.msg;
 					}
+
+					let codeActionResolution : vscode.CodeAction = new vscode.CodeAction(fixMsg, vscode.CodeActionKind.QuickFix);
+					codeActionResolution.command = {
+						command: info.C2000_IDEA_CMD_RUN_BITFIELD_MIGRATION_CHECK,
+						title: "",
+						arguments: [{
+							currentDevice: currentDevice,
+							migrationDevice: migrationDevice,
+							document: document
+						}]
+					};
+					codeActionResolution.diagnostics = [diagnostic];
+					codeActionResolution.edit = new vscode.WorkspaceEdit();
+
+					//
+					// The edit here is what we can use to inset or delete or modify text in the source code
+					//
+
+					let lineBeginningPos: vscode.Position = new vscode.Position(diagnostic.range.start.line, 0);
+					let fixText: string = "//\n//";
+					let lineCharacterLen = 90 ;
+					let fixMsgInd = 0;
+					// if(fixMsg.length < lineCharacterLen + 10)
+					// {
+					// 	fixText += " " + fixMsg + "\n//";
+					// }
+					// else {
+						while(fixMsgInd < fixMsg.length)
+							{
+								let msgSubstr = fixMsg.substring(fixMsgInd, fixMsgInd + lineCharacterLen);
+								if(fixMsgInd + lineCharacterLen > fixMsg.length)
+								{
+									fixText += " " + msgSubstr + "\n//";
+									break;
+								}
+								else 
+								{
+									let lastSpaceInd = msgSubstr.lastIndexOf(" ");
+									fixText += " " + fixMsg.substring(fixMsgInd, fixMsgInd + lastSpaceInd) + "\n//";
+									fixMsgInd += lastSpaceInd + 1 ;
+								}
+								
+								
+							}
+					// }
 					
-				);
-				
+					
+					fixText += " SUGGESTION: Use the fix(es) below in place of the original code:\n//";
+					resReg.fix.forEach((fix) => {
+						fixText += " " + fix + "\n//";
+					});
+					fixText += "\n";
+					
+					codeActionResolution.edit.insert(document.uri, lineBeginningPos, fixText);
+					
+					registerCodeActions.push(
+						{
+							uri: document.uri,
+							codeAction: codeActionResolution
+						}
+						
+					);
+				}			
 				
 			}
 		}

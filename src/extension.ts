@@ -51,6 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 	let debugDisposal = vscode.commands.registerCommand(info.C2000_IDEA_CMD_DEBUG, () => {
+		//console.log("debugged");
 		//vscode.window.showInformationMessage("Debug");
 		// vscode.commands.getCommands().then(val=>{
 		// 	console.log(val);

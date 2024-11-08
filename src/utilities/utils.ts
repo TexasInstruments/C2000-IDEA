@@ -112,7 +112,7 @@ export async function selectBitfieldDeviceFamily() {
 
 
 export async function selectBitfieldMigrationFromDeviceFamily() {
-	let options = deviceData.BITFIELD_MIGRATION_FROM_DEVICE_LIST.map(dev => {
+	let options = Object.keys(deviceData.BITFIELD_MIGRATION_PAIRS).map(dev => {
 		return {
 			label: dev,
 			picked: false,
@@ -134,8 +134,8 @@ export async function selectBitfieldMigrationFromDeviceFamily() {
 	return "";
 }
 
-export async function selectBitfieldMigrationToDeviceFamily() {
-	let options = deviceData.BITFIELD_MIGRATION_TO_DEVICE_LIST.map(dev => {
+export async function selectBitfieldMigrationToDeviceFamily(fromDevice : string) {
+	let options = deviceData.BITFIELD_MIGRATION_PAIRS[fromDevice].map(dev => {
 		return {
 			label: dev,
 			picked: false,
@@ -227,7 +227,7 @@ export async function selectMigrationResolutionToDeviceFamily() {
 	return "";
 }
 
-export async function isDeviceInMigrationResolutionList(device : string) {
+export function isDeviceInMigrationResolutionList(device : string): boolean {
 	return deviceData.MIGRATION_RESOLUTION_TO_DEVICE_LIST.includes(device);
 	
 }
@@ -270,6 +270,31 @@ export async function getFileTypesInFolder(folderUri : vscode.Uri, fileExtension
 
 }
 
+export async function getIgnoredProjectCCodeUris(projectFsPath: string, migrationCheckFolderExceptions: string[]): Promise<vscode.Uri[]> {
+	const projectCCodeUrisIgnored: vscode.Uri[] = [];
+	const outputChannel = vscode.window.createOutputChannel("Ignored Files Output"); // Create output channel
+	// Convert exceptions to URIs
+	const ignoredFoldersFiles = migrationCheckFolderExceptions.map(exception => projectFsPath + "/" + exception);
+	const ignoredFoldersFilesUris = ignoredFoldersFiles.map(exceptionPath => vscode.Uri.file(exceptionPath));
+
+	for (const ignoredUri of ignoredFoldersFilesUris) {
+    	const ignoredFsPath = ignoredUri.fsPath || ignoredUri.path;
+
+    	// Check if the ignored path is a file
+    	if (ignoredFsPath.endsWith(".c") || ignoredFsPath.endsWith(".h")) {
+        	projectCCodeUrisIgnored.push(ignoredUri);
+        	outputChannel.appendLine(`Ignored file: ${ignoredFsPath}`);
+    	} else {
+        	// It's a folder, retrieve its .c and .h files
+        	const projectCCodeUrisFolder = await getFileTypesInFolder(ignoredUri, [".c", ".h"]);
+        	projectCCodeUrisIgnored.push(...projectCCodeUrisFolder);
+        	outputChannel.appendLine(`Ignored folder: ${ignoredFsPath}`);
+    	}	
+	}
+
+	outputChannel.show(); // Show the output channel if needed
+	return projectCCodeUrisIgnored; // Return the accumulated URIs 
+}
 
 export async function getFileInFoldersRecursive(folderUri : vscode.Uri, fileName : string): Promise<vscode.Uri | undefined>
 {

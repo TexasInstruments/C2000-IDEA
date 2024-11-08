@@ -29,7 +29,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_EVENT_EBC0",
-            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC0' should be used. Index changed as EBC instances start from zero in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC0' should be used. ERAD HWBP renamed as ERAD EBC submodule. Index changed as EBC instances start from zero in F29H85x",
             "compatible": false
         },
         {
@@ -37,7 +37,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_EVENT_EBC1",
-            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC1' should be used. Index changed as EBC instances start from zero in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC1' should be used. ERAD HWBP renamed as ERAD EBC submodule. Index changed as EBC instances start from zero in F29H85x",
             "compatible": false
         },
         {
@@ -45,7 +45,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_EVENT_EBC2",
-            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC2' should be used. Index changed as EBC instances start from zero in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC2' should be used. ERAD HWBP renamed as ERAD EBC submodule. Index changed as EBC instances start from zero in F29H85x",
             "compatible": false
         },
         {
@@ -53,7 +53,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_EVENT_EBC3",
-            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC3' should be used. Index changed as EBC instances start from zero in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC3' should be used. ERAD HWBP renamed as ERAD EBC submodule. Index changed as EBC instances start from zero in F29H85x",
             "compatible": false
         },
         {
@@ -61,7 +61,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_EVENT_EBC4",
-            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC4' should be used. Index changed as EBC instances start from zero in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC4' should be used. ERAD HWBP renamed as ERAD EBC submodule. Index changed as EBC instances start from zero in F29H85x",
             "compatible": false
         },
         {
@@ -69,7 +69,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_EVENT_EBC5",
-            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC5' should be used. Index changed as EBC instances start from zero in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC5' should be used. ERAD HWBP renamed as ERAD EBC submodule. Index changed as EBC instances start from zero in F29H85x",
             "compatible": false
         },
         {
@@ -77,7 +77,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_EVENT_EBC6",
-            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC6' should be used. Index changed as EBC instances start from zero in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC6' should be used. ERAD HWBP renamed as ERAD EBC submodule. Index changed as EBC instances start from zero in F29H85x",
             "compatible": false
         },
         {
@@ -85,7 +85,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_EVENT_EBC7",
-            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC7' should be used. Index changed as EBC instances start from zero in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_EVENT_EBC7' should be used. ERAD HWBP renamed as ERAD EBC submodule. Index changed as EBC instances start from zero in F29H85x",
             "compatible": false
         },
         {
@@ -196,8 +196,8 @@
             "code": "ERAD_EVENT_TIMER0_TINT0",
             "type": "enum",
             "peripheral": "erad",
-            "fix": "ERAD_EVENT_CPU1_TIMER0_INT ",
-            "fixMsg": "The correct enum constant 'ERAD_EVENT_CPU1_TIMER0_INT ' should be used. Multicore device. Other alternatives are ERAD_EVENT_CPU2_TIMER0_INT (or) ERAD_EVENT_CPU3_TIMER0_INT (Use either of enum constant as per CPU core)",
+            "fix": "ERAD_EVENT_CPU1_TIMER0_INT",
+            "fixMsg": "The correct enum constant 'ERAD_EVENT_CPU1_TIMER0_INT' should be used. Multicore device. Other alternatives are ERAD_EVENT_CPU2_TIMER0_INT (or) ERAD_EVENT_CPU3_TIMER0_INT (Use either of enum constant as per CPU core)",
             "compatible": false
         },
         {
@@ -212,24 +212,24 @@
             "code": "ERAD_EVENT_TIMER2_TINT2",
             "type": "enum",
             "peripheral": "erad",
-            "fix": "ERAD_EVENT_CPU1_TIMER2_INT ",
-            "fixMsg": "The correct enum constant 'ERAD_EVENT_CPU1_TIMER2_INT ' should be used. Multicore device. Other alternatives are ERAD_EVENT_CPU2_TIMER2_INT (or) ERAD_EVENT_CPU3_TIMER2_INT (Use either of enum constant as per CPU core)",
+            "fix": "ERAD_EVENT_CPU1_TIMER2_INT",
+            "fixMsg": "The correct enum constant 'ERAD_EVENT_CPU1_TIMER2_INT' should be used. Multicore device. Other alternatives are ERAD_EVENT_CPU2_TIMER2_INT (or) ERAD_EVENT_CPU3_TIMER2_INT (Use either of enum constant as per CPU core)",
             "compatible": false
         },
         {
             "code": "ERAD_EVENT_DMACH1INT",
             "type": "enum",
             "peripheral": "erad",
-            "fix": "ERAD_EVENT_RTDMA1_CH1INT ",
-            "fixMsg": "The correct enum constant 'ERAD_EVENT_RTDMA1_CH1INT ' should be used. F29H85x has 2 RTDMA instances. Other alternative is ERAD_EVENT_RTDMA2_CH1INT. Use either of the enum constant as per RTDMA instance. Note: RTDMA2 instance is unavailable when the device is in Lock-step",
+            "fix": "ERAD_EVENT_RTDMA1_CH1INT",
+            "fixMsg": "The correct enum constant 'ERAD_EVENT_RTDMA1_CH1INT' should be used. F29H85x has 2 RTDMA instances. Other alternative is ERAD_EVENT_RTDMA2_CH1INT. Use either of the enum constant as per RTDMA instance. Note: RTDMA2 instance is unavailable when the device is in Lock-step",
             "compatible": false
         },
         {
             "code": "ERAD_EVENT_DMACH2INT",
             "type": "enum",
             "peripheral": "erad",
-            "fix": "ERAD_EVENT_RTDMA1_CH2INT  ",
-            "fixMsg": "The correct enum constant 'ERAD_EVENT_RTDMA1_CH2INT  ' should be used. F29H85x has 2 RTDMA instances. Other alternative is ERAD_EVENT_RTDMA2_CH2INT. Use either of the enum constant as per RTDMA instance. Note: RTDMA2 instance is unavailable when the device is in Lock-step",
+            "fix": "ERAD_EVENT_RTDMA1_CH2INT",
+            "fixMsg": "The correct enum constant 'ERAD_EVENT_RTDMA1_CH2INT' should be used. F29H85x has 2 RTDMA instances. Other alternative is ERAD_EVENT_RTDMA2_CH2INT. Use either of the enum constant as per RTDMA instance. Note: RTDMA2 instance is unavailable when the device is in Lock-step",
             "compatible": false
         },
         {
@@ -4221,15 +4221,15 @@
             "type": "enum",
             "peripheral": "adc",
             "fix": "ASYSCTL_VREF_EXTERNAL",
-            "fixMsg": "The correct enum constant 'ASYSCTL_VREF_EXTERNAL' should be used. Enum moved to  AsysCtl driver",
+            "fixMsg": "The correct enum constant 'ASYSCTL_VREF_EXTERNAL' should be used. enummoved to  AsysCtl driver",
             "compatible": false
         },
         {
             "code": "ADC_REFERENCE_INTERNAL",
             "type": "enum",
             "peripheral": "adc",
-            "fix": "ASYSCTL_VREF_INTERNAL_3_3_V ",
-            "fixMsg": "The correct enum constant 'ASYSCTL_VREF_INTERNAL_3_3_V ' should be used. Other alternative ASYSCTL_VREF_INTERNAL_2_5_V  based on required voltage. Enum moved to  AsysCtl driver",
+            "fix": "ASYSCTL_VREF_INTERNAL_3_3_V",
+            "fixMsg": "The correct enum constant 'ASYSCTL_VREF_INTERNAL_3_3_V' should be used. Other alternative ASYSCTL_VREF_INTERNAL_2_5_V  based on required voltage. enummoved to  AsysCtl driver",
             "compatible": false
         },
         {
@@ -4237,7 +4237,7 @@
             "type": "enum",
             "peripheral": "adc",
             "fix": "ASYSCTL_VREF_INTERNAL_3_3_V",
-            "fixMsg": "The correct enum constant 'ASYSCTL_VREF_INTERNAL_3_3_V' should be used. Enum moved to  AsysCtl driver",
+            "fixMsg": "The correct enum constant 'ASYSCTL_VREF_INTERNAL_3_3_V' should be used. enummoved to  AsysCtl driver",
             "compatible": false
         },
         {
@@ -4245,7 +4245,7 @@
             "type": "enum",
             "peripheral": "adc",
             "fix": "ASYSCTL_VREF_INTERNAL_2_5_V",
-            "fixMsg": "The correct enum constant 'ASYSCTL_VREF_INTERNAL_2_5_V' should be used. Enum moved to  AsysCtl driver",
+            "fixMsg": "The correct enum constant 'ASYSCTL_VREF_INTERNAL_2_5_V' should be used. enummoved to  AsysCtl driver",
             "compatible": false
         },
         {
@@ -4253,7 +4253,7 @@
             "type": "enum",
             "peripheral": "cputimer",
             "fix": "SYSCTL_TIMER2CLK_SOURCE_SYSCLK",
-            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_SOURCE_SYSCLK' should be used. Enum moved to SysCtl driver",
+            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_SOURCE_SYSCLK' should be used. enummoved to SysCtl driver",
             "compatible": false
         },
         {
@@ -4261,7 +4261,7 @@
             "type": "enum",
             "peripheral": "cputimer",
             "fix": "SYSCTL_TIMER2CLK_SOURCE_INTOSC1",
-            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_SOURCE_INTOSC1' should be used. Enum moved to SysCtl driver",
+            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_SOURCE_INTOSC1' should be used. enummoved to SysCtl driver",
             "compatible": false
         },
         {
@@ -4269,7 +4269,7 @@
             "type": "enum",
             "peripheral": "cputimer",
             "fix": "SYSCTL_TIMER2CLK_SOURCE_INTOSC2",
-            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_SOURCE_INTOSC2' should be used. Enum moved to SysCtl driver",
+            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_SOURCE_INTOSC2' should be used. enummoved to SysCtl driver",
             "compatible": false
         },
         {
@@ -4277,7 +4277,7 @@
             "type": "enum",
             "peripheral": "cputimer",
             "fix": "SYSCTL_TIMER2CLK_SOURCE_XTAL",
-            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_SOURCE_XTAL' should be used. Enum moved to SysCtl driver",
+            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_SOURCE_XTAL' should be used. enummoved to SysCtl driver",
             "compatible": false
         },
         {
@@ -4285,7 +4285,7 @@
             "type": "enum",
             "peripheral": "cputimer",
             "fix": "SYSCTL_TIMER2CLK_DIV_1",
-            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_DIV_1' should be used. Enum moved to SysCtl driver",
+            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_DIV_1' should be used. enummoved to SysCtl driver",
             "compatible": false
         },
         {
@@ -4293,7 +4293,7 @@
             "type": "enum",
             "peripheral": "cputimer",
             "fix": "SYSCTL_TIMER2CLK_DIV_2",
-            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_DIV_2' should be used. Enum moved to SysCtl driver",
+            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_DIV_2' should be used. enummoved to SysCtl driver",
             "compatible": false
         },
         {
@@ -4301,7 +4301,7 @@
             "type": "enum",
             "peripheral": "cputimer",
             "fix": "SYSCTL_TIMER2CLK_DIV_4",
-            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_DIV_4' should be used. Enum moved to SysCtl driver",
+            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_DIV_4' should be used. enummoved to SysCtl driver",
             "compatible": false
         },
         {
@@ -4309,7 +4309,7 @@
             "type": "enum",
             "peripheral": "cputimer",
             "fix": "SYSCTL_TIMER2CLK_DIV_8",
-            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_DIV_8' should be used. Enum moved to SysCtl driver",
+            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_DIV_8' should be used. enummoved to SysCtl driver",
             "compatible": false
         },
         {
@@ -4317,7 +4317,7 @@
             "type": "enum",
             "peripheral": "cputimer",
             "fix": "SYSCTL_TIMER2CLK_DIV_16",
-            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_DIV_16' should be used. Enum moved to SysCtl driver",
+            "fixMsg": "The correct enum constant 'SYSCTL_TIMER2CLK_DIV_16' should be used. enummoved to SysCtl driver",
             "compatible": false
         },
         {
@@ -4325,7 +4325,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "SYSCTL_XCLKOUT_SOURCE_PLLSYS",
-            "fixMsg": "The correct enum constant 'SYSCTL_XCLKOUT_SOURCE_PLLSYS' should be used. Enum changed in F29H85x",
+            "fixMsg": "The correct enum constant 'SYSCTL_XCLKOUT_SOURCE_PLLSYS' should be used. enumchanged in F29H85x",
             "compatible": false
         },
         {
@@ -4333,7 +4333,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "SYSCTL_XCLKOUT_SOURCE_CPU1CLK",
-            "fixMsg": "The correct enum constant 'SYSCTL_XCLKOUT_SOURCE_CPU1CLK' should be used. Enum changed in F29H85x",
+            "fixMsg": "The correct enum constant 'SYSCTL_XCLKOUT_SOURCE_CPU1CLK' should be used. enumchanged in F29H85x",
             "compatible": false
         },
         {
@@ -4341,7 +4341,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "SYSCTL_XCLKOUT_SOURCE_CPU2CLK",
-            "fixMsg": "The correct enum constant 'SYSCTL_XCLKOUT_SOURCE_CPU2CLK' should be used. Enum changed in F29H85x",
+            "fixMsg": "The correct enum constant 'SYSCTL_XCLKOUT_SOURCE_CPU2CLK' should be used. enumchanged in F29H85x",
             "compatible": false
         },
         {
@@ -4349,7 +4349,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "SYSCTL_XCLKOUT_SOURCE_INTOSC1",
-            "fixMsg": "The correct enum constant 'SYSCTL_XCLKOUT_SOURCE_INTOSC1' should be used. Enum changed in F29H85x",
+            "fixMsg": "The correct enum constant 'SYSCTL_XCLKOUT_SOURCE_INTOSC1' should be used. enumchanged in F29H85x",
             "compatible": false
         },
         {
@@ -4357,7 +4357,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "SYSCTL_XCLKOUT_SOURCE_INTOSC2",
-            "fixMsg": "The correct enum constant 'SYSCTL_XCLKOUT_SOURCE_INTOSC2' should be used. Enum changed in F29H85x",
+            "fixMsg": "The correct enum constant 'SYSCTL_XCLKOUT_SOURCE_INTOSC2' should be used. enumchanged in F29H85x",
             "compatible": false
         },
         {
@@ -4365,23 +4365,23 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "SYSCTL_XCLKOUT_SOURCE_XTALOSC",
-            "fixMsg": "The correct enum constant 'SYSCTL_XCLKOUT_SOURCE_XTALOSC' should be used. Enum changed in F29H85x",
+            "fixMsg": "The correct enum constant 'SYSCTL_XCLKOUT_SOURCE_XTALOSC' should be used. enumchanged in F29H85x",
             "compatible": false
         },
         {
             "code": "SYSCTL_CORE_DEACTIVE",
             "type": "enum",
             "peripheral": "sysctl",
-            "fix": "SSU_CORE_DEACTIVE",
-            "fixMsg": "The correct enum constant 'SSU_CORE_DEACTIVE' should be used. Enum moved to SSU in F29H85x",
+            "fix": "SSU_CORE_RESET_DEACTIVE",
+            "fixMsg": "The correct enum constant 'SSU_CORE_RESET_DEACTIVE' should be used. enummoved to SSU in F29H85x",
             "compatible": false
         },
         {
             "code": "SYSCTL_CORE_ACTIVE",
             "type": "enum",
             "peripheral": "sysctl",
-            "fix": "SSU_CORE_ACTIVE",
-            "fixMsg": "The correct enum constant 'SSU_CORE_ACTIVE' should be used. Enum moved to SSU in F29H85x",
+            "fix": "SSU_CORE_RESET_ACTIVE",
+            "fixMsg": "The correct enum constant 'SSU_CORE_RESET_ACTIVE' should be used. enummoved to SSU in F29H85x",
             "compatible": false
         },
         {
@@ -4389,7 +4389,7 @@
             "type": "enum",
             "peripheral": "asysctl",
             "fix": "ASYSCTL_VREFHIAB",
-            "fixMsg": "The correct enum constant 'ASYSCTL_VREFHIAB' should be used. Enum changed in F29H85x",
+            "fixMsg": "The correct enum constant 'ASYSCTL_VREFHIAB' should be used. enumchanged in F29H85x",
             "compatible": false
         },
         {
@@ -4397,7 +4397,7 @@
             "type": "enum",
             "peripheral": "asysctl",
             "fix": "ASYSCTL_VREFHIAB",
-            "fixMsg": "The correct enum constant 'ASYSCTL_VREFHIAB' should be used. Enum changed in F29H85x",
+            "fixMsg": "The correct enum constant 'ASYSCTL_VREFHIAB' should be used. enumchanged in F29H85x",
             "compatible": false
         },
         {
@@ -4405,7 +4405,7 @@
             "type": "enum",
             "peripheral": "asysctl",
             "fix": "ASYSCTL_VREFHICDE",
-            "fixMsg": "The correct enum constant 'ASYSCTL_VREFHICDE' should be used. Enum changed in F29H85x",
+            "fixMsg": "The correct enum constant 'ASYSCTL_VREFHICDE' should be used. enumchanged in F29H85x",
             "compatible": false
         },
         {
@@ -4429,7 +4429,7 @@
             "type": "function",
             "peripheral": "adc",
             "fix": "ASysCtl_setVREF(ASysCtl_Vref vref, ASysCtl_VrefMode mode)",
-            "fixMsg": "Function changed to AsysCtl_setVREF(from Asysctl driver) with enum change and number of arguments change",
+            "fixMsg": "Function changed to AsysCtl_setVREF(from Asysctl driver) with enumchange and number of arguments change",
             "compatible": false
         },
         {
@@ -4445,7 +4445,7 @@
             "type": "function",
             "peripheral": "adc",
             "fix": "ADC_setInterruptSource(uint32_t base, ADC_IntNumber adcIntNum, ADC_IntTrigger intTrigger)",
-            "fixMsg": "Function is compatible, argument intTrigger can be used as ADC_IntTrigger enum from ADC driver",
+            "fixMsg": "Function is compatible, argument intTrigger can be used as ADC_IntTrigger enumfrom ADC driver",
             "compatible": true
         },
         {
@@ -4485,7 +4485,7 @@
             "type": "function",
             "peripheral": "mcan",
             "fix": "SysCtl_setMCANClock(SysCtl_MCANInstance mcanInst, SysCtl_MCANClkSource clksrc, SysCtl_MCANClkDivider divider)",
-            "fixMsg": "Function changed to SysCtl_setMCANClock used from SysCtl driver with macnInst enum update and new argumnet entry as divider",
+            "fixMsg": "Function changed to SysCtl_setMCANClock used from SysCtl driver with macnInst enumupdate and new argumnet entry as divider",
             "compatible": false
         },
         {
@@ -4501,14 +4501,14 @@
             "type": "function",
             "peripheral": "cputimer",
             "fix": "SysCtl_setCputimer2Clock(SysCtl_Cputimer2ClkSource source, SysCtl_Cputimer2ClkDivider divider)",
-            "fixMsg": "Function changed to SysCtl_setCputimer2Clock. Enum moved to SysCtl driver and 0paaremeter entry base removed",
+            "fixMsg": "Function changed to SysCtl_setCputimer2Clock. enummoved to SysCtl driver and 0paaremeter entry base removed",
             "compatible": false
         },
         {
             "code": "SysCtl_selectCPUForPeripheralInstance",
             "type": "function",
             "peripheral": "sysctl",
-            "fix": "SysCtl_selectCPUForPeripheral(SysCtl_PeripheralConfig peripheral,\nSysCtl_CPUSel cpuInst)",
+            "fix": "SysCtl_selectCPUForPeripheral(SysCtl_PeripheralConfig peripheral,\r\nSysCtl_CPUSel cpuInst)",
             "fixMsg": "Function renamed to SysCtl_selectCPUForPeripheral and parameter entry is compatible",
             "compatible": false
         },
@@ -4597,7 +4597,7 @@
             "type": "function",
             "peripheral": "sysctl",
             "fix": "SysCtl_setECatClock(SysCtl_ECatClkDivider divider, SysCtl_ECatPhyClk phyEnable)",
-            "fixMsg": "Function changed to SysCtl_setECatClock. Parameter entry source removed and enable can be provided as enum entry ",
+            "fixMsg": "Function changed to SysCtl_setECatClock. Parameter entry source removed and enable can be provided as enumentry ",
             "compatible": false
         },
         {
@@ -4645,7 +4645,7 @@
             "type": "function",
             "peripheral": "sysctl",
             "fix": "SysCtl_enableLPMWakeupPin(SysCtl_LPMWakeupPin pin)",
-            "fixMsg": "Function is compatible. Enum added for pin",
+            "fixMsg": "Function is compatible. enumadded for pin",
             "compatible": true
         },
         {
@@ -4653,7 +4653,7 @@
             "type": "function",
             "peripheral": "sysctl",
             "fix": "SysCtl_disableLPMWakeupPin(SysCtl_LPMWakeupPin pin)",
-            "fixMsg": "Function is compatible. Enum added for pin",
+            "fixMsg": "Function is compatible. enumadded for pin",
             "compatible": true
         },
         {
@@ -4661,7 +4661,7 @@
             "type": "function",
             "peripheral": "sysctl",
             "fix": "SysCtl_enableLPMWakeupPin(SysCtl_LPMWakeupPin pin)",
-            "fixMsg": "Function changed to SysCtl_enableLPMWakeupPin. Enum added for pin",
+            "fixMsg": "Function changed to SysCtl_enableLPMWakeupPin. enumadded for pin",
             "compatible": false
         },
         {
@@ -4669,7 +4669,7 @@
             "type": "function",
             "peripheral": "sysctl",
             "fix": "SysCtl_disableLPMWakeupPin(SysCtl_LPMWakeupPin pin)",
-            "fixMsg": "Function changed to SysCtl_disableLPMWakeupPin. Enum added for pin",
+            "fixMsg": "Function changed to SysCtl_disableLPMWakeupPin. enumadded for pin",
             "compatible": false
         },
         {
@@ -4853,7 +4853,7 @@
             "type": "function",
             "peripheral": "dma",
             "fix": "DMA_initController(uint32_t base)",
-            "fixMsg": "Function name remains same with added parameter base -  base address of the RTDMA instance. Registers writeable by CPU1.LINK0, CPU1.LINK1, CPU1.LINK2 only. Refer TRM for more details.",
+            "fixMsg": "In F29H85x device, two RTDMA instances are supported. Function name remains same with added parameter base -  base address of the RTDMA instance. Registers writeable by CPU1.LINK1, CPU1.LINK2 only. Refer TRM for more details.",
             "compatible": false
         },
         {
@@ -4861,7 +4861,7 @@
             "type": "function",
             "peripheral": "dma",
             "fix": "DMA_setEmulationMode(uint32_t base, DMA_EmulationMode mode)",
-            "fixMsg": "Function name remains same with added parameter base -  base address of the RTDMA instance. Registers writeable by CPU1.LINK0, CPU1.LINK1, CPU1.LINK2 only. Refer TRM for more details.",
+            "fixMsg": "In F29H85x device, two RTDMA instances are supported. Function name remains same with added parameter base -  base address of the RTDMA instance. Registers writeable by CPU1.LINK1, CPU1.LINK2 only. Refer TRM for more details.",
             "compatible": false
         },
         {
@@ -4869,7 +4869,7 @@
             "type": "function",
             "peripheral": "dma",
             "fix": "DMA_setPriorityMode(uint32_t base, DMA_PriorityMode priorityMode)",
-            "fixMsg": "Function name remains same with added parameter base -  base address of the RTDMA instance and enum added for priority mode. F29 allows selection between Round Robin priority mode and Software configurable priority, In F28, the selection is between Round Robin priority mode and High priority for channel 1. Registers writeable by CPU1.LINK0, CPU1.LINK1, CPU1.LINK2 only. Refer TRM for more details.",
+            "fixMsg": "In F29H85x device, two RTDMA instances are supported. Function name remains same with added parameter base -  base address of the RTDMA instance and enumadded for priority mode. F29 allows selection between Round Robin priority mode and Software configurable priority, In F28, the selection is between Round Robin priority mode and High priority for channel 1. Registers writeable by CPU1.LINK1, CPU1.LINK2 only. Refer TRM for more details.",
             "compatible": false
         },
         {
@@ -4917,7 +4917,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_setFlagLtoR(IPC_Channel_t ipcChannel, uint32_t flags)",
-            "fixMsg": "Function is compatible. Parameter name changed from ipcType to ipcChannel with corresponding Enum IPC_Channel_t",
+            "fixMsg": "Function is compatible. Parameter name changed from ipcType to ipcChannel with corresponding enumIPC_Channel_t",
             "compatible": true
         },
         {
@@ -5005,7 +5005,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_sendCommand(IPC_Channel_t ipcChannel, uint32_t flags, uint32_t command, uint32_t addr, uint32_t data)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum and paramter addrCorrEnable is removed, as this was added specifically for F2838 device where the RAM address is different between C28 and CM cores",
+            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding enumand paramter addrCorrEnable is removed, as this was added specifically for F2838 device where the RAM address is different between C28 and CM cores",
             "compatible": true
         },
         {
@@ -5013,7 +5013,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_readCommand(IPC_Channel_t ipcChannel, uint32_t flags,uint32_t *command, uint32_t *addr, uint32_t *data)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum and paramter addrCorrEnable is removed, as this was added specifically for F2838 device where the RAM address is different between C28 and CM cores",
+            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding enumand paramter addrCorrEnable is removed, as this was added specifically for F2838 device where the RAM address is different between C28 and CM cores",
             "compatible": true
         },
         {
@@ -5053,7 +5053,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_getBusCompStatus(ERAD_BusCompInstance instance)",
-            "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
+            "fixMsg": "Function is compatible. Parameter is an enuminstead of base address",
             "compatible": true
         },
         {
@@ -5061,7 +5061,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_clearBusCompEvent(ERAD_BusCompInstance instance)",
-            "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
+            "fixMsg": "Function is compatible. Parameter is an enuminstead of base address",
             "compatible": true
         },
         {
@@ -5069,7 +5069,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_getCounterStatus(ERAD_CounterInstance instance)",
-            "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
+            "fixMsg": "Function is compatible. Parameter is an enuminstead of base address",
             "compatible": true
         },
         {
@@ -5109,7 +5109,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_profile(ERAD_Profile_Params config_params)",
-            "fixMsg": "ERAD_Profile_Params structure updated to use enum for EBC, SEC instances instead of the base addresses",
+            "fixMsg": "ERAD_Profile_Params structure updated to use enumfor EBC, SEC instances instead of the base addresses",
             "compatible": false
         },
         {
@@ -5125,7 +5125,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_enableCounterResetInput(ERAD_CounterInstance instance, ERAD_Counter_Input_Event reset_event)",
-            "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
+            "fixMsg": "Function is compatible. Parameter is an enuminstead of base address",
             "compatible": true
         },
         {
@@ -5133,7 +5133,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_disableCounterResetInput(ERAD_CounterInstance instance)",
-            "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
+            "fixMsg": "Function is compatible. Parameter is an enuminstead of base address",
             "compatible": true
         },
         {
@@ -5141,7 +5141,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_clearCounterEvent(ERAD_CounterInstance instance)",
-            "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
+            "fixMsg": "Function is compatible. Parameter is an enuminstead of base address",
             "compatible": true
         },
         {
@@ -5149,7 +5149,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_clearCounterOverflow(ERAD_CounterInstance instance)",
-            "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
+            "fixMsg": "Function is compatible. Parameter is an enuminstead of base address",
             "compatible": true
         },
         {
@@ -5157,7 +5157,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_getCurrentCount(ERAD_CounterInstance instance)",
-            "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
+            "fixMsg": "Function is compatible. Parameter is an enuminstead of base address",
             "compatible": true
         },
         {
@@ -5165,7 +5165,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_setCurrentCount(ERAD_CounterInstance instance, uint32_t value)",
-            "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
+            "fixMsg": "Function is compatible. Parameter is an enuminstead of base address",
             "compatible": true
         },
         {
@@ -5173,7 +5173,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_getMaxCount(ERAD_CounterInstance instance)",
-            "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
+            "fixMsg": "Function is compatible. Parameter is an enuminstead of base address",
             "compatible": true
         },
         {
@@ -5181,7 +5181,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_setMaxCount(ERAD_CounterInstance instance, uint32_t value)",
-            "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
+            "fixMsg": "Function is compatible. Parameter is an enuminstead of base address",
             "compatible": true
         },
         {
@@ -5365,7 +5365,7 @@
             "type": "function",
             "peripheral": "erad",
             "fix": "ERAD_setCounterInputConditioning(ERAD_CounterInstance instance, ERAD_Counter_Input_Type input_type, uint16_t options)",
-            "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
+            "fixMsg": "Function is compatible. Parameter is an enuminstead of base address",
             "compatible": true
         },
         {
@@ -5377,68 +5377,220 @@
             "compatible": false
         },
         {
-            "code": "ERAD_HWBP1_BASE ",
+            "code": "ERAD_HWBP1_BASE",
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_BUSCOMP0",
-            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP0' should be used. Changed in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP0' should be used. All the driverlib functions which expects the ERAD HWBP base address as parameter has been updated to take in an ERAD BUSCOMP enumas parameter instead",
             "compatible": false
         },
         {
-            "code": "ERAD_HWBP2_BASE ",
+            "code": "ERAD_HWBP2_BASE",
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_BUSCOMP1",
-            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP1' should be used. Changed in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP1' should be used. All the driverlib functions which expects the ERAD HWBP base address as parameter has been updated to take in an ERAD BUSCOMP enumas parameter instead",
             "compatible": false
         },
         {
-            "code": "ERAD_HWBP3_BASE ",
+            "code": "ERAD_HWBP3_BASE",
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_BUSCOMP2",
-            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP2' should be used. Changed in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP2' should be used. All the driverlib functions which expects the ERAD HWBP base address as parameter has been updated to take in an ERAD BUSCOMP enumas parameter instead",
             "compatible": false
         },
         {
-            "code": "ERAD_HWBP4_BASE ",
+            "code": "ERAD_HWBP4_BASE",
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_BUSCOMP3",
-            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP3' should be used. Changed in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP3' should be used. All the driverlib functions which expects the ERAD HWBP base address as parameter has been updated to take in an ERAD BUSCOMP enumas parameter instead",
             "compatible": false
         },
         {
-            "code": "ERAD_HWBP5_BASE ",
+            "code": "ERAD_HWBP5_BASE",
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_BUSCOMP4",
-            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP4' should be used. Changed in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP4' should be used. All the driverlib functions which expects the ERAD HWBP base address as parameter has been updated to take in an ERAD BUSCOMP enumas parameter instead",
             "compatible": false
         },
         {
-            "code": "ERAD_HWBP6_BASE ",
+            "code": "ERAD_HWBP6_BASE",
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_BUSCOMP5",
-            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP5' should be used. Changed in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP5' should be used. All the driverlib functions which expects the ERAD HWBP base address as parameter has been updated to take in an ERAD BUSCOMP enumas parameter instead",
             "compatible": false
         },
         {
-            "code": "ERAD_HWBP7_BASE ",
+            "code": "ERAD_HWBP7_BASE",
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_BUSCOMP6",
-            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP6' should be used. Changed in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP6' should be used. All the driverlib functions which expects the ERAD HWBP base address as parameter has been updated to take in an ERAD BUSCOMP enumas parameter instead",
             "compatible": false
         },
         {
-            "code": "ERAD_HWBP8_BASE ",
+            "code": "ERAD_HWBP8_BASE",
             "type": "enum",
             "peripheral": "erad",
             "fix": "ERAD_BUSCOMP7",
-            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP7' should be used. Changed in F29H85x",
+            "fixMsg": "The correct enum constant 'ERAD_BUSCOMP7' should be used. All the driverlib functions which expects the ERAD HWBP base address as parameter has been updated to take in an ERAD BUSCOMP enumas parameter instead",
             "compatible": false
+        },
+        {
+            "code": "DMA_BASE",
+            "type": "enum",
+            "peripheral": "dma",
+            "fix": "RTDMA1_BASE",
+            "fixMsg": "The correct enum constant 'RTDMA1_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances are supported. In Lockstep mode, RTDMA1 can only be used.",
+            "compatible": false
+        },
+        {
+            "code": "DMA_CH1_BASE",
+            "type": "enum",
+            "peripheral": "dma",
+            "fix": "RTDMA1CH1_BASE",
+            "fixMsg": "The correct enum constant 'RTDMA1CH1_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances with 10 channels each are supported, and shared across all the CPUs. If device is configured in splitlock mode, recommended to use separate RTDMA modules in each CPU applications",
+            "compatible": false
+        },
+        {
+            "code": "DMA_CH2_BASE",
+            "type": "enum",
+            "peripheral": "dma",
+            "fix": "RTDMA1CH2_BASE",
+            "fixMsg": "The correct enum constant 'RTDMA1CH2_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances with 10 channels each are supported, and shared across all the CPUs. If device is configured in splitlock mode, recommended to use separate RTDMA modules in each CPU applications",
+            "compatible": false
+        },
+        {
+            "code": "DMA_CH3_BASE",
+            "type": "enum",
+            "peripheral": "dma",
+            "fix": "RTDMA1CH3_BASE",
+            "fixMsg": "The correct enum constant 'RTDMA1CH3_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances with 10 channels each are supported, and shared across all the CPUs. If device is configured in splitlock mode, recommended to use separate RTDMA modules in each CPU applications",
+            "compatible": false
+        },
+        {
+            "code": "DMA_CH4_BASE",
+            "type": "enum",
+            "peripheral": "dma",
+            "fix": "RTDMA1CH4_BASE",
+            "fixMsg": "The correct enum constant 'RTDMA1CH4_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances with 10 channels each are supported, and shared across all the CPUs. If device is configured in splitlock mode, recommended to use separate RTDMA modules in each CPU applications",
+            "compatible": false
+        },
+        {
+            "code": "DMA_CH5_BASE",
+            "type": "enum",
+            "peripheral": "dma",
+            "fix": "RTDMA1CH5_BASE",
+            "fixMsg": "The correct enum constant 'RTDMA1CH5_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances with 10 channels each are supported, and shared across all the CPUs. If device is configured in splitlock mode, recommended to use separate RTDMA modules in each CPU applications",
+            "compatible": false
+        },
+        {
+            "code": "DMA_CH6_BASE",
+            "type": "enum",
+            "peripheral": "dma",
+            "fix": "RTDMA1CH6_BASE",
+            "fixMsg": "The correct enum constant 'RTDMA1CH6_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances with 10 channels each are supported, and shared across all the CPUs. If device is configured in splitlock mode, recommended to use separate RTDMA modules in each CPU applications",
+            "compatible": false
+        },
+        {
+            "code": "ERAD_COUNTER1_BASE",
+            "type": "enum",
+            "peripheral": "erad",
+            "fix": "ERAD_COUNTER0",
+            "fixMsg": "The correct enum constant 'ERAD_COUNTER0' should be used. All the driverlib functions which expects the ERAD counter base address as parameter has been updated to take in an enumas parameter instead",
+            "compatible": false
+        },
+        {
+            "code": "ERAD_COUNTER2_BASE",
+            "type": "enum",
+            "peripheral": "erad",
+            "fix": "ERAD_COUNTER1",
+            "fixMsg": "The correct enum constant 'ERAD_COUNTER1' should be used. All the driverlib functions which expects the ERAD counter base address as parameter has been updated to take in an enumas parameter instead",
+            "compatible": false
+        },
+        {
+            "code": "ERAD_COUNTER3_BASE",
+            "type": "enum",
+            "peripheral": "erad",
+            "fix": "ERAD_COUNTER2",
+            "fixMsg": "The correct enum constant 'ERAD_COUNTER2' should be used. All the driverlib functions which expects the ERAD counter base address as parameter has been updated to take in an enumas parameter instead",
+            "compatible": false
+        },
+        {
+            "code": "ERAD_COUNTER4_BASE",
+            "type": "enum",
+            "peripheral": "erad",
+            "fix": "ERAD_COUNTER3",
+            "fixMsg": "The correct enum constant 'ERAD_COUNTER3' should be used. All the driverlib functions which expects the ERAD counter base address as parameter has been updated to take in an enumas parameter instead",
+            "compatible": false
+        },
+        {
+            "code": "IPC_FLAG0",
+            "type": "enum",
+            "peripheral": "ipc",
+            "fix": "IPC_FLAG0",
+            "fixMsg": "The correct enum constant 'IPC_FLAG0' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
+            "compatible": true
+        },
+        {
+            "code": "IPC_FLAG1",
+            "type": "enum",
+            "peripheral": "ipc",
+            "fix": "IPC_FLAG1",
+            "fixMsg": "The correct enum constant 'IPC_FLAG1' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
+            "compatible": true
+        },
+        {
+            "code": "IPC_FLAG2",
+            "type": "enum",
+            "peripheral": "ipc",
+            "fix": "IPC_FLAG2",
+            "fixMsg": "The correct enum constant 'IPC_FLAG2' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
+            "compatible": true
+        },
+        {
+            "code": "IPC_FLAG3",
+            "type": "enum",
+            "peripheral": "ipc",
+            "fix": "IPC_FLAG3",
+            "fixMsg": "The correct enum constant 'IPC_FLAG3' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
+            "compatible": true
+        },
+        {
+            "code": "IPC_FLAG4",
+            "type": "enum",
+            "peripheral": "ipc",
+            "fix": "IPC_FLAG4",
+            "fixMsg": "The correct enum constant 'IPC_FLAG4' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
+            "compatible": true
+        },
+        {
+            "code": "IPC_FLAG5",
+            "type": "enum",
+            "peripheral": "ipc",
+            "fix": "IPC_FLAG5",
+            "fixMsg": "The correct enum constant 'IPC_FLAG5' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
+            "compatible": true
+        },
+        {
+            "code": "IPC_FLAG6",
+            "type": "enum",
+            "peripheral": "ipc",
+            "fix": "IPC_FLAG6",
+            "fixMsg": "The correct enum constant 'IPC_FLAG6' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
+            "compatible": true
+        },
+        {
+            "code": "IPC_FLAG7",
+            "type": "enum",
+            "peripheral": "ipc",
+            "fix": "IPC_FLAG7",
+            "fixMsg": "The correct enum constant 'IPC_FLAG7' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
+            "compatible": true
         }
     ],
     "removed": [
@@ -5447,7 +5599,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5455,7 +5607,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5463,7 +5615,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5471,7 +5623,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5479,7 +5631,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5487,7 +5639,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5495,7 +5647,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5503,7 +5655,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5511,7 +5663,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x.Closest alternative is  ERAD_BUSCOMP_BUS_VPC_I_ALIGNED",
+            "fixMsg": "enum constant removed from F29H85x.Closest alternative is  ERAD_BUSCOMP_BUS_VPC_I_ALIGNED",
             "compatible": false
         },
         {
@@ -5519,7 +5671,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x.Closest alternative is  ERAD_BUSCOMP_BUS_VPC_I_ALIGNED",
+            "fixMsg": "enum constant removed from F29H85x.Closest alternative is  ERAD_BUSCOMP_BUS_VPC_I_ALIGNED",
             "compatible": false
         },
         {
@@ -5527,7 +5679,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x.Closest alternative is  ERAD_BUSCOMP_BUS_VPC_I_ALIGNED",
+            "fixMsg": "enum constant removed from F29H85x.Closest alternative is  ERAD_BUSCOMP_BUS_VPC_I_ALIGNED",
             "compatible": false
         },
         {
@@ -5535,7 +5687,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5543,7 +5695,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5551,7 +5703,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5559,7 +5711,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5567,7 +5719,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5575,7 +5727,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5583,7 +5735,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5591,7 +5743,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5599,7 +5751,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5607,7 +5759,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5615,7 +5767,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5623,7 +5775,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5631,7 +5783,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5639,7 +5791,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5647,7 +5799,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5655,7 +5807,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5663,7 +5815,7 @@
             "type": "enum",
             "peripheral": "erad",
             "fix": "NA",
-            "fixMsg": "No CRC unit. Enum constant removed from F29H85x",
+            "fixMsg": "No CRC unit. enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5671,7 +5823,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5679,7 +5831,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x. Closest alternative is XBAR_OUT_ESM_GEN_EVENT",
+            "fixMsg": "enum constant removed from F29H85x. Closest alternative is XBAR_OUT_ESM_GEN_EVENT",
             "compatible": false
         },
         {
@@ -5687,7 +5839,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5695,7 +5847,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5703,7 +5855,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5711,7 +5863,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5719,7 +5871,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5727,7 +5879,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5735,7 +5887,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5743,7 +5895,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5751,7 +5903,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5759,7 +5911,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5767,7 +5919,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5775,7 +5927,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5783,7 +5935,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5791,7 +5943,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5799,7 +5951,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5807,7 +5959,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5815,7 +5967,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5823,7 +5975,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5831,7 +5983,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5839,7 +5991,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5847,7 +5999,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5855,7 +6007,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5863,7 +6015,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5871,7 +6023,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5879,7 +6031,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5887,7 +6039,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5895,7 +6047,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5903,7 +6055,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5911,7 +6063,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5919,7 +6071,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5927,7 +6079,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5935,7 +6087,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5943,7 +6095,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5951,7 +6103,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5959,7 +6111,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5967,7 +6119,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5975,7 +6127,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5983,7 +6135,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5991,7 +6143,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -5999,7 +6151,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6007,7 +6159,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6015,7 +6167,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6023,7 +6175,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6031,7 +6183,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6039,7 +6191,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6047,7 +6199,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6055,7 +6207,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6063,7 +6215,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6071,7 +6223,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6079,7 +6231,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6087,7 +6239,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6095,7 +6247,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6103,7 +6255,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6111,7 +6263,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6119,7 +6271,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6127,7 +6279,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6135,7 +6287,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6143,7 +6295,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6151,7 +6303,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6159,7 +6311,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6167,7 +6319,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6175,7 +6327,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6183,7 +6335,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6199,7 +6351,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6207,7 +6359,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6271,7 +6423,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x. closest alternative is XBAR_OUT_ESM_GEN_EVENT",
+            "fixMsg": "enum constant removed from F29H85x. closest alternative is XBAR_OUT_ESM_GEN_EVENT",
             "compatible": false
         },
         {
@@ -6279,7 +6431,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6287,7 +6439,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6295,7 +6447,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6303,7 +6455,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6311,7 +6463,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6319,7 +6471,7 @@
             "type": "enum",
             "peripheral": "xbar",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x. closest alternative is  XBAR_CLB_ESM_GEN_EVENT",
+            "fixMsg": "enum constant removed from F29H85x. closest alternative is  XBAR_CLB_ESM_GEN_EVENT",
             "compatible": false
         },
         {
@@ -6327,7 +6479,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6335,7 +6487,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6343,7 +6495,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6351,7 +6503,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6359,7 +6511,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6367,7 +6519,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6375,7 +6527,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6383,7 +6535,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6391,7 +6543,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6399,7 +6551,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6407,7 +6559,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6415,7 +6567,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6423,7 +6575,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6431,7 +6583,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6439,7 +6591,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6447,7 +6599,7 @@
             "type": "enum",
             "peripheral": "cputimer",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6455,7 +6607,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {
@@ -6463,7 +6615,7 @@
             "type": "enum",
             "peripheral": "sysctl",
             "fix": "NA",
-            "fixMsg": "Enum constant removed from F29H85x",
+            "fixMsg": "enum constant removed from F29H85x",
             "compatible": false
         },
         {

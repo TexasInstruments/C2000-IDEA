@@ -1,5 +1,5 @@
 {
-    "trm": "https://confluence.itg.ti.com/display/C2000PreRelease/C2000+Pre-Release+Resources?preview=/727714465/984218238/SPRUJ79_F29H85xF29H58x_TRM_06142024.pdf",
+    "trm": "https://www.ti.com/lit/spruj79",
     "productPages": [
         {
             "gpn": "TMS320F29H850TU9",
@@ -51,9 +51,9 @@
         }
     ],
     "datasheet": {
-        "pdf": "https://confluence.itg.ti.com/display/C2000PreRelease/C2000+Pre-Release+Resources?preview=/727714465/984218237/SPRSP93_DS_DRAFT_PREVIEW_VER_0p5_2024Jun17.pdf",
-        "html": "",
-        "blockDiagram": "GUID-611B8260-A863-4396-8837-543E3A58D5C6/TITLE-SPRSP14SPRSP145117",
-        "pinout": "GUID-8727279B-4D17-4EC1-81B9-CA26950BE7DA/TITLE-SPRSP14SPRSP14_PINDIAG_SEC"
+        "pdf": "https://www.ti.com/lit/sprsp93",
+        "html": "https://www.ti.com/document-viewer/TMS320F29H859TU8/datasheet",
+        "blockDiagram": "https://www.ti.com/document-viewer/TMS320F29H859TU8/datasheet#GUID-611B8260-A863-4396-8837-543E3A58D5C6/TITLE-SPRSP14SPRSP145117",
+        "pinout": "https://www.ti.com/document-viewer/TMS320F29H859TU8/datasheet#GUID-8727279B-4D17-4EC1-81B9-CA26950BE7DA/TITLE-SPRSP14SPRSP14_PINDIAG_SEC"
     }
 }

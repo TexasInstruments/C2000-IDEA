@@ -17,7 +17,8 @@ export var extensionContext : vscode.ExtensionContext;
 type MigrationState = {
 	migrationDevices : string[], 
 	currentDevice : string,
-	migrationCheckExceptions? : string[]
+	migrationCheckExceptions? : string[],
+	migrationCheckFolderExceptions? : string[]
 };
 
 export type ProjectInfo = {
@@ -59,6 +60,16 @@ export function addMigrationCheckException(exceptionCode: string, projectInfo: P
 		projectInfo.migrationState.migrationCheckExceptions = [];
 	}
 	projectInfo.migrationState.migrationCheckExceptions.push(exceptionCode);
+	saveProjects(extensionContext);
+}
+
+export function addMigrationCheckFolderException(exceptionFolder: string, projectInfo: ProjectInfo)
+{
+	if (!projectInfo.migrationState.migrationCheckFolderExceptions)
+	{
+		projectInfo.migrationState.migrationCheckFolderExceptions = [];
+	}
+	projectInfo.migrationState.migrationCheckFolderExceptions.push(exceptionFolder);
 	saveProjects(extensionContext);
 }
 
@@ -203,7 +214,7 @@ export function projectSetup(context: vscode.ExtensionContext)
 
 async function runProjectMigrationF28toF29(context: vscode.ExtensionContext)
 {
-	vscode.window.showInformationMessage("Staring F28 to F29 CCS project migration");
+	vscode.window.showInformationMessage("Starting F28 to F29 CCS project migration");
 	let projectName: string | undefined = undefined;
 	let selectedProject: string | undefined;
 
@@ -408,7 +419,8 @@ async function updateProjects(projectFolderName: string, workspaceFolder : vscod
 					migrationState: {
 						migrationDevices: [],
 						currentDevice: device,
-						migrationCheckExceptions : []
+						migrationCheckExceptions : [],
+						migrationCheckFolderExceptions : []
 					}
 				});
 			}
