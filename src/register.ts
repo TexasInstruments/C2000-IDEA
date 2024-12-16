@@ -29,7 +29,7 @@ interface RegisterCodeActions {
 }
 var registerCodeActions : RegisterCodeActions[] = [];
 
-interface Dictionary<T> {
+interface bitfieldToDriverlib<T> {
     [key: string]: T;
 }
   
@@ -111,7 +111,7 @@ const registerBitfieldDecorationType = vscode.window.createTextEditorDecorationT
 		color: 'lightblue'
 	}
 });
-const bitfieldToDriverlibIpMappings: Dictionary<string> = {
+const bitfieldToDriverlibIpMappings: bitfieldToDriverlib<string> = {
     "sysctrl" : "sysctl",
 
 };
@@ -763,7 +763,7 @@ async function getDeviceTRMUrl(device: string){
 	// 	return jsonInternalRegisterLinks[device];
 	// }
 	else{
-		return ""
+		return "";
 	}
 
 }
@@ -779,7 +779,7 @@ async function getDeviceRegisterLinks(device: string)
 
 async function getDeviceRegisterRsvdWritableBits(device: string)
 {
-	var jsonRegisterRsvdName = device.toLowerCase() + "_rsvd_nonzero_regs.json";
+	var jsonRegisterRsvdName = device.toLowerCase() + "_rsvd_regs.json";
 	var jsonRegisterRsvd = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(extensionContext.extensionUri, "register_rsvd_data", jsonRegisterRsvdName));
 	const jsonRegisterRsvdContent = Buffer.from(jsonRegisterRsvd).toString('utf8');
 	var jsonRsvd : any = JSON.parse(jsonRegisterRsvdContent);

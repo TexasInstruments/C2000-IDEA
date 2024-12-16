@@ -35,11 +35,11 @@ export const BITFIELD_DEVICE_LIST : string [] = [
 export const BITFIELD_MIGRATION_PAIRS : Record<string, string[]> = {
 	"F2803x" : ["F280013x"],
 	//"F2837xD" : ["F28P65x"]
-}
+};
 
 export const BITFIELD_MIGRATION_RESOLUTIONS : Record<string, string[]> = {
 	"F2803x" : ["F280013x"]
-}
+};
 
 export const NO_REGISTER_LINK_DEVICE_LIST = [
 	"F2803x"
@@ -166,4 +166,15 @@ export function getDeviceFamilyFromGPN(gpn: string): string
 	}
 
 	return "";
+}
+
+export function isDeviceF29x(device:string) : boolean{
+	if (device.toLowerCase().startsWith("f29"))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

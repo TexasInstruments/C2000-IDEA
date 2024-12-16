@@ -1,0 +1,2574 @@
+{
+    "adc": {
+        "ADCCTL2": [
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7",
+                "resetValue": "0"
+            }
+        ],
+        "ADCOFFTRIM": [
+            {
+                "bits": "11..8",
+                "resetValue": "0"
+            }
+        ]
+    },
+    "can": {
+        "CAN_CTL": [
+            {
+                "bits": "24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25",
+                "resetValue": "0"
+            }
+        ]
+    },
+    "dma": {
+        "CONTROL": [
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            }
+        ]
+    },
+    "epwm": {
+        "TBCTL2": [
+            {
+                "bits": "5",
+                "resetValue": "0"
+            }
+        ],
+        "HRCNFG": [
+            {
+                "bits": "15..14",
+                "resetValue": "0x0"
+            }
+        ],
+        "HRPWR": [
+            {
+                "bits": "1..0",
+                "resetValue": "0x0"
+            },
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9..6",
+                "resetValue": "0"
+            }
+        ],
+        "HRCNFG2": [
+            {
+                "bits": "14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            }
+        ],
+        "HRPCTL": [
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ],
+        "DCAHTRIPSEL": [
+            {
+                "bits": "12",
+                "resetValue": "0"
+            }
+        ],
+        "DCALTRIPSEL": [
+            {
+                "bits": "12",
+                "resetValue": "0"
+            }
+        ],
+        "DCBHTRIPSEL": [
+            {
+                "bits": "12",
+                "resetValue": "0"
+            }
+        ],
+        "DCBLTRIPSEL": [
+            {
+                "bits": "12",
+                "resetValue": "0"
+            }
+        ]
+    },
+    "pmbus": {
+        "PMBCTRL": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19",
+                "resetValue": "0"
+            }
+        ]
+    },
+    "asysctl": {
+        "ANAREFCTL": [
+            {
+                "bits": "1",
+                "resetValue": "1"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            }
+        ],
+        "VMONCTL": [
+            {
+                "bits": "0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "1",
+                "resetValue": "0"
+            }
+        ],
+        "CMPHPMXSEL": [
+            {
+                "bits": "14..12",
+                "resetValue": "0x0"
+            },
+            {
+                "bits": "18..16",
+                "resetValue": "0x0"
+            },
+            {
+                "bits": "21..19",
+                "resetValue": "0x0"
+            }
+        ],
+        "CMPLPMXSEL": [
+            {
+                "bits": "14..12",
+                "resetValue": "0x0"
+            },
+            {
+                "bits": "18..16",
+                "resetValue": "0x0"
+            },
+            {
+                "bits": "21..19",
+                "resetValue": "0x0"
+            }
+        ],
+        "CMPHNMXSEL": [
+            {
+                "bits": "4",
+                "resetValue": "0x0"
+            },
+            {
+                "bits": "5",
+                "resetValue": "0x0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0x0"
+            }
+        ],
+        "CMPLNMXSEL": [
+            {
+                "bits": "4",
+                "resetValue": "0x0"
+            },
+            {
+                "bits": "5",
+                "resetValue": "0x0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0x0"
+            }
+        ],
+        "ADCDACLOOPBACK": [
+            {
+                "bits": "1",
+                "resetValue": "0x0"
+            }
+        ]
+    },
+    "gpio": {
+        "GPAQSEL2": [
+            {
+                "bits": "9..8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11..10",
+                "resetValue": "0"
+            }
+        ],
+        "GPAMUX2": [
+            {
+                "bits": "9..8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11..10",
+                "resetValue": "0"
+            }
+        ],
+        "GPADIR": [
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            }
+        ],
+        "GPAPUD": [
+            {
+                "bits": "20",
+                "resetValue": "1"
+            },
+            {
+                "bits": "21",
+                "resetValue": "1"
+            }
+        ],
+        "GPAINV": [
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            }
+        ],
+        "GPAODR": [
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            }
+        ],
+        "GPAGMUX2": [
+            {
+                "bits": "9..8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11..10",
+                "resetValue": "0"
+            }
+        ],
+        "GPALOCK": [
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            }
+        ],
+        "GPBQSEL1": [
+            {
+                "bits": "9..8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13..12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "31..30",
+                "resetValue": "0"
+            }
+        ],
+        "GPBQSEL2": [
+            {
+                "bits": "1..0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3..2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5..4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7..6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9..8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11..10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13..12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15..14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17..16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19..18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21..20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23..22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25..24",
+                "resetValue": "0"
+            }
+        ],
+        "GPBMUX1": [
+            {
+                "bits": "9..8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13..12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "31..30",
+                "resetValue": "0"
+            }
+        ],
+        "GPBMUX2": [
+            {
+                "bits": "1..0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3..2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5..4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7..6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9..8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11..10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13..12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15..14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17..16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19..18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21..20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23..22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25..24",
+                "resetValue": "0"
+            }
+        ],
+        "GPBDIR": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            },
+            {
+                "bits": "16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17",
+                "resetValue": "0"
+            },
+            {
+                "bits": "18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19",
+                "resetValue": "0"
+            },
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            },
+            {
+                "bits": "22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23",
+                "resetValue": "0"
+            },
+            {
+                "bits": "24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25",
+                "resetValue": "0"
+            },
+            {
+                "bits": "26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27",
+                "resetValue": "0"
+            },
+            {
+                "bits": "28",
+                "resetValue": "0"
+            }
+        ],
+        "GPBPUD": [
+            {
+                "bits": "4",
+                "resetValue": "1"
+            },
+            {
+                "bits": "6",
+                "resetValue": "1"
+            },
+            {
+                "bits": "15",
+                "resetValue": "1"
+            },
+            {
+                "bits": "16",
+                "resetValue": "1"
+            },
+            {
+                "bits": "17",
+                "resetValue": "1"
+            },
+            {
+                "bits": "18",
+                "resetValue": "1"
+            },
+            {
+                "bits": "19",
+                "resetValue": "1"
+            },
+            {
+                "bits": "20",
+                "resetValue": "1"
+            },
+            {
+                "bits": "21",
+                "resetValue": "1"
+            },
+            {
+                "bits": "22",
+                "resetValue": "1"
+            },
+            {
+                "bits": "23",
+                "resetValue": "1"
+            },
+            {
+                "bits": "24",
+                "resetValue": "1"
+            },
+            {
+                "bits": "25",
+                "resetValue": "1"
+            },
+            {
+                "bits": "26",
+                "resetValue": "1"
+            },
+            {
+                "bits": "27",
+                "resetValue": "1"
+            },
+            {
+                "bits": "28",
+                "resetValue": "1"
+            }
+        ],
+        "GPBINV": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            },
+            {
+                "bits": "16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17",
+                "resetValue": "0"
+            },
+            {
+                "bits": "18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19",
+                "resetValue": "0"
+            },
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            },
+            {
+                "bits": "22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23",
+                "resetValue": "0"
+            },
+            {
+                "bits": "24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25",
+                "resetValue": "0"
+            },
+            {
+                "bits": "26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27",
+                "resetValue": "0"
+            },
+            {
+                "bits": "28",
+                "resetValue": "0"
+            }
+        ],
+        "GPBODR": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            },
+            {
+                "bits": "16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17",
+                "resetValue": "0"
+            },
+            {
+                "bits": "18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19",
+                "resetValue": "0"
+            },
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            },
+            {
+                "bits": "22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23",
+                "resetValue": "0"
+            },
+            {
+                "bits": "24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25",
+                "resetValue": "0"
+            },
+            {
+                "bits": "26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27",
+                "resetValue": "0"
+            },
+            {
+                "bits": "28",
+                "resetValue": "0"
+            }
+        ],
+        "GPBGMUX1": [
+            {
+                "bits": "9..8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13..12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "31..30",
+                "resetValue": "0"
+            }
+        ],
+        "GPBGMUX2": [
+            {
+                "bits": "1..0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3..2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5..4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7..6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9..8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11..10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13..12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15..14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17..16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19..18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21..20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23..22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25..24",
+                "resetValue": "0"
+            }
+        ],
+        "GPBLOCK": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            },
+            {
+                "bits": "16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17",
+                "resetValue": "0"
+            },
+            {
+                "bits": "18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19",
+                "resetValue": "0"
+            },
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            },
+            {
+                "bits": "22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23",
+                "resetValue": "0"
+            },
+            {
+                "bits": "24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25",
+                "resetValue": "0"
+            },
+            {
+                "bits": "26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27",
+                "resetValue": "0"
+            },
+            {
+                "bits": "28",
+                "resetValue": "0"
+            }
+        ],
+        "GPHCTRL": [
+            {
+                "bits": "31..24",
+                "resetValue": "0"
+            }
+        ],
+        "GPHQSEL1": [
+            {
+                "bits": "11..10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21..20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23..22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25..24",
+                "resetValue": "0"
+            }
+        ],
+        "GPHQSEL2": [
+            {
+                "bits": "1..0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7..6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13..12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15..14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17..16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19..18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21..20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23..22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25..24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27..26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "29..28",
+                "resetValue": "0"
+            },
+            {
+                "bits": "31..30",
+                "resetValue": "0"
+            }
+        ],
+        "GPHMUX1": [
+            {
+                "bits": "11..10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21..20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23..22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25..24",
+                "resetValue": "0"
+            }
+        ],
+        "GPHMUX2": [
+            {
+                "bits": "1..0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7..6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13..12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15..14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17..16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19..18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21..20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23..22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25..24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27..26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "29..28",
+                "resetValue": "0"
+            },
+            {
+                "bits": "31..30",
+                "resetValue": "0"
+            }
+        ],
+        "GPHGMUX1": [
+            {
+                "bits": "11..10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21..20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23..22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25..24",
+                "resetValue": "0"
+            }
+        ],
+        "GPHGMUX2": [
+            {
+                "bits": "1..0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7..6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13..12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15..14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17..16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19..18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21..20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23..22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25..24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27..26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "29..28",
+                "resetValue": "0"
+            },
+            {
+                "bits": "31..30",
+                "resetValue": "0"
+            }
+        ],
+        "GPADAT": [
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            }
+        ],
+        "GPASET": [
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            }
+        ],
+        "GPACLEAR": [
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            }
+        ],
+        "GPATOGGLE": [
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            }
+        ],
+        "GPBDAT": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            },
+            {
+                "bits": "16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17",
+                "resetValue": "0"
+            },
+            {
+                "bits": "18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19",
+                "resetValue": "0"
+            },
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            },
+            {
+                "bits": "22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23",
+                "resetValue": "0"
+            },
+            {
+                "bits": "24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25",
+                "resetValue": "0"
+            },
+            {
+                "bits": "26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27",
+                "resetValue": "0"
+            },
+            {
+                "bits": "28",
+                "resetValue": "0"
+            }
+        ],
+        "GPBSET": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            },
+            {
+                "bits": "16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17",
+                "resetValue": "0"
+            },
+            {
+                "bits": "18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19",
+                "resetValue": "0"
+            },
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            },
+            {
+                "bits": "22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23",
+                "resetValue": "0"
+            },
+            {
+                "bits": "24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25",
+                "resetValue": "0"
+            },
+            {
+                "bits": "26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27",
+                "resetValue": "0"
+            },
+            {
+                "bits": "28",
+                "resetValue": "0"
+            }
+        ],
+        "GPBCLEAR": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            },
+            {
+                "bits": "16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17",
+                "resetValue": "0"
+            },
+            {
+                "bits": "18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19",
+                "resetValue": "0"
+            },
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            },
+            {
+                "bits": "22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23",
+                "resetValue": "0"
+            },
+            {
+                "bits": "24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25",
+                "resetValue": "0"
+            },
+            {
+                "bits": "26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27",
+                "resetValue": "0"
+            },
+            {
+                "bits": "28",
+                "resetValue": "0"
+            }
+        ],
+        "GPBTOGGLE": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            },
+            {
+                "bits": "16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17",
+                "resetValue": "0"
+            },
+            {
+                "bits": "18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19",
+                "resetValue": "0"
+            },
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            },
+            {
+                "bits": "22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23",
+                "resetValue": "0"
+            },
+            {
+                "bits": "24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25",
+                "resetValue": "0"
+            },
+            {
+                "bits": "26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27",
+                "resetValue": "0"
+            },
+            {
+                "bits": "28",
+                "resetValue": "0"
+            }
+        ]
+    },
+    "memcfg": {
+        "DxTEST": [
+            {
+                "bits": "5..4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7..6",
+                "resetValue": "0"
+            }
+        ],
+        "DxINIT": [
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ],
+        "LSxLOCK": [
+            {
+                "bits": "0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "1",
+                "resetValue": "0"
+            },
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ],
+        "LSxTEST": [
+            {
+                "bits": "1..0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3..2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5..4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7..6",
+                "resetValue": "0"
+            }
+        ],
+        "LSxINIT": [
+            {
+                "bits": "0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "1",
+                "resetValue": "0"
+            },
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ],
+        "LSxRAMTEST_LOCK": [
+            {
+                "bits": "0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "1",
+                "resetValue": "0"
+            },
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ],
+        "GSxLOCK": [
+            {
+                "bits": "1",
+                "resetValue": "0"
+            },
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            },
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7",
+                "resetValue": "0"
+            },
+            {
+                "bits": "8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            },
+            {
+                "bits": "10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11",
+                "resetValue": "0"
+            },
+            {
+                "bits": "12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13",
+                "resetValue": "0"
+            },
+            {
+                "bits": "14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            }
+        ],
+        "GSxTEST": [
+            {
+                "bits": "3..2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5..4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7..6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9..8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11..10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13..12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15..14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17..16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19..18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21..20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23..22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25..24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27..26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "29..28",
+                "resetValue": "0"
+            },
+            {
+                "bits": "31..30",
+                "resetValue": "0"
+            }
+        ],
+        "GSxINIT": [
+            {
+                "bits": "1",
+                "resetValue": "0"
+            },
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            },
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7",
+                "resetValue": "0"
+            },
+            {
+                "bits": "8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            },
+            {
+                "bits": "10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11",
+                "resetValue": "0"
+            },
+            {
+                "bits": "12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13",
+                "resetValue": "0"
+            },
+            {
+                "bits": "14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            }
+        ],
+        "GSxRAMTEST_LOCK": [
+            {
+                "bits": "1",
+                "resetValue": "0"
+            },
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            },
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7",
+                "resetValue": "0"
+            },
+            {
+                "bits": "8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            },
+            {
+                "bits": "10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11",
+                "resetValue": "0"
+            },
+            {
+                "bits": "12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13",
+                "resetValue": "0"
+            },
+            {
+                "bits": "14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            }
+        ],
+        "ROM_TEST": [
+            {
+                "bits": "5..4",
+                "resetValue": "0"
+            }
+        ],
+        "NMAVSET": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7",
+                "resetValue": "0"
+            },
+            {
+                "bits": "8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            }
+        ],
+        "NMAVCLR": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7",
+                "resetValue": "0"
+            },
+            {
+                "bits": "8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            }
+        ],
+        "NMAVINTEN": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7",
+                "resetValue": "0"
+            },
+            {
+                "bits": "8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            }
+        ],
+        "UCERRSET": [
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ],
+        "UCERRCLR": [
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ],
+        "CERRSET": [
+            {
+                "bits": "1",
+                "resetValue": "0"
+            },
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ],
+        "CERRCLR": [
+            {
+                "bits": "1",
+                "resetValue": "0"
+            },
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ]
+    },
+    "nmi": {
+        "NMIFLGCLR": [
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            },
+            {
+                "bits": "10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11",
+                "resetValue": "0"
+            },
+            {
+                "bits": "12",
+                "resetValue": "0"
+            }
+        ],
+        "NMIFLGFRC": [
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            },
+            {
+                "bits": "10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11",
+                "resetValue": "0"
+            },
+            {
+                "bits": "12",
+                "resetValue": "0"
+            }
+        ]
+    },
+    "sysctl": {
+        "SOFTPRES0": [
+            {
+                "bits": "0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "1",
+                "resetValue": "0"
+            },
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ],
+        "SOFTPRES2": [
+            {
+                "bits": "7",
+                "resetValue": "0"
+            },
+            {
+                "bits": "8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            },
+            {
+                "bits": "10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11",
+                "resetValue": "0"
+            },
+            {
+                "bits": "12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13",
+                "resetValue": "0"
+            },
+            {
+                "bits": "14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            }
+        ],
+        "SOFTPRES3": [
+            {
+                "bits": "3",
+                "resetValue": "0"
+            },
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7",
+                "resetValue": "0"
+            }
+        ],
+        "SOFTPRES4": [
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ],
+        "SOFTPRES7": [
+            {
+                "bits": "1",
+                "resetValue": "0"
+            },
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ],
+        "SOFTPRES8": [
+            {
+                "bits": "2",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            },
+            {
+                "bits": "16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17",
+                "resetValue": "0"
+            }
+        ],
+        "SOFTPRES13": [
+            {
+                "bits": "1",
+                "resetValue": "0"
+            },
+            {
+                "bits": "3",
+                "resetValue": "0"
+            }
+        ],
+        "SOFTPRES14": [
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7",
+                "resetValue": "0"
+            }
+        ],
+        "SOFTPRES17": [
+            {
+                "bits": "0",
+                "resetValue": "0"
+            },
+            {
+                "bits": "1",
+                "resetValue": "0"
+            },
+            {
+                "bits": "2",
+                "resetValue": "0"
+            }
+        ],
+        "SOFTPRES18": [
+            {
+                "bits": "2",
+                "resetValue": "0"
+            }
+        ],
+        "SOFTPRES20": [
+            {
+                "bits": "1",
+                "resetValue": "0"
+            }
+        ],
+        "XTALCR2": [
+            {
+                "bits": "31..16",
+                "resetValue": "0"
+            }
+        ],
+        "RESCCLR": [
+            {
+                "bits": "6",
+                "resetValue": "0"
+            }
+        ],
+        "WDCR": [
+            {
+                "bits": "7",
+                "resetValue": "0"
+            }
+        ],
+        "ADCA_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            },
+            {
+                "bits": "5..4",
+                "resetValue": "0x3"
+            },
+            {
+                "bits": "7..6",
+                "resetValue": "0x3"
+            }
+        ],
+        "ADCC_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            },
+            {
+                "bits": "5..4",
+                "resetValue": "0x3"
+            },
+            {
+                "bits": "7..6",
+                "resetValue": "0x3"
+            }
+        ],
+        "CMPSS1_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "CMPSS2_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "CMPSS3_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "CMPSS4_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "EPWM1_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "EPWM2_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "EPWM3_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "EPWM4_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "EPWM5_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "EPWM6_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "EPWM7_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "EQEP1_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "EQEP2_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "ECAP1_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "ECAP2_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "ECAP3_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "SCIA_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "SPIA_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "SPIB_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "I2CA_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "I2CB_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "PMBUS_A_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "LIN_A_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "LIN_B_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "DCANA_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "FSIATX_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "FSIARX_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "HRPWM_A_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            }
+        ],
+        "HIC_A_AC": [
+            {
+                "bits": "3..2",
+                "resetValue": "0x3"
+            },
+            {
+                "bits": "7..6",
+                "resetValue": "0x3"
+            }
+        ],
+        "SYNCSELECT": [
+            {
+                "bits": "2..0",
+                "resetValue": "0x7"
+            },
+            {
+                "bits": "5..3",
+                "resetValue": "0x7"
+            },
+            {
+                "bits": "8..6",
+                "resetValue": "0x7"
+            },
+            {
+                "bits": "11..9",
+                "resetValue": "0x7"
+            },
+            {
+                "bits": "14..12",
+                "resetValue": "0x7"
+            },
+            {
+                "bits": "17..15",
+                "resetValue": "0x7"
+            },
+            {
+                "bits": "31..29",
+                "resetValue": "0x7"
+            }
+        ],
+        "ADCSOCOUTSELECT": [
+            {
+                "bits": "7",
+                "resetValue": "0"
+            },
+            {
+                "bits": "8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            },
+            {
+                "bits": "10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23",
+                "resetValue": "0"
+            },
+            {
+                "bits": "24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25",
+                "resetValue": "0"
+            },
+            {
+                "bits": "26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27",
+                "resetValue": "0"
+            }
+        ]
+    },
+    "xbar": {
+        "XBARCLR1": [
+            {
+                "bits": "8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            },
+            {
+                "bits": "10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11",
+                "resetValue": "0"
+            },
+            {
+                "bits": "12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13",
+                "resetValue": "0"
+            },
+            {
+                "bits": "14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            },
+            {
+                "bits": "24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25",
+                "resetValue": "0"
+            },
+            {
+                "bits": "26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27",
+                "resetValue": "0"
+            },
+            {
+                "bits": "28",
+                "resetValue": "0"
+            },
+            {
+                "bits": "29",
+                "resetValue": "0"
+            },
+            {
+                "bits": "30",
+                "resetValue": "0"
+            },
+            {
+                "bits": "31",
+                "resetValue": "0"
+            }
+        ],
+        "XBARCLR2": [
+            {
+                "bits": "19",
+                "resetValue": "0"
+            },
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27",
+                "resetValue": "0"
+            },
+            {
+                "bits": "28",
+                "resetValue": "0"
+            },
+            {
+                "bits": "29",
+                "resetValue": "0"
+            },
+            {
+                "bits": "30",
+                "resetValue": "0"
+            }
+        ],
+        "XBARCLR3": [
+            {
+                "bits": "3",
+                "resetValue": "0"
+            },
+            {
+                "bits": "4",
+                "resetValue": "0"
+            },
+            {
+                "bits": "5",
+                "resetValue": "0"
+            },
+            {
+                "bits": "6",
+                "resetValue": "0"
+            },
+            {
+                "bits": "7",
+                "resetValue": "0"
+            },
+            {
+                "bits": "8",
+                "resetValue": "0"
+            },
+            {
+                "bits": "9",
+                "resetValue": "0"
+            },
+            {
+                "bits": "10",
+                "resetValue": "0"
+            },
+            {
+                "bits": "11",
+                "resetValue": "0"
+            },
+            {
+                "bits": "12",
+                "resetValue": "0"
+            },
+            {
+                "bits": "13",
+                "resetValue": "0"
+            },
+            {
+                "bits": "14",
+                "resetValue": "0"
+            },
+            {
+                "bits": "15",
+                "resetValue": "0"
+            },
+            {
+                "bits": "16",
+                "resetValue": "0"
+            },
+            {
+                "bits": "17",
+                "resetValue": "0"
+            },
+            {
+                "bits": "18",
+                "resetValue": "0"
+            },
+            {
+                "bits": "19",
+                "resetValue": "0"
+            },
+            {
+                "bits": "20",
+                "resetValue": "0"
+            },
+            {
+                "bits": "21",
+                "resetValue": "0"
+            },
+            {
+                "bits": "22",
+                "resetValue": "0"
+            },
+            {
+                "bits": "23",
+                "resetValue": "0"
+            },
+            {
+                "bits": "24",
+                "resetValue": "0"
+            },
+            {
+                "bits": "25",
+                "resetValue": "0"
+            },
+            {
+                "bits": "26",
+                "resetValue": "0"
+            },
+            {
+                "bits": "27",
+                "resetValue": "0"
+            },
+            {
+                "bits": "28",
+                "resetValue": "0"
+            },
+            {
+                "bits": "29",
+                "resetValue": "0"
+            },
+            {
+                "bits": "30",
+                "resetValue": "0"
+            },
+            {
+                "bits": "31",
+                "resetValue": "0"
+            }
+        ]
+    }
+}

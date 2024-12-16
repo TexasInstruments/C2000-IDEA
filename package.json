@@ -2,7 +2,7 @@
   "name": "c2000-idea",
   "displayName": "C2000 IDEA",
   "description": "C2000 Real-Time Controller IDE ASSIST",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.76.0"
   },
@@ -130,14 +130,6 @@
         "command": "c2000-idea.runMigrationCheckOnProject",
         "enablement": "!c2000-idea.isContinuousMigrationCheckMode",
         "title": "C2000: Run Migration Check on Project",
-        "icon": {
-          "light": "resources/light/c2000-idea-project-migrate.png",
-          "dark": "resources/dark/c2000-idea-project-migrate.png"
-        }
-      },
-      {
-        "command": "c2000-idea.runProjectMigrationF28toF29",
-        "title": "C2000: Run F28 to F29 Project Migration",
         "icon": {
           "light": "resources/light/c2000-idea-project-migrate.png",
           "dark": "resources/dark/c2000-idea-project-migrate.png"
@@ -620,11 +612,11 @@
           ],
           "description": "When working on a projectless file, what device should the tool default back to"
         },
-        "c2000-idea.migration.ignorePathPatterns": {
-          "type": "string",
+        "c2000-idea.collateral.useInternalBrowser": {
+          "type": "boolean",
           "scope": "resource",
-          "default": "",
-          "description": "File path patterns to ignore when running migration check on folders"
+          "default": true,
+          "description": "Use internal browser (if available)"
         }
       }
     }

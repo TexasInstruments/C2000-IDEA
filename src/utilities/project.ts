@@ -202,13 +202,12 @@ export function projectSetup(context: vscode.ExtensionContext)
 	});
 
 		
-	let projectMigrateF28toF29Disposal = vscode.commands.registerCommand(info.C2000_IDEA_CMD_RUN_PROJECT_MIGRATION_F28_TO_F29, () => {
-		runProjectMigrationF28toF29(context);
-	});
+	// let projectMigrateF28toF29Disposal = vscode.commands.registerCommand(info.C2000_IDEA_CMD_RUN_PROJECT_MIGRATION_F28_TO_F29, () => {
+	// 	runProjectMigrationF28toF29(context);
+	// });
 
 	context.subscriptions.push( 
-		getProjectDisposal, updateProjectDevicesDisposal, clearProjectsDisposal,
-		projectMigrateF28toF29Disposal);
+		getProjectDisposal, updateProjectDevicesDisposal, clearProjectsDisposal);
 
 }
 

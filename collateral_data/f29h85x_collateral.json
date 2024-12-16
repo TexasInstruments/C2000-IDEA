@@ -52,8 +52,8 @@
     ],
     "datasheet": {
         "pdf": "https://www.ti.com/lit/sprsp93",
-        "html": "https://www.ti.com/document-viewer/TMS320F29H859TU8/datasheet",
-        "blockDiagram": "https://www.ti.com/document-viewer/TMS320F29H859TU8/datasheet#GUID-611B8260-A863-4396-8837-543E3A58D5C6/TITLE-SPRSP14SPRSP145117",
-        "pinout": "https://www.ti.com/document-viewer/TMS320F29H859TU8/datasheet#GUID-8727279B-4D17-4EC1-81B9-CA26950BE7DA/TITLE-SPRSP14SPRSP14_PINDIAG_SEC"
+        "html": "https://www.ti.com/document-viewer/F29H850TU/datasheet",
+        "blockDiagram": "https://www.ti.com/document-viewer/F29H850TU/datasheet#GUID-611B8260-A863-4396-8837-543E3A58D5C6/TITLE-SPRSP14SPRSP145117",
+        "pinout": "https://www.ti.com/document-viewer/F29H850TU/datasheet#GUID-8727279B-4D17-4EC1-81B9-CA26950BE7DA/TITLE-SPRSP14SPRSP14_PINDIAG_SEC"
     }
 }

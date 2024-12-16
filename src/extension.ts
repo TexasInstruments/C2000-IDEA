@@ -38,7 +38,8 @@ export function activate(context: vscode.ExtensionContext) {
 	let disposableOpenCollateral = vscode.commands.registerCommand(info.C2000_IDEA_CMD_OPEN_COLLATERAL, (args) => {
 		if (args && args.link)
 		{
-			if (args.html && isTheia)
+			const collateralConfig = vscode.workspace.getConfiguration('c2000-idea.collateral');
+			if (args.html && isTheia && collateralConfig.useInternalBrowser)
 			{
 				vscode.commands.executeCommand('ccs.open.browser', args.link);
 			}
