@@ -232,6 +232,11 @@ export function isDeviceInMigrationResolutionList(device : string): boolean {
 	
 }
 
+export function isDeviceInMCPWMMigrationResolutionList(device : string): boolean {
+	return deviceData.MIGRATION_MCPWM_RESOLUTION_DEVICE_LIST.includes(device);
+	
+}
+
 export function getNonce() {
 	let text = '';
 	const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

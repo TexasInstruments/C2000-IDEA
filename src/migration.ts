@@ -31,7 +31,7 @@ function migrationUpdateIsContinuousCheckMode(status: boolean)
 // 	codeAction: vscode.CodeAction
 // }
 
-var migrationDiagnosticsCollection : vscode.DiagnosticCollection;
+export var migrationDiagnosticsCollection : vscode.DiagnosticCollection;
 
 interface MigrationCodeActions {
 	uri: vscode.Uri,
@@ -616,9 +616,35 @@ export async function getMigrationResolutionJSON(context: vscode.ExtensionContex
 export async function getMigrationDriverlibResolutionJSON(context: vscode.ExtensionContext, currentDevice: string, migrationDevice:  string)
 {
 	var jsonMigrationDriverlibResolutionDataName = "f28x_f29h85x_migration.json"; //To be updated for future releases
-	var jsonMigrationDriverlibResolutionData = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", jsonMigrationDriverlibResolutionDataName));
-	const jsonMigrationDriverlibResolutionDataContent = Buffer.from(jsonMigrationDriverlibResolutionData).toString('utf8');
-	var jsonMigrationDriverlibResolution: MigrationDriverlibResolutionData = JSON.parse(jsonMigrationDriverlibResolutionDataContent);
+	var jsonMigrationDriverlibResolution: MigrationDriverlibResolutionData = {
+			changed: [],
+			removed: []
+		};
+	
+		// Check for F29H85x device migration
+		if(utils.isDeviceInMigrationResolutionList(migrationDevice)){
+			var jsonF28F29MigrationData = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", jsonMigrationDriverlibResolutionDataName));
+			const jsonF28F29MigrationDataContent = Buffer.from(jsonF28F29MigrationData).toString('utf8');
+			const f28F29Data: MigrationDriverlibResolutionData = JSON.parse(jsonF28F29MigrationDataContent);
+			// Merge the data
+			jsonMigrationDriverlibResolution.changed = jsonMigrationDriverlibResolution.changed.concat(f28F29Data.changed);
+			jsonMigrationDriverlibResolution.removed = jsonMigrationDriverlibResolution.removed.concat(f28F29Data.removed);
+		} 
+
+		// Check for EPWM_MCPWM device migration
+		if(utils.isDeviceInMCPWMMigrationResolutionList(migrationDevice)){
+			var jsonEPWMMCPWMMigrationData = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", "epwm_mcpwm_migration.json"));
+			const jsonEPWMMCPWMMigrationDataContent = Buffer.from(jsonEPWMMCPWMMigrationData).toString('utf8');
+			const epwmMcpwmData: MigrationDriverlibResolutionData = JSON.parse(jsonEPWMMCPWMMigrationDataContent);
+			// Merge the data
+  			jsonMigrationDriverlibResolution.changed = jsonMigrationDriverlibResolution.changed.concat(epwmMcpwmData.changed);
+  			jsonMigrationDriverlibResolution.removed = jsonMigrationDriverlibResolution.removed.concat(epwmMcpwmData.removed);
+		} 
+		
+		// If the migration device is neither F29H85x nor in MCPWM list, return an empty resolution data
+		if (!utils.isDeviceInMigrationResolutionList(migrationDevice) && !utils.isDeviceInMCPWMMigrationResolutionList(migrationDevice)) {
+			jsonMigrationDriverlibResolution = { changed: [], removed: [] }; // Empty arrays
+		}
 
 	return jsonMigrationDriverlibResolution;
 }
@@ -641,6 +667,13 @@ function migrationFindAllLineNumbersWithCodeChange(documentText: string, allCode
 
 	return relevantLineNumbers.length > 0 ? relevantLineNumbers.map(lineNumber => lineNumber - 1) : [-1];
 
+}
+
+export async function migrationSDKVersionUpdate(currentDevice: string, migrationDevice: string): Promise<{ from: string, to: string}> {
+
+	const fromSDK = currentDevice.includes("F29") ? C2000_MIGRATION_C29SDK_VERSION : C2000_MIGRATION_C2000WARE_VERSION;
+	const toSDK	  = migrationDevice.includes("F29") ? C2000_MIGRATION_C29SDK_VERSION : C2000_MIGRATION_C2000WARE_VERSION;
+	return {from: fromSDK, to: toSDK};
 }
 
 export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionContext, uri: vscode.Uri, currentDevice: string, migrationDevices: string[])
@@ -862,19 +895,10 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 							let compatible;
 							let driverlibChange = 0;
 							let alternateCodeMessage = "// Enter alternate code";
-							let C2000_MIGRATION_TO_SDK_VERSION = C2000_MIGRATION_C2000WARE_VERSION;
-							let C2000_MIGRATION_FROM_SDK_VERSION = C2000_MIGRATION_C2000WARE_VERSION;
-
-							if (deviceData.isDeviceF29x(deviceMigrationData.migrationDevice))
-							{
-								C2000_MIGRATION_TO_SDK_VERSION = C2000_MIGRATION_C29SDK_VERSION;
-							}
-							if (deviceData.isDeviceF29x(currentDevice))
-							{
-								C2000_MIGRATION_FROM_SDK_VERSION = C2000_MIGRATION_C29SDK_VERSION;
-							}
+							const sdkUpdate = await migrationSDKVersionUpdate(currentDevice, deviceMigrationData.migrationDevice);
+							let C2000_MIGRATION_TO_SDK_VERSION = sdkUpdate.to;
+							let C2000_MIGRATION_FROM_SDK_VERSION = sdkUpdate.from;
 	
-							if(utils.isDeviceInMigrationResolutionList(deviceMigrationData.migrationDevice)){
 								for (var allRemovedChangedDriverlibResolution of [allRemovedDriverlibResolution, allChangedDriverlibResolution]){
 									for (let removedChangedDriverlibResolution of allRemovedChangedDriverlibResolution){
 										let codeDriverlib = removedChangedDriverlibResolution.code; 
@@ -887,7 +911,7 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 										}
 									}
 								}
-							}
+
 							if (!driverlibChange){
 								for (var allRemovedChanged of [allRemoved, allChanged]) {
 									for (let removedChangedWithoutDriverlibResolution of allRemovedChanged){
@@ -948,7 +972,7 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 											fixForLineWithMultiFix[0] = fix;
 										}
 									}
-									else if (type === "function" || type === "Real Time Library" || type === "CPU Macros")
+									else if (type === "function" || type === "real_time_library" || type === "mcu_macros")
 									{
 										if (compatible){
 											alternateCodeMessage = "// " + "Suggested replacement: " + trimmedLineText;
@@ -973,7 +997,7 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 								//
 								if (((wordText === code) || (type === "reg")) && (msg !== "")) {
 										
-									let diagnostic = new vscode.Diagnostic(wordRange, type + " " + code + ": " + msg,
+									let diagnostic = new vscode.Diagnostic(wordRange,  code + ": " + msg,
 											severity);
 									diagnostic.code = C2000_MIGRATION_INCOMPAT_CODE;
 									diagnostic.source = C2000_MIGRATION_INCOMPAT_SOURCE;

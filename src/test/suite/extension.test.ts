@@ -1,117 +1,184 @@
-import * as assert from 'assert';
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
 import * as vscode from 'vscode';
-import * as c2000idea from '../../extension';
+import * as fs from 'fs';
+import * as path from 'path';
 import * as migration from '../../migration';
-import * as info from '../../utilities/info';
 import * as project from '../../utilities/project';
+import { suite, test, after } from 'mocha';
 
-import path = require('path');
+// **Toggle for regenerating golden log**
+const generateGoldenLog = false; // Set to `true` for generating golden vector
 
-suite('Extension Test Suite', () => {
+const testMigrationWorkspacePath = path.resolve(__dirname, '../../../../../c2000-idea-test-source/migration/workspace/');
+const goldenLogPath = path.join(testMigrationWorkspacePath, 'results/migration_goldenLog.json');
+const logFilePath = path.join(testMigrationWorkspacePath, 'migrationTest_resultLog.txt');
+const logPath = generateGoldenLog ? goldenLogPath : logFilePath;
+
+// Ensure log file is cleared before test run
+fs.writeFileSync(logPath, '', { encoding: 'utf-8' });
+
+// **Function to write logs**
+function logToFile(message: string) {
+	fs.appendFileSync(logPath, message + '\n', { encoding: 'utf8' });
+}
+
+
+// **Extract Diagnostics in JSON Format with Debug Logs**
+function extractDiagnostics(diagnosticsCollection: vscode.DiagnosticCollection, testUri: vscode.Uri) {
+	let extractedDiagnostics: any[] = [];
+	
+	diagnosticsCollection.forEach((uri, diagnostics) => {
+		if (uri.fsPath === testUri.fsPath) {
+			diagnostics.forEach(diagnostic => {
+				extractedDiagnostics.push({
+					severity: vscode.DiagnosticSeverity[diagnostic.severity] || "Unknown",
+					message: diagnostic.message.trim(),
+					line: diagnostic.range.start.line + 1,
+					charRange: `${diagnostic.range.start.character} - ${diagnostic.range.end.character}`
+				});
+			});
+		}
+	});
+	return extractedDiagnostics;
+}
+	
+
+// **Read Golden Vector from JSON File**
+function parseGoldenVector(filePath: string, testCaseIdentifier: string): any[] {
+	if (!fs.existsSync(filePath)) {
+		console.log(`Golden Vector file not found: ${filePath}`);
+		return [];
+	}
+	try {
+		const jsonData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+		return jsonData[testCaseIdentifier] || [];
+	} catch (error) {
+		logToFile(`Error reading golden vector file: ${error}`);
+		return [];
+	}
+}
+	
+
+// **Compare Actual vs Expected Diagnostics**
+function compareDiagnostics(actual: any[], expected: any[], testCaseIdentifier: string) {
+	let errorsFound = false;
+	let errorDetails = ""
+	
+	expected.forEach(exp => {
+		if (!actual.some(act => JSON.stringify(act) === JSON.stringify(exp))) {
+			errorDetails += `Expected Missing -> ${JSON.stringify(exp)}\n`;
+			errorsFound = true;
+		}
+	});
+	
+	actual.forEach(act => {
+		if (!expected.some(exp => JSON.stringify(act) === JSON.stringify(exp))) {
+			errorDetails += `Unexpected Diagnostic -> ${JSON.stringify(act)}\n`;
+			errorsFound = true;
+		}
+	});
+	
+	
+	// Initialize table header if it's the first test case
+	if (!fs.existsSync(logPath) || fs.readFileSync(logPath, 'utf-8').trim() === '') {
+		logToFile(`+--------------------------------------+--------+`);
+		logToFile(`|            Test Case                 | Status |`);
+		logToFile(`+--------------------------------------+--------+`);
+	}
+
+	if (errorsFound) {
+		logToFile(`| ${testCaseIdentifier.padEnd(36)} |  Fail  |`);
+		return errorDetails;
+	} else {
+		logToFile(`| ${testCaseIdentifier.padEnd(36)} |  Pass  |`);
+		return '';
+	}
+}
+	
+
+
+
+// **Test Suite for Migration**
+suite('Migration Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
+	let allErrors: string[] = [];
 	
 	test('Migration Check from F28 to F29', async () => {
-		 // Specify the file URI
-		let testUri = vscode.Uri.file(path.resolve(__dirname, '../../../../../c2000-idea-test-source/migration/workspace/f28_to_f29_migration_file.c'));
-		// Open the file
+		let testUri = vscode.Uri.file(path.join(testMigrationWorkspacePath, 'f28_to_f29_migration_file.c'));
 		let testTextDoc = await vscode.workspace.openTextDocument(testUri);
 		await vscode.window.showTextDocument(testTextDoc);
 
-		// Run the migration check on the file - Provide current and migration device
 		await migration.migrationRunMigrationCheckOnUri(project.extensionContext, testUri, "F28P65x", ["F29H85x"]);
+		
+		let diagnosticsCollection = migration.migrationDiagnosticsCollection;
+	
+		let actualDiagnostics = extractDiagnostics(diagnosticsCollection, testUri);
+		let testCaseIdentifier = "F28 -> F29 File Migration"
+	
+		if (!generateGoldenLog) {
+			let expectedDiagnostics = parseGoldenVector(goldenLogPath, testCaseIdentifier);
+			let errorDetails = compareDiagnostics(actualDiagnostics, expectedDiagnostics, testCaseIdentifier);
+			if (errorDetails) allErrors.push(`\n====== Failed Scenarios for ${testCaseIdentifier} ====== \n${errorDetails}`);
+		} else {
+			// Ensure existing golden log is read properly
+			let goldenData: Record<string, any[]> = {};
 
- 		// Get the diagnostics for the file
-		let diagnostics = vscode.languages.getDiagnostics();
-
-		// Log diagnostics (for debugging purposes)
-		console.log('Start Diagnostics Data');
-		console.log(JSON.stringify(diagnostics, null, 4));
-		console.log('End Diagnostics Data');
-	});
-
-	test('Migration Check across F28 devcies', async () => {
-		 // Specify the file URI
-		let testUri = vscode.Uri.file(path.resolve(__dirname, '../../../../../c2000-idea-test-source/migration/workspace/f28_to_f28_migration_file.c'));
-		// Open the file
-		let testTextDoc = await vscode.workspace.openTextDocument(testUri);
-		await vscode.window.showTextDocument(testTextDoc);
-
-		// Run the migration check on the file - Provide current and migration device
-		await migration.migrationRunMigrationCheckOnUri(project.extensionContext, testUri, "F28P65x", ["F2837xd"]);
-
-		// Get the diagnostics for the file
-		let diagnostics = vscode.languages.getDiagnostics();
-
-		// Log diagnostics (for debugging purposes)
-		console.log(JSON.stringify(diagnostics, null, 4));
-	});
-
-	test('Perform Quick Fix - Wrap in #Ifdef codeAction ', async () => {
-		 // Specify the file URI
-		let testUri = vscode.Uri.file(path.resolve(__dirname, '../../../../../c2000-idea-test-source/migration/workspace/f28_to_f29_migration_quickfix.c'));
-		// Open the file
-		let testTextDoc = await vscode.workspace.openTextDocument(testUri);
-		await vscode.window.showTextDocument(testTextDoc);
-
-		// Run the migration check on the file - Provide current and migration device
-		await migration.migrationRunMigrationCheckOnUri(project.extensionContext, testUri, "F28P65x", ["F29H85x"]);
-
-		// Get the diagnostics for the file
-		let diagnostics = vscode.languages.getDiagnostics();
-
-   		 // Log diagnostics (for debugging purposes)
-    	console.log('Diagnostics before quick fix:');
-   		console.log(JSON.stringify(diagnostics, null, 4));
-
-		// Ensure that there are diagnostics available
-		assert.ok(diagnostics.length > 0, 'No diagnostics found');
-		console.log(`Number of Diagnostics : ${diagnostics.length}`);
-
-		// Process each diagnostic and attempt to apply a quick fix
-		let quickFixApplied = false;
-		for (const diagnostic of diagnostics.flatMap(([_, diags]) => diags)) {
-   			 // Fetch code actions for the current diagnostic
-    		const codeActions = await vscode.commands.executeCommand<vscode.CodeAction[]>(
-        		'vscode.executeCodeActionProvider',
-       			 testUri,
-        		diagnostic.range
-    		);
-
-			console.log(`Number of codeActions : ${codeActions.length}`);
-
-   		 	if (codeActions && codeActions.length > 0) {
-        	// Find the "Wrap in #IFDEF" code action by title
-        	const wrapIfDefAction = codeActions.find(action => action.title.includes("Wrap in device specific #IFDEF"));
-			
-
-				if (wrapIfDefAction && wrapIfDefAction.edit) {
-					console.log(`Start codeAction data`);
-					console.log(`Available codeActions:`, JSON.stringify(codeActions, null, 4));
-					console.log(`End codeAction data`);
-					// Apply the workspace edit
-					await vscode.workspace.applyEdit(wrapIfDefAction.edit);
-					console.log(`Quick fix (Wrap in #IFDEF) applied for diagnostic: ${diagnostic.message}`);
-					quickFixApplied = true;
-					//break;
-				} else {
-					console.log(`"Wrap in #IFDEF" code action not found for diagnostic: ${diagnostic.message}`);
-				}
-			} else {
-				console.log(`No code actions available for diagnostic: ${diagnostic.message}`);
+			if (fs.existsSync(goldenLogPath)) {
+    			try {
+        			const fileContent = fs.readFileSync(goldenLogPath, 'utf-8').trim();
+        			goldenData = fileContent ? JSON.parse(fileContent) : {};
+    			} catch (error) {
+        			console.error(`Error reading golden log file: ${error}`);
+    			}
 			}
+
+			// Update the golden vector
+			goldenData[testCaseIdentifier] = actualDiagnostics;
+			fs.writeFileSync(goldenLogPath, JSON.stringify(goldenData, null, 4), { encoding: 'utf-8' });
 		}
+	});
+	
+	test('Migration Check across F28 devices', async () => {
+		let testUri = vscode.Uri.file(path.join(testMigrationWorkspacePath, 'f28_to_f28_migration_file.c'));
+		let testTextDoc = await vscode.workspace.openTextDocument(testUri);
+		await vscode.window.showTextDocument(testTextDoc);
 
-		if (!quickFixApplied) {
-    		console.log('No applicable quick fix was applied.');
+		await migration.migrationRunMigrationCheckOnUri(project.extensionContext, testUri, "F28P65x", ["F2837xd"]);
+	
+		let diagnosticsCollection = migration.migrationDiagnosticsCollection;
+	
+		let actualDiagnostics = extractDiagnostics(diagnosticsCollection, testUri);
+		let testCaseIdentifier = "F28 -> F28 File Migration"
+	
+		if (!generateGoldenLog) {
+			let expectedDiagnostics = parseGoldenVector(goldenLogPath, testCaseIdentifier);
+			let errorDetails = compareDiagnostics(actualDiagnostics, expectedDiagnostics, testCaseIdentifier);
+			if (errorDetails) allErrors.push(`\n====== Failed Scenarios for ${testCaseIdentifier} ====== \n${errorDetails}`);
+		} else {	
+			// Ensure existing golden log is read properly
+			let goldenData: Record<string, any[]> = {};
+			
+			if (fs.existsSync(goldenLogPath)) {
+    			try {
+        			const fileContent = fs.readFileSync(goldenLogPath, 'utf-8').trim();
+        			goldenData = fileContent ? JSON.parse(fileContent) : {};
+    			} catch (error) {
+        			console.error(`Error reading golden log file: ${error}`);
+    			}
+			}
+
+			// Update the golden vector
+			goldenData[testCaseIdentifier] = actualDiagnostics;
+			fs.writeFileSync(goldenLogPath, JSON.stringify(goldenData, null, 4), { encoding: 'utf-8' });
 		}
-
-		// Get diagnostics again after the quick fix to check if they were resolved
-		const updatedDiagnostics = vscode.languages.getDiagnostics(testUri);
-		console.log('Diagnostics after quick fix:');
-		console.log(JSON.stringify(updatedDiagnostics, null, 4));
-
+	});
+	
+	// **After Test Suite Execution**
+	after(async function() {
+		if(!generateGoldenLog) {
+			logToFile(`+--------------------------------------+--------+`);
+			allErrors.forEach(error => logToFile(error));
+		}
 	});
 });
+	
+
