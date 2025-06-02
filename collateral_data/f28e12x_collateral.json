@@ -1,0 +1,19 @@
+{
+    "trm": "https://www.ti.com/lit/sprujd3",
+    "productPages": [
+        {
+            "gpn": "F28E120SC",
+            "link": "https://www.ti.com/product/F28E120SC"
+        },
+        {
+            "gpn": "F28E120SB",
+            "link": "https://www.ti.com/product/F28E120SB"
+        }
+    ],
+    "datasheet": {
+        "pdf": "https://www.ti.com/lit/sprspb9",
+        "html": "https://www.ti.com/document-viewer/F28E120SC/datasheet",
+        "blockDiagram": "https://www.ti.com/document-viewer/F28E120SC/datasheet#GUID-7E375D84-0B27-446B-851C-33BA1A76A989/GUID-3BABB51A-026F-482E-94E1-F292FCC597EE",
+        "pinout": "https://www.ti.com/document-viewer/F28E120SC/datasheet#"
+    }
+}
