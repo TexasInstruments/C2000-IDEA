@@ -3,6 +3,7 @@ export const C29_DEVICE_VARIANT = "TMS320C29XX";
 
 export const DEVICE_LIST : string [] = [
 	"F29H85x",
+	"F28E12x",
 	"F28P55x",
 	"F28P65x",
 	"F28002x",
@@ -18,6 +19,7 @@ export const DEVICE_LIST : string [] = [
 
 export const BITFIELD_DEVICE_LIST : string [] = [
 	"F29H85x",
+	"F28E12x",
 	"F28P55x",
 	"F28P65x",
 	"F28002x",
@@ -34,7 +36,6 @@ export const BITFIELD_DEVICE_LIST : string [] = [
 
 export const BITFIELD_MIGRATION_PAIRS : Record<string, string[]> = {
 	"F2803x" : ["F280013x"],
-	//"F2837xD" : ["F28P65x"]
 };
 
 export const BITFIELD_MIGRATION_RESOLUTIONS : Record<string, string[]> = {
@@ -47,6 +48,7 @@ export const NO_REGISTER_LINK_DEVICE_LIST = [
 
 export const MIGRATION_RESOLUTION_DEVICE_LIST : string [] = [
 	"F29H85x",
+	"F28E12x",
 	"F28P55x",
 	"F28P65x",
 	"F28002x",
@@ -63,6 +65,7 @@ export const MIGRATION_RESOLUTION_DEVICE_LIST : string [] = [
 
 export const MIGRATION_RESOLUTION_FROM_DEVICE_LIST = [
 	"F28P55x",
+	"F28E12x",
 	"F28P65x",
 	"F28002x",
 	"F28004x",
@@ -78,6 +81,26 @@ export const MIGRATION_RESOLUTION_FROM_DEVICE_LIST = [
 
 export const MIGRATION_RESOLUTION_TO_DEVICE_LIST = [
 	"F29H85x"
+];
+
+export const MIGRATION_EPWM_RESOLUTION_DEVICE_LIST = [
+	"F28P55x",
+	"F29H85x",
+	"F28P65x",
+	"F28002x",
+	"F28004x",
+	"F28003x",
+	"F280013x",
+	"F280015x",
+	"F2838x",
+	"F2837xD",
+	"F2837xS",
+	"F2807x",
+	"F2803x"
+];
+
+export const MIGRATION_MCPWM_RESOLUTION_DEVICE_LIST = [
+	"F28E12x"
 ];
 
 

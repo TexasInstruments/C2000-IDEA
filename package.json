@@ -2,7 +2,7 @@
   "name": "c2000-idea",
   "displayName": "C2000 IDEA",
   "description": "C2000 Real-Time Controller IDE ASSIST",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "engines": {
     "vscode": "^1.76.0"
   },

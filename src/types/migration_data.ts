@@ -44,10 +44,6 @@ interface MigrationDriverlibResolutionElement {
 
 
 interface MigrationDriverlibResolutionData {
-    removed : [
-        MigrationDriverlibResolutionElement
-    ],
-    changed : [
-        MigrationDriverlibResolutionElement
-    ]
+    removed : MigrationDriverlibResolutionElement[],
+    changed : MigrationDriverlibResolutionElement[]
 }

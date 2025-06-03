@@ -1,0 +1,4710 @@
+{
+    "changed": [
+        {
+            "code": "EPWM_clearSyncEvent",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_clearSyncStatus(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disablePhaseShiftLoad",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_disablePhaseShiftLoad(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableSyncOutPulseSource",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setSyncOutPulseMode(uint32_t base, MCPWM_SyncOutPulseMode mode)",
+            "fixMsg": "In MCPWM module, this function has disable capability through arguments",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enablePhaseShiftLoad",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_enablePhaseShiftLoad(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableSyncOutPulseSource",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setSyncOutPulseMode(uint32_t base, MCPWM_SyncOutPulseMode mode)",
+            "fixMsg": "In MCPWM module, the function has been changed with different sync sources available",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_forceSyncPulse",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_forceSyncPulse(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getSyncStatus",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_getSyncStatus(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getTimeBaseCounterDirection",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_getTimeBaseCounterDirection(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getTimeBaseCounterOverflowStatus",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_getInterruptSource(uint32_t base)",
+            "fixMsg": "In this function, need to check- MCPWM_INT_TBCTR_OVF bit for the status",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getTimeBaseCounterValue",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_getTimeBaseCounterValue(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getTimeBasePeriod",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_getTimeBasePeriodActive(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been changed and  for shadow operations useMCPWM_getTimeBasePeriodShadow function",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_isBaseValid",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_isBaseValid(uint32_t base)",
+            "fixMsg": "In the MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setClockPrescaler",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setClockPrescaler(uint32_t base, MCPWM_ClockDivider prescaler)",
+            "fixMsg": "In MCPWM module, this function maintains same functionally with change in prescalars and argument variation by using MCPWMCLKDIV instead of HSCLKDIV and EPWMCLKDIV ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setCountModeAfterSync",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setCountModeAfterSync(uint32_t base, MCPWM_SyncCountMode mode)",
+            "fixMsg": "In the MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setEmulationMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setEmulationMode(uint32_t base, MCPWM_EmulationMode emulationMode)",
+            "fixMsg": "In the MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setPeriodLoadMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setPeriodLoadMode(uint32_t base, MCPWM_PeriodLoadMode loadMode)",
+            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overriden by global load if enabled",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setPhaseShift",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setPhaseShift(uint32_t base, uint16_t phaseCount)",
+            "fixMsg": "In the MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setSyncInPulseSource",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setSyncInPulseSource(uint32_t base, MCPWM_SyncInPulseSource source)",
+            "fixMsg": "In MCPWM module, the function has been changed with different sync sources available",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setSyncOutPulseMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setSyncOutPulseMode(uint32_t base, MCPWM_SyncOutPulseMode mode)",
+            "fixMsg": "In MCPWM module, the function has been changed with  different pulse modes available",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setSyncPulseSource",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setSyncPulseSource(uint32_t base, MCPWM_SyncPulseSource syncPulseSource)",
+            "fixMsg": "In MCPWM module, the function has been changed with different sync sources available",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setTimeBaseCounter",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setTimeBaseCounter(uint32_t base, uint16_t count)",
+            "fixMsg": "In the MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setTimeBaseCounterMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setTimeBaseCounterMode(uint32_t base, MCPWM_TimeBaseCountMode counterMode)",
+            "fixMsg": "In MCPWM module, the function has been changed but down Count Mode is not present",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setTimeBasePeriod",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setTimeBasePeriodActive(uint32_t base, uint16_t periodCount)",
+            "fixMsg": "In MCPWM module, the function has been changed and for shadow operations use MCPWM_setTimeBasePeriodShadow ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableCounterCompareShadowLoadMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setCounterCompareShadowLoadMode(uint32_t base, MCPWM_CounterCompareModule compModule, MCPWM_CounterCompareLoadMode loadMode)",
+            "fixMsg": "In MCPWM module, this function is near compatible by using with FREEZE mode",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getCounterCompareValue",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_getCounterCompareActiveValue(uint32_t base,  MCPWM_CounterCompareModule compModule)",
+            "fixMsg": "In MCPWM module, the function has been changed and for shadow operations use MCPWM_getCounterCompareShadowValue ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setCounterCompareShadowLoadMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setCounterCompareShadowLoadMode(uint32_t base, MCPWM_CounterCompareModule compModule, MCPWM_CounterCompareLoadMode loadMode)",
+            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overriden by global load if enabled",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setCounterCompareValue",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setCounterCompareActiveValue(uint32_t base, MCPWM_CounterCompareModule compModule, uint16_t compCount)",
+            "fixMsg": "In MCPWM module, the function has been changed and for shadow operations use MCPWM_setCounterCompareShadowValue. The arguments need to be correct compare module A1/A2/A3/B1/B2/B3, instead of A/B",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableActionQualifierShadowLoadMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setActionQualifierShadowLoadMode(uint32_t base, MCPWM_ActionQualifierModule aqModule, MCPWM_ActionQualifierLoadMode loadMode)",
+            "fixMsg": "In MCPWM module, this function is near compatible by using with FREEZE mode",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_forceActionQualifierSWAction",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_forceActionQualifierSWAction(uint32_t base, MCPWM_ActionQualifierOutputModule mcpwmOutput)",
+            "fixMsg": "In the MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setActionQualifierAction",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setActionQualifierActionActive(uint32_t base, MCPWM_ActionQualifierOutputModule mcpwmOutput, MCPWM_ActionQualifierOutput output, MCPWM_ActionQualifierOutputEvent event)",
+            "fixMsg": "In MCPWM module, the function has been changed and for shadow operations use MCPWM_setActionQualifierActionShadow. The arguments need to be correct compare module A1/A2/A3/B1/B2/B3, instead of A/B",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setActionQualifierActionComplete",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setActionQualifierActionCompleteActive(uint32_t base, MCPWM_ActionQualifierOutputModule mcpwmOutput, uint16_t action)",
+            "fixMsg": "In MCPWM module, the function has been changed and for shadow operations use  MCPWM_setActionQualifierActionCompleteShadow",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setActionQualifierContSWForceAction",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setActionQualifierSWAction(uint32_t base, MCPWM_ActionQualifierOutputModule mcpwmOutput, MCPWM_ActionQualifierSWForceOutput output)",
+            "fixMsg": "In MCPWM module, the function has been changed  and  MCPWM_setActionQualifierSWAction is the nearest compatible.The arguments need to be provided in the form of A1/A2/A3, B1/B2/B3 ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setActionQualifierShadowLoadMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setActionQualifierShadowLoadMode(uint32_t base, MCPWM_ActionQualifierModule aqModule, MCPWM_ActionQualifierLoadMode loadMode)",
+            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overriden by global load if enabled",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setActionQualifierSWAction",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setActionQualifierSWAction(uint32_t base, MCPWM_ActionQualifierOutputModule mcpwmOutput, MCPWM_ActionQualifierSWForceOutput output)",
+            "fixMsg": "In MCPWM module, the function has been changed  and  MCPWM_setActionQualifierSWAction is the nearest compatible.The arguments need to be provided in the form of A1/A2/A3, B1/B2/B3 ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setAdditionalActionQualifierActionComplete",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setActionQualifierActionCompleteActive(uint32_t base, MCPWM_ActionQualifierOutputModule mcpwmOutput, uint16_t action)",
+            "fixMsg": "In MCPWM module, this function is nearest compatible  and for shadow operations use  MCPWM_setActionQualifierActionCompleteShadow",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableFallingEdgeDelayCountShadowLoadMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setFallingEdgeDelayCountShadowLoadMode(uint32_t base, MCPWM_FallingEdgeDelayLoadMode loadMode)",
+            "fixMsg": "In MCPWM module, this function is nearest compatible  and  use MCPWM_setFallingEdgeDelayCountShadowLoadMode with FREEZE mode",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableRisingEdgeDelayCountShadowLoadMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setRisingEdgeDelayCountShadowLoadMode(uint32_t base, MCPWM_RisingEdgeDelayLoadMode loadMode)",
+            "fixMsg": "In MCPWM module, this function is nearest compatible  and  use  MCPWM_setRisingEdgeDelayCountShadowLoadMode with FREEZE mode",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDeadBandDelayMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setDeadBandDelayMode(uint32_t base, MCPWM_DeadBandDelayMode delayMode, bool enableDelayMode)",
+            "fixMsg": "In MCPWM module, the function has been changed but common DeadBand Module for all 3 pairs of channel outputs",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDeadBandDelayPolarity",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setDeadBandDelayPolarity(uint32_t base, MCPWM_DeadBandDelayMode delayMode, MCPWM_DeadBandPolarity polarity)",
+            "fixMsg": "In MCPWM module, the function has been changed but common DeadBand Module for all 3 pairs of channel outputs",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDeadBandOutputSwapMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setDeadBandOutputSwapMode(uint32_t base, MCPWM_DeadBandOutput output, bool enableSwapMode)",
+            "fixMsg": "In MCPWM module, the function has been changed but common DeadBand Module for all 3 pairs of channel outputs",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setFallingEdgeDeadBandDelayInput",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setFallingEdgeDeadBandDelayInput(uint32_t base, uint16_t input)",
+            "fixMsg": "In MCPWM module, the function has been changed but common DeadBand Module for all 3 pairs of channel outputs",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setFallingEdgeDelayCount",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setFallingEdgeDelayCountActive(uint32_t base, uint16_t fedCount)",
+            "fixMsg": "In MCPWM module, the function has been changed and  for shadow operations  use MCPWM_setFallingEdgeDelayCountShadow",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setFallingEdgeDelayCountShadowLoadMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setFallingEdgeDelayCountShadowLoadMode(uint32_t base, MCPWM_FallingEdgeDelayLoadMode loadMode)",
+            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overriden by global load if enabled",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setRisingEdgeDeadBandDelayInput",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setRisingEdgeDeadBandDelayInput(uint32_t base, uint16_t input)",
+            "fixMsg": "In MCPWM module, the function has been changed but common DeadBand Module for all 3 pairs of channel outputs",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setRisingEdgeDelayCount",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setRisingEdgeDelayCountActive(uint32_t base, uint16_t redCount)",
+            "fixMsg": "In MCPWM module, the function has been changed and  for shadow operations  use MCPWM_setRisingEdgeDelayCountShadow",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setRisingEdgeDelayCountShadowLoadMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setRisingEdgeDelayCountShadowLoadMode(uint32_t base,  MCPWM_RisingEdgeDelayLoadMode loadMode)",
+            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overriden by global load if enabled",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_clearCycleByCycleTripZoneFlag",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_clearTripZoneFlagStatus(uint32_t base, uint32_t tzFlags)",
+            "fixMsg": "In MCPWM module, this function is nearest compatible and use MCPWM_clearTripZoneFlagStatus",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_clearOneShotTripZoneFlag",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_clearTripZoneFlagStatus(uint32_t base, uint32_t tzFlags)",
+            "fixMsg": "In MCPWM module, this function is nearest compatible and use MCPWM_clearTripZoneFlagStatus",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_clearTripZoneFlag",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_clearTripZoneFlagStatus(uint32_t base, uint32_t tzFlags)",
+            "fixMsg": "In MCPWM module, the function has been changed and different flag bits available, digital Compare Signals are not available, but individual source flags are available. If Trip Zone Interrupt Flag needs to be cleared use, MCPWM_clearInterrupt",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableTripZoneAdvAction",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setTripZoneAction(uint32_t base, MCPWM_TripZoneEvent tzEvent, MCPWM_TripZoneAction tzAction)",
+            "fixMsg": "In MCPWM module, this function is nearest compatible and use MCPWM_setTripZoneAction with basic configurations",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableTripZoneInterrupt",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_disableInterrupt(uint32_t base, uint16_t intFlags)",
+            "fixMsg": "In MCPWM module, the function has been changed and MCPWM TZ Interrupt is OR-ed with ET1/2 interrupts ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableTripZoneSignals",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_disableTripZoneSignals(uint32_t base, uint32_t tzSignal)",
+            "fixMsg": "In MCPWM module, the function has been changed with different trip sources available and common Trip Zone Functionalities for all 3 pairs of channle outputs",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableTripZoneInterrupt",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_enableInterrupt(uint32_t base, uint16_t intFlags)",
+            "fixMsg": "In MCPWM module, the function has been changed and MCPWM TZ Interrupt is OR-ed with ET1/2 interrupts ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableTripZoneSignals",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_enableTripZoneSignals(uint32_t base, uint32_t tzSignal)",
+            "fixMsg": "In MCPWM module, the function has been changed with different trip sources available and common Trip Zone Functionalities for all 3 pairs of channle outputs",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_forceTripZoneEvent",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_forceInterrupt(uint32_t base, uint16_t intFlags)",
+            "fixMsg": "In MCPWM module, this function is nearest compatible. In MCPWM, Interrupt Architecture is modified and is an OR-ed output of multiple Sources",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getOneShotTripZoneFlagStatus",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_getTripZoneFlagStatus(uint32_t base)",
+            "fixMsg": "In MCPWM module, this function is nearest compatible and use MCPWM_getTripZoneFlagStatus with appropriate flags",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getTripZoneFlagStatus",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_getTripZoneFlagStatus(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been changed with different flag bits available, Digital Compare Signals are not available, but individual source flags are available",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_selectCycleByCycleTripZoneClearEvent",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_selectTripZoneCBCEvent(uint32_t base, MCPWM_TripZoneCBCMode clearEvent)",
+            "fixMsg": "In MCPWM module, the function has been changed with similar functionality and different options",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setTripZoneAction",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setTripZoneAction(uint32_t base, MCPWM_TripZoneEvent tzEvent, MCPWM_TripZoneAction tzAction)",
+            "fixMsg": "In MCPWM module, the function has been changed with different trip actions available and Common Trip Zone Functionalities for all 3 Pairs of Channle Outputs",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setTripZoneAdvAction",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setTripZoneAction(uint32_t base, MCPWM_TripZoneEvent tzEvent, MCPWM_TripZoneAction tzAction)",
+            "fixMsg": "In MCPWM module, this function is nearest compatible and use MCPWM_setTripZoneAction with basic configurations",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setTripZoneAdvDigitalCompareActionA",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setTripZoneAction(uint32_t base, MCPWM_TripZoneEvent tzEvent, MCPWM_TripZoneAction tzAction)",
+            "fixMsg": "In MCPWM module, this function is nearest compatible and use MCPWM_setTripZoneAction with basic configurations",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setTripZoneAdvDigitalCompareActionB",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setTripZoneAction(uint32_t base, MCPWM_TripZoneEvent tzEvent, MCPWM_TripZoneAction tzAction)",
+            "fixMsg": "In MCPWM module, this function is nearest compatible and use MCPWM_setTripZoneAction with basic configurations",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableGlobalLoad",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_disableGlobalLoad(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been changed and local loads are overriden by global load if enabled",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableGlobalLoadOneShotMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_disableGlobalLoadOneShotMode(uint32_t base)",
+            "fixMsg": "In the MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableGlobalLoad",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_enableGlobalLoad(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been changed and local loads are overriden by global load if enabled",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableGlobalLoadOneShotMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_enableGlobalLoadOneShotMode(uint32_t base)",
+            "fixMsg": "In the MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_forceGlobalLoadOneShotEvent",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_forceGlobalLoadOneShotEvent(uint32_t base)",
+            "fixMsg": "In the MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setGlobalLoadOneShotLatch",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setGlobalLoadOneShotLatch(uint32_t base)",
+            "fixMsg": "In the MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setGlobalLoadTrigger",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setGlobalLoadTrigger(uint32_t base, MCPWM_GlobalLoadTrigger loadTrigger)",
+            "fixMsg": "In MCPWM module, the function has been changed with different trigger options available",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_clearADCTriggerFlag",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_clearADCTriggerFlag(uint32_t base, MCPWM_ADCStartOfConversionType adcSOCType)",
+            "fixMsg": "In MCPWM module, the function has been changed with different flag bits available",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_clearEventTriggerInterruptFlag",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_clearGlobalInterrupt(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been changed with different flag bits but similar functionality",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableADCTrigger",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_disableADCTrigger(uint32_t base, MCPWM_ADCStartOfConversionType adcSOCType)",
+            "fixMsg": "In MCPWM module, the function has been changed and MCPWM supports 4 SOC (A from A1/A2/A3, B from B1/B2/B3 ,C,D) unlike EPWMs",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableInterrupt",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_disableInterrupt(uint32_t base, uint16_t intFlags)",
+            "fixMsg": "In MCPWM module, the function has been changed with different interrupt sources available and Common Interrupt for ET1/2, TZ CBC/OST, Counter Overflow",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableADCTrigger",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_enableADCTrigger(uint32_t base, MCPWM_ADCStartOfConversionType adcSOCType)",
+            "fixMsg": "In MCPWM module, the function has been changed and MCPWM supports 4 SOC (A from A1/A2/A3, B from B1/B2/B3 ,C,D) unlike EPWMs",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableInterrupt",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_enableInterrupt(uint32_t base, uint16_t intFlags)",
+            "fixMsg": "In MCPWM module, the function has been changed with different interrupt sources available and Common Interrupt for ET1/2, TZ CBC/OST, Counter Overflow",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_forceEventTriggerInterrupt",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_forceInterrupt(uint32_t base, uint16_t intFlags)",
+            "fixMsg": "In MCPWM module, the function has been changed with different interrupt sources available and  common Interrupt for ET1/2, TZ CBC/OST, Counter Overflow",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getADCTriggerEventCount",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_getADCTriggerEventCount(uint32_t base, MCPWM_ADCStartOfConversionType adcSOCType)",
+            "fixMsg": "In MCPWM module, the function has been changed but different ranges",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getADCTriggerFlagStatus",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_getADCTriggerFlagStatus(uint32_t base, MCPWM_ADCStartOfConversionType adcSOCType)",
+            "fixMsg": "In MCPWM module, the function has been changed with different flag bits available",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setADCTriggerEventPrescale",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setADCTriggerEventPrescale(uint32_t base, MCPWM_ADCStartOfConversionType adcSOCType,  uint16_t preScaleCount)",
+            "fixMsg": "In MCPWM module, the function has been changed with different triggers available and SOC A/B/C/D Should be correctly mentioned for adcSOCType Variable",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setADCTriggerSource",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setADCTriggerSource(uint32_t base, MCPWM_ADCStartOfConversionType adcSOCType, MCPWM_ADCStartOfConversionSource socSource)",
+            "fixMsg": "In MCPWM module, the function has been changed with different prescale ranges available and SOC A/B/C/D Should be correctly mentioned for adcSOCType Variable",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setInterruptEventCount",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_setEventTriggerEventPrescale(uint32_t base, MCPWM_EventTriggerType evtTrigType, uint16_t preScaleCount)",
+            "fixMsg": "In MCPWM module, this function is nearest compatible and use Event Trigger Submodules for Prescaling the Events to trigger Interrupt using, MCPWM_setEventTriggerEventPrescale. Enable corresponding Interrupt Source",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setInterruptSource",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_enableInterrupt(uint32_t base, uint16_t intFlags)",
+            "fixMsg": "In MCPWM module, the function has been changed with different interrupt sources available and Common Interrupt for ET1/2, TZ CBC/OST, Counter Overflow",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getEventTriggerInterruptStatus",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_getGlobalInterruptStatus(uint32_t base)",
+            "fixMsg": "In the MCPWM module, the function has been renamed while ensuring that its original functionality remains unchanged.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getInterruptEventCount",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_getGlobalInterruptStatus(uint32_t base)",
+            "fixMsg": "In MCPWM module, the function has been changed with different arguments, flag bits but similar functionality",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_configureSignal",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "MCPWM_configureSignal(uint32_t base, const MCPWM_SignalParams *signalParams)",
+            "fixMsg": "In MCPWM module, the function has been changed with different signal parameters available",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_OUT_PULSE_ON_SOFTWARE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SYNC_OUT_PULSE_ON_SOFTWARE",
+            "fixMsg": "The correct enum constant 'MCPWM_SYNC_OUT_PULSE_ON_SOFTWARE' should be used. In MCPWM, the register takes a value, unlike EPWM register that takes OR-ed Value",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_OUT_PULSE_ON_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SYNC_OUT_PULSE_ON_COUNTER_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_SYNC_OUT_PULSE_ON_COUNTER_ZERO' should be used. In MCPWM, the register takes a value, unlike EPWM register that takes OR-ed Value",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_OUT_PULSE_ON_CNTR_COMPARE_C",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SYNC_OUT_PULSE_ON_COUNTER_COMPARE_C",
+            "fixMsg": "The correct enum constant 'MCPWM_SYNC_OUT_PULSE_ON_COUNTER_COMPARE_C' should be used. In MCPWM, the register takes a value, unlike EPWM register that takes OR-ed Value",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_OUT_PULSE_ON_CNTR_COMPARE_D",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SYNC_OUT_PULSE_ON_COUNTER_COMPARE_D",
+            "fixMsg": "The correct enum constant 'MCPWM_SYNC_OUT_PULSE_ON_COUNTER_COMPARE_D' should be used. In MCPWM, the register takes a value, unlike EPWM register that takes OR-ed Value",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_EMULATION_STOP_AFTER_NEXT_TB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EMULATION_STOP_AFTER_NEXT_TB",
+            "fixMsg": "The correct enum constant 'MCPWM_EMULATION_STOP_AFTER_NEXT_TB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_EMULATION_STOP_AFTER_FULL_CYCLE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EMULATION_STOP_AFTER_FULL_CYCLE",
+            "fixMsg": "The correct enum constant 'MCPWM_EMULATION_STOP_AFTER_FULL_CYCLE' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_EMULATION_FREE_RUN",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EMULATION_FREE_RUN",
+            "fixMsg": "The correct enum constant 'MCPWM_EMULATION_FREE_RUN' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COUNT_MODE_DOWN_AFTER_SYNC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COUNT_MODE_DOWN_AFTER_SYNC",
+            "fixMsg": "The correct enum constant 'MCPWM_COUNT_MODE_DOWN_AFTER_SYNC' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COUNT_MODE_UP_AFTER_SYNC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COUNT_MODE_UP_AFTER_SYNC",
+            "fixMsg": "The correct enum constant 'MCPWM_COUNT_MODE_UP_AFTER_SYNC' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_CLOCK_DIVIDER_1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_CLOCK_DIVIDER_1",
+            "fixMsg": "The correct enum constant 'MCPWM_CLOCK_DIVIDER_1' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_CLOCK_DIVIDER_2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_CLOCK_DIVIDER_2",
+            "fixMsg": "The correct enum constant 'MCPWM_CLOCK_DIVIDER_2' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_CLOCK_DIVIDER_4",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_CLOCK_DIVIDER_4",
+            "fixMsg": "The correct enum constant 'MCPWM_CLOCK_DIVIDER_4' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_CLOCK_DIVIDER_8",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_CLOCK_DIVIDER_8",
+            "fixMsg": "The correct enum constant 'MCPWM_CLOCK_DIVIDER_8' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_CLOCK_DIVIDER_16",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_CLOCK_DIVIDER_16",
+            "fixMsg": "The correct enum constant 'MCPWM_CLOCK_DIVIDER_16' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_CLOCK_DIVIDER_32",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_CLOCK_DIVIDER_32",
+            "fixMsg": "The correct enum constant 'MCPWM_CLOCK_DIVIDER_32' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_CLOCK_DIVIDER_64",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_CLOCK_DIVIDER_64",
+            "fixMsg": "The correct enum constant 'MCPWM_CLOCK_DIVIDER_64' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_CLOCK_DIVIDER_128",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_CLOCK_DIVIDER_128",
+            "fixMsg": "The correct enum constant 'MCPWM_CLOCK_DIVIDER_128' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_DISABLE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SYNC_IN_PULSE_SRC_DISABLE",
+            "fixMsg": "The correct enum constant 'MCPWM_SYNC_IN_PULSE_SRC_DISABLE' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SYNC_IN_PULSE_SRC_SYNCOUT_MCPWM1",
+            "fixMsg": "The correct enum constant 'MCPWM_SYNC_IN_PULSE_SRC_SYNCOUT_MCPWM1' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM3",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SYNC_IN_PULSE_SRC_SYNCOUT_MCPWM3",
+            "fixMsg": "The correct enum constant 'MCPWM_SYNC_IN_PULSE_SRC_SYNCOUT_MCPWM3' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP1",
+            "fixMsg": "The correct enum constant 'MCPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP1' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_INPUTXBAR_OUT5",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SYNC_IN_PULSE_SRC_INPUTXBAR_OUT5",
+            "fixMsg": "The correct enum constant 'MCPWM_SYNC_IN_PULSE_SRC_INPUTXBAR_OUT5' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_INPUTXBAR_OUT6",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SYNC_IN_PULSE_SRC_INPUTXBAR_OUT6",
+            "fixMsg": "The correct enum constant 'MCPWM_SYNC_IN_PULSE_SRC_INPUTXBAR_OUT6' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_PERIOD_SHADOW_LOAD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_PERIOD_SHADOW_LOAD_ENABLE",
+            "fixMsg": "The correct enum constant 'MCPWM_PERIOD_SHADOW_LOAD_ENABLE' should be used. MCPWM has physical registers for Shadow and Active.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_PERIOD_DIRECT_LOAD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_PERIOD_SHADOW_LOAD_DISABLE",
+            "fixMsg": "The correct enum constant 'MCPWM_PERIOD_SHADOW_LOAD_DISABLE' should be used. MCPWM has physical registers for Shadow and Active.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COUNTER_MODE_UP",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COUNTER_MODE_UP",
+            "fixMsg": "The correct enum constant 'MCPWM_COUNTER_MODE_UP' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COUNTER_MODE_UP_DOWN",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COUNTER_MODE_UP_DOWN",
+            "fixMsg": "The correct enum constant 'MCPWM_COUNTER_MODE_UP_DOWN' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COUNTER_MODE_STOP_FREEZE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COUNTER_MODE_STOP_FREEZE",
+            "fixMsg": "The correct enum constant 'MCPWM_COUNTER_MODE_STOP_FREEZE' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TIME_BASE_STATUS_COUNT_UP",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TIME_BASE_STATUS_COUNT_UP",
+            "fixMsg": "The correct enum constant 'MCPWM_TIME_BASE_STATUS_COUNT_UP' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TIME_BASE_STATUS_COUNT_DOWN",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TIME_BASE_STATUS_COUNT_DOWN",
+            "fixMsg": "The correct enum constant 'MCPWM_TIME_BASE_STATUS_COUNT_DOWN' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COUNTER_COMPARE_A",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COUNTER_COMPARE_1A",
+            "fixMsg": "The correct enum constant 'MCPWM_COUNTER_COMPARE_1A' should be used. MCPWM has 3 sets of Counter Compare A/B ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COUNTER_COMPARE_B",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COUNTER_COMPARE_1B",
+            "fixMsg": "The correct enum constant 'MCPWM_COUNTER_COMPARE_1B' should be used. MCPWM has 3 sets of Counter Compare A/B ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COUNTER_COMPARE_C",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COUNTER_COMPARE_C",
+            "fixMsg": "The correct enum constant 'MCPWM_COUNTER_COMPARE_C' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COUNTER_COMPARE_D",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COUNTER_COMPARE_D",
+            "fixMsg": "The correct enum constant 'MCPWM_COUNTER_COMPARE_D' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COMP_LOAD_ON_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COMP_LOAD_ON_CNTR_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_COMP_LOAD_ON_CNTR_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COMP_LOAD_ON_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COMP_LOAD_ON_CNTR_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_COMP_LOAD_ON_CNTR_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COMP_LOAD_ON_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COMP_LOAD_ON_CNTR_ZERO_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_COMP_LOAD_ON_CNTR_ZERO_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COMP_LOAD_FREEZE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_COMP_LOAD_FREEZE",
+            "fixMsg": "The correct enum constant 'MCPWM_COMP_LOAD_FREEZE' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_ACTION_QUALIFIER_A",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_ACTION_QUALIFIER_1A",
+            "fixMsg": "The correct enum constant 'MCPWM_ACTION_QUALIFIER_1A' should be used. MCPWM has 3 sets of Action Qualifier A/B ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_ACTION_QUALIFIER_B",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_ACTION_QUALIFIER_1B",
+            "fixMsg": "The correct enum constant 'MCPWM_ACTION_QUALIFIER_1B' should be used. MCPWM has 3 sets of Action Qualifier A/B ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_LOAD_ON_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_LOAD_ON_CNTR_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_LOAD_ON_CNTR_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_LOAD_ON_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_LOAD_ON_CNTR_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_LOAD_ON_CNTR_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_LOAD_ON_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_LOAD_ON_CNTR_ZERO_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_LOAD_ON_CNTR_ZERO_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_LOAD_FREEZE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_LOAD_FREEZE",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_LOAD_FREEZE' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_ON_TIMEBASE_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_ON_TIMEBASE_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_ON_TIMEBASE_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_ON_TIMEBASE_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_ON_TIMEBASE_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_ON_TIMEBASE_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_ON_TIMEBASE_UP_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_ON_TIMEBASE_UP_CMPA",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_ON_TIMEBASE_UP_CMPA' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_ON_TIMEBASE_DOWN_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_ON_TIMEBASE_DOWN_CMPA",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_ON_TIMEBASE_DOWN_CMPA' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_ON_TIMEBASE_UP_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_ON_TIMEBASE_UP_CMPB",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_ON_TIMEBASE_UP_CMPB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_ON_TIMEBASE_DOWN_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_ON_TIMEBASE_DOWN_CMPB",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_ON_TIMEBASE_DOWN_CMPB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_NO_CHANGE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_NO_CHANGE",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_NO_CHANGE' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_LOW",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_LOW",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_LOW' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_HIGH",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_HIGH",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_HIGH' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_TOGGLE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_TOGGLE",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_TOGGLE' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_SW_DISABLED",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_SW_FORCE_DISABLED",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_SW_FORCE_DISABLED' should be used. MCPWM SW AQFRC takes action to be continous or Oneshot and is handled by AQOTFRC writes",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_SW_OUTPUT_LOW",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_SW_CONTINUOUS_LOW",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_SW_CONTINUOUS_LOW' should be used. MCPWM SW AQFRC takes action to be continous or Oneshot and is handled by AQOTFRC writes",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_SW_OUTPUT_HIGH",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_SW_CONTINUOUS_HIGH",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_SW_CONTINUOUS_HIGH' should be used. MCPWM SW AQFRC takes action to be continous or Oneshot and is handled by AQOTFRC writes",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_NO_CHANGE_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_NO_CHANGE_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_NO_CHANGE_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_LOW_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_LOW_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_LOW_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_HIGH_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_HIGH_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_HIGH_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_TOGGLE_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_TOGGLE_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_TOGGLE_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_NO_CHANGE_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_NO_CHANGE_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_NO_CHANGE_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_LOW_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_LOW_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_LOW_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_HIGH_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_HIGH_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_HIGH_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_TOGGLE_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_TOGGLE_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_TOGGLE_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_NO_CHANGE_UP_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_NO_CHANGE_UP_CMPA",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_NO_CHANGE_UP_CMPA' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_LOW_UP_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_LOW_UP_CMPA",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_LOW_UP_CMPA' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_HIGH_UP_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_HIGH_UP_CMPA",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_HIGH_UP_CMPA' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_TOGGLE_UP_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_TOGGLE_UP_CMPA",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_TOGGLE_UP_CMPA' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_NO_CHANGE_DOWN_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_NO_CHANGE_DOWN_CMPA",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_NO_CHANGE_DOWN_CMPA' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_LOW_DOWN_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_LOW_DOWN_CMPA",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_LOW_DOWN_CMPA' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_HIGH_DOWN_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_HIGH_DOWN_CMPA",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_HIGH_DOWN_CMPA' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_TOGGLE_DOWN_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_TOGGLE_DOWN_CMPA",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_TOGGLE_DOWN_CMPA' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_NO_CHANGE_UP_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_NO_CHANGE_UP_CMPB",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_NO_CHANGE_UP_CMPB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_LOW_UP_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_LOW_UP_CMPB",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_LOW_UP_CMPB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_HIGH_UP_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_HIGH_UP_CMPB",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_HIGH_UP_CMPB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_TOGGLE_UP_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_TOGGLE_UP_CMPB",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_TOGGLE_UP_CMPB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_NO_CHANGE_DOWN_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_NO_CHANGE_DOWN_CMPB",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_NO_CHANGE_DOWN_CMPB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_LOW_DOWN_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_LOW_DOWN_CMPB",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_LOW_DOWN_CMPB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_HIGH_DOWN_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_HIGH_DOWN_CMPB",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_HIGH_DOWN_CMPB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_TOGGLE_DOWN_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_TOGGLE_DOWN_CMPB",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_TOGGLE_DOWN_CMPB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_A",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_1A",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_1A' should be used. MCPWM has 3 sets of Action Qualifier A/B ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_B",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_AQ_OUTPUT_1B",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_OUTPUT_1B' should be used. MCPWM has 3 sets of Action Qualifier A/B ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_OUTPUT_A",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_DB_OUTPUT_A",
+            "fixMsg": "The correct enum constant 'MCPWM_DB_OUTPUT_A' should be used. MCPWM DeadBand is common to all 3 Pairs of outputs",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_OUTPUT_B",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_DB_OUTPUT_B",
+            "fixMsg": "The correct enum constant 'MCPWM_DB_OUTPUT_B' should be used. MCPWM DeadBand is common to all 3 Pairs of outputs",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_RED",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_DB_RED",
+            "fixMsg": "The correct enum constant 'MCPWM_DB_RED' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_FED",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_DB_FED",
+            "fixMsg": "The correct enum constant 'MCPWM_DB_FED' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_POLARITY_ACTIVE_HIGH",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_DB_POLARITY_ACTIVE_HIGH",
+            "fixMsg": "The correct enum constant 'MCPWM_DB_POLARITY_ACTIVE_HIGH' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_POLARITY_ACTIVE_LOW",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_DB_POLARITY_ACTIVE_LOW",
+            "fixMsg": "The correct enum constant 'MCPWM_DB_POLARITY_ACTIVE_LOW' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_INPUT_EPWMA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_DB_INPUT_MCPWMA",
+            "fixMsg": "The correct enum constant 'MCPWM_DB_INPUT_MCPWMA' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_INPUT_EPWMB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_DB_INPUT_MCPWMB",
+            "fixMsg": "The correct enum constant 'MCPWM_DB_INPUT_MCPWMB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_INPUT_DB_RED",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_DB_INPUT_DB_RED",
+            "fixMsg": "The correct enum constant 'MCPWM_DB_INPUT_DB_RED' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_RED_LOAD_ON_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_RED_LOAD_ON_CNTR_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_RED_LOAD_ON_CNTR_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_RED_LOAD_ON_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_RED_LOAD_ON_CNTR_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_RED_LOAD_ON_CNTR_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_RED_LOAD_ON_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_RED_LOAD_ON_CNTR_ZERO_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_RED_LOAD_ON_CNTR_ZERO_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_RED_LOAD_FREEZE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_RED_LOAD_FREEZE",
+            "fixMsg": "The correct enum constant 'MCPWM_RED_LOAD_FREEZE' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_FED_LOAD_ON_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_FED_LOAD_ON_CNTR_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_FED_LOAD_ON_CNTR_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_FED_LOAD_ON_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_FED_LOAD_ON_CNTR_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_FED_LOAD_ON_CNTR_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_FED_LOAD_ON_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_FED_LOAD_ON_CNTR_ZERO_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_FED_LOAD_ON_CNTR_ZERO_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_FED_LOAD_FREEZE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_FED_LOAD_FREEZE",
+            "fixMsg": "The correct enum constant 'MCPWM_FED_LOAD_FREEZE' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_CBC1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_SIGNAL_CBC1",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_SIGNAL_CBC1' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_CBC2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_SIGNAL_CBC2",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_SIGNAL_CBC2' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_CBC3",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_SIGNAL_CBC3",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_SIGNAL_CBC3' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_CBC4",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_SIGNAL_CBC4",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_SIGNAL_CBC4' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_CBC5",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_SIGNAL_CBC5",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_SIGNAL_CBC5' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_CBC6",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_SIGNAL_CBC6",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_SIGNAL_CBC6' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_OSHT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_SIGNAL_OSHT1",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_SIGNAL_OSHT1' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_OSHT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_SIGNAL_OSHT2",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_SIGNAL_OSHT2' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_OSHT3",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_SIGNAL_OSHT3",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_SIGNAL_OSHT3' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_OSHT4",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_SIGNAL_OSHT4",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_SIGNAL_OSHT4' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_OSHT5",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_SIGNAL_OSHT5",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_SIGNAL_OSHT5' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_OSHT6",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_SIGNAL_OSHT6",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_SIGNAL_OSHT6' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ACTION_EVENT_TZA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_ACTION_EVENT_TZA",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_ACTION_EVENT_TZA' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ACTION_EVENT_TZB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_ACTION_EVENT_TZB",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_ACTION_EVENT_TZB' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ACTION_HIGH_Z",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_ACTION_HIGH_Z",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_ACTION_HIGH_Z' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ACTION_HIGH",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_ACTION_HIGH",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_ACTION_HIGH' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ACTION_LOW",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_ACTION_LOW",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_ACTION_LOW' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ACTION_DISABLE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_ACTION_DISABLE",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_ACTION_DISABLE' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_INTERRUPT_CBC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_INT_TZ_CBC",
+            "fixMsg": "The correct enum constant 'MCPWM_INT_TZ_CBC' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_INTERRUPT_OST",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_INT_TZ_OST",
+            "fixMsg": "The correct enum constant 'MCPWM_INT_TZ_OST' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_FLAG_CBC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_CBC_TZ1",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_CBC_TZ1' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_FLAG_OST",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_OST_TZ1",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_OST_TZ1' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_INTERRUPT",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_INT_TZ_CBC",
+            "fixMsg": "The correct enum constant 'MCPWM_INT_TZ_CBC' should be used. MCPWM TZ interrupt Flags are split between MCPWM_INT_TZ_CBC and MCPWM_INT_TZ_OST",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_CBC_FLAG_1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_CBC_TZ1",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_CBC_TZ1' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_CBC_FLAG_2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_CBC_TZ2",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_CBC_TZ2' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_CBC_FLAG_3",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_CBC_TZ3",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_CBC_TZ3' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_CBC_FLAG_4",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_CBC_TZ4",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_CBC_TZ4' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_CBC_FLAG_5",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_CBC_TZ5",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_CBC_TZ5' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_CBC_FLAG_6",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_CBC_TZ6",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_CBC_TZ6' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_OST_FLAG_OST1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_OST_TZ1",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_OST_TZ1' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_OST_FLAG_OST2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_OST_TZ2",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_OST_TZ2' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_OST_FLAG_OST3",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_OST_TZ3",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_OST_TZ3' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_OST_FLAG_OST4",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_OST_TZ4",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_OST_TZ4' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_OST_FLAG_OST5",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_OST_TZ5",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_OST_TZ5' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_OST_FLAG_OST6",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_FLAG_OST_TZ6",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_FLAG_OST_TZ6' should be used. MCPWM TZ flags include MCPWM_TZ_FLAG_CBC_TZx and MCPWM_TZ_FLAG_OST_TZx (x is 1 to 8) ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_CBC_PULSE_CLR_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_CBC_PULSE_CLR_CNTR_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_CBC_PULSE_CLR_CNTR_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_CBC_PULSE_CLR_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_CBC_PULSE_CLR_CNTR_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_CBC_PULSE_CLR_CNTR_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_CBC_PULSE_CLR_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_TZ_CBC_PULSE_CLR_CNTR_ZERO_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_TZ_CBC_PULSE_CLR_CNTR_ZERO_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_FORCE_EVENT_CBC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_INT_TZ_CBC",
+            "fixMsg": "The correct enum constant 'MCPWM_INT_TZ_CBC' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_FORCE_EVENT_OST",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_INT_TZ_OST",
+            "fixMsg": "The correct enum constant 'MCPWM_INT_TZ_OST' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_INT_TBCTR_DISABLED",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EVT_DISABLED",
+            "fixMsg": "The correct enum constant 'MCPWM_EVT_DISABLED' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_INT_TBCTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EVT_TBCTR_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_EVT_TBCTR_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_INT_TBCTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EVT_TBCTR_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_EVT_TBCTR_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_INT_TBCTR_ZERO_OR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EVT_TBCTR_ZERO_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_EVT_TBCTR_ZERO_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_INT_TBCTR_U_CMPC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EVT_TBCTR_U_CMPC",
+            "fixMsg": "The correct enum constant 'MCPWM_EVT_TBCTR_U_CMPC' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_INT_TBCTR_U_CMPD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EVT_TBCTR_U_CMPD",
+            "fixMsg": "The correct enum constant 'MCPWM_EVT_TBCTR_U_CMPD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_INT_TBCTR_U_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EVT_TBCTR_U_CMP1A",
+            "fixMsg": "The correct enum constant 'MCPWM_EVT_TBCTR_U_CMP1A' should be used. CMP A,B are A1,A2,A3, B1, B2, B3 in MCPWM. EPWM event trigger is now 2 instances in MCPWM as ET1 and ET2 and is an input to the Interrupt module. This enabling source in the ETSEL register or MCPWM_setEventTriggerSource and then using MCPWM_enableInterrupt against the ET selected will enable this source for interrupt generation.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_INT_TBCTR_U_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EVT_TBCTR_U_CMP1B",
+            "fixMsg": "The correct enum constant 'MCPWM_EVT_TBCTR_U_CMP1B' should be used. CMP A,B are A1,A2,A3, B1, B2, B3 in MCPWM. EPWM event trigger is now 2 instances in MCPWM as ET1 and ET2 and is an input to the Interrupt module. This enabling source in the ETSEL register or MCPWM_setEventTriggerSource and then using MCPWM_enableInterrupt against the ET selected will enable this source for interrupt generation.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_INT_TBCTR_D_CMPC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EVT_TBCTR_D_CMPC",
+            "fixMsg": "The correct enum constant 'MCPWM_EVT_TBCTR_D_CMPC' should be used. EPWM event trigger is now 2 instances in MCPWM as ET1 and ET2 and is an input to the Interrupt module. This enabling source in the ETSEL register or MCPWM_setEventTriggerSource and then using MCPWM_enableInterrupt against the ET selected will enable this source for interrupt generation.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_INT_TBCTR_D_CMPD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EVT_TBCTR_D_CMPD",
+            "fixMsg": "The correct enum constant 'MCPWM_EVT_TBCTR_D_CMPD' should be used. EPWM event trigger is now 2 instances in MCPWM as ET1 and ET2 and is an input to the Interrupt module. This enabling source in the ETSEL register or MCPWM_setEventTriggerSource and then using MCPWM_enableInterrupt against the ET selected will enable this source for interrupt generation.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_INT_TBCTR_D_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EVT_TBCTR_D_CMP2A",
+            "fixMsg": "The correct enum constant 'MCPWM_EVT_TBCTR_D_CMP2A' should be used. EPWM event trigger is now 2 instances in MCPWM as ET1 and ET2 and is an input to the Interrupt module. This enabling source in the ETSEL register or MCPWM_setEventTriggerSource and then using MCPWM_enableInterrupt against the ET selected will enable this source for interrupt generation.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_INT_TBCTR_D_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_EVT_TBCTR_D_CMP1B",
+            "fixMsg": "The correct enum constant 'MCPWM_EVT_TBCTR_D_CMP1B' should be used. EPWM event trigger is now 2 instances in MCPWM as ET1 and ET2 and is an input to the Interrupt module. This enabling source in the ETSEL register or MCPWM_setEventTriggerSource and then using MCPWM_enableInterrupt against the ET selected will enable this source for interrupt generation.",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_A",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_A",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_A' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_B",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_B",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_B' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_TBCTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_TBCTR_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_TBCTR_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_TBCTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_TBCTR_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_TBCTR_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_TBCTR_ZERO_OR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_TBCTR_ZERO_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_TBCTR_ZERO_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_TBCTR_U_CMPC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_TBCTR_U_CMPC",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_TBCTR_U_CMPC' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_TBCTR_U_CMPD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_TBCTR_U_CMPD",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_TBCTR_U_CMPD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_TBCTR_U_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_TBCTR_U_CMP1A",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_TBCTR_U_CMP1A' should be used. MCPWM SOC signals are SOC A,B,C,D and can be triggered from CMPxA, CMPxB (x is 1 to 3)",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_TBCTR_U_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_TBCTR_U_CMP1B",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_TBCTR_U_CMP1B' should be used. MCPWM SOC signals are SOC A,B,C,D and can be triggered from CMPxA, CMPxB (x is 1 to 3)",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_TBCTR_D_CMPC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_TBCTR_D_CMPC",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_TBCTR_D_CMPC' should be used. MCPWM SOC signals are SOC A,B,C,D and can be triggered from CMPxA, CMPxB (x is 1 to 3)",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_TBCTR_D_CMPD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_TBCTR_D_CMPD",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_TBCTR_D_CMPD' should be used. MCPWM SOC signals are SOC A,B,C,D and can be triggered from CMPxA, CMPxB (x is 1 to 3)",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_TBCTR_D_CMPA",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_TBCTR_D_CMP1A",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_TBCTR_D_CMP1A' should be used. MCPWM SOC signals are SOC A,B,C,D and can be triggered from CMPxA, CMPxB (x is 1 to 3)",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_TBCTR_D_CMPB",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_SOC_TBCTR_D_CMP1B",
+            "fixMsg": "The correct enum constant 'MCPWM_SOC_TBCTR_D_CMP1B' should be used. MCPWM SOC signals are SOC A,B,C,D and can be triggered from CMPxA, CMPxB (x is 1 to 3)",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_LOAD_PULSE_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_GL_LOAD_PULSE_CNTR_ZERO",
+            "fixMsg": "The correct enum constant 'MCPWM_GL_LOAD_PULSE_CNTR_ZERO' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_LOAD_PULSE_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_GL_LOAD_PULSE_CNTR_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_GL_LOAD_PULSE_CNTR_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_LOAD_PULSE_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_GL_LOAD_PULSE_CNTR_ZERO_PERIOD",
+            "fixMsg": "The correct enum constant 'MCPWM_GL_LOAD_PULSE_CNTR_ZERO_PERIOD' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_LOAD_PULSE_GLOBAL_FORCE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "MCPWM_GL_LOAD_PULSE_GLOBAL_FORCE",
+            "fixMsg": "The correct enum constant 'MCPWM_GL_LOAD_PULSE_GLOBAL_FORCE' should be used. In MCPWM module, this enum is changed",
+            "compatible": false
+        },
+        {
+            "code": "EPWM1_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM2_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM3_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM4_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM5_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM6_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM7_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM8_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM9_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM10_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM11_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM12_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM13_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM14_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM15_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM16_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM17_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        },
+        {
+            "code": "EPWM18_BASE",
+            "type": "mcu_macros",
+            "peripheral": "epwm",
+            "fix": "PWM1_BASE",
+            "fixMsg": "In MCPWM module, each instance supports either 6 channels or 2 channels. PWM3_BASE would be other alternative. EPWMX_BASE is not supported ",
+            "compatible": false
+        }
+    ],
+    "removed": [
+        {
+            "code": "EPWM_clearTimeBaseCounterOverflowEvent",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableOneShotSync",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableOneShotSync",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_selectOneShotSyncOutTrigger",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setOneShotSyncOutTrigger",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_startOneShotSync",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getCounterCompareShadowStatus",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setActionQualifierContSWForceShadowMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setActionQualifierT1TriggerSource",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setActionQualifierT2TriggerSource",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableDeadBandControlShadowLoadMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDeadBandControlShadowLoadMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDeadBandCounterClock",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableTripZoneAdvAction",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getCycleByCycleTripZoneFlagStatus",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableGlobalLoadRegisters",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableGlobalLoadRegisters",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setGlobalLoadEventPrescale",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableADCTriggerEventCountInit",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableDigitalCompareADCTrigger",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableInterruptEventCountInit",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableADCTriggerEventCountInit",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableDigitalCompareADCTrigger",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableInterruptEventCountInit",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_forceADCTrigger",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_forceADCTriggerEventCountInit",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_forceInterruptEventCountInit",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setADCTriggerEventCountInitValue",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setInterruptEventCountInitValue",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setTripZoneDigitalCompareEventCondition",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableDigitalCompareSyncEvent",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableDigitalCompareSyncEvent",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDigitalCompareEventSyncMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_clearDigitalCompareCaptureStatusFlag",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_configureDigitalCompareCounterCaptureMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableChopper",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableDigitalCompareBlankingWindow",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableDigitalCompareCounterCapture",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableDigitalCompareEdgeFilter ",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableDigitalCompareTripCombinationInput",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableDigitalCompareWindowInverseMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableValleyCapture",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_disableValleyHWDelay",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableChopper",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableDigitalCompareBlankingWindow",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableDigitalCompareCounterCapture",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableDigitalCompareEdgeFilter",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableDigitalCompareTripCombinationInput",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableDigitalCompareWindowInverseMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableValleyCapture",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_enableValleyHWDelay",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getDigitalCompareBlankingWindowLengthCount",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getDigitalCompareBlankingWindowOffsetCount",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getDigitalCompareCaptureCount",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getDigitalCompareCaptureStatus",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getDigitalCompareCBCLatchStatus",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getDigitalCompareEdgeFilterEdgeCount",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getDigitalCompareEdgeFilterEdgeStatus",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getValleyCount",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getValleyEdgeStatus",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_getValleyHWDelay",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_lockRegisters",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_selectDigitalCompareCBCLatchClearEvent",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_selectDigitalCompareTripCombinationInput",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_selectDigitalCompareTripInput",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setChopperDutyCycle",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setChopperFirstPulseWidth",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setChopperFreq",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDigitalCompareBlankingEvent",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDigitalCompareBlankingPulse",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDigitalCompareCBCLatchMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDigitalCompareCounterShadowMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDigitalCompareEdgeFilterEdgeCount",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDigitalCompareEdgeFilterMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDigitalCompareEventSource",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDigitalCompareFilterInput",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDigitalCompareWindowLength",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setDigitalCompareWindowOffset",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setupEPWMLinks",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setValleyDelayDivider",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setValleyDelayMode",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setValleyTriggerEdgeCounts",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_setValleyTriggerSource",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_startValleyCapture",
+            "type": "function",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this function is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_OUT_SOURCE_M",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_OUT_PULSE_ON_CNTR_COMPARE_B",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_OUT_PULSE_ON_DCA_EVT1_SYNC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_OUT_PULSE_ON_DCB_EVT1_SYNC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_OUT_PULSE_ON_ALL",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_HSCLOCK_DIVIDER_1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_HSCLOCK_DIVIDER_2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_HSCLOCK_DIVIDER_4",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_HSCLOCK_DIVIDER_6",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_HSCLOCK_DIVIDER_8",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_HSCLOCK_DIVIDER_10",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_HSCLOCK_DIVIDER_12",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_HSCLOCK_DIVIDER_14",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM4",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM5",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM6",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM7",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP3",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_OSHT_SYNC_OUT_TRIG_SYNC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_OSHT_SYNC_OUT_TRIG_RELOAD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COUNTER_MODE_DOWN",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SHADOW_LOAD_MODE_COUNTER_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SHADOW_LOAD_MODE_COUNTER_SYNC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SHADOW_LOAD_MODE_SYNC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_WITH_EPWM_1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_WITH_EPWM_2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_WITH_EPWM_3",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_WITH_EPWM_4",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_WITH_EPWM_5",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_WITH_EPWM_6",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_WITH_EPWM_7",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_TBPRD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_COMP_A",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_COMP_B",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_COMP_C",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_COMP_D",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_LINK_GLDCTL2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COMP_LOAD_ON_SYNC_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COMP_LOAD_ON_SYNC_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COMP_LOAD_ON_SYNC_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_COMP_LOAD_ON_SYNC_ONLY",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_LOAD_ON_SYNC_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_LOAD_ON_SYNC_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_LOAD_ON_SYNC_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_LOAD_ON_SYNC_ONLY",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_TRIGGER_EVENT_TRIG_DCA_1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_TRIGGER_EVENT_TRIG_DCA_2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_TRIGGER_EVENT_TRIG_DCB_1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_TRIGGER_EVENT_TRIG_DCB_2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_TRIGGER_EVENT_TRIG_TZ_1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_TRIGGER_EVENT_TRIG_TZ_2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_TRIGGER_EVENT_TRIG_TZ_3",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_TRIGGER_EVENT_TRIG_EPWM_SYNCIN",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_TRIGGER_EVENT_TRIG_DC_EVTFILT",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_ON_T1_COUNT_UP",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_ON_T1_COUNT_DOWN",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_ON_T2_COUNT_UP",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_ON_T2_COUNT_DOWN",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_NO_CHANGE_UP_T1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_LOW_UP_T1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_HIGH_UP_T1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_TOGGLE_UP_T1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_NO_CHANGE_DOWN_T1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_LOW_DOWN_T1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_HIGH_DOWN_T1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_TOGGLE_DOWN_T1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_NO_CHANGE_UP_T2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_LOW_UP_T2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_HIGH_UP_T2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_TOGGLE_UP_T2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_NO_CHANGE_DOWN_T2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_LOW_DOWN_T2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_HIGH_DOWN_T2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_OUTPUT_TOGGLE_DOWN_T2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_SW_SH_LOAD_ON_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_SW_SH_LOAD_ON_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_SW_SH_LOAD_ON_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_AQ_SW_IMMEDIATE_LOAD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_LOAD_ON_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_LOAD_ON_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_LOAD_ON_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_LOAD_FREEZE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_COUNTER_CLOCK_FULL_CYCLE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DB_COUNTER_CLOCK_HALF_CYCLE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_DCAEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_DCBEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_DCAEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_SIGNAL_DCBEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_DC_OUTPUT_A1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_DC_OUTPUT_A2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_DC_OUTPUT_B1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_DC_OUTPUT_B2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_EVENT_DC_DISABLED",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_EVENT_DCXH_LOW",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_EVENT_DCXH_HIGH",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_EVENT_DCXL_LOW",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_EVENT_DCXL_HIGH",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_EVENT_DCXL_HIGH_DCXH_LOW",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ACTION_EVENT_DCAEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ACTION_EVENT_DCAEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ACTION_EVENT_DCBEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ACTION_EVENT_DCBEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_EVENT_TZB_D",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_EVENT_TZB_U",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_EVENT_TZA_D",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_EVENT_TZA_U",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_HIGH_Z",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_HIGH",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_LOW",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_TOGGLE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_DISABLE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_EVENT_DCxEVT1_U",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_EVENT_DCxEVT1_D",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_EVENT_DCxEVT2_U",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_ADV_ACTION_EVENT_DCxEVT2_D",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_INTERRUPT_DCAEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_INTERRUPT_DCAEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_INTERRUPT_DCBEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_INTERRUPT_DCBEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_FLAG_DCAEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_FLAG_DCAEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_FLAG_DCBEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_FLAG_DCBEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_CBC_FLAG_DCAEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_CBC_FLAG_DCBEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_OST_FLAG_DCAEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_OST_FLAG_DCBEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_FORCE_EVENT_DCAEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_FORCE_EVENT_DCAEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_FORCE_EVENT_DCBEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_TZ_FORCE_EVENT_DCBEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_SOC_DCxEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_LOAD_PULSE_SYNC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_LOAD_PULSE_SYNC_OR_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_LOAD_PULSE_SYNC_OR_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_LOAD_PULSE_SYNC_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TYPE_DCAH",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TYPE_DCAL",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TYPE_DCBH",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TYPE_DCBL",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN3",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN4",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN5",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN6",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN7",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN8",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN9",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN10",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN11",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN12",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN14",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_TRIPIN15",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_TRIP_COMBINATION",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN3",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN4",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN5",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN6",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN7",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN8",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN9",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN10",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN11",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN12",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN14",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_COMBINATIONAL_TRIPIN15",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_WINDOW_START_TBCTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_WINDOW_START_TBCTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_WINDOW_START_TBCTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_WINDOW_SOURCE_DCAEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_WINDOW_SOURCE_DCAEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_WINDOW_SOURCE_DCBEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_WINDOW_SOURCE_DCBEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_MODULE_A",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_MODULE_B",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EVENT_1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EVENT_2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EVENT_SOURCE_ORIG_SIGNAL",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EVENT_SOURCE_FILT_SIGNAL",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EVENT_INPUT_SYNCED",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EVENT_INPUT_NOT_SYNCED",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_CBC_LATCH_DISABLED",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_CBC_LATCH_ENABLED",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_CBC_LATCH_CLR_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_CBC_LATCH_CLR_ON_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_CBC_LATCH_CLR_ON_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_REGISTER_TBPRD_TBPRDHR",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_REGISTER_CMPA_CMPAHR",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_REGISTER_CMPB_CMPBHR",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_REGISTER_CMPC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_REGISTER_CMPD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_REGISTER_DBRED_DBREDHR",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_REGISTER_DBFED_DBFEDHR",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_REGISTER_DBCTL",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_REGISTER_AQCTLA_AQCTLA2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_REGISTER_AQCTLB_AQCTLB2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_GL_REGISTER_AQCSFRC",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_TRIGGER_EVENT_SOFTWARE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_TRIGGER_EVENT_CNTR_ZERO",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_TRIGGER_EVENT_CNTR_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_TRIGGER_EVENT_CNTR_ZERO_PERIOD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_TRIGGER_EVENT_DCAEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_TRIGGER_EVENT_DCAEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_TRIGGER_EVENT_DCBEVT1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_TRIGGER_EVENT_DCBEVT2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_COUNT_START_EDGE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_COUNT_STOP_EDGE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_DELAY_MODE_SW_DELAY",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_DELAY_MODE_VCNT_DELAY_SW_DELAY",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_DELAY_MODE_VCNT_DELAY_SHIFT_1_SW_DELAY",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_DELAY_MODE_VCNT_DELAY_SHIFT_2_SW_DELAY",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_VALLEY_DELAY_MODE_VCNT_DELAY_SHIFT_4_SW_DELAY",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EDGEFILT_MODE_RISING",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EDGEFILT_MODE_FALLING",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EDGEFILT_MODE_BOTH",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EDGEFILT_EDGECNT_0",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EDGEFILT_EDGECNT_1",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EDGEFILT_EDGECNT_2",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EDGEFILT_EDGECNT_3",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EDGEFILT_EDGECNT_4",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EDGEFILT_EDGECNT_5",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EDGEFILT_EDGECNT_6",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_DC_EDGEFILT_EDGECNT_7",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_REGISTER_GROUP_GLOBAL_LOAD",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_REGISTER_GROUP_TRIP_ZONE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_REGISTER_GROUP_TRIP_ZONE_CLEAR",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        },
+        {
+            "code": "EPWM_REGISTER_GROUP_DIGITAL_COMPARE",
+            "type": "enum",
+            "peripheral": "epwm",
+            "fix": "NA",
+            "fixMsg": "In MCPWM module, this enum is not supported",
+            "compatible": false
+        }
+    ]
+}

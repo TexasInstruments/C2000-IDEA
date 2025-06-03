@@ -80,6 +80,7 @@ export function interruptSetupAutoCompletes(deviceName: string, context: vscode.
         for (let interruptData of deviceInterruptData)
         {
 			let interruptCodeTemplate = "";
+			let realtimeinterruptCodeTemplate = "";
 			if (device.startsWith("f28")) {
 				interruptCodeTemplate = 
 				"//" + "\n" +
@@ -117,6 +118,28 @@ export function interruptSetupAutoCompletes(deviceName: string, context: vscode.
 				"}" + "\n" +
 				"";
 			}
+			
+			if (device.startsWith("f29")) {
+				realtimeinterruptCodeTemplate = 
+				"//" + "\n" +
+				"// Real Time Interrupt Service Routine - " + interruptData.intDescription + "\n" + 
+				"//" + "\n" +
+				"__attribute__((interrupt(\"RTINT\"))) void INT_${1:" + interruptData.intDefineName.replace("INT_", "") + "}_ISR(void);" + "\n" +
+				"void INT_${1}_ISR(void)" + "\n" +
+				"{" + "\n" +
+				"\t${0}" + "\n" +
+				"\t//" + "\n" +
+				"\t// Ensure to clear all interrupt flags" + "\n" +
+				"\t//" + "\n" +
+				"}" + "\n" +
+				"";
+
+				const realtimeinterruptCodeCompletion = new vscode.CompletionItem(
+					"interrupt real time handler " + interruptData.intDefineName.replace("INT_", ""), 
+					vscode.CompletionItemKind.Snippet);
+				realtimeinterruptCodeCompletion.insertText = new vscode.SnippetString(realtimeinterruptCodeTemplate);
+				interruptCompletions.push(realtimeinterruptCodeCompletion);
+			}
             const interruptCodeCompletion = new vscode.CompletionItem(
                 "interrupt handler " + interruptData.intDefineName.replace("INT_", ""), 
                 vscode.CompletionItemKind.Snippet);
@@ -136,6 +159,7 @@ async function interruptSetupSysConfigAutoCompletes(deviceName: string, projectI
         for (let interruptInfo of boardJSON.interruptInfo)
         {
 			let interruptCodeTemplate = "";
+			let realtimeinterruptCodeTemplate = "";
 			if (device.startsWith("f28")) {
 				interruptCodeTemplate = 
 				"//" + "\n" +
@@ -165,6 +189,27 @@ async function interruptSetupSysConfigAutoCompletes(deviceName: string, projectI
 				"\t//" + "\n" +
 				"}" + "\n" +
 				"";
+			}
+
+			if (device.startsWith("f29")){
+				realtimeinterruptCodeTemplate = 
+				"//" + "\n" +
+				"// Real Time Interrupt Service Routine - " + interruptInfo.interruptName + "\n" + 
+				"//" + "\n" +
+				"__attribute__((interrupt(\"RTINT\"))) void " + interruptInfo.interruptHandler + "(void);" + "\n" +
+				"void " + interruptInfo.interruptHandler + "(void)" + "\n" +
+				"{" + "\n" +
+				"\t${0}" + "\n" +
+				"\t//" + "\n" +
+				"\t// Ensure to clear all interrupt flags" + "\n" +
+				"\t//" + "\n" +
+				"}" + "\n" +
+				"";
+				const realtimeinterruptCodeCompletion = new vscode.CompletionItem(
+					"interrupt real time handler " + interruptInfo.interruptName.replace("INT_", ""), 
+					vscode.CompletionItemKind.Snippet);
+					realtimeinterruptCodeCompletion.insertText = new vscode.SnippetString(realtimeinterruptCodeTemplate);
+				interruptCompletions.push(realtimeinterruptCodeCompletion);
 			}
 
 
