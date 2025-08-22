@@ -11,9 +11,10 @@ const outputChannel = vscode.window.createOutputChannel("My Extension Logs");
 const C2000_MIGRATION_DIAGNOSTIC_COLLECTION_NAME = "C2000 Migration";
 const C2000_MIGRATION_INCOMPAT_CODE = "C2000_MIGRATION_INCOMPAT";
 const C2000_MIGRATION_INCOMPAT_SOURCE = "C2000 Migration Check";
-const C2000_MIGRATION_C2000WARE_VERSION = "C2000Ware_5_04_00_00";
+const C2000_MIGRATION_C2000WARE_VERSION = "C2000Ware_6_00_00_00";
+const C2000_MIGRATION_C2000WARE_OLDVERSION = "C2000Ware_5_04_00_00";
 const C2000_MIGRATION_C29SDK_VERSION = "F29H85X-SDK";
-const C2000_AUTO_MIGRATION_GUIDE_LINK = "https://dev.ti.com/tirex/content/" + C2000_MIGRATION_C2000WARE_VERSION + "/docs/" + C2000_MIGRATION_C2000WARE_VERSION + "_Migration_Guides/html_pages/";
+let C2000_AUTO_MIGRATION_GUIDE_LINK = "https://dev.ti.com/tirex/content/" + C2000_MIGRATION_C2000WARE_VERSION + "/docs/" + C2000_MIGRATION_C2000WARE_VERSION + "_Migration_Guides/html_pages/";
 
 const lastMigrationCheckTimestampPerURI: {[uri:string]: number } = {}; //Object to store duration time for each file
 
@@ -649,6 +650,99 @@ export async function getMigrationDriverlibResolutionJSON(context: vscode.Extens
 	return jsonMigrationDriverlibResolution;
 }
 
+
+export async function functionmigrationEnhancement(code: string, trimmedLineText: string, context: vscode.ExtensionContext, currentDevice: string, migrationDevice: string): Promise<{trimmedLineEnhancedText: string, message: string}>
+{
+	let functionMapFile = "";
+	let argChangeFile = "";
+
+	if (utils.isDeviceInMCPWMMigrationResolutionList(migrationDevice)) {
+		functionMapFile = "functionMap_epwm_mcpwm.json";
+		argChangeFile = "epwm_mcpwm_migration.json";
+	} else if (utils.isDeviceInMigrationResolutionList(migrationDevice)) {
+		functionMapFile = "functionMap_f28x_f29x.json";
+		argChangeFile = "f28x_f29h85x_migration.json";
+	}
+
+	const [functionMapBuffer, argChangeBuffer] = await Promise.all([
+		vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", functionMapFile)),
+		vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", argChangeFile)),
+	]);
+	
+	const functionMappings: FunctionMap[] = JSON.parse(Buffer.from(functionMapBuffer).toString('utf-8'));
+	const argChangeJson: { changed: ArgChange[] } = JSON.parse(Buffer.from(argChangeBuffer).toString('utf-8'));
+	const changedArgs = argChangeJson.changed || [];
+	
+	const cleanLine = trimmedLineText.replace(/\u00A0/g, ' ').trim();
+	const mapping = functionMappings.find(entry => entry.fromFunction === code);
+	
+	if (!mapping) {
+		return { trimmedLineEnhancedText: trimmedLineText, message: '' };
+	}
+	
+	const match = await utils.extractFunctionArgs(cleanLine, code);
+	if (!match) {
+		return {
+			trimmedLineEnhancedText: trimmedLineText,
+			message: `🚨 Currently tool is not capable for multi line functions migration support! Please, modify to single line function call`
+		};
+	}
+	
+	const { fullCall, argsStr } = match;
+	
+	const actualArgs = await utils.splitArgs(argsStr);
+	let migratedCall = mapping.toFunction;
+	const unmatchedArgs: string[] = [];
+	
+	for (let i = 0; i < mapping.fromArgs.length; i++) {
+		const fromArg = mapping.fromArgs[i];
+		const actualArg = actualArgs[i] ?? '';
+	
+		// Handle special placeholder e.g. arg1_change
+		const changePlaceholderRegex = new RegExp(`\\b${fromArg}_change\\b`); //searching for param_change where b represents boundary
+		if (changePlaceholderRegex.test(migratedCall)) {
+			const parts = actualArg.split('|').map(p => p.trim());
+			const transformedParts = parts.map(part => {
+				const match = changedArgs.find(entry => entry.code.trim() === part);
+				if (!match) {
+					unmatchedArgs.push(part);
+				}
+				return match ? match.fix : part;
+			});
+			const finalArg = transformedParts.join(' | ');
+			migratedCall = migratedCall.replace(changePlaceholderRegex, finalArg);
+			continue;
+		}
+	
+		// Handle expressions like arg3 * 2
+		/* 
+		\\b  			Starts and Ends with a word boundary
+		\\s* 			Matches zero or more whitespace characters
+		[*\\/\\+\\-]  	Matches one of these operators: * (multiply), / (divide), + (add), or - (subtract)
+		\\d+			Matches one or more digits
+		g				Global flag, meaning it will find all matches in the text, not just the first one
+		*/
+		const expressionRegex = new RegExp(`\\b${fromArg}(\\s*[*\\/\\+\\-]\\s*\\d+)?\\b`, 'g');
+		migratedCall = migratedCall.replace(expressionRegex, (match, op) => {
+
+			if (op) {
+				const cleanOp = op.replace(/\s+/g, '');
+				return `(${actualArg})${cleanOp}`;
+			}
+			return actualArg;
+		});
+	}
+	
+	const updatedLine = cleanLine.replace(fullCall, migratedCall);
+	const message = unmatchedArgs.length > 0
+		? `⚠️ No matching migration for: ${unmatchedArgs.join(', ')}`
+		: '';
+	return {
+		trimmedLineEnhancedText: updatedLine,
+		message
+	};
+}
+
 function migrationFindAllLineNumbersWithCodeChange(documentText: string, allCodesSet: Set<string>): number[] {
 
 	allCodesSet.add('_DEVICE_MIGRATION_');
@@ -671,10 +765,18 @@ function migrationFindAllLineNumbersWithCodeChange(documentText: string, allCode
 
 export async function migrationSDKVersionUpdate(currentDevice: string, migrationDevice: string): Promise<{ from: string, to: string}> {
 
-	const fromSDK = currentDevice.includes("F29") ? C2000_MIGRATION_C29SDK_VERSION : C2000_MIGRATION_C2000WARE_VERSION;
+	let fromSDK = currentDevice.includes("F29") ? C2000_MIGRATION_C29SDK_VERSION : C2000_MIGRATION_C2000WARE_VERSION;
 	const toSDK	  = migrationDevice.includes("F29") ? C2000_MIGRATION_C29SDK_VERSION : C2000_MIGRATION_C2000WARE_VERSION;
+	if ((migrationDevice.includes("F29")) && (currentDevice.includes("F28"))){
+		fromSDK = C2000_MIGRATION_C2000WARE_OLDVERSION;
+		C2000_AUTO_MIGRATION_GUIDE_LINK = "https://dev.ti.com/tirex/content/" + C2000_MIGRATION_C2000WARE_OLDVERSION + "/docs/" + C2000_MIGRATION_C2000WARE_OLDVERSION + "_Migration_Guides/html_pages/";
+	}else{
+		C2000_AUTO_MIGRATION_GUIDE_LINK = "https://dev.ti.com/tirex/content/" + C2000_MIGRATION_C2000WARE_VERSION + "/docs/" + C2000_MIGRATION_C2000WARE_VERSION + "_Migration_Guides/html_pages/";
+	}
+	
 	return {from: fromSDK, to: toSDK};
 }
+
 
 export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionContext, uri: vscode.Uri, currentDevice: string, migrationDevices: string[])
 {
@@ -855,7 +957,7 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 					let lineEnumChangeCount = 0;
 					let lineAllEnumChangeQuickFixMessage;
 		
-					const All_FIX_THRESHOLD = 1;
+					const allFixThreshold = 1;
 		
 					//Line has multiple code change (codeChange1, codeChange2, codeChange3) with fixes (fix1, fix2, fix3)
 					//Let lineText1 will be line with fix1 replaced for codechnage1 in line
@@ -958,11 +1060,11 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 								let startPos: vscode.Position = new vscode.Position(lineNumber, codeDetectedIndex);
 								let wordRange = document.getWordRangeAtPosition(startPos);
 	
-								if (driverlibChange === All_FIX_THRESHOLD){
+								if (driverlibChange === allFixThreshold){
 									if ((type === "enum")) {
 										alternateCodeMessage = "// " + "Suggested replacement: " + trimmedLineText.replace(code,fix);
 										lineEnumChangeCount++;
-										if (lineEnumChangeCount > All_FIX_THRESHOLD) { 
+										if (lineEnumChangeCount > allFixThreshold) { 
 											codeForLineWithMultiFix[lineEnumChangeCount - 1] = code; 
 											fixForLineWithMultiFix[lineEnumChangeCount - 1] = fix;
 											lineWithChangesApplied[0] = trimmedLineText.replace(codeForLineWithMultiFix[0],fixForLineWithMultiFix[0]);
@@ -975,7 +1077,12 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 									else if (type === "function" || type === "real_time_library" || type === "mcu_macros")
 									{
 										if (compatible){
-											alternateCodeMessage = "// " + "Suggested replacement: " + trimmedLineText;
+											const {trimmedLineEnhancedText, message}  = await functionmigrationEnhancement(code,trimmedLineText, context, currentDevice ,deviceMigrationData.migrationDevice);								
+											alternateCodeMessage = "// " + "Compatible replacement: " + trimmedLineEnhancedText;
+											if (message) {
+												// Append message on a new comment line
+												alternateCodeMessage += "\n"+ leadingSpacesString + "// " + message;
+											}
 										}
 										else { 
 											alternateCodeMessage = "// " + "Suggested replacement: " + fix;
@@ -1063,7 +1170,7 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 						severity = vscode.DiagnosticSeverity.Warning;
 					}
 					// Combined ENUM Fix
-					if ((lineEnumChangeCount > All_FIX_THRESHOLD) && deviceMigrationData.migrationDevice){
+					if ((lineEnumChangeCount > allFixThreshold) && deviceMigrationData.migrationDevice){
 						for(let i = 1; i < lineEnumChangeCount; i++){
 								lineWithChangesApplied[i] = lineWithChangesApplied[i-1].replace(codeForLineWithMultiFix[i],fixForLineWithMultiFix[i]);
 								lineAllEnumChangeQuickFixMessage = "// " + "Suggested replacement:" + lineWithChangesApplied[i];

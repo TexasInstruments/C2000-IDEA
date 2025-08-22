@@ -2,7 +2,7 @@
   "name": "c2000-idea",
   "displayName": "C2000 IDEA",
   "description": "C2000 Real-Time Controller IDE ASSIST",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "engines": {
     "vscode": "^1.76.0"
   },
@@ -597,6 +597,7 @@
           "default": "None",
           "enum": [
             "None",
+            "F28E12x",
             "F29H85x",
             "F28P55x",
             "F28P65x",

@@ -15,6 +15,8 @@ const C2000_REGISTER_DIAGNOSTIC_BFIELD_TO_DLIB_SOURCE = "C2000 Register bitfield
 const C2000_REGISTER_DIAGNOSTIC_MIGRATION_BFIELD_CODE = "C2000_REGISTER_DIAGNOSTIC_MIGRATION_BITFIELD";
 const C2000_REGISTER_DIAGNOSTIC_MIGRATION_BFIELD_SOURCE = "C2000 Register bitfield migration";
 
+
+
 function c2000RegisterDiagnosticMigrationIgnore(ignoreRegs: string[]){
 	return `/* C2000_REGISTER_MIGRATION_IGNORE=[${ignoreRegs.join(",")}] */`;
 } 
@@ -32,6 +34,13 @@ var registerCodeActions : RegisterCodeActions[] = [];
 interface bitfieldToDriverlib<T> {
     [key: string]: T;
 }
+
+interface testRegisterLinksFound {
+    regName: string;
+	link: string;
+}
+//Global for test case
+export let lastRegisterVisionResults: testRegisterLinksFound[] = [];
   
 
 enum RegisterDataBase {
@@ -190,6 +199,7 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 {
 	let registersFoundInfo : RegisterBitfieldsFound[] = [];
 	const text = document.getText();
+	let testMode = false;
 	//If device isn't autodetected in project or hasn't previously been input, prompt user to input
 	if (!device)
 	{
@@ -198,6 +208,9 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 		{
 			device = await utils.selectBitfieldDeviceFamily();
 		}
+	}
+	else{
+		testMode = true;
 	}
 	if (device)
 	{
@@ -292,6 +305,15 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 								let link = "";
 								if(registerUrl !== ""){
 									link = deviceTRMUrl + registerUrl;
+								}
+
+								//Append to lastRegisterVisionResults if in test mode
+								if(testMode){
+									let results :testRegisterLinksFound  = {
+										regName : registerName,
+										link: link
+									}
+									lastRegisterVisionResults.push(results);
 								}
 
 								//Get rsvd bit data 
@@ -579,14 +601,19 @@ async function registerBitfieldToDriverlibMigration(){
 	registerDiagnosticsCollection.set(vscode.window.activeTextEditor.document.uri, registerDiagnostics);
 }
 
-async function registerBitfieldVisionUpdateDecorations() {
+async function registerBitfieldVisionUpdateDecorations(testDevice?:string) {
 	const regDecorations: vscode.DecorationOptions[] = [];
 
 	if (!vscode.window.activeTextEditor) {
 		return;
 	}
-	
-	let registersFoundInfo = await registerFindBitfieldRegisters(vscode.window.activeTextEditor.document);
+	let device = '';
+	if(typeof testDevice === "string"){
+		device = testDevice;
+		lastRegisterVisionResults = [];
+	}
+
+	let registersFoundInfo = await registerFindBitfieldRegisters(vscode.window.activeTextEditor.document, device != '' ? device : undefined);
 
 	for (var regFound of registersFoundInfo)
 	{
@@ -627,17 +654,24 @@ async function registerBitfieldVisionUpdateDecorations() {
 	vscode.window.activeTextEditor.setDecorations(registerBitfieldDecorationType, regDecorations);
 }
 
-async function registerDriverlibUpdateDecorations() {
+async function registerDriverlibUpdateDecorations(testDevice?:string) {
 	const regs: vscode.DecorationOptions[] = [];
 
 	if (!vscode.window.activeTextEditor) {
 		return;
 	}
 	const text = vscode.window.activeTextEditor.document.getText();
-	var device = project.projectGetCurrentDevice();
-	if (!device)
-	{
-		device = await utils.selectDeviceFamily();
+	var device = '';
+	if(typeof testDevice === "string"){
+		device = testDevice;
+		lastRegisterVisionResults = [];
+	}
+	else{
+		device = project.projectGetCurrentDevice();
+		if (!device)
+		{
+			device = await utils.selectDeviceFamily();
+		}
 	}
 	if (device)
 	{
@@ -679,6 +713,19 @@ async function registerDriverlibUpdateDecorations() {
 									const openCollateralArgs = { link: link, html:true};
 									const openCollateralUri = vscode.Uri.parse(`command:${info.C2000_IDEA_CMD_OPEN_COLLATERAL}?${encodeURIComponent(JSON.stringify(openCollateralArgs))}`);
 									openCollateralMarkdown.appendMarkdown(`[View Register Description in TRM](${openCollateralUri}) `);
+								}
+
+								//Append to lastRegisterVisionResults if in test mode
+								if(typeof testDevice === "string"){
+									let linkField = "";
+									if(registerUrl !== ''){
+										linkField = deviceTRMUrl + registerUrl;
+									}
+									let results :testRegisterLinksFound  = {
+										regName : registerName,
+										link: linkField
+									}
+									lastRegisterVisionResults.push(results);
 								}
 								
 								openCollateralMarkdown.isTrusted = true;
@@ -840,12 +887,12 @@ export function registerSetup(context: vscode.ExtensionContext)
 
 	context.subscriptions.push(registerCompletionProvider);
 
-	let runRegisterVisionDisposable = vscode.commands.registerCommand(info.C2000_IDEA_CMD_RUN_REGISTER_VISION, () => {		
-		registerDriverlibUpdateDecorations();
+	let runRegisterVisionDisposable = vscode.commands.registerCommand(info.C2000_IDEA_CMD_RUN_REGISTER_VISION, (arg) => {		
+		registerDriverlibUpdateDecorations(arg);
 	});
 
-	let runBitfieldRegisterVisionDisposable = vscode.commands.registerCommand(info.C2000_IDEA_CMD_RUN_BITFIELD_REGISTER_VISION, () => {		
-		registerBitfieldVisionUpdateDecorations();
+	let runBitfieldRegisterVisionDisposable = vscode.commands.registerCommand(info.C2000_IDEA_CMD_RUN_BITFIELD_REGISTER_VISION, (arg) => {		
+		registerBitfieldVisionUpdateDecorations(arg);
 	});
 
 	let runBitfieldRegisterToDriverlibRegisterMigrationDisposable = vscode.commands.registerCommand(

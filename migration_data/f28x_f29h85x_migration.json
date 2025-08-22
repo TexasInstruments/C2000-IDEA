@@ -4462,7 +4462,7 @@
             "peripheral": "dcc",
             "fix": "DCC_enableSingleShotMode(uint32_t base)",
             "fixMsg": "Removed the argument  'mode'.In F29H85x, only the DCC_MODE_COUNTER_ZERO option is supported",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "EQEP_selectSource",
@@ -4478,7 +4478,7 @@
             "peripheral": "fsi",
             "fix": "SysCtl_delay(uint32_t count)",
             "fixMsg": "Function changed to SysCtl_delay with same parameter entry, function used from SysCtl driver",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "MCAN_selectClockSource",
@@ -4494,7 +4494,7 @@
             "peripheral": "spi",
             "fix": "SPI_setConfig(uint32_t base, uint32_t sysclkHz, SPI_TransferProtocol protocol, SPI_Mode mode, uint32_t bitRate, uint16_t dataWidth)",
             "fixMsg": "Function  argument entry lspclk changed to sysclkHz (macro DEVICE_SYSCLK_FEQ can be used). As LSPCLK domain is not supported for F29 device.",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "CPUTimer_selectClockSource",
@@ -4526,7 +4526,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_clearResetCause(uint32_t rstCauses)",
             "fixMsg": "Function is compatible. The list of reset causes in the device is different. Refer to the API guide for more details.",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "SysCtl_simulateReset",
@@ -4534,7 +4534,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_simulateReset(void)",
             "fixMsg": "Function argument entry is removed, as in F29H85x there is a single reset cause that can be simulated",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "SysCtl_setClock",
@@ -4550,7 +4550,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_setEPWMClock(SysCtl_EPWMClkDivider divider)",
             "fixMsg": "Function renamed to SysCtl_setEPWMClock. Parameter entry is compatible",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "SysCtl_setEMIF1ClockDivider",
@@ -4558,7 +4558,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_setEMIF1Clock(SysCtl_EMIFClkDivider divider)",
             "fixMsg": "Function renamed to SysCtl_setEMIF1Clock. Parameter entry is compatible",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "SysCtl_setLINAClockDivider",
@@ -4566,7 +4566,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_setLINAClock(SysCtl_LINClkDivider divider)",
             "fixMsg": "Function renamed to SysCtl_setLINAClock. Parameter entry is compatible",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "SysCtl_setLINBClockDivider",
@@ -4574,7 +4574,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_setLINBClock(SysCtl_LINClkDivider divider)",
             "fixMsg": "Function renamed to SysCtl_setLINBClock. Parameter entry is compatible",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "SysCtl_selectClockOutSource",
@@ -4614,7 +4614,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_setCputimer2Clock(SysCtl_Cputimer2ClkSource source,SysCtl_Cputimer2ClkDivider divider)",
             "fixMsg": "Function changed to  SysCtl_setCputimer2Clock. Same function used for configuring clock source and divider because of this parameter entries interchanged ( to maintain standard)",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "SysCtl_CLBClkConfig",
@@ -4630,7 +4630,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_turnOnXTAL(void)",
             "fixMsg": "Function changed to SysCtl_turnOnXTAL. Since XTAL is only input option",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "SysCtl_turnOffOsc",
@@ -4638,7 +4638,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_turnOffXTAL(void)",
             "fixMsg": "Function changed to SysCtl_turnOffXTAL. Since XTAL is only input option",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "SysCtl_enableLPMWakeupPin",
@@ -4646,7 +4646,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_enableLPMWakeupPin(SysCtl_LPMWakeupPin pin)",
             "fixMsg": "Function is compatible. Enum added for pin",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "SysCtl_disableLPMWakeupPin",
@@ -4654,7 +4654,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_disableLPMWakeupPin(SysCtl_LPMWakeupPin pin)",
             "fixMsg": "Function is compatible. Enum added for pin",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "SysCtl_enableCMPSSLPMWakeupPin",
@@ -4702,7 +4702,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_simulateReset(void)",
             "fixMsg": "Function changed to SysCtl_simulateReset",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "SysCtl_getCPU2ResetStatus",
@@ -4710,7 +4710,7 @@
             "peripheral": "sysctl",
             "fix": "SysCtl_isCPU2Reset(void)",
             "fixMsg": "Not supported in F29H85x. Use function SysCtl_isCPU2Reset to get the CPU reset status",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "SysCtl_controlCPU2Reset",
@@ -4838,7 +4838,7 @@
             "peripheral": "interrupt",
             "fix": "Interrupt_enableGlobal(void)",
             "fixMsg": "Functionality can be reproduced using Interrupt_enableGlobal in F29",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "Interrupt_disablePIE",
@@ -4846,36 +4846,36 @@
             "peripheral": "interrupt",
             "fix": "Interrupt_disableGlobal(void)",
             "fixMsg": "Functionality can be reproduced using Interrupt_disableGlobal in F29",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "DMA_initController",
             "type": "function",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "DMA_initController(uint32_t base)",
-            "fixMsg": "In F29H85x device, two RTDMA instances are supported. Function name remains same with added parameter base -  base address of the RTDMA instance. Registers writeable by CPU1.LINK1, CPU1.LINK2 only. Refer TRM for more details.",
-            "compatible": false
+            "fixMsg": "In F29H85x device, two RTDMA instances are supported. Function name remains same with added parameter base -  base address of the RTDMA instance. Registers writeable by CPU1.LINK1, CPU1.LINK2 only.  Adding disableMPU function after initialization to open the entire memory range. Refer TRM for more details.",
+            "compatible": true
         },
         {
             "code": "DMA_setEmulationMode",
             "type": "function",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "DMA_setEmulationMode(uint32_t base, DMA_EmulationMode mode)",
             "fixMsg": "In F29H85x device, two RTDMA instances are supported. Function name remains same with added parameter base -  base address of the RTDMA instance. Registers writeable by CPU1.LINK1, CPU1.LINK2 only. Refer TRM for more details.",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "DMA_setPriorityMode",
             "type": "function",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "DMA_setPriorityMode(uint32_t base, DMA_PriorityMode priorityMode)",
             "fixMsg": "In F29H85x device, two RTDMA instances are supported. Function name remains same with added parameter base -  base address of the RTDMA instance and enum added for priority mode. F29 allows selection between Round Robin priority mode and Software configurable priority, In F28, the selection is between Round Robin priority mode and High priority for channel 1. Registers writeable by CPU1.LINK1, CPU1.LINK2 only. Refer TRM for more details.",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "DMA_configMode",
             "type": "function",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "DMA_configMode(uint32_t base, DMA_Trigger trigger, uint32_t config);",
             "fixMsg": "Function is compatible with F28. F29 API provides support for independently configuring the data size of read and write access. Refer to the API guide for more details.",
             "compatible": true
@@ -4883,7 +4883,7 @@
         {
             "code": "DMA_configChannel",
             "type": "function",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "DMA_configChannel(uint32_t base, const DMA_ConfigParams *transfParams);",
             "fixMsg": "Function is compatible. Update the transfParams parameter with the correct burst size, and address step sizes.",
             "compatible": true
@@ -4891,7 +4891,7 @@
         {
             "code": "DMA_configBurst",
             "type": "function",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "DMA_configBurst(uint32_t base, uint16_t size, int16_t srcStep, int16_t destStep);",
             "fixMsg": "Function is compatible. Update the parameters size, srcStep and destStep.",
             "compatible": true
@@ -4899,7 +4899,7 @@
         {
             "code": "DMA_configTransfer",
             "type": "function",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "DMA_configTransfer(uint32_t base, uint32_t transferSize, int16_t srcStep, int16_t destStep);",
             "fixMsg": "Function is compatible. Update the parameters transferSize, srcStep and destStep.",
             "compatible": true
@@ -4907,7 +4907,7 @@
         {
             "code": "DMA_configWrap",
             "type": "function",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "DMA_configWrap(uint32_t base, uint32_t srcWrapSize, int16_t srcStep,uint32_t destWrapSize, int16_t destStep);",
             "fixMsg": "Function is compatible. Update the parameters srcWrapSize,srcStep, destWrapSize and destStep",
             "compatible": true
@@ -4918,7 +4918,7 @@
             "peripheral": "ipc",
             "fix": "IPC_setFlagLtoR(IPC_Channel_t ipcChannel, uint32_t flags)",
             "fixMsg": "Function is compatible. Parameter name changed from ipcType to ipcChannel with corresponding Enum IPC_Channel_t",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_clearFlagLtoR",
@@ -4926,7 +4926,7 @@
             "peripheral": "ipc",
             "fix": "IPC_clearFlagLtoR(IPC_Channel_t ipcChannel, uint32_t flags)",
             "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_ackFlagRtoL",
@@ -4934,7 +4934,7 @@
             "peripheral": "ipc",
             "fix": "IPC_ackFlagRtoL(IPC_Channel_t ipcChannel, uint32_t flags)",
             "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_isFlagBusyLtoR",
@@ -4942,7 +4942,7 @@
             "peripheral": "ipc",
             "fix": "IPC_isFlagBusyLtoR(IPC_Channel_t ipcChannel, uint32_t flags)",
             "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_isFlagBusyRtoL",
@@ -4950,7 +4950,7 @@
             "peripheral": "ipc",
             "fix": "IPC_isFlagBusyRtoL(IPC_Channel_t ipcChannel, uint32_t flags)",
             "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_waitForFlag",
@@ -4958,7 +4958,7 @@
             "peripheral": "ipc",
             "fix": "IPC_waitForFlag(IPC_Channel_t ipcChannel, uint32_t flag)",
             "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_waitForAck",
@@ -4966,7 +4966,7 @@
             "peripheral": "ipc",
             "fix": "IPC_waitForAck(IPC_Channel_t ipcChannel, uint32_t flag)",
             "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_sync",
@@ -4974,7 +4974,7 @@
             "peripheral": "ipc",
             "fix": "IPC_sync(IPC_Channel_t ipcChannel, uint32_t flag)",
             "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_init",
@@ -4982,7 +4982,7 @@
             "peripheral": "ipc",
             "fix": "IPC_init(IPC_Channel_t ipcChannel)",
             "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_sendResponse",
@@ -4990,7 +4990,7 @@
             "peripheral": "ipc",
             "fix": "IPC_sendResponse(IPC_Channel_t ipcChannel, uint32_t data)",
             "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_getResponse",
@@ -4998,7 +4998,7 @@
             "peripheral": "ipc",
             "fix": "IPC_getResponse(IPC_Channel_t ipcChannel)",
             "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_sendCommand",
@@ -5006,7 +5006,7 @@
             "peripheral": "ipc",
             "fix": "IPC_sendCommand(IPC_Channel_t ipcChannel, uint32_t flags, uint32_t command, uint32_t addr, uint32_t data)",
             "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum and paramter addrCorrEnable is removed, as this was added specifically for F2838 device where the RAM address is different between C28 and CM cores",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_readCommand",
@@ -5014,7 +5014,7 @@
             "peripheral": "ipc",
             "fix": "IPC_readCommand(IPC_Channel_t ipcChannel, uint32_t flags,uint32_t *command, uint32_t *addr, uint32_t *data)",
             "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum and paramter addrCorrEnable is removed, as this was added specifically for F2838 device where the RAM address is different between C28 and CM cores",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_getCounter",
@@ -5022,7 +5022,7 @@
             "peripheral": "ipc",
             "fix": "IPC_getCounter(void)",
             "fixMsg": "Function remains same with parameter ipcType removed.",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "IPC_claimFlashSemaphore",
@@ -5030,7 +5030,7 @@
             "peripheral": "ipc",
             "fix": "SSU_claimFlashSemaphore(void)",
             "fixMsg": "Function changed to SSU_claimFlashSemaphore. Refer SSU driver",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "IPC_releaseFlashSemaphore",
@@ -5038,7 +5038,7 @@
             "peripheral": "ipc",
             "fix": "SSU_releaseFlashSemaphore(void)",
             "fixMsg": "Function changed to SSU_releaseFlashSemaphore. Refer SSU driver",
-            "compatible": false
+            "compatible": true
         },
         {
             "code": "ERAD_setOwnership",
@@ -5054,7 +5054,7 @@
             "peripheral": "erad",
             "fix": "ERAD_getBusCompStatus(ERAD_BusCompInstance instance)",
             "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "ERAD_clearBusCompEvent",
@@ -5062,7 +5062,7 @@
             "peripheral": "erad",
             "fix": "ERAD_clearBusCompEvent(ERAD_BusCompInstance instance)",
             "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "ERAD_getCounterStatus",
@@ -5070,7 +5070,7 @@
             "peripheral": "erad",
             "fix": "ERAD_getCounterStatus(ERAD_CounterInstance instance)",
             "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "ERAD_configBusComp",
@@ -5126,7 +5126,7 @@
             "peripheral": "erad",
             "fix": "ERAD_enableCounterResetInput(ERAD_CounterInstance instance, ERAD_Counter_Input_Event reset_event)",
             "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "ERAD_disableCounterResetInput",
@@ -5134,7 +5134,7 @@
             "peripheral": "erad",
             "fix": "ERAD_disableCounterResetInput(ERAD_CounterInstance instance)",
             "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "ERAD_clearCounterEvent",
@@ -5142,7 +5142,7 @@
             "peripheral": "erad",
             "fix": "ERAD_clearCounterEvent(ERAD_CounterInstance instance)",
             "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "ERAD_clearCounterOverflow",
@@ -5150,7 +5150,7 @@
             "peripheral": "erad",
             "fix": "ERAD_clearCounterOverflow(ERAD_CounterInstance instance)",
             "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "ERAD_getCurrentCount",
@@ -5158,7 +5158,7 @@
             "peripheral": "erad",
             "fix": "ERAD_getCurrentCount(ERAD_CounterInstance instance)",
             "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "ERAD_setCurrentCount",
@@ -5166,7 +5166,7 @@
             "peripheral": "erad",
             "fix": "ERAD_setCurrentCount(ERAD_CounterInstance instance, uint32_t value)",
             "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "ERAD_getMaxCount",
@@ -5174,7 +5174,7 @@
             "peripheral": "erad",
             "fix": "ERAD_getMaxCount(ERAD_CounterInstance instance)",
             "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "ERAD_setMaxCount",
@@ -5182,7 +5182,7 @@
             "peripheral": "erad",
             "fix": "ERAD_setMaxCount(ERAD_CounterInstance instance, uint32_t value)",
             "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "XBAR_enableOutputMux",
@@ -5262,7 +5262,7 @@
             "peripheral": "xbar",
             "fix": "XBAR_invertOutputSignal(uint32_t base, XBAR_OutputNum output, bool invert)",
             "fixMsg": "Function is compatible. Same Function to invert the output signal from OUTPUT/ EPWM/ MINDB/ ICL/ CLB X-BAR depending on the XBAR base address passed",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "XBAR_invertEPWMSignal",
@@ -5294,7 +5294,7 @@
             "peripheral": "xbar",
             "fix": "XBAR_lockInput(uint32_t base, XBAR_InputNum input)",
             "fixMsg": "Function is compatible for INPUTXBAR only. F28 function locks the inputs to INPUT X-BAR, MINDB X-BAR, ICL X-BAR AND CLBINPUT X-BAR, while in F29, it can be used to lock the inputs to INPUT X-BAR only.",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "XBAR_lockOutput",
@@ -5318,7 +5318,7 @@
             "peripheral": "xbar",
             "fix": "XBAR_getOutputLatchStatus(uint32_t base, XBAR_OutputNum output)",
             "fixMsg": "Function is compatible",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "XBAR_clearOutputLatch",
@@ -5326,7 +5326,7 @@
             "peripheral": "xbar",
             "fix": "XBAR_clearOutputLatch(uint32_t base, XBAR_OutputNum output)",
             "fixMsg": "Function is compatible",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "XBAR_forceOutputLatch",
@@ -5334,7 +5334,7 @@
             "peripheral": "xbar",
             "fix": "XBAR_forceOutputLatch(uint32_t base, XBAR_OutputNum output)",
             "fixMsg": "Function is compatible",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "SysCtl_lockExtADCSOCSelect",
@@ -5366,7 +5366,7 @@
             "peripheral": "erad",
             "fix": "ERAD_setCounterInputConditioning(ERAD_CounterInstance instance, ERAD_Counter_Input_Type input_type, uint16_t options)",
             "fixMsg": "Function is compatible. Parameter is an enum instead of base address",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "ERAD_GLOBAL_BASE",
@@ -5443,7 +5443,7 @@
         {
             "code": "DMA_BASE",
             "type": "enum",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "RTDMA1_BASE",
             "fixMsg": "The correct enum constant 'RTDMA1_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances are supported. In Lockstep mode, RTDMA1 can only be used.",
             "compatible": false
@@ -5451,7 +5451,7 @@
         {
             "code": "DMA_CH1_BASE",
             "type": "enum",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "RTDMA1CH1_BASE",
             "fixMsg": "The correct enum constant 'RTDMA1CH1_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances with 10 channels each are supported, and shared across all the CPUs. If device is configured in splitlock mode, recommended to use separate RTDMA modules in each CPU applications",
             "compatible": false
@@ -5459,7 +5459,7 @@
         {
             "code": "DMA_CH2_BASE",
             "type": "enum",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "RTDMA1CH2_BASE",
             "fixMsg": "The correct enum constant 'RTDMA1CH2_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances with 10 channels each are supported, and shared across all the CPUs. If device is configured in splitlock mode, recommended to use separate RTDMA modules in each CPU applications",
             "compatible": false
@@ -5467,7 +5467,7 @@
         {
             "code": "DMA_CH3_BASE",
             "type": "enum",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "RTDMA1CH3_BASE",
             "fixMsg": "The correct enum constant 'RTDMA1CH3_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances with 10 channels each are supported, and shared across all the CPUs. If device is configured in splitlock mode, recommended to use separate RTDMA modules in each CPU applications",
             "compatible": false
@@ -5475,7 +5475,7 @@
         {
             "code": "DMA_CH4_BASE",
             "type": "enum",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "RTDMA1CH4_BASE",
             "fixMsg": "The correct enum constant 'RTDMA1CH4_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances with 10 channels each are supported, and shared across all the CPUs. If device is configured in splitlock mode, recommended to use separate RTDMA modules in each CPU applications",
             "compatible": false
@@ -5483,7 +5483,7 @@
         {
             "code": "DMA_CH5_BASE",
             "type": "enum",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "RTDMA1CH5_BASE",
             "fixMsg": "The correct enum constant 'RTDMA1CH5_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances with 10 channels each are supported, and shared across all the CPUs. If device is configured in splitlock mode, recommended to use separate RTDMA modules in each CPU applications",
             "compatible": false
@@ -5491,7 +5491,7 @@
         {
             "code": "DMA_CH6_BASE",
             "type": "enum",
-            "peripheral": "dma",
+            "peripheral": "rtdma",
             "fix": "RTDMA1CH6_BASE",
             "fixMsg": "The correct enum constant 'RTDMA1CH6_BASE' should be used. In F29H85x device, two RTDMA (RTDMA1/2) instances with 10 channels each are supported, and shared across all the CPUs. If device is configured in splitlock mode, recommended to use separate RTDMA modules in each CPU applications",
             "compatible": false
@@ -5534,7 +5534,7 @@
             "peripheral": "ipc",
             "fix": "IPC_FLAG0",
             "fixMsg": "The correct enum constant 'IPC_FLAG0' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_FLAG1",
@@ -5542,7 +5542,7 @@
             "peripheral": "ipc",
             "fix": "IPC_FLAG1",
             "fixMsg": "The correct enum constant 'IPC_FLAG1' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_FLAG2",
@@ -5550,7 +5550,7 @@
             "peripheral": "ipc",
             "fix": "IPC_FLAG2",
             "fixMsg": "The correct enum constant 'IPC_FLAG2' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_FLAG3",
@@ -5558,7 +5558,7 @@
             "peripheral": "ipc",
             "fix": "IPC_FLAG3",
             "fixMsg": "The correct enum constant 'IPC_FLAG3' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_FLAG4",
@@ -5566,7 +5566,7 @@
             "peripheral": "ipc",
             "fix": "IPC_FLAG4",
             "fixMsg": "The correct enum constant 'IPC_FLAG4' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_FLAG5",
@@ -5574,7 +5574,7 @@
             "peripheral": "ipc",
             "fix": "IPC_FLAG5",
             "fixMsg": "The correct enum constant 'IPC_FLAG5' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_FLAG6",
@@ -5582,7 +5582,7 @@
             "peripheral": "ipc",
             "fix": "IPC_FLAG6",
             "fixMsg": "The correct enum constant 'IPC_FLAG6' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "IPC_FLAG7",
@@ -5590,7 +5590,7 @@
             "peripheral": "ipc",
             "fix": "IPC_FLAG7",
             "fixMsg": "The correct enum constant 'IPC_FLAG7' should be used. In F29H85x device, IPC interrupt can only be triggered by IPC_FLAG0",
-            "compatible": true
+            "compatible": false
         },
         {
             "code": "DCL_runPI_C1",
@@ -6401,7 +6401,7 @@
             "compatible": false
         },
         {
-            "code": "EINT;",
+            "code": "EINT",
             "type": "mcu_macros",
             "peripheral": "interrupt",
             "fix": "ENINT; Interrupt_enableGlobal();",
@@ -6410,43 +6410,43 @@
         },
         {
             "code": "srcBurstStep",
-            "type": "enum",
-            "peripheral": "dma",
+            "type": "mcu_macros",
+            "peripheral": "rtdma",
             "fix": "srcBurstStep",
-            "fixMsg": "The correct enum constant 'srcBurstStep' should be used. F29x device utilizes a byte-addressable architecture, address increments occur in 8-bit steps regardless of the data bus width. In contrast, F28x devices use 16-bit increments.",
-            "compatible": true
+            "fixMsg": "F29x device utilizes a byte-addressable architecture, address increments occur in 8-bit steps regardless of the data bus width. In contrast, F28x devices use 16-bit increments.",
+            "compatible": false
         },
         {
             "code": "destBurstStep",
-            "type": "enum",
-            "peripheral": "dma",
+            "type": "mcu_macros",
+            "peripheral": "rtdma",
             "fix": "destBurstStep",
-            "fixMsg": "The correct enum constant 'destBurstStep' should be used. F29x device utilizes a byte-addressable architecture, address increments occur in 8-bit steps regardless of the data bus width. In contrast, F28x devices use 16-bit increments.",
-            "compatible": true
+            "fixMsg": "F29x device utilizes a byte-addressable architecture, address increments occur in 8-bit steps regardless of the data bus width. In contrast, F28x devices use 16-bit increments.",
+            "compatible": false
         },
         {
             "code": "srcTransferStep",
-            "type": "enum",
-            "peripheral": "dma",
+            "type": "mcu_macros",
+            "peripheral": "rtdma",
             "fix": "srcTransferStep",
-            "fixMsg": "The correct enum constant 'srcTransferStep' should be used. F29x device utilizes a byte-addressable architecture, address increments occur in 8-bit steps regardless of the data bus width. In contrast, F28x devices use 16-bit increments.",
-            "compatible": true
+            "fixMsg": "F29x device utilizes a byte-addressable architecture, address increments occur in 8-bit steps regardless of the data bus width. In contrast, F28x devices use 16-bit increments.",
+            "compatible": false
         },
         {
             "code": "destTransferStep",
-            "type": "enum",
-            "peripheral": "dma",
+            "type": "mcu_macros",
+            "peripheral": "rtdma",
             "fix": "destTransferStep",
-            "fixMsg": "The correct enum constant 'destTransferStep' should be used. F29x device utilizes a byte-addressable architecture, address increments occur in 8-bit steps regardless of the data bus width. In contrast, F28x devices use 16-bit increments.",
-            "compatible": true
+            "fixMsg": "F29x device utilizes a byte-addressable architecture, address increments occur in 8-bit steps regardless of the data bus width. In contrast, F28x devices use 16-bit increments.",
+            "compatible": false
         },
         {
             "code": "burstSize",
-            "type": "enum",
-            "peripheral": "dma",
+            "type": "mcu_macros",
+            "peripheral": "rtdma",
             "fix": "burstSize",
-            "fixMsg": "The correct enum constant 'burstSize' should be used. F29x device utilizes a byte-addressable architecture, burst size is in multiples of 8-bits (bytes)",
-            "compatible": true
+            "fixMsg": "F29x device utilizes a byte-addressable architecture, burst size is in multiples of 8-bits (bytes)",
+            "compatible": false
         },
         {
             "code": "CFFT_f32_sincostable",
@@ -6630,6 +6630,22 @@
             "peripheral": "interrupt",
             "fix": "__attribute__((interrupt(\"RTINT\")))",
             "fixMsg": "For the F29 device, CLA Tasks should be updated to specify INT or RTINT. It is advisable to use RTINT for CLA Tasks by setting a threshold.",
+            "compatible": false
+        },
+        {
+            "code": "Uint16",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "uint16_t",
+            "fixMsg": "For the F29 device, Uint16 is not supported",
+            "compatible": false
+        },
+        {
+            "code": "Uint32",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "uint32_t",
+            "fixMsg": "For the F29 device, Uint32 is not supported",
             "compatible": false
         }
     ],

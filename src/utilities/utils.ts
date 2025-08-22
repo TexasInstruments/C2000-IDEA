@@ -399,3 +399,81 @@ export async function isCommandAvailable(cmdId: string): Promise<boolean>{
 export async function isTheiaEnv(): Promise<boolean> {
 	return isCommandAvailable('ccs.open.browser');
 }
+
+export async function extractFunctionArgs(line: string, functionName: string): Promise<{ fullCall: string, argsStr: string } | null> {
+	const fnCallStart = line.indexOf(functionName + "(");
+	if (fnCallStart === -1) {
+		return null;
+	}
+	const openParenIndex = line.indexOf("(", fnCallStart);
+	if (openParenIndex === -1) {
+		return null;
+	}
+	let depth = 0;
+	let closeParenIndex = -1;
+	for (let i = openParenIndex; i < line.length; i++) {
+		const char = line[i];
+		if (char === "(") {
+			depth++;
+		}
+		else if (char === ")") {
+			depth--;
+		}
+
+		if (depth === 0) {
+			closeParenIndex = i;
+			break;
+		}
+	}
+	// If we never found a closing `)`, it's likely a multi-line function call
+	if (closeParenIndex === -1) {
+		return null;
+	}
+
+	const argsStr = line.slice(openParenIndex + 1, closeParenIndex).trim();
+	const fullCall = line.slice(fnCallStart, closeParenIndex + 1);
+	return { fullCall, argsStr }; 
+}
+
+export async function splitArgs(argStr: string): Promise<string[]> {
+	const args: string[] = [];
+	let current = '';
+	let depth = 0;
+	let inQuotes = false;
+	let quoteChar = '';
+	for (let i = 0; i < argStr.length; i++) {
+		const char = argStr[i];
+		if (inQuotes) {
+			current += char;
+			if (char === quoteChar) {
+				inQuotes = false;
+			}
+			continue;
+		  }
+		  
+		  if (char === '"' || char === "'") {
+			inQuotes = true;
+			quoteChar = char;
+			current += char;
+			continue;
+		  }
+		  
+		  if (char === '(') {
+			depth++;
+			current += char;
+		  } else if (char === ')') {
+			depth--;
+			current += char;
+		  } else if (char === ',' && depth === 0) {
+			args.push(current.trim());
+			current = '';
+		  } else {
+			current += char;
+		  } 
+		}
+		if(current){
+			args.push(current.trim());
+		}
+		return args;
+
+}

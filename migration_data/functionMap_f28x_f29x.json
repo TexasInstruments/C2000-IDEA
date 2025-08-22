@@ -1,0 +1,255 @@
+[
+  {
+    "fromFunction": "ADC_forceMultipleSOC",
+    "toFunction": "ADC_forceMultipleSOC(arg1,  arg2)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "ADC_setInterruptSource",
+    "toFunction": "ADC_setInterruptSource(arg1, arg2, arg3)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "ADC_setMode",
+    "toFunction": "ADC_setMode(arg1, arg2,  arg3)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "DCC_enableSingleShotMode",
+    "toFunction": "DCC_enableSingleShotMode(arg1)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EQEP_selectSource",
+    "toFunction": "EQEP_selectSource(arg1, arg2 )",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "FSI_delayWait",
+    "toFunction": "SysCtl_delay(arg1)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "SPI_setConfig",
+    "toFunction": "SPI_setConfig(arg1, DEVICE_SYSCLK_FREQ, arg3, arg4, arg5, arg6)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3",
+      "arg4",
+      "arg5",
+      "arg6"
+    ]
+  },
+  {
+    "fromFunction": "SysCtl_getResetCause",
+    "toFunction": "SysCtl_getResetCause()",
+    "fromArgs": []
+  },
+  {
+    "fromFunction": "SysCtl_simulateReset",
+    "toFunction": "SysCtl_simulateReset()",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "SysCtl_setEPWMClockDivider",
+    "toFunction": "SysCtl_setEPWMClock(arg1)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "SysCtl_setEMIF1ClockDivider",
+    "toFunction": "SysCtl_setEMIF1Clock(arg1)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "SysCtl_setLINAClockDivider",
+    "toFunction": "SysCtl_setLINAClock(arg1)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "SysCtl_setLINBClockDivider",
+    "toFunction": "SysCtl_setLINBClock(arg1)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "SysCtl_setCputimer2Clk",
+    "toFunction": "SysCtl_setCputimer2Clock(arg2, arg1)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "SysCtl_turnOnOsc",
+    "toFunction": "SysCtl_turnOnXTAL()",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "SysCtl_turnOffOsc",
+    "toFunction": "SysCtl_turnOffXTAL()",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "SysCtl_delay",
+    "toFunction": "SysCtl_delay(arg1)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "SysCtl_resetDevice",
+    "toFunction": "SysCtl_simulateReset()",
+    "fromArgs": []
+  },
+  {
+    "fromFunction": "SysCtl_getCPU2ResetStatus",
+    "toFunction": "SysCtl_isCPU2Reset()",
+    "fromArgs": []
+  },
+  {
+    "fromFunction": "Interrupt_enableGlobal",
+    "toFunction": "Interrupt_enableGlobal()",
+    "fromArgs": []
+  },
+  {
+    "fromFunction": "Interrupt_disableGlobal",
+    "toFunction": "Interrupt_disableGlobal()",
+    "fromArgs": []
+  },
+  {
+    "fromFunction": "Interrupt_enablePIE",
+    "toFunction": "Interrupt_enableGlobal()",
+    "fromArgs": []
+  },
+  {
+    "fromFunction": "Interrupt_disablePIE",
+    "toFunction": "Interrupt_disableGlobal()",
+    "fromArgs": []
+  },
+  {
+    "fromFunction": "DMA_initController",
+    "toFunction": "DMA_initController(RTDMA1_BASE);  DMA_disableMPU(RTDMA1_MPU_BASE)",
+    "fromArgs": []
+  },
+  {
+    "fromFunction": "DMA_setEmulationMode",
+    "toFunction": "DMA_setEmulationMode(RTDMA1_BASE, arg1)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "DMA_setPriorityMode",
+    "toFunction": "DMA_setPriorityMode(RTDMA1_BASE, DMA_PRIORITY_ROUND_ROBIN)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "DMA_configMode",
+    "toFunction": "DMA_configMode(arg1_change, arg2, arg3)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "DMA_configChannel",
+    "toFunction": "DMA_configChannel(arg1_change, arg2)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "DMA_configBurst",
+    "toFunction": "DMA_configBurst(arg1_change, arg2 , arg3 * 2, arg4 * 2)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3",
+      "arg4"
+    ]
+  },
+  {
+    "fromFunction": "DMA_configTransfer",
+    "toFunction": "DMA_configTransfer(arg1_change, arg2, arg3 * 2, arg4 * 2)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3",
+      "arg4"
+    ]
+  },
+  {
+    "fromFunction": "DMA_configWrap",
+    "toFunction": "DMA_configWrap(arg1_change, arg2, arg3 * 2, arg4, arg5 * 2)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3",
+      "arg4",
+      "arg5"
+    ]
+  },
+  {
+    "fromFunction": "IPC_getCounter",
+    "toFunction": "IPC_getCounter()",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "IPC_claimFlashSemaphore",
+    "toFunction": "SSU_claimFlashSemaphore()",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "IPC_releaseFlashSemaphore",
+    "toFunction": "SSU_releaseFlashSemaphore()",
+    "fromArgs": []
+  },
+  {
+    "fromFunction": "ERAD_setOwnership",
+    "toFunction": "ERAD_setOwnership(arg1)",
+    "fromArgs": [
+      "arg1"
+    ]
+  }
+]

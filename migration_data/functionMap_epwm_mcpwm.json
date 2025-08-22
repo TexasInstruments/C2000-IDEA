@@ -1,0 +1,563 @@
+[
+  {
+    "fromFunction": "EPWM_clearSyncEvent",
+    "toFunction": "MCPWM_clearSyncStatus(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_disablePhaseShiftLoad",
+    "toFunction": "MCPWM_disablePhaseShiftLoad(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_disableSyncOutPulseSource",
+    "toFunction": "MCPWM_setSyncOutPulseMode(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_enablePhaseShiftLoad",
+    "toFunction": "MCPWM_enablePhaseShiftLoad(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_enableSyncOutPulseSource",
+    "toFunction": "MCPWM_setSyncOutPulseMode(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_forceSyncPulse",
+    "toFunction": "MCPWM_forceSyncPulse(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_getSyncStatus",
+    "toFunction": "MCPWM_getSyncStatus(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_getTimeBaseCounterDirection",
+    "toFunction": "MCPWM_getTimeBaseCounterDirection(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_getTimeBaseCounterOverflowStatus",
+    "toFunction": "MCPWM_getInterruptSource(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_getTimeBaseCounterValue",
+    "toFunction": "MCPWM_getTimeBaseCounterValue(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_getTimeBasePeriod",
+    "toFunction": "MCPWM_getTimeBasePeriodActive(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_isBaseValid",
+    "toFunction": "MCPWM_isBaseValid(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setClockPrescaler",
+    "toFunction": "MCPWM_setClockPrescaler(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setCountModeAfterSync",
+    "toFunction": "MCPWM_setCountModeAfterSync(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setEmulationMode",
+    "toFunction": "MCPWM_setEmulationMode(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setPeriodLoadMode",
+    "toFunction": "MCPWM_setPeriodLoadMode(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setPhaseShift",
+    "toFunction": "MCPWM_setPhaseShift(arg1_change, arg2)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setSyncInPulseSource",
+    "toFunction": "MCPWM_setSyncInPulseSource(arg1_change,arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setTimeBaseCounter",
+    "toFunction": "MCPWM_setTimeBaseCounter(arg1_change, arg2)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setTimeBaseCounterMode",
+    "toFunction": "MCPWM_setTimeBaseCounterMode(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setTimeBasePeriod",
+    "toFunction": "MCPWM_setTimeBasePeriodActive(arg1_change, arg2)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_getCounterCompareValue",
+    "toFunction": "MCPWM_getCounterCompareActiveValue(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setCounterCompareShadowLoadMode",
+    "toFunction": "MCPWM_setCounterCompareShadowLoadMode(arg1_change, arg2_change, arg3_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setCounterCompareValue",
+    "toFunction": "MCPWM_setCounterCompareActiveValue(arg1_change,arg2_change, arg3)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_forceActionQualifierSWAction",
+    "toFunction": "MCPWM_forceActionQualifierSWAction(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setActionQualifierAction",
+    "toFunction": "MCPWM_setActionQualifierActionActive(arg1_change, arg2_change, arg3_change, arg4_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3",
+      "arg4"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setActionQualifierActionComplete",
+    "toFunction": "MCPWM_setActionQualifierActionCompleteActive(arg1_change, arg2_change,arg3)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setActionQualifierContSWForceAction",
+    "toFunction": "MCPWM_setActionQualifierSWAction(arg1_change, arg2_change, arg3_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setActionQualifierShadowLoadMode",
+    "toFunction": "MCPWM_setActionQualifierShadowLoadMode(arg1_change, arg2_change, arg3_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setActionQualifierSWAction",
+    "toFunction": "MCPWM_setActionQualifierSWAction(arg1_change, arg2_change, arg3_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setAdditionalActionQualifierActionComplete",
+    "toFunction": "MCPWM_setActionQualifierActionCompleteActive(arg1_change, arg2_change, arg3_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_disableFallingEdgeDelayCountShadowLoadMode",
+    "toFunction": "MCPWM_setFallingEdgeDelayCountShadowLoadMode(arg1_change, MCPWM_FED_LOAD_FREEZE)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_disableRisingEdgeDelayCountShadowLoadMode",
+    "toFunction": "MCPWM_setRisingEdgeDelayCountShadowLoadMode(arg1_change, MCPWM_RED_LOAD_FREEZE)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setDeadBandDelayMode",
+    "toFunction": "MCPWM_setDeadBandDelayMode(arg1_change, arg2_change, arg3)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setDeadBandDelayPolarity",
+    "toFunction": "MCPWM_setDeadBandDelayPolarity(arg1_change, arg2_change, arg3_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setDeadBandOutputSwapMode",
+    "toFunction": "MCPWM_setDeadBandOutputSwapMode(arg1_change, arg2_change, arg3)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setFallingEdgeDeadBandDelayInput",
+    "toFunction": "MCPWM_setFallingEdgeDeadBandDelayInput(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setFallingEdgeDelayCount",
+    "toFunction": "MCPWM_setFallingEdgeDelayCountActive(arg1_change, arg2)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setFallingEdgeDelayCountShadowLoadMode",
+    "toFunction": "MCPWM_setFallingEdgeDelayCountShadowLoadMode(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setRisingEdgeDeadBandDelayInput",
+    "toFunction": "MCPWM_setRisingEdgeDeadBandDelayInput(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setRisingEdgeDelayCount",
+    "toFunction": "MCPWM_setRisingEdgeDelayCountActive(arg1_change, arg2)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setRisingEdgeDelayCountShadowLoadMode",
+    "toFunction": "MCPWM_setRisingEdgeDelayCountShadowLoadMode(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_clearCycleByCycleTripZoneFlag",
+    "toFunction": "MCPWM_clearTripZoneFlagStatus(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_clearOneShotTripZoneFlag",
+    "toFunction": "MCPWM_clearTripZoneFlagStatus(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_clearTripZoneFlag",
+    "toFunction": "MCPWM_clearInterrupt(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_disableTripZoneInterrupt",
+    "toFunction": "MCPWM_disableInterrupt(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_disableTripZoneSignals",
+    "toFunction": "MCPWM_disableTripZoneSignals(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_enableTripZoneInterrupt",
+    "toFunction": "MCPWM_enableInterrupt(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_enableTripZoneSignals",
+    "toFunction": "MCPWM_enableTripZoneSignals(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_forceTripZoneEvent",
+    "toFunction": "MCPWM_forceInterrupt(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_getOneShotTripZoneFlagStatus",
+    "toFunction": "MCPWM_getTripZoneFlagStatus(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_getTripZoneFlagStatus",
+    "toFunction": "MCPWM_getTripZoneFlagStatus(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_selectCycleByCycleTripZoneClearEvent",
+    "toFunction": "MCPWM_selectTripZoneCBCEvent(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setTripZoneAction",
+    "toFunction": "MCPWM_setTripZoneAction(uarg1_change, arg2_change, arg3_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_disableGlobalLoad",
+    "toFunction": "MCPWM_disableGlobalLoad(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_disableGlobalLoadOneShotMode",
+    "toFunction": "MCPWM_disableGlobalLoadOneShotMode(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_enableGlobalLoad",
+    "toFunction": "MCPWM_enableGlobalLoad(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_enableGlobalLoadOneShotMode",
+    "toFunction": "MCPWM_enableGlobalLoadOneShotMode(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_forceGlobalLoadOneShotEvent",
+    "toFunction": "MCPWM_forceGlobalLoadOneShotEvent(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setGlobalLoadOneShotLatch",
+    "toFunction": "MCPWM_setGlobalLoadOneShotLatch(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setGlobalLoadTrigger",
+    "toFunction": "MCPWM_setGlobalLoadTrigger(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_clearADCTriggerFlag",
+    "toFunction": "MCPWM_clearADCTriggerFlag(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_clearEventTriggerInterruptFlag",
+    "toFunction": "MCPWM_clearGlobalInterrupt(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_disableADCTrigger",
+    "toFunction": "MCPWM_disableADCTrigger(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_enableADCTrigger",
+    "toFunction": "MCPWM_enableADCTrigger(uarg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_getADCTriggerEventCount",
+    "toFunction": "MCPWM_getADCTriggerEventCount(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_getADCTriggerFlagStatus",
+    "toFunction": "MCPWM_getADCTriggerFlagStatus(arg1_change, arg2_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setADCTriggerEventPrescale",
+    "toFunction": "MCPWM_setADCTriggerEventPrescale(arg1_change, arg2_change, arg3)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_setADCTriggerSource",
+    "toFunction": "MCPWM_setADCTriggerSource(arg1_change, arg2_change, arg3_change)",
+    "fromArgs": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_getEventTriggerInterruptStatus",
+    "toFunction": "MCPWM_getGlobalInterruptStatus(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  },
+  {
+    "fromFunction": "EPWM_getInterruptEventCount",
+    "toFunction": "MCPWM_getGlobalInterruptStatus(arg1_change)",
+    "fromArgs": [
+      "arg1"
+    ]
+  }
+]

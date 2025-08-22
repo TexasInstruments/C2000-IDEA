@@ -47,3 +47,14 @@ interface MigrationDriverlibResolutionData {
     removed : MigrationDriverlibResolutionElement[],
     changed : MigrationDriverlibResolutionElement[]
 }
+
+interface FunctionMap {
+	fromFunction : string;
+	toFunction : string;
+	fromArgs: string[];
+}
+
+interface ArgChange {
+	code: string;
+	fix: string;
+}
