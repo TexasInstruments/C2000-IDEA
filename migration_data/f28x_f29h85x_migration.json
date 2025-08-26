@@ -4461,7 +4461,7 @@
             "type": "function",
             "peripheral": "dcc",
             "fix": "DCC_enableSingleShotMode(uint32_t base)",
-            "fixMsg": "Removed the argument  'mode'.In F29H85x, only the DCC_MODE_COUNTER_ZERO option is supported",
+            "fixMsg": "Removed the argument  'mode'. In F29H85x, only the DCC_MODE_COUNTER_ZERO option is supported",
             "compatible": true
         },
         {
@@ -4469,7 +4469,7 @@
             "type": "function",
             "peripheral": "eqep",
             "fix": "EQEP_selectSource(uint32_t base, EQEP_SourceSelect sourceConfig )",
-            "fixMsg": "Function is compatible. In F29H85x, for argument souceConfig enum constant  EQEP_SOURCE_DEVICE_PIN is not available instead  EQEP_SOURCE_INPUTXBAR by enabling INPUTXBAR",
+            "fixMsg": "Function is compatible. In F29H85x, for argument sourceConfig enum constant  EQEP_SOURCE_DEVICE_PIN is not available instead  EQEP_SOURCE_INPUTXBAR by enabling INPUTXBAR",
             "compatible": true
         },
         {
@@ -4485,7 +4485,7 @@
             "type": "function",
             "peripheral": "mcan",
             "fix": "SysCtl_setMCANClock(SysCtl_MCANInstance mcanInst, SysCtl_MCANClkSource clksrc, SysCtl_MCANClkDivider divider)",
-            "fixMsg": "Function changed to SysCtl_setMCANClock used from SysCtl driver with macnInst enum update and new argumnet entry as divider",
+            "fixMsg": "Function changed to SysCtl_setMCANClock used from SysCtl driver with macnInst enum update and new argument entry as divider",
             "compatible": false
         },
         {
@@ -4621,7 +4621,7 @@
             "type": "function",
             "peripheral": "sysctl",
             "fix": "SysCtl_setCLBClock(SysCtl_CLBClkDivider divider, SysCtl_CLBTClkDivider tdivider, uint8_t clkMode)",
-            "fixMsg": "Function changed to SysCtl_setCLBClock. Parameter entry for CLB CLK didviders and mode for SYNC/ASYNC for each instance",
+            "fixMsg": "Function changed to SysCtl_setCLBClock. Parameter entry for CLB CLK dividers and mode for SYNC/ASYNC for each instance",
             "compatible": false
         },
         {
@@ -4677,7 +4677,7 @@
             "type": "function",
             "peripheral": "sysctl",
             "fix": "SysCtl_delay(uint32_t count)",
-            "fixMsg": "Function is compatible. Total cycles taken by the function is different. In C29, it takes 4 cycles per iteration plus 11 cycles. In C28, it takes 5 cycles per iteration plus 9 cycles. The marcro DEVICE_DELAY_US(x) will remain compatible",
+            "fixMsg": "Function is compatible. Total cycles taken by the function is different. In C29, it takes 4 cycles per iteration plus 11 cycles. In C28, it takes 5 cycles per iteration plus 9 cycles. The macro DEVICE_DELAY_US(x) will remain compatible",
             "compatible": true
         },
         {
@@ -4725,7 +4725,7 @@
             "type": "function",
             "peripheral": "asysctl",
             "fix": "ASysCtl_setVREF(ASysCtl_Vref vref, ASysCtl_VrefMode mode)",
-            "fixMsg": "Function changed to AsysCtl_setVREF and in same function selection of analog reference volateg to internal/external",
+            "fixMsg": "Function changed to AsysCtl_setVREF and in same function selection of analog reference voltage to internal/external",
             "compatible": false
         },
         {
@@ -4733,7 +4733,7 @@
             "type": "function",
             "peripheral": "asysctl",
             "fix": "ASysCtl_setVREF(ASysCtl_Vref vref, ASysCtl_VrefMode mode)",
-            "fixMsg": "Function changed to AsysCtl_setVREF and in same function selection of analog reference volateg to internal/external",
+            "fixMsg": "Function changed to AsysCtl_setVREF and in same function selection of analog reference voltage to internal/external",
             "compatible": false
         },
         {
@@ -4741,7 +4741,7 @@
             "type": "function",
             "peripheral": "asysctl",
             "fix": "ASysCtl_setVREF(ASysCtl_Vref vref, ASysCtl_VrefMode mode)",
-            "fixMsg": "Function changed to AsysCtl_setVREF and in same function selection of analog reference volateg to internal/external",
+            "fixMsg": "Function changed to AsysCtl_setVREF and in same function selection of analog reference voltage to internal/external",
             "compatible": false
         },
         {
@@ -4749,7 +4749,7 @@
             "type": "function",
             "peripheral": "asysctl",
             "fix": "ASysCtl_setVREF(ASysCtl_Vref vref, ASysCtl_VrefMode mode)",
-            "fixMsg": "Function changed to AsysCtl_setVREF and in same function selection of analog reference volateg to internal/external",
+            "fixMsg": "Function changed to AsysCtl_setVREF and in same function selection of analog reference voltage to internal/external",
             "compatible": false
         },
         {
@@ -4821,7 +4821,7 @@
             "type": "function",
             "peripheral": "interrupt",
             "fix": "Interrupt_enableGlobal(void)",
-            "fixMsg": "Function is compatible. In F28, this function enables the interrupt in the CPU and returns true if was disabled when the function was called.In F29, this enables INTs and RTINTs in the PIPE module. RTINTs are always enabled in the CPU. Use the macro EINT/ENINT for enabling interrupts in the CPU. F29 function does not return any value",
+            "fixMsg": "Function is compatible. In F28, this function enables the interrupt in the CPU and returns true if was disabled when the function was called. In F29, this enables INTs and RTINTs in the PIPE module. RTINTs are always enabled in the CPU. Use the macro EINT/ENINT for enabling interrupts in the CPU. F29 function does not return any value",
             "compatible": true
         },
         {
@@ -4829,7 +4829,7 @@
             "type": "function",
             "peripheral": "interrupt",
             "fix": "Interrupt_disableGlobal(void)",
-            "fixMsg": "Function is compatible. In F28, this function disables the interrupt in the CPU and returns true if was disabled when the function was called.In F29, this disables INTs and RTINTs in the PIPE module. RTINTs are always enabled in the CPU. Use the macro DINT/DISINT for disabling interrupts in the CPU. F29 function does not return any value",
+            "fixMsg": "Function is compatible. In F28, this function disables the interrupt in the CPU and returns true if was disabled when the function was called. In F29, this disables INTs and RTINTs in the PIPE module. RTINTs are always enabled in the CPU. Use the macro DINT/DISINT for disabling interrupts in the CPU. F29 function does not return any value",
             "compatible": true
         },
         {
@@ -4925,7 +4925,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_clearFlagLtoR(IPC_Channel_t ipcChannel, uint32_t flags)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
+            "fixMsg": "Function is compatible. Parameter entry changed from ipcType to ipcChannel with corresponding Enum",
             "compatible": false
         },
         {
@@ -4933,7 +4933,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_ackFlagRtoL(IPC_Channel_t ipcChannel, uint32_t flags)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
+            "fixMsg": "Function is compatible. Parameter entry changed from ipcType to ipcChannel with corresponding Enum",
             "compatible": false
         },
         {
@@ -4941,7 +4941,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_isFlagBusyLtoR(IPC_Channel_t ipcChannel, uint32_t flags)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
+            "fixMsg": "Function is compatible. Parameter entry changed from ipcType to ipcChannel with corresponding Enum",
             "compatible": false
         },
         {
@@ -4949,7 +4949,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_isFlagBusyRtoL(IPC_Channel_t ipcChannel, uint32_t flags)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
+            "fixMsg": "Function is compatible. Parameter entry changed from ipcType to ipcChannel with corresponding Enum",
             "compatible": false
         },
         {
@@ -4957,7 +4957,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_waitForFlag(IPC_Channel_t ipcChannel, uint32_t flag)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
+            "fixMsg": "Function is compatible. Parameter entry changed from ipcType to ipcChannel with corresponding Enum",
             "compatible": false
         },
         {
@@ -4965,7 +4965,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_waitForAck(IPC_Channel_t ipcChannel, uint32_t flag)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
+            "fixMsg": "Function is compatible. Parameter entry changed from ipcType to ipcChannel with corresponding Enum",
             "compatible": false
         },
         {
@@ -4973,7 +4973,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_sync(IPC_Channel_t ipcChannel, uint32_t flag)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
+            "fixMsg": "Function is compatible. Parameter entry changed from ipcType to ipcChannel with corresponding Enum",
             "compatible": false
         },
         {
@@ -4981,7 +4981,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_init(IPC_Channel_t ipcChannel)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
+            "fixMsg": "Function is compatible. Parameter entry changed from ipcType to ipcChannel with corresponding Enum",
             "compatible": false
         },
         {
@@ -4989,7 +4989,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_sendResponse(IPC_Channel_t ipcChannel, uint32_t data)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
+            "fixMsg": "Function is compatible. Parameter entry changed from ipcType to ipcChannel with corresponding Enum",
             "compatible": false
         },
         {
@@ -4997,7 +4997,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_getResponse(IPC_Channel_t ipcChannel)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum",
+            "fixMsg": "Function is compatible. Parameter entry changed from ipcType to ipcChannel with corresponding Enum",
             "compatible": false
         },
         {
@@ -5005,7 +5005,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_sendCommand(IPC_Channel_t ipcChannel, uint32_t flags, uint32_t command, uint32_t addr, uint32_t data)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum and paramter addrCorrEnable is removed, as this was added specifically for F2838 device where the RAM address is different between C28 and CM cores",
+            "fixMsg": "Function is compatible. Parameter entry changed from ipcType to ipcChannel with corresponding Enum and parameter addrCorrEnable is removed, as this was added specifically for F2838 device where the RAM address is different between C28 and CM cores",
             "compatible": false
         },
         {
@@ -5013,7 +5013,7 @@
             "type": "function",
             "peripheral": "ipc",
             "fix": "IPC_readCommand(IPC_Channel_t ipcChannel, uint32_t flags,uint32_t *command, uint32_t *addr, uint32_t *data)",
-            "fixMsg": "Function is compatible. Paramter entry changed from ipcType to ipcChannel with corresponding Enum and paramter addrCorrEnable is removed, as this was added specifically for F2838 device where the RAM address is different between C28 and CM cores",
+            "fixMsg": "Function is compatible. Parameter entry changed from ipcType to ipcChannel with corresponding Enum and parameter addrCorrEnable is removed, as this was added specifically for F2838 device where the RAM address is different between C28 and CM cores",
             "compatible": false
         },
         {
@@ -6573,7 +6573,7 @@
             "type": "function",
             "peripheral": "cla",
             "fix": "Interrupt_register(uint32_t intNum, void (*handler)(void))",
-            "fixMsg": "In F29 devcie, use ISRs in place of CLA tasks - register the corresponding interrupt source and the claTask handler using  Interrupt_register function",
+            "fixMsg": "In F29 device, use ISRs in place of CLA tasks - register the corresponding interrupt source and the claTask handler using  Interrupt_register function",
             "compatible": false
         },
         {
@@ -6581,7 +6581,7 @@
             "type": "function",
             "peripheral": "cla",
             "fix": "Interrupt_register(uint32_t intNum, void (*handler)(void))",
-            "fixMsg": "In F29 devcie, use ISRs in place of CLA tasks - register the corresponding interrupt source and the claTask handler using  Interrupt_register function",
+            "fixMsg": "In F29 device, use ISRs in place of CLA tasks - register the corresponding interrupt source and the claTask handler using  Interrupt_register function",
             "compatible": false
         },
         {
@@ -6646,6 +6646,70 @@
             "peripheral": "CPU",
             "fix": "uint32_t",
             "fixMsg": "For the F29 device, Uint32 is not supported",
+            "compatible": false
+        },
+        {
+            "code": "asm(\"   ESTOP0\")",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "ESTOP0",
+            "fixMsg": "For the F29 device, asm instructions are not supported but ESTOP0 is supported",
+            "compatible": false
+        },
+        {
+            "code": "asm(\" IDLE\")",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "IDLE",
+            "fixMsg": "For the F29 device, asm instructions are not supported but IDLE  is supported",
+            "compatible": false
+        },
+        {
+            "code": "asm(\" EMUSTOP0\")",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "EMUSTOP0",
+            "fixMsg": "For the F29 device, asm instructions are not supported but EMUSTOP0 is supported",
+            "compatible": false
+        },
+        {
+            "code": "asm(\" DISINT\")",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "DISINT",
+            "fixMsg": "For the F29 device, asm instructions are not supported but DISINT is supported",
+            "compatible": false
+        },
+        {
+            "code": "asm(\" ENINT\")",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "ENINT; Interrupt_enableGlobal();",
+            "fixMsg": "For the F29 device, asm instructions are not supported but ENINT is supported and need to add interrupt_enableflobal function",
+            "compatible": false
+        },
+        {
+            "code": "asm(\" ESTOP0\")",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "ESTOP0",
+            "fixMsg": "For the F29 device, asm instructions are not supported but ESTOP0 is supported",
+            "compatible": false
+        },
+        {
+            "code": "asm(\" EINT\")",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "ENINT; Interrupt_enableGlobal();",
+            "fixMsg": "For the F29 device, asm instructions are not supported but ENINT is supported and need to add interrupt_enableflobal function",
+            "compatible": false
+        },
+        {
+            "code": "asm(\"  ESTOP0\")",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "ESTOP0",
+            "fixMsg": "For the F29 device, asm instructions are not supported but ESTOP0 is supported",
             "compatible": false
         }
     ],
@@ -7943,7 +8007,7 @@
             "type": "function",
             "peripheral": "interrupt",
             "fix": "NA",
-            "fixMsg": "Not applicable for F29H85x DINT/DISINT instruction diables all the INTs.",
+            "fixMsg": "Not applicable for F29H85x DINT/DISINT instruction disables all the INTs.",
             "compatible": false
         },
         {
@@ -8511,7 +8575,7 @@
             "type": "mcu_macros",
             "peripheral": "CPU",
             "fix": "NA",
-            "fixMsg": "CPU Macro, IER is not available on F29 Devcies",
+            "fixMsg": "CPU Macro, IER is not available on F29 Devices",
             "compatible": false
         },
         {
@@ -8519,7 +8583,7 @@
             "type": "mcu_macros",
             "peripheral": "CPU",
             "fix": "NA",
-            "fixMsg": "CPU Macro, IFR is not available on F29 Devcies",
+            "fixMsg": "CPU Macro, IFR is not available on F29 Devices",
             "compatible": false
         },
         {
@@ -8527,7 +8591,7 @@
             "type": "mcu_macros",
             "peripheral": "CPU",
             "fix": "NA",
-            "fixMsg": "CPU Macro, ERTM is not available on F29 Devcies",
+            "fixMsg": "CPU Macro, ERTM is not available on F29 Devices",
             "compatible": false
         },
         {
@@ -8535,7 +8599,7 @@
             "type": "mcu_macros",
             "peripheral": "CPU",
             "fix": "NA",
-            "fixMsg": "CPU Macro, DRTM is not available on F29 Devcies",
+            "fixMsg": "CPU Macro, DRTM is not available on F29 Devices",
             "compatible": false
         },
         {
@@ -8543,7 +8607,7 @@
             "type": "mcu_macros",
             "peripheral": "CPU",
             "fix": "NA",
-            "fixMsg": "CPU Macro, EALLOW is not available on F29 Devcies. User may use the register lock/unlock feature instead",
+            "fixMsg": "CPU Macro, EALLOW is not available on F29 Devices. User may use the register lock/unlock feature instead",
             "compatible": false
         },
         {
@@ -8551,7 +8615,7 @@
             "type": "mcu_macros",
             "peripheral": "CPU",
             "fix": "NA",
-            "fixMsg": "CPU Macro, EDIS is not available on F29 Devcies. User may use the register lock/unlock feature instead",
+            "fixMsg": "CPU Macro, EDIS is not available on F29 Devices. User may use the register lock/unlock feature instead",
             "compatible": false
         },
         {
@@ -8655,7 +8719,31 @@
             "type": "function",
             "peripheral": "cla",
             "fix": "NA",
-            "fixMsg": "In F29 devcie, use ISRs in place of CLA tasks- register the corresponding interrupt source and the claTask handler using  Interrupt_register function. This might be redundant if CLA_mapTaskVector is already migrated.",
+            "fixMsg": "In F29 device, use ISRs in place of CLA tasks- register the corresponding interrupt source and the claTask handler using  Interrupt_register function. This might be redundant if CLA_mapTaskVector is already migrated.",
+            "compatible": false
+        },
+        {
+            "code": "asm",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "NA",
+            "fixMsg": "For the F29 device, asm instructions are not supported",
+            "compatible": false
+        },
+        {
+            "code": "_asm",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "NA",
+            "fixMsg": "For the F29 device, asm instructions are not supported",
+            "compatible": false
+        },
+        {
+            "code": "__asm",
+            "type": "mcu_macros",
+            "peripheral": "CPU",
+            "fix": "NA",
+            "fixMsg": "For the F29 device, asm instructions are not supported",
             "compatible": false
         }
     ]

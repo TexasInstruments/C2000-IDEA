@@ -1167,7 +1167,7 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 							}
 							processedCodes.add(code);
 						}
-						severity = vscode.DiagnosticSeverity.Warning;
+						severity = vscode.DiagnosticSeverity.Error;
 					}
 					// Combined ENUM Fix
 					if ((lineEnumChangeCount > allFixThreshold) && deviceMigrationData.migrationDevice){

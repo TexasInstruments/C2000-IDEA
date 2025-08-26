@@ -125,7 +125,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setPeriodLoadMode(uint32_t base, MCPWM_PeriodLoadMode loadMode)",
-            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overriden by global load if enabled",
+            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overridden by global load if enabled",
             "compatible": true
         },
         {
@@ -205,7 +205,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setCounterCompareShadowLoadMode(uint32_t base, MCPWM_CounterCompareModule compModule, MCPWM_CounterCompareLoadMode loadMode)",
-            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overriden by global load if enabled",
+            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overridden by global load if enabled",
             "compatible": true
         },
         {
@@ -253,7 +253,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setActionQualifierSWAction(uint32_t base, MCPWM_ActionQualifierOutputModule mcpwmOutput, MCPWM_ActionQualifierSWForceOutput output)",
-            "fixMsg": "In MCPWM module, the function has been changed  and  MCPWM_setActionQualifierSWAction is the nearest compatible.The arguments need to be provided in the form of A1/A2/A3, B1/B2/B3 ",
+            "fixMsg": "In MCPWM module, the function has been changed  and  MCPWM_setActionQualifierSWAction is the nearest compatible. The arguments need to be provided in the form of A1/A2/A3, B1/B2/B3 ",
             "compatible": true
         },
         {
@@ -261,7 +261,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setActionQualifierShadowLoadMode(uint32_t base, MCPWM_ActionQualifierModule aqModule, MCPWM_ActionQualifierLoadMode loadMode)",
-            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overriden by global load if enabled",
+            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overridden by global load if enabled",
             "compatible": true
         },
         {
@@ -269,7 +269,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setActionQualifierSWAction(uint32_t base, MCPWM_ActionQualifierOutputModule mcpwmOutput, MCPWM_ActionQualifierSWForceOutput output)",
-            "fixMsg": "In MCPWM module, the function has been changed  and  MCPWM_setActionQualifierSWAction is the nearest compatible.The arguments need to be provided in the form of A1/A2/A3, B1/B2/B3 ",
+            "fixMsg": "In MCPWM module, the function has been changed  and  MCPWM_setActionQualifierSWAction is the nearest compatible. The arguments need to be provided in the form of A1/A2/A3, B1/B2/B3 ",
             "compatible": true
         },
         {
@@ -301,7 +301,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setDeadBandDelayMode(uint32_t base, MCPWM_DeadBandDelayMode delayMode, bool enableDelayMode)",
-            "fixMsg": "In MCPWM module, the function has been changed but common DeadBand Module for all 3 pairs of channel outputs",
+            "fixMsg": "In MCPWM module, the function has been changed but common Dead Band Module for all 3 pairs of channel outputs",
             "compatible": true
         },
         {
@@ -309,7 +309,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setDeadBandDelayPolarity(uint32_t base, MCPWM_DeadBandDelayMode delayMode, MCPWM_DeadBandPolarity polarity)",
-            "fixMsg": "In MCPWM module, the function has been changed but common DeadBand Module for all 3 pairs of channel outputs",
+            "fixMsg": "In MCPWM module, the function has been changed but common Dead Band Module for all 3 pairs of channel outputs",
             "compatible": true
         },
         {
@@ -317,7 +317,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setDeadBandOutputSwapMode(uint32_t base, MCPWM_DeadBandOutput output, bool enableSwapMode)",
-            "fixMsg": "In MCPWM module, the function has been changed but common DeadBand Module for all 3 pairs of channel outputs",
+            "fixMsg": "In MCPWM module, the function has been changed but common Dead Band Module for all 3 pairs of channel outputs",
             "compatible": true
         },
         {
@@ -325,7 +325,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setFallingEdgeDeadBandDelayInput(uint32_t base, uint16_t input)",
-            "fixMsg": "In MCPWM module, the function has been changed but common DeadBand Module for all 3 pairs of channel outputs",
+            "fixMsg": "In MCPWM module, the function has been changed but common Dead Band Module for all 3 pairs of channel outputs",
             "compatible": true
         },
         {
@@ -341,7 +341,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setFallingEdgeDelayCountShadowLoadMode(uint32_t base, MCPWM_FallingEdgeDelayLoadMode loadMode)",
-            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overriden by global load if enabled",
+            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overridden by global load if enabled",
             "compatible": true
         },
         {
@@ -349,7 +349,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setRisingEdgeDeadBandDelayInput(uint32_t base, uint16_t input)",
-            "fixMsg": "In MCPWM module, the function has been changed but common DeadBand Module for all 3 pairs of channel outputs",
+            "fixMsg": "In MCPWM module, the function has been changed but common Dead Band Module for all 3 pairs of channel outputs",
             "compatible": true
         },
         {
@@ -365,7 +365,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setRisingEdgeDelayCountShadowLoadMode(uint32_t base,  MCPWM_RisingEdgeDelayLoadMode loadMode)",
-            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overriden by global load if enabled",
+            "fixMsg": "In MCPWM module, the function has been changed with different load modes available and local loads are overridden by global load if enabled",
             "compatible": true
         },
         {
@@ -413,7 +413,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_disableTripZoneSignals(uint32_t base, uint32_t tzSignal)",
-            "fixMsg": "In MCPWM module, the function has been changed with different trip sources available and common Trip Zone Functionalities for all 3 pairs of channle outputs",
+            "fixMsg": "In MCPWM module, the function has been changed with different trip sources available and common Trip Zone Functionalities for all 3 pairs of channel outputs",
             "compatible": true
         },
         {
@@ -429,7 +429,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_enableTripZoneSignals(uint32_t base, uint32_t tzSignal)",
-            "fixMsg": "In MCPWM module, the function has been changed with different trip sources available and common Trip Zone Functionalities for all 3 pairs of channle outputs",
+            "fixMsg": "In MCPWM module, the function has been changed with different trip sources available and common Trip Zone Functionalities for all 3 pairs of channel outputs",
             "compatible": true
         },
         {
@@ -469,7 +469,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_setTripZoneAction(uint32_t base, MCPWM_TripZoneEvent tzEvent, MCPWM_TripZoneAction tzAction)",
-            "fixMsg": "In MCPWM module, the function has been changed with different trip actions available and Common Trip Zone Functionalities for all 3 Pairs of Channle Outputs",
+            "fixMsg": "In MCPWM module, the function has been changed with different trip actions available and Common Trip Zone Functionalities for all 3 Pairs of Channels Outputs",
             "compatible": true
         },
         {
@@ -501,7 +501,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_disableGlobalLoad(uint32_t base)",
-            "fixMsg": "In MCPWM module, the function has been changed and local loads are overriden by global load if enabled",
+            "fixMsg": "In MCPWM module, the function has been changed and local loads are overridden by global load if enabled",
             "compatible": true
         },
         {
@@ -517,7 +517,7 @@
             "type": "function",
             "peripheral": "mcpwm",
             "fix": "MCPWM_enableGlobalLoad(uint32_t base)",
-            "fixMsg": "In MCPWM module, the function has been changed and local loads are overriden by global load if enabled",
+            "fixMsg": "In MCPWM module, the function has been changed and local loads are overridden by global load if enabled",
             "compatible": true
         },
         {
@@ -1117,7 +1117,7 @@
             "type": "enum",
             "peripheral": "mcpwm",
             "fix": "MCPWM_AQ_SW_FORCE_DISABLED",
-            "fixMsg": "The correct enum constant 'MCPWM_AQ_SW_FORCE_DISABLED' should be used. MCPWM SW AQFRC takes action to be continous or Oneshot and is handled by AQOTFRC writes",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_SW_FORCE_DISABLED' should be used. MCPWM SW AQFRC takes action to be continuous or One-shot and is handled by AQOTFRC writes",
             "compatible": false
         },
         {
@@ -1125,7 +1125,7 @@
             "type": "enum",
             "peripheral": "mcpwm",
             "fix": "MCPWM_AQ_SW_CONTINUOUS_LOW",
-            "fixMsg": "The correct enum constant 'MCPWM_AQ_SW_CONTINUOUS_LOW' should be used. MCPWM SW AQFRC takes action to be continous or Oneshot and is handled by AQOTFRC writes",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_SW_CONTINUOUS_LOW' should be used. MCPWM SW AQFRC takes action to be continuous or One-shot and is handled by AQOTFRC writes",
             "compatible": false
         },
         {
@@ -1133,7 +1133,7 @@
             "type": "enum",
             "peripheral": "mcpwm",
             "fix": "MCPWM_AQ_SW_CONTINUOUS_HIGH",
-            "fixMsg": "The correct enum constant 'MCPWM_AQ_SW_CONTINUOUS_HIGH' should be used. MCPWM SW AQFRC takes action to be continous or Oneshot and is handled by AQOTFRC writes",
+            "fixMsg": "The correct enum constant 'MCPWM_AQ_SW_CONTINUOUS_HIGH' should be used. MCPWM SW AQFRC takes action to be continuous or One-shot and is handled by AQOTFRC writes",
             "compatible": false
         },
         {
@@ -1349,7 +1349,7 @@
             "type": "enum",
             "peripheral": "mcpwm",
             "fix": "MCPWM_DB_OUTPUT_A",
-            "fixMsg": "The correct enum constant 'MCPWM_DB_OUTPUT_A' should be used. MCPWM DeadBand is common to all 3 Pairs of outputs",
+            "fixMsg": "The correct enum constant 'MCPWM_DB_OUTPUT_A' should be used. MCPWM Dead Band is common to all 3 Pairs of outputs",
             "compatible": false
         },
         {
@@ -1357,7 +1357,7 @@
             "type": "enum",
             "peripheral": "mcpwm",
             "fix": "MCPWM_DB_OUTPUT_B",
-            "fixMsg": "The correct enum constant 'MCPWM_DB_OUTPUT_B' should be used. MCPWM DeadBand is common to all 3 Pairs of outputs",
+            "fixMsg": "The correct enum constant 'MCPWM_DB_OUTPUT_B' should be used. MCPWM Dead Band is common to all 3 Pairs of outputs",
             "compatible": false
         },
         {

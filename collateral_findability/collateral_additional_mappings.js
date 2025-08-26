@@ -18,7 +18,7 @@ var COLLATERAL_FINDABILITY_ADDITIONAL_MAPPINGS =
     "safety": ["DCSM", "SYSCTL", "BGCRC"],
     "jtaglock": ["DCSM"],
     "ethercat": ["ECAT"],
-    "pwm": ["EPWM"],
+    "pwm": ["EPWM", "MCPWM"],
     "diagnostic": ["ERAD"],
     "memory": ["FLASH", "ROM", "EMIF", "DMA"],
     "io": ["GPIO"],

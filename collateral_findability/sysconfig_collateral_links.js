@@ -2390,6 +2390,11 @@ var collateral = {
                     url:"https://ti.com/lit/SPRAAI1",
                     appNote:true,
                 },
+                {
+                    name:"EPWM to MCPWM Migration Guide",
+                    url:"https://www.ti.com/lit/an/spradl7/spradl7.pdf",
+                    appNote:true,
+                },
             ]
         },
         {
@@ -3311,6 +3316,35 @@ var collateral = {
             ]
         },
     ],
+    "MCPWM":[
+        {
+            category_displayName: "Foundational Materials",
+            content:[
+                {
+                    name:"C28x Academy - MCPWM",
+                    url:"https://dev.ti.com/tirex/local?id=source_c2000_control_peripherals_c2000_multi_channel_pulse_width_modulation&packageId=C28X-ACADEMY",
+                    devices:[
+                        "F28E12x",
+                    ],
+                },
+                {
+                    name:"Real-Time Control Reference Guide",
+                    url:"https://www.ti.com/lit/eb/slyy211/slyy211.pdf",
+                    description:"Refer to the PWM section",
+                },
+            ]
+        },
+        {
+            category_displayName: "Getting Started Materials",
+            content:[
+                {
+                    name:"EPWM to MCPWM Migration Guide",
+                    url:"https://www.ti.com/lit/an/spradl7/spradl7.pdf",
+                    appNote:true,
+                },
+            ]
+        },
+    ],
     "MCBSP":[
         {
             category_displayName: "Foundational Materials",
@@ -4183,6 +4217,23 @@ var collateral = {
                 {
                     name:"[FAQ] How do I add SYSCONFIG support (Pinmux and Peripheral Initialization) to an existing driverlib project?",
                     url:"https://e2e.ti.com/support/microcontrollers/c2000-microcontrollers-group/c2000/f/c2000-microcontrollers-forum/910829/faq-how-do-i-add-sysconfig-support-pinmux-and-peripheral-initialization-to-an-existing-driverlib-project",
+                },
+                {
+                    name:"Migration Between TMS320F280015x, TMS320F280013x, and F28E12x Guide",
+                    url:"https://www.ti.com/lit/SPRUJE9",
+                    devices:[
+                        "F280013x",
+                        "F280015x",
+                        "F28E12x",
+                    ],
+                },
+                {
+                    name:"Migration Between TMS320F2802x, TMS320F2803x, and F28E12x Guide",
+                    url:"https://www.ti.com/lit/SPRUJF0",
+                    devices:[
+                        "F2803x",
+                        "F28E12x",
+                    ],
                 },
             ]
         },
