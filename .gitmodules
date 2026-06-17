@@ -1,0 +1,3 @@
+[submodule "submodules/ti_asm_mcp"]
+	path = submodules/ti_asm_mcp
+	url = https://github.com/nimeskan/ti_asm_mcp.git
