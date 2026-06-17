@@ -210,23 +210,23 @@
       },
       {
         "command": "c2000-idea.enableMcp",
-        "title": "C2000-IDEA: Enable MCP"
+        "title": "C2000-IDEA: Enable TI ASM MCP"
       },
       {
         "command": "c2000-idea.disableMcp",
-        "title": "C2000-IDEA: Disable MCP"
+        "title": "C2000-IDEA: Disable TI ASM MCP"
       },
       {
         "command": "c2000-idea.checkMcp",
-        "title": "C2000-IDEA: Check MCP"
+        "title": "C2000-IDEA: Check TI ASM MCP"
       },
       {
         "command": "c2000-idea.registerMcp",
-        "title": "C2000-IDEA: Register MCP"
+        "title": "C2000-IDEA: Register TI ASM MCP"
       },
       {
         "command": "c2000-idea.mcpInstructions",
-        "title": "C2000-IDEA: MCP Instructions"
+        "title": "C2000-IDEA: TI ASM MCP Instructions"
       },
       {
         "command": "c2000-idea.registerSkills",
