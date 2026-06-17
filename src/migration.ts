@@ -34,6 +34,21 @@ function migrationUpdateIsContinuousCheckMode(status: boolean)
 
 export var migrationDiagnosticsCollection : vscode.DiagnosticCollection;
 
+interface DiagnosticMeta {
+	code: string;
+	fix: string;
+	fixMsg: string;
+	type: string;
+	category: string;
+	compatible: boolean;
+	sourceDevice: string;
+	targetDevice: string;
+	changeType?: string;
+	collateralLink?: string;
+}
+// Key: `${uri.fsPath}:${line}:${col}`
+let migrationDiagnosticMetadata: Map<string, DiagnosticMeta> = new Map();
+
 interface MigrationCodeActions {
 	uri: vscode.Uri,
 	codeAction: vscode.CodeAction
@@ -167,7 +182,7 @@ export function migrationSetup(context: vscode.ExtensionContext)
 		}
 	);
 
-	// Added this ignoreMigrationFolderIncompatDisposal function for future enhancement of ignoring a file from explorer window 
+	// This ignoreMigrationFolderIncompatDisposal function enables ignoring a file from explorer window
 	let ignoreMigrationFolderIncompatDisposal = vscode.commands.registerCommand(info.C2000_IDEA_CMD_IGNORE_FOLDER_MIGRATION_INCOMPAT, 
 		( args : {
 			code:string, 
@@ -188,7 +203,15 @@ export function migrationSetup(context: vscode.ExtensionContext)
 		}
 	});
 
-	context.subscriptions.push( 
+	let exportMigrationAgentReportDisposal = vscode.commands.registerCommand(info.C2000_IDEA_CMD_EXPORT_MIGRATION_AGENT_REPORT, (args) => {
+		if (args && args.treeItem && args.projectInfo) {
+			exportProjectMigrationAgentReport(args.projectInfo);
+		} else {
+			exportMigrationAgentReport();
+		}
+	});
+
+	context.subscriptions.push(
 		disposableOpenAutoMigrationGuide,
 		enableContinuousMigrationCheckDisposable,
 		disableContinuousMigrationCheckDisposable,
@@ -198,6 +221,7 @@ export function migrationSetup(context: vscode.ExtensionContext)
 		setUpProjectCurrentDeviceCommand,
 		clearAllDisposal,
 		exportMigrationDisposal,
+		exportMigrationAgentReportDisposal,
 		ignoreMigrationIncompatDisposal,
 		ignoreMigrationFolderIncompatDisposal
 	);
@@ -375,6 +399,7 @@ export function migrationClearAllData(context: vscode.ExtensionContext)
     migrationCodeActions = [];
 	migrationCodeLenses = [];
 	migrationDiagnosticsCollection.clear();
+	migrationDiagnosticMetadata.clear();
 }
 
 var migrationDisposableOnDidChangeActiveTextEditor: vscode.Disposable;
@@ -788,6 +813,12 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 
 		let migrationDiagnostics: vscode.Diagnostic[] = [];
 		migrationDiagnosticsCollection.set(uri, migrationDiagnostics);
+		// Clear per-URI metadata so it stays in sync with the diagnostic collection
+		for (const key of Array.from(migrationDiagnosticMetadata.keys())) {
+			if (key.startsWith(uri.fsPath + ":")) {
+				migrationDiagnosticMetadata.delete(key);
+			}
+		}
 
 		let devicesMigrationData: {
 			migrationDevice: string,
@@ -1109,7 +1140,26 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 									diagnostic.code = C2000_MIGRATION_INCOMPAT_CODE;
 									diagnostic.source = C2000_MIGRATION_INCOMPAT_SOURCE;
 									diagnosticsForThisLine.push(diagnostic);
-	
+
+									const metaKey = `${uri.fsPath}:${lineNumber}:${code}:${deviceMigrationData.migrationDevice}`;
+									const collateralLink = C2000_AUTO_MIGRATION_GUIDE_LINK + "diff_reports/" + C2000_MIGRATION_FROM_SDK_VERSION + "_" +
+										currentDevice.toLowerCase() +
+										"_vs_" + C2000_MIGRATION_TO_SDK_VERSION + "_" +
+										deviceMigrationData.migrationDevice.toLowerCase() +
+										"_driverlib.html#" + bookmark;
+									migrationDiagnosticMetadata.set(metaKey, {
+										code,
+										fix,
+										fixMsg: msg,
+										type,
+										category,
+										compatible: compatible === "true",
+										sourceDevice: currentDevice,
+										targetDevice: deviceMigrationData.migrationDevice,
+										changeType: (allRemoved.some((r: any) => r.code === code) || allRemovedDriverlibResolution.some((r: any) => r.code === code)) ? "removed" : "changed",
+										collateralLink
+									});
+
 									if (type === "enum"){
 										diagnosticsEnumsOnlyForThisLine.push(diagnostic);
 									}
@@ -1377,6 +1427,426 @@ function exportProjectMigrationDiagnostics(projectInfo: project.ProjectInfo, las
 	});
 
 
+}
+
+/**
+ * Build shared instruction content for migration agent reports
+ */
+function getSDKVersionForDevice(device: string): string {
+	return device.toUpperCase().includes("F29") ? C2000_MIGRATION_C29SDK_VERSION : C2000_MIGRATION_C2000WARE_VERSION;
+}
+
+function buildMigrationAgentReportInstructions(sourceDevice: string, targetDevice: string): string {
+	const fromSDK = sourceDevice.toUpperCase().includes("F29") ? C2000_MIGRATION_C29SDK_VERSION :
+		(targetDevice.toUpperCase().includes("F29") ? C2000_MIGRATION_C2000WARE_OLDVERSION : C2000_MIGRATION_C2000WARE_VERSION);
+	const toSDK = getSDKVersionForDevice(targetDevice);
+
+	let md = `## Role & Context\n\n`;
+	md += `> You are an AI coding agent tasked with migrating a Texas Instruments C2000 embedded C project.\n`;
+	md += `> **Source device:** \`${sourceDevice}\` → **Target device:** \`${targetDevice}\`\n`;
+	md += `> **SDK:** \`${fromSDK}\` → \`${toSDK}\`\n`;
+	md += `> The issues in this report were detected by the C2000 IDEA VS Code extension via static analysis.\n`;
+	md += `> Your goal is to edit the listed source files so the project compiles and runs correctly on \`${targetDevice}\`.\n`;
+	md += `> **File modification protocol:** Present each change as a unified diff with 3 lines of context. For files under 100 lines, you may show the full modified file.\n\n`;
+	md += `---\n\n`;
+	md += `## Instructions for AI Agent\n\n`;
+	md += `### Priority Order\n\n`;
+	md += `Work through issues in this order for maximum efficiency:\n`;
+	md += `1. **Auto-fixable ✓ issues first** — These are direct 1-to-1 symbol substitutions. Apply them immediately without research.\n`;
+	md += `2. **Needs manual review ⚠ issues second** — These require context analysis, collateral inspection, and confirmation before applying.\n\n`;
+	md += `### Change Type Strategy\n\n`;
+	md += `Each issue carries a **Change** field that indicates what happened to the symbol:\n\n`;
+	md += `| Change Type | What It Means | Recommended Action |\n`;
+	md += `|-------------|---------------|--------------------|\n`;
+	md += `| \`removed\` | Symbol does not exist in \`${targetDevice}\` | Find equivalent target-device API; leave a \`// TODO: verify replacement\` comment |\n`;
+	md += `| \`modified\` | Symbol exists but signature/value/behavior changed | Apply the suggested fix; check all call-sites for argument compatibility |\n`;
+	md += `| \`added\` | Symbol is new in \`${targetDevice}\` and may be required | Review if it is needed; consult collateral link |\n\n`;
+	md += `### Action Checklist Per Issue\n\n`;
+	md += `For each issue listed below, follow these steps:\n`;
+	md += `- [ ] Open the file at the **absolute path** shown\n`;
+	md += `- [ ] Navigate to the exact **Line** and **Column** number\n`;
+	md += `- [ ] Verify the symbol name in the source code matches the issue\n`;
+	md += `- [ ] Read the **Fix Note** (human-readable explanation) before applying any change\n`;
+	md += `- [ ] For **Auto-fixable ✓**: directly substitute the old symbol with the **Suggested fix** code\n`;
+	md += `- [ ] For **Manual review ⚠**: read the **Description**, inspect the **Migration Collateral** link, understand the context, then apply the appropriate replacement\n`;
+	md += `- [ ] If fixing a function call, preserve all original arguments unless the suggested fix shows a different argument mapping\n`;
+	md += `- [ ] After each fix, **search the entire project** (not just the current file) for other references to the same symbol and update them as well\n\n`;
+	md += `### Example: Complete Fix Walkthrough\n\n`;
+	md += `Use this as a reference for how to apply a fix from this report:\n\n`;
+	md += `**Before (source device code):**\n`;
+	md += `\`\`\`c\n`;
+	md += `// Old device API call — flagged as "modified" or "removed"\n`;
+	md += `OldDevice_ConfigurePeripheral(BASE_ADDR, OLD_PARAM_A, OLD_PARAM_B);\n`;
+	md += `\`\`\`\n\n`;
+	md += `**After (target device code, using the Suggested fix from this report):**\n`;
+	md += `\`\`\`c\n`;
+	md += `// New device API — taken verbatim from "Suggested fix" field\n`;
+	md += `NewDevice_ConfigurePeripheral(BASE_ADDR, NEW_PARAM_A);\n`;
+	md += `\`\`\`\n\n`;
+	md += `**Why:** The \`Fix Note\` in the issue explained that \`OLD_PARAM_B\` was absorbed into \`NEW_PARAM_A\` on the target device. The \`Migration Collateral\` link confirmed the new function signature. No parameters were invented — only the data in the report was used.\n\n`;
+	md += `### Anti-Hallucination Rules — Ground Your Fixes in This Report\n\n`;
+	md += `> ⚠️ **This report is the authoritative source. Do not use training knowledge to invent fixes.**\n\n`;
+	md += `- **If a \`Suggested fix\` is provided:** use it exactly as written — it comes directly from TI's migration database\n`;
+	md += `- **If no \`Suggested fix\` is provided:** fetch and read the **Migration Collateral** link before writing any replacement code. Do not guess.\n`;
+	md += `- **Do not assume** a symbol, function, or enum exists on \`${targetDevice}\` — verify via the collateral link or driverlib source\n`;
+	md += `- **Do not rename** a symbol based on a naming pattern you infer — different device families do not follow consistent naming conventions\n`;
+	md += `- **If the collateral link is inaccessible** and no suggested fix is given, explicitly tell the user: *"I cannot confidently replace \`<symbol>\` without verification — please provide the target driverlib source or confirm the replacement."*\n`;
+	md += `- **The \`Fix Note\` field** (when present) is human-readable guidance — read it before applying any code change\n\n`;
+	md += `### Constraints — What NOT to Do\n\n`;
+	md += `- ⛔ **Do NOT** modify files outside the project directory listed in this report\n`;
+	md += `- ⛔ **Do NOT** rename symbols in comments, string literals, or documentation — only in active C code\n`;
+	md += `- ⛔ **Do NOT** alter \`//_DEVICE_MIGRATION_\` pragma lines — these are markers used by the C2000 IDEA tool\n`;
+	md += `- ⛔ **Do NOT** change SDK/driverlib source files — only modify the project's own source files\n`;
+	md += `- ⛔ **Do NOT** fix the same symbol in multiple target devices unless each target device is explicitly listed in its own issue\n\n`;
+	md += `### Error Recovery\n\n`;
+	md += `If you encounter compilation errors after applying a fix from this report:\n\n`;
+	md += `1. **Undefined symbol / undeclared identifier** — The replacement may require a different \`#include\`. Check the Migration Collateral for header file changes between \`${sourceDevice}\` and \`${targetDevice}\`\n`;
+	md += `2. **Type mismatch / incompatible types** — The target device may use a different enum or typedef. Search the \`${toSDK}\` driverlib header for the correct type name\n`;
+	md += `3. **Wrong number of arguments** — The function signature changed. Re-read the **Fix Note** and **Migration Collateral** — you may have missed a parameter added or removed\n`;
+	md += `4. **Multiple definition / redeclaration** — You may have applied the same fix twice. Search the file for duplicate symbol occurrences\n`;
+	md += `5. **If stuck after 2 attempts** — Flag the symbol in your completion summary as "needs human review" and move on to the next issue\n\n`;
+	md += `### Completion Signal\n\n`;
+	md += `When you have processed all issues in this report:\n`;
+	md += `1. Report back with a summary table: one row per file, showing how many issues were fixed, how many need further review\n`;
+	md += `2. List any symbols where you could not find a confident replacement — these need human review\n`;
+	md += `3. List any files where you made changes so the user can review the diffs\n\n`;
+	md += `### Accessing Migration Collateral\n\n`;
+	md += `Each issue includes a link to the TI migration guide showing diffs of changed APIs, registers, and enums.\n`;
+	md += `You can fetch and read these resources from the web to understand:\n`;
+	md += `- What APIs/registers/enums changed between devices\n`;
+	md += `- How function signatures changed\n`;
+	md += `- Deprecated symbols and their replacements\n\n`;
+	md += `If the collateral link is inaccessible or insufficient, read the driverlib source code directly (see Fallback Analysis section below).\n\n`;
+	md += `### Fallback Analysis Strategy\n\n`;
+	md += `If the migration collateral links are inaccessible or do not provide sufficient detail, follow this approach:\n\n`;
+	md += `#### 1. Locate the Driverlib Source Code\n`;
+	md += `- C2000Ware includes driverlib source for both the source and target devices\n`;
+	md += `- Typically found in: \`C2000Ware/driverlib/{device_name}/\`\n`;
+	md += `- Look for files that contain the changed symbols (register definitions, enums, functions)\n\n`;
+	md += `#### 2. Compare Implementations\n`;
+	md += `- For **removed** symbols: verify they no longer exist in the target device's driverlib\n`;
+	md += `- For **modified** symbols: compare the definition in both device's source files\n`;
+	md += `  - Register addresses, bit field layouts, and struct definitions\n`;
+	md += `  - Function signatures, parameter types, and return values\n`;
+	md += `  - Macro definitions and their expansions\n\n`;
+	md += `#### 3. Manual Fix Development\n`;
+	md += `- If a direct replacement is not available, write equivalent code that:\n`;
+	md += `  - Performs the same hardware operation using target device APIs\n`;
+	md += `  - Uses target device register names and addresses\n`;
+	md += `  - Follows the target device's driverlib conventions\n`;
+	md += `  - Maintains the original functionality and timing behavior\n\n`;
+	md += `#### 4. Getting Device & Register Information\n`;
+	md += `- Use the **ti-asm-mcp** tool to query technical details including registers for the current device\n`;
+	md += `  (this MCP allows querying device description, register bit shifts, masks, and detailed descriptions)\n`;
+	md += `- Whenever needed, try to understand the **intent of the code** using the original symbol's context\n`;
+	md += `- If the SDK is available, search the SDK for driverlib functions whose signature and parameters match the original code's intent\n\n`;
+	md += `#### 5. Validation\n`;
+	md += `- Cross-reference the fix with target device documentation (TRM)\n`;
+	md += `- Ensure parameter ranges and legal values match target device specs\n`;
+	md += `- Test on actual hardware when possible\n\n`;
+	md += `### Shared Codebase Strategy: Critical Decision\n\n`;
+	md += `**BEFORE implementing fixes, ask the user which approach they prefer:**\n\n`;
+	md += `#### Approach 1: Keep Shared Source with Device-Specific Branches (#ifdef)\n`;
+	md += `Use this if the user wants **one codebase** that compiles for both old and new devices:\n`;
+	md += `\`\`\`c\n`;
+	md += `#if ${sourceDevice}  //_DEVICE_MIGRATION_\n`;
+	md += `    // Old device code (original code)\n`;
+	md += `    old_device_function();\n`;
+	md += `#elif ${targetDevice}  //_DEVICE_MIGRATION_\n`;
+	md += `    // New device code (migrated code)\n`;
+	md += `    new_device_function();\n`;
+	md += `#endif  //_DEVICE_MIGRATION_\n`;
+	md += `\`\`\`\n`;
+	md += `**Pros:** Maintain single source, easy to port back if needed, clear documentation of changes\n`;
+	md += `**Cons:** More #ifdef blocks in code, slightly more complex logic\n\n`;
+	md += `#### Approach 2: Clean Replacement (Remove Old Device Code)\n`;
+	md += `Use this if the user wants **only new device code** (remove old device references entirely):\n`;
+	md += `\`\`\`c\n`;
+	md += `// Just use the new device API\n`;
+	md += `new_device_function();\n`;
+	md += `\`\`\`\n`;
+	md += `**Pros:** Cleaner code, no preprocessor clutter, simpler maintenance\n`;
+	md += `**Cons:** No easy way to revert, less clear what changed, cannot dual-compile\n\n`;
+	md += `**Ask the user:** "For this migration, do you want to (1) keep a shared codebase with #ifdef device branches, or (2) do a clean replacement removing all old device code?"\n\n`;
+	md += `**How to proceed based on answer:**\n`;
+	md += `- **Answer "shared":** Use device-specific #ifdef blocks (Approach 1) for all "changed" symbols. Wrap the old code and new code with device-specific preprocessor directives.\n`;
+	md += `- **Answer "clean":** Simply replace old code with new code (Approach 2), no #ifdef wrappers needed.\n\n`;
+	md += `---\n\n`;
+	return md;
+}
+
+function exportMigrationAgentReport()
+{
+	let isEmpty = true;
+	migrationDiagnosticsCollection.forEach(() => { isEmpty = false; });
+	if (isEmpty) {
+		vscode.window.showWarningMessage("No migration issues found. Run Migration Check first.");
+		return;
+	}
+
+	// Infer source/target devices from collected metadata
+	let inferredSource = "SourceDevice";
+	let inferredTargets = new Set<string>();
+	for (const val of migrationDiagnosticMetadata.values()) {
+		inferredSource = val.sourceDevice;
+		inferredTargets.add(val.targetDevice);
+	}
+	const inferredTargetStr = Array.from(inferredTargets).join(", ") || "TargetDevice";
+
+	const timestamp = new Date().toISOString();
+	let md = `# C2000 Migration Agent Report\n`;
+	md += `**Generated:** ${timestamp}\n`;
+	md += `**Migration:** \`${inferredSource}\` → \`${inferredTargetStr}\`\n\n`;
+	md += buildMigrationAgentReportInstructions(inferredSource, inferredTargetStr);
+
+	let totalIssues = 0;
+	let autoFixable = 0;
+	let filesWithIssues = 0;
+	let uniqueCollateralLinks = new Map<string, {label: string, symbols: string[]}>(); // url -> {label, affected symbols}
+	let issuesMd = `## Issues by File\n\n`;
+	let globalIssueIndex = 0;
+
+	// Pre-pass: count total issues for global index denominator
+	migrationDiagnosticsCollection.forEach((_, diagnostics) => {
+		if (diagnostics.length > 0) { totalIssues += diagnostics.length; }
+	});
+	const grandTotal = totalIssues;
+	totalIssues = 0; // reset; will recount during render pass
+
+	migrationDiagnosticsCollection.forEach((
+		uri: vscode.Uri,
+		diagnostics: readonly vscode.Diagnostic[]) => {
+			if (diagnostics.length === 0) { return; }
+			filesWithIssues++;
+			issuesMd += `### \`${uri.fsPath}\`\n\n`;
+			for (const diagnostic of diagnostics) {
+				totalIssues++;
+				globalIssueIndex++;
+				const { start } = diagnostic.range;
+				const line = start.line + 1;
+				const col = start.character + 1;
+				// Extract symbol name: message format is "CODE: description"
+				const colonIdx = diagnostic.message.indexOf(": ");
+				const symbolName = colonIdx > 0 ? diagnostic.message.substring(0, colonIdx) : diagnostic.message;
+
+				// Find best matching metadata (any target device for this file/line/symbol)
+				let meta: DiagnosticMeta | undefined;
+				for (const [key, val] of migrationDiagnosticMetadata) {
+					if (key.startsWith(`${uri.fsPath}:${start.line}:${symbolName}:`)) {
+						meta = val;
+						break;
+					}
+				}
+
+				const isAutoFixable = meta ? meta.compatible : false;
+				if (isAutoFixable) { autoFixable++; }
+				const statusBadge = isAutoFixable ? "Auto-fixable ✓" : "Needs manual review ⚠";
+				const deviceInfo = meta ? ` (${meta.sourceDevice} → ${meta.targetDevice})` : "";
+
+				issuesMd += `#### Issue ${globalIssueIndex} of ${grandTotal} — \`${symbolName}\` [Line ${line}, Col ${col}]${deviceInfo}\n`;
+					if (meta) {
+						issuesMd += `- **Type:** ${meta.type}\n`;
+						issuesMd += `- **Category:** ${meta.category || "N/A"}\n`;
+						issuesMd += `- **Change:** \`${meta.changeType}\`\n`;
+					}
+					issuesMd += `- **Status:** ${statusBadge}\n`;
+					issuesMd += `- **Description:** ${diagnostic.message}\n`;
+					// Only emit fixMsg if it differs from the diagnostic message (avoids repeating identical text)
+					if (meta && meta.fixMsg && meta.fixMsg !== "" && meta.fixMsg !== diagnostic.message) {
+						issuesMd += `- **Fix Note:** ${meta.fixMsg}\n`;
+					}
+					if (meta && meta.collateralLink) {
+						const linkLabel = `${meta.sourceDevice} → ${meta.targetDevice} Migration Guide`;
+						issuesMd += `- **Migration Collateral:** [${linkLabel}](${meta.collateralLink})\n`;
+						const entry = uniqueCollateralLinks.get(meta.collateralLink);
+						if (entry) {
+							if (!entry.symbols.includes(symbolName)) { entry.symbols.push(symbolName); }
+						} else {
+							uniqueCollateralLinks.set(meta.collateralLink, {label: linkLabel, symbols: [symbolName]});
+						}
+					}
+					if (meta && meta.fix && meta.fix !== "Not Applicable") {
+						issuesMd += `- **Suggested fix:**\n  \`\`\`c\n  ${meta.fix}\n  \`\`\`\n`;
+					}
+					issuesMd += `\n`;
+			}
+			issuesMd += `---\n\n`;
+	});
+
+	// Build summary table now that we have counts
+	md += `## Summary\n\n`;
+	md += `> **Tip for AI Agent:** Start with the ${autoFixable} Auto-fixable issue(s) first — they require no research. Then address the ${totalIssues - autoFixable} manual review item(s).\n\n`;
+	md += `| Metric | Count |\n|--------|-------|\n`;
+	md += `| Files with issues | ${filesWithIssues} |\n`;
+	md += `| Total issues | ${totalIssues} |\n`;
+	md += `| Auto-fixable ✓ | ${autoFixable} |\n`;
+	md += `| Needs manual review ⚠ | ${totalIssues - autoFixable} |\n\n`;
+	md += `---\n\n`;
+	md += issuesMd;
+
+	// Add unique migration collateral links collected from issues (with affected symbols per link)
+	if (uniqueCollateralLinks.size > 0) {
+		md += `### Migration Collateral Links (Summary)\n\n`;
+		md += `Each link below points to the TI migration guide covering the listed changed symbols:\n\n`;
+		let linkIdx = 1;
+		uniqueCollateralLinks.forEach(({label, symbols}, link) => {
+			md += `${linkIdx++}. [${label}](${link})\n`;
+			md += `   - **Covers changed symbols:** ${symbols.map(s => `\`${s}\``).join(", ")}\n`;
+		});
+		md += `\n`;
+	}
+
+	const filename = "migration_agent_report.md";
+	vscode.workspace.openTextDocument().then((textDoc: vscode.TextDocument) => {
+		vscode.window.showTextDocument(textDoc, 2, false).then(textEditor => {
+			textEditor.edit(edit => {
+				edit.insert(new vscode.Position(0, 0), md);
+			});
+			vscode.window.showInformationMessage(`Opened report: ${filename}`);
+		});
+	}, (_error: any) => {
+	});
+}
+
+function exportProjectMigrationAgentReport(projectInfo: project.ProjectInfo)
+{
+	const projectUri = projectInfo.uri;
+	const projectFsPath = projectUri.fsPath || projectUri.path;
+
+	let isEmpty = true;
+	migrationDiagnosticsCollection.forEach((uri, diagnostics) => {
+		if (uri.path.includes(projectInfo.uri.path) && diagnostics.length > 0) { isEmpty = false; }
+	});
+	if (isEmpty) {
+		vscode.window.showWarningMessage("No migration issues found for this project. Run Migration Check first.");
+		return;
+	}
+
+	const timestamp = new Date().toISOString();
+	const ignoredSymbols = projectInfo.migrationState.migrationCheckExceptions;
+	const ignoredFolders = projectInfo.migrationState.migrationCheckFolderExceptions;
+
+	let md = `# C2000 Migration Agent Report\n`;
+	md += `Generated: ${timestamp}\n\n`;
+	md += `## Project: ${projectInfo.name}\n\n`;
+	md += `- **Migration:** ${projectInfo.migrationState.currentDevice} → ${projectInfo.migrationState.migrationDevices.join(", ")}\n`;
+	md += `- **Ignored Symbols:** ${(ignoredSymbols && ignoredSymbols.length > 0) ? ignoredSymbols.join(", ") : "None"}\n`;
+	md += `- **Ignored Folders:** ${(ignoredFolders && ignoredFolders.length > 0) ? ignoredFolders.map(f => projectFsPath + "/" + f).join("; ") : "None"}\n\n`;
+	if ((ignoredSymbols && ignoredSymbols.length > 0) || (ignoredFolders && ignoredFolders.length > 0)) {
+		md += `> ⚠️ **AI Agent — Ignored Items Notice:** The symbols and folders listed above as "Ignored" have been **explicitly excluded** by the user from migration checks. `;
+		md += `**Do NOT suggest or apply fixes for any issues located in ignored folders or involving ignored symbols.** `;
+		md += `If you encounter code that references an ignored symbol, leave it unchanged and do not flag it as needing migration.\n\n`;
+	}
+	const firstTargetDevice = projectInfo.migrationState.migrationDevices[0] ?? "TargetDevice";
+	md += buildMigrationAgentReportInstructions(projectInfo.migrationState.currentDevice, firstTargetDevice);
+
+	let totalIssues = 0;
+	let autoFixable = 0;
+	let filesWithIssues = 0;
+	let uniqueCollateralLinks = new Map<string, {label: string, symbols: string[]}>(); // url -> {label, affected symbols}
+	let issuesMd = `## Issues by File\n\n`;
+	let globalIssueIndex = 0;
+
+	// Pre-pass: count total issues for global index denominator
+	migrationDiagnosticsCollection.forEach((uri, diagnostics) => {
+		if (uri.path.includes(projectInfo.uri.path) && diagnostics.length > 0) { totalIssues += diagnostics.length; }
+	});
+	const grandTotal = totalIssues;
+	totalIssues = 0;
+
+	migrationDiagnosticsCollection.forEach((
+		uri: vscode.Uri,
+		diagnostics: readonly vscode.Diagnostic[]) => {
+			if (!uri.path.includes(projectInfo.uri.path) || diagnostics.length === 0) { return; }
+			filesWithIssues++;
+			const relativePath = path.relative(projectFsPath, uri.fsPath);
+			issuesMd += `### \`${relativePath}\`\n`;
+			issuesMd += `> Absolute path: \`${uri.fsPath}\`\n\n`;
+			for (const diagnostic of diagnostics) {
+				totalIssues++;
+				globalIssueIndex++;
+				const { start } = diagnostic.range;
+				const line = start.line + 1;
+				const col = start.character + 1;
+				const colonIdx = diagnostic.message.indexOf(": ");
+				const symbolName = colonIdx > 0 ? diagnostic.message.substring(0, colonIdx) : diagnostic.message;
+
+				let meta: DiagnosticMeta | undefined;
+				for (const [key, val] of migrationDiagnosticMetadata) {
+					if (key.startsWith(`${uri.fsPath}:${start.line}:${symbolName}:`)) {
+						meta = val;
+						break;
+					}
+				}
+
+				const isAutoFixable = meta ? meta.compatible : false;
+				if (isAutoFixable) { autoFixable++; }
+				const statusBadge = isAutoFixable ? "Auto-fixable ✓" : "Needs manual review ⚠";
+				const deviceInfo = meta ? ` (${meta.sourceDevice} → ${meta.targetDevice})` : "";
+
+				issuesMd += `#### Issue ${globalIssueIndex} of ${grandTotal} — \`${symbolName}\` [Line ${line}, Col ${col}]${deviceInfo}\n`;
+					if (meta) {
+						issuesMd += `- **Type:** ${meta.type}\n`;
+						issuesMd += `- **Category:** ${meta.category || "N/A"}\n`;
+						issuesMd += `- **Change:** \`${meta.changeType}\`\n`;
+					}
+					issuesMd += `- **Status:** ${statusBadge}\n`;
+					issuesMd += `- **Description:** ${diagnostic.message}\n`;
+					// Only emit fixMsg if it differs from the diagnostic message (avoids repeating identical text)
+					if (meta && meta.fixMsg && meta.fixMsg !== "" && meta.fixMsg !== diagnostic.message) {
+						issuesMd += `- **Fix Note:** ${meta.fixMsg}\n`;
+					}
+					if (meta && meta.collateralLink) {
+							const linkLabel = `${meta.sourceDevice} → ${meta.targetDevice} Migration Guide`;
+							issuesMd += `- **Migration Collateral:** [${linkLabel}](${meta.collateralLink})\n`;
+							const entry = uniqueCollateralLinks.get(meta.collateralLink);
+							if (entry) {
+								if (!entry.symbols.includes(symbolName)) { entry.symbols.push(symbolName); }
+							} else {
+								uniqueCollateralLinks.set(meta.collateralLink, {label: linkLabel, symbols: [symbolName]});
+							}
+						}
+					if (meta && meta.fix && meta.fix !== "Not Applicable") {
+						issuesMd += `- **Suggested fix:**\n  \`\`\`c\n  ${meta.fix}\n  \`\`\`\n`;
+					}
+					issuesMd += `\n`;
+			}
+			issuesMd += `---\n\n`;
+	});
+
+	// Build summary table now that we have counts
+	md += `## Summary\n\n`;
+	md += `> **Tip for AI Agent:** Start with the ${autoFixable} Auto-fixable issue(s) first — they require no research. Then address the ${totalIssues - autoFixable} manual review item(s).\n\n`;
+	md += `| Metric | Count |\n|--------|-------|\n`;
+	md += `| Files with issues | ${filesWithIssues} |\n`;
+	md += `| Total issues | ${totalIssues} |\n`;
+	md += `| Auto-fixable ✓ | ${autoFixable} |\n`;
+	md += `| Needs manual review ⚠ | ${totalIssues - autoFixable} |\n\n`;
+	md += `---\n\n`;
+	md += issuesMd;
+
+	// Add unique migration collateral links collected from issues (with affected symbols per link)
+	if (uniqueCollateralLinks.size > 0) {
+		md += `### Migration Collateral Links (Summary)\n\n`;
+		md += `Each link below points to the TI migration guide covering the listed changed symbols:\n\n`;
+		let linkIdx = 1;
+		uniqueCollateralLinks.forEach(({label, symbols}, link) => {
+			md += `${linkIdx++}. [${label}](${link})\n`;
+			md += `   - **Covers changed symbols:** ${symbols.map(s => `\`${s}\``).join(", ")}\n`;
+		});
+		md += `\n`;
+	}
+
+	const filename = `${projectInfo.name}_migration_agent_report.md`;
+	vscode.workspace.openTextDocument().then((textDoc: vscode.TextDocument) => {
+		vscode.window.showTextDocument(textDoc, 2, false).then(textEditor => {
+			textEditor.edit(edit => {
+				edit.insert(new vscode.Position(0, 0), md);
+			});
+			vscode.window.showInformationMessage(`Opened report: ${filename}`);
+		});
+	}, (_error: any) => {
+	});
 }
 
 function getRegisterMigrationDriverlibCode(migEl: MigrationElement)

@@ -31,6 +31,22 @@ interface RegisterCodeActions {
 }
 var registerCodeActions : RegisterCodeActions[] = [];
 
+interface RegisterDiagnosticMeta {
+	registerName: string;				// e.g., "ADCCTL2"
+	bitName?: string;					// e.g., "START" (null for whole-register)
+	module: string;						// e.g., "adc", "spi"
+	description: string;				// Register description from TRM
+	bitDescription?: string;			// Bit-specific description
+	sourcePattern: string;				// Original: "Regs.ADCCTL2.bit.START"
+	suggestedFix: string;				// Driverlib replacement code
+	fixType: "read" | "write" | "access" | "whole";
+	device: string;						// Target device (F28379D)
+	trmLink?: string;					// TRM register documentation link
+	driverLibFunctions?: string[];		// Available alternatives
+	registerBitDetails?: string;		// Formatted bit definitions with descriptions and shifts
+}
+let registerDiagnosticMetadata: Map<string, RegisterDiagnosticMeta> = new Map();
+
 interface bitfieldToDriverlib<T> {
     [key: string]: T;
 }
@@ -158,6 +174,18 @@ export function isRegisterNamePrependedWithModuleNameUnderscore(moduleName: stri
 		return true;
 	}
 
+}
+
+export function getDriverlibRegisterName(moduleName: string, registerBitfieldName: string)
+{
+	if (isRegisterNamePrependedWithModuleName(moduleName))
+	{
+		return registerBitfieldName.replace(moduleName.toUpperCase(), "");
+	}
+	else if (isRegisterNamePrependedWithModuleNameUnderscore(moduleName))
+	{
+		return registerBitfieldName.replace(moduleName.toUpperCase() + "_", "");
+	}
 }
 
 export function getBitfieldRegisterName(moduleName: string, registerName: string)
@@ -437,22 +465,78 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 	return registersFoundInfo;
 }
 
+function getRegisterToFunctionMapping(device: string)
+{
+	try {
+		let mappingFile = require("./../register_to_function_data/" + device.toLowerCase());
+		if (mappingFile && mappingFile.registerToFunction)
+		{
+			return mappingFile.registerToFunction;
+		}
+		return {};
+	} catch (e) {
+		return {};
+	}
+}
+
+function generateRegisterBitCommentsText(registerName: string, registerBits: any[], bitName?: string): string
+{
+	let comments = "// " + registerName + " Register";
+	if (bitName) {
+		comments += " - " + bitName + " bit";
+	}
+	comments += "\n";
+
+	let bitsToShow = registerBits;
+	if (bitName) {
+		bitsToShow = registerBits.filter(bit => bit.name === bitName);
+	}
+
+	for (const bit of bitsToShow) {
+		comments += "//  " + bit.name + " - description: " + bit.description + ", size: " + bit.size + ", shift: " + bit.shift + "\n";
+	}
+	return comments;
+}
+
+function generateRegisterBitDetailsText(registerName: string, registerBits: any[], bitName?: string): string
+{
+	let details = registerName + " Register";
+	if (bitName) {
+		details += " - " + bitName + " bit";
+	}
+	details += "\n";
+
+	let bitsToShow = registerBits;
+	if (bitName) {
+		bitsToShow = registerBits.filter(bit => bit.name === bitName);
+	}
+
+	for (const bit of bitsToShow) {
+		details += bit.name + " - description: " + bit.description + ", size: " + bit.size + ", shift: " + bit.shift + "\n";
+	}
+	return details;
+}
+
 async function registerBitfieldToDriverlibMigration(){
 	let registerDiagnostics : vscode.Diagnostic[] = [];
 	registerDiagnosticsCollection.clear();
+	registerDiagnosticMetadata.clear();
 	registerCodeActions = [];
 
 	if (!vscode.window.activeTextEditor) {
 		return;
 	}
-	
+
+	let device = project.projectGetCurrentDevice();
+	let registerToFunctionMapping = device ? getRegisterToFunctionMapping(device) : {};
+
 	let registersFoundInfo = await registerFindBitfieldRegisters(vscode.window.activeTextEditor.document);
 	
 	for (var regFound of registersFoundInfo)
 	{
 		if (regFound.instWordRange)
 		{
-			if (regFound.bitName && regFound.bitWordRange)
+			if (regFound.bitName && regFound.bitWordRange) // bitfield register access
 			{
 				let range = new vscode.Range(regFound.instWordRange.start, regFound.bitWordRange.end);
 				let diagnostic: vscode.Diagnostic = {
@@ -464,6 +548,29 @@ async function registerBitfieldToDriverlibMigration(){
 				};
 				registerDiagnostics.push(diagnostic);
 
+				// Store metadata for AI agent export
+				let metaKey = `${vscode.window.activeTextEditor.document.uri.fsPath}:${range.start.line}:${range.start.character}:${regFound.registerName}`;
+				let metaLine = vscode.window.activeTextEditor.document.lineAt(range.start);
+				let metaSourcePattern = metaLine.text.trim();
+				let metaDriverLibFuncs = (device && registerToFunctionMapping[regFound.registerName]) ? registerToFunctionMapping[regFound.registerName] : undefined;
+				let metaRegisterDetails = generateRegisterBitDetailsText(regFound.registerName, regFound.registerInfo.bits, regFound.bitName);
+
+				let meta: RegisterDiagnosticMeta = {
+					registerName: regFound.registerName,
+					bitName: regFound.bitName,
+					module: regFound.module,
+					description: regFound.registerInfo.description || "",
+					bitDescription: regFound.registerBitInfo?.description || undefined,
+					sourcePattern: metaSourcePattern,
+					suggestedFix: "", // Will be populated from code actions
+					fixType: "access", // Default, will be updated based on code path
+					device: device || "unknown",
+					trmLink: regFound.registerLink || undefined,
+					driverLibFunctions: metaDriverLibFuncs,
+					registerBitDetails: metaRegisterDetails
+				};
+				registerDiagnosticMetadata.set(metaKey, meta);
+
 				let codeAction : vscode.CodeAction = new vscode.CodeAction("Replace with driverlib bit access", vscode.CodeActionKind.QuickFix);
 				codeAction.diagnostics = [diagnostic];
 				codeAction.edit = new vscode.WorkspaceEdit();
@@ -471,16 +578,23 @@ async function registerBitfieldToDriverlibMigration(){
 
 				let line = vscode.window.activeTextEditor.document.lineAt(regFound.registerWordRange.start);
 				let assignmentMatch = line.text.match(/[^<>=]=[^=]([^;]+);?/);
-				if (assignmentMatch && assignmentMatch.index)
+				if (assignmentMatch && assignmentMatch.index) // Register is being assigned to (write access) - check if bitfield access is on left side of assignment
 				{
 					if (regFound.registerWordRange.start.isBefore(new vscode.Position(regFound.registerWordRange.end.line, assignmentMatch.index)))
 					{
 						//
 						// Bitfield Assignment
 						//
+						// Update metadata fixType to write
+						let metaKey = `${vscode.window.activeTextEditor.document.uri.fsPath}:${range.start.line}:${range.start.character}:${regFound.registerName}`;
+						let existingMeta = registerDiagnosticMetadata.get(metaKey);
+						if (existingMeta) {
+							existingMeta.fixType = "write";
+						}
+
 						let valueAssigned = assignmentMatch[1];
 						let registerCompletionsFound = registerCompletions.filter(completionItem => {
-							return (completionItem.label === (regFound.module.toUpperCase() + " Write " + regFound.registerInfo.name + " bit " + regFound.bitName));
+							return (completionItem.label === (regFound.module.toUpperCase() + " Write " + getDriverlibRegisterName(regFound.module, regFound.registerInfo.name) + " bit " + regFound.bitName));
 						});
 	
 						if (registerCompletionsFound.length > 0)
@@ -505,12 +619,54 @@ async function registerBitfieldToDriverlibMigration(){
 									codeAction: codeAction
 								}
 							);
+
+							// Generate commented code actions with register bit info and suggested driverlib functions
+							if (device && regFound.registerInfo && regFound.registerInfo.bits && Object.keys(registerToFunctionMapping).length > 0)
+							{
+								let mappedFunctions = registerToFunctionMapping[regFound.registerName] || [];
+
+								if (mappedFunctions.length > 0)
+								{
+									let line = vscode.window.activeTextEditor.document.lineAt(range.start);
+									let lineEndPos = new vscode.Position(range.end.line, line.text.length);
+									let commentedCode = "// " + line.text.trim() + "\n";
+									commentedCode += generateRegisterBitCommentsText(regFound.registerName, regFound.registerInfo.bits, regFound.bitName);
+
+									for (const func of mappedFunctions)
+									{
+										let funcCodeAction = new vscode.CodeAction(
+											"Replace with " + func,
+											vscode.CodeActionKind.QuickFix
+										);
+										funcCodeAction.diagnostics = [diagnostic];
+										funcCodeAction.edit = new vscode.WorkspaceEdit();
+
+										let replacement = commentedCode + "\n" + func + "(...);";
+										let textEdit = new vscode.TextEdit(new vscode.Range(range.start, lineEndPos), replacement);
+										funcCodeAction.edit.set(vscode.window.activeTextEditor.document.uri, [textEdit]);
+
+										registerCodeActions.push(
+											{
+												uri: vscode.window.activeTextEditor.document.uri,
+												codeAction: funcCodeAction
+											}
+										);
+									}
+								}
+							}
 						}
-						
+
 					}
 					else {
+						// Update metadata fixType to read
+						let metaKey = `${vscode.window.activeTextEditor.document.uri.fsPath}:${range.start.line}:${range.start.character}:${regFound.registerName}`;
+						let existingMeta = registerDiagnosticMetadata.get(metaKey);
+						if (existingMeta) {
+							existingMeta.fixType = "read";
+						}
+
 						let registerCompletionsFound = registerCompletions.filter(completionItem => {
-							return (completionItem.label === (regFound.module.toUpperCase() + " Read " + regFound.registerInfo.name + " bit " + regFound.bitName));
+							return (completionItem.label === (regFound.module.toUpperCase() + " Read " + getDriverlibRegisterName(regFound.module, regFound.registerInfo.name) + " bit " + regFound.bitName));
 						});
 	
 						if (registerCompletionsFound.length > 0)
@@ -534,13 +690,48 @@ async function registerBitfieldToDriverlibMigration(){
 									codeAction: codeAction
 								}
 							);
-						}
+
+							// Generate commented code actions with register bit info and suggested driverlib functions
+							if (device && regFound.registerInfo && regFound.registerInfo.bits && Object.keys(registerToFunctionMapping).length > 0)
+							{
+								let mappedFunctions = registerToFunctionMapping[regFound.registerName] || [];
+
+								if (mappedFunctions.length > 0)
+								{
+									let line = vscode.window.activeTextEditor.document.lineAt(range.start);
+									let lineEndPos = new vscode.Position(range.end.line, line.text.length);
+									let commentedCode = "// " + line.text.trim() + "\n";
+									commentedCode += generateRegisterBitCommentsText(regFound.registerName, regFound.registerInfo.bits, regFound.bitName);
+
+									for (const func of mappedFunctions)
+									{
+										let funcCodeAction = new vscode.CodeAction(
+											"Replace with " + func,
+											vscode.CodeActionKind.QuickFix
+										);
+										funcCodeAction.diagnostics = [diagnostic];
+										funcCodeAction.edit = new vscode.WorkspaceEdit();
+
+										let replacement = commentedCode + "\n" + func + "(...);";
+										let textEdit = new vscode.TextEdit(new vscode.Range(range.start, lineEndPos), replacement);
+										funcCodeAction.edit.set(vscode.window.activeTextEditor.document.uri, [textEdit]);
+
+										registerCodeActions.push(
+											{
+												uri: vscode.window.activeTextEditor.document.uri,
+												codeAction: funcCodeAction
+											}
+										);
+									}
+								}
+							}
+						}						
 					}
 				}
-				else
+				else // No assignment - default to read access
 				{
 					let registerCompletionsFound = registerCompletions.filter(completionItem => {
-						return (completionItem.label === (regFound.module.toUpperCase() + " Read " + regFound.registerInfo.name + " bit " + regFound.bitName));
+						return (completionItem.label === (regFound.module.toUpperCase() + " Read " + getDriverlibRegisterName(regFound.module, regFound.registerInfo.name) + " bit " + regFound.bitName));
 					});
 
 					if (registerCompletionsFound.length > 0)
@@ -557,9 +748,44 @@ async function registerBitfieldToDriverlibMigration(){
 							}
 						);
 					}
+
+					// Generate commented code actions with register bit info and suggested driverlib functions
+					if (device && regFound.registerInfo && regFound.registerInfo.bits && Object.keys(registerToFunctionMapping).length > 0)
+					{
+						let mappedFunctions = registerToFunctionMapping[regFound.registerName] || [];
+
+						if (mappedFunctions.length > 0)
+						{
+							let line = vscode.window.activeTextEditor.document.lineAt(range.start);
+							let lineEndPos = new vscode.Position(range.end.line, line.text.length);
+							let commentedCode = "// " + line.text.trim() + "\n";
+							commentedCode += generateRegisterBitCommentsText(regFound.registerName, regFound.registerInfo.bits);
+
+							for (const func of mappedFunctions)
+							{
+								let funcCodeAction = new vscode.CodeAction(
+									"Replace with " + func,
+									vscode.CodeActionKind.QuickFix
+								);
+								funcCodeAction.diagnostics = [diagnostic];
+								funcCodeAction.edit = new vscode.WorkspaceEdit();
+
+								let replacement = commentedCode + "\n" + func + "(...);";
+								let textEdit = new vscode.TextEdit(new vscode.Range(range.start, lineEndPos), replacement);
+								funcCodeAction.edit.set(vscode.window.activeTextEditor.document.uri, [textEdit]);
+
+								registerCodeActions.push(
+									{
+										uri: vscode.window.activeTextEditor.document.uri,
+										codeAction: funcCodeAction
+									}
+								);
+							}
+						}
+					}
 				}
 			}
-			else
+			else // .all register whole accesses
 			{
 				let dotAllTranslationNeeded = regFound.instanceRegsFound? 0 : ".all".length;
 				let range = new vscode.Range(regFound.instWordRange.start, regFound.registerWordRange.end.translate(0, dotAllTranslationNeeded));
@@ -571,13 +797,35 @@ async function registerBitfieldToDriverlibMigration(){
 					severity: vscode.DiagnosticSeverity.Error,
 				};
 				registerDiagnostics.push(diagnostic);
-				
+
+				// Store metadata for AI agent export (whole-register access)
+				let wholeMetaKey = `${vscode.window.activeTextEditor.document.uri.fsPath}:${range.start.line}:${range.start.character}:${regFound.registerName}`;
+				let wholeLine = vscode.window.activeTextEditor.document.lineAt(range.start);
+				let wholeSourcePattern = wholeLine.text.trim();
+				let wholeDriverLibFuncs = (device && registerToFunctionMapping[regFound.registerName]) ? registerToFunctionMapping[regFound.registerName] : undefined;
+				let wholeRegisterDetails = generateRegisterBitDetailsText(regFound.registerName, regFound.registerInfo.bits);
+
+				let wholeMeta: RegisterDiagnosticMeta = {
+					registerName: regFound.registerName,
+					bitName: undefined,
+					module: regFound.module,
+					description: regFound.registerInfo.description || "",
+					sourcePattern: wholeSourcePattern,
+					suggestedFix: "", // Will be populated from code actions
+					fixType: "whole",
+					device: device || "unknown",
+					trmLink: regFound.registerLink || undefined,
+					driverLibFunctions: wholeDriverLibFuncs,
+					registerBitDetails: wholeRegisterDetails
+				};
+				registerDiagnosticMetadata.set(wholeMetaKey, wholeMeta);
+
 				let codeAction : vscode.CodeAction = new vscode.CodeAction("Replace with driverlib register access", vscode.CodeActionKind.QuickFix);
 				codeAction.diagnostics = [diagnostic];
 				codeAction.edit = new vscode.WorkspaceEdit();
 
 				let registerCompletionsFound = registerCompletions.filter(completionItem => {
-					return (completionItem.label === (regFound.module.toUpperCase() + " Read " + regFound.registerInfo.name));
+					return (completionItem.label === (regFound.module.toUpperCase() + " Read " + getDriverlibRegisterName(regFound.module, regFound.registerInfo.name)));
 				});
 
 				if (registerCompletionsFound.length > 0)
@@ -594,11 +842,337 @@ async function registerBitfieldToDriverlibMigration(){
 						}
 					);
 				}
+
+				// Generate commented code actions with register bit info and suggested driverlib functions
+				if (device && regFound.registerInfo && regFound.registerInfo.bits && Object.keys(registerToFunctionMapping).length > 0)
+				{
+					let mappedFunctions = registerToFunctionMapping[regFound.registerName] || [];
+
+					if (mappedFunctions.length > 0)
+					{
+						let line = vscode.window.activeTextEditor.document.lineAt(range.start);
+						let lineEndPos = new vscode.Position(range.end.line, line.text.length);
+						let commentedCode = "// " + line.text.trim() + "\n";
+						commentedCode += generateRegisterBitCommentsText(regFound.registerName, regFound.registerInfo.bits);
+
+						for (const func of mappedFunctions)
+						{
+							let funcCodeAction = new vscode.CodeAction(
+								"Replace with " + func,
+								vscode.CodeActionKind.QuickFix
+							);
+							funcCodeAction.diagnostics = [diagnostic];
+							funcCodeAction.edit = new vscode.WorkspaceEdit();
+
+							let replacement = commentedCode + "\n" + func + "(...);";
+							let textEdit = new vscode.TextEdit(new vscode.Range(range.start, lineEndPos), replacement);
+							funcCodeAction.edit.set(vscode.window.activeTextEditor.document.uri, [textEdit]);
+
+							registerCodeActions.push(
+								{
+									uri: vscode.window.activeTextEditor.document.uri,
+									codeAction: funcCodeAction
+								}
+							);
+						}
+					}
+				}
 			}
 		}
 	}
 
 	registerDiagnosticsCollection.set(vscode.window.activeTextEditor.document.uri, registerDiagnostics);
+}
+
+function registerBitfieldAgentReportMDHeader(): string {
+	const timestamp = new Date().toISOString();
+	let device = project.projectGetCurrentDevice();
+	
+	let deviceDisplay = device || "unknown";
+	let deviceNote = device ? "" : "\n> ⚠️ **Device could not be determined automatically.** Please infer from file paths, `#include` directives, or ask the user.\n";
+	const sdkVersion = deviceDisplay.toUpperCase().includes("F29") ? "F29H85X-SDK" : "C2000Ware_6_00_00_00";
+
+	let header = `# C2000 Register Bitfield to Driverlib Migration Report
+**Generated:** ${timestamp}
+**Device:** ${deviceDisplay}
+**SDK:** \`${sdkVersion}\`${deviceNote}
+
+## Role & Context
+
+> You are an AI coding agent tasked with migrating Texas Instruments C2000 embedded C code.
+> The source files contain **bitfield register access patterns** (e.g., \`Regs.REGISTER.bit.FIELD\`) that must be replaced with **driverlib API calls** appropriate for device \`${deviceDisplay}\`.
+> The issues in this report were detected by the C2000 IDEA VS Code extension via static analysis.
+> Your goal is to edit each listed file so that no direct bitfield register accesses remain — use driverlib functions or, when unavailable, explicit read-modify-write register operations.
+> **SDK reference:** \`${sdkVersion}\` — all driverlib function names and register definitions must be verified against this SDK version.
+> **File modification protocol:** Present each change as a unified diff with 3 lines of context. For files under 100 lines, you may show the full modified file.
+
+---
+
+## Instructions for AI Agent
+
+You are reviewing C code that uses bitfield register access patterns (e.g., \`Regs.REGISTER.bit.FIELD\`).
+These patterns need to be migrated to driverlib register access.
+
+### Fix Type Reference
+
+Each issue is categorized by fix type. Understanding these helps determine the correct replacement pattern:
+
+| Fix Type | Meaning | Example Pattern |
+|----------|---------|-----------------|
+| **read** | Bitfield read operation (right-hand side of assignment) | \`value = Regs.ADCCTL2.bit.START;\` |
+| **write** | Bitfield write operation (left-hand side of assignment) | \`Regs.ADCCTL2.bit.START = 1;\` |
+| **access** | General bitfield access (direction ambiguous from context) | \`Regs.ADCCTL2.bit.START\` (standalone) |
+| **whole** | Whole-register access using \`.all\` | \`Regs.ADCCTL2.all = 0x0020;\` |
+
+### Anti-Hallucination Rules — Ground Your Fixes in This Report
+
+> ⚠️ **This report is the authoritative source. Do not use training knowledge to construct register access code.**
+
+- **If a \`Suggested replacement\` is provided:** use it exactly as written — it is sourced from TI's migration database and register analysis
+- **If no \`Suggested replacement\` is given:** choose **only** from the **Available driverlib functions** listed in the issue. Do not call driverlib functions that are not listed there unless you first verify they exist in the \`${sdkVersion}\` driverlib source
+- **Register Bit Details (shift/mask values) are authoritative** — use the exact shift and mask values provided; do not recalculate from training knowledge or guess register layouts
+- **Do not assume** a driverlib function exists for a given register operation — if neither a replacement nor functions are listed, tell the user: *"I cannot confidently replace this pattern without verification — please confirm the correct driverlib function."*
+- **TRM links are provided per-issue** — read the linked register page before manually constructing any bit manipulation code
+- **Do not use the \`ti-asm-mcp\` tool results as a substitute for a missing \`Suggested replacement\`** — MCP data is supplementary context only; always prefer the fix data already in this report
+
+### Action Checklist Per Issue
+
+For each issue listed below, follow these steps:
+- [ ] Open the file at the **absolute path** shown
+- [ ] Navigate to the exact **Line** and **Column** number
+- [ ] Identify the bitfield pattern in the source code
+- [ ] For issues with a **Suggested replacement**, apply it directly
+- [ ] For issues with **Available driverlib functions**, choose the most appropriate function and apply it with correct arguments
+- [ ] For whole-register accesses, determine if a driverlib peripheral configuration function is more appropriate than direct register writes
+- [ ] Use the **Register Bit Details** to understand shift/mask values if manual conversion is needed
+- [ ] After each fix, verify no other references to the same bitfield pattern remain in the file
+
+### Example: Complete Fix Walkthrough
+
+Use this as a reference for how to apply a fix from this report:
+
+**Before (bitfield access — flagged as "write"):**
+\`\`\`c
+// Direct bitfield write — must be replaced with driverlib
+AdcaRegs.ADCCTL2.bit.PRESCALE = 6;
+\`\`\`
+
+**After (driverlib call — taken from "Suggested replacement" field):**
+\`\`\`c
+// Driverlib API — sourced verbatim from the Suggested replacement in this report
+ADC_setPrescaler(ADCA_BASE, ADC_CLK_DIV_4_0);
+\`\`\`
+
+**Why:** The \`Suggested replacement\` field in the issue provided the exact driverlib function and enum constant. The \`Register Bit Details\` confirmed that bit \`PRESCALE\` controls the ADC clock divider. No driverlib function was invented — only the data already in this report was used.
+
+### Bit Shift & Masking Reference
+
+When migrating from bitfield to driverlib register access, remember:
+- **Bit shift value** determines position in the 32-bit register
+- **Mask value** determines which bits are part of this field
+- **Driverlib read:** \`value = ((hwReg & MASK) >> SHIFT)\`
+- **Driverlib write:** \`hwReg = (hwReg & ~MASK) | ((value << SHIFT) & MASK)\`
+
+### Error Recovery
+
+If you encounter compilation errors after applying a fix from this report:
+
+1. **Undefined symbol / undeclared identifier** — The replacement may require a different \`#include\`. Check the \`${sdkVersion}\` driverlib header for \`device.h\` or peripheral-specific headers (e.g., \`adc.h\`, \`epwm.h\`)
+2. **Type mismatch / incompatible types** — The driverlib function may use a specific enum typedef. Search the \`${sdkVersion}\` driverlib header for the correct enum name (e.g., \`ADC_ClkPrescale\`, \`EPWM_TimeBaseCountMode\`)
+3. **Wrong number of arguments** — The function signature may differ from what was inferred. Re-read the **Available driverlib functions** list — the correct overload may be listed there
+4. **Multiple definition / redeclaration** — You may have applied the same fix twice. Search the file for duplicate patterns
+5. **If stuck after 2 attempts** — Flag the bitfield access in your completion summary as "needs human review" and move on to the next issue
+
+### Constraints — What NOT to Do
+
+- ⛔ **Do NOT** modify SDK/driverlib header files — only modify the project's own source files
+- ⛔ **Do NOT** rename bitfield patterns in comments or string literals — only fix active C code
+- ⛔ **Do NOT** alter register names in macros defined in device header files — those are not the source of the diagnostic
+- ⛔ **Do NOT** apply a fix from one device to a different device's code block
+
+### Getting Device & Register Information
+- Use the **ti-asm-mcp** tool to query register details for the current device (this is an MCP that allows querying register information such as bit shifts, masks, and detailed descriptions)
+- If the MCP is not available, as a backup plan, use the provided TRM links to understand register functionality (however use this as a last resort as it is more time consuming than the MCP and has a lot of noise in the HTML)
+- Refer to **Register Bit Details** provided with each issue for descriptions and sizes
+- Whenever needed, try to understand the **intent of the code** using the original bitfield access
+- If the SDK is available, search the SDK for driverlib functions whose signature and parameters match the original code's intent
+
+---
+`;
+	return header;
+}
+
+function exportRegisterBitfieldAgentReport() {
+	let device = project.projectGetCurrentDevice();
+	let deviceDisplay = device || "unknown";
+	
+	let diagnosticCount = 0;
+	let readCount = 0;
+	let writeCount = 0;
+	let accessCount = 0;
+	let wholeCount = 0;
+	let fileIssuesMap: Map<string, Array<{line: number, col: number, meta: RegisterDiagnosticMeta, diagnostic: vscode.Diagnostic}>> = new Map();
+
+	// Collect all diagnostics and group by file
+	registerDiagnosticsCollection.forEach((uri, diagnostics) => {
+		let fileIssues: Array<{line: number, col: number, meta: RegisterDiagnosticMeta, diagnostic: vscode.Diagnostic}> = [];
+
+		for (let diagnostic of diagnostics) {
+			if (diagnostic.code !== C2000_REGISTER_DIAGNOSTIC_BFIELD_TO_DLIB_CODE) {
+				continue;
+			}
+
+			const { start } = diagnostic.range;
+			const line = start.line + 1;
+			const col = start.character + 1;
+
+			// Try to find metadata for this diagnostic
+			// First try exact key with register name
+			let meta: RegisterDiagnosticMeta | null = null;
+			for (let [key, value] of registerDiagnosticMetadata) {
+				if (key.startsWith(`${uri.fsPath}:${start.line}:${start.character}`)) {
+					meta = value;
+					break;
+				}
+			}
+
+			if (!meta) {
+				// Create a default metadata if not found
+				meta = {
+					registerName: "Unknown",
+					module: "unknown",
+					description: diagnostic.message,
+					sourcePattern: "",
+					suggestedFix: "",
+					fixType: "access" as const,
+					device: "unknown"
+				};
+			}
+
+			// Count by fix type
+			if (meta.fixType === "read") {
+				readCount++;
+			} else if (meta.fixType === "write") {
+				writeCount++;
+			} else if (meta.fixType === "access") {
+				accessCount++;
+			} else if (meta.fixType === "whole") {
+				wholeCount++;
+			}
+
+			fileIssues.push({ line, col, meta, diagnostic });
+			diagnosticCount++;
+		}
+
+		if (fileIssues.length > 0) {
+			fileIssuesMap.set(uri.fsPath, fileIssues);
+		}
+	});
+
+	if (diagnosticCount === 0) {
+		vscode.window.showWarningMessage("No bitfield register migration issues found. Run the migration check first.");
+		return;
+	}
+
+	// Generate markdown report
+	let md = registerBitfieldAgentReportMDHeader();
+
+	// Summary statistics
+	md += `## Summary\n\n`;
+	md += `> **Tip for AI Agent:** Prioritize issues with a **Suggested replacement** — apply those directly. For issues with only **Available driverlib functions**, choose the best-matching function and construct the call. For \`whole\`-register writes, consider whether a driverlib peripheral configuration function is more appropriate than a raw register write.\n\n`;
+	md += `| Metric | Count |\n|--------|-------|\n`;
+	md += `| Total issues | ${diagnosticCount} |\n`;
+	md += `| Whole-register accesses | ${wholeCount} |\n`;
+	md += `| Read operations | ${readCount} |\n`;
+	md += `| Write operations | ${writeCount} |\n`;
+	md += `| Bit-field accesses | ${accessCount} |\n`;
+	md += `\n---\n\n## Issues by File\n`;
+
+	// Issues grouped by file — use a global counter for consistent cross-file issue numbering
+	let globalIssueIndex = 0;
+	fileIssuesMap.forEach((issues, filepath) => {
+		md += `\n### \`${filepath}\`\n`;
+
+		issues.forEach((issue) => {
+			globalIssueIndex++;
+			// Determine if the per-issue device differs from the report-level device
+			const issueDevice = issue.meta.device && issue.meta.device !== "unknown" ? issue.meta.device : deviceDisplay;
+			const deviceMismatchNote = (issue.meta.device && issue.meta.device !== "unknown" && issue.meta.device !== deviceDisplay)
+				? ` ⚠️ *Device for this issue: \`${issue.meta.device}\`*`
+				: "";
+
+			md += `\n#### Issue ${globalIssueIndex} of ${diagnosticCount} — \`${issue.meta.registerName}\` [Line ${issue.line}, Col ${issue.col}] *(${issue.meta.fixType})*`;
+			if (issue.meta.bitName) {
+				md += ` (Bit: \`${issue.meta.bitName}\`)`;
+			}
+			if (deviceMismatchNote) {
+				md += `\n> ${deviceMismatchNote.trim()}\n`;
+			}
+			md += `\n`;
+
+			md += `- **Module:** ${issue.meta.module}\n`;
+			md += `- **Fix Type:** ${issue.meta.fixType}\n`;
+			if (issue.meta.description) {
+				md += `- **Description:** ${issue.meta.description}\n`;
+			}
+			if (issue.meta.bitDescription) {
+				md += `- **Bit Description:** ${issue.meta.bitDescription}\n`;
+			}
+
+			md += `- **Original pattern:** \`${issue.meta.sourcePattern}\`\n`;
+			
+			// Emit suggested fix if available
+			if (issue.meta.suggestedFix && issue.meta.suggestedFix !== "") {
+				md += `- **Suggested replacement:**\n  \`\`\`c\n  ${issue.meta.suggestedFix}\n  \`\`\`\n`;
+			}
+
+			// Register bit details with explicit language hint for LLM parsing
+			if (issue.meta.registerBitDetails) {
+				md += `- **Register Bit Details:**\n\`\`\`c\n${issue.meta.registerBitDetails}\`\`\`\n`;
+			}
+
+			if (issue.meta.trmLink) {
+				md += `- **TRM Link:** [${issue.meta.registerName} Register — ${issueDevice} TRM](${issue.meta.trmLink})\n`;
+			}
+
+			if (issue.meta.driverLibFunctions && issue.meta.driverLibFunctions.length > 0) {
+				md += `- **Available driverlib functions:**\n`;
+				issue.meta.driverLibFunctions.forEach(func => {
+					md += `  - \`${func}\`\n`;
+				});
+			}
+			// Per-issue action checklist
+			md += `- **Action checklist:**\n`;
+			md += `  - [ ] Navigate to line ${issue.line}, col ${issue.col} in \`${issueDevice}\`\n`;
+			if (issue.meta.suggestedFix && issue.meta.suggestedFix !== "") {
+				md += `  - [ ] Apply the **Suggested replacement** shown above directly\n`;
+			} else if (issue.meta.driverLibFunctions && issue.meta.driverLibFunctions.length > 0) {
+				md += `  - [ ] Choose the most appropriate function from **Available driverlib functions** and apply with correct arguments\n`;
+			} else {
+				md += `  - [ ] Use Register Bit Details (shift/mask) to construct a manual read-modify-write operation\n`;
+			}
+			md += `  - [ ] Verify no other references to \`${issue.meta.sourcePattern || issue.meta.registerName}\` remain in this file\n`;
+			md += `\n`;
+		});
+	});
+
+	md += `\n---\n\n`;
+	md += `## Completion\n\n`;
+	md += `When you have processed all ${diagnosticCount} issue(s) in this report:\n`;
+	md += `1. Report back with a summary table: one row per file, showing how many issues were fixed vs. need further review\n`;
+	md += `2. List any registers where you could not find a confident driverlib replacement — flag these for human review\n`;
+	md += `3. List all files you modified so the user can review the diffs\n\n`;
+	md += `**Report generated for AI agent assistance. Please review each issue and apply appropriate fixes based on the suggested patterns.**`;
+
+	// Open the report in the editor
+	vscode.workspace.openTextDocument().then((textDoc: vscode.TextDocument) => {
+		vscode.window.showTextDocument(textDoc, 2, false).then(textEditor => {
+			textEditor.edit(edit => {
+				edit.insert(new vscode.Position(0, 0), md);
+			});
+			vscode.window.showInformationMessage(`Bitfield Migration Report opened (${diagnosticCount} issues found)`);
+		});
+	}, (_error: any) => {});
 }
 
 async function registerBitfieldVisionUpdateDecorations(testDevice?:string) {
@@ -896,20 +1470,26 @@ export function registerSetup(context: vscode.ExtensionContext)
 	});
 
 	let runBitfieldRegisterToDriverlibRegisterMigrationDisposable = vscode.commands.registerCommand(
-		info.C2000_IDEA_CMD_RUN_BITFIELD_REGISTER_TO_DRIVERLIB_MIGRATION, () => {		
+		info.C2000_IDEA_CMD_RUN_BITFIELD_REGISTER_TO_DRIVERLIB_MIGRATION, () => {
 		registerBitfieldToDriverlibMigration();
 	});
-	
+
+	let exportRegisterBitfieldAgentReportDisposable = vscode.commands.registerCommand(
+		info.C2000_IDEA_CMD_EXPORT_REGISTER_BITFIELD_AGENT_REPORT, () => {
+		exportRegisterBitfieldAgentReport();
+	});
+
 	let clearAllRegisterInfoDisposable = vscode.commands.registerCommand(
-		info.C2000_IDEA_CMD_CLEAR_ALL_REGISTER_INFO, () => {		
-		
+		info.C2000_IDEA_CMD_CLEAR_ALL_REGISTER_INFO, () => {
+
 		registerDiagnosticsCollection.clear();
+		registerDiagnosticMetadata.clear();
 		registerCodeActions = [];
 		vscode.window.activeTextEditor?.setDecorations(registerDecorationType, []);
 		vscode.window.activeTextEditor?.setDecorations(registerBitfieldDecorationType, []);
 
 	});
-	context.subscriptions.push(clearAllRegisterInfoDisposable, runBitfieldRegisterToDriverlibRegisterMigrationDisposable, runRegisterVisionDisposable, runBitfieldRegisterVisionDisposable);
+	context.subscriptions.push(clearAllRegisterInfoDisposable, runBitfieldRegisterToDriverlibRegisterMigrationDisposable, exportRegisterBitfieldAgentReportDisposable, runRegisterVisionDisposable, runBitfieldRegisterVisionDisposable);
 
 	let enableRegisterCoderDisposable = vscode.commands.registerCommand(info.C2000_IDEA_CMD_ENABLE_REGISTER_CODER, () => {		
 		registerUpdateIsRegisterCoderEnabled(true);

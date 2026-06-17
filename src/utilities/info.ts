@@ -6,7 +6,6 @@ export const C2000_IDEA_INTERNAL = true;
 export const C2000_IDEA_CMD_GET_PROJECTS = "c2000-idea.getProjects";
 export const C2000_IDEA_CMD_UPDATE_PROJECT_DEVICES = "c2000-idea.updateProjectDevices";
 export const C2000_IDEA_CMD_CLEAR_PROJECTS = "c2000-idea.clearProjects";
-export const C2000_IDEA_CMD_RUN_PROJECT_MIGRATION_F28_TO_F29 = "c2000-idea.runProjectMigrationF28toF29";
 
 //
 // Collateral
@@ -26,6 +25,7 @@ export const C2000_IDEA_CMD_OPEN_AUTO_MIGRATION_GUIDE = "c2000-idea.openAnyToAny
 export const C2000_IDEA_CMD_ENABLE_CONT_MIGRATION_CHECK = "c2000-idea.enableContininuousMigrationCheck";
 export const C2000_IDEA_CMD_DISABLE_CONT_MIGRATION_CHECK = "c2000-idea.disableContininuousMigrationCheck";
 export const C2000_IDEA_CMD_EXPORT_MIGRATION_REPORT = "c2000-idea.exportMigrationReport";
+export const C2000_IDEA_CMD_EXPORT_MIGRATION_AGENT_REPORT = "c2000-idea.exportMigrationAgentReport";
 export const C2000_IDEA_CMD_IGNORE_MIGRATION_INCOMPAT = "c2000-idea.ignoreMigrationIncompatibility";
 export const C2000_IDEA_CMD_IGNORE_FOLDER_MIGRATION_INCOMPAT = "c2000-idea.ignoreMigrationFolderIncompatibility";
 
@@ -38,6 +38,7 @@ export const C2000_IDEA_CMD_RUN_BITFIELD_REGISTER_VISION = "c2000-idea.runBitfie
 export const C2000_IDEA_CMD_ENABLE_REGISTER_CODER = "c2000-idea.enableRegisterCoder";
 export const C2000_IDEA_CMD_DISABLE_REGISTER_CODER = "c2000-idea.disableRegisterCoder";
 export const C2000_IDEA_CMD_RUN_BITFIELD_REGISTER_TO_DRIVERLIB_MIGRATION = "c2000-idea.runBitfieldRegisterToDriverlibMigration";
+export const C2000_IDEA_CMD_EXPORT_REGISTER_BITFIELD_AGENT_REPORT = "c2000-idea.exportRegisterBitfieldAgentReport";
 export const C2000_IDEA_CMD_CLEAR_ALL_REGISTER_INFO = "c2000-idea.clearAllRegisterInfo";
 
 //
