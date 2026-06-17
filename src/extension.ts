@@ -11,6 +11,8 @@ import * as info from './utilities/info';
 import * as walkthroughs from './walkthroughs';
 import { CollateralAdditionalTreeView } from './collateralAdditionalTreeView';
 import * as utils from './utilities/utils';
+import { tiAsmMcpInit } from './mcp/ti-asm-mcp';
+import { tiAsmSkillsInit } from './skills/ti-asm-skills';
 
 let isTheia : boolean = false;
 
@@ -34,6 +36,9 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	migration.migrationSetup(context);
+
+	tiAsmMcpInit(context);
+	tiAsmSkillsInit(context);
 
 	let disposableOpenCollateral = vscode.commands.registerCommand(info.C2000_IDEA_CMD_OPEN_COLLATERAL, (args) => {
 		if (args && args.link)

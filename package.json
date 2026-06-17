@@ -30,7 +30,7 @@
     "*"
   ],
   "publisher": "ti-asm",
-  "main": "./out/extension.js",
+  "main": "./out/src/extension.js",
   "contributes": {
     "commands": [
       {
@@ -207,6 +207,34 @@
           "light": "resources/light/c2000-idea-migrate.png",
           "dark": "resources/dark/c2000-idea-migrate.png"
         }
+      },
+      {
+        "command": "c2000-idea.enableMcp",
+        "title": "C2000-IDEA: Enable MCP"
+      },
+      {
+        "command": "c2000-idea.disableMcp",
+        "title": "C2000-IDEA: Disable MCP"
+      },
+      {
+        "command": "c2000-idea.checkMcp",
+        "title": "C2000-IDEA: Check MCP"
+      },
+      {
+        "command": "c2000-idea.registerMcp",
+        "title": "C2000-IDEA: Register MCP"
+      },
+      {
+        "command": "c2000-idea.mcpInstructions",
+        "title": "C2000-IDEA: MCP Instructions"
+      },
+      {
+        "command": "c2000-idea.registerSkills",
+        "title": "C2000-IDEA: Register Skills"
+      },
+      {
+        "command": "c2000-idea.unregisterSkills",
+        "title": "C2000-IDEA: Unregister Skills"
       }
     ],
     "views": {
@@ -643,6 +671,16 @@
           "scope": "resource",
           "default": true,
           "description": "Use internal browser (if available)"
+        },
+        "c2000-idea.mcp.port": {
+          "type": "number",
+          "default": 55000,
+          "description": "Port for the MCP server to listen on"
+        },
+        "c2000-idea.mcp.host": {
+          "type": "string",
+          "default": "localhost",
+          "description": "Host address for the MCP server to bind to"
         }
       }
     }

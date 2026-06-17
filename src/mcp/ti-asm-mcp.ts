@@ -62,6 +62,102 @@ function createMcpServerInstance() {
 	return createMcpServer(indices);
 }
 
+const SERVER_NAME = 'ti-asm-mcp';
+
+async function upsertJsonServer(
+	filePath: string,
+	parentKey: string,
+	serverEntry: Record<string, unknown>
+): Promise<void> {
+	const fileExisted = fs.existsSync(filePath);
+	let root: Record<string, unknown> = {};
+
+	if (fileExisted) {
+		const raw = fs.readFileSync(filePath, 'utf8');
+		if (raw.trim().length > 0) {
+			try {
+				root = JSON.parse(raw);
+			} catch {
+				const choice = await vscode.window.showWarningMessage(
+					`${filePath} exists but is not valid JSON (it may contain comments). Overwrite the whole file?`,
+					'Overwrite', 'Cancel'
+				);
+				if (choice !== 'Overwrite') { return; }
+				root = {};
+			}
+		}
+		if (typeof root !== 'object' || root === null || Array.isArray(root)) {
+			root = {};
+		}
+	}
+
+	const existingParent = root[parentKey];
+	const parent: Record<string, unknown> =
+		typeof existingParent === 'object' && existingParent !== null && !Array.isArray(existingParent)
+			? existingParent as Record<string, unknown>
+			: {};
+
+	const keyExisted = Object.prototype.hasOwnProperty.call(parent, SERVER_NAME);
+	if (keyExisted) {
+		const choice = await vscode.window.showWarningMessage(
+			`"${SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
+			'Replace', 'Cancel'
+		);
+		if (choice !== 'Replace') { return; }
+	}
+
+	parent[SERVER_NAME] = serverEntry;
+	root[parentKey] = parent;
+
+	fs.mkdirSync(path.dirname(filePath), { recursive: true });
+	fs.writeFileSync(filePath, JSON.stringify(root, null, 2) + '\n');
+
+	const verb = keyExisted ? 'Updated' : fileExisted ? 'Added ti-asm-mcp to' : 'Created';
+	vscode.window.showInformationMessage(`${verb} ${filePath}.`);
+}
+
+function replaceCodexBlock(content: string, header: string, block: string): string {
+	const lines = content.split('\n');
+	const start = lines.findIndex(l => l.trim() === header);
+	if (start === -1) { return content; }
+	let end = start + 1;
+	while (end < lines.length && !lines[end].trimStart().startsWith('[')) {
+		end++;
+	}
+	const replLines = block.replace(/\n$/, '').split('\n');
+	return [...lines.slice(0, start), ...replLines, ...lines.slice(end)].join('\n');
+}
+
+async function upsertCodexToml(filePath: string, url: string): Promise<void> {
+	const header = '[mcp_servers.ti-asm-mcp]';
+	const block = `${header}\nurl = "${url}"\nbearer_token_env_var = "ASM_MCP_AUTH_TOKEN"\n`;
+
+	const fileExisted = fs.existsSync(filePath);
+	let content = fileExisted ? fs.readFileSync(filePath, 'utf8') : '';
+	const keyExisted = content.includes(header);
+
+	if (keyExisted) {
+		const choice = await vscode.window.showWarningMessage(
+			`"${SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
+			'Replace', 'Cancel'
+		);
+		if (choice !== 'Replace') { return; }
+		content = replaceCodexBlock(content, header, block);
+	} else {
+		if (content.length > 0 && !content.endsWith('\n')) { content += '\n'; }
+		if (content.length > 0) { content += '\n'; }
+		content += block;
+	}
+
+	fs.mkdirSync(path.dirname(filePath), { recursive: true });
+	fs.writeFileSync(filePath, content);
+
+	const verb = keyExisted ? 'Updated' : fileExisted ? 'Added ti-asm-mcp to' : 'Created';
+	vscode.window.showInformationMessage(
+		`${verb} ${filePath}. Set ASM_MCP_AUTH_TOKEN=${ASM_MCP_AUTH_TOKEN} in your shell environment.`
+	);
+}
+
 export async function registerMcp() {
 	const tool = await vscode.window.showQuickPick(
 		[
@@ -82,74 +178,94 @@ export async function registerMcp() {
 
 	const wsRoot = workspaceFolders[0].uri.fsPath;
 	const url = getMcpUrl();
-	let filePath: string;
-	let content: string;
-	let successMessage: string;
 
-	if (tool.id === 'claude-code') {
-		filePath = path.join(wsRoot, '.mcp.json');
-		content = JSON.stringify({
-			mcpServers: {
-				'ti-asm-mcp': { type: 'http', url, headers: { Authorization: 'Bearer ' + ASM_MCP_AUTH_TOKEN } },
-			},
-		}, null, 2) + '\n';
-		successMessage = `Wrote .mcp.json to ${filePath}.`;
-	} else if (tool.id === 'cursor') {
-		filePath = path.join(wsRoot, '.cursor', 'mcp.json');
-		content = JSON.stringify({
-			mcpServers: {
-				'ti-asm-mcp': { type: 'http', url, headers: { Authorization: 'Bearer ' + ASM_MCP_AUTH_TOKEN } },
-			},
-		}, null, 2) + '\n';
-		successMessage = `Wrote .cursor/mcp.json to ${filePath}.`;
-	} else if (tool.id === 'copilot') {
-		filePath = path.join(wsRoot, '.vscode', 'mcp.json');
-		content = JSON.stringify({
-			servers: {
-				'ti-asm-mcp': { type: 'http', url, headers: { Authorization: 'Bearer ' + ASM_MCP_AUTH_TOKEN } },
-			},
-		}, null, 2) + '\n';
-		successMessage = `Wrote .vscode/mcp.json to ${filePath}.`;
-	} else {
-		filePath = path.join(wsRoot, '.codex', 'config.toml');
-		content = `[mcp_servers.ti-asm-mcp]\nurl = "${url}"\nbearer_token_env_var = "ASM_MCP_AUTH_TOKEN"\n`;
-		successMessage = `Wrote .codex/config.toml to ${filePath}. Set ASM_MCP_AUTH_TOKEN=${ASM_MCP_AUTH_TOKEN} in your shell environment.`;
+	try {
+		if (tool.id === 'codex') {
+			await upsertCodexToml(path.join(wsRoot, '.codex', 'config.toml'), url);
+			return;
+		}
+
+		const serverEntry = {
+			type: 'http',
+			url,
+			headers: { Authorization: 'Bearer ' + ASM_MCP_AUTH_TOKEN },
+		};
+
+		if (tool.id === 'claude-code') {
+			await upsertJsonServer(path.join(wsRoot, '.mcp.json'), 'mcpServers', serverEntry);
+		} else if (tool.id === 'cursor') {
+			await upsertJsonServer(path.join(wsRoot, '.cursor', 'mcp.json'), 'mcpServers', serverEntry);
+		} else {
+			await upsertJsonServer(path.join(wsRoot, '.vscode', 'mcp.json'), 'servers', serverEntry);
+		}
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		vscode.window.showErrorMessage(`Failed to register MCP: ${msg}`);
 	}
-
-	if (fs.existsSync(filePath)) {
-		const choice = await vscode.window.showWarningMessage(
-			`${filePath} already exists. Overwrite?`,
-			'Overwrite', 'Cancel'
-		);
-		if (choice !== 'Overwrite') { return; }
-	}
-
-	fs.mkdirSync(path.dirname(filePath), { recursive: true });
-	fs.writeFileSync(filePath, content);
-	vscode.window.showInformationMessage(successMessage);
 }
 
 export async function mcpInstructions() {
 	const url = getMcpUrl();
-	const snippet = JSON.stringify(
-		{ mcpServers: { 'ti-asm-mcp': { type: 'http', url } } },
+
+	const jsonSnippet = (parentKey: string) => JSON.stringify(
+		{
+			[parentKey]: {
+				'ti-asm-mcp': {
+					type: 'http',
+					url,
+					headers: { Authorization: 'Bearer ' + ASM_MCP_AUTH_TOKEN },
+				},
+			},
+		},
 		null,
 		2
 	);
+
+	const tomlSnippet = [
+		'[mcp_servers.ti-asm-mcp]',
+		`url = "${url}"`,
+		'bearer_token_env_var = "ASM_MCP_AUTH_TOKEN"',
+	].join('\n');
+
 	const content = [
 		'# MCP Connection Instructions',
 		'',
 		`The MCP server runs on: **${url}**`,
 		'',
-		'## Add to .mcp.json (Claude Code, any MCP-compatible agent)',
+		'These are the exact configs written by **' + COMMAND_PREFIX + ': Register MCP** —',
+		'use that command instead of copying these by hand whenever possible.',
+		'',
+		'## Claude Code — `.mcp.json`',
 		'',
 		'```json',
-		snippet,
+		jsonSnippet('mcpServers'),
 		'```',
 		'',
+		'## Cursor — `.cursor/mcp.json`',
+		'',
+		'```json',
+		jsonSnippet('mcpServers'),
+		'```',
+		'',
+		'## GitHub Copilot (VS Code) — `.vscode/mcp.json`',
+		'',
+		'Note the parent key is `servers`, not `mcpServers`.',
+		'',
+		'```json',
+		jsonSnippet('servers'),
+		'```',
+		'',
+		'## OpenAI Codex CLI — `.codex/config.toml`',
+		'',
+		'```toml',
+		tomlSnippet,
+		'```',
+		'',
+		`Codex reads the token from an environment variable. Set \`ASM_MCP_AUTH_TOKEN=${ASM_MCP_AUTH_TOKEN}\` in your shell before launching Codex.`,
+		'',
 		'Any agent that supports the MCP Streamable HTTP transport can connect',
-		'by pointing at the URL above. Start the server first with the',
-		'**' + COMMAND_PREFIX + ': Enable MCP** command.',
+		'by pointing at the URL above with the bearer token shown. Start the',
+		'server first with the **' + COMMAND_PREFIX + ': Enable MCP** command.',
 	].join('\n');
 
 	const doc = await vscode.workspace.openTextDocument({
@@ -287,7 +403,7 @@ export async function disableMcpCommand() {
 					console.log('[MCP] Server stopped');
 				}
 				httpServer = null;
-				indices = null; // Clear cached indices
+				indices = null;
 				resolve();
 			});
 		} else {
@@ -319,7 +435,7 @@ export function tiAsmMcpInit(context: vscode.ExtensionContext) {
 		await mcpInstructions();
 	});
 
-	
+
 	context.subscriptions.push(
 		enableMcpCmd,
 		disableMcpCmd,
