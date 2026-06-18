@@ -229,6 +229,26 @@
         "title": "C2000-IDEA: TI ASM MCP Instructions"
       },
       {
+        "command": "c2000-idea.enableIdeaMcp",
+        "title": "C2000-IDEA: Enable IDEA MCP"
+      },
+      {
+        "command": "c2000-idea.disableIdeaMcp",
+        "title": "C2000-IDEA: Disable IDEA MCP"
+      },
+      {
+        "command": "c2000-idea.checkIdeaMcp",
+        "title": "C2000-IDEA: Check IDEA MCP"
+      },
+      {
+        "command": "c2000-idea.registerIdeaMcp",
+        "title": "C2000-IDEA: Register IDEA MCP"
+      },
+      {
+        "command": "c2000-idea.ideaMcpInstructions",
+        "title": "C2000-IDEA: IDEA MCP Instructions"
+      },
+      {
         "command": "c2000-idea.registerSkills",
         "title": "C2000-IDEA: Register Skills"
       },
@@ -681,6 +701,16 @@
           "type": "string",
           "default": "localhost",
           "description": "Host address for the MCP server to bind to"
+        },
+        "c2000-idea.ideaMcp.port": {
+          "type": "number",
+          "default": 55001,
+          "description": "Port for the IDEA MCP server to listen on"
+        },
+        "c2000-idea.ideaMcp.host": {
+          "type": "string",
+          "default": "localhost",
+          "description": "Host address for the IDEA MCP server to bind to"
         }
       }
     }
@@ -711,6 +741,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "zod": "^3.25"
   }
 }
