@@ -9,6 +9,7 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js';
 import { z } from 'zod';
 import {
+	IDEA_MCP_PLATFORM,
 	IDEA_MCP_SERVER_NAME,
 	IDEA_MCP_AUTH_TOKEN,
 	IDEA_MCP_COMMAND_PREFIX,
@@ -64,7 +65,7 @@ export function checkMcp() {
 	}
 }
 
-const SERVER_INSTRUCTIONS = `C2000 device-to-device migration analysis tool. Checks source files for API/register changes when migrating between C2000 MCU devices.
+const SERVER_INSTRUCTIONS = `${IDEA_MCP_PLATFORM} device-to-device migration analysis tool. Checks source files for API/register changes when migrating between ${IDEA_MCP_PLATFORM} MCU devices.
 
 REQUIRED FLOW:
 1. Call list_migration_devices() to get the list of supported device families.
@@ -89,7 +90,7 @@ function createMcpServerInstance(): McpServer {
 
 		server.tool(
 			'list_migration_devices',
-			'Get the list of supported C2000 device families for device-to-device migration. Call this first to discover valid device names before running a migration check.',
+			`Get the list of supported ${IDEA_MCP_PLATFORM} device families for device-to-device migration. Call this first to discover valid device names before running a migration check.`,
 			{},
 			async () => {
 				const devices = getDeviceList();
@@ -104,7 +105,7 @@ function createMcpServerInstance(): McpServer {
 
 		server.tool(
 			'get_device_migration_report',
-			`Run a C2000 device-to-device migration check on a source file. Scans for API and register symbol changes between the source device and each target device, then generates a structured markdown report.
+			`Run a ${IDEA_MCP_PLATFORM} device-to-device migration check on a source file. Scans for API and register symbol changes between the source device and each target device, then generates a structured markdown report.
 
 The report includes:
 - Summary table (total issues, auto-fixable count, manual review count)

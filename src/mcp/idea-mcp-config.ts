@@ -1,6 +1,7 @@
 import { migrationRunMigrationCheckOnUri, exportMigrationAgentReport } from '../migration';
 import { DEVICE_LIST } from '../deviceData';
 
+export const IDEA_MCP_PLATFORM = 'C2000';
 export const IDEA_MCP_SERVER_NAME = 'idea-mcp';
 export const IDEA_MCP_AUTH_TOKEN = 'IDEA-MCP';
 export const IDEA_MCP_COMMAND_PREFIX = 'C2000-IDEA';
