@@ -468,7 +468,7 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 function getRegisterToFunctionMapping(device: string)
 {
 	try {
-		let mappingFile = require("./../register_to_function_data/" + device.toLowerCase());
+		let mappingFile = require("./../../register_to_function_data/" + device.toLowerCase());
 		if (mappingFile && mappingFile.registerToFunction)
 		{
 			return mappingFile.registerToFunction;
@@ -1322,10 +1322,10 @@ async function registerDriverlibUpdateDecorations(testDevice?:string) {
 
 function getDeviceRegisterSummary(device: string, registerDatabase: RegisterDataBase): RegisterSummary | null{
 	device = device.toLowerCase();
-	var summaryFile = require("./../register_data/" + registerDatabase + "/" + device + "_summary");
+	var summaryFile = require("./../../register_data/" + registerDatabase + "/" + device + "_summary");
 	if (summaryFile && summaryFile[device])
 	{
-		var deviceRegisterSummary : RegisterSummary = require("./../register_data/" + registerDatabase + "/" + device + "_summary")[device];
+		var deviceRegisterSummary : RegisterSummary = require("./../../register_data/" + registerDatabase + "/" + device + "_summary")[device];
 		return deviceRegisterSummary;
 	}
 	return null;
@@ -1333,7 +1333,7 @@ function getDeviceRegisterSummary(device: string, registerDatabase: RegisterData
 
 function getDeviceModuleRegisters(device: string, module: string, registerDatabase: RegisterDataBase)
 {
-	let moduleFile = require("./../register_data/" + registerDatabase + "/" + device + "_" + module + "_registers");
+	let moduleFile = require("./../../register_data/" + registerDatabase + "/" + device + "_" + module + "_registers");
 	if (moduleFile && moduleFile[module + "Registers"])
 	{
 		let moduleRegisters: Register[] = moduleFile[module + "Registers"];
@@ -1784,12 +1784,12 @@ async function runRegisterBitfieldMigrationOnDocument(currentDevice: string, mig
 export function registerSetupAutoCompletes(deviceName: string, context: vscode.ExtensionContext)
 {
 	var device = deviceName.toLowerCase();
-    var deviceRegisterSummary = require("./../register_data/" + "driverlib/" + device + "_summary")[device];
+    var deviceRegisterSummary = require("./../../register_data/" + "driverlib/" + device + "_summary")[device];
 	registerCompletions = [];
 
 	for (let module of deviceRegisterSummary.modules)
 	{
-		let moduleRegisters = require("./../register_data/" + "driverlib/" + device + "_" + module + "_registers")[module + "Registers"];
+		let moduleRegisters = require("./../../register_data/" + "driverlib/" + device + "_" + module + "_registers")[module + "Registers"];
 
 		if (!moduleRegisters)
 		{

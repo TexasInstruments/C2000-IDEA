@@ -26,7 +26,7 @@ let interruptProjectChangeHandler: project.ProjectChangeHandler = async (context
 };
 
 function getDeviceInterruptData(device: string){
-	var interruptFile = require("./../interrupt_data/" + device + "_interrupt");
+	var interruptFile = require("./../../interrupt_data/" + device + "_interrupt");
 	if (interruptFile && interruptFile["interrupts"])
 	{
 		var deviceInterruptData : InterruptData[] = interruptFile["interrupts"];

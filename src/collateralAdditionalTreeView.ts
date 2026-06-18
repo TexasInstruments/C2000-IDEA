@@ -180,12 +180,12 @@ let collateralAdditionalTreeWordChangeHandler: project.ProjectWordSelectionChang
 export class CollateralAdditionalTreeView {
 	constructor(context: vscode.ExtensionContext) {
         extensionContext = context;
-        var collateralFindabilityFile = require("./../collateral_findability/" + "sysconfig_collateral_links");
+        var collateralFindabilityFile = require("./../../collateral_findability/" + "sysconfig_collateral_links");
         if (collateralFindabilityFile && collateralFindabilityFile["getCollateralData"])
         {
             collateralFindabilityData = collateralFindabilityFile["getCollateralData"]();
         }
-        var collateralAdditionalMappingFile = require("./../collateral_findability/" + "collateral_additional_mappings");
+        var collateralAdditionalMappingFile = require("./../../collateral_findability/" + "collateral_additional_mappings");
         if (collateralAdditionalMappingFile && collateralAdditionalMappingFile["getCollateralDataMappings"])
         {
             collateralAdditionalMappingData = collateralAdditionalMappingFile["getCollateralDataMappings"]();
