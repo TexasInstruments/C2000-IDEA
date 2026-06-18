@@ -1,4 +1,5 @@
 import { migrationRunMigrationCheckOnUri, exportMigrationAgentReport } from '../migration';
+import { DEVICE_LIST } from '../deviceData';
 
 export const IDEA_MCP_SERVER_NAME = 'idea-mcp';
 export const IDEA_MCP_AUTH_TOKEN = 'IDEA-MCP';
@@ -10,4 +11,5 @@ export const IDEA_MCP_DEFAULT_PORT = 55001;
 export const IDEA_MCP_HANDLERS = {
 	runMigrationCheck: migrationRunMigrationCheckOnUri,
 	generateMigrationReport: exportMigrationAgentReport,
+	getDeviceList: () => DEVICE_LIST,
 };

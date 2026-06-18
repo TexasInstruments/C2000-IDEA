@@ -64,19 +64,19 @@ export function checkMcp() {
 	}
 }
 
-const SERVER_INSTRUCTIONS = `C2000 device migration analysis tool. Checks source files for API/register changes when migrating between C2000 MCU devices.
+const SERVER_INSTRUCTIONS = `C2000 device-to-device migration analysis tool. Checks source files for API/register changes when migrating between C2000 MCU devices.
 
-USAGE:
-1. Call get_migration_report() with the absolute path to a C or header file, the source device the code was written for, and one or more target devices to check migration against.
-2. The tool returns a structured markdown report with every migration issue found: location, type, severity, suggested fix, and links to TI migration collateral.
-3. Issues marked "Auto-fixable" have a concrete code replacement you can apply directly. Issues marked "Needs manual review" require reading the linked migration guide.
+REQUIRED FLOW:
+1. Call list_migration_devices() to get the list of supported device families.
+2. Call get_device_migration_report() with the file path, source device, and target device(s).
+3. The tool returns a structured markdown report with every migration issue found: location, type, severity, suggested fix, and links to TI migration collateral.
+4. Issues marked "Auto-fixable" have a concrete code replacement you can apply directly. Issues marked "Needs manual review" require reading the linked migration guide.
 
-SUPPORTED DEVICES (case-insensitive — internally normalized to lowercase):
-F29H85x, F28E12x, F28P55x, F28P65x, F28002x, F28004x, F28003x, F280013x, F280015x, F2838x, F2837xD, F2837xS, F2807x
-
-Not every source→target pair has migration data. If no issues are returned, either the file has no migration-relevant APIs or the device pair has no migration JSON data.
-
-SIDE EFFECT: Running this tool populates VS Code diagnostics (squiggly underlines) in the editor for the analyzed file.`;
+RULES:
+- Always call list_migration_devices() first to discover valid device names. Do not guess device names.
+- Device names are case-insensitive (internally normalized to lowercase).
+- Not every source→target pair has migration data. If no issues are returned, either the file has no migration-relevant APIs or the device pair has no migration JSON data.
+- Running get_device_migration_report() populates VS Code diagnostics (squiggly underlines) in the editor as a side effect.`;
 
 function createMcpServerInstance(): McpServer {
 	const server = new McpServer(
@@ -84,13 +84,27 @@ function createMcpServerInstance(): McpServer {
 		{ instructions: SERVER_INSTRUCTIONS }
 	);
 
+	if (IDEA_MCP_HANDLERS.getDeviceList) {
+		const getDeviceList = IDEA_MCP_HANDLERS.getDeviceList;
+
+		server.tool(
+			'list_migration_devices',
+			'Get the list of supported C2000 device families for device-to-device migration. Call this first to discover valid device names before running a migration check.',
+			{},
+			async () => {
+				const devices = getDeviceList();
+				return { content: [{ type: 'text' as const, text: devices.join('\n') }] };
+			}
+		);
+	}
+
 	if (IDEA_MCP_HANDLERS.runMigrationCheck && IDEA_MCP_HANDLERS.generateMigrationReport) {
 		const runCheck = IDEA_MCP_HANDLERS.runMigrationCheck;
 		const genReport = IDEA_MCP_HANDLERS.generateMigrationReport;
 
 		server.tool(
-			'get_migration_report',
-			`Run a C2000 device migration check on a source file. Scans for API and register symbol changes between the source device and each target device, then generates a structured markdown report.
+			'get_device_migration_report',
+			`Run a C2000 device-to-device migration check on a source file. Scans for API and register symbol changes between the source device and each target device, then generates a structured markdown report.
 
 The report includes:
 - Summary table (total issues, auto-fixable count, manual review count)
@@ -98,10 +112,10 @@ The report includes:
 - Suggested code fixes for auto-fixable issues
 - Links to official TI migration collateral for manual-review issues
 
-Device names are case-insensitive (e.g., "F280013x" and "f280013x" both work). Pass the device family name, not a specific part number.`,
+Device names are case-insensitive. Use names from list_migration_devices() — pass the device family name, not a specific part number.`,
 			{
 				filePath: z.string().describe('Absolute path to C/H source file to analyze'),
-				sourceDevice: z.string().describe('Current device (e.g., "F280013x")'),
+				sourceDevice: z.string().describe('Source device the code was written for (e.g., "F280013x")'),
 				targetDevices: z.array(z.string()).describe('Target devices to check migration against (e.g., ["F28P55x"])'),
 			},
 			async ({ filePath, sourceDevice, targetDevices }) => {
