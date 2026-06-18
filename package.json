@@ -30,7 +30,7 @@
     "*"
   ],
   "publisher": "ti-asm",
-  "main": "./out/extension.js",
+  "main": "./out/src/extension.js",
   "contributes": {
     "commands": [
       {
@@ -207,6 +207,54 @@
           "light": "resources/light/c2000-idea-migrate.png",
           "dark": "resources/dark/c2000-idea-migrate.png"
         }
+      },
+      {
+        "command": "c2000-idea.enableTiAsmMcp",
+        "title": "C2000-IDEA: Enable TI ASM MCP"
+      },
+      {
+        "command": "c2000-idea.disableTiAsmMcp",
+        "title": "C2000-IDEA: Disable TI ASM MCP"
+      },
+      {
+        "command": "c2000-idea.checkTiAsmMcp",
+        "title": "C2000-IDEA: Check TI ASM MCP"
+      },
+      {
+        "command": "c2000-idea.registerTiAsmMcp",
+        "title": "C2000-IDEA: Register TI ASM MCP"
+      },
+      {
+        "command": "c2000-idea.tiAsmMcpInstructions",
+        "title": "C2000-IDEA: TI ASM MCP Instructions"
+      },
+      {
+        "command": "c2000-idea.enableIdeaMcp",
+        "title": "C2000-IDEA: Enable IDEA MCP"
+      },
+      {
+        "command": "c2000-idea.disableIdeaMcp",
+        "title": "C2000-IDEA: Disable IDEA MCP"
+      },
+      {
+        "command": "c2000-idea.checkIdeaMcp",
+        "title": "C2000-IDEA: Check IDEA MCP"
+      },
+      {
+        "command": "c2000-idea.registerIdeaMcp",
+        "title": "C2000-IDEA: Register IDEA MCP"
+      },
+      {
+        "command": "c2000-idea.ideaMcpInstructions",
+        "title": "C2000-IDEA: IDEA MCP Instructions"
+      },
+      {
+        "command": "c2000-idea.registerSkills",
+        "title": "C2000-IDEA: Register Skills"
+      },
+      {
+        "command": "c2000-idea.unregisterSkills",
+        "title": "C2000-IDEA: Unregister Skills"
       }
     ],
     "views": {
@@ -643,6 +691,26 @@
           "scope": "resource",
           "default": true,
           "description": "Use internal browser (if available)"
+        },
+        "c2000-idea.mcp.port": {
+          "type": "number",
+          "default": 55000,
+          "description": "Port for the MCP server to listen on"
+        },
+        "c2000-idea.mcp.host": {
+          "type": "string",
+          "default": "localhost",
+          "description": "Host address for the MCP server to bind to"
+        },
+        "c2000-idea.ideaMcp.port": {
+          "type": "number",
+          "default": 55001,
+          "description": "Port for the IDEA MCP server to listen on"
+        },
+        "c2000-idea.ideaMcp.host": {
+          "type": "string",
+          "default": "localhost",
+          "description": "Host address for the IDEA MCP server to bind to"
         }
       }
     }
@@ -673,6 +741,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "zod": "^3.25"
   }
 }

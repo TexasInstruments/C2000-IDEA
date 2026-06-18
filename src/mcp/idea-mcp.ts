@@ -4,23 +4,31 @@ import * as fs from 'fs';
 import * as http from "http";
 import express from 'express';
 import { randomUUID } from 'crypto';
-import { createMcpServer } from '../../submodules/ti_asm_mcp/src/mcp-server';
-import { loadAllIndices } from '../../submodules/ti_asm_mcp/src/index-loader';
-import { DeviceIndex } from '../../submodules/ti_asm_mcp/src/types';
-import { ASM_MCP_AUTH_TOKEN, COMMAND_PREFIX, MCP_VSCODE_CONFIG } from './ti-asm-mcp-config';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js';
+import { z } from 'zod';
+import {
+	IDEA_MCP_PLATFORM,
+	IDEA_MCP_SERVER_NAME,
+	IDEA_MCP_AUTH_TOKEN,
+	IDEA_MCP_COMMAND_PREFIX,
+	IDEA_MCP_VSCODE_CONFIG,
+	IDEA_MCP_SETTINGS_KEY,
+	IDEA_MCP_DEFAULT_PORT,
+	IDEA_MCP_HANDLERS,
+} from './idea-mcp-config';
 
-let httpServer: http.Server|null = null;
+let httpServer: http.Server | null = null;
+let extensionContext: vscode.ExtensionContext | null = null;
 
 const TRANSPORTS: Record<string, StreamableHTTPServerTransport> = {};
-let indices: Map<string, DeviceIndex> | null = null;
 
 function authenticate(req: express.Request, res: express.Response, next: express.NextFunction): void {
 	const header = req.headers.authorization;
 	const token = header?.startsWith('Bearer ') ? header.slice(7) : undefined;
 
-	if (!token || token !== ASM_MCP_AUTH_TOKEN) {
+	if (!token || token !== IDEA_MCP_AUTH_TOKEN) {
 		res.status(401).json({
 			jsonrpc: '2.0',
 			error: { code: -32001, message: 'Unauthorized: invalid or missing bearer token' },
@@ -36,11 +44,11 @@ export function isRunning(): boolean {
 }
 
 export function getMcpPort(): number {
-	return vscode.workspace.getConfiguration(MCP_VSCODE_CONFIG + '.mcp').get('port', 55000);
+	return vscode.workspace.getConfiguration(IDEA_MCP_VSCODE_CONFIG + '.' + IDEA_MCP_SETTINGS_KEY).get('port', IDEA_MCP_DEFAULT_PORT);
 }
 
 export function getMcpHost(): string {
-	return vscode.workspace.getConfiguration(MCP_VSCODE_CONFIG + '.mcp').get('host', 'localhost');
+	return vscode.workspace.getConfiguration(IDEA_MCP_VSCODE_CONFIG + '.' + IDEA_MCP_SETTINGS_KEY).get('host', 'localhost');
 }
 
 export function getMcpUrl(): string {
@@ -51,23 +59,97 @@ export function getMcpUrl(): string {
 
 export function checkMcp() {
 	if (isRunning()) {
-		vscode.window.showInformationMessage(`MCP server is running on ${getMcpUrl()}.`);
+		vscode.window.showInformationMessage(`IDEA MCP server is running on ${getMcpUrl()}.`);
 	} else {
-		vscode.window.showInformationMessage('MCP server is not running.');
+		vscode.window.showInformationMessage('IDEA MCP server is not running.');
 	}
 }
 
-function createMcpServerInstance() {
-	if (!indices) { throw new Error('Indices not loaded'); }
-	return createMcpServer(indices);
+const SERVER_INSTRUCTIONS = `${IDEA_MCP_PLATFORM} device-to-device migration analysis tool. Checks source files for API/register changes when migrating between ${IDEA_MCP_PLATFORM} MCU devices.
+
+REQUIRED FLOW:
+1. Call list_migration_devices() to get the list of supported device families.
+2. Call get_device_migration_report() with the file path, source device, and target device(s).
+3. The tool returns a structured markdown report with every migration issue found: location, type, severity, suggested fix, and links to TI migration collateral.
+4. Issues marked "Auto-fixable" have a concrete code replacement you can apply directly. Issues marked "Needs manual review" require reading the linked migration guide.
+
+RULES:
+- Always call list_migration_devices() first to discover valid device names. Do not guess device names.
+- Device names are case-insensitive (internally normalized to lowercase).
+- Not every source→target pair has migration data. If no issues are returned, either the file has no migration-relevant APIs or the device pair has no migration JSON data.
+- Running get_device_migration_report() populates VS Code diagnostics (squiggly underlines) in the editor as a side effect.`;
+
+function createMcpServerInstance(): McpServer {
+	const server = new McpServer(
+		{ name: IDEA_MCP_SERVER_NAME, version: '1.0.0' },
+		{ instructions: SERVER_INSTRUCTIONS }
+	);
+
+	if (IDEA_MCP_HANDLERS.getDeviceList) {
+		const getDeviceList = IDEA_MCP_HANDLERS.getDeviceList;
+
+		server.tool(
+			'list_migration_devices',
+			`Get the list of supported ${IDEA_MCP_PLATFORM} device families for device-to-device migration. Call this first to discover valid device names before running a migration check.`,
+			{},
+			async () => {
+				const devices = getDeviceList();
+				return { content: [{ type: 'text' as const, text: devices.join('\n') }] };
+			}
+		);
+	}
+
+	if (IDEA_MCP_HANDLERS.runMigrationCheck && IDEA_MCP_HANDLERS.generateMigrationReport) {
+		const runCheck = IDEA_MCP_HANDLERS.runMigrationCheck;
+		const genReport = IDEA_MCP_HANDLERS.generateMigrationReport;
+
+		server.tool(
+			'get_device_migration_report',
+			`Run a ${IDEA_MCP_PLATFORM} device-to-device migration check on a source file. Scans for API and register symbol changes between the source device and each target device, then generates a structured markdown report.
+
+The report includes:
+- Summary table (total issues, auto-fixable count, manual review count)
+- Per-issue details: file location (line/col), symbol name, change type, category
+- Suggested code fixes for auto-fixable issues
+- Links to official TI migration collateral for manual-review issues
+
+Device names are case-insensitive. Use names from list_migration_devices() — pass the device family name, not a specific part number.`,
+			{
+				filePath: z.string().describe('Absolute path to C/H source file to analyze'),
+				sourceDevice: z.string().describe('Source device the code was written for (e.g., "F280013x")'),
+				targetDevices: z.array(z.string()).describe('Target devices to check migration against (e.g., ["F28P55x"])'),
+			},
+			async ({ filePath, sourceDevice, targetDevices }) => {
+				if (!extensionContext) {
+					return { content: [{ type: 'text' as const, text: 'Error: Extension context not available.' }] };
+				}
+
+				if (!fs.existsSync(filePath)) {
+					return { content: [{ type: 'text' as const, text: `Error: File not found: ${filePath}` }] };
+				}
+
+				const uri = vscode.Uri.file(filePath);
+
+				try {
+					await runCheck(extensionContext, uri, sourceDevice, targetDevices);
+					const report = genReport(false);
+
+					if (!report) {
+						return { content: [{ type: 'text' as const, text: 'No migration issues found for the specified file and device combination.' }] };
+					}
+
+					return { content: [{ type: 'text' as const, text: report }] };
+				} catch (err) {
+					const msg = err instanceof Error ? err.message : String(err);
+					return { content: [{ type: 'text' as const, text: `Error running migration check: ${msg}` }] };
+				}
+			}
+		);
+	}
+
+	return server;
 }
 
-const SERVER_NAME = 'ti-asm-mcp';
-
-// Upsert the ti-asm-mcp entry into a JSON MCP config, preserving every other
-// key in the file. parentKey is "mcpServers" (Claude Code, Cursor) or "servers"
-// (Copilot). Only our own server entry is added or replaced — the rest of the
-// file is left untouched.
 async function upsertJsonServer(
 	filePath: string,
 	parentKey: string,
@@ -101,27 +183,25 @@ async function upsertJsonServer(
 			? existingParent as Record<string, unknown>
 			: {};
 
-	const keyExisted = Object.prototype.hasOwnProperty.call(parent, SERVER_NAME);
+	const keyExisted = Object.prototype.hasOwnProperty.call(parent, IDEA_MCP_SERVER_NAME);
 	if (keyExisted) {
 		const choice = await vscode.window.showWarningMessage(
-			`"${SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
+			`"${IDEA_MCP_SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
 			'Replace', 'Cancel'
 		);
 		if (choice !== 'Replace') { return; }
 	}
 
-	parent[SERVER_NAME] = serverEntry;
+	parent[IDEA_MCP_SERVER_NAME] = serverEntry;
 	root[parentKey] = parent;
 
 	fs.mkdirSync(path.dirname(filePath), { recursive: true });
 	fs.writeFileSync(filePath, JSON.stringify(root, null, 2) + '\n');
 
-	const verb = keyExisted ? 'Updated' : fileExisted ? 'Added ti-asm-mcp to' : 'Created';
+	const verb = keyExisted ? 'Updated' : fileExisted ? `Added ${IDEA_MCP_SERVER_NAME} to` : 'Created';
 	vscode.window.showInformationMessage(`${verb} ${filePath}.`);
 }
 
-// Replace the [mcp_servers.ti-asm-mcp] table (header line through the line
-// before the next table header or EOF) with the given block.
 function replaceCodexBlock(content: string, header: string, block: string): string {
 	const lines = content.split('\n');
 	const start = lines.findIndex(l => l.trim() === header);
@@ -134,11 +214,9 @@ function replaceCodexBlock(content: string, header: string, block: string): stri
 	return [...lines.slice(0, start), ...replLines, ...lines.slice(end)].join('\n');
 }
 
-// Upsert the ti-asm-mcp table into Codex's config.toml, preserving the rest of
-// the file. TOML has no JSON parser here, so we operate at the table-block level.
 async function upsertCodexToml(filePath: string, url: string): Promise<void> {
-	const header = '[mcp_servers.ti-asm-mcp]';
-	const block = `${header}\nurl = "${url}"\nbearer_token_env_var = "ASM_MCP_AUTH_TOKEN"\n`;
+	const header = `[mcp_servers.${IDEA_MCP_SERVER_NAME}]`;
+	const block = `${header}\nurl = "${url}"\nbearer_token_env_var = "IDEA_MCP_AUTH_TOKEN"\n`;
 
 	const fileExisted = fs.existsSync(filePath);
 	let content = fileExisted ? fs.readFileSync(filePath, 'utf8') : '';
@@ -146,7 +224,7 @@ async function upsertCodexToml(filePath: string, url: string): Promise<void> {
 
 	if (keyExisted) {
 		const choice = await vscode.window.showWarningMessage(
-			`"${SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
+			`"${IDEA_MCP_SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
 			'Replace', 'Cancel'
 		);
 		if (choice !== 'Replace') { return; }
@@ -160,19 +238,19 @@ async function upsertCodexToml(filePath: string, url: string): Promise<void> {
 	fs.mkdirSync(path.dirname(filePath), { recursive: true });
 	fs.writeFileSync(filePath, content);
 
-	const verb = keyExisted ? 'Updated' : fileExisted ? 'Added ti-asm-mcp to' : 'Created';
+	const verb = keyExisted ? 'Updated' : fileExisted ? `Added ${IDEA_MCP_SERVER_NAME} to` : 'Created';
 	vscode.window.showInformationMessage(
-		`${verb} ${filePath}. Set ASM_MCP_AUTH_TOKEN=${ASM_MCP_AUTH_TOKEN} in your shell environment.`
+		`${verb} ${filePath}. Set IDEA_MCP_AUTH_TOKEN=${IDEA_MCP_AUTH_TOKEN} in your shell environment.`
 	);
 }
 
 export async function registerMcp() {
 	const tool = await vscode.window.showQuickPick(
 		[
-			{ label: 'Claude Code',              id: 'claude-code' },
-			{ label: 'Cursor',                   id: 'cursor' },
+			{ label: 'Claude Code', id: 'claude-code' },
+			{ label: 'Cursor', id: 'cursor' },
 			{ label: 'GitHub Copilot (VS Code)', id: 'copilot' },
-			{ label: 'OpenAI Codex CLI',         id: 'codex' },
+			{ label: 'OpenAI Codex CLI', id: 'codex' },
 		],
 		{ title: 'Select your AI coding tool', placeHolder: 'Choose a tool to configure' }
 	);
@@ -196,7 +274,7 @@ export async function registerMcp() {
 		const serverEntry = {
 			type: 'http',
 			url,
-			headers: { Authorization: 'Bearer ' + ASM_MCP_AUTH_TOKEN },
+			headers: { Authorization: 'Bearer ' + IDEA_MCP_AUTH_TOKEN },
 		};
 
 		if (tool.id === 'claude-code') {
@@ -208,7 +286,7 @@ export async function registerMcp() {
 		}
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
-		vscode.window.showErrorMessage(`Failed to register MCP: ${msg}`);
+		vscode.window.showErrorMessage(`Failed to register IDEA MCP: ${msg}`);
 	}
 }
 
@@ -218,10 +296,10 @@ export async function mcpInstructions() {
 	const jsonSnippet = (parentKey: string) => JSON.stringify(
 		{
 			[parentKey]: {
-				'ti-asm-mcp': {
+				[IDEA_MCP_SERVER_NAME]: {
 					type: 'http',
 					url,
-					headers: { Authorization: 'Bearer ' + ASM_MCP_AUTH_TOKEN },
+					headers: { Authorization: 'Bearer ' + IDEA_MCP_AUTH_TOKEN },
 				},
 			},
 		},
@@ -230,17 +308,17 @@ export async function mcpInstructions() {
 	);
 
 	const tomlSnippet = [
-		'[mcp_servers.ti-asm-mcp]',
+		`[mcp_servers.${IDEA_MCP_SERVER_NAME}]`,
 		`url = "${url}"`,
-		'bearer_token_env_var = "ASM_MCP_AUTH_TOKEN"',
+		'bearer_token_env_var = "IDEA_MCP_AUTH_TOKEN"',
 	].join('\n');
 
 	const content = [
-		'# MCP Connection Instructions',
+		'# IDEA MCP Connection Instructions',
 		'',
-		`The MCP server runs on: **${url}**`,
+		`The IDEA MCP server runs on: **${url}**`,
 		'',
-		'These are the exact configs written by **' + COMMAND_PREFIX + ': Register MCP** —',
+		'These are the exact configs written by **' + IDEA_MCP_COMMAND_PREFIX + ': Register IDEA MCP** —',
 		'use that command instead of copying these by hand whenever possible.',
 		'',
 		'## Claude Code — `.mcp.json`',
@@ -269,11 +347,11 @@ export async function mcpInstructions() {
 		tomlSnippet,
 		'```',
 		'',
-		`Codex reads the token from an environment variable. Set \`ASM_MCP_AUTH_TOKEN=${ASM_MCP_AUTH_TOKEN}\` in your shell before launching Codex.`,
+		`Codex reads the token from an environment variable. Set \`IDEA_MCP_AUTH_TOKEN=${IDEA_MCP_AUTH_TOKEN}\` in your shell before launching Codex.`,
 		'',
 		'Any agent that supports the MCP Streamable HTTP transport can connect',
 		'by pointing at the URL above with the bearer token shown. Start the',
-		'server first with the **' + COMMAND_PREFIX + ': Enable MCP** command.',
+		'server first with the **' + IDEA_MCP_COMMAND_PREFIX + ': Enable IDEA MCP** command.',
 	].join('\n');
 
 	const doc = await vscode.workspace.openTextDocument({
@@ -285,44 +363,26 @@ export async function mcpInstructions() {
 
 export async function enableMcpCommand(context: vscode.ExtensionContext) {
 	try {
-		vscode.window.showInformationMessage('Starting MCP Server...');
+		vscode.window.showInformationMessage('Starting IDEA MCP Server...');
 
-		// Get MCP configuration from extension settings
-		const config = vscode.workspace.getConfiguration(MCP_VSCODE_CONFIG + '.mcp');
-		const port = config.get<number>('port') || 55000;
-		const host = config.get<string>('host') || 'localhost';
+		const port = getMcpPort();
+		const host = getMcpHost();
 
-		// Resolve trm-index path (bundled data)
-		const trmIndexPath = path.join(context.extensionPath, 'submodules', 'ti_asm_mcp', 'trm-index');
-
-		// Load device indices once and cache for all sessions
-		console.log(`Loading TRM indices from ${trmIndexPath}`);
-		indices = await loadAllIndices(trmIndexPath);
-
-		if (indices.size === 0) {
-			throw new Error('No device indices loaded');
-		}
-		console.log(`Loaded ${indices.size} device(s)`);
-
-		// Create Express app with session-based routing
 		const app = express();
 		app.use(express.json());
 
-		// POST /mcp — client→server messages (incl. initialize handshake)
 		app.post('/mcp', authenticate, async (req: express.Request, res: express.Response) => {
 			const sessionId = req.headers['mcp-session-id'] as string | undefined;
 			let transport: StreamableHTTPServerTransport;
 
 			if (sessionId && TRANSPORTS[sessionId]) {
-				// Reuse transport for existing session
 				transport = TRANSPORTS[sessionId];
 			} else if (!sessionId && isInitializeRequest(req.body)) {
-				// New client handshake → create isolated session
 				transport = new StreamableHTTPServerTransport({
 					sessionIdGenerator: () => randomUUID(),
 					onsessioninitialized: (sid) => {
 						TRANSPORTS[sid] = transport;
-						console.log(`[MCP] Session initialized: ${sid}`);
+						console.log(`[IDEA-MCP] Session initialized: ${sid}`);
 					},
 					enableDnsRebindingProtection: true,
 					allowedHosts: [`localhost:${port}`, `127.0.0.1:${port}`, 'localhost', '127.0.0.1'],
@@ -331,7 +391,7 @@ export async function enableMcpCommand(context: vscode.ExtensionContext) {
 				transport.onclose = () => {
 					if (transport.sessionId) {
 						delete TRANSPORTS[transport.sessionId];
-						console.log(`[MCP] Session closed: ${transport.sessionId}`);
+						console.log(`[IDEA-MCP] Session closed: ${transport.sessionId}`);
 					}
 				};
 
@@ -349,7 +409,6 @@ export async function enableMcpCommand(context: vscode.ExtensionContext) {
 			await transport.handleRequest(req, res, req.body);
 		});
 
-		// GET /mcp (server→client SSE stream)
 		app.get('/mcp', authenticate, async (req: express.Request, res: express.Response) => {
 			const sessionId = req.headers['mcp-session-id'] as string | undefined;
 			if (!sessionId || !TRANSPORTS[sessionId]) {
@@ -359,7 +418,6 @@ export async function enableMcpCommand(context: vscode.ExtensionContext) {
 			await TRANSPORTS[sessionId].handleRequest(req, res);
 		});
 
-		// DELETE /mcp (session teardown)
 		app.delete('/mcp', authenticate, async (req: express.Request, res: express.Response) => {
 			const sessionId = req.headers['mcp-session-id'] as string | undefined;
 			if (!sessionId || !TRANSPORTS[sessionId]) {
@@ -369,34 +427,31 @@ export async function enableMcpCommand(context: vscode.ExtensionContext) {
 			await TRANSPORTS[sessionId].handleRequest(req, res);
 		});
 
-		// Start HTTP server
 		httpServer = app.listen(port, host, () => {
-			vscode.window.showInformationMessage(`MCP Server running on http://${host}:${port}/mcp`);
-			console.log(`[MCP] Server started with multi-session support on http://${host}:${port}/mcp`);
+			vscode.window.showInformationMessage(`IDEA MCP Server running on http://${host}:${port}/mcp`);
+			console.log(`[IDEA-MCP] Server started on http://${host}:${port}/mcp`);
 		});
 
-		// Handle server errors
 		httpServer.on('error', (err: NodeJS.ErrnoException) => {
 			if (err.code === 'EADDRINUSE') {
 				vscode.window.showErrorMessage(
 					`Port ${port} is already in use. Stop the running server first.`
 				);
 			} else {
-				vscode.window.showErrorMessage(`Server error: ${err.message}`);
+				vscode.window.showErrorMessage(`IDEA MCP server error: ${err.message}`);
 			}
-			console.error('[MCP] HTTP server error:', err);
+			console.error('[IDEA-MCP] HTTP server error:', err);
 		});
 
 	} catch (err) {
 		const message = err instanceof Error ? err.message : String(err);
-		vscode.window.showErrorMessage(`Failed to enable MCP: ${message}`);
-		console.error('[MCP] Enable error:', err);
+		vscode.window.showErrorMessage(`Failed to enable IDEA MCP: ${message}`);
+		console.error('[IDEA-MCP] Enable error:', err);
 	}
 }
 
 export async function disableMcpCommand() {
 	return new Promise<void>((resolve) => {
-		// Clean up all active sessions
 		Object.keys(TRANSPORTS).forEach((sid) => {
 			delete TRANSPORTS[sid];
 		});
@@ -404,50 +459,50 @@ export async function disableMcpCommand() {
 		if (httpServer) {
 			httpServer.close((err?: NodeJS.ErrnoException | null) => {
 				if (err) {
-					vscode.window.showErrorMessage(`Error stopping server: ${err.message}`);
-					console.error('[MCP] Server close error:', err);
+					vscode.window.showErrorMessage(`Error stopping IDEA MCP server: ${err.message}`);
+					console.error('[IDEA-MCP] Server close error:', err);
 				} else {
-					vscode.window.showInformationMessage('MCP Server disabled');
-					console.log('[MCP] Server stopped');
+					vscode.window.showInformationMessage('IDEA MCP Server disabled');
+					console.log('[IDEA-MCP] Server stopped');
 				}
 				httpServer = null;
-				indices = null; // Clear cached indices
 				resolve();
 			});
 		} else {
-			vscode.window.showWarningMessage('MCP Server is not running');
+			vscode.window.showWarningMessage('IDEA MCP Server is not running');
 			resolve();
 		}
 	});
 }
 
-export function tiAsmMcpInit(context: vscode.ExtensionContext) {
+export function ideaMcpInit(context: vscode.ExtensionContext) {
+	extensionContext = context;
 
-	const enableMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.enableTiAsmMcp', async () => {
+	const enableCmd = vscode.commands.registerCommand(IDEA_MCP_VSCODE_CONFIG + '.enableIdeaMcp', async () => {
 		await enableMcpCommand(context);
 	});
 
-	const disableMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.disableTiAsmMcp', async () => {
+	const disableCmd = vscode.commands.registerCommand(IDEA_MCP_VSCODE_CONFIG + '.disableIdeaMcp', async () => {
 		await disableMcpCommand();
 	});
 
-	const checkMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.checkTiAsmMcp', () => {
+	const checkCmd = vscode.commands.registerCommand(IDEA_MCP_VSCODE_CONFIG + '.checkIdeaMcp', () => {
 		checkMcp();
 	});
 
-	const registerMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.registerTiAsmMcp', async () => {
+	const registerCmd = vscode.commands.registerCommand(IDEA_MCP_VSCODE_CONFIG + '.registerIdeaMcp', async () => {
 		await registerMcp();
 	});
 
-	const mcpInstructionsCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.tiAsmMcpInstructions', async () => {
+	const instructionsCmd = vscode.commands.registerCommand(IDEA_MCP_VSCODE_CONFIG + '.ideaMcpInstructions', async () => {
 		await mcpInstructions();
 	});
 
 	context.subscriptions.push(
-		enableMcpCmd,
-		disableMcpCmd,
-		checkMcpCmd,
-		registerMcpCmd,
-		mcpInstructionsCmd
+		enableCmd,
+		disableCmd,
+		checkCmd,
+		registerCmd,
+		instructionsCmd
 	);
 }

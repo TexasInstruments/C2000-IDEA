@@ -1575,13 +1575,15 @@ function buildMigrationAgentReportInstructions(sourceDevice: string, targetDevic
 	return md;
 }
 
-function exportMigrationAgentReport()
+export function exportMigrationAgentReport(openAfter: boolean = true): string
 {
 	let isEmpty = true;
 	migrationDiagnosticsCollection.forEach(() => { isEmpty = false; });
 	if (isEmpty) {
-		vscode.window.showWarningMessage("No migration issues found. Run Migration Check first.");
-		return;
+		if (openAfter) {
+			vscode.window.showWarningMessage("No migration issues found. Run Migration Check first.");
+		}
+		return '';
 	}
 
 	// Infer source/target devices from collected metadata
@@ -1696,16 +1698,20 @@ function exportMigrationAgentReport()
 		md += `\n`;
 	}
 
-	const filename = "migration_agent_report.md";
-	vscode.workspace.openTextDocument().then((textDoc: vscode.TextDocument) => {
-		vscode.window.showTextDocument(textDoc, 2, false).then(textEditor => {
-			textEditor.edit(edit => {
-				edit.insert(new vscode.Position(0, 0), md);
+	if (openAfter) {
+		const filename = "migration_agent_report.md";
+		vscode.workspace.openTextDocument().then((textDoc: vscode.TextDocument) => {
+			vscode.window.showTextDocument(textDoc, 2, false).then(textEditor => {
+				textEditor.edit(edit => {
+					edit.insert(new vscode.Position(0, 0), md);
+				});
+				vscode.window.showInformationMessage(`Opened report: ${filename}`);
 			});
-			vscode.window.showInformationMessage(`Opened report: ${filename}`);
+		}, (_error: any) => {
 		});
-	}, (_error: any) => {
-	});
+	}
+
+	return md;
 }
 
 function exportProjectMigrationAgentReport(projectInfo: project.ProjectInfo)
