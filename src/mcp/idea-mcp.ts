@@ -88,10 +88,11 @@ function createMcpServerInstance(): McpServer {
 	if (IDEA_MCP_HANDLERS.getDeviceList) {
 		const getDeviceList = IDEA_MCP_HANDLERS.getDeviceList;
 
-		server.tool(
+		server.registerTool(
 			'list_migration_devices',
-			`Get the list of supported ${IDEA_MCP_PLATFORM} device families for device-to-device migration. Call this first to discover valid device names before running a migration check.`,
-			{},
+			{
+				description: `Get the list of supported ${IDEA_MCP_PLATFORM} device families for device-to-device migration. Call this first to discover valid device names before running a migration check.`,
+			},
 			async () => {
 				const devices = getDeviceList();
 				return { content: [{ type: 'text' as const, text: devices.join('\n') }] };
@@ -103,9 +104,10 @@ function createMcpServerInstance(): McpServer {
 		const runCheck = IDEA_MCP_HANDLERS.runMigrationCheck;
 		const genReport = IDEA_MCP_HANDLERS.generateMigrationReport;
 
-		server.tool(
+		server.registerTool(
 			'get_device_migration_report',
-			`Run a ${IDEA_MCP_PLATFORM} device-to-device migration check on a source file. Scans for API and register symbol changes between the source device and each target device, then generates a structured markdown report.
+			{
+				description: `Run a ${IDEA_MCP_PLATFORM} device-to-device migration check on a source file. Scans for API and register symbol changes between the source device and each target device, then generates a structured markdown report.
 
 The report includes:
 - Summary table (total issues, auto-fixable count, manual review count)
@@ -114,12 +116,13 @@ The report includes:
 - Links to official TI migration collateral for manual-review issues
 
 Device names are case-insensitive. Use names from list_migration_devices() — pass the device family name, not a specific part number.`,
-			{
-				filePath: z.string().describe('Absolute path to C/H source file to analyze'),
-				sourceDevice: z.string().describe('Source device the code was written for (e.g., "F280013x")'),
-				targetDevices: z.array(z.string()).describe('Target devices to check migration against (e.g., ["F28P55x"])'),
+				inputSchema: {
+					filePath: z.string().describe('Absolute path to C/H source file to analyze'),
+					sourceDevice: z.string().describe('Source device the code was written for (e.g., "F280013x")'),
+					targetDevices: z.array(z.string()).describe('Target devices to check migration against (e.g., ["F28P55x"])'),
+				} as any,
 			},
-			async ({ filePath, sourceDevice, targetDevices }) => {
+			async ({ filePath, sourceDevice, targetDevices }: any) => {
 				if (!extensionContext) {
 					return { content: [{ type: 'text' as const, text: 'Error: Extension context not available.' }] };
 				}
@@ -361,7 +364,7 @@ export async function mcpInstructions() {
 	vscode.window.showTextDocument(doc);
 }
 
-export async function enableMcpCommand(context: vscode.ExtensionContext) {
+export async function enableMcpCommand() {
 	try {
 		vscode.window.showInformationMessage('Starting IDEA MCP Server...');
 
@@ -479,7 +482,7 @@ export function ideaMcpInit(context: vscode.ExtensionContext) {
 	extensionContext = context;
 
 	const enableCmd = vscode.commands.registerCommand(IDEA_MCP_VSCODE_CONFIG + '.enableIdeaMcp', async () => {
-		await enableMcpCommand(context);
+		await enableMcpCommand();
 	});
 
 	const disableCmd = vscode.commands.registerCommand(IDEA_MCP_VSCODE_CONFIG + '.disableIdeaMcp', async () => {
