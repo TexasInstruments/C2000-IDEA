@@ -64,6 +64,10 @@ function createMcpServerInstance() {
 
 const SERVER_NAME = 'ti-asm-mcp';
 
+// Upsert the ti-asm-mcp entry into a JSON MCP config, preserving every other
+// key in the file. parentKey is "mcpServers" (Claude Code, Cursor) or "servers"
+// (Copilot). Only our own server entry is added or replaced — the rest of the
+// file is left untouched.
 async function upsertJsonServer(
 	filePath: string,
 	parentKey: string,
@@ -116,6 +120,8 @@ async function upsertJsonServer(
 	vscode.window.showInformationMessage(`${verb} ${filePath}.`);
 }
 
+// Replace the [mcp_servers.ti-asm-mcp] table (header line through the line
+// before the next table header or EOF) with the given block.
 function replaceCodexBlock(content: string, header: string, block: string): string {
 	const lines = content.split('\n');
 	const start = lines.findIndex(l => l.trim() === header);
@@ -128,6 +134,8 @@ function replaceCodexBlock(content: string, header: string, block: string): stri
 	return [...lines.slice(0, start), ...replLines, ...lines.slice(end)].join('\n');
 }
 
+// Upsert the ti-asm-mcp table into Codex's config.toml, preserving the rest of
+// the file. TOML has no JSON parser here, so we operate at the table-block level.
 async function upsertCodexToml(filePath: string, url: string): Promise<void> {
 	const header = '[mcp_servers.ti-asm-mcp]';
 	const block = `${header}\nurl = "${url}"\nbearer_token_env_var = "ASM_MCP_AUTH_TOKEN"\n`;
@@ -403,7 +411,7 @@ export async function disableMcpCommand() {
 					console.log('[MCP] Server stopped');
 				}
 				httpServer = null;
-				indices = null;
+				indices = null; // Clear cached indices
 				resolve();
 			});
 		} else {
@@ -434,7 +442,6 @@ export function tiAsmMcpInit(context: vscode.ExtensionContext) {
 	const mcpInstructionsCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.tiAsmMcpInstructions', async () => {
 		await mcpInstructions();
 	});
-
 
 	context.subscriptions.push(
 		enableMcpCmd,
