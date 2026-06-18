@@ -1,0 +1,727 @@
+{
+  "name": "hrpwm",
+  "functions": [
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((base == EPWM1_BASE) || (base == EPWM2_BASE) ||\n           (base == EPWM3_BASE) || (base == EPWM4_BASE) ||\n           (base == EPWM5_BASE) || (base == EPWM6_BASE) ||\n           (base == EPWM7_BASE) || (base == EPWM8_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((base == EPWM1_BASE) || (base == EPWM2_BASE) || (base == EPWM3_BASE) || (base == EPWM4_BASE) || (base == EPWM5_BASE) || (base == EPWM6_BASE) || (base == EPWM7_BASE) || (base == EPWM8_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setPhaseShift",
+      "functionArgs": [
+        "base",
+        "phaseCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n    ASSERT(phaseCount < 0x1000000U);\n\n    //\n    // Write to TBPHS:TBPHSHR bits\n    //\n    HWREG(base + HRPWM_O_TBPHS) = phaseCount << 8U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); ASSERT(phaseCount < 0x1000000U); // // Write to TBPHS:TBPHSHR bits // HWREG(base + HRPWM_O_TBPHS) = phaseCount << 8U; }",
+      "registersUsed": [
+        "TBPHS"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBPHS"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setHiResPhaseShiftOnly",
+      "functionArgs": [
+        "base",
+        "hrPhaseCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n    ASSERT(hrPhaseCount < 256U);\n\n    //\n    // Write to TBPHSHR bits\n    //\n    HWREGH(base + HRPWM_O_TBPHS) = hrPhaseCount << 8U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); ASSERT(hrPhaseCount < 256U); // // Write to TBPHSHR bits // HWREGH(base + HRPWM_O_TBPHS) = hrPhaseCount << 8U; }",
+      "registersUsed": [
+        "TBPHS"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBPHS"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setTimeBasePeriod",
+      "functionArgs": [
+        "base",
+        "periodCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n    ASSERT(periodCount < 0x1000000U);\n\n    //\n    // Write to TBPRD:TBPRDHR bits\n    //\n    HWREG(base + HRPWM_O_TBPRDHR) = periodCount << 8U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); ASSERT(periodCount < 0x1000000U); // // Write to TBPRD:TBPRDHR bits // HWREG(base + HRPWM_O_TBPRDHR) = periodCount << 8U; }",
+      "registersUsed": [
+        "TBPRDHR",
+        "TBPRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBPRDHR",
+        "TBPRD"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setHiResTimeBasePeriodOnly",
+      "functionArgs": [
+        "base",
+        "hrPeriodCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n    ASSERT(hrPeriodCount < 256U);\n\n    //\n    // Write to TBPRDHR bits\n    //\n    HWREGH(base + HRPWM_O_TBPRDHR) = hrPeriodCount << 8U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); ASSERT(hrPeriodCount < 256U); // // Write to TBPRDHR bits // HWREGH(base + HRPWM_O_TBPRDHR) = hrPeriodCount << 8U; }",
+      "registersUsed": [
+        "TBPRDHR",
+        "TBPRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBPRDHR",
+        "TBPRD"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_getTimeBasePeriod",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Read from TBPRD:TBPRDHR bit\n    //\n    return(HWREG(base + HRPWM_O_TBPRDHR) >> 8U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Read from TBPRD:TBPRDHR bit // return(HWREG(base + HRPWM_O_TBPRDHR) >> 8U); }",
+      "registersUsed": [
+        "TBPRDHR",
+        "TBPRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBPRDHR",
+        "TBPRD"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_getHiResTimeBasePeriodOnly",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Read from TBPRDHR bit\n    //\n    return(HWREGH(base + HRPWM_O_TBPRDHR) >> 8U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Read from TBPRDHR bit // return(HWREGH(base + HRPWM_O_TBPRDHR) >> 8U); }",
+      "registersUsed": [
+        "TBPRDHR",
+        "TBPRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBPRDHR",
+        "TBPRD"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setMEPEdgeSelect",
+      "functionArgs": [
+        "base",
+        "channel",
+        "mepEdgeMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRPWM_Channel",
+        "HRPWM_MEPEdgeMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Set the edge mode\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRCNFG) =\n             ((HWREGH(base + HRPWM_O_HRCNFG) & ~(0x3U << (uint16_t)channel )) |\n              ((uint16_t)mepEdgeMode << (uint16_t)channel));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Set the edge mode // EALLOW; HWREGH(base + HRPWM_O_HRCNFG) = ((HWREGH(base + HRPWM_O_HRCNFG) & ~(0x3U << (uint16_t)channel )) | ((uint16_t)mepEdgeMode << (uint16_t)channel)); EDIS; }",
+      "registersUsed": [
+        "HRCNFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCNFG"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setMEPControlMode",
+      "functionArgs": [
+        "base",
+        "channel",
+        "mepCtrlMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRPWM_Channel",
+        "HRPWM_MEPCtrlMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Set the MEP control\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRCNFG) =\n       ((HWREGH(base + HRPWM_O_HRCNFG) & ~(0x1U << ((uint16_t)channel + 2U))) |\n         ((uint16_t)mepCtrlMode << ((uint16_t)channel + 2U)));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Set the MEP control // EALLOW; HWREGH(base + HRPWM_O_HRCNFG) = ((HWREGH(base + HRPWM_O_HRCNFG) & ~(0x1U << ((uint16_t)channel + 2U))) | ((uint16_t)mepCtrlMode << ((uint16_t)channel + 2U))); EDIS; }",
+      "registersUsed": [
+        "HRCNFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCNFG"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setCounterCompareShadowLoadEvent",
+      "functionArgs": [
+        "base",
+        "channel",
+        "loadEvent"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRPWM_Channel",
+        "HRPWM_LoadMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Set the CMPAHR or CMPBHR load mode\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRCNFG) =\n       ((HWREGH(base + HRPWM_O_HRCNFG) & ~(0x3U << ((uint16_t)channel + 3U))) |\n         ((uint16_t)loadEvent << ((uint16_t)channel + 3U)));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Set the CMPAHR or CMPBHR load mode // EALLOW; HWREGH(base + HRPWM_O_HRCNFG) = ((HWREGH(base + HRPWM_O_HRCNFG) & ~(0x3U << ((uint16_t)channel + 3U))) | ((uint16_t)loadEvent << ((uint16_t)channel + 3U))); EDIS; }",
+      "registersUsed": [
+        "HRCNFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCNFG"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setOutputSwapMode",
+      "functionArgs": [
+        "base",
+        "enableOutputSwap"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Set output swap mode\n    //\n    EALLOW;\n    if(enableOutputSwap)\n    {\n        HWREGH(base + HRPWM_O_HRCNFG) |= HRPWM_HRCNFG_SWAPAB;\n    }\n    else\n    {\n        HWREGH(base + HRPWM_O_HRCNFG) &= ~HRPWM_HRCNFG_SWAPAB;\n    }\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Set output swap mode // EALLOW; if(enableOutputSwap) { HWREGH(base + HRPWM_O_HRCNFG) |= HRPWM_HRCNFG_SWAPAB; } else { HWREGH(base + HRPWM_O_HRCNFG) &= ~HRPWM_HRCNFG_SWAPAB; } EDIS; }",
+      "registersUsed": [
+        "HRCNFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCNFG"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setChannelBOutputPath",
+      "functionArgs": [
+        "base",
+        "outputOnB"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRPWM_ChannelBOutput"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Set the output on ePWM B\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRCNFG) =\n            ((HWREGH(base + HRPWM_O_HRCNFG) & ~(HRPWM_HRCNFG_SELOUTB)) |\n             ((uint16_t)outputOnB << 5U));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Set the output on ePWM B // EALLOW; HWREGH(base + HRPWM_O_HRCNFG) = ((HWREGH(base + HRPWM_O_HRCNFG) & ~(HRPWM_HRCNFG_SELOUTB)) | ((uint16_t)outputOnB << 5U)); EDIS; }",
+      "registersUsed": [
+        "HRCNFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCNFG"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_enableAutoConversion",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Enable MEP automatic scale\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRCNFG) |= HRPWM_HRCNFG_AUTOCONV;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Enable MEP automatic scale // EALLOW; HWREGH(base + HRPWM_O_HRCNFG) |= HRPWM_HRCNFG_AUTOCONV; EDIS; }",
+      "registersUsed": [
+        "HRCNFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCNFG"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_disableAutoConversion",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Disable MEP automatic scale\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRCNFG) &= ~HRPWM_HRCNFG_AUTOCONV;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Disable MEP automatic scale // EALLOW; HWREGH(base + HRPWM_O_HRCNFG) &= ~HRPWM_HRCNFG_AUTOCONV; EDIS; }",
+      "registersUsed": [
+        "HRCNFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCNFG"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_enablePeriodControl",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Set HRPE bit\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRPCTL) |= HRPWM_HRPCTL_HRPE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Set HRPE bit // EALLOW; HWREGH(base + HRPWM_O_HRPCTL) |= HRPWM_HRPCTL_HRPE; EDIS; }",
+      "registersUsed": [
+        "HRPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRPCTL"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_disablePeriodControl",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Clear HRPE bit\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRPCTL) &= ~HRPWM_HRPCTL_HRPE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Clear HRPE bit // EALLOW; HWREGH(base + HRPWM_O_HRPCTL) &= ~HRPWM_HRPCTL_HRPE; EDIS; }",
+      "registersUsed": [
+        "HRPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRPCTL"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_enablePhaseShiftLoad",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Set TBPHSHRLOADE bit\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRPCTL) |= HRPWM_HRPCTL_TBPHSHRLOADE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Set TBPHSHRLOADE bit // EALLOW; HWREGH(base + HRPWM_O_HRPCTL) |= HRPWM_HRPCTL_TBPHSHRLOADE; EDIS; }",
+      "registersUsed": [
+        "HRPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRPCTL"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_disablePhaseShiftLoad",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Clear TBPHSHRLOADE bit\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRPCTL) &= ~HRPWM_HRPCTL_TBPHSHRLOADE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Clear TBPHSHRLOADE bit // EALLOW; HWREGH(base + HRPWM_O_HRPCTL) &= ~HRPWM_HRPCTL_TBPHSHRLOADE; EDIS; }",
+      "registersUsed": [
+        "HRPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRPCTL"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setSyncPulseSource",
+      "functionArgs": [
+        "base",
+        "syncPulseSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRPWM_SyncPulseSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the PWMSYNC source\n    //\n    EALLOW;\n\n    //\n    // Configuration for sync pulse source equal to HRPWM_PWMSYNC_SOURCE_PERIOD\n    // or HRPWM_PWMSYNC_SOURCE_ZERO\n    //\n    if(syncPulseSource < HRPWM_PWMSYNC_SOURCE_COMPC_UP)\n    {\n        HWREGH(base + HRPWM_O_HRPCTL) =\n          ((HWREGH(base + HRPWM_O_HRPCTL) &\n          ~(HRPWM_HRPCTL_PWMSYNCSELX_M | HRPWM_HRPCTL_PWMSYNCSEL)) |\n           ((uint16_t)syncPulseSource << 1U));\n    }\n    else\n    {\n        HWREGH(base + HRPWM_O_HRPCTL) =\n          ((HWREGH(base + HRPWM_O_HRPCTL) & ~HRPWM_HRPCTL_PWMSYNCSELX_M) |\n           ((uint16_t)syncPulseSource << HRPWM_HRPCTL_PWMSYNCSELX_S));\n    }\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the PWMSYNC source // EALLOW; // // Configuration for sync pulse source equal to HRPWM_PWMSYNC_SOURCE_PERIOD // or HRPWM_PWMSYNC_SOURCE_ZERO // if(syncPulseSource < HRPWM_PWMSYNC_SOURCE_COMPC_UP) { HWREGH(base + HRPWM_O_HRPCTL) = ((HWREGH(base + HRPWM_O_HRPCTL) & ~(HRPWM_HRPCTL_PWMSYNCSELX_M | HRPWM_HRPCTL_PWMSYNCSEL)) | ((uint16_t)syncPulseSource << 1U)); } else { HWREGH(base + HRPWM_O_HRPCTL) = ((HWREGH(base + HRPWM_O_HRPCTL) & ~HRPWM_HRPCTL_PWMSYNCSELX_M) | ((uint16_t)syncPulseSource << HRPWM_HRPCTL_PWMSYNCSELX_S)); } EDIS; }",
+      "registersUsed": [
+        "HRPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRPCTL"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setTranslatorRemainder",
+      "functionArgs": [
+        "base",
+        "trremVal"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n    ASSERT(trremVal < 2048U);\n\n    //\n    // Set Translator Remainder value\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_TRREM) = (trremVal & HRPWM_TRREM_TRREM_M);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); ASSERT(trremVal < 2048U); // // Set Translator Remainder value // EALLOW; HWREGH(base + HRPWM_O_TRREM) = (trremVal & HRPWM_TRREM_TRREM_M); EDIS; }",
+      "registersUsed": [
+        "TRREM"
+      ],
+      "registersUsedMatchingBifield": [
+        "TRREM"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setCounterCompareValue",
+      "functionArgs": [
+        "base",
+        "compModule",
+        "compCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRPWM_CounterCompareModule",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n    ASSERT(compCount < 0x1000000U);\n\n    //\n    // Write to counter compare registers\n    //\n    if(compModule == HRPWM_COUNTER_COMPARE_A)\n    {\n        //\n        // Write to CMPA:CMPAHR\n        //\n        HWREG(base + HRPWM_O_CMPA) = compCount << 8U;\n    }\n    else\n    {\n        //\n        // Write to CMPB:CMPBHR\n        //\n        HWREG(base + HRPWM_O_CMPB) = compCount << 8U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); ASSERT(compCount < 0x1000000U); // // Write to counter compare registers // if(compModule == HRPWM_COUNTER_COMPARE_A) { // // Write to CMPA:CMPAHR // HWREG(base + HRPWM_O_CMPA) = compCount << 8U; } else { // // Write to CMPB:CMPBHR // HWREG(base + HRPWM_O_CMPB) = compCount << 8U; } }",
+      "registersUsed": [
+        "CMPA",
+        "CMPB"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPA",
+        "CMPB"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setHiResCounterCompareValueOnly",
+      "functionArgs": [
+        "base",
+        "compModule",
+        "hrCompCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRPWM_CounterCompareModule",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n    ASSERT(hrCompCount < 256U);\n\n    //\n    // Write to the high resolution counter compare registers\n    //\n    if(compModule == HRPWM_COUNTER_COMPARE_A)\n    {\n        //\n        // Write to CMPAHR\n        //\n        HWREGH(base + HRPWM_O_CMPA) = hrCompCount << 8U;\n    }\n    else\n    {\n        //\n        // Write to CMPBHR\n        //\n        HWREGH(base + HRPWM_O_CMPB) = hrCompCount << 8U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); ASSERT(hrCompCount < 256U); // // Write to the high resolution counter compare registers // if(compModule == HRPWM_COUNTER_COMPARE_A) { // // Write to CMPAHR // HWREGH(base + HRPWM_O_CMPA) = hrCompCount << 8U; } else { // // Write to CMPBHR // HWREGH(base + HRPWM_O_CMPB) = hrCompCount << 8U; } }",
+      "registersUsed": [
+        "CMPA",
+        "CMPB"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPA",
+        "CMPB"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_getCounterCompareValue",
+      "functionArgs": [
+        "base",
+        "compModule"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRPWM_CounterCompareModule"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    uint32_t compCount;\n\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Get counter compare value for selected module\n    //\n    if(compModule == HRPWM_COUNTER_COMPARE_A)\n    {\n        //\n        // Read from CMPAHR\n        //\n        compCount = HWREG(base + HRPWM_O_CMPA) >> 8U;\n    }\n    else\n    {\n        //\n        // Read from CMPBHR\n        //\n        compCount = HWREG(base + HRPWM_O_CMPB) >> 8U;\n    }\n    return(compCount);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t compCount; // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Get counter compare value for selected module // if(compModule == HRPWM_COUNTER_COMPARE_A) { // // Read from CMPAHR // compCount = HWREG(base + HRPWM_O_CMPA) >> 8U; } else { // // Read from CMPBHR // compCount = HWREG(base + HRPWM_O_CMPB) >> 8U; } return(compCount); }",
+      "registersUsed": [
+        "CMPA",
+        "CMPB"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPA",
+        "CMPB"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_getHiResCounterCompareValueOnly",
+      "functionArgs": [
+        "base",
+        "compModule"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRPWM_CounterCompareModule"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint16_t hrCompCount;\n\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Get counter compare value for selected module\n    //\n    if(compModule == HRPWM_COUNTER_COMPARE_A)\n    {\n        //\n        // Read from CMPAHR\n        //\n        hrCompCount = HWREGH(base + HRPWM_O_CMPA) >> 8U;\n    }\n    else\n    {\n        //\n        // Read from CMPBHR\n        //\n        hrCompCount = HWREGH(base + HRPWM_O_CMPB) >> 8U;\n    }\n    return(hrCompCount);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t hrCompCount; // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Get counter compare value for selected module // if(compModule == HRPWM_COUNTER_COMPARE_A) { // // Read from CMPAHR // hrCompCount = HWREGH(base + HRPWM_O_CMPA) >> 8U; } else { // // Read from CMPBHR // hrCompCount = HWREGH(base + HRPWM_O_CMPB) >> 8U; } return(hrCompCount); }",
+      "registersUsed": [
+        "CMPA",
+        "CMPB"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPA",
+        "CMPB"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setRisingEdgeDelay",
+      "functionArgs": [
+        "base",
+        "redCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n    ASSERT(redCount < 0x200000U);\n\n    //\n    // Set the consolidated RED (Rising Edge Delay) count\n    //\n    HWREG(base + HRPWM_O_DBREDHR) = redCount << 9U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); ASSERT(redCount < 0x200000U); // // Set the consolidated RED (Rising Edge Delay) count // HWREG(base + HRPWM_O_DBREDHR) = redCount << 9U; }",
+      "registersUsed": [
+        "DBREDHR",
+        "DBRED"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBREDHR",
+        "DBRED"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setHiResRisingEdgeDelayOnly",
+      "functionArgs": [
+        "base",
+        "hrRedCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n    ASSERT(hrRedCount < 128U);\n\n    //\n    // Set the High Resolution RED (Rising Edge Delay) count only\n    //\n    HWREGH(base + HRPWM_O_DBREDHR) = hrRedCount << 9U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); ASSERT(hrRedCount < 128U); // // Set the High Resolution RED (Rising Edge Delay) count only // HWREGH(base + HRPWM_O_DBREDHR) = hrRedCount << 9U; }",
+      "registersUsed": [
+        "DBREDHR",
+        "DBRED"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBREDHR",
+        "DBRED"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setFallingEdgeDelay",
+      "functionArgs": [
+        "base",
+        "fedCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n    ASSERT(fedCount < 0x200000U);\n\n    //\n    // Set the High Resolution FED (Falling Edge Delay) count\n    //\n    HWREG(base + HRPWM_O_DBFEDHR) = fedCount << 9U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); ASSERT(fedCount < 0x200000U); // // Set the High Resolution FED (Falling Edge Delay) count // HWREG(base + HRPWM_O_DBFEDHR) = fedCount << 9U; }",
+      "registersUsed": [
+        "DBFEDHR",
+        "DBFED"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBFEDHR",
+        "DBFED"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setHiResFallingEdgeDelayOnly",
+      "functionArgs": [
+        "base",
+        "hrFedCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n    ASSERT(hrFedCount < 128U);\n\n    //\n    // Set the high resolution FED (Falling Edge Delay) count\n    //\n    HWREGH(base + HRPWM_O_DBFEDHR) = hrFedCount << 9U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); ASSERT(hrFedCount < 128U); // // Set the high resolution FED (Falling Edge Delay) count // HWREGH(base + HRPWM_O_DBFEDHR) = hrFedCount << 9U; }",
+      "registersUsed": [
+        "DBFEDHR",
+        "DBFED"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBFEDHR",
+        "DBFED"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setMEPStep",
+      "functionArgs": [
+        "base",
+        "mepCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n    ASSERT(mepCount < 256U);\n\n    //\n    // Set HRPWM MEP count\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRMSTEP) =\n             ((HWREGH(base + HRPWM_O_HRMSTEP) & ~HRPWM_HRMSTEP_HRMSTEP_M) |\n               mepCount);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); ASSERT(mepCount < 256U); // // Set HRPWM MEP count // EALLOW; HWREGH(base + HRPWM_O_HRMSTEP) = ((HWREGH(base + HRPWM_O_HRMSTEP) & ~HRPWM_HRMSTEP_HRMSTEP_M) | mepCount); EDIS; }",
+      "registersUsed": [
+        "HRMSTEP"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRMSTEP"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setDeadbandMEPEdgeSelect",
+      "functionArgs": [
+        "base",
+        "mepDBEdge"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRPWM_MEPDeadBandEdgeMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Set the HRPWM DB edge mode\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRCNFG2) =\n       ((HWREGH(base + HRPWM_O_HRCNFG2) & ~HRPWM_HRCNFG2_EDGMODEDB_M) |\n         ((uint16_t)mepDBEdge));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Set the HRPWM DB edge mode // EALLOW; HWREGH(base + HRPWM_O_HRCNFG2) = ((HWREGH(base + HRPWM_O_HRCNFG2) & ~HRPWM_HRCNFG2_EDGMODEDB_M) | ((uint16_t)mepDBEdge)); EDIS; }",
+      "registersUsed": [
+        "HRCNFG",
+        "HRCNFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCNFG",
+        "HRCNFG2"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setRisingEdgeDelayLoadMode",
+      "functionArgs": [
+        "base",
+        "loadEvent"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRPWM_LoadMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Set the HRPWM RED load mode\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRCNFG2) =\n      ((HWREGH(base + HRPWM_O_HRCNFG2) & ~HRPWM_HRCNFG2_CTLMODEDBRED_M) |\n       ((uint16_t)loadEvent << HRPWM_HRCNFG2_CTLMODEDBRED_S));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Set the HRPWM RED load mode // EALLOW; HWREGH(base + HRPWM_O_HRCNFG2) = ((HWREGH(base + HRPWM_O_HRCNFG2) & ~HRPWM_HRCNFG2_CTLMODEDBRED_M) | ((uint16_t)loadEvent << HRPWM_HRCNFG2_CTLMODEDBRED_S)); EDIS; }",
+      "registersUsed": [
+        "HRCNFG",
+        "HRCNFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCNFG",
+        "HRCNFG2"
+      ]
+    },
+    {
+      "file": "hrpwm.h",
+      "peripheral": "hrpwm",
+      "functionName": "HRPWM_setFallingEdgeDelayLoadMode",
+      "functionArgs": [
+        "base",
+        "loadEvent"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRPWM_LoadMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(HRPWM_isBaseValid(base));\n\n    //\n    // Set the HRPWM FED load mode\n    //\n    EALLOW;\n    HWREGH(base + HRPWM_O_HRCNFG2) =\n       ((HWREGH(base + HRPWM_O_HRCNFG2) & ~HRPWM_HRCNFG2_CTLMODEDBFED_M) |\n        ((uint16_t)loadEvent << HRPWM_HRCNFG2_CTLMODEDBFED_S));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(HRPWM_isBaseValid(base)); // // Set the HRPWM FED load mode // EALLOW; HWREGH(base + HRPWM_O_HRCNFG2) = ((HWREGH(base + HRPWM_O_HRCNFG2) & ~HRPWM_HRCNFG2_CTLMODEDBFED_M) | ((uint16_t)loadEvent << HRPWM_HRCNFG2_CTLMODEDBFED_S)); EDIS; }",
+      "registersUsed": [
+        "HRCNFG",
+        "HRCNFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCNFG",
+        "HRCNFG2"
+      ]
+    }
+  ]
+}

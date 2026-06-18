@@ -1,0 +1,1537 @@
+{
+  "name": "escss",
+  "functions": [
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_setRawInterruptStatus",
+      "functionArgs": [
+        "base",
+        "interruptMask",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t keyMatchStatus;\n\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n    ASSERT((interruptMask & ~(ECAT_SS_ESCSS_SET_INTERRUPT_MASK)) == 0U);\n\n    if(ESCSS_VALID_KEY_VALUE == writeKey)\n    {\n        //\n        // Set the individual Interrupt cause to emulate the interrupt.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_INTR_SET) |= (interruptMask |\n         ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_INTR_SET_WRITE_KEY_S)\n          & ECAT_SS_ESCSS_INTR_SET_WRITE_KEY_M));\n\n        //\n        // Set the return value when correct key is passed.\n        //\n        keyMatchStatus = ESCSS_API_SUCCESS ;\n    }\n    else\n    {\n        //\n        // Set the return value when bad key is passed.\n        //\n        keyMatchStatus = ESCSS_API_FAIL;\n    }\n\n    return(keyMatchStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t keyMatchStatus; // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); ASSERT((interruptMask & ~(ECAT_SS_ESCSS_SET_INTERRUPT_MASK)) == 0U); if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set the individual Interrupt cause to emulate the interrupt. // HWREGH(base + ECAT_SS_O_ESCSS_INTR_SET) |= (interruptMask | ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_INTR_SET_WRITE_KEY_S) & ECAT_SS_ESCSS_INTR_SET_WRITE_KEY_M)); // // Set the return value when correct key is passed. // keyMatchStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // keyMatchStatus = ESCSS_API_FAIL; } return(keyMatchStatus); }",
+      "registersUsed": [
+        "ESCSS_INTR_SET"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_INTR_SET"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_setGPINGroupCaptureTriggerSelect",
+      "functionArgs": [
+        "base",
+        "selectGPIN",
+        "triggerCapSelect"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESCSS_GroupCaptureSelect",
+        "ESCSS_CaptureTrigger"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n    ASSERT((triggerCapSelect == ESCSS_SOF_CAPTURE_TRIGGER) ||\n           (triggerCapSelect == ESCSS_SYNC0_CAPTURE_TRIGGER) ||\n           (triggerCapSelect == ESCSS_SYNC1_CAPTURE_TRIGGER) ||\n           (triggerCapSelect == ESCSS_LATCH0_CAPTURE_TRIGGER) ||\n           (triggerCapSelect == ESCSS_LATCH1_CAPTURE_TRIGGER));\n    ASSERT((selectGPIN == ESCSS_GROUP_CAPTURE_SELECT0) ||\n           (selectGPIN == ESCSS_GROUP_CAPTURE_SELECT1) ||\n           (selectGPIN == ESCSS_GROUP_CAPTURE_SELECT2) ||\n           (selectGPIN == ESCSS_GROUP_CAPTURE_SELECT3));\n\n    if(selectGPIN == ESCSS_GROUP_CAPTURE_SELECT0)\n    {\n        HWREG(base + ECAT_SS_O_ESCSS_GPIN_GRP_CAP_SEL) |=\n        (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPIN)) &\n         ECAT_SS_ESCSS_GRP_CAP_SELECT0_MASK);\n    }\n    else if(selectGPIN == ESCSS_GROUP_CAPTURE_SELECT1)\n    {\n        HWREG(base + ECAT_SS_O_ESCSS_GPIN_GRP_CAP_SEL) |=\n        (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPIN)) &\n         ECAT_SS_ESCSS_GRP_CAP_SELECT1_MASK);\n    }\n    else if(selectGPIN == ESCSS_GROUP_CAPTURE_SELECT2)\n    {\n        HWREG(base + ECAT_SS_O_ESCSS_GPIN_GRP_CAP_SEL) |=\n        (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPIN)) &\n         ECAT_SS_ESCSS_GRP_CAP_SELECT2_MASK);\n    }\n    else if(selectGPIN == ESCSS_GROUP_CAPTURE_SELECT3)\n    {\n        HWREG(base + ECAT_SS_O_ESCSS_GPIN_GRP_CAP_SEL) |=\n        (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPIN)) &\n         ECAT_SS_ESCSS_GRP_CAP_SELECT3_MASK);\n    }\n    else\n    {\n        //\n        // Not a valid value.\n        //\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); ASSERT((triggerCapSelect == ESCSS_SOF_CAPTURE_TRIGGER) || (triggerCapSelect == ESCSS_SYNC0_CAPTURE_TRIGGER) || (triggerCapSelect == ESCSS_SYNC1_CAPTURE_TRIGGER) || (triggerCapSelect == ESCSS_LATCH0_CAPTURE_TRIGGER) || (triggerCapSelect == ESCSS_LATCH1_CAPTURE_TRIGGER)); ASSERT((selectGPIN == ESCSS_GROUP_CAPTURE_SELECT0) || (selectGPIN == ESCSS_GROUP_CAPTURE_SELECT1) || (selectGPIN == ESCSS_GROUP_CAPTURE_SELECT2) || (selectGPIN == ESCSS_GROUP_CAPTURE_SELECT3)); if(selectGPIN == ESCSS_GROUP_CAPTURE_SELECT0) { HWREG(base + ECAT_SS_O_ESCSS_GPIN_GRP_CAP_SEL) |= (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPIN)) & ECAT_SS_ESCSS_GRP_CAP_SELECT0_MASK); } else if(selectGPIN == ESCSS_GROUP_CAPTURE_SELECT1) { HWREG(base + ECAT_SS_O_ESCSS_GPIN_GRP_CAP_SEL) |= (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPIN)) & ECAT_SS_ESCSS_GRP_CAP_SELECT1_MASK); } else if(selectGPIN == ESCSS_GROUP_CAPTURE_SELECT2) { HWREG(base + ECAT_SS_O_ESCSS_GPIN_GRP_CAP_SEL) |= (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPIN)) & ECAT_SS_ESCSS_GRP_CAP_SELECT2_MASK); } else if(selectGPIN == ESCSS_GROUP_CAPTURE_SELECT3) { HWREG(base + ECAT_SS_O_ESCSS_GPIN_GRP_CAP_SEL) |= (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPIN)) & ECAT_SS_ESCSS_GRP_CAP_SELECT3_MASK); } else { // // Not a valid value. // } }",
+      "registersUsed": [
+        "ESCSS_GPIN_GRP_CAP_SEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPIN_GRP_CAP_SEL"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_setGPOUTGroupCaptureTriggerSelect",
+      "functionArgs": [
+        "base",
+        "selectGPOUT",
+        "triggerCapSelect"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESCSS_GroupCaptureSelect",
+        "ESCSS_CaptureTrigger"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n    ASSERT((triggerCapSelect == ESCSS_SOF_CAPTURE_TRIGGER) ||\n           (triggerCapSelect == ESCSS_SYNC0_CAPTURE_TRIGGER) ||\n           (triggerCapSelect == ESCSS_SYNC1_CAPTURE_TRIGGER) ||\n           (triggerCapSelect == ESCSS_LATCH0_CAPTURE_TRIGGER) ||\n           (triggerCapSelect == ESCSS_LATCH1_CAPTURE_TRIGGER));\n    ASSERT((selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT0) ||\n           (selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT1) ||\n           (selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT2) ||\n           (selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT3));\n\n    if(selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT0)\n    {\n        HWREG(base + ECAT_SS_O_ESCSS_GPOUT_GRP_CAP_SEL) |=\n        (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPOUT)) &\n         ECAT_SS_ESCSS_GRP_CAP_SELECT0_MASK);\n    }\n    else if(selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT1)\n    {\n        HWREG(base + ECAT_SS_O_ESCSS_GPOUT_GRP_CAP_SEL) |=\n        (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPOUT)) &\n         ECAT_SS_ESCSS_GRP_CAP_SELECT1_MASK);\n    }\n    else if(selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT2)\n    {\n        HWREG(base + ECAT_SS_O_ESCSS_GPOUT_GRP_CAP_SEL) |=\n        (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPOUT)) &\n         ECAT_SS_ESCSS_GRP_CAP_SELECT2_MASK);\n    }\n    else if(selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT3)\n    {\n        HWREG(base + ECAT_SS_O_ESCSS_GPOUT_GRP_CAP_SEL) |=\n        (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPOUT)) &\n         ECAT_SS_ESCSS_GRP_CAP_SELECT3_MASK);\n    }\n    else\n    {\n        //\n        // Not a valid value.\n        //\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); ASSERT((triggerCapSelect == ESCSS_SOF_CAPTURE_TRIGGER) || (triggerCapSelect == ESCSS_SYNC0_CAPTURE_TRIGGER) || (triggerCapSelect == ESCSS_SYNC1_CAPTURE_TRIGGER) || (triggerCapSelect == ESCSS_LATCH0_CAPTURE_TRIGGER) || (triggerCapSelect == ESCSS_LATCH1_CAPTURE_TRIGGER)); ASSERT((selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT0) || (selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT1) || (selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT2) || (selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT3)); if(selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT0) { HWREG(base + ECAT_SS_O_ESCSS_GPOUT_GRP_CAP_SEL) |= (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPOUT)) & ECAT_SS_ESCSS_GRP_CAP_SELECT0_MASK); } else if(selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT1) { HWREG(base + ECAT_SS_O_ESCSS_GPOUT_GRP_CAP_SEL) |= (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPOUT)) & ECAT_SS_ESCSS_GRP_CAP_SELECT1_MASK); } else if(selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT2) { HWREG(base + ECAT_SS_O_ESCSS_GPOUT_GRP_CAP_SEL) |= (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPOUT)) & ECAT_SS_ESCSS_GRP_CAP_SELECT2_MASK); } else if(selectGPOUT == ESCSS_GROUP_CAPTURE_SELECT3) { HWREG(base + ECAT_SS_O_ESCSS_GPOUT_GRP_CAP_SEL) |= (((uint16_t)((uint32_t)triggerCapSelect) << ((uint32_t)selectGPOUT)) & ECAT_SS_ESCSS_GRP_CAP_SELECT3_MASK); } else { // // Not a valid value. // } }",
+      "registersUsed": [
+        "ESCSS_GPOUT_GRP_CAP_SEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPOUT_GRP_CAP_SEL"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableCPUReset",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Enable the bit and set the Key Value.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) |=\n             (ECAT_SS_ESCSS_RESET_DEST_CONFIG_CPU_RESET_EN | ((uint16_t)((uint32_t)\n             writeKey << ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_S) &\n             ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Enable the bit and set the Key Value. // HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) |= (ECAT_SS_ESCSS_RESET_DEST_CONFIG_CPU_RESET_EN | ((uint16_t)((uint32_t) writeKey << ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_RESET_DEST_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_RESET_DEST_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableCPUReset",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Reset the Value of the Bit and set the Key Value.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) =\n            ((HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) &\n             (~(ECAT_SS_ESCSS_RESET_DEST_CONFIG_CPU_RESET_EN))) | ((uint16_t)\n             ((uint32_t)writeKey << ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_S)\n             & ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Reset the Value of the Bit and set the Key Value. // HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) = ((HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) & (~(ECAT_SS_ESCSS_RESET_DEST_CONFIG_CPU_RESET_EN))) | ((uint16_t) ((uint32_t)writeKey << ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_RESET_DEST_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_RESET_DEST_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableResetToNMI",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Set the Reset out set the Write Key Value.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) |=\n            (ECAT_SS_ESCSS_RESET_DEST_CONFIG_CPU_NMI_EN | ((uint16_t)((uint32_t)\n             writeKey << ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_S) &\n             ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set the Reset out set the Write Key Value. // HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) |= (ECAT_SS_ESCSS_RESET_DEST_CONFIG_CPU_NMI_EN | ((uint16_t)((uint32_t) writeKey << ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_RESET_DEST_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_RESET_DEST_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableResetToNMI",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Reset out does not drive the CPU NMI.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) =\n            ((HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) &\n             (~(ECAT_SS_ESCSS_RESET_DEST_CONFIG_CPU_NMI_EN))) | ((uint16_t)((uint32_t)\n             writeKey << ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_S)\n             & ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Reset out does not drive the CPU NMI. // HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) = ((HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) & (~(ECAT_SS_ESCSS_RESET_DEST_CONFIG_CPU_NMI_EN))) | ((uint16_t)((uint32_t) writeKey << ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_RESET_DEST_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_RESET_DEST_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableResetToInterrupt",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Reset out drives interrupt to the main CPU to the respective\n            // EtherCATSS.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) |=\n            (ECAT_SS_ESCSS_RESET_DEST_CONFIG_CPU_INT_EN | ((uint16_t)((uint32_t)\n             writeKey << ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_S) &\n             ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Reset out drives interrupt to the main CPU to the respective // EtherCATSS. // HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) |= (ECAT_SS_ESCSS_RESET_DEST_CONFIG_CPU_INT_EN | ((uint16_t)((uint32_t) writeKey << ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_RESET_DEST_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_RESET_DEST_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableResetToInterrupt",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Disable the Reset out and set the Write Key Value.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) =\n            ((HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) &\n             (~(ECAT_SS_ESCSS_RESET_DEST_CONFIG_CPU_INT_EN))) | ((uint16_t)((uint32_t)\n             writeKey << ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_S)\n             & ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Disable the Reset out and set the Write Key Value. // HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) = ((HWREGH(base + ECAT_SS_O_ESCSS_RESET_DEST_CONFIG) & (~(ECAT_SS_ESCSS_RESET_DEST_CONFIG_CPU_INT_EN))) | ((uint16_t)((uint32_t) writeKey << ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_RESET_DEST_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_RESET_DEST_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_RESET_DEST_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_configureSync0Connections",
+      "functionArgs": [
+        "base",
+        "connectionInterrupt",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n    ASSERT((connectionInterrupt & ~(ECAT_SS_ESCSS_SYNC0_CONFIG_CPUX_INT_EN |\n                                    ECAT_SS_ESCSS_SYNC0_CONFIG_DMAX_TRIG_EN)) == 0U);\n\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Configure the connection from SYNC0 to passed interrupt type.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_SYNC0_CONFIG) |=\n             (connectionInterrupt | ((uint16_t)((uint32_t)writeKey <<\n              ECAT_SS_ESCSS_SYNC0_CONFIG_WRITE_KEY_S) &\n              ECAT_SS_ESCSS_SYNC0_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isBaseValid(base)); ASSERT((connectionInterrupt & ~(ECAT_SS_ESCSS_SYNC0_CONFIG_CPUX_INT_EN | ECAT_SS_ESCSS_SYNC0_CONFIG_DMAX_TRIG_EN)) == 0U); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Configure the connection from SYNC0 to passed interrupt type. // HWREGH(base + ECAT_SS_O_ESCSS_SYNC0_CONFIG) |= (connectionInterrupt | ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_SYNC0_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_SYNC0_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_SYNC0_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_SYNC0_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_configureSync1Connections",
+      "functionArgs": [
+        "base",
+        "connectionInterrupt",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n     uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n    ASSERT((connectionInterrupt & ~(ECAT_SS_ESCSS_SYNC1_CONFIG_CPUX_INT_EN |\n                                    ECAT_SS_ESCSS_SYNC1_CONFIG_DMAX_TRIG_EN)) == 0U);\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Configure the connection from SYNC1 to passed interrupt type and\n            // set the Write Key Value.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_SYNC1_CONFIG) |=\n            (connectionInterrupt | ((uint16_t)((uint32_t)writeKey <<\n             ECAT_SS_ESCSS_SYNC1_CONFIG_WRITE_KEY_S) &\n             ECAT_SS_ESCSS_SYNC1_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isBaseValid(base)); ASSERT((connectionInterrupt & ~(ECAT_SS_ESCSS_SYNC1_CONFIG_CPUX_INT_EN | ECAT_SS_ESCSS_SYNC1_CONFIG_DMAX_TRIG_EN)) == 0U); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Configure the connection from SYNC1 to passed interrupt type and // set the Write Key Value. // HWREGH(base + ECAT_SS_O_ESCSS_SYNC1_CONFIG) |= (connectionInterrupt | ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_SYNC1_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_SYNC1_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_SYNC1_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_SYNC1_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableConfigurationLock",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t keyMatchStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if(ESCSS_VALID_KEY_VALUE == writeKey)\n    {\n        //\n        // Set the lock bit and Write Key.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_CONFIG_LOCK) |=\n        (ECAT_SS_ESCSS_CONFIG_LOCK_LOCK_ENABLE | ((uint16_t)((uint32_t)writeKey <<\n         ECAT_SS_ESCSS_CONFIG_LOCK_WRITE_KEY_S) & ECAT_SS_ESCSS_CONFIG_LOCK_WRITE_KEY_M));\n\n        //\n        // Set the return value when correct key is passed.\n        //\n        keyMatchStatus = ESCSS_API_SUCCESS ;\n    }\n    else\n    {\n        //\n        // Set the return value when bad key is passed.\n        //\n        keyMatchStatus = ESCSS_API_FAIL;\n    }\n\n    return(keyMatchStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t keyMatchStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set the lock bit and Write Key. // HWREGH(base + ECAT_SS_O_ESCSS_CONFIG_LOCK) |= (ECAT_SS_ESCSS_CONFIG_LOCK_LOCK_ENABLE | ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_CONFIG_LOCK_WRITE_KEY_S) & ECAT_SS_ESCSS_CONFIG_LOCK_WRITE_KEY_M)); // // Set the return value when correct key is passed. // keyMatchStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // keyMatchStatus = ESCSS_API_FAIL; } return(keyMatchStatus); }",
+      "registersUsed": [
+        "ESCSS_CONFIG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_CONFIG_LOCK"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableIOConnectionLock",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t keyMatchStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if(ESCSS_VALID_KEY_VALUE == writeKey)\n    {\n        //\n        // Set the lock bit and Write Key.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_CONFIG_LOCK) |=\n        (ECAT_SS_ESCSS_CONFIG_LOCK_IO_CONFIG_ENABLE | ((uint16_t)((uint32_t)writeKey\n         << ECAT_SS_ESCSS_CONFIG_LOCK_WRITE_KEY_S) & ECAT_SS_ESCSS_CONFIG_LOCK_WRITE_KEY_M));\n\n        //\n        // Set the return value when correct key is passed.\n        //\n        keyMatchStatus = ESCSS_API_SUCCESS ;\n    }\n    else\n    {\n        //\n        // Set the return value when bad key is passed.\n        //\n        keyMatchStatus = ESCSS_API_FAIL;\n    }\n\n    return(keyMatchStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t keyMatchStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set the lock bit and Write Key. // HWREGH(base + ECAT_SS_O_ESCSS_CONFIG_LOCK) |= (ECAT_SS_ESCSS_CONFIG_LOCK_IO_CONFIG_ENABLE | ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_CONFIG_LOCK_WRITE_KEY_S) & ECAT_SS_ESCSS_CONFIG_LOCK_WRITE_KEY_M)); // // Set the return value when correct key is passed. // keyMatchStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // keyMatchStatus = ESCSS_API_FAIL; } return(keyMatchStatus); }",
+      "registersUsed": [
+        "ESCSS_CONFIG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_CONFIG_LOCK"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableIOConnectionLock",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t keyMatchStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if(ESCSS_VALID_KEY_VALUE == writeKey)\n    {\n        //\n        // Disable the lock bit and set the write Key Value.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_CONFIG_LOCK) =\n        ((HWREGH(base + ECAT_SS_O_ESCSS_CONFIG_LOCK) &\n          (~(ECAT_SS_ESCSS_CONFIG_LOCK_IO_CONFIG_ENABLE))) |\n         ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_CONFIG_LOCK_WRITE_KEY_S) &\n          ECAT_SS_ESCSS_CONFIG_LOCK_WRITE_KEY_M));\n\n        //\n        // Set the return value when correct key is passed.\n        //\n        keyMatchStatus = ESCSS_API_SUCCESS ;\n    }\n    else\n    {\n        //\n        // Set the return value when bad key is passed.\n        //\n        keyMatchStatus = ESCSS_API_FAIL;\n    }\n\n    return(keyMatchStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t keyMatchStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Disable the lock bit and set the write Key Value. // HWREGH(base + ECAT_SS_O_ESCSS_CONFIG_LOCK) = ((HWREGH(base + ECAT_SS_O_ESCSS_CONFIG_LOCK) & (~(ECAT_SS_ESCSS_CONFIG_LOCK_IO_CONFIG_ENABLE))) | ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_CONFIG_LOCK_WRITE_KEY_S) & ECAT_SS_ESCSS_CONFIG_LOCK_WRITE_KEY_M)); // // Set the return value when correct key is passed. // keyMatchStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // keyMatchStatus = ESCSS_API_FAIL; } return(keyMatchStatus); }",
+      "registersUsed": [
+        "ESCSS_CONFIG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_CONFIG_LOCK"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableResetInputFromGpioPad",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n     uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Set the bit to enable ResetIN from GPIO and the write Key Value.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_MISC_IO_CONFIG) |=\n            (ECAT_SS_ESCSS_MISC_IO_CONFIG_RESETIN_GPIO_EN | ((uint16_t)((uint32_t)\n             writeKey << ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_S) &\n             ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set the bit to enable ResetIN from GPIO and the write Key Value. // HWREGH(base + ECAT_SS_O_ESCSS_MISC_IO_CONFIG) |= (ECAT_SS_ESCSS_MISC_IO_CONFIG_RESETIN_GPIO_EN | ((uint16_t)((uint32_t) writeKey << ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_MISC_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MISC_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableResetInputFromGpioPad",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Disable ResetIN from GPIO.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_MISC_IO_CONFIG) =\n            ((HWREGH(base + ECAT_SS_O_ESCSS_MISC_IO_CONFIG) &\n            (~(ECAT_SS_ESCSS_MISC_IO_CONFIG_RESETIN_GPIO_EN))) |\n            ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_S)\n            & ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Disable ResetIN from GPIO. // HWREGH(base + ECAT_SS_O_ESCSS_MISC_IO_CONFIG) = ((HWREGH(base + ECAT_SS_O_ESCSS_MISC_IO_CONFIG) & (~(ECAT_SS_ESCSS_MISC_IO_CONFIG_RESETIN_GPIO_EN))) | ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_MISC_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MISC_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableESCEEPROMI2CIoPadConnection",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n     uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Set the EEPROM I2C IOPAD connection.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_MISC_IO_CONFIG) |=\n            (ECAT_SS_ESCSS_MISC_IO_CONFIG_EEPROM_I2C_IO_EN | ((uint16_t)((uint32_t)\n             writeKey << ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_S) &\n             ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set the EEPROM I2C IOPAD connection. // HWREGH(base + ECAT_SS_O_ESCSS_MISC_IO_CONFIG) |= (ECAT_SS_ESCSS_MISC_IO_CONFIG_EEPROM_I2C_IO_EN | ((uint16_t)((uint32_t) writeKey << ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_MISC_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MISC_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableESCEEPROMI2CIoPadConnection",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n     uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Disable the EEPROM I2C IOPAD connection.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_MISC_IO_CONFIG) =\n            ((HWREGH(base + ECAT_SS_O_ESCSS_MISC_IO_CONFIG) &\n             (~(ECAT_SS_ESCSS_MISC_IO_CONFIG_EEPROM_I2C_IO_EN))) | ((uint16_t)\n             ((uint32_t)writeKey << ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_S)\n             & ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Disable the EEPROM I2C IOPAD connection. // HWREGH(base + ECAT_SS_O_ESCSS_MISC_IO_CONFIG) = ((HWREGH(base + ECAT_SS_O_ESCSS_MISC_IO_CONFIG) & (~(ECAT_SS_ESCSS_MISC_IO_CONFIG_EEPROM_I2C_IO_EN))) | ((uint16_t) ((uint32_t)writeKey << ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_MISC_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_MISC_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MISC_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_configurePortCount",
+      "functionArgs": [
+        "base",
+        "portConfig",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESCSS_PortSelection",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t keyMatchStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n    ASSERT((portConfig == ESCSS_ONE_PORT_SELECTION) ||\n           (portConfig == ESCSS_TWO_PORT_SELECTION));\n\n    if(ESCSS_VALID_KEY_VALUE == writeKey)\n    {\n        //\n        // Set the Number of PHY Ports.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_PHY_IO_CONFIG) |=\n        (((uint16_t)((uint32_t)portConfig <<\n         ECAT_SS_ESCSS_PHY_IO_CONFIG_PHY_PORT_CNT_S)\n         & ECAT_SS_ESCSS_PHY_IO_CONFIG_PHY_PORT_CNT_M) |\n        ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_PHY_IO_CONFIG_WRITE_KEY_S) &\n        ECAT_SS_ESCSS_PHY_IO_CONFIG_WRITE_KEY_M));\n\n        //\n        // Set the return value when correct key is passed.\n        //\n        keyMatchStatus = ESCSS_API_SUCCESS ;\n    }\n    else\n    {\n        //\n        // Set the return value when bad key is passed.\n        //\n        keyMatchStatus = ESCSS_API_FAIL;\n    }\n\n    return(keyMatchStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t keyMatchStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); ASSERT((portConfig == ESCSS_ONE_PORT_SELECTION) || (portConfig == ESCSS_TWO_PORT_SELECTION)); if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set the Number of PHY Ports. // HWREGH(base + ECAT_SS_O_ESCSS_PHY_IO_CONFIG) |= (((uint16_t)((uint32_t)portConfig << ECAT_SS_ESCSS_PHY_IO_CONFIG_PHY_PORT_CNT_S) & ECAT_SS_ESCSS_PHY_IO_CONFIG_PHY_PORT_CNT_M) | ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_PHY_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_PHY_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // keyMatchStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // keyMatchStatus = ESCSS_API_FAIL; } return(keyMatchStatus); }",
+      "registersUsed": [
+        "ESCSS_PHY_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_PHY_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableAutoCompensationTxClkIOPad",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t keyMatchStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if(ESCSS_VALID_KEY_VALUE == writeKey)\n    {\n        //\n        // Set the Auto Compensation based on sampling of TX_CLK.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_PHY_IO_CONFIG) |=\n        (ECAT_SS_ESCSS_PHY_IO_CONFIG_TX_CLK_AUTO_COMP | ((uint16_t)((uint32_t)writeKey\n         << ECAT_SS_ESCSS_PHY_IO_CONFIG_WRITE_KEY_S) &\n         ECAT_SS_ESCSS_PHY_IO_CONFIG_WRITE_KEY_M));\n\n        //\n        // Set the return value when correct key is passed.\n        //\n        keyMatchStatus = ESCSS_API_SUCCESS ;\n    }\n    else\n    {\n        //\n        // Set the return value when bad key is passed.\n        //\n        keyMatchStatus = ESCSS_API_FAIL;\n    }\n\n    return(keyMatchStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t keyMatchStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set the Auto Compensation based on sampling of TX_CLK. // HWREGH(base + ECAT_SS_O_ESCSS_PHY_IO_CONFIG) |= (ECAT_SS_ESCSS_PHY_IO_CONFIG_TX_CLK_AUTO_COMP | ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_PHY_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_PHY_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // keyMatchStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // keyMatchStatus = ESCSS_API_FAIL; } return(keyMatchStatus); }",
+      "registersUsed": [
+        "ESCSS_PHY_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_PHY_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableAutoCompensationTxClkIOPad",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t keyMatchStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if(ESCSS_VALID_KEY_VALUE == writeKey)\n    {\n        //\n        // Set Manual Compensation to be there using CLK_IN.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_PHY_IO_CONFIG) =\n        ((HWREGH(base + ECAT_SS_O_ESCSS_PHY_IO_CONFIG) &\n          (~(ECAT_SS_ESCSS_PHY_IO_CONFIG_TX_CLK_AUTO_COMP))) |\n         ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_PHY_IO_CONFIG_WRITE_KEY_S)\n          & ECAT_SS_ESCSS_PHY_IO_CONFIG_WRITE_KEY_M));\n\n        //\n        // Set the return value when correct key is passed.\n        //\n        keyMatchStatus = ESCSS_API_SUCCESS ;\n    }\n    else\n    {\n        //\n        // Set the return value when bad key is passed.\n        //\n        keyMatchStatus = ESCSS_API_FAIL;\n    }\n\n    return(keyMatchStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t keyMatchStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set Manual Compensation to be there using CLK_IN. // HWREGH(base + ECAT_SS_O_ESCSS_PHY_IO_CONFIG) = ((HWREGH(base + ECAT_SS_O_ESCSS_PHY_IO_CONFIG) & (~(ECAT_SS_ESCSS_PHY_IO_CONFIG_TX_CLK_AUTO_COMP))) | ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_PHY_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_PHY_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // keyMatchStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // keyMatchStatus = ESCSS_API_FAIL; } return(keyMatchStatus); }",
+      "registersUsed": [
+        "ESCSS_PHY_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_PHY_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableSync0GpioMuxConnection",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Set the SYNC0 connection to OUT pad.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_SYNC_IO_CONFIG) |=\n             (ECAT_SS_ESCSS_SYNC_IO_CONFIG_SYNC0_GPIO_EN | ((uint16_t)((uint32_t)\n             writeKey << ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_S) &\n             ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set the SYNC0 connection to OUT pad. // HWREGH(base + ECAT_SS_O_ESCSS_SYNC_IO_CONFIG) |= (ECAT_SS_ESCSS_SYNC_IO_CONFIG_SYNC0_GPIO_EN | ((uint16_t)((uint32_t) writeKey << ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_SYNC_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_SYNC_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableSync0GpioMuxConnection",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Disable the SYNC0 connection to OUT pad.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_SYNC_IO_CONFIG) =\n            ((HWREGH(base + ECAT_SS_O_ESCSS_SYNC_IO_CONFIG) &\n             (~(ECAT_SS_ESCSS_SYNC_IO_CONFIG_SYNC0_GPIO_EN))) |\n             ((uint16_t)((uint32_t)writeKey <<\n              ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_S)\n             & ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Disable the SYNC0 connection to OUT pad. // HWREGH(base + ECAT_SS_O_ESCSS_SYNC_IO_CONFIG) = ((HWREGH(base + ECAT_SS_O_ESCSS_SYNC_IO_CONFIG) & (~(ECAT_SS_ESCSS_SYNC_IO_CONFIG_SYNC0_GPIO_EN))) | ((uint16_t)((uint32_t)writeKey << ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_SYNC_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_SYNC_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableSync1GpioMuxConnection",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Set the SYNC1 connection to OUT pad.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_SYNC_IO_CONFIG) |=\n            (ECAT_SS_ESCSS_SYNC_IO_CONFIG_SYNC1_GPIO_EN | ((uint16_t)((uint32_t)\n             writeKey << ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_S) &\n             ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set the SYNC1 connection to OUT pad. // HWREGH(base + ECAT_SS_O_ESCSS_SYNC_IO_CONFIG) |= (ECAT_SS_ESCSS_SYNC_IO_CONFIG_SYNC1_GPIO_EN | ((uint16_t)((uint32_t) writeKey << ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_SYNC_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_SYNC_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableSync1GpioMuxConnection",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Disable the SYNC1 connection to OUT pad.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_SYNC_IO_CONFIG) =\n            ((HWREGH(base + ECAT_SS_O_ESCSS_SYNC_IO_CONFIG) &\n             ((~ECAT_SS_ESCSS_SYNC_IO_CONFIG_SYNC1_GPIO_EN))) | ((uint16_t)((uint32_t)\n             writeKey << ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_S)\n             & ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Disable the SYNC1 connection to OUT pad. // HWREGH(base + ECAT_SS_O_ESCSS_SYNC_IO_CONFIG) = ((HWREGH(base + ECAT_SS_O_ESCSS_SYNC_IO_CONFIG) & ((~ECAT_SS_ESCSS_SYNC_IO_CONFIG_SYNC1_GPIO_EN))) | ((uint16_t)((uint32_t) writeKey << ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_SYNC_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_SYNC_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_SYNC_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableLatch0GpioMuxConnection",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Set the LATCH0 connection to IN pad.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_LATCH_IO_CONFIG) |=\n            (ECAT_SS_ESCSS_LATCH_IO_CONFIG_LATCH0_GPIO_EN | ((uint16_t)((uint32_t)\n             writeKey << ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_S) &\n             ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set the LATCH0 connection to IN pad. // HWREGH(base + ECAT_SS_O_ESCSS_LATCH_IO_CONFIG) |= (ECAT_SS_ESCSS_LATCH_IO_CONFIG_LATCH0_GPIO_EN | ((uint16_t)((uint32_t) writeKey << ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_LATCH_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_LATCH_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableLatch0GpioMuxConnection",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Reset the LATCH0 connection to IN pad.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_LATCH_IO_CONFIG) =\n            ((HWREGH(base + ECAT_SS_O_ESCSS_LATCH_IO_CONFIG) &\n             (~(ECAT_SS_ESCSS_LATCH_IO_CONFIG_LATCH0_GPIO_EN))) | ((uint16_t)\n             ((uint32_t)writeKey << ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_S)\n             & ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Reset the LATCH0 connection to IN pad. // HWREGH(base + ECAT_SS_O_ESCSS_LATCH_IO_CONFIG) = ((HWREGH(base + ECAT_SS_O_ESCSS_LATCH_IO_CONFIG) & (~(ECAT_SS_ESCSS_LATCH_IO_CONFIG_LATCH0_GPIO_EN))) | ((uint16_t) ((uint32_t)writeKey << ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_LATCH_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_LATCH_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableLatch1GpioMuxConnection",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Set the LATCH1 connection to IN pad.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_LATCH_IO_CONFIG) |=\n            (ECAT_SS_ESCSS_LATCH_IO_CONFIG_LATCH1_GPIO_EN | ((uint16_t)((uint32_t)\n             writeKey << ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_S) &\n             ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Set the LATCH1 connection to IN pad. // HWREGH(base + ECAT_SS_O_ESCSS_LATCH_IO_CONFIG) |= (ECAT_SS_ESCSS_LATCH_IO_CONFIG_LATCH1_GPIO_EN | ((uint16_t)((uint32_t) writeKey << ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_LATCH_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_LATCH_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableLatch1GpioMuxConnection",
+      "functionArgs": [
+        "base",
+        "writeKey"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        if(ESCSS_VALID_KEY_VALUE == writeKey)\n        {\n            //\n            // Reset the LATCH1 connection to IN pad.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_LATCH_IO_CONFIG) =\n            ((HWREGH(base + ECAT_SS_O_ESCSS_LATCH_IO_CONFIG) &\n             (~(ECAT_SS_ESCSS_LATCH_IO_CONFIG_LATCH1_GPIO_EN))) | ((uint16_t)\n             ((uint32_t)writeKey << ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_S) &\n             ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_M));\n\n            //\n            // Set the return value when correct key is passed.\n            //\n            apiStatus = ESCSS_API_SUCCESS ;\n        }\n        else\n        {\n            //\n            // Set the return value when bad key is passed.\n            //\n            apiStatus = ESCSS_API_FAIL;\n        }\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { if(ESCSS_VALID_KEY_VALUE == writeKey) { // // Reset the LATCH1 connection to IN pad. // HWREGH(base + ECAT_SS_O_ESCSS_LATCH_IO_CONFIG) = ((HWREGH(base + ECAT_SS_O_ESCSS_LATCH_IO_CONFIG) & (~(ECAT_SS_ESCSS_LATCH_IO_CONFIG_LATCH1_GPIO_EN))) | ((uint16_t) ((uint32_t)writeKey << ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_S) & ECAT_SS_ESCSS_LATCH_IO_CONFIG_WRITE_KEY_M)); // // Set the return value when correct key is passed. // apiStatus = ESCSS_API_SUCCESS ; } else { // // Set the return value when bad key is passed. // apiStatus = ESCSS_API_FAIL; } } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_LATCH_IO_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_LATCH_IO_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.c",
+      "peripheral": "escss",
+      "functionName": "ESCSS_configureEEPROMSize",
+      "functionArgs": [
+        "base",
+        "eepromSize"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESCSS_SizeSelect"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    //\n    // Set the Value as per the selected size.\n    //\n    switch(eepromSize)\n    {\n        case ESCSS_LESS_THAN_16K:\n            //\n            // Set the value as zero.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) &=\n            ~ECAT_SS_ESCSS_MISC_CONFIG_EEPROM_SIZE;\n            break;\n\n        case ESCSS_GREATER_THAN_16K:\n            //\n            // Set the value as one.\n            //\n            HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) |=\n            ECAT_SS_ESCSS_MISC_CONFIG_EEPROM_SIZE;\n            break;\n        default:\n            //\n            // Do nothing. Not a valid selection value.\n            //\n            break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isConfigBaseValid(base)); // // Set the Value as per the selected size. // switch(eepromSize) { case ESCSS_LESS_THAN_16K: // // Set the value as zero. // HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) &= ~ECAT_SS_ESCSS_MISC_CONFIG_EEPROM_SIZE; break; case ESCSS_GREATER_THAN_16K: // // Set the value as one. // HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) |= ECAT_SS_ESCSS_MISC_CONFIG_EEPROM_SIZE; break; default: // // Do nothing. Not a valid selection value. // break; } }",
+      "registersUsed": [
+        "ESCSS_MISC_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MISC_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((ESC_SS_BASE == base));\n}\n",
+      "functionContentWithoutFormatting": "{ return((ESC_SS_BASE == base)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_isConfigBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((ESC_SS_CONFIG_BASE == base));\n}\n",
+      "functionContentWithoutFormatting": "{ return((ESC_SS_CONFIG_BASE == base)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_readIPMinorRevNumber",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Returns the Minor IP Revision Number.\n    //\n    return(uint16_t)(((HWREG(base + ECAT_SS_O_ESCSS_IPREVNUM)) &\n            ECAT_SS_ESCSS_IPREVNUM_IP_REV_MINOR_M) >>\n            ECAT_SS_ESCSS_IPREVNUM_IP_REV_MINOR_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Returns the Minor IP Revision Number. // return(uint16_t)(((HWREG(base + ECAT_SS_O_ESCSS_IPREVNUM)) & ECAT_SS_ESCSS_IPREVNUM_IP_REV_MINOR_M) >> ECAT_SS_ESCSS_IPREVNUM_IP_REV_MINOR_S); }",
+      "registersUsed": [
+        "ESCSS_IPREVNUM"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_IPREVNUM"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_readIPMajorRevNumber",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Returns the Major IP Revision Number.\n    //\n    return(uint16_t)(((HWREG(base + ECAT_SS_O_ESCSS_IPREVNUM)) &\n            ECAT_SS_ESCSS_IPREVNUM_IP_REV_MAJOR_M) >>\n            ECAT_SS_ESCSS_IPREVNUM_IP_REV_MAJOR_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Returns the Major IP Revision Number. // return(uint16_t)(((HWREG(base + ECAT_SS_O_ESCSS_IPREVNUM)) & ECAT_SS_ESCSS_IPREVNUM_IP_REV_MAJOR_M) >> ECAT_SS_ESCSS_IPREVNUM_IP_REV_MAJOR_S); }",
+      "registersUsed": [
+        "ESCSS_IPREVNUM"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_IPREVNUM"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_readIPRevNumber",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Return the IP Revision Number.\n    //\n    return((HWREG(base + ECAT_SS_O_ESCSS_IPREVNUM)) & ECAT_SS_ESCSS_IPREV_MASK);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Return the IP Revision Number. // return((HWREG(base + ECAT_SS_O_ESCSS_IPREVNUM)) & ECAT_SS_ESCSS_IPREV_MASK); }",
+      "registersUsed": [
+        "ESCSS_IPREVNUM"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_IPREVNUM"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_getRawInterruptStatus",
+      "functionArgs": [
+        "base",
+        "interruptMask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n    ASSERT((interruptMask & ~(ECAT_SS_ESCSS_RAW_INTERRUPT_MASK)) == 0U);\n\n    //\n    // Return the specific Raw Interrupt Status Value.\n    //\n    return((uint16_t)((HWREG(base + ECAT_SS_O_ESCSS_INTR_RIS)) & interruptMask));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); ASSERT((interruptMask & ~(ECAT_SS_ESCSS_RAW_INTERRUPT_MASK)) == 0U); // // Return the specific Raw Interrupt Status Value. // return((uint16_t)((HWREG(base + ECAT_SS_O_ESCSS_INTR_RIS)) & interruptMask)); }",
+      "registersUsed": [
+        "ESCSS_INTR_RIS"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_INTR_RIS"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_readRawInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Return the Raw Interrupt Status Value.\n    //\n    return(HWREG(base + ECAT_SS_O_ESCSS_INTR_RIS) & ECAT_SS_ESCSS_RAW_INTERRUPT_MASK);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Return the Raw Interrupt Status Value. // return(HWREG(base + ECAT_SS_O_ESCSS_INTR_RIS) & ECAT_SS_ESCSS_RAW_INTERRUPT_MASK); }",
+      "registersUsed": [
+        "ESCSS_INTR_RIS"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_INTR_RIS"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_setMaskedInterruptStatus",
+      "functionArgs": [
+        "base",
+        "interruptMask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n    ASSERT((interruptMask & ~(ECAT_SS_ESCSS_INTERRUPT_MASK)) == 0U);\n    //\n    // Set the Masked Interrupt Status Value.\n    //\n    HWREGH(base + ECAT_SS_O_ESCSS_INTR_MASK) |= interruptMask;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); ASSERT((interruptMask & ~(ECAT_SS_ESCSS_INTERRUPT_MASK)) == 0U); // // Set the Masked Interrupt Status Value. // HWREGH(base + ECAT_SS_O_ESCSS_INTR_MASK) |= interruptMask; }",
+      "registersUsed": [
+        "ESCSS_INTR_MASK"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_INTR_MASK"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_resetMaskedInterruptStatus",
+      "functionArgs": [
+        "base",
+        "interruptMask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n    ASSERT((interruptMask & ~(ECAT_SS_ESCSS_RESET_INTERRUPT_MASK)) == 0U);\n    //\n    // Reset the Masked Interrupt Status Value.\n    //\n    HWREGH(base + ECAT_SS_O_ESCSS_INTR_MASK) &= ~interruptMask;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); ASSERT((interruptMask & ~(ECAT_SS_ESCSS_RESET_INTERRUPT_MASK)) == 0U); // // Reset the Masked Interrupt Status Value. // HWREGH(base + ECAT_SS_O_ESCSS_INTR_MASK) &= ~interruptMask; }",
+      "registersUsed": [
+        "ESCSS_INTR_MASK"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_INTR_MASK"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_getMaskedInterruptStatus",
+      "functionArgs": [
+        "base",
+        "interruptMask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n    ASSERT((interruptMask & ~(ECAT_SS_ESCSS_GET_INTERRUPT_MASK)) == 0U);\n\n    //\n    // Return the Masked Interrupt Status Value.\n    //\n    return((HWREGH(base + ECAT_SS_O_ESCSS_INTR_MIS)) & interruptMask);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); ASSERT((interruptMask & ~(ECAT_SS_ESCSS_GET_INTERRUPT_MASK)) == 0U); // // Return the Masked Interrupt Status Value. // return((HWREGH(base + ECAT_SS_O_ESCSS_INTR_MIS)) & interruptMask); }",
+      "registersUsed": [
+        "ESCSS_INTR_MIS"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_INTR_MIS"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_clearRawInterruptStatus",
+      "functionArgs": [
+        "base",
+        "interruptMask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n    ASSERT((interruptMask & ~(ECAT_SS_ESCSS_CLEAR_INTERRUPT_MASK)) == 0U);\n    //\n    // Clear the Interrupt Status using the Mask Value passed.\n    //\n    HWREGH(base + ECAT_SS_O_ESCSS_INTR_CLR) = interruptMask;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); ASSERT((interruptMask & ~(ECAT_SS_ESCSS_CLEAR_INTERRUPT_MASK)) == 0U); // // Clear the Interrupt Status using the Mask Value passed. // HWREGH(base + ECAT_SS_O_ESCSS_INTR_CLR) = interruptMask; }",
+      "registersUsed": [
+        "ESCSS_INTR_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_INTR_CLR"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_selectLatch0Mux",
+      "functionArgs": [
+        "base",
+        "muxSelectValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESCSS_LatchTrigger"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Set the Mux Select Value for Latch0.\n    //\n    HWREGH(base + ECAT_SS_O_ESCSS_LATCH_SEL) |=\n    (uint16_t)(((uint32_t)muxSelectValue << ECAT_SS_ESCSS_LATCH_SEL_LATCH0_SELECT_S) &\n     ECAT_SS_ESCSS_LATCH_SEL_LATCH0_SELECT_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Set the Mux Select Value for Latch0. // HWREGH(base + ECAT_SS_O_ESCSS_LATCH_SEL) |= (uint16_t)(((uint32_t)muxSelectValue << ECAT_SS_ESCSS_LATCH_SEL_LATCH0_SELECT_S) & ECAT_SS_ESCSS_LATCH_SEL_LATCH0_SELECT_M); }",
+      "registersUsed": [
+        "ESCSS_LATCH_SEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_LATCH_SEL"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_selectLatch1Mux",
+      "functionArgs": [
+        "base",
+        "muxSelectValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESCSS_LatchTrigger"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Set the Mux Select Value for Latch1.\n    //\n    HWREGH(base + ECAT_SS_O_ESCSS_LATCH_SEL) |=\n    (uint16_t)(((uint32_t)muxSelectValue << ECAT_SS_ESCSS_LATCH_SEL_LATCH1_SELECT_S) &\n     ECAT_SS_ESCSS_LATCH_SEL_LATCH1_SELECT_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Set the Mux Select Value for Latch1. // HWREGH(base + ECAT_SS_O_ESCSS_LATCH_SEL) |= (uint16_t)(((uint32_t)muxSelectValue << ECAT_SS_ESCSS_LATCH_SEL_LATCH1_SELECT_S) & ECAT_SS_ESCSS_LATCH_SEL_LATCH1_SELECT_M); }",
+      "registersUsed": [
+        "ESCSS_LATCH_SEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_LATCH_SEL"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_configure16BitAsyncAccessWaitState",
+      "functionArgs": [
+        "base",
+        "waitState"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Configure the Wait State Value.\n    //\n    HWREGH(base + ECAT_SS_O_ESCSS_ACCESS_CTRL) |=\n    ((waitState << ECAT_SS_ESCSS_ACCESS_CTRL_WAIT_STATES_S) &\n     ECAT_SS_ESCSS_ACCESS_CTRL_WAIT_STATES_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Configure the Wait State Value. // HWREGH(base + ECAT_SS_O_ESCSS_ACCESS_CTRL) |= ((waitState << ECAT_SS_ESCSS_ACCESS_CTRL_WAIT_STATES_S) & ECAT_SS_ESCSS_ACCESS_CTRL_WAIT_STATES_M); }",
+      "registersUsed": [
+        "ESCSS_ACCESS_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_ACCESS_CTRL"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enablePDIAccessTimeOut",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Enable timeout.\n    //\n    HWREGH(base + ECAT_SS_O_ESCSS_ACCESS_CTRL) |= (uint16_t)ECAT_SS_ESCSS_ACCESS_CTRL_EN_TIMEOUT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Enable timeout. // HWREGH(base + ECAT_SS_O_ESCSS_ACCESS_CTRL) |= (uint16_t)ECAT_SS_ESCSS_ACCESS_CTRL_EN_TIMEOUT; }",
+      "registersUsed": [
+        "ESCSS_ACCESS_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_ACCESS_CTRL"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disablePDIAccessTimeOut",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Disable Timeout.\n    //\n    HWREGH(base + ECAT_SS_O_ESCSS_ACCESS_CTRL) &= (~ECAT_SS_ESCSS_ACCESS_CTRL_EN_TIMEOUT);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Disable Timeout. // HWREGH(base + ECAT_SS_O_ESCSS_ACCESS_CTRL) &= (~ECAT_SS_ESCSS_ACCESS_CTRL_EN_TIMEOUT); }",
+      "registersUsed": [
+        "ESCSS_ACCESS_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_ACCESS_CTRL"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableDebugAccess",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Set the Bit for Debug Access.\n    //\n    HWREGH(base + ECAT_SS_O_ESCSS_ACCESS_CTRL) |=\n    (uint16_t)ECAT_SS_ESCSS_ACCESS_CTRL_ENABLE_DEBUG_ACCESS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Set the Bit for Debug Access. // HWREGH(base + ECAT_SS_O_ESCSS_ACCESS_CTRL) |= (uint16_t)ECAT_SS_ESCSS_ACCESS_CTRL_ENABLE_DEBUG_ACCESS; }",
+      "registersUsed": [
+        "ESCSS_ACCESS_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_ACCESS_CTRL"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableDebugAccess",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Reset the Bit for Debug Access.\n    //\n    HWREGH(base + ECAT_SS_O_ESCSS_ACCESS_CTRL) &=\n    ~ECAT_SS_ESCSS_ACCESS_CTRL_ENABLE_DEBUG_ACCESS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Reset the Bit for Debug Access. // HWREGH(base + ECAT_SS_O_ESCSS_ACCESS_CTRL) &= ~ECAT_SS_ESCSS_ACCESS_CTRL_ENABLE_DEBUG_ACCESS; }",
+      "registersUsed": [
+        "ESCSS_ACCESS_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_ACCESS_CTRL"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_readGPINData",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Return the GPIN Data Read from the register.\n    //\n    return(HWREG(base + ECAT_SS_O_ESCSS_GPIN_DAT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Return the GPIN Data Read from the register. // return(HWREG(base + ECAT_SS_O_ESCSS_GPIN_DAT)); }",
+      "registersUsed": [
+        "ESCSS_GPIN_DAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPIN_DAT"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_setGPINData",
+      "functionArgs": [
+        "base",
+        "pinValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Set the GPIN data register value.\n    //\n    HWREG(base + ECAT_SS_O_ESCSS_GPIN_DAT) |= pinValue;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Set the GPIN data register value. // HWREG(base + ECAT_SS_O_ESCSS_GPIN_DAT) |= pinValue; }",
+      "registersUsed": [
+        "ESCSS_GPIN_DAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPIN_DAT"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_resetGPINData",
+      "functionArgs": [
+        "base",
+        "pinValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Reset the GPIN data register value.\n    //\n    HWREG(base + ECAT_SS_O_ESCSS_GPIN_DAT) &= ~pinValue;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Reset the GPIN data register value. // HWREG(base + ECAT_SS_O_ESCSS_GPIN_DAT) &= ~pinValue; }",
+      "registersUsed": [
+        "ESCSS_GPIN_DAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPIN_DAT"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableGPIPipelinedRegCaptureOnEvent",
+      "functionArgs": [
+        "base",
+        "pipelineMask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Set the value for the GPIN Pipeline Select.\n    //\n    HWREG(base + ECAT_SS_O_ESCSS_GPIN_PIPE) |= pipelineMask;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Set the value for the GPIN Pipeline Select. // HWREG(base + ECAT_SS_O_ESCSS_GPIN_PIPE) |= pipelineMask; }",
+      "registersUsed": [
+        "ESCSS_GPIN_PIPE"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPIN_PIPE"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableGPIPipelinedRegCaptureOnEvent",
+      "functionArgs": [
+        "base",
+        "pipelineMask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Reset the value for the GPIN Pipeline Select.\n    //\n    HWREG(base + ECAT_SS_O_ESCSS_GPIN_PIPE) &= ~pipelineMask;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Reset the value for the GPIN Pipeline Select. // HWREG(base + ECAT_SS_O_ESCSS_GPIN_PIPE) &= ~pipelineMask; }",
+      "registersUsed": [
+        "ESCSS_GPIN_PIPE"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPIN_PIPE"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_readGPOUTData",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Return the GPOUT Data Read from the register.\n    //\n    return(HWREG(base + ECAT_SS_O_ESCSS_GPOUT_DAT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Return the GPOUT Data Read from the register. // return(HWREG(base + ECAT_SS_O_ESCSS_GPOUT_DAT)); }",
+      "registersUsed": [
+        "ESCSS_GPOUT_DAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPOUT_DAT"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableGPOUTPipelinedRegCaptureOnEvent",
+      "functionArgs": [
+        "base",
+        "pipelineMask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Set the GPOUT pipelined register value.\n    //\n    HWREG(base + ECAT_SS_O_ESCSS_GPOUT_PIPE) |= pipelineMask;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Set the GPOUT pipelined register value. // HWREG(base + ECAT_SS_O_ESCSS_GPOUT_PIPE) |= pipelineMask; }",
+      "registersUsed": [
+        "ESCSS_GPOUT_PIPE"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPOUT_PIPE"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableGPOUTPipelinedRegCaptureOnEvent",
+      "functionArgs": [
+        "base",
+        "pipelineMask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Reset the GPOUT pipelined register value.\n    //\n    HWREG(base + ECAT_SS_O_ESCSS_GPOUT_PIPE) &= ~pipelineMask;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isBaseValid(base)); // // Reset the GPOUT pipelined register value. // HWREG(base + ECAT_SS_O_ESCSS_GPOUT_PIPE) &= ~pipelineMask; }",
+      "registersUsed": [
+        "ESCSS_GPOUT_PIPE"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPOUT_PIPE"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_initMemory",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    //\n    // Trigger the memory initialization.\n    //\n    HWREGH(base + ECAT_SS_O_ESCSS_MEM_TEST) |= ECAT_SS_ESCSS_MEM_TEST_INITIATE_MEM_INIT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESCSS_isBaseValid(base)); // // Trigger the memory initialization. // HWREGH(base + ECAT_SS_O_ESCSS_MEM_TEST) |= ECAT_SS_ESCSS_MEM_TEST_INITIATE_MEM_INIT; }",
+      "registersUsed": [
+        "ESCSS_MEM_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MEM_TEST"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_getMemoryInitDoneStatusNonBlocking",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    bool memoryInitStatus;\n\n    //\n    // Get the memory init Status.\n    //\n    if((HWREG(base + ECAT_SS_O_ESCSS_MEM_TEST) & ECAT_SS_ESCSS_MEM_TEST_MEM_INIT_DONE) ==\n       ECAT_SS_ESCSS_MEM_TEST_MEM_INIT_DONE)\n    {\n        memoryInitStatus = (bool)true;\n    }\n    else\n    {\n        memoryInitStatus = (bool)false;\n    }\n\n    return(memoryInitStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESCSS_isBaseValid(base)); bool memoryInitStatus; // // Get the memory init Status. // if((HWREG(base + ECAT_SS_O_ESCSS_MEM_TEST) & ECAT_SS_ESCSS_MEM_TEST_MEM_INIT_DONE) == ECAT_SS_ESCSS_MEM_TEST_MEM_INIT_DONE) { memoryInitStatus = (bool)true; } else { memoryInitStatus = (bool)false; } return(memoryInitStatus); }",
+      "registersUsed": [
+        "ESCSS_MEM_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MEM_TEST"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_getMemoryInitDoneStatusBlocking",
+      "functionArgs": [
+        "base",
+        "loopCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    uint32_t count = 0U;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isBaseValid(base));\n\n    uint32_t apiStatus = ESCSS_API_FAIL;\n\n    while(count < loopCount)\n    {\n        //\n        // Get the memory init Status.\n        //\n        if((HWREG(base + ECAT_SS_O_ESCSS_MEM_TEST) & ECAT_SS_ESCSS_MEM_TEST_MEM_INIT_DONE) ==\n         ECAT_SS_ESCSS_MEM_TEST_MEM_INIT_DONE)\n        {\n            //\n            // Memory Init Successful.\n            //\n            apiStatus = ESCSS_API_SUCCESS;\n            break;\n        }\n    else\n        {\n            apiStatus = ESCSS_API_FAIL;\n        }\n\n        count++;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t count = 0U; // // Check the arguments. // ASSERT(ESCSS_isBaseValid(base)); uint32_t apiStatus = ESCSS_API_FAIL; while(count < loopCount) { // // Get the memory init Status. // if((HWREG(base + ECAT_SS_O_ESCSS_MEM_TEST) & ECAT_SS_ESCSS_MEM_TEST_MEM_INIT_DONE) == ECAT_SS_ESCSS_MEM_TEST_MEM_INIT_DONE) { // // Memory Init Successful. // apiStatus = ESCSS_API_SUCCESS; break; } else { apiStatus = ESCSS_API_FAIL; } count++; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_MEM_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MEM_TEST"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_isConfigurationLockEnabled",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    bool configStatus;\n\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    //\n    // Check if lock configuration is enabled.\n    //\n    if((HWREG(base + ECAT_SS_O_ESCSS_CONFIG_LOCK) & ECAT_SS_ESCSS_CONFIG_LOCK_LOCK_ENABLE) ==\n       ECAT_SS_ESCSS_CONFIG_LOCK_LOCK_ENABLE)\n    {\n        configStatus = (bool)true;\n    }\n    else\n    {\n        configStatus = (bool)false;\n    }\n\n    return(configStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ bool configStatus; // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isConfigBaseValid(base)); // // Check if lock configuration is enabled. // if((HWREG(base + ECAT_SS_O_ESCSS_CONFIG_LOCK) & ECAT_SS_ESCSS_CONFIG_LOCK_LOCK_ENABLE) == ECAT_SS_ESCSS_CONFIG_LOCK_LOCK_ENABLE) { configStatus = (bool)true; } else { configStatus = (bool)false; } return(configStatus); }",
+      "registersUsed": [
+        "ESCSS_CONFIG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_CONFIG_LOCK"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableLEDOptions",
+      "functionArgs": [
+        "base",
+        "ledSelectConfig"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n    ASSERT((ledSelectConfig & ~(ECAT_SS_ESCSS_LED_CONFIG_LINKACT0 |\n                                ECAT_SS_ESCSS_LED_CONFIG_LINKACT1 |\n                                ECAT_SS_ESCSS_LED_CONFIG_STATE |\n                                ECAT_SS_ESCSS_LED_CONFIG_ERR |\n                                ECAT_SS_ESCSS_LED_CONFIG_RUN)) == 0U);\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        //\n        // Set the LED Options.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_LED_CONFIG) |= ledSelectConfig;\n        apiStatus = ESCSS_API_SUCCESS;\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); ASSERT((ledSelectConfig & ~(ECAT_SS_ESCSS_LED_CONFIG_LINKACT0 | ECAT_SS_ESCSS_LED_CONFIG_LINKACT1 | ECAT_SS_ESCSS_LED_CONFIG_STATE | ECAT_SS_ESCSS_LED_CONFIG_ERR | ECAT_SS_ESCSS_LED_CONFIG_RUN)) == 0U); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { // // Set the LED Options. // HWREGH(base + ECAT_SS_O_ESCSS_LED_CONFIG) |= ledSelectConfig; apiStatus = ESCSS_API_SUCCESS; } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_LED_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_LED_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableLEDOptions",
+      "functionArgs": [
+        "base",
+        "ledSelectConfig"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n    ASSERT((ledSelectConfig & ~(ECAT_SS_ESCSS_LED_CONFIG_LINKACT0 |\n                                ECAT_SS_ESCSS_LED_CONFIG_LINKACT1 |\n                                ECAT_SS_ESCSS_LED_CONFIG_STATE |\n                                ECAT_SS_ESCSS_LED_CONFIG_ERR |\n                                ECAT_SS_ESCSS_LED_CONFIG_RUN)) == 0U);\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        //\n        // Disable the LED Options.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_LED_CONFIG) &= ~ledSelectConfig;\n        apiStatus = ESCSS_API_SUCCESS;\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check the arguments. // ASSERT(ESCSS_isConfigBaseValid(base)); ASSERT((ledSelectConfig & ~(ECAT_SS_ESCSS_LED_CONFIG_LINKACT0 | ECAT_SS_ESCSS_LED_CONFIG_LINKACT1 | ECAT_SS_ESCSS_LED_CONFIG_STATE | ECAT_SS_ESCSS_LED_CONFIG_ERR | ECAT_SS_ESCSS_LED_CONFIG_RUN)) == 0U); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { // // Disable the LED Options. // HWREGH(base + ECAT_SS_O_ESCSS_LED_CONFIG) &= ~ledSelectConfig; apiStatus = ESCSS_API_SUCCESS; } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_LED_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_LED_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableGPIN",
+      "functionArgs": [
+        "base",
+        "selectValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        //\n        // Mux Select the GPIN from the dedicated IO PAD.\n        //\n        HWREG(base + ECAT_SS_O_ESCSS_GPIN_SEL) |= selectValue;\n        apiStatus = ESCSS_API_SUCCESS;\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { // // Mux Select the GPIN from the dedicated IO PAD. // HWREG(base + ECAT_SS_O_ESCSS_GPIN_SEL) |= selectValue; apiStatus = ESCSS_API_SUCCESS; } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_GPIN_SEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPIN_SEL"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableGPIN",
+      "functionArgs": [
+        "base",
+        "selectValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        //\n        // Disables connection to GPIO PADMux.\n        //\n        HWREG(base + ECAT_SS_O_ESCSS_GPIN_SEL) &= ~selectValue;\n        apiStatus = ESCSS_API_SUCCESS;\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { // // Disables connection to GPIO PADMux. // HWREG(base + ECAT_SS_O_ESCSS_GPIN_SEL) &= ~selectValue; apiStatus = ESCSS_API_SUCCESS; } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_GPIN_SEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPIN_SEL"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enableGPOUT",
+      "functionArgs": [
+        "base",
+        "selectValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        //\n        // Mux Select the GPOUT.\n        //\n        HWREG(base + ECAT_SS_O_ESCSS_GPOUT_SEL) |= selectValue;\n        apiStatus = ESCSS_API_SUCCESS;\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { // // Mux Select the GPOUT. // HWREG(base + ECAT_SS_O_ESCSS_GPOUT_SEL) |= selectValue; apiStatus = ESCSS_API_SUCCESS; } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_GPOUT_SEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPOUT_SEL"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disableGPOUT",
+      "functionArgs": [
+        "base",
+        "selectValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        //\n        // Mux Select the GPOUT to disable.\n        //\n        HWREG(base + ECAT_SS_O_ESCSS_GPOUT_SEL) &= ~selectValue;\n        apiStatus = ESCSS_API_SUCCESS;\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { // // Mux Select the GPOUT to disable. // HWREG(base + ECAT_SS_O_ESCSS_GPOUT_SEL) &= ~selectValue; apiStatus = ESCSS_API_SUCCESS; } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_GPOUT_SEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_GPOUT_SEL"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_configureTX0ShiftForTxEnaAndTxData",
+      "functionArgs": [
+        "base",
+        "shiftValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        //\n        // Set the shift Value.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) |=\n        ((uint16_t)((uint32_t)shiftValue <<\n         ECAT_SS_ESCSS_MISC_CONFIG_TX0_SHIFT_CONFIG_S)\n         & ECAT_SS_ESCSS_MISC_CONFIG_TX0_SHIFT_CONFIG_M);\n\n        apiStatus = ESCSS_API_SUCCESS;\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { // // Set the shift Value. // HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) |= ((uint16_t)((uint32_t)shiftValue << ECAT_SS_ESCSS_MISC_CONFIG_TX0_SHIFT_CONFIG_S) & ECAT_SS_ESCSS_MISC_CONFIG_TX0_SHIFT_CONFIG_M); apiStatus = ESCSS_API_SUCCESS; } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_MISC_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MISC_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_configureTX1ShiftForTxEnaAndTxData",
+      "functionArgs": [
+        "base",
+        "shiftValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        //\n        // Set the shift Value.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) |=\n        (uint16_t)((shiftValue << ECAT_SS_ESCSS_MISC_CONFIG_TX1_SHIFT_CONFIG_S) &\n         ECAT_SS_ESCSS_MISC_CONFIG_TX1_SHIFT_CONFIG_M);\n\n        apiStatus = ESCSS_API_SUCCESS;\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { // // Set the shift Value. // HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) |= (uint16_t)((shiftValue << ECAT_SS_ESCSS_MISC_CONFIG_TX1_SHIFT_CONFIG_S) & ECAT_SS_ESCSS_MISC_CONFIG_TX1_SHIFT_CONFIG_M); apiStatus = ESCSS_API_SUCCESS; } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_MISC_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MISC_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_enablePDIEmulation",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        //\n        // Set the PDI Emulation.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) |= ECAT_SS_ESCSS_MISC_CONFIG_PDI_EMULATION;\n        apiStatus = ESCSS_API_SUCCESS;\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { // // Set the PDI Emulation. // HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) |= ECAT_SS_ESCSS_MISC_CONFIG_PDI_EMULATION; apiStatus = ESCSS_API_SUCCESS; } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_MISC_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MISC_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_disablePDIEmulation",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        //\n        // Set the PDI Emulation.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) &= (uint16_t)~ECAT_SS_ESCSS_MISC_CONFIG_PDI_EMULATION;\n        apiStatus = ESCSS_API_SUCCESS;\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { // // Set the PDI Emulation. // HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) &= (uint16_t)~ECAT_SS_ESCSS_MISC_CONFIG_PDI_EMULATION; apiStatus = ESCSS_API_SUCCESS; } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_MISC_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MISC_CONFIG"
+      ]
+    },
+    {
+      "file": "escss.h",
+      "peripheral": "escss",
+      "functionName": "ESCSS_configurePhyAddressOffset",
+      "functionArgs": [
+        "base",
+        "registerOffset"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint16_t apiStatus;\n\n    //\n    // Check if the passed parameter base is valid.\n    //\n    ASSERT(ESCSS_isConfigBaseValid(base));\n\n    if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE))\n    {\n        //\n        // Set the Physical Address Offset.\n        //\n        HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) |=\n        ((uint16_t)((uint32_t)registerOffset << ECAT_SS_ESCSS_MISC_CONFIG_PHY_ADDR_S)\n         & ECAT_SS_ESCSS_MISC_CONFIG_PHY_ADDR_M);\n        apiStatus = ESCSS_API_SUCCESS;\n    }\n    else\n    {\n        //\n        // Return API Fail if Configuration Lock is Enabled.\n        //\n        apiStatus = ESCSS_API_FAIL;\n    }\n\n    return(apiStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t apiStatus; // // Check if the passed parameter base is valid. // ASSERT(ESCSS_isConfigBaseValid(base)); if((bool)true != ESCSS_isConfigurationLockEnabled(ESC_SS_CONFIG_BASE)) { // // Set the Physical Address Offset. // HWREGH(base + ECAT_SS_O_ESCSS_MISC_CONFIG) |= ((uint16_t)((uint32_t)registerOffset << ECAT_SS_ESCSS_MISC_CONFIG_PHY_ADDR_S) & ECAT_SS_ESCSS_MISC_CONFIG_PHY_ADDR_M); apiStatus = ESCSS_API_SUCCESS; } else { // // Return API Fail if Configuration Lock is Enabled. // apiStatus = ESCSS_API_FAIL; } return(apiStatus); }",
+      "registersUsed": [
+        "ESCSS_MISC_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ESCSS_MISC_CONFIG"
+      ]
+    }
+  ]
+}

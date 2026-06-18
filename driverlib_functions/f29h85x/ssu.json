@@ -1,0 +1,405 @@
+{
+  "name": "ssu",
+  "functions": [
+    {
+      "file": "ssu.c",
+      "peripheral": "ssu",
+      "functionName": "SSU_setAccessProtection",
+      "functionArgs": [
+        "cpu",
+        "config[]",
+        "length"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID",
+        "SSU_APConfig",
+        "int"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    int i;\n    uint32_t apCfg;\n\n    for(i = 0; i < length; i++)\n    {\n        ASSERT(config[i].region < SSU_TOTAL_AP);\n\n        //\n        // Check if the last 12 bits of start address is 0,\n        // and last 12 bits of end address is 0xFFF\n        //\n        ASSERT(((config[i].startAddr & 0xFFFU) == 0U) &&\n               ((config[i].endAddr   & 0xFFFU) == 0xFFFU));\n\n        //\n        // If the region is not AP_EXT, check if the first 8 bits are same and\n        // and the reserved bits are 0\n        //\n        ASSERT((config[i].region <  SSU_TOTAL_AP_EXT) ||\n               (\n                 ((config[i].startAddr >> 24U) == (config[i].endAddr >> 24U)) &&\n                 ((config[i].startAddr & 0x8F000000U) == 0U) &&\n                 ((config[i].endAddr   & 0x8F000000U) == 0U)\n               ));\n\n\n        if(config[i].exelinkID != SSU_EXE_DISABLE)\n        {\n            //\n            // Enable execution from this region and set the LINKID\n            //\n            apCfg = SSU_AP_CFG_XE | ((uint32_t)config[i].exelinkID << SSU_AP_CFG_LINKID_S);\n        }\n        else\n        {\n            //\n            // Set the LINKID as 2. LINKID is not valid if execution is disabled from this region.\n            //\n            apCfg = 2U << SSU_AP_CFG_LINKID_S;\n        }\n\n        if(config[i].apiLinkID != SSU_API_DISABLE)\n        {\n            apCfg |= SSU_AP_CFG_APILINKE | ((uint32_t)config[i].apiLinkID << SSU_AP_CFG_APILINK_S);\n        }\n\n        HWREG(SSU_AP_CFG(cpu, config[i].region))    = apCfg;\n        HWREG(SSU_AP_ACCESS(cpu, config[i].region)) = config[i].linkAccess;\n\n\n        HWREG(SSU_AP_START(cpu, config[i].region)) = config[i].startAddr;\n        HWREG(SSU_AP_END(cpu, config[i].region))   = config[i].endAddr;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ int i; uint32_t apCfg; for(i = 0; i < length; i++) { ASSERT(config[i].region < SSU_TOTAL_AP); // // Check if the last 12 bits of start address is 0, // and last 12 bits of end address is 0xFFF // ASSERT(((config[i].startAddr & 0xFFFU) == 0U) && ((config[i].endAddr & 0xFFFU) == 0xFFFU)); // // If the region is not AP_EXT, check if the first 8 bits are same and // and the reserved bits are 0 // ASSERT((config[i].region < SSU_TOTAL_AP_EXT) || ( ((config[i].startAddr >> 24U) == (config[i].endAddr >> 24U)) && ((config[i].startAddr & 0x8F000000U) == 0U) && ((config[i].endAddr & 0x8F000000U) == 0U) )); if(config[i].exelinkID != SSU_EXE_DISABLE) { // // Enable execution from this region and set the LINKID // apCfg = SSU_AP_CFG_XE | ((uint32_t)config[i].exelinkID << SSU_AP_CFG_LINKID_S); } else { // // Set the LINKID as 2. LINKID is not valid if execution is disabled from this region. // apCfg = 2U << SSU_AP_CFG_LINKID_S; } if(config[i].apiLinkID != SSU_API_DISABLE) { apCfg |= SSU_AP_CFG_APILINKE | ((uint32_t)config[i].apiLinkID << SSU_AP_CFG_APILINK_S); } HWREG(SSU_AP_CFG(cpu, config[i].region)) = apCfg; HWREG(SSU_AP_ACCESS(cpu, config[i].region)) = config[i].linkAccess; HWREG(SSU_AP_START(cpu, config[i].region)) = config[i].startAddr; HWREG(SSU_AP_END(cpu, config[i].region)) = config[i].endAddr; } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_enableAccessProtection",
+      "functionArgs": [
+        "cpu",
+        "region"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID",
+        "uint32_t"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.SSU_enableAccessProtection\"))) static inline void",
+      "functionContent": "{\n    HWREG(SSU_AP_CFG(cpu, region)) &= ~(uint32_t)SSU_AP_CFG_APD;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(SSU_AP_CFG(cpu, region)) &= ~(uint32_t)SSU_AP_CFG_APD; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_disableAccessProtection",
+      "functionArgs": [
+        "cpu",
+        "region"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID",
+        "uint32_t"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.SSU_disableAccessProtection\"))) static inline void",
+      "functionContent": "{\n    HWREG(SSU_AP_CFG(cpu, region)) |= SSU_AP_CFG_APD;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(SSU_AP_CFG(cpu, region)) |= SSU_AP_CFG_APD; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_getSSUMode",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline SSU_Mode",
+      "functionContent": "{\n    return((SSU_Mode)HWREG(SSUGEN_BASE + SSU_O_MODE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((SSU_Mode)HWREG(SSUGEN_BASE + SSU_O_MODE)); }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_getCPUID",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline SSU_CPUID",
+      "functionContent": "{\n    return((SSU_CPUID)((HWREG(SSUGEN_BASE + SSU_O_CPUID) & SSU_CPUID_CPUID_M) - 1U));\n}\n",
+      "functionContentWithoutFormatting": "{ return((SSU_CPUID)((HWREG(SSUGEN_BASE + SSU_O_CPUID) & SSU_CPUID_CPUID_M) - 1U)); }",
+      "registersUsed": [
+        "CPUID"
+      ],
+      "registersUsedMatchingBifield": [
+        "CPUID"
+      ]
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_lockAPRegisters",
+      "functionArgs": [
+        "cpu",
+        "region"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID",
+        "uint32_t"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.SSU_lockAPRegisters\"))) static inline void",
+      "functionContent": "{\n    HWREG(SSU_AP_LOCK(cpu, region)) = 1U;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(SSU_AP_LOCK(cpu, region)) = 1U; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_unlockAPRegisters",
+      "functionArgs": [
+        "cpu",
+        "region"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID",
+        "uint32_t"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.SSU_unlockAPRegisters\"))) static inline void",
+      "functionContent": "{\n    HWREG(SSU_AP_LOCK(cpu, region)) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(SSU_AP_LOCK(cpu, region)) = 0U; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_commitAPRegisters",
+      "functionArgs": [
+        "cpu",
+        "region"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID",
+        "uint32_t"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.SSU_commitAPRegisters\"))) static inline void",
+      "functionContent": "{\n    HWREG(SSU_AP_COMMIT(cpu, region)) = 1U;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(SSU_AP_COMMIT(cpu, region)) = 1U; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_lockAllAPRegisters",
+      "functionArgs": [
+        "cpu"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.SSU_lockAllAPRegisters\"))) static inline void",
+      "functionContent": "{\n    uint32_t i;\n    for(i = 0U; i < SSU_TOTAL_AP; i++)\n    {\n        HWREG(SSU_AP_LOCK(cpu, i)) = 1U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t i; for(i = 0U; i < SSU_TOTAL_AP; i++) { HWREG(SSU_AP_LOCK(cpu, i)) = 1U; } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_commitAllAPRegisters",
+      "functionArgs": [
+        "cpu"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.SSU_commitAllAPRegisters\"))) static inline void",
+      "functionContent": "{\n    uint32_t i;\n    for(i = 0U; i < SSU_TOTAL_AP; i++)\n    {\n        HWREG(SSU_AP_COMMIT(cpu, i)) = 1U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t i; for(i = 0U; i < SSU_TOTAL_AP; i++) { HWREG(SSU_AP_COMMIT(cpu, i)) = 1U; } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_enableLink2APOverride",
+      "functionArgs": [
+        "cpu"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.SSU_enableLink2APOverride\"))) static inline void",
+      "functionContent": "{\n    HWREG(SSUGEN_BASE + SSU_O_LINK2_AP_OVERRIDE) |= 1U << (uint8_t)cpu;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(SSUGEN_BASE + SSU_O_LINK2_AP_OVERRIDE) |= 1U << (uint8_t)cpu; }",
+      "registersUsed": [
+        "LINK2_AP_OVERRIDE"
+      ],
+      "registersUsedMatchingBifield": [
+        "LINK2_AP_OVERRIDE"
+      ]
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_disableLink2APOverride",
+      "functionArgs": [
+        "cpu"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.SSU_disableLink2APOverride\"))) static inline void",
+      "functionContent": "{\n    HWREG(SSUGEN_BASE + SSU_O_LINK2_AP_OVERRIDE) &= ~(1U << (uint8_t)cpu);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(SSUGEN_BASE + SSU_O_LINK2_AP_OVERRIDE) &= ~(1U << (uint8_t)cpu); }",
+      "registersUsed": [
+        "LINK2_AP_OVERRIDE"
+      ],
+      "registersUsedMatchingBifield": [
+        "LINK2_AP_OVERRIDE"
+      ]
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_configBootAddress",
+      "functionArgs": [
+        "cpu",
+        "addr",
+        "link"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID",
+        "uint32_t",
+        "SSU_Link"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.SSU_configBootAddress\"))) static inline void",
+      "functionContent": "{\n    if(cpu == SSU_CPU2)\n    {\n        HWREG(SSUCPU2CFG_BASE + SSU_O_RST_VECT) = addr;\n        HWREG(SSUCPU2CFG_BASE + SSU_O_RST_LINK) = (uint32_t)link;\n    }\n    else if(cpu == SSU_CPU3)\n    {\n        HWREG(SSUCPU3CFG_BASE + SSU_O_RST_VECT) = addr;\n        HWREG(SSUCPU3CFG_BASE + SSU_O_RST_LINK) = (uint32_t)link;\n    }\n    else\n    {\n        //\n        // Invalid option\n        //\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ if(cpu == SSU_CPU2) { HWREG(SSUCPU2CFG_BASE + SSU_O_RST_VECT) = addr; HWREG(SSUCPU2CFG_BASE + SSU_O_RST_LINK) = (uint32_t)link; } else if(cpu == SSU_CPU3) { HWREG(SSUCPU3CFG_BASE + SSU_O_RST_VECT) = addr; HWREG(SSUCPU3CFG_BASE + SSU_O_RST_LINK) = (uint32_t)link; } else { // // Invalid option // } }",
+      "registersUsed": [
+        "RST_VECT",
+        "RST_LINK"
+      ],
+      "registersUsedMatchingBifield": [
+        "RST_VECT",
+        "RST_LINK"
+      ]
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_configNmiAddress",
+      "functionArgs": [
+        "cpu",
+        "addr",
+        "link"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID",
+        "uint32_t",
+        "SSU_Link"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.SSU_configNmiAddress\"))) static inline void",
+      "functionContent": "{\n    if(cpu == SSU_CPU2)\n    {\n        HWREG(SSUCPU2CFG_BASE + SSU_O_DEF_NMI_VECT) = addr;\n        HWREG(SSUCPU2CFG_BASE + SSU_O_DEF_NMI_LINK) = (uint32_t)link;\n    }\n    else if(cpu == SSU_CPU3)\n    {\n        HWREG(SSUCPU3CFG_BASE + SSU_O_DEF_NMI_VECT) = addr;\n        HWREG(SSUCPU3CFG_BASE + SSU_O_DEF_NMI_LINK) = (uint32_t)link;\n    }\n    else\n    {\n        //\n        // Invalid option\n        //\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ if(cpu == SSU_CPU2) { HWREG(SSUCPU2CFG_BASE + SSU_O_DEF_NMI_VECT) = addr; HWREG(SSUCPU2CFG_BASE + SSU_O_DEF_NMI_LINK) = (uint32_t)link; } else if(cpu == SSU_CPU3) { HWREG(SSUCPU3CFG_BASE + SSU_O_DEF_NMI_VECT) = addr; HWREG(SSUCPU3CFG_BASE + SSU_O_DEF_NMI_LINK) = (uint32_t)link; } else { // // Invalid option // } }",
+      "registersUsed": [
+        "DEF_NMI_VECT",
+        "DEF_NMI_LINK"
+      ],
+      "registersUsedMatchingBifield": [
+        "DEF_NMI_VECT",
+        "DEF_NMI_LINK"
+      ]
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_controlCPUReset",
+      "functionArgs": [
+        "cpu",
+        "control"
+      ],
+      "functionArgsTypes": [
+        "SSU_CPUID",
+        "SSU_CoreReset"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.SSU_controlCPUReset\"))) static inline void",
+      "functionContent": "{\n    if(cpu == SSU_CPU2)\n    {\n        HWREG(SSUCPU2CFG_BASE + SSU_O_CPU_RST_CTRL) = (uint32_t)control;\n    }\n    else if(cpu == SSU_CPU3)\n    {\n        HWREG(SSUCPU3CFG_BASE + SSU_O_CPU_RST_CTRL) = (uint32_t)control;\n    }\n    else\n    {\n        //\n        // Invalid option\n        //\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ if(cpu == SSU_CPU2) { HWREG(SSUCPU2CFG_BASE + SSU_O_CPU_RST_CTRL) = (uint32_t)control; } else if(cpu == SSU_CPU3) { HWREG(SSUCPU3CFG_BASE + SSU_O_CPU_RST_CTRL) = (uint32_t)control; } else { // // Invalid option // } }",
+      "registersUsed": [
+        "CPU_RST_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CPU_RST_CTRL"
+      ]
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_claimFlashSemaphore",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    bool status = false;\n\n    //\n    // Check if the semaphore is already assigned\n    //\n    if((HWREG(SSUGEN_BASE + SSU_O_FLSEMSTAT) & SSU_FLSEMSTAT_ASSIGNED) == 0U)\n    {\n        //\n        // Claim the semaphore\n        //\n        HWREG(SSUGEN_BASE + SSU_O_FLSEMREQ) = 1U;\n    }\n    //\n    // Check if the semaphore is assigned to the current CPU and LINK\n    //\n    if((HWREG(SSUGEN_BASE + SSU_O_FLSEMSTAT) & SSU_FLSEMSTAT_MATCH) != 0U)\n    {\n        status = true;\n    }\n    return(status);\n}\n",
+      "functionContentWithoutFormatting": "{ bool status = false; // // Check if the semaphore is already assigned // if((HWREG(SSUGEN_BASE + SSU_O_FLSEMSTAT) & SSU_FLSEMSTAT_ASSIGNED) == 0U) { // // Claim the semaphore // HWREG(SSUGEN_BASE + SSU_O_FLSEMREQ) = 1U; } // // Check if the semaphore is assigned to the current CPU and LINK // if((HWREG(SSUGEN_BASE + SSU_O_FLSEMSTAT) & SSU_FLSEMSTAT_MATCH) != 0U) { status = true; } return(status); }",
+      "registersUsed": [
+        "FLSEMSTAT",
+        "FLSEMREQ"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLSEMSTAT",
+        "FLSEMREQ"
+      ]
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_releaseFlashSemaphore",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    bool status = false;\n\n    //\n    // Check if the semaphore is already assigned to the current CPU and LINK\n    //\n    if((HWREG(SSUGEN_BASE + SSU_O_FLSEMSTAT) & SSU_FLSEMSTAT_MATCH) != 0U)\n    {\n        //\n        // Release the semaphore\n        //\n        HWREG(SSUGEN_BASE + SSU_O_FLSEMCLR) = 1U;\n        status = true;\n    }\n    if((HWREG(SSUGEN_BASE + SSU_O_FLSEMSTAT) & SSU_FLSEMSTAT_ASSIGNED) == 0U)\n    {\n        status = true;\n    }\n    return(status);\n}\n",
+      "functionContentWithoutFormatting": "{ bool status = false; // // Check if the semaphore is already assigned to the current CPU and LINK // if((HWREG(SSUGEN_BASE + SSU_O_FLSEMSTAT) & SSU_FLSEMSTAT_MATCH) != 0U) { // // Release the semaphore // HWREG(SSUGEN_BASE + SSU_O_FLSEMCLR) = 1U; status = true; } if((HWREG(SSUGEN_BASE + SSU_O_FLSEMSTAT) & SSU_FLSEMSTAT_ASSIGNED) == 0U) { status = true; } return(status); }",
+      "registersUsed": [
+        "FLSEMSTAT",
+        "FLSEMCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLSEMSTAT",
+        "FLSEMCLR"
+      ]
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_forceRAMOPEN",
+      "functionArgs": [
+        "wipeOnClear"
+      ],
+      "functionArgsTypes": [
+        "bool"
+      ],
+      "returnType": "__attribute__((section(\".text.link1\"))) static inline void",
+      "functionContent": "{\n    if(wipeOnClear)\n    {\n        HWREG(SSUCPU1CFG_BASE  + SSU_O_RAMOPENFRC) = SSU_RAMOPENFRC_SET_LINK1 |\n                                                     SSU_RAMOPENFRC_WIPE_ON_LINK1_CLR;\n    }\n    else\n    {\n        HWREG(SSUCPU1CFG_BASE  + SSU_O_RAMOPENFRC) = SSU_RAMOPENFRC_SET_LINK1;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ if(wipeOnClear) { HWREG(SSUCPU1CFG_BASE + SSU_O_RAMOPENFRC) = SSU_RAMOPENFRC_SET_LINK1 | SSU_RAMOPENFRC_WIPE_ON_LINK1_CLR; } else { HWREG(SSUCPU1CFG_BASE + SSU_O_RAMOPENFRC) = SSU_RAMOPENFRC_SET_LINK1; } }",
+      "registersUsed": [
+        "RAMOPENFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMOPENFRC"
+      ]
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_clearRAMOPEN",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link1\"))) static inline void",
+      "functionContent": "{\n    HWREG(SSUCPU1CFG_BASE  + SSU_O_RAMOPENCLR) = SSU_RAMOPENCLR_CLEAR_LINK1;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(SSUCPU1CFG_BASE + SSU_O_RAMOPENCLR) = SSU_RAMOPENCLR_CLEAR_LINK1; }",
+      "registersUsed": [
+        "RAMOPENCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMOPENCLR"
+      ]
+    },
+    {
+      "file": "ssu.h",
+      "peripheral": "ssu",
+      "functionName": "SSU_getRAMOPENStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link1\"))) static inline bool",
+      "functionContent": "{\n    return((HWREG(SSUCPU1CFG_BASE  + SSU_O_RAMOPENSTAT) & SSU_RAMOPENSTAT_LINK1_RAMOPENS) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ return((HWREG(SSUCPU1CFG_BASE + SSU_O_RAMOPENSTAT) & SSU_RAMOPENSTAT_LINK1_RAMOPENS) != 0U); }",
+      "registersUsed": [
+        "RAMOPENSTAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMOPENSTAT"
+      ]
+    }
+  ]
+}

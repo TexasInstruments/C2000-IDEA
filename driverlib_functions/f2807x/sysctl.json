@@ -1,0 +1,1851 @@
+{
+  "name": "sysctl",
+  "functions": [
+    {
+      "file": "sysctl.c",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_pollCpuTimer",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "SYSCTL_DELAY;   static void",
+      "functionContent": "{\n    //\n    // Delay for 1 ms while the XTAL powers up\n    //\n    // 2000 loops, 5 cycles per loop + 9 cycles overhead = 10009 cycles\n    //\n    SysCtl_delay(2000);\n\n    //\n    // Wait for cpu timer 2 to overflow\n    //\n    while(CPUTimer_getTimerOverflowStatus(CPUTIMER2_BASE) == false);\n    {\n        //\n        // If your application is stuck in this loop, please check if the\n        // input clock source is valid.\n        //\n    }\n\n    //\n    // Clear cpu timer 2 overflow flag\n    //\n    CPUTimer_clearOverflowFlag(CPUTIMER2_BASE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Delay for 1 ms while the XTAL powers up // // 2000 loops, 5 cycles per loop + 9 cycles overhead = 10009 cycles // SysCtl_delay(2000); // // Wait for cpu timer 2 to overflow // while(CPUTimer_getTimerOverflowStatus(CPUTIMER2_BASE) == false); { // // If your application is stuck in this loop, please check if the // input clock source is valid. // } // // Clear cpu timer 2 overflow flag // CPUTimer_clearOverflowFlag(CPUTIMER2_BASE); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "sysctl.c",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getClock",
+      "functionArgs": [
+        "clockInHz"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    uint32_t temp;\n    uint32_t oscSource;\n    uint32_t clockOut;\n\n    //\n    // Don't proceed if an MCD failure is detected.\n    //\n    if(SysCtl_isMCDClockFailureDetected())\n    {\n        //\n        // OSCCLKSRC2 failure detected. Returning the INTOSC1 rate. You need\n        // to handle the MCD and clear the failure.\n        //\n        clockOut = SYSCTL_DEFAULT_OSC_FREQ;\n    }\n    else\n    {\n        //\n        // If one of the internal oscillators is being used, start from the\n        // known default frequency.  Otherwise, use clockInHz parameter.\n        //\n        oscSource = HWREG(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &\n                    (uint32_t)SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M;\n\n        if((oscSource == (SYSCTL_OSCSRC_OSC2 >> SYSCTL_OSCSRC_S)) ||\n           (oscSource == (SYSCTL_OSCSRC_OSC1 >> SYSCTL_OSCSRC_S)))\n        {\n            clockOut = SYSCTL_DEFAULT_OSC_FREQ;\n        }\n        else\n        {\n            clockOut = clockInHz;\n        }\n\n        //\n        // If the PLL is enabled calculate its effect on the clock\n        //\n        if((HWREG(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &\n            (SYSCTL_SYSPLLCTL1_PLLEN | SYSCTL_SYSPLLCTL1_PLLCLKEN)) == 3U)\n        {\n            //\n            // Calculate portion from fractional multiplier\n            //\n            temp = (clockInHz * ((HWREG(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) &\n                                  SYSCTL_SYSPLLMULT_FMULT_M) >>\n                                 SYSCTL_SYSPLLMULT_FMULT_S)) / 4U;\n\n            //\n            // Calculate integer multiplier and fixed divide by 2\n            //\n            clockOut = clockOut * ((HWREG(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) &\n                                    SYSCTL_SYSPLLMULT_IMULT_M) >>\n                                   SYSCTL_SYSPLLMULT_IMULT_S);\n\n            //\n            // Add in fractional portion\n            //\n            clockOut += temp;\n        }\n\n        if((HWREG(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) &\n            SYSCTL_SYSCLKDIVSEL_PLLSYSCLKDIV_M) != 0U)\n        {\n            clockOut /= (2U * (HWREG(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) &\n                               SYSCTL_SYSCLKDIVSEL_PLLSYSCLKDIV_M));\n        }\n    }\n\n    return(clockOut);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t temp; uint32_t oscSource; uint32_t clockOut; // // Don't proceed if an MCD failure is detected. // if(SysCtl_isMCDClockFailureDetected()) { // // OSCCLKSRC2 failure detected. Returning the INTOSC1 rate. You need // to handle the MCD and clear the failure. // clockOut = SYSCTL_DEFAULT_OSC_FREQ; } else { // // If one of the internal oscillators is being used, start from the // known default frequency. Otherwise, use clockInHz parameter. // oscSource = HWREG(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) & (uint32_t)SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M; if((oscSource == (SYSCTL_OSCSRC_OSC2 >> SYSCTL_OSCSRC_S)) || (oscSource == (SYSCTL_OSCSRC_OSC1 >> SYSCTL_OSCSRC_S))) { clockOut = SYSCTL_DEFAULT_OSC_FREQ; } else { clockOut = clockInHz; } // // If the PLL is enabled calculate its effect on the clock // if((HWREG(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) & (SYSCTL_SYSPLLCTL1_PLLEN | SYSCTL_SYSPLLCTL1_PLLCLKEN)) == 3U) { // // Calculate portion from fractional multiplier // temp = (clockInHz * ((HWREG(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) & SYSCTL_SYSPLLMULT_FMULT_M) >> SYSCTL_SYSPLLMULT_FMULT_S)) / 4U; // // Calculate integer multiplier and fixed divide by 2 // clockOut = clockOut * ((HWREG(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) & SYSCTL_SYSPLLMULT_IMULT_M) >> SYSCTL_SYSPLLMULT_IMULT_S); // // Add in fractional portion // clockOut += temp; } if((HWREG(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) & SYSCTL_SYSCLKDIVSEL_PLLSYSCLKDIV_M) != 0U) { clockOut /= (2U * (HWREG(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) & SYSCTL_SYSCLKDIVSEL_PLLSYSCLKDIV_M)); } } return(clockOut); }",
+      "registersUsed": [
+        "CLKSRCCTL1",
+        "SYSPLLCTL1",
+        "SYSPLLMULT",
+        "SYSCLKDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKSRCCTL1",
+        "SYSPLLCTL1",
+        "SYSPLLMULT",
+        "SYSCLKDIVSEL"
+      ]
+    },
+    {
+      "file": "sysctl.c",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getAuxClock",
+      "functionArgs": [
+        "clockInHz"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    uint32_t temp;\n    uint32_t oscSource;\n    uint32_t clockOut;\n\n    oscSource = HWREG(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) &\n                (uint32_t)SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_M;\n\n    //\n    // If one of the internal oscillators is being used, start from the\n    // known default frequency.  Otherwise, use clockInHz parameter.\n    //\n    if(oscSource == (SYSCTL_AUXPLL_OSCSRC_OSC2 >> SYSCTL_OSCSRC_S))\n    {\n        //\n        // 10MHz Internal Clock\n        //\n        clockOut = SYSCTL_DEFAULT_OSC_FREQ;\n    }\n    else\n    {\n        clockOut = clockInHz;\n    }\n\n    //\n    // If the PLL is enabled calculate its effect on the clock\n    //\n    if((HWREG(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) &\n        (SYSCTL_AUXPLLCTL1_PLLEN | SYSCTL_AUXPLLCTL1_PLLCLKEN)) == 3U)\n    {\n        //\n        // Calculate portion from fractional multiplier\n        //\n        temp = (clockInHz * ((HWREG(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) &\n                              SYSCTL_AUXPLLMULT_FMULT_M) >>\n                             SYSCTL_AUXPLLMULT_FMULT_S)) / 4U;\n\n        //\n        // Calculate integer multiplier\n        //\n        clockOut = clockOut * ((HWREG(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) &\n                                SYSCTL_AUXPLLMULT_IMULT_M) >>\n                               SYSCTL_AUXPLLMULT_IMULT_S);\n\n        //\n        // Add in fractional portion\n        //\n        clockOut += temp;\n    }\n\n    clockOut /= (1U << (HWREG(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) &\n                        SYSCTL_AUXCLKDIVSEL_AUXPLLDIV_M));\n\n    return(clockOut);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t temp; uint32_t oscSource; uint32_t clockOut; oscSource = HWREG(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) & (uint32_t)SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_M; // // If one of the internal oscillators is being used, start from the // known default frequency. Otherwise, use clockInHz parameter. // if(oscSource == (SYSCTL_AUXPLL_OSCSRC_OSC2 >> SYSCTL_OSCSRC_S)) { // // 10MHz Internal Clock // clockOut = SYSCTL_DEFAULT_OSC_FREQ; } else { clockOut = clockInHz; } // // If the PLL is enabled calculate its effect on the clock // if((HWREG(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) & (SYSCTL_AUXPLLCTL1_PLLEN | SYSCTL_AUXPLLCTL1_PLLCLKEN)) == 3U) { // // Calculate portion from fractional multiplier // temp = (clockInHz * ((HWREG(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) & SYSCTL_AUXPLLMULT_FMULT_M) >> SYSCTL_AUXPLLMULT_FMULT_S)) / 4U; // // Calculate integer multiplier // clockOut = clockOut * ((HWREG(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) & SYSCTL_AUXPLLMULT_IMULT_M) >> SYSCTL_AUXPLLMULT_IMULT_S); // // Add in fractional portion // clockOut += temp; } clockOut /= (1U << (HWREG(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) & SYSCTL_AUXCLKDIVSEL_AUXPLLDIV_M)); return(clockOut); }",
+      "registersUsed": [
+        "CLKSRCCTL2",
+        "AUXPLLCTL1",
+        "AUXPLLMULT",
+        "AUXCLKDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKSRCCTL2",
+        "AUXPLLCTL1",
+        "AUXPLLMULT",
+        "AUXCLKDIVSEL"
+      ]
+    },
+    {
+      "file": "sysctl.c",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setClock",
+      "functionArgs": [
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    uint16_t divSel;\n    uint16_t iMult = 0U, fMult = 0U, pllMult = 0U, div;\n    bool status, sysclkInvalidFreq = true;\n    uint16_t i, tempSCSR, tempWDCR, tempWDWCR, intStatus;\n    uint16_t t1TCR, t1TPR, t1TPRH, t2TCR, t2TPR, t2TPRH, t2CLKCTL;\n    uint32_t t1PRD, t2PRD, ctr1;\n    float32_t sysclkToInClkError, mult;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT((config & SYSCTL_OSCSRC_M) != SYSCTL_OSCSRC_M); // 3 is not valid\n\n    //\n    // Don't proceed to the PLL initialization if an MCD failure is detected.\n    //\n    if(SysCtl_isMCDClockFailureDetected())\n    {\n        //\n        // OSCCLKSRC2 failure detected. Returning false. You'll need to clear\n        // the MCD error.\n        //\n        status = false;\n    }\n    else\n    {\n        //\n        // Configure oscillator source\n        //\n        SysCtl_selectOscSource(config & SYSCTL_OSCSRC_M);\n\n        //\n        // Bypass PLL\n        //\n        EALLOW;\n        HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &=\n            ~SYSCTL_SYSPLLCTL1_PLLCLKEN;\n        EDIS;\n\n        //\n        // Delay of at least 120 OSCCLK cycles required post PLL bypass\n        //\n        SysCtl_delay(23U);\n\n        //\n        // Configure PLL if enabled\n        //\n        EALLOW;\n        if((config & SYSCTL_PLL_ENABLE) == SYSCTL_PLL_ENABLE)\n        {\n            if((HWREGH(DEVCFG_BASE + SYSCTL_O_SYSDBGCTL) &\n                SYSCTL_SYSDBGCTL_BIT_0) != 0U)\n            {\n                //\n                // The user can optionally insert handler code here. This will\n                // only be executed if a watchdog reset occurred after a failed\n                // system PLL initialization. See your device user's guide for\n                // more information.\n                //\n                // If the application has a watchdog reset handler, this bit\n                // should be checked to determine if the watchdog reset\n                // occurred because of the PLL.\n                //\n                // No action here will continue with retrying the PLL as\n                // normal.\n                //\n            }\n\n            //\n            // Set dividers to /1\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) = 0U;\n\n            //\n            // Get the PLL multiplier settings from config\n            //\n            iMult |= (uint16_t)(config & SYSCTL_IMULT_M);\n            fMult |= (uint16_t)((config & SYSCTL_FMULT_M) >> SYSCTL_FMULT_S);\n            pllMult |= (iMult << SYSCTL_SYSPLLMULT_IMULT_S) |\n                       (fMult << SYSCTL_SYSPLLMULT_FMULT_S);\n\n            //\n            // Lock the PLL five times. This helps ensure a successful start.\n            // Five is the minimum recommended number. The user can increase\n            // this number according to allotted system initialization time.\n            //\n            for(i = 0U; i < 5U; i++)\n            {\n                //\n                // Turn off PLL\n                //\n                HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &=\n                    ~SYSCTL_SYSPLLCTL1_PLLEN;\n\n                asm(\" RPT #60 || NOP\");\n\n                //\n                // Write multiplier, which automatically turns on the PLL\n                //\n                HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) = pllMult;\n\n                //\n                // Wait for the SYSPLL lock counter\n                //\n                while((HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLSTS) &\n                       SYSCTL_SYSPLLSTS_LOCKS) == 0U)\n                {\n                    //\n                    // Consider to servicing the watchdog using\n                    // SysCtl_serviceWatchdog()\n                    //\n                }\n            }\n        }\n\n        //\n        // Configure Dividers. Set divider to produce slower output frequency\n        // to limit current increase.\n        //\n        divSel = (uint16_t)(config & SYSCTL_SYSDIV_M) >> SYSCTL_SYSDIV_S;\n\n        if(divSel != (126U / 2U))\n        {\n            HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) =\n                (HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) &\n                ~(uint16_t)SYSCTL_SYSCLKDIVSEL_PLLSYSCLKDIV_M) | (divSel + 1U);\n        }\n        else\n        {\n            HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) =\n                (HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) &\n                 ~(uint16_t)SYSCTL_SYSCLKDIVSEL_PLLSYSCLKDIV_M) | divSel;\n        }\n\n        //\n        //      *CAUTION*\n        // It is recommended to use the following watchdog code to monitor the\n        // PLLstartup sequence. If your application has already cleared the\n        // watchdog SCRS[WDOVERRIDE] bit this cannot be done. It is recommended\n        // not to clear this bit until after the PLL has been initiated.\n        //\n\n        //\n        // Backup User Watchdog\n        //\n        tempSCSR = HWREGH(WD_BASE + SYSCTL_O_SCSR);\n        tempWDCR = HWREGH(WD_BASE + SYSCTL_O_WDCR);\n        tempWDWCR = HWREGH(WD_BASE + SYSCTL_O_WDWCR);\n\n        //\n        // Disable windowed functionality, reset counter\n        //\n        HWREGH(WD_BASE + SYSCTL_O_WDWCR) = 0x0U;\n        SysCtl_serviceWatchdog();\n\n        //\n        // Disable global interrupts\n        //\n        intStatus = __disable_interrupts();\n\n        //\n        // Configure for watchdog reset and to run at max frequency\n        //\n        EALLOW;\n        HWREGH(WD_BASE + SYSCTL_O_SCSR) = 0x0U;\n        HWREGH(WD_BASE + SYSCTL_O_WDCR) = SYSCTL_WD_CHKBITS;\n\n        //\n        // This bit is reset only by power-on-reset (POR) and will not be\n        // cleared by a WD reset\n        //\n        HWREGH(DEVCFG_BASE + SYSCTL_O_SYSDBGCTL) |= SYSCTL_SYSDBGCTL_BIT_0;\n\n        //\n        // Enable PLLSYSCLK is fed from system PLL clock\n        //\n        HWREGH(CLKCFG_BASE +\n               SYSCTL_O_SYSPLLCTL1) |= SYSCTL_SYSPLLCTL1_PLLCLKEN;\n\n        EDIS;\n\n        //\n        // Delay to ensure system is clocking from PLL prior to clearing\n        // status bit\n        //\n        SysCtl_delay(3U);\n\n        //\n        // Slip Bit Monitor and SYSCLK Frequency Check using timers\n        // Re-lock routine for SLIP condition or if SYSCLK and CLKSRC timer\n        // counts are off by +/- 10%. At a minimum, SYSCLK check is performed.\n        // Re-lock attempt is carried out if SLIPS bit is set.\n        // This while loop is monitored by watchdog.\n        // In the event that the PLL does not successfully lock, the loop will\n        // be aborted by watchdog reset.\n        //\n        while(((config & SYSCTL_PLL_ENABLE) == SYSCTL_PLL_ENABLE) &&\n              (sysclkInvalidFreq == true))\n        {\n            EALLOW;\n\n            //\n            // Perform PLL re-lock only if SLIPS bit is set, otherwise monitor\n            // SYSCLK frequency with timers\n            //\n            if((HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLSTS) &\n                SYSCTL_SYSPLLSTS_SLIPS) == 1U)\n            {\n                //\n                // Bypass PLL\n                //\n                HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &=\n                    ~SYSCTL_SYSPLLCTL1_PLLCLKEN;\n\n                //\n                // Delay of at least 120 OSCCLK cycles required post PLL bypass\n                //\n                SysCtl_delay(23U);\n\n                //\n                // Turn off PLL\n                //\n                HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &=\n                    ~SYSCTL_SYSPLLCTL1_PLLEN;\n\n                SysCtl_delay(12U);\n\n                //\n                // Write multiplier, which automatically turns on the PLL\n                //\n                HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) |= pllMult;\n\n                //\n                // Wait for the SYSPLL lock counter\n                //\n                while((HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLSTS) &\n                        SYSCTL_SYSPLLSTS_LOCKS) == 0U)\n                {\n                    ;\n                }\n\n                //\n                // Enable PLLSYSCLK is fed from system PLL clock\n                //\n                HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) |=\n                    SYSCTL_SYSPLLCTL1_PLLCLKEN;\n\n                //\n                // Delay to ensure system is clocking from PLL prior to\n                // clearing status bit\n                //\n                SysCtl_delay(12U);\n            }\n\n            //\n            // Backup timer1 and timer2 settings\n            //\n            t1TCR = HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR);\n            t1PRD = HWREG(CPUTIMER1_BASE + CPUTIMER_O_PRD);\n            t1TPR = HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TPR);\n            t1TPRH = HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TPRH);\n            t2CLKCTL = HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL);\n            t2TCR = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR);\n            t2PRD = HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD);\n            t2TPR = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR);\n            t2TPRH = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH);\n\n            //\n            // Set up timers 1 and 2\n            // Configure timer1 to count SYSCLK cycles\n            //\n\n            //\n            // Stop timer 1\n            // Seed timer1 counter\n            // Set sysclock divider\n            // Reload timer with value in PRD\n            // Clear interrupt flag\n            // Enable interrupt\n            //\n            HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS;\n            HWREG(CPUTIMER1_BASE + CPUTIMER_O_PRD) = (uint32_t)TMR1SYSCLKCTR;\n            HWREG(CPUTIMER1_BASE + CPUTIMER_O_TPR) = 0U;\n            HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB;\n            HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIF;\n            HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIE;\n\n            //\n            // Configure timer2 to count Input clock cycles\n            //\n            switch (config & SYSCTL_OSCSRC_M)\n            {\n                case SYSCTL_OSCSRC_OSC1:\n                    //\n                    // Clk Src = INT_OSC1\n                    //\n                    HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) =\n                            (HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) &\n                             ~SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_M) | 1U;\n                    break;\n\n                case SYSCTL_OSCSRC_OSC2:\n                    //\n                    // Clk Src = INT_OSC2\n                    //\n                    HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) =\n                            (HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) &\n                             ~SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_M) | 2U;\n                    break;\n\n                case SYSCTL_OSCSRC_XTAL:\n                    //\n                    // Clk Src = XTAL\n                    //\n                    HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) =\n                            (HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) &\n                             ~SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_M) | 3U;\n                    break;\n\n                default:\n                    //\n                    // Do nothing. Not a valid clock source value.\n                    //\n                    break;\n            }\n\n            //\n            // Clear interrupt flag\n            // Enable interrupt\n            // Stop timer 2\n            // Seed timer2 counter\n            // Set sysclock divider\n            // Reload timer with value in PRD\n            //\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIF;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIE;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS;\n            HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD) = (uint32_t)TMR2INPCLKCTR;\n            HWREG(CPUTIMER2_BASE + CPUTIMER_O_TPR) = 0U;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB;\n\n            //\n            // Stop/Start timer counters\n            //\n\n            //\n            // Stop timer 1\n            // Stop timer 2\n            // Reload timer1 with value in PRD\n            // Reload timer2 with value in PRD\n            // Clear timer2 interrupt flag\n            // Start timer2\n            // Start timer1\n            //\n            HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS;\n            HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIF;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) &= ~CPUTIMER_TCR_TSS;\n            HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) &= ~CPUTIMER_TCR_TSS;\n\n            //\n            // Wait for Timers - Stop if either timer overflows\n            //\n            while(((HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) &\n                   CPUTIMER_TCR_TIF) == 0U)  &&\n                  ((HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) &\n                   CPUTIMER_TCR_TIF) == 0U))\n            {\n                ;\n            }\n\n            //\n            // Stop timer 1 and 2\n            //\n            HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS;\n\n            //\n            // Calculate elapsed counts on timer1\n            //\n            ctr1 = (uint32_t)TMR1SYSCLKCTR - HWREG(CPUTIMER1_BASE +\n                                                   CPUTIMER_O_TIM);\n\n            //\n            // Restore timer settings\n            //\n            HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) = t1TCR;\n            HWREG(CPUTIMER1_BASE + CPUTIMER_O_PRD) = t1PRD;\n            HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TPR) = t1TPR;\n            HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TPRH) = t1TPRH;\n            HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = t2CLKCTL;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) = t2TCR;\n            HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD) = t2PRD;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR) = t2TPR;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH) = t2TPRH;\n\n            //\n            // Calculate Clock Error:\n            // Error = (mult/div) - (timer1 count/timer2 count)\n            //\n            mult = (float32_t)iMult + ((float32_t)fMult / 4.0F);\n\n            if((HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) & 0x3FU) == 0U)\n            {\n                div = 1U;\n            }\n            else\n            {\n                div = (HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) &\n                       0x3FU) << 1;\n            }\n\n            sysclkToInClkError = (mult / (float32_t)div) -\n                                 ((float32_t)ctr1 / (float32_t)TMR2INPCLKCTR);\n\n            //\n            // sysclkInvalidFreq will be set to true if sysclkToInClkError is\n            // off by 10%\n            //\n            sysclkInvalidFreq = ((sysclkToInClkError > 0.10F) ||\n                                 (sysclkToInClkError < -0.10F));\n\n            EDIS;\n        }\n\n        //\n        // Clear bit\n        //\n        EALLOW;\n        HWREGH(DEVCFG_BASE + SYSCTL_O_SYSDBGCTL) &= ~SYSCTL_SYSDBGCTL_BIT_0;\n        EDIS;\n\n        //\n        // Restore user watchdog, first resetting counter\n        //\n        SysCtl_serviceWatchdog();\n\n        //\n        // Set the KEY bits and make sure not to set the WDOVERRIDE bit\n        //\n        EALLOW;\n        HWREGH(WD_BASE + SYSCTL_O_WDCR) = tempWDCR | SYSCTL_WD_CHKBITS;\n        HWREGH(WD_BASE + SYSCTL_O_WDWCR) = tempWDWCR;\n        HWREGH(WD_BASE + SYSCTL_O_SCSR) = tempSCSR & ~SYSCTL_SCSR_WDOVERRIDE;\n        EDIS;\n\n        //\n        // Restore state of ST1[INTM]. This was set by the\n        // __disable_interrupts() intrinsic previously.\n        //\n        if((intStatus & 0x1U) == 0U)\n        {\n            EINT;\n        }\n\n        //\n        // Restore state of ST1[DBGM]. This was set by the\n        // __disable_interrupts() intrinsic previously.\n        //\n        if((intStatus & 0x2U) == 0U)\n        {\n            SYSCTL_CLRC_DBGM;\n        }\n\n        //\n        // ~200 PLLSYSCLK delay to allow voltage regulator to stabilize prior\n        // to increasing entire system clock frequency.\n        //\n        SysCtl_delay(40U);\n\n        //\n        // Set the divider to user value\n        //\n        EALLOW;\n        HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) =\n            (HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) &\n             ~SYSCTL_SYSCLKDIVSEL_PLLSYSCLKDIV_M) | divSel;\n        SYSCTL_REGWRITE_DELAY;\n        EDIS;\n\n        status = true;\n    }\n\n    return(status);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t divSel; uint16_t iMult = 0U, fMult = 0U, pllMult = 0U, div; bool status, sysclkInvalidFreq = true; uint16_t i, tempSCSR, tempWDCR, tempWDWCR, intStatus; uint16_t t1TCR, t1TPR, t1TPRH, t2TCR, t2TPR, t2TPRH, t2CLKCTL; uint32_t t1PRD, t2PRD, ctr1; float32_t sysclkToInClkError, mult; // // Check the arguments. // ASSERT((config & SYSCTL_OSCSRC_M) != SYSCTL_OSCSRC_M); // 3 is not valid // // Don't proceed to the PLL initialization if an MCD failure is detected. // if(SysCtl_isMCDClockFailureDetected()) { // // OSCCLKSRC2 failure detected. Returning false. You'll need to clear // the MCD error. // status = false; } else { // // Configure oscillator source // SysCtl_selectOscSource(config & SYSCTL_OSCSRC_M); // // Bypass PLL // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &= ~SYSCTL_SYSPLLCTL1_PLLCLKEN; EDIS; // // Delay of at least 120 OSCCLK cycles required post PLL bypass // SysCtl_delay(23U); // // Configure PLL if enabled // EALLOW; if((config & SYSCTL_PLL_ENABLE) == SYSCTL_PLL_ENABLE) { if((HWREGH(DEVCFG_BASE + SYSCTL_O_SYSDBGCTL) & SYSCTL_SYSDBGCTL_BIT_0) != 0U) { // // The user can optionally insert handler code here. This will // only be executed if a watchdog reset occurred after a failed // system PLL initialization. See your device user's guide for // more information. // // If the application has a watchdog reset handler, this bit // should be checked to determine if the watchdog reset // occurred because of the PLL. // // No action here will continue with retrying the PLL as // normal. // } // // Set dividers to /1 // HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) = 0U; // // Get the PLL multiplier settings from config // iMult |= (uint16_t)(config & SYSCTL_IMULT_M); fMult |= (uint16_t)((config & SYSCTL_FMULT_M) >> SYSCTL_FMULT_S); pllMult |= (iMult << SYSCTL_SYSPLLMULT_IMULT_S) | (fMult << SYSCTL_SYSPLLMULT_FMULT_S); // // Lock the PLL five times. This helps ensure a successful start. // Five is the minimum recommended number. The user can increase // this number according to allotted system initialization time. // for(i = 0U; i < 5U; i++) { // // Turn off PLL // HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &= ~SYSCTL_SYSPLLCTL1_PLLEN; asm(\" RPT #60 || NOP\"); // // Write multiplier, which automatically turns on the PLL // HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) = pllMult; // // Wait for the SYSPLL lock counter // while((HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLSTS) & SYSCTL_SYSPLLSTS_LOCKS) == 0U) { // // Consider to servicing the watchdog using // SysCtl_serviceWatchdog() // } } } // // Configure Dividers. Set divider to produce slower output frequency // to limit current increase. // divSel = (uint16_t)(config & SYSCTL_SYSDIV_M) >> SYSCTL_SYSDIV_S; if(divSel != (126U / 2U)) { HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) = (HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) & ~(uint16_t)SYSCTL_SYSCLKDIVSEL_PLLSYSCLKDIV_M) | (divSel + 1U); } else { HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) = (HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) & ~(uint16_t)SYSCTL_SYSCLKDIVSEL_PLLSYSCLKDIV_M) | divSel; } // // *CAUTION* // It is recommended to use the following watchdog code to monitor the // PLLstartup sequence. If your application has already cleared the // watchdog SCRS[WDOVERRIDE] bit this cannot be done. It is recommended // not to clear this bit until after the PLL has been initiated. // // // Backup User Watchdog // tempSCSR = HWREGH(WD_BASE + SYSCTL_O_SCSR); tempWDCR = HWREGH(WD_BASE + SYSCTL_O_WDCR); tempWDWCR = HWREGH(WD_BASE + SYSCTL_O_WDWCR); // // Disable windowed functionality, reset counter // HWREGH(WD_BASE + SYSCTL_O_WDWCR) = 0x0U; SysCtl_serviceWatchdog(); // // Disable global interrupts // intStatus = __disable_interrupts(); // // Configure for watchdog reset and to run at max frequency // EALLOW; HWREGH(WD_BASE + SYSCTL_O_SCSR) = 0x0U; HWREGH(WD_BASE + SYSCTL_O_WDCR) = SYSCTL_WD_CHKBITS; // // This bit is reset only by power-on-reset (POR) and will not be // cleared by a WD reset // HWREGH(DEVCFG_BASE + SYSCTL_O_SYSDBGCTL) |= SYSCTL_SYSDBGCTL_BIT_0; // // Enable PLLSYSCLK is fed from system PLL clock // HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) |= SYSCTL_SYSPLLCTL1_PLLCLKEN; EDIS; // // Delay to ensure system is clocking from PLL prior to clearing // status bit // SysCtl_delay(3U); // // Slip Bit Monitor and SYSCLK Frequency Check using timers // Re-lock routine for SLIP condition or if SYSCLK and CLKSRC timer // counts are off by +/- 10%. At a minimum, SYSCLK check is performed. // Re-lock attempt is carried out if SLIPS bit is set. // This while loop is monitored by watchdog. // In the event that the PLL does not successfully lock, the loop will // be aborted by watchdog reset. // while(((config & SYSCTL_PLL_ENABLE) == SYSCTL_PLL_ENABLE) && (sysclkInvalidFreq == true)) { EALLOW; // // Perform PLL re-lock only if SLIPS bit is set, otherwise monitor // SYSCLK frequency with timers // if((HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLSTS) & SYSCTL_SYSPLLSTS_SLIPS) == 1U) { // // Bypass PLL // HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &= ~SYSCTL_SYSPLLCTL1_PLLCLKEN; // // Delay of at least 120 OSCCLK cycles required post PLL bypass // SysCtl_delay(23U); // // Turn off PLL // HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &= ~SYSCTL_SYSPLLCTL1_PLLEN; SysCtl_delay(12U); // // Write multiplier, which automatically turns on the PLL // HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLMULT) |= pllMult; // // Wait for the SYSPLL lock counter // while((HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLSTS) & SYSCTL_SYSPLLSTS_LOCKS) == 0U) { ; } // // Enable PLLSYSCLK is fed from system PLL clock // HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) |= SYSCTL_SYSPLLCTL1_PLLCLKEN; // // Delay to ensure system is clocking from PLL prior to // clearing status bit // SysCtl_delay(12U); } // // Backup timer1 and timer2 settings // t1TCR = HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR); t1PRD = HWREG(CPUTIMER1_BASE + CPUTIMER_O_PRD); t1TPR = HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TPR); t1TPRH = HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TPRH); t2CLKCTL = HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL); t2TCR = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR); t2PRD = HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD); t2TPR = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR); t2TPRH = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH); // // Set up timers 1 and 2 // Configure timer1 to count SYSCLK cycles // // // Stop timer 1 // Seed timer1 counter // Set sysclock divider // Reload timer with value in PRD // Clear interrupt flag // Enable interrupt // HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS; HWREG(CPUTIMER1_BASE + CPUTIMER_O_PRD) = (uint32_t)TMR1SYSCLKCTR; HWREG(CPUTIMER1_BASE + CPUTIMER_O_TPR) = 0U; HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB; HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIF; HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIE; // // Configure timer2 to count Input clock cycles // switch (config & SYSCTL_OSCSRC_M) { case SYSCTL_OSCSRC_OSC1: // // Clk Src = INT_OSC1 // HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = (HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) & ~SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_M) | 1U; break; case SYSCTL_OSCSRC_OSC2: // // Clk Src = INT_OSC2 // HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = (HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) & ~SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_M) | 2U; break; case SYSCTL_OSCSRC_XTAL: // // Clk Src = XTAL // HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = (HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) & ~SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_M) | 3U; break; default: // // Do nothing. Not a valid clock source value. // break; } // // Clear interrupt flag // Enable interrupt // Stop timer 2 // Seed timer2 counter // Set sysclock divider // Reload timer with value in PRD // HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIF; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIE; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS; HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD) = (uint32_t)TMR2INPCLKCTR; HWREG(CPUTIMER2_BASE + CPUTIMER_O_TPR) = 0U; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB; // // Stop/Start timer counters // // // Stop timer 1 // Stop timer 2 // Reload timer1 with value in PRD // Reload timer2 with value in PRD // Clear timer2 interrupt flag // Start timer2 // Start timer1 // HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS; HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIF; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) &= ~CPUTIMER_TCR_TSS; HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) &= ~CPUTIMER_TCR_TSS; // // Wait for Timers - Stop if either timer overflows // while(((HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) & CPUTIMER_TCR_TIF) == 0U) && ((HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) & CPUTIMER_TCR_TIF) == 0U)) { ; } // // Stop timer 1 and 2 // HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS; // // Calculate elapsed counts on timer1 // ctr1 = (uint32_t)TMR1SYSCLKCTR - HWREG(CPUTIMER1_BASE + CPUTIMER_O_TIM); // // Restore timer settings // HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TCR) = t1TCR; HWREG(CPUTIMER1_BASE + CPUTIMER_O_PRD) = t1PRD; HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TPR) = t1TPR; HWREGH(CPUTIMER1_BASE + CPUTIMER_O_TPRH) = t1TPRH; HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = t2CLKCTL; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) = t2TCR; HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD) = t2PRD; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR) = t2TPR; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH) = t2TPRH; // // Calculate Clock Error: // Error = (mult/div) - (timer1 count/timer2 count) // mult = (float32_t)iMult + ((float32_t)fMult / 4.0F); if((HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) & 0x3FU) == 0U) { div = 1U; } else { div = (HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) & 0x3FU) << 1; } sysclkToInClkError = (mult / (float32_t)div) - ((float32_t)ctr1 / (float32_t)TMR2INPCLKCTR); // // sysclkInvalidFreq will be set to true if sysclkToInClkError is // off by 10% // sysclkInvalidFreq = ((sysclkToInClkError > 0.10F) || (sysclkToInClkError < -0.10F)); EDIS; } // // Clear bit // EALLOW; HWREGH(DEVCFG_BASE + SYSCTL_O_SYSDBGCTL) &= ~SYSCTL_SYSDBGCTL_BIT_0; EDIS; // // Restore user watchdog, first resetting counter // SysCtl_serviceWatchdog(); // // Set the KEY bits and make sure not to set the WDOVERRIDE bit // EALLOW; HWREGH(WD_BASE + SYSCTL_O_WDCR) = tempWDCR | SYSCTL_WD_CHKBITS; HWREGH(WD_BASE + SYSCTL_O_WDWCR) = tempWDWCR; HWREGH(WD_BASE + SYSCTL_O_SCSR) = tempSCSR & ~SYSCTL_SCSR_WDOVERRIDE; EDIS; // // Restore state of ST1[INTM]. This was set by the // __disable_interrupts() intrinsic previously. // if((intStatus & 0x1U) == 0U) { EINT; } // // Restore state of ST1[DBGM]. This was set by the // __disable_interrupts() intrinsic previously. // if((intStatus & 0x2U) == 0U) { SYSCTL_CLRC_DBGM; } // // ~200 PLLSYSCLK delay to allow voltage regulator to stabilize prior // to increasing entire system clock frequency. // SysCtl_delay(40U); // // Set the divider to user value // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) = (HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) & ~SYSCTL_SYSCLKDIVSEL_PLLSYSCLKDIV_M) | divSel; SYSCTL_REGWRITE_DELAY; EDIS; status = true; } return(status); }",
+      "registersUsed": [
+        "TIM",
+        "PRD",
+        "TCR",
+        "TPR",
+        "TPRH",
+        "SYSDBGCTL",
+        "SYSPLLCTL1",
+        "SYSPLLMULT",
+        "SYSPLLSTS",
+        "SYSCLKDIVSEL",
+        "TMR2CLKCTL",
+        "SCSR",
+        "WDCR",
+        "WDWCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TIM",
+        "PRD",
+        "TCR",
+        "TPR",
+        "TPRH",
+        "SYSDBGCTL",
+        "SYSPLLCTL1",
+        "SYSPLLMULT",
+        "SYSPLLSTS",
+        "SYSCLKDIVSEL",
+        "TMR2CLKCTL",
+        "SCSR",
+        "WDCR",
+        "WDWCR"
+      ]
+    },
+    {
+      "file": "sysctl.c",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setAuxClock",
+      "functionArgs": [
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t pllMult = 0U;\n    uint16_t counter = 0U, started = 0U, attempts = 0U;\n    uint16_t mult;\n    uint16_t i, t2TCR, t2TPR, t2TPRH, t2CLKCTL;\n    uint32_t t2PRD;\n\n    //\n    // Check the arguments\n    //\n    ASSERT((config & SYSCTL_OSCSRC_M) != SYSCTL_OSCSRC_M); // 3 is not valid\n\n    //\n    // Bypass PLL\n    //\n    EALLOW;\n    HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) &= ~SYSCTL_AUXPLLCTL1_PLLCLKEN;\n    EDIS;\n\n    //\n    // Delay of at least 120 OSCCLK cycles required post PLL bypass\n    //\n    SysCtl_delay(23U);\n\n    //\n    // Configure oscillator source\n    //\n    SysCtl_selectOscSourceAuxPLL(config & SYSCTL_OSCSRC_M);\n\n    //\n    // Get the PLL multiplier settings from config\n    //\n    pllMult |= (uint16_t)((config & SYSCTL_IMULT_M) <<\n                          SYSCTL_AUXPLLMULT_IMULT_S);\n    pllMult |= (uint16_t)(((config & SYSCTL_FMULT_M) >> SYSCTL_FMULT_S) <<\n                          SYSCTL_AUXPLLMULT_FMULT_S);\n\n    //\n    // Get the PLL multipliers currently programmed\n    //\n    mult  = (uint16_t)((HWREG(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) &\n                        (uint32_t)SYSCTL_AUXPLLMULT_IMULT_M) >>\n                       (uint32_t)SYSCTL_AUXPLLMULT_IMULT_S);\n    mult |= (uint16_t)(HWREG(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) &\n                             SYSCTL_AUXPLLMULT_FMULT_M);\n\n    //\n    // Lock PLL only if the multipliers need update\n    //\n    if(mult !=  pllMult)\n    {\n\n        //\n        // Configure PLL if enabled\n        //\n        if((config & SYSCTL_AUXPLL_ENABLE) == SYSCTL_AUXPLL_ENABLE)\n        {\n            //\n            // Backup Timer 2 settings\n            //\n            t2CLKCTL = HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL);\n            t2TCR = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR);\n            t2PRD = HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD);\n            t2TPR = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR);\n            t2TPRH = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH);\n\n            //\n            // Configure Timer 2 for AUXPLL as source in known configuration\n            // - Clock source to AUXPLL\n            // - Clock divider to divide by 1\n            // - Small period to detect overflow\n            // - Interrupt disabled\n            //\n            EALLOW;\n            HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = 6U;\n\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS;\n\n            HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD) = 10U;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR) = 0U;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH) = 0U;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) &= ~CPUTIMER_TCR_TIE;\n\n            //\n            // Set AUX Divide by 8 to ensure that AUXPLLCLK <= SYSCLK / 2\n            // while using Timer 2\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) = 0x3U;\n            SYSCTL_REGWRITE_DELAY;\n            EDIS;\n\n            //\n            // Lock the PLL up to five times.\n            //CPU Timer 2 will monitor a successful\n            // lock and break out of the loop earlier if detected.\n            //\n            while((counter < 5U) && (started == 0U))\n            {\n                EALLOW;\n\n                //\n                // Turn off AUXPLL and delay for it to power down.\n                //\n                HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) &=\n                    ~SYSCTL_AUXPLLCTL1_PLLEN;\n                SysCtl_delay(3U);\n\n                //\n                // Set integer and fractional multiplier, which automatically\n                // turns on the PLL\n                //\n                HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) |= pllMult;\n                SYSCTL_REGWRITE_DELAY;\n\n                //\n                // Enable AUXPLL\n                //\n                HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) |=\n                    SYSCTL_AUXPLLCTL1_PLLEN;\n                EDIS;\n\n                //\n                // Wait for the AUXPLL lock counter\n                //\n\n                while((HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLSTS) &\n                       SYSCTL_AUXPLLSTS_LOCKS) != 1U)\n                {\n                    //\n                    // Consider to servicing the watchdog using\n                    // SysCtl_serviceWatchdog()\n                    //\n                }\n\n\n                //\n                // Enable AUXPLLCLK to be fed from AUXPLL\n                //\n                EALLOW;\n                HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) |=\n                    SYSCTL_AUXPLLCTL1_PLLCLKEN;\n                SysCtl_delay(3U);\n\n                //\n                // CPU Timer 2 will now be setup to be clocked from AUXPLLCLK.\n                // This is used to test that the PLL has successfully started.\n                //\n                // Reload and start the timer\n                //\n                HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB;\n                HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) &= ~CPUTIMER_TCR_TSS;\n\n                //\n                // Check to see timer is counting properly\n                //\n                for(i = 0U; i < 1000U; i++)\n                {\n                    //\n                    // Check overflow flag\n                    //\n                    if((HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) &\n                        CPUTIMER_TCR_TIF) != 0U)\n                    {\n                        //\n                        // Clear overflow flag\n                        //\n                        HWREGH(CPUTIMER2_BASE +\n                               CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIF;\n\n                        //\n                        // Set flag to indicate PLL started and break out of\n                        // for-loop\n                        //\n                        started = 1U;\n                        break;\n                    }\n                }\n\n                //\n                // Stop timer\n                //\n                HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS;\n                counter++;\n                EDIS;\n            }\n\n            if(started == 0U)\n            {\n                //\n                // AUX PLL may not have started. Reset multiplier to 0 (bypass\n                // PLL).\n                //\n                EALLOW;\n                HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) = 0U;\n                EDIS;\n\n                //\n                // The user should put some handler code here based on how\n                // this condition should be handled in their application.\n                //\n                ESTOP0;\n            }\n\n            //\n            // Restore Timer 2 configuration\n            //\n            EALLOW;\n            HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = t2CLKCTL;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) = t2TCR;\n            HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD) = t2PRD;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR) = t2TPR;\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH) = t2TPRH;\n\n            //\n            // Reload period value\n            //\n            HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB;\n            EDIS;\n        }\n    }\n    else\n    {\n        //\n        // Enable AUXPLLCLK to be fed from AUXPLL\n        //\n        EALLOW;\n        HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) |= SYSCTL_AUXPLLCTL1_PLLCLKEN;\n        SysCtl_delay(3U);\n        EDIS;\n    }\n\n    //\n    // Slip Bit Monitor\n    // Re-lock routine for SLIP condition\n    //\n    while(((HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLSTS) &\n            SYSCTL_AUXPLLSTS_SLIPS) != 0U) && (attempts < 10U) &&\n          ((config & SYSCTL_AUXPLL_ENABLE) == SYSCTL_AUXPLL_ENABLE))\n    {\n        EALLOW;\n\n        //\n        // Bypass AUXPLL\n        //\n        HWREGH(CLKCFG_BASE +\n               SYSCTL_O_AUXPLLCTL1) &= ~SYSCTL_AUXPLLCTL1_PLLCLKEN;\n\n        //\n        // Delay of at least 120 OSCCLK cycles required post PLL bypass\n        //\n        SysCtl_delay(23U);\n\n        //\n        // Turn off AUXPLL\n        //\n        HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) &= ~SYSCTL_AUXPLLCTL1_PLLEN;\n        SysCtl_delay(3U);\n\n        //\n        // Set integer and fractional multiplier, which automatically turns\n        // on the PLL\n        //\n        HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) |= pllMult;\n\n        //\n        // Enable AUXPLL\n        //\n        HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) |= SYSCTL_AUXPLLCTL1_PLLEN;\n\n        //\n        // Wait for the AUXPLL lock counter\n        //\n        while((HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLSTS) &\n               SYSCTL_AUXPLLSTS_LOCKS) != 1U)\n        {\n            //\n            // Consider to servicing the watchdog using\n            // SysCtl_serviceWatchdog()\n            //\n        }\n\n        //\n        // Enable AUXPLLCLK to be fed from AUXPLL\n        //\n        HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) |= SYSCTL_AUXPLLCTL1_PLLCLKEN;\n\n        SysCtl_delay(3U);\n\n        attempts++;\n\n        EDIS;\n    }\n\n    //\n    // Set divider to desired value\n    //\n    EALLOW;\n    HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) =\n        (uint16_t)(config & SYSCTL_SYSDIV_M) >> SYSCTL_SYSDIV_S;\n    SYSCTL_REGWRITE_DELAY;\n    EDIS;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t pllMult = 0U; uint16_t counter = 0U, started = 0U, attempts = 0U; uint16_t mult; uint16_t i, t2TCR, t2TPR, t2TPRH, t2CLKCTL; uint32_t t2PRD; // // Check the arguments // ASSERT((config & SYSCTL_OSCSRC_M) != SYSCTL_OSCSRC_M); // 3 is not valid // // Bypass PLL // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) &= ~SYSCTL_AUXPLLCTL1_PLLCLKEN; EDIS; // // Delay of at least 120 OSCCLK cycles required post PLL bypass // SysCtl_delay(23U); // // Configure oscillator source // SysCtl_selectOscSourceAuxPLL(config & SYSCTL_OSCSRC_M); // // Get the PLL multiplier settings from config // pllMult |= (uint16_t)((config & SYSCTL_IMULT_M) << SYSCTL_AUXPLLMULT_IMULT_S); pllMult |= (uint16_t)(((config & SYSCTL_FMULT_M) >> SYSCTL_FMULT_S) << SYSCTL_AUXPLLMULT_FMULT_S); // // Get the PLL multipliers currently programmed // mult = (uint16_t)((HWREG(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) & (uint32_t)SYSCTL_AUXPLLMULT_IMULT_M) >> (uint32_t)SYSCTL_AUXPLLMULT_IMULT_S); mult |= (uint16_t)(HWREG(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) & SYSCTL_AUXPLLMULT_FMULT_M); // // Lock PLL only if the multipliers need update // if(mult != pllMult) { // // Configure PLL if enabled // if((config & SYSCTL_AUXPLL_ENABLE) == SYSCTL_AUXPLL_ENABLE) { // // Backup Timer 2 settings // t2CLKCTL = HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL); t2TCR = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR); t2PRD = HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD); t2TPR = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR); t2TPRH = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH); // // Configure Timer 2 for AUXPLL as source in known configuration // - Clock source to AUXPLL // - Clock divider to divide by 1 // - Small period to detect overflow // - Interrupt disabled // EALLOW; HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = 6U; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS; HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD) = 10U; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR) = 0U; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH) = 0U; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) &= ~CPUTIMER_TCR_TIE; // // Set AUX Divide by 8 to ensure that AUXPLLCLK <= SYSCLK / 2 // while using Timer 2 // HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) = 0x3U; SYSCTL_REGWRITE_DELAY; EDIS; // // Lock the PLL up to five times. //CPU Timer 2 will monitor a successful // lock and break out of the loop earlier if detected. // while((counter < 5U) && (started == 0U)) { EALLOW; // // Turn off AUXPLL and delay for it to power down. // HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) &= ~SYSCTL_AUXPLLCTL1_PLLEN; SysCtl_delay(3U); // // Set integer and fractional multiplier, which automatically // turns on the PLL // HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) |= pllMult; SYSCTL_REGWRITE_DELAY; // // Enable AUXPLL // HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) |= SYSCTL_AUXPLLCTL1_PLLEN; EDIS; // // Wait for the AUXPLL lock counter // while((HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLSTS) & SYSCTL_AUXPLLSTS_LOCKS) != 1U) { // // Consider to servicing the watchdog using // SysCtl_serviceWatchdog() // } // // Enable AUXPLLCLK to be fed from AUXPLL // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) |= SYSCTL_AUXPLLCTL1_PLLCLKEN; SysCtl_delay(3U); // // CPU Timer 2 will now be setup to be clocked from AUXPLLCLK. // This is used to test that the PLL has successfully started. // // Reload and start the timer // HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) &= ~CPUTIMER_TCR_TSS; // // Check to see timer is counting properly // for(i = 0U; i < 1000U; i++) { // // Check overflow flag // if((HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) & CPUTIMER_TCR_TIF) != 0U) { // // Clear overflow flag // HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIF; // // Set flag to indicate PLL started and break out of // for-loop // started = 1U; break; } } // // Stop timer // HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TSS; counter++; EDIS; } if(started == 0U) { // // AUX PLL may not have started. Reset multiplier to 0 (bypass // PLL). // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) = 0U; EDIS; // // The user should put some handler code here based on how // this condition should be handled in their application. // ESTOP0; } // // Restore Timer 2 configuration // EALLOW; HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = t2CLKCTL; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) = t2TCR; HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD) = t2PRD; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR) = t2TPR; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH) = t2TPRH; // // Reload period value // HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB; EDIS; } } else { // // Enable AUXPLLCLK to be fed from AUXPLL // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) |= SYSCTL_AUXPLLCTL1_PLLCLKEN; SysCtl_delay(3U); EDIS; } // // Slip Bit Monitor // Re-lock routine for SLIP condition // while(((HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLSTS) & SYSCTL_AUXPLLSTS_SLIPS) != 0U) && (attempts < 10U) && ((config & SYSCTL_AUXPLL_ENABLE) == SYSCTL_AUXPLL_ENABLE)) { EALLOW; // // Bypass AUXPLL // HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) &= ~SYSCTL_AUXPLLCTL1_PLLCLKEN; // // Delay of at least 120 OSCCLK cycles required post PLL bypass // SysCtl_delay(23U); // // Turn off AUXPLL // HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) &= ~SYSCTL_AUXPLLCTL1_PLLEN; SysCtl_delay(3U); // // Set integer and fractional multiplier, which automatically turns // on the PLL // HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLMULT) |= pllMult; // // Enable AUXPLL // HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) |= SYSCTL_AUXPLLCTL1_PLLEN; // // Wait for the AUXPLL lock counter // while((HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLSTS) & SYSCTL_AUXPLLSTS_LOCKS) != 1U) { // // Consider to servicing the watchdog using // SysCtl_serviceWatchdog() // } // // Enable AUXPLLCLK to be fed from AUXPLL // HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) |= SYSCTL_AUXPLLCTL1_PLLCLKEN; SysCtl_delay(3U); attempts++; EDIS; } // // Set divider to desired value // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) = (uint16_t)(config & SYSCTL_SYSDIV_M) >> SYSCTL_SYSDIV_S; SYSCTL_REGWRITE_DELAY; EDIS; }",
+      "registersUsed": [
+        "PRD",
+        "TCR",
+        "TPR",
+        "TPRH",
+        "AUXPLLCTL1",
+        "AUXPLLMULT",
+        "AUXPLLSTS",
+        "AUXCLKDIVSEL",
+        "TMR2CLKCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PRD",
+        "TCR",
+        "TPR",
+        "TPRH",
+        "AUXPLLCTL1",
+        "AUXPLLMULT",
+        "AUXPLLSTS",
+        "AUXCLKDIVSEL",
+        "TMR2CLKCTL"
+      ]
+    },
+    {
+      "file": "sysctl.c",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_selectXTAL",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t t2TCR, t2TPR, t2TPRH, t2CLKCTL;\n    uint32_t t2PRD;\n\n    //\n    // Backup CPU timer2 settings\n    //\n    t2CLKCTL = HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL);\n    t2TCR = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR);\n    t2PRD = HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD);\n    t2TPR = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR);\n    t2TPRH = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH);\n\n    //\n    // Backup AUX clock settings\n    //\n    uint16_t clksrcctl2 = HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2);\n    uint16_t auxpllctl1 = HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1);\n    uint16_t auxclkdivsel = HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL);\n\n    //\n    // Set AUX clock source to XTAL, bypass mode.\n    // AUXCLK is used as the CPUTimer Clock source. SYSCLK frequency must be\n    // atleast twice the frequency of AUXCLK. SYSCLK = INTOSC2(10MHz)\n    // Set the AUX divider to 8. The above condition will be met for XTAL\n    // frequencies up to 40MHz\n    //\n    EALLOW;\n    HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) =\n            (HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) &\n             ~(SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_M)) |\n            (1U << SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_S);\n    HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) = 0x0U;\n    HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) = SYSCTL_AUXPLLCLK_DIV_8;\n    SYSCTL_REGWRITE_DELAY;\n\n\n    //\n    // Disable cpu timer 2 interrupt\n    //\n    CPUTimer_disableInterrupt(CPUTIMER2_BASE);\n\n    //\n    // Stop cpu timer 2 if running\n    //\n    CPUTimer_stopTimer(CPUTIMER2_BASE);\n\n    //\n    // Initialize cpu timer 2 period\n    //\n    CPUTimer_setPeriod(CPUTIMER2_BASE, XTAL_CPUTIMER_PERIOD);\n\n    //\n    // Set cpu timer 2 clock source to XTAL\n    //\n    CPUTimer_selectClockSource(CPUTIMER2_BASE, CPUTIMER_CLOCK_SOURCE_AUX,\n                               CPUTIMER_CLOCK_PRESCALER_1);\n\n    //\n    // Clear cpu timer 2 overflow flag\n    //\n    CPUTimer_clearOverflowFlag(CPUTIMER2_BASE);\n\n    //\n    // Start cpu timer 2\n    //\n    CPUTimer_startTimer(CPUTIMER2_BASE);\n\n    EALLOW;\n    //\n    // Turn on XTAL\n    //\n    HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &= ~SYSCTL_CLKSRCCTL1_XTALOFF;\n    EDIS;\n\n    //\n    // Wait for the X1 clock to overflow cpu timer 2\n    //\n    SysCtl_pollCpuTimer();\n\n    //\n    // Select XTAL as the oscillator source\n    //\n    EALLOW;\n    HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) =\n    ((HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &\n      (~SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M)) |\n     (SYSCTL_OSCSRC_XTAL >> SYSCTL_OSCSRC_S));\n    EDIS;\n\n    //\n    // If a missing clock failure was detected, try waiting for the cpu timer 2\n    // to overflow again.\n    //\n    while(SysCtl_isMCDClockFailureDetected())\n    {\n        //\n        // Clear the MCD failure\n        //\n        SysCtl_resetMCD();\n\n        //\n        // Wait for the X1 clock to overflow cpu timer 2\n        //\n        SysCtl_pollCpuTimer();\n\n        //\n        // Select XTAL as the oscillator source\n        //\n        EALLOW;\n        HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) =\n        ((HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &\n          (~SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M)) |\n         (SYSCTL_OSCSRC_XTAL >> SYSCTL_OSCSRC_S));\n        EDIS;\n    }\n\n    //\n    // Stop cpu timer 2\n    //\n    CPUTimer_stopTimer(CPUTIMER2_BASE);\n\n    //\n    // Restore Timer 2 configuration\n    //\n    EALLOW;\n    HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = t2CLKCTL;\n    HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) = t2TCR;\n    HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD) = t2PRD;\n    HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR) = t2TPR;\n    HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH) = t2TPRH;\n    HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB;\n\n    //\n    // Restore AUX clock settings\n    //\n    HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) = clksrcctl2;\n    HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) = auxpllctl1;\n    HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) = auxclkdivsel;\n    SYSCTL_REGWRITE_DELAY;\n    EDIS;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t t2TCR, t2TPR, t2TPRH, t2CLKCTL; uint32_t t2PRD; // // Backup CPU timer2 settings // t2CLKCTL = HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL); t2TCR = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR); t2PRD = HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD); t2TPR = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR); t2TPRH = HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH); // // Backup AUX clock settings // uint16_t clksrcctl2 = HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2); uint16_t auxpllctl1 = HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1); uint16_t auxclkdivsel = HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL); // // Set AUX clock source to XTAL, bypass mode. // AUXCLK is used as the CPUTimer Clock source. SYSCLK frequency must be // atleast twice the frequency of AUXCLK. SYSCLK = INTOSC2(10MHz) // Set the AUX divider to 8. The above condition will be met for XTAL // frequencies up to 40MHz // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) = (HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) & ~(SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_M)) | (1U << SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_S); HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) = 0x0U; HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) = SYSCTL_AUXPLLCLK_DIV_8; SYSCTL_REGWRITE_DELAY; // // Disable cpu timer 2 interrupt // CPUTimer_disableInterrupt(CPUTIMER2_BASE); // // Stop cpu timer 2 if running // CPUTimer_stopTimer(CPUTIMER2_BASE); // // Initialize cpu timer 2 period // CPUTimer_setPeriod(CPUTIMER2_BASE, XTAL_CPUTIMER_PERIOD); // // Set cpu timer 2 clock source to XTAL // CPUTimer_selectClockSource(CPUTIMER2_BASE, CPUTIMER_CLOCK_SOURCE_AUX, CPUTIMER_CLOCK_PRESCALER_1); // // Clear cpu timer 2 overflow flag // CPUTimer_clearOverflowFlag(CPUTIMER2_BASE); // // Start cpu timer 2 // CPUTimer_startTimer(CPUTIMER2_BASE); EALLOW; // // Turn on XTAL // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &= ~SYSCTL_CLKSRCCTL1_XTALOFF; EDIS; // // Wait for the X1 clock to overflow cpu timer 2 // SysCtl_pollCpuTimer(); // // Select XTAL as the oscillator source // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) = ((HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) & (~SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M)) | (SYSCTL_OSCSRC_XTAL >> SYSCTL_OSCSRC_S)); EDIS; // // If a missing clock failure was detected, try waiting for the cpu timer 2 // to overflow again. // while(SysCtl_isMCDClockFailureDetected()) { // // Clear the MCD failure // SysCtl_resetMCD(); // // Wait for the X1 clock to overflow cpu timer 2 // SysCtl_pollCpuTimer(); // // Select XTAL as the oscillator source // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) = ((HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) & (~SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M)) | (SYSCTL_OSCSRC_XTAL >> SYSCTL_OSCSRC_S)); EDIS; } // // Stop cpu timer 2 // CPUTimer_stopTimer(CPUTIMER2_BASE); // // Restore Timer 2 configuration // EALLOW; HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = t2CLKCTL; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) = t2TCR; HWREG(CPUTIMER2_BASE + CPUTIMER_O_PRD) = t2PRD; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPR) = t2TPR; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TPRH) = t2TPRH; HWREGH(CPUTIMER2_BASE + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TRB; // // Restore AUX clock settings // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) = clksrcctl2; HWREGH(CLKCFG_BASE + SYSCTL_O_AUXPLLCTL1) = auxpllctl1; HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) = auxclkdivsel; SYSCTL_REGWRITE_DELAY; EDIS; EDIS; }",
+      "registersUsed": [
+        "PRD",
+        "TCR",
+        "TPR",
+        "TPRH",
+        "CLKSRCCTL1",
+        "CLKSRCCTL2",
+        "AUXPLLCTL1",
+        "AUXCLKDIVSEL",
+        "TMR2CLKCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PRD",
+        "TCR",
+        "TPR",
+        "TPRH",
+        "CLKSRCCTL1",
+        "CLKSRCCTL2",
+        "AUXPLLCTL1",
+        "AUXCLKDIVSEL",
+        "TMR2CLKCTL"
+      ]
+    },
+    {
+      "file": "sysctl.c",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_selectOscSource",
+      "functionArgs": [
+        "oscSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ASSERT((oscSource == SYSCTL_OSCSRC_OSC1) ||\n           (oscSource == SYSCTL_OSCSRC_OSC2) ||\n           (oscSource == SYSCTL_OSCSRC_XTAL));\n\n    //\n    // Select the specified source.\n    //\n    EALLOW;\n    switch(oscSource)\n    {\n        case SYSCTL_OSCSRC_OSC2:\n            //\n            // Turn on INTOSC2\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &=\n                ~SYSCTL_CLKSRCCTL1_INTOSC2OFF;\n\n            SYSCTL_CLKSRCCTL_DELAY;\n\n            //\n            // Clk Src = INTOSC2\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &=\n                ~SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M;\n\n            SYSCTL_CLKSRCCTL_DELAY;\n\n            //\n            // Turn off XTALOSC\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) |=\n                SYSCTL_CLKSRCCTL1_XTALOFF;\n\n            break;\n\n        case SYSCTL_OSCSRC_XTAL:\n            //\n            // Select XTAL in crystal mode and wait for it to power up\n            //\n            SysCtl_selectXTAL();\n            break;\n\n        case SYSCTL_OSCSRC_OSC1:\n            //\n            // Clk Src = INTOSC1\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) =\n                   (HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &\n                    ~SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M) |\n                   (SYSCTL_OSCSRC_OSC1 >> SYSCTL_OSCSRC_S);\n\n            SYSCTL_CLKSRCCTL_DELAY;\n\n            //\n            //Turn off XTALOSC\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) |=\n                SYSCTL_CLKSRCCTL1_XTALOFF;\n\n            break;\n\n        default:\n            //\n            // Do nothing. Not a valid oscSource value.\n            //\n            break;\n    }\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT((oscSource == SYSCTL_OSCSRC_OSC1) || (oscSource == SYSCTL_OSCSRC_OSC2) || (oscSource == SYSCTL_OSCSRC_XTAL)); // // Select the specified source. // EALLOW; switch(oscSource) { case SYSCTL_OSCSRC_OSC2: // // Turn on INTOSC2 // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &= ~SYSCTL_CLKSRCCTL1_INTOSC2OFF; SYSCTL_CLKSRCCTL_DELAY; // // Clk Src = INTOSC2 // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &= ~SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M; SYSCTL_CLKSRCCTL_DELAY; // // Turn off XTALOSC // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) |= SYSCTL_CLKSRCCTL1_XTALOFF; break; case SYSCTL_OSCSRC_XTAL: // // Select XTAL in crystal mode and wait for it to power up // SysCtl_selectXTAL(); break; case SYSCTL_OSCSRC_OSC1: // // Clk Src = INTOSC1 // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) = (HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) & ~SYSCTL_CLKSRCCTL1_OSCCLKSRCSEL_M) | (SYSCTL_OSCSRC_OSC1 >> SYSCTL_OSCSRC_S); SYSCTL_CLKSRCCTL_DELAY; // //Turn off XTALOSC // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) |= SYSCTL_CLKSRCCTL1_XTALOFF; break; default: // // Do nothing. Not a valid oscSource value. // break; } EDIS; }",
+      "registersUsed": [
+        "CLKSRCCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKSRCCTL1"
+      ]
+    },
+    {
+      "file": "sysctl.c",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_selectOscSourceAuxPLL",
+      "functionArgs": [
+        "oscSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    bool status = false;\n\n    EALLOW;\n\n    switch(oscSource)\n    {\n        case SYSCTL_AUXPLL_OSCSRC_OSC2:\n            //\n            // Turn on INTOSC2\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &=\n                    ~(SYSCTL_CLKSRCCTL1_INTOSC2OFF);\n            SYSCTL_CLKSRCCTL_DELAY;\n\n            //\n            // Clk Src = INTOSC2\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) &=\n                    ~(SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_M);\n            break;\n\n        case SYSCTL_AUXPLL_OSCSRC_XTAL:\n            //\n            // Turn on XTALOSC\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &=\n                   ~(SYSCTL_CLKSRCCTL1_XTALOFF);\n            SYSCTL_CLKSRCCTL_DELAY;\n\n            //\n            // Clk Src = XTAL\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) =\n                    (HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) &\n                     ~(SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_M)) |\n                    (1U << SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_S);\n            break;\n\n        case SYSCTL_AUXPLL_OSCSRC_AUXCLKIN:\n            //\n            // Clk Src = AUXCLKIN\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) =\n                    (HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) &\n                     ~(SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_M)) |\n                    (2U << SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_S);\n            SYSCTL_CLKSRCCTL_DELAY;\n            break;\n\n        default:\n            //\n            // Do nothing. Not a valid clock source value.\n            //\n            break;\n    }\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ bool status = false; EALLOW; switch(oscSource) { case SYSCTL_AUXPLL_OSCSRC_OSC2: // // Turn on INTOSC2 // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &= ~(SYSCTL_CLKSRCCTL1_INTOSC2OFF); SYSCTL_CLKSRCCTL_DELAY; // // Clk Src = INTOSC2 // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) &= ~(SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_M); break; case SYSCTL_AUXPLL_OSCSRC_XTAL: // // Turn on XTALOSC // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &= ~(SYSCTL_CLKSRCCTL1_XTALOFF); SYSCTL_CLKSRCCTL_DELAY; // // Clk Src = XTAL // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) = (HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) & ~(SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_M)) | (1U << SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_S); break; case SYSCTL_AUXPLL_OSCSRC_AUXCLKIN: // // Clk Src = AUXCLKIN // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) = (HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL2) & ~(SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_M)) | (2U << SYSCTL_CLKSRCCTL2_AUXOSCCLKSRCSEL_S); SYSCTL_CLKSRCCTL_DELAY; break; default: // // Do nothing. Not a valid clock source value. // break; } EDIS; }",
+      "registersUsed": [
+        "CLKSRCCTL1",
+        "CLKSRCCTL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKSRCCTL1",
+        "CLKSRCCTL2"
+      ]
+    },
+    {
+      "file": "sysctl.c",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getLowSpeedClock",
+      "functionArgs": [
+        "clockInHz"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    uint32_t clockOut;\n\n    //\n    // Get the main system clock\n    //\n    clockOut = SysCtl_getClock(clockInHz);\n\n    //\n    // Apply the divider to the main clock\n    //\n    if((HWREG(CLKCFG_BASE + SYSCTL_O_LOSPCP) &\n        SYSCTL_LOSPCP_LSPCLKDIV_M) != 0U)\n    {\n        clockOut /= (2U * (HWREG(CLKCFG_BASE + SYSCTL_O_LOSPCP) &\n                            SYSCTL_LOSPCP_LSPCLKDIV_M));\n    }\n\n    return(clockOut);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t clockOut; // // Get the main system clock // clockOut = SysCtl_getClock(clockInHz); // // Apply the divider to the main clock // if((HWREG(CLKCFG_BASE + SYSCTL_O_LOSPCP) & SYSCTL_LOSPCP_LSPCLKDIV_M) != 0U) { clockOut /= (2U * (HWREG(CLKCFG_BASE + SYSCTL_O_LOSPCP) & SYSCTL_LOSPCP_LSPCLKDIV_M)); } return(clockOut); }",
+      "registersUsed": [
+        "LOSPCP"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOSPCP"
+      ]
+    },
+    {
+      "file": "sysctl.c",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getDeviceParametric",
+      "functionArgs": [
+        "parametric"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_DeviceParametric"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint32_t value;\n\n    //\n    // Get requested parametric value\n    //\n    switch(parametric)\n    {\n        case SYSCTL_DEVICE_QUAL:\n            //\n            // Qualification Status\n            //\n            value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDL) &\n                      SYSCTL_PARTIDL_QUAL_M) >> SYSCTL_PARTIDL_QUAL_S);\n            break;\n\n        case SYSCTL_DEVICE_PINCOUNT:\n            //\n            // Pin Count\n            //\n            value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDL) &\n                      SYSCTL_PARTIDL_PIN_COUNT_M) >>\n                     SYSCTL_PARTIDL_PIN_COUNT_S);\n            break;\n\n        case SYSCTL_DEVICE_INSTASPIN:\n            //\n            // InstaSPIN Feature Set\n            //\n            value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDL) &\n                      SYSCTL_PARTIDL_INSTASPIN_M) >>\n                     SYSCTL_PARTIDL_INSTASPIN_S);\n            break;\n\n        case SYSCTL_DEVICE_FLASH:\n            //\n            // Flash Size (KB)\n            //\n            value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDL) &\n                      SYSCTL_PARTIDL_FLASH_SIZE_M) >>\n                     SYSCTL_PARTIDL_FLASH_SIZE_S);\n            break;\n\n        case SYSCTL_DEVICE_PARTID:\n            //\n            // PARTID Format Revision\n            //\n            value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDL) &\n                      SYSCTL_PARTIDL_PARTID_FORMAT_REVISION_M) >>\n                     SYSCTL_PARTIDL_PARTID_FORMAT_REVISION_S);\n            break;\n\n        case SYSCTL_DEVICE_FAMILY:\n            //\n            // Device Family\n            //\n            value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDH) &\n                      SYSCTL_PARTIDH_FAMILY_M) >> SYSCTL_PARTIDH_FAMILY_S);\n            break;\n\n        case SYSCTL_DEVICE_PARTNO:\n            //\n            // Part Number\n            //\n            value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDH) &\n                      SYSCTL_PARTIDH_PARTNO_M) >> SYSCTL_PARTIDH_PARTNO_S);\n            break;\n\n        case SYSCTL_DEVICE_CLASSID:\n            //\n            // Class ID\n            //\n            value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDH) &\n                      SYSCTL_PARTIDH_DEVICE_CLASS_ID_M) >>\n                     SYSCTL_PARTIDH_DEVICE_CLASS_ID_S);\n            break;\n\n        default:\n            //\n            // Not a valid value for PARTID register\n            //\n            value = 0U;\n            break;\n    }\n\n    return((uint16_t)value);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t value; // // Get requested parametric value // switch(parametric) { case SYSCTL_DEVICE_QUAL: // // Qualification Status // value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDL) & SYSCTL_PARTIDL_QUAL_M) >> SYSCTL_PARTIDL_QUAL_S); break; case SYSCTL_DEVICE_PINCOUNT: // // Pin Count // value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDL) & SYSCTL_PARTIDL_PIN_COUNT_M) >> SYSCTL_PARTIDL_PIN_COUNT_S); break; case SYSCTL_DEVICE_INSTASPIN: // // InstaSPIN Feature Set // value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDL) & SYSCTL_PARTIDL_INSTASPIN_M) >> SYSCTL_PARTIDL_INSTASPIN_S); break; case SYSCTL_DEVICE_FLASH: // // Flash Size (KB) // value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDL) & SYSCTL_PARTIDL_FLASH_SIZE_M) >> SYSCTL_PARTIDL_FLASH_SIZE_S); break; case SYSCTL_DEVICE_PARTID: // // PARTID Format Revision // value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDL) & SYSCTL_PARTIDL_PARTID_FORMAT_REVISION_M) >> SYSCTL_PARTIDL_PARTID_FORMAT_REVISION_S); break; case SYSCTL_DEVICE_FAMILY: // // Device Family // value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDH) & SYSCTL_PARTIDH_FAMILY_M) >> SYSCTL_PARTIDH_FAMILY_S); break; case SYSCTL_DEVICE_PARTNO: // // Part Number // value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDH) & SYSCTL_PARTIDH_PARTNO_M) >> SYSCTL_PARTIDH_PARTNO_S); break; case SYSCTL_DEVICE_CLASSID: // // Class ID // value = ((HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDH) & SYSCTL_PARTIDH_DEVICE_CLASS_ID_M) >> SYSCTL_PARTIDH_DEVICE_CLASS_ID_S); break; default: // // Not a valid value for PARTID register // value = 0U; break; } return((uint16_t)value); }",
+      "registersUsed": [
+        "PARTIDL",
+        "PARTIDH"
+      ],
+      "registersUsedMatchingBifield": [
+        "PARTIDL",
+        "PARTIDH"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_deviceCal",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Save the core registers used by Device_cal function in the stack\n    //\n    SYSCTL_DEVICECAL_CONTEXT_SAVE;\n\n    //\n    // Call the Device_cal function\n    //\n    Device_cal();\n\n    //\n    // Restore the core registers\n    //\n    SYSCTL_DEVICECAL_CONTEXT_RESTORE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Save the core registers used by Device_cal function in the stack // SYSCTL_DEVICECAL_CONTEXT_SAVE; // // Call the Device_cal function // Device_cal(); // // Restore the core registers // SYSCTL_DEVICECAL_CONTEXT_RESTORE; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_resetPeripheral",
+      "functionArgs": [
+        "peripheral"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_PeripheralSOFTPRES"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t regIndex;\n    uint16_t bitIndex;\n\n    //\n    // Decode the peripheral variable.\n    //\n    regIndex = (uint16_t)2U * ((uint16_t)peripheral &\n                               (uint16_t)SYSCTL_PERIPH_REG_M);\n    bitIndex = ((uint16_t)peripheral & SYSCTL_PERIPH_BIT_M) >>\n               SYSCTL_PERIPH_BIT_S;\n\n    EALLOW;\n\n    //\n    // Sets the appropriate reset bit and then clears it.\n    //\n    HWREG(DEVCFG_BASE + SYSCTL_O_SOFTPRES0 + regIndex) |=  (1UL << bitIndex);\n    HWREG(DEVCFG_BASE + SYSCTL_O_SOFTPRES0 + regIndex) &= ~(1UL << bitIndex);\n\n    //\n    // Call Device_cal function\n    //\n    if((((uint16_t)peripheral & SYSCTL_PERIPH_REG_M) == 0xDU) ||      // ADCx\n       (((uint16_t)peripheral & SYSCTL_PERIPH_REG_M) == 0x10U)        // DACx\n       )\n    {\n        SysCtl_deviceCal();\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t regIndex; uint16_t bitIndex; // // Decode the peripheral variable. // regIndex = (uint16_t)2U * ((uint16_t)peripheral & (uint16_t)SYSCTL_PERIPH_REG_M); bitIndex = ((uint16_t)peripheral & SYSCTL_PERIPH_BIT_M) >> SYSCTL_PERIPH_BIT_S; EALLOW; // // Sets the appropriate reset bit and then clears it. // HWREG(DEVCFG_BASE + SYSCTL_O_SOFTPRES0 + regIndex) |= (1UL << bitIndex); HWREG(DEVCFG_BASE + SYSCTL_O_SOFTPRES0 + regIndex) &= ~(1UL << bitIndex); // // Call Device_cal function // if((((uint16_t)peripheral & SYSCTL_PERIPH_REG_M) == 0xDU) || // ADCx (((uint16_t)peripheral & SYSCTL_PERIPH_REG_M) == 0x10U) // DACx ) { SysCtl_deviceCal(); } EDIS; }",
+      "registersUsed": [
+        "SOFTPRES0",
+        "SOFTPRES1",
+        "SOFTPRES2",
+        "SOFTPRES3",
+        "SOFTPRES4",
+        "SOFTPRES6",
+        "SOFTPRES7",
+        "SOFTPRES8",
+        "SOFTPRES9",
+        "SOFTPRES11",
+        "SOFTPRES13",
+        "SOFTPRES14",
+        "SOFTPRES16"
+      ],
+      "registersUsedMatchingBifield": [
+        "SOFTPRES0",
+        "SOFTPRES1",
+        "SOFTPRES2",
+        "SOFTPRES3",
+        "SOFTPRES4",
+        "SOFTPRES6",
+        "SOFTPRES7",
+        "SOFTPRES8",
+        "SOFTPRES9",
+        "SOFTPRES11",
+        "SOFTPRES13",
+        "SOFTPRES14",
+        "SOFTPRES16"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enablePeripheral",
+      "functionArgs": [
+        "peripheral"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_PeripheralPCLOCKCR"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t regIndex;\n    uint16_t bitIndex;\n\n    //\n    // Decode the peripheral variable.\n    //\n    regIndex = (uint16_t)2U * ((uint16_t)peripheral &\n                               (uint16_t)SYSCTL_PERIPH_REG_M);\n    bitIndex = ((uint16_t)peripheral & SYSCTL_PERIPH_BIT_M) >>\n               SYSCTL_PERIPH_BIT_S;\n\n    EALLOW;\n\n    //\n    // Turn on the module clock.\n    //\n    HWREG(CPUSYS_BASE + SYSCTL_O_PCLKCR0 + regIndex) |= (1UL << bitIndex);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t regIndex; uint16_t bitIndex; // // Decode the peripheral variable. // regIndex = (uint16_t)2U * ((uint16_t)peripheral & (uint16_t)SYSCTL_PERIPH_REG_M); bitIndex = ((uint16_t)peripheral & SYSCTL_PERIPH_BIT_M) >> SYSCTL_PERIPH_BIT_S; EALLOW; // // Turn on the module clock. // HWREG(CPUSYS_BASE + SYSCTL_O_PCLKCR0 + regIndex) |= (1UL << bitIndex); EDIS; }",
+      "registersUsed": [
+        "PCLKCR0",
+        "PCLKCR1",
+        "PCLKCR2",
+        "PCLKCR3",
+        "PCLKCR4",
+        "PCLKCR6",
+        "PCLKCR7",
+        "PCLKCR8",
+        "PCLKCR9",
+        "PCLKCR10",
+        "PCLKCR11",
+        "PCLKCR12",
+        "PCLKCR13",
+        "PCLKCR14",
+        "PCLKCR16"
+      ],
+      "registersUsedMatchingBifield": [
+        "PCLKCR0",
+        "PCLKCR1",
+        "PCLKCR2",
+        "PCLKCR3",
+        "PCLKCR4",
+        "PCLKCR6",
+        "PCLKCR7",
+        "PCLKCR8",
+        "PCLKCR9",
+        "PCLKCR10",
+        "PCLKCR11",
+        "PCLKCR12",
+        "PCLKCR13",
+        "PCLKCR14",
+        "PCLKCR16"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_disablePeripheral",
+      "functionArgs": [
+        "peripheral"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_PeripheralPCLOCKCR"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t regIndex;\n    uint16_t bitIndex;\n\n    //\n    // Decode the peripheral variable.\n    //\n    regIndex = (uint16_t)2U * ((uint16_t)peripheral &\n                               (uint16_t)SYSCTL_PERIPH_REG_M);\n    bitIndex = ((uint16_t)peripheral & SYSCTL_PERIPH_BIT_M) >>\n               SYSCTL_PERIPH_BIT_S;\n\n    EALLOW;\n\n    //\n    // Turn off the module clock.\n    //\n    HWREG(CPUSYS_BASE + SYSCTL_O_PCLKCR0 + regIndex) &= ~(1UL << bitIndex);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t regIndex; uint16_t bitIndex; // // Decode the peripheral variable. // regIndex = (uint16_t)2U * ((uint16_t)peripheral & (uint16_t)SYSCTL_PERIPH_REG_M); bitIndex = ((uint16_t)peripheral & SYSCTL_PERIPH_BIT_M) >> SYSCTL_PERIPH_BIT_S; EALLOW; // // Turn off the module clock. // HWREG(CPUSYS_BASE + SYSCTL_O_PCLKCR0 + regIndex) &= ~(1UL << bitIndex); EDIS; }",
+      "registersUsed": [
+        "PCLKCR0",
+        "PCLKCR1",
+        "PCLKCR2",
+        "PCLKCR3",
+        "PCLKCR4",
+        "PCLKCR6",
+        "PCLKCR7",
+        "PCLKCR8",
+        "PCLKCR9",
+        "PCLKCR10",
+        "PCLKCR11",
+        "PCLKCR12",
+        "PCLKCR13",
+        "PCLKCR14",
+        "PCLKCR16"
+      ],
+      "registersUsedMatchingBifield": [
+        "PCLKCR0",
+        "PCLKCR1",
+        "PCLKCR2",
+        "PCLKCR3",
+        "PCLKCR4",
+        "PCLKCR6",
+        "PCLKCR7",
+        "PCLKCR8",
+        "PCLKCR9",
+        "PCLKCR10",
+        "PCLKCR11",
+        "PCLKCR12",
+        "PCLKCR13",
+        "PCLKCR14",
+        "PCLKCR16"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_resetDevice",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write an incorrect check value to the watchdog control register\n    // This will cause a device reset\n    //\n    EALLOW;\n\n    //\n    // Enable the watchdog\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDCR) = SYSCTL_WD_CHKBITS;\n    SYSCTL_REGWRITE_DELAY;\n\n    //\n    // Write a bad check value\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDCR) = 0U;\n    SYSCTL_REGWRITE_DELAY;\n\n    EDIS;\n\n    //\n    // The device should have reset, so this should never be reached.  Just in\n    // case, loop forever.\n    //\n    while((bool)1)\n    {\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write an incorrect check value to the watchdog control register // This will cause a device reset // EALLOW; // // Enable the watchdog // HWREGH(WD_BASE + SYSCTL_O_WDCR) = SYSCTL_WD_CHKBITS; SYSCTL_REGWRITE_DELAY; // // Write a bad check value // HWREGH(WD_BASE + SYSCTL_O_WDCR) = 0U; SYSCTL_REGWRITE_DELAY; EDIS; // // The device should have reset, so this should never be reached. Just in // case, loop forever. // while((bool)1) { } }",
+      "registersUsed": [
+        "WDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getResetCause",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    uint32_t resetCauses;\n\n    //\n    // Read CPU reset register\n    //\n    resetCauses = HWREG(CPUSYS_BASE + SYSCTL_O_RESC) &\n                  ((uint32_t)SYSCTL_RESC_POR | (uint32_t)SYSCTL_RESC_XRSN |\n                   (uint32_t)SYSCTL_RESC_WDRSN |\n                   (uint32_t)SYSCTL_RESC_NMIWDRSN |\n                   (uint32_t)SYSCTL_RESC_SCCRESETN\n                   );\n\n    //\n    // Set POR and XRS Causes from boot ROM Status\n    //\n    if((HWREG(SYSCTL_BOOT_ROM_STATUS) & (uint32_t)SYSCTL_BOOT_ROM_POR) ==\n       (uint32_t)SYSCTL_BOOT_ROM_POR)\n    {\n        resetCauses |= SYSCTL_RESC_POR;\n    }\n    if((HWREG(SYSCTL_BOOT_ROM_STATUS) & (uint32_t)SYSCTL_BOOT_ROM_XRS) ==\n       (uint32_t)SYSCTL_BOOT_ROM_XRS)\n    {\n        resetCauses |= SYSCTL_RESC_XRSN;\n    }\n\n    //\n    // Return the reset reasons.\n    //\n    return(resetCauses);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t resetCauses; // // Read CPU reset register // resetCauses = HWREG(CPUSYS_BASE + SYSCTL_O_RESC) & ((uint32_t)SYSCTL_RESC_POR | (uint32_t)SYSCTL_RESC_XRSN | (uint32_t)SYSCTL_RESC_WDRSN | (uint32_t)SYSCTL_RESC_NMIWDRSN | (uint32_t)SYSCTL_RESC_SCCRESETN ); // // Set POR and XRS Causes from boot ROM Status // if((HWREG(SYSCTL_BOOT_ROM_STATUS) & (uint32_t)SYSCTL_BOOT_ROM_POR) == (uint32_t)SYSCTL_BOOT_ROM_POR) { resetCauses |= SYSCTL_RESC_POR; } if((HWREG(SYSCTL_BOOT_ROM_STATUS) & (uint32_t)SYSCTL_BOOT_ROM_XRS) == (uint32_t)SYSCTL_BOOT_ROM_XRS) { resetCauses |= SYSCTL_RESC_XRSN; } // // Return the reset reasons. // return(resetCauses); }",
+      "registersUsed": [
+        "RESC"
+      ],
+      "registersUsedMatchingBifield": [
+        "RESC"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_clearResetCause",
+      "functionArgs": [
+        "rstCauses"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear the given reset reasons.\n    //\n    HWREG(CPUSYS_BASE + SYSCTL_O_RESC) = rstCauses;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the given reset reasons. // HWREG(CPUSYS_BASE + SYSCTL_O_RESC) = rstCauses; }",
+      "registersUsed": [
+        "RESC"
+      ],
+      "registersUsedMatchingBifield": [
+        "RESC"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setLowSpeedClock",
+      "functionArgs": [
+        "prescaler"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_LSPCLKPrescaler"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write the divider selection to the appropriate register.\n    //\n    EALLOW;\n    HWREG(CLKCFG_BASE + SYSCTL_O_LOSPCP) =\n        (HWREG(CLKCFG_BASE + SYSCTL_O_LOSPCP) &\n         ~(uint32_t)SYSCTL_LOSPCP_LSPCLKDIV_M) | (uint32_t)prescaler;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write the divider selection to the appropriate register. // EALLOW; HWREG(CLKCFG_BASE + SYSCTL_O_LOSPCP) = (HWREG(CLKCFG_BASE + SYSCTL_O_LOSPCP) & ~(uint32_t)SYSCTL_LOSPCP_LSPCLKDIV_M) | (uint32_t)prescaler; EDIS; }",
+      "registersUsed": [
+        "LOSPCP"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOSPCP"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setEPWMClockDivider",
+      "functionArgs": [
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_EPWMCLKDivider"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write the divider selection to the appropriate register.\n    //\n    EALLOW;\n    HWREGH(CLKCFG_BASE + SYSCTL_O_PERCLKDIVSEL) =\n        (HWREGH(CLKCFG_BASE + SYSCTL_O_PERCLKDIVSEL) &\n         ~SYSCTL_PERCLKDIVSEL_EPWMCLKDIV_M) | (uint16_t)divider;\n    SYSCTL_REGWRITE_DELAY;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write the divider selection to the appropriate register. // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_PERCLKDIVSEL) = (HWREGH(CLKCFG_BASE + SYSCTL_O_PERCLKDIVSEL) & ~SYSCTL_PERCLKDIVSEL_EPWMCLKDIV_M) | (uint16_t)divider; SYSCTL_REGWRITE_DELAY; EDIS; }",
+      "registersUsed": [
+        "PERCLKDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCLKDIVSEL"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setEMIF1ClockDivider",
+      "functionArgs": [
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_EMIF1CLKDivider"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write the divider selection to the appropriate register.\n    //\n    EALLOW;\n    if(divider == SYSCTL_EMIF1CLK_DIV_2)\n    {\n        HWREGH(CLKCFG_BASE + SYSCTL_O_PERCLKDIVSEL) |=\n            SYSCTL_PERCLKDIVSEL_EMIF1CLKDIV;\n        SYSCTL_REGWRITE_DELAY;\n    }\n    else\n    {\n        HWREGH(CLKCFG_BASE + SYSCTL_O_PERCLKDIVSEL) &=\n            ~SYSCTL_PERCLKDIVSEL_EMIF1CLKDIV;\n        SYSCTL_REGWRITE_DELAY;\n    }\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write the divider selection to the appropriate register. // EALLOW; if(divider == SYSCTL_EMIF1CLK_DIV_2) { HWREGH(CLKCFG_BASE + SYSCTL_O_PERCLKDIVSEL) |= SYSCTL_PERCLKDIVSEL_EMIF1CLKDIV; SYSCTL_REGWRITE_DELAY; } else { HWREGH(CLKCFG_BASE + SYSCTL_O_PERCLKDIVSEL) &= ~SYSCTL_PERCLKDIVSEL_EMIF1CLKDIV; SYSCTL_REGWRITE_DELAY; } EDIS; }",
+      "registersUsed": [
+        "PERCLKDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCLKDIVSEL"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setEMIF2ClockDivider",
+      "functionArgs": [
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_EMIF2CLKDivider"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write the divider selection to the appropriate register.\n    //\n    EALLOW;\n    if(divider == SYSCTL_EMIF2CLK_DIV_2)\n    {\n        HWREGH(CLKCFG_BASE + SYSCTL_O_PERCLKDIVSEL) |=\n            SYSCTL_PERCLKDIVSEL_EMIF2CLKDIV;\n        SYSCTL_REGWRITE_DELAY;\n    }\n    else\n    {\n        HWREGH(CLKCFG_BASE + SYSCTL_O_PERCLKDIVSEL) &=\n            ~SYSCTL_PERCLKDIVSEL_EMIF2CLKDIV;\n        SYSCTL_REGWRITE_DELAY;\n    }\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write the divider selection to the appropriate register. // EALLOW; if(divider == SYSCTL_EMIF2CLK_DIV_2) { HWREGH(CLKCFG_BASE + SYSCTL_O_PERCLKDIVSEL) |= SYSCTL_PERCLKDIVSEL_EMIF2CLKDIV; SYSCTL_REGWRITE_DELAY; } else { HWREGH(CLKCFG_BASE + SYSCTL_O_PERCLKDIVSEL) &= ~SYSCTL_PERCLKDIVSEL_EMIF2CLKDIV; SYSCTL_REGWRITE_DELAY; } EDIS; }",
+      "registersUsed": [
+        "PERCLKDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCLKDIVSEL"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_selectClockOutSource",
+      "functionArgs": [
+        "source"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_ClockOut"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Clear clock out source\n    //\n    HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL3) &=\n        ~SYSCTL_CLKSRCCTL3_XCLKOUTSEL_M;\n    SYSCTL_CLKSRCCTL_DELAY;\n\n    //\n    // Set clock out source\n    //\n    HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL3) |= (uint16_t)source;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Clear clock out source // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL3) &= ~SYSCTL_CLKSRCCTL3_XCLKOUTSEL_M; SYSCTL_CLKSRCCTL_DELAY; // // Set clock out source // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL3) |= (uint16_t)source; EDIS; }",
+      "registersUsed": [
+        "CLKSRCCTL3"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKSRCCTL3"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getExternalOscCounterValue",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    return(HWREGH(CLKCFG_BASE + SYSCTL_O_X1CNT) & SYSCTL_X1CNT_X1CNT_M);\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREGH(CLKCFG_BASE + SYSCTL_O_X1CNT) & SYSCTL_X1CNT_X1CNT_M); }",
+      "registersUsed": [
+        "X1CNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "X1CNT"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_turnOnOsc",
+      "functionArgs": [
+        "oscSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(\n           (oscSource == SYSCTL_OSCSRC_OSC2) ||\n           (oscSource == SYSCTL_OSCSRC_XTAL)\n          );\n\n    EALLOW;\n\n    switch(oscSource)\n    {\n        case SYSCTL_OSCSRC_OSC2:\n            //\n            // Turn on INTOSC2\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &=\n                ~SYSCTL_CLKSRCCTL1_INTOSC2OFF;\n            SYSCTL_CLKSRCCTL_DELAY;\n            break;\n\n        case SYSCTL_OSCSRC_XTAL:\n            //\n            // Turn on XTALOSC\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &=\n                ~SYSCTL_CLKSRCCTL1_XTALOFF;\n\n            break;\n\n        default:\n            //\n            // Do nothing. Not a valid oscSource value.\n            //\n            break;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT( (oscSource == SYSCTL_OSCSRC_OSC2) || (oscSource == SYSCTL_OSCSRC_XTAL) ); EALLOW; switch(oscSource) { case SYSCTL_OSCSRC_OSC2: // // Turn on INTOSC2 // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &= ~SYSCTL_CLKSRCCTL1_INTOSC2OFF; SYSCTL_CLKSRCCTL_DELAY; break; case SYSCTL_OSCSRC_XTAL: // // Turn on XTALOSC // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &= ~SYSCTL_CLKSRCCTL1_XTALOFF; break; default: // // Do nothing. Not a valid oscSource value. // break; } EDIS; }",
+      "registersUsed": [
+        "CLKSRCCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKSRCCTL1"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_turnOffOsc",
+      "functionArgs": [
+        "oscSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(\n           (oscSource == SYSCTL_OSCSRC_OSC2) ||\n           (oscSource == SYSCTL_OSCSRC_XTAL)\n          );\n\n    EALLOW;\n\n    switch(oscSource)\n    {\n        case SYSCTL_OSCSRC_OSC2:\n            //\n            // Turn off INTOSC2\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) |=\n                SYSCTL_CLKSRCCTL1_INTOSC2OFF;\n            SYSCTL_CLKSRCCTL_DELAY;\n            break;\n\n        case SYSCTL_OSCSRC_XTAL:\n            //\n            // Turn off XTALOSC\n            //\n            HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) |=\n                SYSCTL_CLKSRCCTL1_XTALOFF;\n            break;\n\n        default:\n            //\n            // Do nothing. Not a valid oscSource value.\n            //\n            break;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT( (oscSource == SYSCTL_OSCSRC_OSC2) || (oscSource == SYSCTL_OSCSRC_XTAL) ); EALLOW; switch(oscSource) { case SYSCTL_OSCSRC_OSC2: // // Turn off INTOSC2 // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) |= SYSCTL_CLKSRCCTL1_INTOSC2OFF; SYSCTL_CLKSRCCTL_DELAY; break; case SYSCTL_OSCSRC_XTAL: // // Turn off XTALOSC // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) |= SYSCTL_CLKSRCCTL1_XTALOFF; break; default: // // Do nothing. Not a valid oscSource value. // break; } EDIS; }",
+      "registersUsed": [
+        "CLKSRCCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKSRCCTL1"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enterIdleMode",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Configure the device to go into IDLE mode when IDLE is executed.\n    //\n    HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) =\n                (HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) &\n                 ~(uint32_t)SYSCTL_LPMCR_LPM_M) | SYSCTL_LPM_IDLE;\n\n    EDIS;\n\n#ifndef _DUAL_HEADERS\n    IDLE;\n#else\n    IDLE_ASM;\n#endif\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Configure the device to go into IDLE mode when IDLE is executed. // HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) = (HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) & ~(uint32_t)SYSCTL_LPMCR_LPM_M) | SYSCTL_LPM_IDLE; EDIS; #ifndef _DUAL_HEADERS IDLE; #else IDLE_ASM; #endif }",
+      "registersUsed": [
+        "LPMCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "LPMCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enterStandbyMode",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Configure the device to go into STANDBY mode when IDLE is executed.\n    //\n    HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) =\n                (HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) &\n                 ~(uint32_t)SYSCTL_LPMCR_LPM_M) | SYSCTL_LPM_STANDBY;\n\n    EDIS;\n\n#ifndef _DUAL_HEADERS\n    IDLE;\n#else\n    IDLE_ASM;\n#endif\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Configure the device to go into STANDBY mode when IDLE is executed. // HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) = (HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) & ~(uint32_t)SYSCTL_LPMCR_LPM_M) | SYSCTL_LPM_STANDBY; EDIS; #ifndef _DUAL_HEADERS IDLE; #else IDLE_ASM; #endif }",
+      "registersUsed": [
+        "LPMCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "LPMCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enterHaltMode",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Configure the device to go into HALT mode when IDLE is executed.\n    //\n    HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) =\n                (HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) &\n                 ~(uint32_t)SYSCTL_LPMCR_LPM_M) | SYSCTL_LPM_HALT;\n\n    HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &=\n                ~(SYSCTL_SYSPLLCTL1_PLLCLKEN | SYSCTL_SYSPLLCTL1_PLLEN);\n    SYSCTL_REGWRITE_DELAY;\n\n    EDIS;\n\n#ifndef _DUAL_HEADERS\n    IDLE;\n#else\n    IDLE_ASM;\n#endif\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Configure the device to go into HALT mode when IDLE is executed. // HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) = (HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) & ~(uint32_t)SYSCTL_LPMCR_LPM_M) | SYSCTL_LPM_HALT; HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &= ~(SYSCTL_SYSPLLCTL1_PLLCLKEN | SYSCTL_SYSPLLCTL1_PLLEN); SYSCTL_REGWRITE_DELAY; EDIS; #ifndef _DUAL_HEADERS IDLE; #else IDLE_ASM; #endif }",
+      "registersUsed": [
+        "SYSPLLCTL1",
+        "LPMCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SYSPLLCTL1",
+        "LPMCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enterHibernateMode",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Configure the device to go into Hibernate mode when IDLE is executed\n    //\n    HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) =\n            (HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) &\n             ~(uint32_t)SYSCTL_LPMCR_LPM_M) | SYSCTL_LPM_HIB;\n\n    HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &=\n            ~(SYSCTL_SYSPLLCTL1_PLLCLKEN | SYSCTL_SYSPLLCTL1_PLLEN);\n    SYSCTL_REGWRITE_DELAY;\n\n    EDIS;\n\n#ifndef _DUAL_HEADERS\n        IDLE;\n#else\n        IDLE_ASM;\n#endif\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Configure the device to go into Hibernate mode when IDLE is executed // HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) = (HWREG(CPUSYS_BASE + SYSCTL_O_LPMCR) & ~(uint32_t)SYSCTL_LPMCR_LPM_M) | SYSCTL_LPM_HIB; HWREGH(CLKCFG_BASE + SYSCTL_O_SYSPLLCTL1) &= ~(SYSCTL_SYSPLLCTL1_PLLCLKEN | SYSCTL_SYSPLLCTL1_PLLEN); SYSCTL_REGWRITE_DELAY; EDIS; #ifndef _DUAL_HEADERS IDLE; #else IDLE_ASM; #endif }",
+      "registersUsed": [
+        "SYSPLLCTL1",
+        "LPMCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SYSPLLCTL1",
+        "LPMCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enableLPMWakeupPin",
+      "functionArgs": [
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t pinMask;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(pin <= 63U);\n\n    pinMask = 1UL << (pin % 32U);\n\n    EALLOW;\n\n    if(pin < 32U)\n    {\n        HWREG(CPUSYS_BASE + SYSCTL_O_GPIOLPMSEL0) |= pinMask;\n    }\n    else\n    {\n        HWREG(CPUSYS_BASE + SYSCTL_O_GPIOLPMSEL1) |= pinMask;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t pinMask; // // Check the arguments. // ASSERT(pin <= 63U); pinMask = 1UL << (pin % 32U); EALLOW; if(pin < 32U) { HWREG(CPUSYS_BASE + SYSCTL_O_GPIOLPMSEL0) |= pinMask; } else { HWREG(CPUSYS_BASE + SYSCTL_O_GPIOLPMSEL1) |= pinMask; } EDIS; }",
+      "registersUsed": [
+        "GPIOLPMSEL0",
+        "GPIOLPMSEL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPIOLPMSEL0",
+        "GPIOLPMSEL1"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_disableLPMWakeupPin",
+      "functionArgs": [
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t pinMask;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(pin <= 63U);\n\n    pinMask = 1UL << (pin % 32U);\n\n    EALLOW;\n\n    if(pin < 32U)\n    {\n        HWREG(CPUSYS_BASE + SYSCTL_O_GPIOLPMSEL0) &= ~pinMask;\n    }\n    else\n    {\n        HWREG(CPUSYS_BASE + SYSCTL_O_GPIOLPMSEL1) &= ~pinMask;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t pinMask; // // Check the arguments. // ASSERT(pin <= 63U); pinMask = 1UL << (pin % 32U); EALLOW; if(pin < 32U) { HWREG(CPUSYS_BASE + SYSCTL_O_GPIOLPMSEL0) &= ~pinMask; } else { HWREG(CPUSYS_BASE + SYSCTL_O_GPIOLPMSEL1) &= ~pinMask; } EDIS; }",
+      "registersUsed": [
+        "GPIOLPMSEL0",
+        "GPIOLPMSEL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPIOLPMSEL0",
+        "GPIOLPMSEL1"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setStandbyQualificationPeriod",
+      "functionArgs": [
+        "cycles"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT((cycles >= 2U) && (cycles <= 65U));\n\n    EALLOW;\n\n    HWREGH(CPUSYS_BASE + SYSCTL_O_LPMCR) =\n                (HWREGH(CPUSYS_BASE + SYSCTL_O_LPMCR) &\n                 ~(uint16_t)SYSCTL_LPMCR_QUALSTDBY_M) |\n                ((cycles - 2U) << SYSCTL_LPMCR_QUALSTDBY_S);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT((cycles >= 2U) && (cycles <= 65U)); EALLOW; HWREGH(CPUSYS_BASE + SYSCTL_O_LPMCR) = (HWREGH(CPUSYS_BASE + SYSCTL_O_LPMCR) & ~(uint16_t)SYSCTL_LPMCR_QUALSTDBY_M) | ((cycles - 2U) << SYSCTL_LPMCR_QUALSTDBY_S); EDIS; }",
+      "registersUsed": [
+        "LPMCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "LPMCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enableWatchdogStandbyWakeup",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Set the bit enables the watchdog to wake up the device from STANDBY.\n    //\n    HWREGH(CPUSYS_BASE + SYSCTL_O_LPMCR) |= SYSCTL_LPMCR_WDINTE;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Set the bit enables the watchdog to wake up the device from STANDBY. // HWREGH(CPUSYS_BASE + SYSCTL_O_LPMCR) |= SYSCTL_LPMCR_WDINTE; EDIS; }",
+      "registersUsed": [
+        "LPMCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "LPMCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_disableWatchdogStandbyWakeup",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Clear the bit enables the watchdog to wake up the device from STANDBY.\n    //\n    HWREGH(CPUSYS_BASE + SYSCTL_O_LPMCR) &= ~SYSCTL_LPMCR_WDINTE;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Clear the bit enables the watchdog to wake up the device from STANDBY. // HWREGH(CPUSYS_BASE + SYSCTL_O_LPMCR) &= ~SYSCTL_LPMCR_WDINTE; EDIS; }",
+      "registersUsed": [
+        "LPMCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "LPMCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enableWatchdogInHalt",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Set the watchdog HALT mode ignore bit.\n    //\n    HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) |= SYSCTL_CLKSRCCTL1_WDHALTI;\n    SYSCTL_CLKSRCCTL_DELAY;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Set the watchdog HALT mode ignore bit. // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) |= SYSCTL_CLKSRCCTL1_WDHALTI; SYSCTL_CLKSRCCTL_DELAY; EDIS; }",
+      "registersUsed": [
+        "CLKSRCCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKSRCCTL1"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_disableWatchdogInHalt",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Clear the watchdog HALT mode ignore bit.\n    //\n    HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &= ~SYSCTL_CLKSRCCTL1_WDHALTI;\n    SYSCTL_CLKSRCCTL_DELAY;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Clear the watchdog HALT mode ignore bit. // HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &= ~SYSCTL_CLKSRCCTL1_WDHALTI; SYSCTL_CLKSRCCTL_DELAY; EDIS; }",
+      "registersUsed": [
+        "CLKSRCCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKSRCCTL1"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setWatchdogMode",
+      "functionArgs": [
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_WDMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Either set or clear the WDENINT bit to that will determine whether the\n    // watchdog will generate a reset signal or an interrupt signal. Take care\n    // not to write a 1 to WDOVERRIDE.\n    //\n    if(mode == SYSCTL_WD_MODE_INTERRUPT)\n    {\n        HWREGH(WD_BASE + SYSCTL_O_SCSR) =\n                (HWREGH(WD_BASE + SYSCTL_O_SCSR) & ~SYSCTL_SCSR_WDOVERRIDE) |\n                SYSCTL_SCSR_WDENINT;\n    }\n    else\n    {\n        HWREGH(WD_BASE + SYSCTL_O_SCSR) &= ~(SYSCTL_SCSR_WDENINT |\n                                             SYSCTL_SCSR_WDOVERRIDE);\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Either set or clear the WDENINT bit to that will determine whether the // watchdog will generate a reset signal or an interrupt signal. Take care // not to write a 1 to WDOVERRIDE. // if(mode == SYSCTL_WD_MODE_INTERRUPT) { HWREGH(WD_BASE + SYSCTL_O_SCSR) = (HWREGH(WD_BASE + SYSCTL_O_SCSR) & ~SYSCTL_SCSR_WDOVERRIDE) | SYSCTL_SCSR_WDENINT; } else { HWREGH(WD_BASE + SYSCTL_O_SCSR) &= ~(SYSCTL_SCSR_WDENINT | SYSCTL_SCSR_WDOVERRIDE); } EDIS; }",
+      "registersUsed": [
+        "SCSR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCSR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_isWatchdogInterruptActive",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // If the status bit is cleared, the WDINTn signal is active.\n    //\n    return((HWREGH(WD_BASE + SYSCTL_O_SCSR) & SYSCTL_SCSR_WDINTS) == 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // If the status bit is cleared, the WDINTn signal is active. // return((HWREGH(WD_BASE + SYSCTL_O_SCSR) & SYSCTL_SCSR_WDINTS) == 0U); }",
+      "registersUsed": [
+        "SCSR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCSR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_disableWatchdog",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Set the disable bit.\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDCR) |= SYSCTL_WD_CHKBITS | SYSCTL_WDCR_WDDIS;\n    SYSCTL_REGWRITE_DELAY;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Set the disable bit. // HWREGH(WD_BASE + SYSCTL_O_WDCR) |= SYSCTL_WD_CHKBITS | SYSCTL_WDCR_WDDIS; SYSCTL_REGWRITE_DELAY; EDIS; }",
+      "registersUsed": [
+        "WDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enableWatchdog",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Clear the disable bit.\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDCR) = (HWREGH(WD_BASE + SYSCTL_O_WDCR) &\n                                       ~SYSCTL_WDCR_WDDIS) | SYSCTL_WD_CHKBITS;\n    SYSCTL_REGWRITE_DELAY;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Clear the disable bit. // HWREGH(WD_BASE + SYSCTL_O_WDCR) = (HWREGH(WD_BASE + SYSCTL_O_WDCR) & ~SYSCTL_WDCR_WDDIS) | SYSCTL_WD_CHKBITS; SYSCTL_REGWRITE_DELAY; EDIS; }",
+      "registersUsed": [
+        "WDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_isWatchdogEnabled",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n\n    //\n    // Get the watchdog enable status\n    //\n    return ((HWREGH(WD_BASE + SYSCTL_O_WDCR) & SYSCTL_WDCR_WDDIS) == 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Get the watchdog enable status // return ((HWREGH(WD_BASE + SYSCTL_O_WDCR) & SYSCTL_WDCR_WDDIS) == 0U); }",
+      "registersUsed": [
+        "WDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_serviceWatchdog",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Enable the counter to be reset and then reset it.\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_ENRSTKEY;\n    HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_RSTKEY;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Enable the counter to be reset and then reset it. // HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_ENRSTKEY; HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_RSTKEY; EDIS; }",
+      "registersUsed": [
+        "WDKEY"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDKEY"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enableWatchdogReset",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Enable the counter to be reset\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_ENRSTKEY;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Enable the counter to be reset // HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_ENRSTKEY; EDIS; }",
+      "registersUsed": [
+        "WDKEY"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDKEY"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_resetWatchdog",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Reset the watchdog counter\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_RSTKEY;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Reset the watchdog counter // HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_RSTKEY; EDIS; }",
+      "registersUsed": [
+        "WDKEY"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDKEY"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setWatchdogPrescaler",
+      "functionArgs": [
+        "prescaler"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_WDPrescaler"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t regVal;\n\n    regVal = (uint16_t)prescaler | (uint16_t)SYSCTL_WD_CHKBITS;\n\n    EALLOW;\n\n    //\n    // Write the prescaler to the appropriate register.\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDCR) = (HWREGH(WD_BASE + SYSCTL_O_WDCR) &\n                                       ~(SYSCTL_WDCR_WDPS_M)) | regVal;\n    SYSCTL_REGWRITE_DELAY;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t regVal; regVal = (uint16_t)prescaler | (uint16_t)SYSCTL_WD_CHKBITS; EALLOW; // // Write the prescaler to the appropriate register. // HWREGH(WD_BASE + SYSCTL_O_WDCR) = (HWREGH(WD_BASE + SYSCTL_O_WDCR) & ~(SYSCTL_WDCR_WDPS_M)) | regVal; SYSCTL_REGWRITE_DELAY; EDIS; }",
+      "registersUsed": [
+        "WDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getWatchdogCounterValue",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Read and return the value of the watchdog counter.\n    //\n    return(HWREGH(WD_BASE + SYSCTL_O_WDCNTR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return the value of the watchdog counter. // return(HWREGH(WD_BASE + SYSCTL_O_WDCNTR)); }",
+      "registersUsed": [
+        "WDCNTR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDCNTR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getWatchdogResetStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Read and return the status of the watchdog reset status flag.\n    //\n    return((HWREGH(CPUSYS_BASE + SYSCTL_O_RESC) & SYSCTL_RESC_WDRSN) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return the status of the watchdog reset status flag. // return((HWREGH(CPUSYS_BASE + SYSCTL_O_RESC) & SYSCTL_RESC_WDRSN) != 0U); }",
+      "registersUsed": [
+        "RESC"
+      ],
+      "registersUsedMatchingBifield": [
+        "RESC"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_clearWatchdogResetStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Read and return the status of the watchdog reset status flag.\n    //\n    HWREGH(CPUSYS_BASE + SYSCTL_O_RESC) = SYSCTL_RESC_WDRSN;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Read and return the status of the watchdog reset status flag. // HWREGH(CPUSYS_BASE + SYSCTL_O_RESC) = SYSCTL_RESC_WDRSN; EDIS; }",
+      "registersUsed": [
+        "RESC"
+      ],
+      "registersUsedMatchingBifield": [
+        "RESC"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setWatchdogWindowValue",
+      "functionArgs": [
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Clear the windowed value\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDWCR) &= ~SYSCTL_WDWCR_MIN_M;\n\n    //\n    // Set the windowed value\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDWCR) |= (value & SYSCTL_WDWCR_MIN_M);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Clear the windowed value // HWREGH(WD_BASE + SYSCTL_O_WDWCR) &= ~SYSCTL_WDWCR_MIN_M; // // Set the windowed value // HWREGH(WD_BASE + SYSCTL_O_WDWCR) |= (value & SYSCTL_WDWCR_MIN_M); EDIS; }",
+      "registersUsed": [
+        "WDWCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDWCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_clearWatchdogOverride",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    HWREGH(WD_BASE + SYSCTL_O_SCSR) |= SYSCTL_SCSR_WDOVERRIDE;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREGH(WD_BASE + SYSCTL_O_SCSR) |= SYSCTL_SCSR_WDOVERRIDE; EDIS; }",
+      "registersUsed": [
+        "SCSR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCSR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enableNMIGlobalInterrupt",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    HWREGH(NMI_BASE + NMI_O_CFG) |= NMI_CFG_NMIE;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREGH(NMI_BASE + NMI_O_CFG) |= NMI_CFG_NMIE; EDIS; }",
+      "registersUsed": [
+        "CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "CFG"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getNMIStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Read and return the current value of the NMI flag register, masking out\n    // all but the NMI bit.\n    //\n    return((HWREGH(NMI_BASE + NMI_O_FLG) & NMI_FLG_NMIINT) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return the current value of the NMI flag register, masking out // all but the NMI bit. // return((HWREGH(NMI_BASE + NMI_O_FLG) & NMI_FLG_NMIINT) != 0U); }",
+      "registersUsed": [
+        "FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLG"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getNMIFlagStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Read and return the current value of the NMI flag register.\n    //\n    return(HWREGH(NMI_BASE + NMI_O_FLG));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return the current value of the NMI flag register. // return(HWREGH(NMI_BASE + NMI_O_FLG)); }",
+      "registersUsed": [
+        "FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLG"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_isNMIFlagSet",
+      "functionArgs": [
+        "nmiFlags"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    // Make sure if reserved bits are not set in nmiFlags.\n    //\n    ASSERT((nmiFlags & ~(\n                         SYSCTL_NMI_NMIINT           |\n                         SYSCTL_NMI_CLOCKFAIL        |\n                         SYSCTL_NMI_RAMUNCERR        |\n                         SYSCTL_NMI_FLUNCERR         |\n                         SYSCTL_NMI_CPU1HWBISTERR    |\n                         SYSCTL_NMI_CLBNMI\n                         )) == 0U);\n\n    //\n    // Read the flag register and return true if any of them are set.\n    //\n    return((HWREGH(NMI_BASE + NMI_O_FLG) & nmiFlags) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // Make sure if reserved bits are not set in nmiFlags. // ASSERT((nmiFlags & ~( SYSCTL_NMI_NMIINT | SYSCTL_NMI_CLOCKFAIL | SYSCTL_NMI_RAMUNCERR | SYSCTL_NMI_FLUNCERR | SYSCTL_NMI_CPU1HWBISTERR | SYSCTL_NMI_CLBNMI )) == 0U); // // Read the flag register and return true if any of them are set. // return((HWREGH(NMI_BASE + NMI_O_FLG) & nmiFlags) != 0U); }",
+      "registersUsed": [
+        "FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLG"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_clearNMIStatus",
+      "functionArgs": [
+        "nmiFlags"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    // Make sure if reserved bits are not set in nmiFlags.\n    //\n    ASSERT((nmiFlags & ~(\n                         SYSCTL_NMI_NMIINT           |\n                         SYSCTL_NMI_CLOCKFAIL        |\n                         SYSCTL_NMI_RAMUNCERR        |\n                         SYSCTL_NMI_FLUNCERR         |\n                         SYSCTL_NMI_CPU1HWBISTERR    |\n                         SYSCTL_NMI_CLBNMI\n                         )) == 0U);\n\n    EALLOW;\n\n    //\n    // Clear the individual flags as well as NMI Interrupt flag\n    //\n    HWREGH(NMI_BASE + NMI_O_FLGCLR) = nmiFlags;\n    HWREGH(NMI_BASE + NMI_O_FLGCLR) = NMI_FLG_NMIINT;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // Make sure if reserved bits are not set in nmiFlags. // ASSERT((nmiFlags & ~( SYSCTL_NMI_NMIINT | SYSCTL_NMI_CLOCKFAIL | SYSCTL_NMI_RAMUNCERR | SYSCTL_NMI_FLUNCERR | SYSCTL_NMI_CPU1HWBISTERR | SYSCTL_NMI_CLBNMI )) == 0U); EALLOW; // // Clear the individual flags as well as NMI Interrupt flag // HWREGH(NMI_BASE + NMI_O_FLGCLR) = nmiFlags; HWREGH(NMI_BASE + NMI_O_FLGCLR) = NMI_FLG_NMIINT; EDIS; }",
+      "registersUsed": [
+        "FLG",
+        "FLGCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLG",
+        "FLGCLR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_clearAllNMIFlags",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t nmiFlags;\n\n    //\n    // Read the flag status register and then write to the clear register,\n    // clearing all the flags that were returned plus the NMI flag.\n    //\n    EALLOW;\n\n    nmiFlags = SysCtl_getNMIFlagStatus();\n    HWREGH(NMI_BASE + NMI_O_FLGCLR) = nmiFlags;\n    HWREGH(NMI_BASE + NMI_O_FLGCLR) = NMI_FLG_NMIINT;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t nmiFlags; // // Read the flag status register and then write to the clear register, // clearing all the flags that were returned plus the NMI flag. // EALLOW; nmiFlags = SysCtl_getNMIFlagStatus(); HWREGH(NMI_BASE + NMI_O_FLGCLR) = nmiFlags; HWREGH(NMI_BASE + NMI_O_FLGCLR) = NMI_FLG_NMIINT; EDIS; }",
+      "registersUsed": [
+        "FLG",
+        "FLGCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLG",
+        "FLGCLR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_forceNMIFlags",
+      "functionArgs": [
+        "nmiFlags"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    // Make sure if reserved bits are not set in nmiFlags.\n    //\n    ASSERT((nmiFlags & ~(\n                         SYSCTL_NMI_NMIINT           |\n                         SYSCTL_NMI_CLOCKFAIL        |\n                         SYSCTL_NMI_RAMUNCERR        |\n                         SYSCTL_NMI_FLUNCERR         |\n                         SYSCTL_NMI_CPU1HWBISTERR    |\n                         SYSCTL_NMI_CLBNMI\n                        )) == 0U);\n\n    EALLOW;\n\n    //\n    // Set the Flags for the individual interrupts in the NMI flag\n    // force register\n    //\n    HWREGH(NMI_BASE + NMI_O_FLGFRC) |= nmiFlags;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // Make sure if reserved bits are not set in nmiFlags. // ASSERT((nmiFlags & ~( SYSCTL_NMI_NMIINT | SYSCTL_NMI_CLOCKFAIL | SYSCTL_NMI_RAMUNCERR | SYSCTL_NMI_FLUNCERR | SYSCTL_NMI_CPU1HWBISTERR | SYSCTL_NMI_CLBNMI )) == 0U); EALLOW; // // Set the Flags for the individual interrupts in the NMI flag // force register // HWREGH(NMI_BASE + NMI_O_FLGFRC) |= nmiFlags; EDIS; }",
+      "registersUsed": [
+        "FLG",
+        "FLGFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLG",
+        "FLGFRC"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getNMIWatchdogCounter",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Read and return the NMI watchdog counter register's value.\n    //\n    return(HWREGH(NMI_BASE + NMI_O_WDCNT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return the NMI watchdog counter register's value. // return(HWREGH(NMI_BASE + NMI_O_WDCNT)); }",
+      "registersUsed": [
+        "WDCNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDCNT"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setNMIWatchdogPeriod",
+      "functionArgs": [
+        "wdPeriod"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Write to the period register.\n    //\n    HWREGH(NMI_BASE + NMI_O_WDPRD) = wdPeriod;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Write to the period register. // HWREGH(NMI_BASE + NMI_O_WDPRD) = wdPeriod; EDIS; }",
+      "registersUsed": [
+        "WDPRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDPRD"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getNMIWatchdogPeriod",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Read and return the NMI watchdog period register's value.\n    //\n    return(HWREGH(NMI_BASE + NMI_O_WDPRD));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return the NMI watchdog period register's value. // return(HWREGH(NMI_BASE + NMI_O_WDPRD)); }",
+      "registersUsed": [
+        "WDPRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDPRD"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getNMIShadowFlagStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Read and return the current value of the NMI shadow flag register.\n    //\n    return(HWREGH(NMI_BASE + NMI_O_SHDFLG));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return the current value of the NMI shadow flag register. // return(HWREGH(NMI_BASE + NMI_O_SHDFLG)); }",
+      "registersUsed": [
+        "SHDFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SHDFLG"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_isNMIShadowFlagSet",
+      "functionArgs": [
+        "nmiFlags"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    // Make sure if reserved bits are not set in nmiFlags.\n    //\n    ASSERT((nmiFlags & ~(\n                         SYSCTL_NMI_NMIINT           |\n                         SYSCTL_NMI_CLOCKFAIL        |\n                         SYSCTL_NMI_RAMUNCERR        |\n                         SYSCTL_NMI_FLUNCERR         |\n                         SYSCTL_NMI_CPU1HWBISTERR    |\n                         SYSCTL_NMI_CLBNMI\n                        )) == 0U);\n\n    //\n    // Read the flag register and return true if any of them are set.\n    //\n    return((HWREGH(NMI_BASE + NMI_O_SHDFLG) & nmiFlags) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // Make sure if reserved bits are not set in nmiFlags. // ASSERT((nmiFlags & ~( SYSCTL_NMI_NMIINT | SYSCTL_NMI_CLOCKFAIL | SYSCTL_NMI_RAMUNCERR | SYSCTL_NMI_FLUNCERR | SYSCTL_NMI_CPU1HWBISTERR | SYSCTL_NMI_CLBNMI )) == 0U); // // Read the flag register and return true if any of them are set. // return((HWREGH(NMI_BASE + NMI_O_SHDFLG) & nmiFlags) != 0U); }",
+      "registersUsed": [
+        "SHDFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SHDFLG"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enableMCD",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    HWREGH(CLKCFG_BASE + SYSCTL_O_MCDCR) &= ~(SYSCTL_MCDCR_MCLKOFF);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_MCDCR) &= ~(SYSCTL_MCDCR_MCLKOFF); EDIS; }",
+      "registersUsed": [
+        "MCDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCDCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_disableMCD",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    HWREGH(CLKCFG_BASE + SYSCTL_O_MCDCR) |= SYSCTL_MCDCR_MCLKOFF;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_MCDCR) |= SYSCTL_MCDCR_MCLKOFF; EDIS; }",
+      "registersUsed": [
+        "MCDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCDCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_isMCDClockFailureDetected",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    //  Check the status bit to determine failure\n    //\n    return((HWREGH(CLKCFG_BASE + SYSCTL_O_MCDCR) & SYSCTL_MCDCR_MCLKSTS) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the status bit to determine failure // return((HWREGH(CLKCFG_BASE + SYSCTL_O_MCDCR) & SYSCTL_MCDCR_MCLKSTS) != 0U); }",
+      "registersUsed": [
+        "MCDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCDCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_resetMCD",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    HWREGH(CLKCFG_BASE + SYSCTL_O_MCDCR) |= SYSCTL_MCDCR_MCLKCLR;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_MCDCR) |= SYSCTL_MCDCR_MCLKCLR; EDIS; }",
+      "registersUsed": [
+        "MCDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCDCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_connectMCDClockSource",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    HWREGH(CLKCFG_BASE + SYSCTL_O_MCDCR) &= ~(SYSCTL_MCDCR_OSCOFF);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_MCDCR) &= ~(SYSCTL_MCDCR_OSCOFF); EDIS; }",
+      "registersUsed": [
+        "MCDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCDCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_disconnectMCDClockSource",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    HWREGH(CLKCFG_BASE + SYSCTL_O_MCDCR) |= SYSCTL_MCDCR_OSCOFF;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_MCDCR) |= SYSCTL_MCDCR_OSCOFF; EDIS; }",
+      "registersUsed": [
+        "MCDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCDCR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setSyncInputConfig",
+      "functionArgs": [
+        "syncInput",
+        "syncSrc"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_SyncInput",
+        "SysCtl_SyncInputSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t clearMask;\n\n    //\n    // Write the input sync source selection to the appropriate register.\n    //\n    EALLOW;\n    clearMask = (uint32_t)SYSCTL_SYNCSELECT_SYNCIN_M << (uint32_t)syncInput;\n\n    HWREG(SYNCSOC_BASE + SYSCTL_O_SYNCSELECT) =\n        (HWREG(SYNCSOC_BASE + SYSCTL_O_SYNCSELECT) & ~clearMask) |\n        ((uint32_t)syncSrc << (uint32_t)syncInput);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t clearMask; // // Write the input sync source selection to the appropriate register. // EALLOW; clearMask = (uint32_t)SYSCTL_SYNCSELECT_SYNCIN_M << (uint32_t)syncInput; HWREG(SYNCSOC_BASE + SYSCTL_O_SYNCSELECT) = (HWREG(SYNCSOC_BASE + SYSCTL_O_SYNCSELECT) & ~clearMask) | ((uint32_t)syncSrc << (uint32_t)syncInput); EDIS; }",
+      "registersUsed": [
+        "SYNCSELECT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SYNCSELECT"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setSyncOutputConfig",
+      "functionArgs": [
+        "syncSrc"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_SyncOutputSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write the sync output source selection to the appropriate register.\n    //\n    EALLOW;\n    HWREG(SYNCSOC_BASE + SYSCTL_O_SYNCSELECT) =\n        (HWREG(SYNCSOC_BASE + SYSCTL_O_SYNCSELECT) &\n         ~((uint32_t)SYSCTL_SYNCSELECT_SYNCOUT_M)) |\n        ((uint32_t)syncSrc << SYSCTL_SYNCSELECT_SYNCOUT_S);\n    EDIS;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write the sync output source selection to the appropriate register. // EALLOW; HWREG(SYNCSOC_BASE + SYSCTL_O_SYNCSELECT) = (HWREG(SYNCSOC_BASE + SYSCTL_O_SYNCSELECT) & ~((uint32_t)SYSCTL_SYNCSELECT_SYNCOUT_M)) | ((uint32_t)syncSrc << SYSCTL_SYNCSELECT_SYNCOUT_S); EDIS; }",
+      "registersUsed": [
+        "SYNCSELECT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SYNCSELECT"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_enableExtADCSOCSource",
+      "functionArgs": [
+        "adcsocSrc"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the bits that correspond to signal to be enabled.\n    //\n    EALLOW;\n    HWREG(SYNCSOC_BASE + SYSCTL_O_ADCSOCOUTSELECT) |= adcsocSrc;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the bits that correspond to signal to be enabled. // EALLOW; HWREG(SYNCSOC_BASE + SYSCTL_O_ADCSOCOUTSELECT) |= adcsocSrc; EDIS; }",
+      "registersUsed": [
+        "ADCSOCOUTSELECT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCSOCOUTSELECT"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_disableExtADCSOCSource",
+      "functionArgs": [
+        "adcsocSrc"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear the bits that correspond to signal to be disabled.\n    //\n    EALLOW;\n    HWREG(SYNCSOC_BASE + SYSCTL_O_ADCSOCOUTSELECT) &= ~adcsocSrc;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the bits that correspond to signal to be disabled. // EALLOW; HWREG(SYNCSOC_BASE + SYSCTL_O_ADCSOCOUTSELECT) &= ~adcsocSrc; EDIS; }",
+      "registersUsed": [
+        "ADCSOCOUTSELECT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCSOCOUTSELECT"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_lockExtADCSOCSelect",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Lock the ADCSOCOUTSELECT bit of the SYNCSOCLOCK register.\n    //\n    EALLOW;\n    HWREG(SYNCSOC_BASE + SYSCTL_O_SYNCSOCLOCK) =\n        SYSCTL_SYNCSOCLOCK_ADCSOCOUTSELECT;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Lock the ADCSOCOUTSELECT bit of the SYNCSOCLOCK register. // EALLOW; HWREG(SYNCSOC_BASE + SYSCTL_O_SYNCSOCLOCK) = SYSCTL_SYNCSOCLOCK_ADCSOCOUTSELECT; EDIS; }",
+      "registersUsed": [
+        "SYNCSOCLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "SYNCSOCLOCK"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_selectSecController",
+      "functionArgs": [
+        "periFrame1Config",
+        "periFrame2Config"
+      ],
+      "functionArgsTypes": [
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    HWREG(CPUSYS_BASE + SYSCTL_O_SECMSEL) =\n            (((periFrame1Config << SYSCTL_SECMSEL_PF1SEL_S) &\n               SYSCTL_SECMSEL_PF1SEL_M) |\n             ((periFrame2Config << SYSCTL_SECMSEL_PF2SEL_S) &\n                SYSCTL_SECMSEL_PF2SEL_M));\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREG(CPUSYS_BASE + SYSCTL_O_SECMSEL) = (((periFrame1Config << SYSCTL_SECMSEL_PF1SEL_S) & SYSCTL_SECMSEL_PF1SEL_M) | ((periFrame2Config << SYSCTL_SECMSEL_PF2SEL_S) & SYSCTL_SECMSEL_PF2SEL_M)); EDIS; }",
+      "registersUsed": [
+        "SECMSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SECMSEL"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_lockSyncSelect",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Lock the SYNCSELECT register.\n    //\n    EALLOW;\n    HWREG(SYNCSOC_BASE + SYSCTL_O_SYNCSOCLOCK) = SYSCTL_SYNCSOCLOCK_SYNCSELECT;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Lock the SYNCSELECT register. // EALLOW; HWREG(SYNCSOC_BASE + SYSCTL_O_SYNCSOCLOCK) = SYSCTL_SYNCSOCLOCK_SYNCSELECT; EDIS; }",
+      "registersUsed": [
+        "SYNCSOCLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "SYNCSOCLOCK"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getDeviceRevision",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Returns the device silicon revision ID\n    //\n    return(HWREG(DEVCFG_BASE + SYSCTL_O_REVID));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Returns the device silicon revision ID // return(HWREG(DEVCFG_BASE + SYSCTL_O_REVID)); }",
+      "registersUsed": [
+        "REVID"
+      ],
+      "registersUsedMatchingBifield": [
+        "REVID"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getEfuseError",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    return(HWREGH(DEVCFG_BASE + SYSCTL_O_FUSEERR));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREGH(DEVCFG_BASE + SYSCTL_O_FUSEERR)); }",
+      "registersUsed": [
+        "FUSEERR"
+      ],
+      "registersUsedMatchingBifield": [
+        "FUSEERR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setXClk",
+      "functionArgs": [
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_XClkDivider"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clears the divider then configures it.\n    //\n    EALLOW;\n    HWREGH(CLKCFG_BASE + SYSCTL_O_XCLKOUTDIVSEL) =\n                        (HWREGH(CLKCFG_BASE + SYSCTL_O_XCLKOUTDIVSEL) &\n                         ~(SYSCTL_XCLKOUTDIVSEL_XCLKOUTDIV_M)) |\n                        (uint16_t)divider;\n    SYSCTL_REGWRITE_DELAY;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clears the divider then configures it. // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_XCLKOUTDIVSEL) = (HWREGH(CLKCFG_BASE + SYSCTL_O_XCLKOUTDIVSEL) & ~(SYSCTL_XCLKOUTDIVSEL_XCLKOUTDIV_M)) | (uint16_t)divider; SYSCTL_REGWRITE_DELAY; EDIS; }",
+      "registersUsed": [
+        "XCLKOUTDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "XCLKOUTDIVSEL"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setPLLSysClk",
+      "functionArgs": [
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clears the divider then configures it.\n    //\n    EALLOW;\n    HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) =\n                    (HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) &\n                     ~(SYSCTL_SYSCLKDIVSEL_PLLSYSCLKDIV_M)) | divider;\n    SYSCTL_REGWRITE_DELAY;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clears the divider then configures it. // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) = (HWREGH(CLKCFG_BASE + SYSCTL_O_SYSCLKDIVSEL) & ~(SYSCTL_SYSCLKDIVSEL_PLLSYSCLKDIV_M)) | divider; SYSCTL_REGWRITE_DELAY; EDIS; }",
+      "registersUsed": [
+        "SYSCLKDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SYSCLKDIVSEL"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setAuxPLLClk",
+      "functionArgs": [
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_AuxPLLClkDivider"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clears the divider then configures it.\n    //\n    EALLOW;\n    HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) =\n                    (HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) &\n                     ~(SYSCTL_AUXCLKDIVSEL_AUXPLLDIV_M)) | (uint16_t)divider;\n    SYSCTL_REGWRITE_DELAY;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clears the divider then configures it. // EALLOW; HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) = (HWREGH(CLKCFG_BASE + SYSCTL_O_AUXCLKDIVSEL) & ~(SYSCTL_AUXCLKDIVSEL_AUXPLLDIV_M)) | (uint16_t)divider; SYSCTL_REGWRITE_DELAY; EDIS; }",
+      "registersUsed": [
+        "AUXCLKDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "AUXCLKDIVSEL"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_setCputimer2Clk",
+      "functionArgs": [
+        "divider",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_Cputimer2ClkDivider",
+        "SysCtl_Cputimer2ClkSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n  //\n    // Clears the divider & the source, then configures it.\n    //\n    EALLOW;\n    HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) =\n                    (HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) &\n                     ~(SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_M |\n                       SYSCTL_TMR2CLKCTL_TMR2CLKPRESCALE_M));\n    SYSCTL_REGWRITE_DELAY;\n\n    HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) |=\n                    ((uint16_t)divider << SYSCTL_TMR2CLKCTL_TMR2CLKPRESCALE_S) |\n                    ((uint16_t)source << SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_S);\n    SYSCTL_REGWRITE_DELAY;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clears the divider & the source, then configures it. // EALLOW; HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = (HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) & ~(SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_M | SYSCTL_TMR2CLKCTL_TMR2CLKPRESCALE_M)); SYSCTL_REGWRITE_DELAY; HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) |= ((uint16_t)divider << SYSCTL_TMR2CLKCTL_TMR2CLKPRESCALE_S) | ((uint16_t)source << SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_S); SYSCTL_REGWRITE_DELAY; EDIS; }",
+      "registersUsed": [
+        "TMR2CLKCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TMR2CLKCTL"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getPIEVErrAddr",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(HWREG(CPUSYS_BASE + SYSCTL_O_PIEVERRADDR));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(CPUSYS_BASE + SYSCTL_O_PIEVERRADDR)); }",
+      "registersUsed": [
+        "PIEVERRADDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PIEVERRADDR"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_isPresentUSBPHY",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return((HWREG(DEVCFG_BASE + SYSCTL_O_PERCNF1) &\n            SYSCTL_PERCNF1_USB_A_PHY) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ return((HWREG(DEVCFG_BASE + SYSCTL_O_PERCNF1) & SYSCTL_PERCNF1_USB_A_PHY) != 0U); }",
+      "registersUsed": [
+        "PERCNF1"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCNF1"
+      ]
+    },
+    {
+      "file": "sysctl.h",
+      "peripheral": "sysctl",
+      "functionName": "SysCtl_getDeviceUID",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Returns the device UID_UNIQUE value\n    //\n    return(HWREG(UID_BASE + OTP_O_UID_UNIQUE));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Returns the device UID_UNIQUE value // return(HWREG(UID_BASE + OTP_O_UID_UNIQUE)); }",
+      "registersUsed": [
+        "UID_UNIQUE"
+      ],
+      "registersUsedMatchingBifield": [
+        "UID_UNIQUE"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,555 @@
+{
+  "name": "erad",
+  "functions": [
+    {
+      "file": "erad.c",
+      "peripheral": "erad",
+      "functionName": "ERAD_configBusComp",
+      "functionArgs": [
+        "base",
+        "config_params"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ERAD_BusComp_Config"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check if owner is APPLICATION or NO_OWNER\n    //\n    ASSERT((ERAD_getOwnership() == ERAD_OWNER_APPLICATION) ||\n           (ERAD_getOwnership() == ERAD_OWNER_NOOWNER));\n\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidBusCompBase(base));\n\n    //\n    // Check if the bus comparator is in ERAD_STATE_IDLE\n    //\n    ASSERT(ERAD_getBusCompStatus(base) == ERAD_STATE_IDLE);\n\n    //\n    // Write into necessary registers to configure the bus comparator\n    //\n    EALLOW;\n    HWREG(base + ERAD_O_HWBP_MASK) = config_params.mask;\n    HWREG(base + ERAD_O_HWBP_REF)  = config_params.reference;\n\n    //\n    // Set the comparison mode and the CPU bus to be monitored\n    // Enable interrupt and CPU halt if specified in the parameters\n    //\n    HWREGH(base + ERAD_O_HWBP_CNTL) =\n        ((uint16_t)config_params.comp_mode   << ERAD_HWBP_CNTL_COMP_MODE_S) |\n        ((uint16_t)config_params.bus_sel     << ERAD_HWBP_CNTL_BUS_SEL_S)   |\n        ((uint16_t)config_params.enable_stop << ERAD_HWBP_CNTL_STOP_S)      |\n        ((uint16_t)config_params.enable_int  << ERAD_HWBP_CNTL_RTOSINT_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if owner is APPLICATION or NO_OWNER // ASSERT((ERAD_getOwnership() == ERAD_OWNER_APPLICATION) || (ERAD_getOwnership() == ERAD_OWNER_NOOWNER)); // // Check if the base is valid // ASSERT(ERAD_isValidBusCompBase(base)); // // Check if the bus comparator is in ERAD_STATE_IDLE // ASSERT(ERAD_getBusCompStatus(base) == ERAD_STATE_IDLE); // // Write into necessary registers to configure the bus comparator // EALLOW; HWREG(base + ERAD_O_HWBP_MASK) = config_params.mask; HWREG(base + ERAD_O_HWBP_REF) = config_params.reference; // // Set the comparison mode and the CPU bus to be monitored // Enable interrupt and CPU halt if specified in the parameters // HWREGH(base + ERAD_O_HWBP_CNTL) = ((uint16_t)config_params.comp_mode << ERAD_HWBP_CNTL_COMP_MODE_S) | ((uint16_t)config_params.bus_sel << ERAD_HWBP_CNTL_BUS_SEL_S) | ((uint16_t)config_params.enable_stop << ERAD_HWBP_CNTL_STOP_S) | ((uint16_t)config_params.enable_int << ERAD_HWBP_CNTL_RTOSINT_S); EDIS; }",
+      "registersUsed": [
+        "HWBP_MASK",
+        "HWBP_REF",
+        "HWBP_CNTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HWBP_MASK",
+        "HWBP_REF",
+        "HWBP_CNTL"
+      ]
+    },
+    {
+      "file": "erad.c",
+      "peripheral": "erad",
+      "functionName": "ERAD_configCounterInCountingMode",
+      "functionArgs": [
+        "base",
+        "config_params"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ERAD_Counter_Config"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check if owner is APPLICATION or NO_OWNER\n    //\n    ASSERT((ERAD_getOwnership() == ERAD_OWNER_APPLICATION) ||\n           (ERAD_getOwnership() == ERAD_OWNER_NOOWNER));\n\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidCounterBase(base));\n\n    //\n    // Check if the counter is in ERAD_STATE_IDLE\n    //\n    ASSERT(ERAD_getCounterStatus(base) == ERAD_STATE_IDLE);\n\n    //\n    // Write into registers to configure the counter\n    //\n    EALLOW;\n\n    HWREG(base + ERAD_O_CTM_REF) = config_params.reference;\n\n    if(config_params.event == ERAD_EVENT_NO_EVENT)\n    {\n        //\n        // If ERAD_EVENT_NO_EVENT is selected, clear the counter input select\n        // enable bit. The counter will count CPU cycles.\n        //\n        HWREGH(base + ERAD_O_CTM_INPUT_SEL) = 0U;\n    }\n    else\n    {\n        //\n        // For any other value, set the counter input select enable bit and\n        // configure the counter input event.\n        //\n        HWREGH(base + ERAD_O_CTM_INPUT_SEL) =\n          ((uint16_t)config_params.event << ERAD_CTM_INPUT_SEL_CNT_INP_SEL_S) |\n          ERAD_CTM_INPUT_SEL_CTM_INP_SEL_EN;\n    }\n\n    //\n    // Set the counter in Normal count mode\n    // Set the event mode as Rising edge or Active\n    // Enable interrupt, CPU halt and reset on match if specified in the\n    // parameters\n    //\n    HWREGH(base + ERAD_O_CTM_CNTL) =\n        (HWREGH(base + ERAD_O_CTM_CNTL) & (~(ERAD_CTM_CNTL_RTOSINT      |\n                                             ERAD_CTM_CNTL_STOP         |\n                                             ERAD_CTM_CNTL_RST_ON_MATCH |\n                                             ERAD_CTM_CNTL_EVENT_MODE   |\n                                             ERAD_CTM_CNTL_START_STOP_MODE))) |\n        ((uint16_t)config_params.enable_int   << ERAD_CTM_CNTL_RTOSINT_S)     |\n        ((uint16_t)config_params.enable_stop  << ERAD_CTM_CNTL_STOP_S)        |\n        ((uint16_t)config_params.event_mode   << ERAD_CTM_CNTL_EVENT_MODE_S)  |\n        ((uint16_t)config_params.rst_on_match << ERAD_CTM_CNTL_RST_ON_MATCH_S);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if owner is APPLICATION or NO_OWNER // ASSERT((ERAD_getOwnership() == ERAD_OWNER_APPLICATION) || (ERAD_getOwnership() == ERAD_OWNER_NOOWNER)); // // Check if the base is valid // ASSERT(ERAD_isValidCounterBase(base)); // // Check if the counter is in ERAD_STATE_IDLE // ASSERT(ERAD_getCounterStatus(base) == ERAD_STATE_IDLE); // // Write into registers to configure the counter // EALLOW; HWREG(base + ERAD_O_CTM_REF) = config_params.reference; if(config_params.event == ERAD_EVENT_NO_EVENT) { // // If ERAD_EVENT_NO_EVENT is selected, clear the counter input select // enable bit. The counter will count CPU cycles. // HWREGH(base + ERAD_O_CTM_INPUT_SEL) = 0U; } else { // // For any other value, set the counter input select enable bit and // configure the counter input event. // HWREGH(base + ERAD_O_CTM_INPUT_SEL) = ((uint16_t)config_params.event << ERAD_CTM_INPUT_SEL_CNT_INP_SEL_S) | ERAD_CTM_INPUT_SEL_CTM_INP_SEL_EN; } // // Set the counter in Normal count mode // Set the event mode as Rising edge or Active // Enable interrupt, CPU halt and reset on match if specified in the // parameters // HWREGH(base + ERAD_O_CTM_CNTL) = (HWREGH(base + ERAD_O_CTM_CNTL) & (~(ERAD_CTM_CNTL_RTOSINT | ERAD_CTM_CNTL_STOP | ERAD_CTM_CNTL_RST_ON_MATCH | ERAD_CTM_CNTL_EVENT_MODE | ERAD_CTM_CNTL_START_STOP_MODE))) | ((uint16_t)config_params.enable_int << ERAD_CTM_CNTL_RTOSINT_S) | ((uint16_t)config_params.enable_stop << ERAD_CTM_CNTL_STOP_S) | ((uint16_t)config_params.event_mode << ERAD_CTM_CNTL_EVENT_MODE_S) | ((uint16_t)config_params.rst_on_match << ERAD_CTM_CNTL_RST_ON_MATCH_S); EDIS; }",
+      "registersUsed": [
+        "CTM_CNTL",
+        "CTM_REF",
+        "CTM_INPUT_SEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTM_CNTL",
+        "CTM_REF",
+        "CTM_INPUT_SEL"
+      ]
+    },
+    {
+      "file": "erad.c",
+      "peripheral": "erad",
+      "functionName": "ERAD_configCounterInStartStopMode",
+      "functionArgs": [
+        "base",
+        "config_params",
+        "start_event",
+        "stop_event"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ERAD_Counter_Config",
+        "ERAD_Counter_Input_Event",
+        "ERAD_Counter_Input_Event"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check if owner is APPLICATION or NO_OWNER\n    //\n    ASSERT((ERAD_getOwnership() == ERAD_OWNER_APPLICATION) ||\n                                  (ERAD_getOwnership() == ERAD_OWNER_NOOWNER));\n\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidCounterBase(base));\n\n    //\n    // Check if the counter is in IDLE state\n    //\n    ASSERT(ERAD_getCounterStatus(base) == ERAD_STATE_IDLE);\n\n    //\n    // Write into registers to configure the counter\n    //\n    EALLOW;\n\n    HWREG(base + ERAD_O_CTM_REF) = config_params.reference;\n\n    if(config_params.event == ERAD_EVENT_NO_EVENT)\n    {\n        //\n        // If ERAD_EVENT_NO_EVENT is selected, clear the counter input select\n        // enable bit. The counter will count CPU cycles.\n        // Set the start and stop events\n        //\n        HWREGH(base + ERAD_O_CTM_INPUT_SEL) =\n                ((uint16_t)start_event << ERAD_CTM_INPUT_SEL_STA_INP_SEL_S) |\n                ((uint16_t)stop_event << ERAD_CTM_INPUT_SEL_STO_INP_SEL_S);\n    }\n    else\n    {\n        //\n        // For any other value, set the counter input select enable bit and\n        // configure the counter input, start event and stop event,\n        //\n        HWREGH(base + ERAD_O_CTM_INPUT_SEL) =\n           ((uint16_t)config_params.event << ERAD_CTM_INPUT_SEL_CNT_INP_SEL_S) |\n           ((uint16_t)start_event         << ERAD_CTM_INPUT_SEL_STA_INP_SEL_S) |\n           ((uint16_t)stop_event          << ERAD_CTM_INPUT_SEL_STO_INP_SEL_S) |\n           ERAD_CTM_INPUT_SEL_CTM_INP_SEL_EN;\n    }\n\n    //\n    // Setting the counter in Start-Stop mode, with the reset values\n    // remaining as they are\n    // Set the event mode as Rising edge or Active\n    // Enable interrupt, CPU halt and reset on match if specified in the\n    // parameters\n    //\n    HWREGH(base + ERAD_O_CTM_CNTL) =\n        (HWREGH(base + ERAD_O_CTM_CNTL) & (~(ERAD_CTM_CNTL_RTOSINT      |\n                                             ERAD_CTM_CNTL_STOP         |\n                                             ERAD_CTM_CNTL_RST_ON_MATCH |\n                                             ERAD_CTM_CNTL_EVENT_MODE )))    |\n        ERAD_CTM_CNTL_START_STOP_MODE                                        |\n        ((uint16_t)config_params.enable_int   << ERAD_CTM_CNTL_RTOSINT_S)    |\n        ((uint16_t)config_params.enable_stop  << ERAD_CTM_CNTL_STOP_S)       |\n        ((uint16_t)config_params.event_mode   << ERAD_CTM_CNTL_EVENT_MODE_S) |\n        ((uint16_t)config_params.rst_on_match << ERAD_CTM_CNTL_RST_ON_MATCH_S);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if owner is APPLICATION or NO_OWNER // ASSERT((ERAD_getOwnership() == ERAD_OWNER_APPLICATION) || (ERAD_getOwnership() == ERAD_OWNER_NOOWNER)); // // Check if the base is valid // ASSERT(ERAD_isValidCounterBase(base)); // // Check if the counter is in IDLE state // ASSERT(ERAD_getCounterStatus(base) == ERAD_STATE_IDLE); // // Write into registers to configure the counter // EALLOW; HWREG(base + ERAD_O_CTM_REF) = config_params.reference; if(config_params.event == ERAD_EVENT_NO_EVENT) { // // If ERAD_EVENT_NO_EVENT is selected, clear the counter input select // enable bit. The counter will count CPU cycles. // Set the start and stop events // HWREGH(base + ERAD_O_CTM_INPUT_SEL) = ((uint16_t)start_event << ERAD_CTM_INPUT_SEL_STA_INP_SEL_S) | ((uint16_t)stop_event << ERAD_CTM_INPUT_SEL_STO_INP_SEL_S); } else { // // For any other value, set the counter input select enable bit and // configure the counter input, start event and stop event, // HWREGH(base + ERAD_O_CTM_INPUT_SEL) = ((uint16_t)config_params.event << ERAD_CTM_INPUT_SEL_CNT_INP_SEL_S) | ((uint16_t)start_event << ERAD_CTM_INPUT_SEL_STA_INP_SEL_S) | ((uint16_t)stop_event << ERAD_CTM_INPUT_SEL_STO_INP_SEL_S) | ERAD_CTM_INPUT_SEL_CTM_INP_SEL_EN; } // // Setting the counter in Start-Stop mode, with the reset values // remaining as they are // Set the event mode as Rising edge or Active // Enable interrupt, CPU halt and reset on match if specified in the // parameters // HWREGH(base + ERAD_O_CTM_CNTL) = (HWREGH(base + ERAD_O_CTM_CNTL) & (~(ERAD_CTM_CNTL_RTOSINT | ERAD_CTM_CNTL_STOP | ERAD_CTM_CNTL_RST_ON_MATCH | ERAD_CTM_CNTL_EVENT_MODE ))) | ERAD_CTM_CNTL_START_STOP_MODE | ((uint16_t)config_params.enable_int << ERAD_CTM_CNTL_RTOSINT_S) | ((uint16_t)config_params.enable_stop << ERAD_CTM_CNTL_STOP_S) | ((uint16_t)config_params.event_mode << ERAD_CTM_CNTL_EVENT_MODE_S) | ((uint16_t)config_params.rst_on_match << ERAD_CTM_CNTL_RST_ON_MATCH_S); EDIS; }",
+      "registersUsed": [
+        "CTM_CNTL",
+        "CTM_REF",
+        "CTM_INPUT_SEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTM_CNTL",
+        "CTM_REF",
+        "CTM_INPUT_SEL"
+      ]
+    },
+    {
+      "file": "erad.c",
+      "peripheral": "erad",
+      "functionName": "ERAD_profile",
+      "functionArgs": [
+        "config_params"
+      ],
+      "functionArgsTypes": [
+        "ERAD_Profile_Params"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ERAD_BusComp_Config buscomp1_params, buscomp2_params;\n    ERAD_Counter_Config counter_params;\n\n    //\n    // Clear any previous events\n    //\n    ERAD_clearBusCompEvent(config_params.busComp_base1);\n    ERAD_clearBusCompEvent(config_params.busComp_base2);\n\n    //\n    // Clear any previous events and overflow\n    //\n    ERAD_clearCounterEvent(config_params.counter_base);\n    ERAD_clearCounterOverflow(config_params.counter_base);\n\n    //\n    // Reset the counter\n    //\n    ERAD_resetCounter(ERAD_getCounterInstance(config_params.counter_base));\n\n    //\n    // Configure the first bus comparator\n    // No interrupt or CPU halt. Compare for equality. No mask.\n    // Reference is the address of the first instruction\n    //\n    buscomp1_params.bus_sel = config_params.bus_sel;\n    buscomp1_params.comp_mode = ERAD_BUSCOMP_COMPMODE_EQ;\n    buscomp1_params.enable_stop = 0;\n    buscomp1_params.enable_int = 0;\n    buscomp1_params.mask = 0x0;\n    buscomp1_params.reference = config_params.start_address;\n    ERAD_configBusComp(config_params.busComp_base1, buscomp1_params);\n\n    //\n    // Configure the second bus comparator\n    // No interrupt or CPU halt. Compare for equality. No mask.\n    // Reference is the address of the last instruction\n    //\n    buscomp2_params.bus_sel = config_params.bus_sel;\n    buscomp2_params.comp_mode = ERAD_BUSCOMP_COMPMODE_EQ;\n    buscomp2_params.enable_stop = 0;\n    buscomp2_params.enable_int = 0;\n    buscomp2_params.mask = 0x0;\n    buscomp2_params.reference = config_params.end_address;\n    ERAD_configBusComp(config_params.busComp_base2, buscomp2_params);\n\n    //\n    // Configure the counter\n    // No interrupt, no CPU halt, no reset on match, no reference.\n    // Counting the number of CPU cycles\n    // Start event is the first bus comparator and stop is the second\n    //\n    counter_params.enable_int = 0;\n    counter_params.enable_stop = 0;\n    counter_params.rst_on_match = 0;\n    counter_params.reference = 0x0;\n    counter_params.event_mode = ERAD_COUNTER_MODE_ACTIVE;\n    counter_params.event = ERAD_EVENT_NO_EVENT;\n    ERAD_Counter_Input_Event start = (ERAD_Counter_Input_Event)\n                    (ERAD_BUSCOMP_BASE_TO_EVENT(config_params.busComp_base1));\n    ERAD_Counter_Input_Event stop = (ERAD_Counter_Input_Event)\n                    (ERAD_BUSCOMP_BASE_TO_EVENT(config_params.busComp_base2));\n    ERAD_configCounterInStartStopMode(config_params.counter_base,\n                                      counter_params, start, stop);\n\n    //\n    // Enable the modules\n    //\n    ERAD_enableModules(ERAD_getBusCompInstance(config_params.busComp_base1) |\n                       ERAD_getBusCompInstance(config_params.busComp_base2) |\n                       ERAD_getCounterInstance(config_params.counter_base));\n}\n",
+      "functionContentWithoutFormatting": "{ ERAD_BusComp_Config buscomp1_params, buscomp2_params; ERAD_Counter_Config counter_params; // // Clear any previous events // ERAD_clearBusCompEvent(config_params.busComp_base1); ERAD_clearBusCompEvent(config_params.busComp_base2); // // Clear any previous events and overflow // ERAD_clearCounterEvent(config_params.counter_base); ERAD_clearCounterOverflow(config_params.counter_base); // // Reset the counter // ERAD_resetCounter(ERAD_getCounterInstance(config_params.counter_base)); // // Configure the first bus comparator // No interrupt or CPU halt. Compare for equality. No mask. // Reference is the address of the first instruction // buscomp1_params.bus_sel = config_params.bus_sel; buscomp1_params.comp_mode = ERAD_BUSCOMP_COMPMODE_EQ; buscomp1_params.enable_stop = 0; buscomp1_params.enable_int = 0; buscomp1_params.mask = 0x0; buscomp1_params.reference = config_params.start_address; ERAD_configBusComp(config_params.busComp_base1, buscomp1_params); // // Configure the second bus comparator // No interrupt or CPU halt. Compare for equality. No mask. // Reference is the address of the last instruction // buscomp2_params.bus_sel = config_params.bus_sel; buscomp2_params.comp_mode = ERAD_BUSCOMP_COMPMODE_EQ; buscomp2_params.enable_stop = 0; buscomp2_params.enable_int = 0; buscomp2_params.mask = 0x0; buscomp2_params.reference = config_params.end_address; ERAD_configBusComp(config_params.busComp_base2, buscomp2_params); // // Configure the counter // No interrupt, no CPU halt, no reset on match, no reference. // Counting the number of CPU cycles // Start event is the first bus comparator and stop is the second // counter_params.enable_int = 0; counter_params.enable_stop = 0; counter_params.rst_on_match = 0; counter_params.reference = 0x0; counter_params.event_mode = ERAD_COUNTER_MODE_ACTIVE; counter_params.event = ERAD_EVENT_NO_EVENT; ERAD_Counter_Input_Event start = (ERAD_Counter_Input_Event) (ERAD_BUSCOMP_BASE_TO_EVENT(config_params.busComp_base1)); ERAD_Counter_Input_Event stop = (ERAD_Counter_Input_Event) (ERAD_BUSCOMP_BASE_TO_EVENT(config_params.busComp_base2)); ERAD_configCounterInStartStopMode(config_params.counter_base, counter_params, start, stop); // // Enable the modules // ERAD_enableModules(ERAD_getBusCompInstance(config_params.busComp_base1) | ERAD_getBusCompInstance(config_params.busComp_base2) | ERAD_getCounterInstance(config_params.counter_base)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "erad.c",
+      "peripheral": "erad",
+      "functionName": "ERAD_enableInterruptOnAddressHit",
+      "functionArgs": [
+        "config_params",
+        "busComp_base"
+      ],
+      "functionArgsTypes": [
+        "ERAD_AddressHit_Params",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ERAD_BusComp_Config buscomp_params;\n\n    //\n    // Clear any previous events\n    //\n    ERAD_clearBusCompEvent(busComp_base);\n\n    //\n    // Set the address and mask. Disable CPU halt\n    // and enable Interrupt\n    //\n    buscomp_params.reference = config_params.address;\n    buscomp_params.mask = config_params.mask;\n    buscomp_params.enable_stop = 0;\n    buscomp_params.enable_int = 1;\n\n    //\n    // Comparison mode is set to equality and the bus to be\n    // monitored is the Virtual Program Counter\n    //\n    buscomp_params.comp_mode = ERAD_BUSCOMP_COMPMODE_EQ;\n    buscomp_params.bus_sel = config_params.bus_sel;\n\n    //\n    // Configure the bus comparator\n    //\n    ERAD_configBusComp(busComp_base, buscomp_params);\n\n    //\n    // Enable the bus comparator\n    //\n    ERAD_enableModules(ERAD_getBusCompInstance(busComp_base));\n}\n",
+      "functionContentWithoutFormatting": "{ ERAD_BusComp_Config buscomp_params; // // Clear any previous events // ERAD_clearBusCompEvent(busComp_base); // // Set the address and mask. Disable CPU halt // and enable Interrupt // buscomp_params.reference = config_params.address; buscomp_params.mask = config_params.mask; buscomp_params.enable_stop = 0; buscomp_params.enable_int = 1; // // Comparison mode is set to equality and the bus to be // monitored is the Virtual Program Counter // buscomp_params.comp_mode = ERAD_BUSCOMP_COMPMODE_EQ; buscomp_params.bus_sel = config_params.bus_sel; // // Configure the bus comparator // ERAD_configBusComp(busComp_base, buscomp_params); // // Enable the bus comparator // ERAD_enableModules(ERAD_getBusCompInstance(busComp_base)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "erad.c",
+      "peripheral": "erad",
+      "functionName": "ERAD_countAddressHits",
+      "functionArgs": [
+        "config_params",
+        "busComp_base",
+        "counter_base"
+      ],
+      "functionArgsTypes": [
+        "ERAD_AddressHit_Params",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ERAD_BusComp_Config buscomp_params;\n    ERAD_Counter_Config counter_params;\n\n    //\n    // Clear any previous events and overflows\n    //\n    ERAD_clearBusCompEvent(busComp_base);\n    ERAD_clearCounterEvent(counter_base);\n    ERAD_clearCounterOverflow(counter_base);\n\n    //\n    // Reset the counter\n    //\n    ERAD_resetCounter(ERAD_getCounterInstance(counter_base));\n\n    //\n    // Configure the bus comparator\n    // No interrupt or CPU halt. Compare for equality. No mask.\n    // Reference is the address of the instruction to be counted\n    // Bus to be monitored is specified in the bus argument\n    //\n    buscomp_params.reference = config_params.address;\n    buscomp_params.mask = config_params.mask;\n    buscomp_params.comp_mode = ERAD_BUSCOMP_COMPMODE_EQ;\n    buscomp_params.enable_stop = 0;\n    buscomp_params.bus_sel = config_params.bus_sel;\n    buscomp_params.enable_int = 0;\n    ERAD_configBusComp(busComp_base, buscomp_params);\n\n    //\n    // Configure the counter\n    // No interrupt, no CPU halt, no reset on match, no reference.\n    // Counting the number of rising edges of the bus comparator event\n    //\n    counter_params.enable_int = 0;\n    counter_params.enable_stop = 0;\n    counter_params.event_mode = ERAD_COUNTER_MODE_RISING_EDGE;\n    counter_params.rst_on_match = 0;\n    counter_params.reference = 0x0;\n    counter_params.event = (ERAD_Counter_Input_Event)\n                      (ERAD_BUSCOMP_BASE_TO_EVENT(busComp_base));\n    ERAD_configCounterInCountingMode(counter_base, counter_params);\n\n    //\n    // Enable the modules\n    //\n    ERAD_enableModules(ERAD_getBusCompInstance(busComp_base) |\n                       ERAD_getCounterInstance(counter_base));\n}\n",
+      "functionContentWithoutFormatting": "{ ERAD_BusComp_Config buscomp_params; ERAD_Counter_Config counter_params; // // Clear any previous events and overflows // ERAD_clearBusCompEvent(busComp_base); ERAD_clearCounterEvent(counter_base); ERAD_clearCounterOverflow(counter_base); // // Reset the counter // ERAD_resetCounter(ERAD_getCounterInstance(counter_base)); // // Configure the bus comparator // No interrupt or CPU halt. Compare for equality. No mask. // Reference is the address of the instruction to be counted // Bus to be monitored is specified in the bus argument // buscomp_params.reference = config_params.address; buscomp_params.mask = config_params.mask; buscomp_params.comp_mode = ERAD_BUSCOMP_COMPMODE_EQ; buscomp_params.enable_stop = 0; buscomp_params.bus_sel = config_params.bus_sel; buscomp_params.enable_int = 0; ERAD_configBusComp(busComp_base, buscomp_params); // // Configure the counter // No interrupt, no CPU halt, no reset on match, no reference. // Counting the number of rising edges of the bus comparator event // counter_params.enable_int = 0; counter_params.enable_stop = 0; counter_params.event_mode = ERAD_COUNTER_MODE_RISING_EDGE; counter_params.rst_on_match = 0; counter_params.reference = 0x0; counter_params.event = (ERAD_Counter_Input_Event) (ERAD_BUSCOMP_BASE_TO_EVENT(busComp_base)); ERAD_configCounterInCountingMode(counter_base, counter_params); // // Enable the modules // ERAD_enableModules(ERAD_getBusCompInstance(busComp_base) | ERAD_getCounterInstance(counter_base)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_isValidBusCompBase",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return((base == ERAD_HWBP1_BASE) ||\n           (base == ERAD_HWBP2_BASE) ||\n           (base == ERAD_HWBP3_BASE) ||\n           (base == ERAD_HWBP4_BASE) ||\n           (base == ERAD_HWBP5_BASE) ||\n           (base == ERAD_HWBP6_BASE) ||\n           (base == ERAD_HWBP7_BASE) ||\n           (base == ERAD_HWBP8_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((base == ERAD_HWBP1_BASE) || (base == ERAD_HWBP2_BASE) || (base == ERAD_HWBP3_BASE) || (base == ERAD_HWBP4_BASE) || (base == ERAD_HWBP5_BASE) || (base == ERAD_HWBP6_BASE) || (base == ERAD_HWBP7_BASE) || (base == ERAD_HWBP8_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_isValidCounterBase",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return((base == ERAD_COUNTER1_BASE) ||\n           (base == ERAD_COUNTER2_BASE) ||\n           (base == ERAD_COUNTER3_BASE) ||\n           (base == ERAD_COUNTER4_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((base == ERAD_COUNTER1_BASE) || (base == ERAD_COUNTER2_BASE) || (base == ERAD_COUNTER3_BASE) || (base == ERAD_COUNTER4_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_getOwnership",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline ERAD_Owner",
+      "functionContent": "{\n    //\n    // Read Global Owner register and return value\n    //\n    return((ERAD_Owner)((uint16_t)((HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_OWNER) &\n                         ERAD_GLBL_OWNER_OWNER_M) >> ERAD_GLBL_OWNER_OWNER_S)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read Global Owner register and return value // return((ERAD_Owner)((uint16_t)((HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_OWNER) & ERAD_GLBL_OWNER_OWNER_M) >> ERAD_GLBL_OWNER_OWNER_S))); }",
+      "registersUsed": [
+        "GLBL_OWNER"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLBL_OWNER"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_setOwnership",
+      "functionArgs": [
+        "owner"
+      ],
+      "functionArgsTypes": [
+        "ERAD_Owner"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the Global Owner as owner\n    //\n    EALLOW;\n    HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_OWNER) =\n        ((uint16_t)owner & ERAD_GLBL_OWNER_OWNER_M) << ERAD_GLBL_OWNER_OWNER_S;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the Global Owner as owner // EALLOW; HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_OWNER) = ((uint16_t)owner & ERAD_GLBL_OWNER_OWNER_M) << ERAD_GLBL_OWNER_OWNER_S; EDIS; }",
+      "registersUsed": [
+        "GLBL_OWNER"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLBL_OWNER"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_resetCounter",
+      "functionArgs": [
+        "instances"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Resets the counter by writing into the global registers\n    //\n    EALLOW;\n    HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_CTM_RESET) |= instances >> 8U;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Resets the counter by writing into the global registers // EALLOW; HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_CTM_RESET) |= instances >> 8U; EDIS; }",
+      "registersUsed": [
+        "GLBL_CTM_RESET"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLBL_CTM_RESET"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_enableModules",
+      "functionArgs": [
+        "instances"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write into Global register for enabling the required modules\n    //\n    EALLOW;\n    HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_ENABLE) |= instances;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write into Global register for enabling the required modules // EALLOW; HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_ENABLE) |= instances; EDIS; }",
+      "registersUsed": [
+        "GLBL_ENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLBL_ENABLE"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_disableModules",
+      "functionArgs": [
+        "instances"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write into Global register for disabling the required modules\n    //\n    EALLOW;\n    HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_ENABLE) &= (~instances);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write into Global register for disabling the required modules // EALLOW; HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_ENABLE) &= (~instances); EDIS; }",
+      "registersUsed": [
+        "GLBL_ENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLBL_ENABLE"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_initModule",
+      "functionArgs": [
+        "owner"
+      ],
+      "functionArgsTypes": [
+        "ERAD_Owner"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the owner of ERAD as required\n    //\n    ERAD_setOwnership(owner);\n\n    //\n    // Disable all counters and bus comparators\n    //\n    ERAD_disableModules(ERAD_INST_BUSCOMP1 | ERAD_INST_BUSCOMP2 |\n                        ERAD_INST_BUSCOMP3 | ERAD_INST_BUSCOMP4 |\n                        ERAD_INST_BUSCOMP5 | ERAD_INST_BUSCOMP6 |\n                        ERAD_INST_BUSCOMP7 | ERAD_INST_BUSCOMP8 |\n                        ERAD_INST_COUNTER1 | ERAD_INST_COUNTER2 |\n                        ERAD_INST_COUNTER3 | ERAD_INST_COUNTER4);\n\n    //\n    // Reset all counters\n    //\n    ERAD_resetCounter(ERAD_INST_COUNTER1 | ERAD_INST_COUNTER2 |\n                      ERAD_INST_COUNTER3 | ERAD_INST_COUNTER4);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the owner of ERAD as required // ERAD_setOwnership(owner); // // Disable all counters and bus comparators // ERAD_disableModules(ERAD_INST_BUSCOMP1 | ERAD_INST_BUSCOMP2 | ERAD_INST_BUSCOMP3 | ERAD_INST_BUSCOMP4 | ERAD_INST_BUSCOMP5 | ERAD_INST_BUSCOMP6 | ERAD_INST_BUSCOMP7 | ERAD_INST_BUSCOMP8 | ERAD_INST_COUNTER1 | ERAD_INST_COUNTER2 | ERAD_INST_COUNTER3 | ERAD_INST_COUNTER4); // // Reset all counters // ERAD_resetCounter(ERAD_INST_COUNTER1 | ERAD_INST_COUNTER2 | ERAD_INST_COUNTER3 | ERAD_INST_COUNTER4); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_getHaltStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Read and return from the global register\n    //\n    return(HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_HALT_STAT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return from the global register // return(HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_HALT_STAT)); }",
+      "registersUsed": [
+        "GLBL_HALT_STAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLBL_HALT_STAT"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_getEventStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Read and return from the global register\n    //\n    return(HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_EVENT_STAT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return from the global register // return(HWREGH(ERAD_GLOBAL_BASE + ERAD_O_GLBL_EVENT_STAT)); }",
+      "registersUsed": [
+        "GLBL_EVENT_STAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLBL_EVENT_STAT"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_getBusCompStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline ERAD_Status",
+      "functionContent": "{\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidBusCompBase(base));\n\n    //\n    // Read and return status of bus comparator\n    //\n    return((ERAD_Status)((uint16_t)((HWREGH(base + ERAD_O_HWBP_STATUS) &\n                    ERAD_HWBP_STATUS_STATUS_M) >> ERAD_HWBP_STATUS_STATUS_S)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base is valid // ASSERT(ERAD_isValidBusCompBase(base)); // // Read and return status of bus comparator // return((ERAD_Status)((uint16_t)((HWREGH(base + ERAD_O_HWBP_STATUS) & ERAD_HWBP_STATUS_STATUS_M) >> ERAD_HWBP_STATUS_STATUS_S))); }",
+      "registersUsed": [
+        "HWBP_STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "HWBP_STATUS"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_clearBusCompEvent",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidBusCompBase(base));\n\n    //\n    // Clear the event fired bit by writing into EVENT_CLR register\n    //\n    EALLOW;\n    HWREGH(base + ERAD_O_HWBP_CLEAR) = ERAD_HWBP_CLEAR_EVENT_CLR;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base is valid // ASSERT(ERAD_isValidBusCompBase(base)); // // Clear the event fired bit by writing into EVENT_CLR register // EALLOW; HWREGH(base + ERAD_O_HWBP_CLEAR) = ERAD_HWBP_CLEAR_EVENT_CLR; EDIS; }",
+      "registersUsed": [
+        "HWBP_CLEAR"
+      ],
+      "registersUsedMatchingBifield": [
+        "HWBP_CLEAR"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_getCounterStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline ERAD_Status",
+      "functionContent": "{\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidCounterBase(base));\n\n    //\n    // Read and return status of the counter\n    //\n    return((ERAD_Status)((uint16_t)((HWREGH(base + ERAD_O_CTM_STATUS) &\n                      ERAD_CTM_STATUS_STATUS_M) >> ERAD_CTM_STATUS_STATUS_S)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base is valid // ASSERT(ERAD_isValidCounterBase(base)); // // Read and return status of the counter // return((ERAD_Status)((uint16_t)((HWREGH(base + ERAD_O_CTM_STATUS) & ERAD_CTM_STATUS_STATUS_M) >> ERAD_CTM_STATUS_STATUS_S))); }",
+      "registersUsed": [
+        "CTM_STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTM_STATUS"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_enableCounterResetInput",
+      "functionArgs": [
+        "base",
+        "reset_event"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ERAD_Counter_Input_Event"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidCounterBase(base));\n\n    //\n    // Setup up the counter such that the reset event is set and enabled\n    //\n    EALLOW;\n    HWREGH(base + ERAD_O_CTM_CNTL) =\n            (HWREGH(base + ERAD_O_CTM_CNTL) & ~(ERAD_CTM_CNTL_RST_INP_SEL_M)) |\n            (reset_event << ERAD_CTM_CNTL_RST_INP_SEL_S) | ERAD_CTM_CNTL_RST_EN;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base is valid // ASSERT(ERAD_isValidCounterBase(base)); // // Setup up the counter such that the reset event is set and enabled // EALLOW; HWREGH(base + ERAD_O_CTM_CNTL) = (HWREGH(base + ERAD_O_CTM_CNTL) & ~(ERAD_CTM_CNTL_RST_INP_SEL_M)) | (reset_event << ERAD_CTM_CNTL_RST_INP_SEL_S) | ERAD_CTM_CNTL_RST_EN; EDIS; }",
+      "registersUsed": [
+        "CTM_CNTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTM_CNTL"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_disableCounterResetInput",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidCounterBase(base));\n\n    //\n    // Disable the reset bit\n    //\n    EALLOW;\n    HWREGH(base + ERAD_O_CTM_CNTL) &= (~ERAD_CTM_CNTL_RST_EN);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base is valid // ASSERT(ERAD_isValidCounterBase(base)); // // Disable the reset bit // EALLOW; HWREGH(base + ERAD_O_CTM_CNTL) &= (~ERAD_CTM_CNTL_RST_EN); EDIS; }",
+      "registersUsed": [
+        "CTM_CNTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTM_CNTL"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_clearCounterEvent",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidCounterBase(base));\n\n    //\n    // Clear the event by writing into CTM_CLEAR register\n    //\n    EALLOW;\n    HWREGH(base + ERAD_O_CTM_CLEAR) = ERAD_CTM_CLEAR_EVENT_CLEAR;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base is valid // ASSERT(ERAD_isValidCounterBase(base)); // // Clear the event by writing into CTM_CLEAR register // EALLOW; HWREGH(base + ERAD_O_CTM_CLEAR) = ERAD_CTM_CLEAR_EVENT_CLEAR; EDIS; }",
+      "registersUsed": [
+        "CTM_CLEAR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTM_CLEAR"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_clearCounterOverflow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidCounterBase(base));\n\n    //\n    // Clear the overflow bit by writing into the CTM_CLEAR register\n    //\n    EALLOW;\n    HWREGH(base + ERAD_O_CTM_CLEAR) = ERAD_CTM_CLEAR_OVERFLOW_CLEAR;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base is valid // ASSERT(ERAD_isValidCounterBase(base)); // // Clear the overflow bit by writing into the CTM_CLEAR register // EALLOW; HWREGH(base + ERAD_O_CTM_CLEAR) = ERAD_CTM_CLEAR_OVERFLOW_CLEAR; EDIS; }",
+      "registersUsed": [
+        "CTM_CLEAR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTM_CLEAR"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_getCurrentCount",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidCounterBase(base));\n\n    //\n    // Return the current count\n    //\n    return(HWREG(base + ERAD_O_CTM_COUNT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base is valid // ASSERT(ERAD_isValidCounterBase(base)); // // Return the current count // return(HWREG(base + ERAD_O_CTM_COUNT)); }",
+      "registersUsed": [
+        "CTM_COUNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTM_COUNT"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_setCurrentCount",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if owner is APPLICATION or NO_OWNER\n    //\n    ASSERT((ERAD_getOwnership() == ERAD_OWNER_APPLICATION) ||\n           (ERAD_getOwnership() == ERAD_OWNER_NOOWNER));\n\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidCounterBase(base));\n\n    //\n    // Write the value into CTM_COUNT register\n    //\n    EALLOW;\n    HWREG(base + ERAD_O_CTM_COUNT) = value;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if owner is APPLICATION or NO_OWNER // ASSERT((ERAD_getOwnership() == ERAD_OWNER_APPLICATION) || (ERAD_getOwnership() == ERAD_OWNER_NOOWNER)); // // Check if the base is valid // ASSERT(ERAD_isValidCounterBase(base)); // // Write the value into CTM_COUNT register // EALLOW; HWREG(base + ERAD_O_CTM_COUNT) = value; EDIS; }",
+      "registersUsed": [
+        "CTM_COUNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTM_COUNT"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_getMaxCount",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidCounterBase(base));\n\n    //\n    // Return the maximum value\n    //\n    return(HWREG(base + ERAD_O_CTM_MAX_COUNT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base is valid // ASSERT(ERAD_isValidCounterBase(base)); // // Return the maximum value // return(HWREG(base + ERAD_O_CTM_MAX_COUNT)); }",
+      "registersUsed": [
+        "CTM_MAX_COUNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTM_MAX_COUNT"
+      ]
+    },
+    {
+      "file": "erad.h",
+      "peripheral": "erad",
+      "functionName": "ERAD_setMaxCount",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check if owner is APPLICATION or NO_OWNER\n    //\n    ASSERT((ERAD_getOwnership() == ERAD_OWNER_APPLICATION) ||\n           (ERAD_getOwnership() == ERAD_OWNER_NOOWNER));\n\n    //\n    // Check if the base is valid\n    //\n    ASSERT(ERAD_isValidCounterBase(base));\n\n    //\n    // Write the value into the CTM_MAX_COUNT register\n    //\n    EALLOW;\n    HWREG(base + ERAD_O_CTM_MAX_COUNT) = value;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if owner is APPLICATION or NO_OWNER // ASSERT((ERAD_getOwnership() == ERAD_OWNER_APPLICATION) || (ERAD_getOwnership() == ERAD_OWNER_NOOWNER)); // // Check if the base is valid // ASSERT(ERAD_isValidCounterBase(base)); // // Write the value into the CTM_MAX_COUNT register // EALLOW; HWREG(base + ERAD_O_CTM_MAX_COUNT) = value; EDIS; }",
+      "registersUsed": [
+        "CTM_MAX_COUNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTM_MAX_COUNT"
+      ]
+    }
+  ]
+}

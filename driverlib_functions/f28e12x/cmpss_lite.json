@@ -1,0 +1,27 @@
+{
+  "name": "cmpss_lite",
+  "functions": [
+    {
+      "file": "cmpss_lite.h",
+      "peripheral": "cmpss_lite",
+      "functionName": "staticinlinevoidCMPSSLITE_configDAC",
+      "functionArgs": [
+        "base",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSSLITE_isBaseValid(base));\n\n    //\n    // Write the DAC configuration to the appropriate register.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSSLITE_O_COMPDACHCTL) =\n                                     (HWREGH(base + CMPSSLITE_O_COMPDACHCTL) &\n                                      ~CMPSSLITE_COMPDACHCTL_SWLOADSEL)      |\n                                     config;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSSLITE_isBaseValid(base)); // // Write the DAC configuration to the appropriate register. // EALLOW; HWREGH(base + CMPSSLITE_O_COMPDACHCTL) = (HWREGH(base + CMPSSLITE_O_COMPDACHCTL) & ~CMPSSLITE_COMPDACHCTL_SWLOADSEL) | config; EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    }
+  ]
+}

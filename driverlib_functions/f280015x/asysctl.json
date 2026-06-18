@@ -1,0 +1,533 @@
+{
+  "name": "asysctl",
+  "functions": [
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_enableTemperatureSensor",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Set the temperature sensor enable bit.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_TSNSCTL) |= ASYSCTL_TSNSCTL_ENABLE;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Set the temperature sensor enable bit. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_TSNSCTL) |= ASYSCTL_TSNSCTL_ENABLE; EDIS; }",
+      "registersUsed": [
+        "TSNSCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TSNSCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_disableTemperatureSensor",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Clear the temperature sensor enable bit.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_TSNSCTL) &= ~(ASYSCTL_TSNSCTL_ENABLE);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Clear the temperature sensor enable bit. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_TSNSCTL) &= ~(ASYSCTL_TSNSCTL_ENABLE); EDIS; }",
+      "registersUsed": [
+        "TSNSCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TSNSCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_setAnalogReferenceInternal",
+      "functionArgs": [
+        "reference"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT((reference & (\n                         ASYSCTL_VREFHI\n                        )) == reference);\n\n    EALLOW;\n\n    //\n    // Write selection to the Analog Internal Reference Select bit.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) &= ~reference;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT((reference & ( ASYSCTL_VREFHI )) == reference); EALLOW; // // Write selection to the Analog Internal Reference Select bit. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) &= ~reference; EDIS; }",
+      "registersUsed": [
+        "ANAREFCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ANAREFCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_setAnalogReferenceExternal",
+      "functionArgs": [
+        "reference"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT((reference & (\n                         ASYSCTL_VREFHI\n                        )) == reference);\n\n    EALLOW;\n\n    //\n    // Write selection to the Analog External Reference Select bit.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) |= reference;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT((reference & ( ASYSCTL_VREFHI )) == reference); EALLOW; // // Write selection to the Analog External Reference Select bit. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) |= reference; EDIS; }",
+      "registersUsed": [
+        "ANAREFCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ANAREFCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_setAnalogReference2P5",
+      "functionArgs": [
+        "reference"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT((reference & (\n                         ASYSCTL_VREFHI\n                        )) == reference);\n\n    EALLOW;\n\n    //\n    // Write selection to the Analog Voltage Reference Select bit.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) |= (reference << 8U);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT((reference & ( ASYSCTL_VREFHI )) == reference); EALLOW; // // Write selection to the Analog Voltage Reference Select bit. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) |= (reference << 8U); EDIS; }",
+      "registersUsed": [
+        "ANAREFCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ANAREFCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_setAnalogReference1P65",
+      "functionArgs": [
+        "reference"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT((reference & (\n                         ASYSCTL_VREFHI\n                        )) == reference);\n\n    EALLOW;\n\n    //\n    // Write selection to the Analog Voltage Reference Select bit.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) &= ~(reference << 8U);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT((reference & ( ASYSCTL_VREFHI )) == reference); EALLOW; // // Write selection to the Analog Voltage Reference Select bit. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) &= ~(reference << 8U); EDIS; }",
+      "registersUsed": [
+        "ANAREFCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ANAREFCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_selectInternalTestNode",
+      "functionArgs": [
+        "testSelect"
+      ],
+      "functionArgsTypes": [
+        "ASysCtl_TestSelect"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Select internal test node for ADC\n    //\n    HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) = \n        (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) &\n        ~(ASYSCTL_INTERNALTESTCTL_TESTSEL_M | ASYSCTL_INTERNALTESTCTL_KEY_M)) | \n        (0xA5A50000UL | (uint32_t)testSelect);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Select internal test node for ADC // HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) = (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) & ~(ASYSCTL_INTERNALTESTCTL_TESTSEL_M | ASYSCTL_INTERNALTESTCTL_KEY_M)) | (0xA5A50000UL | (uint32_t)testSelect); EDIS; }",
+      "registersUsed": [
+        "INTERNALTESTCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTERNALTESTCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_selectCMPHNMux",
+      "functionArgs": [
+        "select"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(select <= 0x7FU);\n\n    EALLOW;\n\n    //\n    // Write a select to the mux select bit.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHNMXSEL) = select;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(select <= 0x7FU); EALLOW; // // Write a select to the mux select bit. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHNMXSEL) = select; EDIS; }",
+      "registersUsed": [
+        "CMPHNMXSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPHNMXSEL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_selectCMPHNMuxValue",
+      "functionArgs": [
+        "select",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(select <= 0x7FU);\n    ASSERT(value <= 1U);\n\n    EALLOW;\n\n    //\n    // Write a select to the mux select bit.\n    //\n    if(value == 0U)\n    {\n        HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHNMXSEL) &= ~select;\n    }\n    else if(value == 1U)\n    {\n        HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHNMXSEL) |= select;\n    }\n    else\n    {\n        //Do nothing. Not a valid value\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(select <= 0x7FU); ASSERT(value <= 1U); EALLOW; // // Write a select to the mux select bit. // if(value == 0U) { HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHNMXSEL) &= ~select; } else if(value == 1U) { HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHNMXSEL) |= select; } else { //Do nothing. Not a valid value } EDIS; }",
+      "registersUsed": [
+        "CMPHNMXSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPHNMXSEL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_selectCMPLNMux",
+      "functionArgs": [
+        "select"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(select <= 0x7FU);\n\n    EALLOW;\n\n    //\n    // Write a select to the mux select bit.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPLNMXSEL) = select;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(select <= 0x7FU); EALLOW; // // Write a select to the mux select bit. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPLNMXSEL) = select; EDIS; }",
+      "registersUsed": [
+        "CMPLNMXSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPLNMXSEL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_selectCMPLNMuxValue",
+      "functionArgs": [
+        "select",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(select <= 0x7FU);\n    ASSERT(value <= 1U);\n\n    EALLOW;\n\n    //\n    // Write a select to the mux select bit.\n    //\n    if(value == 0U)\n    {\n        HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPLNMXSEL) &= ~select;\n    }\n    else if(value == 1U)\n    {\n        HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPLNMXSEL) |= select;\n    }\n    else\n    {\n        //Do nothing. Not a valid value\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(select <= 0x7FU); ASSERT(value <= 1U); EALLOW; // // Write a select to the mux select bit. // if(value == 0U) { HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPLNMXSEL) &= ~select; } else if(value == 1U) { HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPLNMXSEL) |= select; } else { //Do nothing. Not a valid value } EDIS; }",
+      "registersUsed": [
+        "CMPLNMXSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPLNMXSEL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_selectCMPHPMux",
+      "functionArgs": [
+        "select",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "ASysCtl_CMPHPMuxSelect",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(value <= 5U);\n\n    EALLOW;\n\n    //\n    // Set the value for the appropriate Mux Select.\n    //\n        HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHPMXSEL) =\n        (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHPMXSEL) &\n        ~((uint32_t)ASYSCTL_CMPHPMXSEL_CMP1HPMXSEL_M << (uint32_t)select)) |\n        (value << (uint32_t)select);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(value <= 5U); EALLOW; // // Set the value for the appropriate Mux Select. // HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHPMXSEL) = (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHPMXSEL) & ~((uint32_t)ASYSCTL_CMPHPMXSEL_CMP1HPMXSEL_M << (uint32_t)select)) | (value << (uint32_t)select); EDIS; }",
+      "registersUsed": [
+        "CMPHPMXSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPHPMXSEL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_selectCMPLPMux",
+      "functionArgs": [
+        "select",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "ASysCtl_CMPLPMuxSelect",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(value <= 5U);\n\n    EALLOW;\n\n    //\n    // Set the value for the appropriate Mux Select.\n    //\n        HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPLPMXSEL) =\n        (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPLPMXSEL) &\n        ~((uint32_t)ASYSCTL_CMPLPMXSEL_CMP1LPMXSEL_M << (uint32_t)select)) |\n        (value << (uint32_t)select);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(value <= 5U); EALLOW; // // Set the value for the appropriate Mux Select. // HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPLPMXSEL) = (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPLPMXSEL) & ~((uint32_t)ASYSCTL_CMPLPMXSEL_CMP1LPMXSEL_M << (uint32_t)select)) | (value << (uint32_t)select); EDIS; }",
+      "registersUsed": [
+        "CMPLPMXSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPLPMXSEL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_enableCMPSSExternalDAC",
+      "functionArgs": [
+        "select"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT((select & (\n                      ASYSCTL_CMPSS1_DACL\n                     )) == select);\n    //\n    // Set the specified bits and enable CMPSSCTL register\n    //\n    EALLOW;\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPSSCTL) =\n                    (HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPSSCTL) | (uint16_t)select) |\n                    ASYSCTL_CMPSSCTL_CMPSSCTLEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT((select & ( ASYSCTL_CMPSS1_DACL )) == select); // // Set the specified bits and enable CMPSSCTL register // EALLOW; HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPSSCTL) = (HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPSSCTL) | (uint16_t)select) | ASYSCTL_CMPSSCTL_CMPSSCTLEN; EDIS; }",
+      "registersUsed": [
+        "CMPSSCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPSSCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_disableCMPSSExternalDAC",
+      "functionArgs": [
+        "select"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT((select & (\n                      ASYSCTL_CMPSS1_DACL\n                     )) == select);\n\n    //\n    // Set the specified bits and enable CMPSSCTL register\n    //\n    EALLOW;\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPSSCTL) =\n                    (HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPSSCTL) & ~(uint16_t)select) |\n                    ASYSCTL_CMPSSCTL_CMPSSCTLEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT((select & ( ASYSCTL_CMPSS1_DACL )) == select); // // Set the specified bits and enable CMPSSCTL register // EALLOW; HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPSSCTL) = (HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPSSCTL) & ~(uint16_t)select) | ASYSCTL_CMPSSCTL_CMPSSCTLEN; EDIS; }",
+      "registersUsed": [
+        "CMPSSCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPSSCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockTemperatureSensor",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_TSNSCTL;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_TSNSCTL; EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockANAREF",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_ANAREFCTL;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_ANAREFCTL; EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockVMON",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_VMONCTL;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_VMONCTL; EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockCMPHPMux",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPHPMXSEL;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPHPMXSEL; EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockCMPLPMux",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPLPMXSEL;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPLPMXSEL; EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockCMPHNMux",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPHNMXSEL;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPHNMXSEL; EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockCMPLNMux",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPLNMXSEL;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPLNMXSEL; EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockVREG",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_VREGCTL;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_VREGCTL; EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockCMPSSCTL",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPSSCTL;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPSSCTL; EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_enableADCDACLoopback",
+      "functionArgs": [
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_ADCDACLOOPBACK) =\n            (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_ADCDACLOOPBACK) | config) |\n            (0xA5A5UL << ASYSCTL_ADCDACLOOPBACK_KEY_S);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_ADCDACLOOPBACK) = (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_ADCDACLOOPBACK) | config) | (0xA5A5UL << ASYSCTL_ADCDACLOOPBACK_KEY_S); }",
+      "registersUsed": [
+        "ADCDACLOOPBACK"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCDACLOOPBACK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_disableADCDACLoopback",
+      "functionArgs": [
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_ADCDACLOOPBACK) =\n            (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_ADCDACLOOPBACK) & ~config) |\n            (0xA5A5UL << ASYSCTL_ADCDACLOOPBACK_KEY_S);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_ADCDACLOOPBACK) = (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_ADCDACLOOPBACK) & ~config) | (0xA5A5UL << ASYSCTL_ADCDACLOOPBACK_KEY_S); }",
+      "registersUsed": [
+        "ADCDACLOOPBACK"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCDACLOOPBACK"
+      ]
+    }
+  ]
+}

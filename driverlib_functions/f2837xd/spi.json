@@ -1,0 +1,997 @@
+{
+  "name": "spi",
+  "functions": [
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_setConfig",
+      "functionArgs": [
+        "base",
+        "lspclkHz",
+        "protocol",
+        "mode",
+        "bitRate",
+        "dataWidth"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "SPI_TransferProtocol",
+        "SPI_Mode",
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t regValue;\n    uint32_t baud;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n    ASSERT(bitRate <= (lspclkHz / 4U));\n    ASSERT((lspclkHz / bitRate) <= 128U);\n    ASSERT((dataWidth >= 1U) && (dataWidth <= 16U));\n    ASSERT((HWREGH(base + SPI_O_CCR) & SPI_CCR_SPISWRESET) == 0U);\n\n    //\n    // Set polarity and data width.\n    //\n    regValue = (((uint16_t)protocol << 6U) & SPI_CCR_CLKPOLARITY) |\n               (dataWidth - 1U);\n\n    HWREGH(base + SPI_O_CCR) = (HWREGH(base + SPI_O_CCR) &\n                                ~(SPI_CCR_CLKPOLARITY | SPI_CCR_SPICHAR_M)) |\n                               regValue;\n\n    //\n    // Set the mode and phase.\n    //\n    regValue = (uint16_t)mode | (((uint16_t)protocol << 2U) &\n                                 SPI_CTL_CLK_PHASE);\n\n    HWREGH(base + SPI_O_CTL) = (HWREGH(base + SPI_O_CTL) &\n                                ~(SPI_CTL_TALK | SPI_CTL_CONTROLLER_PERIPHERAL |\n                                  SPI_CTL_CLK_PHASE)) | regValue;\n\n    //\n    // Set the clock.\n    //\n    baud = (lspclkHz / bitRate) - 1U;\n    HWREGH(base + SPI_O_BRR) = (uint16_t)baud;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t regValue; uint32_t baud; // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); ASSERT(bitRate <= (lspclkHz / 4U)); ASSERT((lspclkHz / bitRate) <= 128U); ASSERT((dataWidth >= 1U) && (dataWidth <= 16U)); ASSERT((HWREGH(base + SPI_O_CCR) & SPI_CCR_SPISWRESET) == 0U); // // Set polarity and data width. // regValue = (((uint16_t)protocol << 6U) & SPI_CCR_CLKPOLARITY) | (dataWidth - 1U); HWREGH(base + SPI_O_CCR) = (HWREGH(base + SPI_O_CCR) & ~(SPI_CCR_CLKPOLARITY | SPI_CCR_SPICHAR_M)) | regValue; // // Set the mode and phase. // regValue = (uint16_t)mode | (((uint16_t)protocol << 2U) & SPI_CTL_CLK_PHASE); HWREGH(base + SPI_O_CTL) = (HWREGH(base + SPI_O_CTL) & ~(SPI_CTL_TALK | SPI_CTL_CONTROLLER_PERIPHERAL | SPI_CTL_CLK_PHASE)) | regValue; // // Set the clock. // baud = (lspclkHz / bitRate) - 1U; HWREGH(base + SPI_O_BRR) = (uint16_t)baud; }",
+      "registersUsed": [
+        "CCR",
+        "CTL",
+        "BRR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICCR",
+        "SPICTL",
+        "SPIBRR"
+      ]
+    },
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_setBaudRate",
+      "functionArgs": [
+        "base",
+        "lspclkHz",
+        "bitRate"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t baud;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n    ASSERT(bitRate <= (lspclkHz / 4U));\n    ASSERT((lspclkHz / bitRate) <= 128U);\n\n    //\n    // Set the clock.\n    //\n    baud = (lspclkHz / bitRate) - 1U;\n    HWREGH(base + SPI_O_BRR) = (uint16_t)baud;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t baud; // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); ASSERT(bitRate <= (lspclkHz / 4U)); ASSERT((lspclkHz / bitRate) <= 128U); // // Set the clock. // baud = (lspclkHz / bitRate) - 1U; HWREGH(base + SPI_O_BRR) = (uint16_t)baud; }",
+      "registersUsed": [
+        "BRR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIBRR"
+      ]
+    },
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Enable the specified non-FIFO interrupts.\n    //\n    if((intFlags & SPI_INT_RX_DATA_TX_EMPTY) != 0U)\n    {\n        HWREGH(base + SPI_O_CTL) |= SPI_CTL_SPIINTENA;\n    }\n\n    if((intFlags & SPI_INT_RX_OVERRUN) != 0U)\n    {\n        HWREGH(base + SPI_O_CTL) |= SPI_CTL_OVERRUNINTENA;\n    }\n\n    //\n    // Enable the specified FIFO-mode interrupts.\n    //\n    if((intFlags & SPI_INT_TXFF) != 0U)\n    {\n        HWREGH(base + SPI_O_FFTX) |= SPI_FFTX_TXFFIENA;\n    }\n\n    if((intFlags & (SPI_INT_RXFF | SPI_INT_RXFF_OVERFLOW)) != 0U)\n    {\n        HWREGH(base + SPI_O_FFRX) |= SPI_FFRX_RXFFIENA;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Enable the specified non-FIFO interrupts. // if((intFlags & SPI_INT_RX_DATA_TX_EMPTY) != 0U) { HWREGH(base + SPI_O_CTL) |= SPI_CTL_SPIINTENA; } if((intFlags & SPI_INT_RX_OVERRUN) != 0U) { HWREGH(base + SPI_O_CTL) |= SPI_CTL_OVERRUNINTENA; } // // Enable the specified FIFO-mode interrupts. // if((intFlags & SPI_INT_TXFF) != 0U) { HWREGH(base + SPI_O_FFTX) |= SPI_FFTX_TXFFIENA; } if((intFlags & (SPI_INT_RXFF | SPI_INT_RXFF_OVERFLOW)) != 0U) { HWREGH(base + SPI_O_FFRX) |= SPI_FFRX_RXFFIENA; } }",
+      "registersUsed": [
+        "CTL",
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICTL",
+        "SPIFFTX",
+        "SPIFFRX"
+      ]
+    },
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Disable the specified non-FIFO interrupts.\n    //\n    if((intFlags & SPI_INT_RX_DATA_TX_EMPTY) != 0U)\n    {\n        HWREGH(base + SPI_O_CTL) &= ~(SPI_CTL_SPIINTENA);\n    }\n\n    if((intFlags & SPI_INT_RX_OVERRUN) != 0U)\n    {\n        HWREGH(base + SPI_O_CTL) &= ~(SPI_CTL_OVERRUNINTENA);\n    }\n\n    //\n    // Disable the specified FIFO-mode interrupts.\n    //\n    if((intFlags & SPI_INT_TXFF) != 0U)\n    {\n        HWREGH(base + SPI_O_FFTX) &= ~(SPI_FFTX_TXFFIENA);\n    }\n\n    if((intFlags & (SPI_INT_RXFF | SPI_INT_RXFF_OVERFLOW)) != 0U)\n    {\n        HWREGH(base + SPI_O_FFRX) &= ~(SPI_FFRX_RXFFIENA);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Disable the specified non-FIFO interrupts. // if((intFlags & SPI_INT_RX_DATA_TX_EMPTY) != 0U) { HWREGH(base + SPI_O_CTL) &= ~(SPI_CTL_SPIINTENA); } if((intFlags & SPI_INT_RX_OVERRUN) != 0U) { HWREGH(base + SPI_O_CTL) &= ~(SPI_CTL_OVERRUNINTENA); } // // Disable the specified FIFO-mode interrupts. // if((intFlags & SPI_INT_TXFF) != 0U) { HWREGH(base + SPI_O_FFTX) &= ~(SPI_FFTX_TXFFIENA); } if((intFlags & (SPI_INT_RXFF | SPI_INT_RXFF_OVERFLOW)) != 0U) { HWREGH(base + SPI_O_FFRX) &= ~(SPI_FFRX_RXFFIENA); } }",
+      "registersUsed": [
+        "CTL",
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICTL",
+        "SPIFFTX",
+        "SPIFFRX"
+      ]
+    },
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_getInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    uint32_t temp = 0;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    if((HWREGH(base + SPI_O_STS) & SPI_STS_INT_FLAG) != 0U)\n    {\n        temp |= SPI_INT_RX_DATA_TX_EMPTY;\n    }\n\n    if((HWREGH(base + SPI_O_STS) & SPI_STS_OVERRUN_FLAG) != 0U)\n    {\n        temp |= SPI_INT_RX_OVERRUN;\n    }\n\n    if((HWREGH(base + SPI_O_FFTX) & SPI_FFTX_TXFFINT) != 0U)\n    {\n        temp |= SPI_INT_TXFF;\n    }\n\n    if((HWREGH(base + SPI_O_FFRX) & SPI_FFRX_RXFFINT) != 0U)\n    {\n        temp |= SPI_INT_RXFF;\n    }\n\n    if((HWREGH(base + SPI_O_FFRX) & SPI_FFRX_RXFFOVF) != 0U)\n    {\n        temp |= SPI_INT_RXFF_OVERFLOW;\n    }\n\n    return(temp);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t temp = 0; // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); if((HWREGH(base + SPI_O_STS) & SPI_STS_INT_FLAG) != 0U) { temp |= SPI_INT_RX_DATA_TX_EMPTY; } if((HWREGH(base + SPI_O_STS) & SPI_STS_OVERRUN_FLAG) != 0U) { temp |= SPI_INT_RX_OVERRUN; } if((HWREGH(base + SPI_O_FFTX) & SPI_FFTX_TXFFINT) != 0U) { temp |= SPI_INT_TXFF; } if((HWREGH(base + SPI_O_FFRX) & SPI_FFRX_RXFFINT) != 0U) { temp |= SPI_INT_RXFF; } if((HWREGH(base + SPI_O_FFRX) & SPI_FFRX_RXFFOVF) != 0U) { temp |= SPI_INT_RXFF_OVERFLOW; } return(temp); }",
+      "registersUsed": [
+        "STS",
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPISTS",
+        "SPIFFTX",
+        "SPIFFRX"
+      ]
+    },
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_clearInterruptStatus",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Clear the specified non-FIFO interrupt sources.\n    //\n    if((intFlags & SPI_INT_RX_DATA_TX_EMPTY) != 0U)\n    {\n        HWREGH(base + SPI_O_CCR) &= ~(SPI_CCR_SPISWRESET);\n        HWREGH(base + SPI_O_CCR) |= SPI_CCR_SPISWRESET;\n    }\n\n    if((intFlags & SPI_INT_RX_OVERRUN) != 0U)\n    {\n        HWREGH(base + SPI_O_STS) |= SPI_STS_OVERRUN_FLAG;\n    }\n\n    //\n    // Clear the specified FIFO-mode interrupt sources.\n    //\n    if((intFlags & SPI_INT_TXFF) != 0U)\n    {\n        HWREGH(base + SPI_O_FFTX) |= SPI_FFTX_TXFFINTCLR;\n    }\n\n    if((intFlags & SPI_INT_RXFF) != 0U)\n    {\n        HWREGH(base + SPI_O_FFRX) |= SPI_FFRX_RXFFINTCLR;\n    }\n\n    if((intFlags & SPI_INT_RXFF_OVERFLOW) != 0U)\n    {\n        HWREGH(base + SPI_O_FFRX) |= SPI_FFRX_RXFFOVFCLR;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Clear the specified non-FIFO interrupt sources. // if((intFlags & SPI_INT_RX_DATA_TX_EMPTY) != 0U) { HWREGH(base + SPI_O_CCR) &= ~(SPI_CCR_SPISWRESET); HWREGH(base + SPI_O_CCR) |= SPI_CCR_SPISWRESET; } if((intFlags & SPI_INT_RX_OVERRUN) != 0U) { HWREGH(base + SPI_O_STS) |= SPI_STS_OVERRUN_FLAG; } // // Clear the specified FIFO-mode interrupt sources. // if((intFlags & SPI_INT_TXFF) != 0U) { HWREGH(base + SPI_O_FFTX) |= SPI_FFTX_TXFFINTCLR; } if((intFlags & SPI_INT_RXFF) != 0U) { HWREGH(base + SPI_O_FFRX) |= SPI_FFRX_RXFFINTCLR; } if((intFlags & SPI_INT_RXFF_OVERFLOW) != 0U) { HWREGH(base + SPI_O_FFRX) |= SPI_FFRX_RXFFOVFCLR; } }",
+      "registersUsed": [
+        "CCR",
+        "STS",
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICCR",
+        "SPISTS",
+        "SPIFFTX",
+        "SPIFFRX"
+      ]
+    },
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_pollingNonFIFOTransaction",
+      "functionArgs": [
+        "base",
+        "charLength",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t rxData;\n\n    ASSERT(((HWREGH(base + SPI_O_CCR) & SPI_CCR_SPICHAR_M) + 1U) == charLength);\n    ASSERT(data < ((uint32_t)1U << charLength));\n\n    //\n    // Write to SPI Transmit buffer\n    //\n    SPI_writeDataBlockingNonFIFO(base, data << (16U - charLength));\n\n    //\n    // Read SPI Receive buffer\n    //\n    rxData = SPI_readDataBlockingNonFIFO(base);\n\n    return(rxData);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t rxData; ASSERT(((HWREGH(base + SPI_O_CCR) & SPI_CCR_SPICHAR_M) + 1U) == charLength); ASSERT(data < ((uint32_t)1U << charLength)); // // Write to SPI Transmit buffer // SPI_writeDataBlockingNonFIFO(base, data << (16U - charLength)); // // Read SPI Receive buffer // rxData = SPI_readDataBlockingNonFIFO(base); return(rxData); }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICCR"
+      ]
+    },
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_pollingFIFOTransaction",
+      "functionArgs": [
+        "base",
+        "charLength",
+        "*pTxBuffer",
+        "*pRxBuffer",
+        "numOfWords",
+        "txDelay"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t",
+        "uint16_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ASSERT(((HWREGH(base + SPI_O_CCR) & SPI_CCR_SPICHAR_M) + 1U) == charLength);\n\n    //\n    // Reset the TX / RX FIFO buffers to default state\n    //\n    SPI_disableFIFO(base); // Disable FIFO register\n    SPI_enableFIFO(base);  // Enable FIFO register\n\n    //\n    // Configure the FIFO Transmit Delay\n    //\n    SPI_setTxFifoTransmitDelay(base, txDelay);\n\n    //\n    // Determine the number of 16-level words from number of words to be\n    // transmitted / received\n    //\n    uint16_t numOfSixteenWords = numOfWords / (uint16_t)SPI_FIFO_TXFULL;\n\n    //\n    // Determine the number of remaining words from number of words to be\n    // transmitted / received\n    //\n    uint16_t remainingWords = numOfWords % (uint16_t)SPI_FIFO_TXFULL;\n\n    uint16_t count = 0;\n    uint16_t i = 0;\n    uint16_t txBuffer_pos = 0;\n    uint16_t rxBuffer_pos = 0;\n\n    //\n    // Number of transactions is based on numOfSixteenWords\n    // Each transaction will transmit and receive 16 words.\n    //\n    while(count < numOfSixteenWords)\n    {\n        //\n        // Fill-up the SPI Transmit FIFO buffers\n        //\n        for(i = 1; i <= (uint16_t)SPI_FIFO_TXFULL; i++)\n        {\n            SPI_writeDataBlockingFIFO(base, pTxBuffer[txBuffer_pos] <<\n                                            (16U - charLength));\n            txBuffer_pos++;\n        }\n\n        //\n        // Wait till SPI Receive FIFO buffer is full\n        //\n        while(SPI_getRxFIFOStatus(base) < SPI_FIFO_RXFULL)\n        {\n        }\n\n        //\n        // Read the SPI Receive FIFO buffers\n        //\n        for(i = 1U; i <= (uint16_t)SPI_FIFO_RXFULL; i++)\n        {\n            if(pRxBuffer == NULL)\n            {\n                SPI_readDataBlockingFIFO(base);\n            }\n            else\n            {\n                pRxBuffer[rxBuffer_pos] = SPI_readDataBlockingFIFO(base);\n                rxBuffer_pos++;\n            }\n        }\n\n        count++;\n    }\n\n    //\n    // Number of transactions is based on remainingWords\n    //\n    for(i = 0U; i < remainingWords; i++)\n    {\n        SPI_writeDataBlockingFIFO(base, pTxBuffer[txBuffer_pos] <<\n                                        (16U - charLength));\n        txBuffer_pos++;\n    }\n\n    //\n    // Wait till SPI Receive FIFO buffer remaining words\n    //\n    while((uint16_t)SPI_getRxFIFOStatus(base) < remainingWords)\n    {\n    }\n\n    //\n    // Read the SPI Receive FIFO buffers\n    //\n    for(i = 0; i < remainingWords; i++)\n    {\n        if(pRxBuffer == NULL)\n        {\n            SPI_readDataBlockingFIFO(base);\n        }\n        else\n        {\n            pRxBuffer[rxBuffer_pos] = SPI_readDataBlockingFIFO(base);\n            rxBuffer_pos++;\n        }\n    }\n\n    //\n    // Disable SPI FIFO\n    //\n    SPI_disableFIFO(base);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(((HWREGH(base + SPI_O_CCR) & SPI_CCR_SPICHAR_M) + 1U) == charLength); // // Reset the TX / RX FIFO buffers to default state // SPI_disableFIFO(base); // Disable FIFO register SPI_enableFIFO(base); // Enable FIFO register // // Configure the FIFO Transmit Delay // SPI_setTxFifoTransmitDelay(base, txDelay); // // Determine the number of 16-level words from number of words to be // transmitted / received // uint16_t numOfSixteenWords = numOfWords / (uint16_t)SPI_FIFO_TXFULL; // // Determine the number of remaining words from number of words to be // transmitted / received // uint16_t remainingWords = numOfWords % (uint16_t)SPI_FIFO_TXFULL; uint16_t count = 0; uint16_t i = 0; uint16_t txBuffer_pos = 0; uint16_t rxBuffer_pos = 0; // // Number of transactions is based on numOfSixteenWords // Each transaction will transmit and receive 16 words. // while(count < numOfSixteenWords) { // // Fill-up the SPI Transmit FIFO buffers // for(i = 1; i <= (uint16_t)SPI_FIFO_TXFULL; i++) { SPI_writeDataBlockingFIFO(base, pTxBuffer[txBuffer_pos] << (16U - charLength)); txBuffer_pos++; } // // Wait till SPI Receive FIFO buffer is full // while(SPI_getRxFIFOStatus(base) < SPI_FIFO_RXFULL) { } // // Read the SPI Receive FIFO buffers // for(i = 1U; i <= (uint16_t)SPI_FIFO_RXFULL; i++) { if(pRxBuffer == NULL) { SPI_readDataBlockingFIFO(base); } else { pRxBuffer[rxBuffer_pos] = SPI_readDataBlockingFIFO(base); rxBuffer_pos++; } } count++; } // // Number of transactions is based on remainingWords // for(i = 0U; i < remainingWords; i++) { SPI_writeDataBlockingFIFO(base, pTxBuffer[txBuffer_pos] << (16U - charLength)); txBuffer_pos++; } // // Wait till SPI Receive FIFO buffer remaining words // while((uint16_t)SPI_getRxFIFOStatus(base) < remainingWords) { } // // Read the SPI Receive FIFO buffers // for(i = 0; i < remainingWords; i++) { if(pRxBuffer == NULL) { SPI_readDataBlockingFIFO(base); } else { pRxBuffer[rxBuffer_pos] = SPI_readDataBlockingFIFO(base); rxBuffer_pos++; } } // // Disable SPI FIFO // SPI_disableFIFO(base); }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICCR"
+      ]
+    },
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_transmit24Bits",
+      "functionArgs": [
+        "base",
+        "data",
+        "txDelay"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t i;\n    uint16_t rxBuffer[3];\n    uint16_t txBuffer[3];\n\n    ASSERT(data < ((uint32_t)1U << 24U));\n\n    //\n    // Empty Receive buffer\n    //\n    for(i = 0U; i < 3U; i++)\n    {\n        rxBuffer[i] = 0U;\n    }\n\n    //\n    // Fill Transmit buffer with appropriate data\n    //\n    txBuffer[0] = (uint16_t)(data >> 16U);   // data[23:16]\n    txBuffer[1] = (uint16_t)(data) >> 8U;    // data[15:8]\n    txBuffer[2] = (uint16_t)(data) & 0x00FFU; // data[7:0]\n\n    //\n    // Three 8-bits make a 24-bit\n    // Character length = 8\n    // number of bytes = 3\n    //\n    SPI_pollingFIFOTransaction(base, 8U, txBuffer, rxBuffer, 3U, txDelay);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; uint16_t rxBuffer[3]; uint16_t txBuffer[3]; ASSERT(data < ((uint32_t)1U << 24U)); // // Empty Receive buffer // for(i = 0U; i < 3U; i++) { rxBuffer[i] = 0U; } // // Fill Transmit buffer with appropriate data // txBuffer[0] = (uint16_t)(data >> 16U); // data[23:16] txBuffer[1] = (uint16_t)(data) >> 8U; // data[15:8] txBuffer[2] = (uint16_t)(data) & 0x00FFU; // data[7:0] // // Three 8-bits make a 24-bit // Character length = 8 // number of bytes = 3 // SPI_pollingFIFOTransaction(base, 8U, txBuffer, rxBuffer, 3U, txDelay); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_receive16Bits",
+      "functionArgs": [
+        "base",
+        "endianness",
+        "dummyData",
+        "txDelay"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SPI_endianess",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t i;\n    uint16_t txBuffer[2];\n    uint16_t rxBuffer[2];\n    uint16_t rxData = 0U;\n\n    ASSERT(dummyData <= 0xFFU);\n\n    //\n    // Empty Transmit buffer\n    //\n    for(i = 0U; i < 2U; i++)\n    {\n        txBuffer[i] = dummyData;\n        rxBuffer[i] = 0U;\n    }\n\n    //\n    // Send dummy words to receive data from peripheral\n    //\n    SPI_pollingFIFOTransaction(base, 8U, txBuffer, rxBuffer, 2U, txDelay);\n\n    if(endianness == SPI_DATA_LITTLE_ENDIAN)\n    {\n        //\n        // LITTLE_ENDIAN\n        //\n        rxData = (rxBuffer[1] << 8) | rxBuffer[0];\n    }\n    else\n    {\n        //\n        // BIG_ENDIAN\n        //\n        rxData = (rxBuffer[0] << 8) | rxBuffer[1];\n    }\n\n    return(rxData);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; uint16_t txBuffer[2]; uint16_t rxBuffer[2]; uint16_t rxData = 0U; ASSERT(dummyData <= 0xFFU); // // Empty Transmit buffer // for(i = 0U; i < 2U; i++) { txBuffer[i] = dummyData; rxBuffer[i] = 0U; } // // Send dummy words to receive data from peripheral // SPI_pollingFIFOTransaction(base, 8U, txBuffer, rxBuffer, 2U, txDelay); if(endianness == SPI_DATA_LITTLE_ENDIAN) { // // LITTLE_ENDIAN // rxData = (rxBuffer[1] << 8) | rxBuffer[0]; } else { // // BIG_ENDIAN // rxData = (rxBuffer[0] << 8) | rxBuffer[1]; } return(rxData); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_receive24Bits",
+      "functionArgs": [
+        "base",
+        "endianness",
+        "dummyData",
+        "txDelay"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SPI_endianess",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    uint16_t i;\n    uint16_t txBuffer[3];\n    uint16_t rxBuffer[3];\n    uint32_t rxData = 0;\n\n    ASSERT(dummyData <= 0xFFU);\n\n    //\n    // Empty Transmit buffer\n    //\n    for(i = 0U; i < 3U; i++)\n    {\n        txBuffer[i] = dummyData;\n        rxBuffer[i] = 0U;\n    }\n\n    //\n    // Send dummy words to receive data from peripheral\n    // Two 8-bits make a 16-bit\n    // Character length = 8\n    // number of bytes = 2\n    //\n    SPI_pollingFIFOTransaction(base, 8U, txBuffer, rxBuffer, 3U, txDelay);\n\n    if(endianness == SPI_DATA_LITTLE_ENDIAN)\n    {\n        //\n        // LITTLE_ENDIAN\n        //\n        rxData = ((uint32_t)rxBuffer[2] << 16) |\n                 ((uint32_t)rxBuffer[1] << 8)  |\n                 (uint32_t)rxBuffer[0];\n    }\n    else\n    {\n        //\n        // BIG_ENDIAN\n        //\n        rxData = ((uint32_t)rxBuffer[0] << 16) |\n                 ((uint32_t)rxBuffer[1] << 8)  |\n                 (uint32_t)rxBuffer[2];\n    }\n\n    return(rxData);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; uint16_t txBuffer[3]; uint16_t rxBuffer[3]; uint32_t rxData = 0; ASSERT(dummyData <= 0xFFU); // // Empty Transmit buffer // for(i = 0U; i < 3U; i++) { txBuffer[i] = dummyData; rxBuffer[i] = 0U; } // // Send dummy words to receive data from peripheral // Two 8-bits make a 16-bit // Character length = 8 // number of bytes = 2 // SPI_pollingFIFOTransaction(base, 8U, txBuffer, rxBuffer, 3U, txDelay); if(endianness == SPI_DATA_LITTLE_ENDIAN) { // // LITTLE_ENDIAN // rxData = ((uint32_t)rxBuffer[2] << 16) | ((uint32_t)rxBuffer[1] << 8) | (uint32_t)rxBuffer[0]; } else { // // BIG_ENDIAN // rxData = ((uint32_t)rxBuffer[0] << 16) | ((uint32_t)rxBuffer[1] << 8) | (uint32_t)rxBuffer[2]; } return(rxData); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_transmit32Bits",
+      "functionArgs": [
+        "base",
+        "data",
+        "txDelay"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t i;\n    uint16_t txBuffer[2];\n    uint16_t rxBuffer[2];\n\n    //\n    // Empty Receive buffer\n    //\n    for(i = 0U; i < 2U; i++)\n    {\n        rxBuffer[i] = 0U;\n    }\n\n    //\n    // Fill Transmit buffer with appropriate data\n    //\n    txBuffer[0] = (uint16_t)(data >> 16U);  // data[31:16]\n    txBuffer[1] = (uint16_t)(data);         // data[15:0]\n\n    //\n    // Two 16-bits make a 32-bit\n    // Character length = 16\n    // number of bytes = 2\n    //\n    SPI_pollingFIFOTransaction(base, 16U, txBuffer, rxBuffer, 2U, txDelay);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; uint16_t txBuffer[2]; uint16_t rxBuffer[2]; // // Empty Receive buffer // for(i = 0U; i < 2U; i++) { rxBuffer[i] = 0U; } // // Fill Transmit buffer with appropriate data // txBuffer[0] = (uint16_t)(data >> 16U); // data[31:16] txBuffer[1] = (uint16_t)(data); // data[15:0] // // Two 16-bits make a 32-bit // Character length = 16 // number of bytes = 2 // SPI_pollingFIFOTransaction(base, 16U, txBuffer, rxBuffer, 2U, txDelay); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "spi.c",
+      "peripheral": "spi",
+      "functionName": "SPI_receive32Bits",
+      "functionArgs": [
+        "base",
+        "endianness",
+        "dummyData",
+        "txDelay"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SPI_endianess",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    uint16_t i;\n    uint16_t txBuffer[4];\n    uint16_t rxBuffer[4];\n    uint32_t rxData = 0U;\n\n    ASSERT(dummyData <= 0xFFU);\n\n    //\n    // Empty Transmit buffer\n    //\n    for(i = 0U; i < 4U; i++)\n    {\n        txBuffer[i] = dummyData;\n        rxBuffer[i] = 0U;\n    }\n\n    //\n    // Send dummy words to receive data from peripheral\n    // Four 8-bits make a 32-bit\n    // Character length = 8\n    // number of bytes = 4\n    //\n    SPI_pollingFIFOTransaction(base, 8U, txBuffer, rxBuffer, 4U, txDelay);\n\n    if(endianness == SPI_DATA_LITTLE_ENDIAN)\n    {\n        //\n        // LITTLE_ENDIAN\n        //\n        rxData = ((uint32_t)rxBuffer[3] << 24U) |\n                 ((uint32_t)rxBuffer[2] << 16U) |\n                 ((uint32_t)rxBuffer[1] << 8U)  |\n                 (uint32_t)rxBuffer[0];\n    }\n    else\n    {\n        //\n        // BIG_ENDIAN\n        //\n        rxData = ((uint32_t)rxBuffer[0] << 24U) |\n                 ((uint32_t)rxBuffer[1] << 16U) |\n                 ((uint32_t)rxBuffer[2] << 8U)  |\n                 (uint32_t)rxBuffer[3];\n    }\n\n    return(rxData);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; uint16_t txBuffer[4]; uint16_t rxBuffer[4]; uint32_t rxData = 0U; ASSERT(dummyData <= 0xFFU); // // Empty Transmit buffer // for(i = 0U; i < 4U; i++) { txBuffer[i] = dummyData; rxBuffer[i] = 0U; } // // Send dummy words to receive data from peripheral // Four 8-bits make a 32-bit // Character length = 8 // number of bytes = 4 // SPI_pollingFIFOTransaction(base, 8U, txBuffer, rxBuffer, 4U, txDelay); if(endianness == SPI_DATA_LITTLE_ENDIAN) { // // LITTLE_ENDIAN // rxData = ((uint32_t)rxBuffer[3] << 24U) | ((uint32_t)rxBuffer[2] << 16U) | ((uint32_t)rxBuffer[1] << 8U) | (uint32_t)rxBuffer[0]; } else { // // BIG_ENDIAN // rxData = ((uint32_t)rxBuffer[0] << 24U) | ((uint32_t)rxBuffer[1] << 16U) | ((uint32_t)rxBuffer[2] << 8U) | (uint32_t)rxBuffer[3]; } return(rxData); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == SPIA_BASE) ||\n           (base == SPIB_BASE) ||\n           (base == SPIC_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == SPIA_BASE) || (base == SPIB_BASE) || (base == SPIC_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_enableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    HWREGH(base + SPI_O_CCR) |= SPI_CCR_SPISWRESET;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); HWREGH(base + SPI_O_CCR) |= SPI_CCR_SPISWRESET; }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICCR"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_disableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    HWREGH(base + SPI_O_CCR) &= ~(SPI_CCR_SPISWRESET);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); HWREGH(base + SPI_O_CCR) &= ~(SPI_CCR_SPISWRESET); }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICCR"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_setcharLength",
+      "functionArgs": [
+        "base",
+        "charLength"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT((charLength >= 1U) && (charLength <= 16U));\n\n    bool originalStatus = ((HWREGH(base + SPI_O_CCR) & (SPI_CCR_SPISWRESET))\n                                                    == SPI_CCR_SPISWRESET );\n\n    SPI_disableModule(base);\n    HWREGH(base + SPI_O_CCR) = (HWREGH(base + SPI_O_CCR) & ~SPI_CCR_SPICHAR_M) |\n                               (charLength - 1U);\n    //\n    // Restore original status\n    //\n    if(originalStatus){\n        SPI_enableModule(base);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT((charLength >= 1U) && (charLength <= 16U)); bool originalStatus = ((HWREGH(base + SPI_O_CCR) & (SPI_CCR_SPISWRESET)) == SPI_CCR_SPISWRESET ); SPI_disableModule(base); HWREGH(base + SPI_O_CCR) = (HWREGH(base + SPI_O_CCR) & ~SPI_CCR_SPICHAR_M) | (charLength - 1U); // // Restore original status // if(originalStatus){ SPI_enableModule(base); } }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICCR"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_enableFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Enable the FIFO.\n    //\n    HWREGH(base + SPI_O_FFTX) |= SPI_FFTX_SPIFFENA | SPI_FFTX_TXFIFO;\n    HWREGH(base + SPI_O_FFRX) |= SPI_FFRX_RXFIFORESET;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Enable the FIFO. // HWREGH(base + SPI_O_FFTX) |= SPI_FFTX_SPIFFENA | SPI_FFTX_TXFIFO; HWREGH(base + SPI_O_FFRX) |= SPI_FFRX_RXFIFORESET; }",
+      "registersUsed": [
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIFFTX",
+        "SPIFFRX"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_disableFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Disable the FIFO.\n    //\n    HWREGH(base + SPI_O_FFTX) &= ~(SPI_FFTX_SPIFFENA | SPI_FFTX_TXFIFO);\n    HWREGH(base + SPI_O_FFRX) &= ~SPI_FFRX_RXFIFORESET;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Disable the FIFO. // HWREGH(base + SPI_O_FFTX) &= ~(SPI_FFTX_SPIFFENA | SPI_FFTX_TXFIFO); HWREGH(base + SPI_O_FFRX) &= ~SPI_FFRX_RXFIFORESET; }",
+      "registersUsed": [
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIFFTX",
+        "SPIFFRX"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_resetTxFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Reset the TX FIFO.\n    //\n    HWREGH(base + SPI_O_FFTX) &= ~SPI_FFTX_TXFIFO;\n    HWREGH(base + SPI_O_FFTX) |= SPI_FFTX_TXFIFO;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Reset the TX FIFO. // HWREGH(base + SPI_O_FFTX) &= ~SPI_FFTX_TXFIFO; HWREGH(base + SPI_O_FFTX) |= SPI_FFTX_TXFIFO; }",
+      "registersUsed": [
+        "FFTX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIFFTX"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_resetRxFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Reset the RX FIFO.\n    //\n    HWREGH(base + SPI_O_FFRX) &= ~SPI_FFRX_RXFIFORESET;\n    HWREGH(base + SPI_O_FFRX) |= SPI_FFRX_RXFIFORESET;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Reset the RX FIFO. // HWREGH(base + SPI_O_FFRX) &= ~SPI_FFRX_RXFIFORESET; HWREGH(base + SPI_O_FFRX) |= SPI_FFRX_RXFIFORESET; }",
+      "registersUsed": [
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIFFRX"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_setFIFOInterruptLevel",
+      "functionArgs": [
+        "base",
+        "txLevel",
+        "rxLevel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SPI_TxFIFOLevel",
+        "SPI_RxFIFOLevel"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Set the FIFO interrupt levels.\n    //\n    HWREGH(base + SPI_O_FFTX) = (HWREGH(base + SPI_O_FFTX) &\n                                 (~SPI_FFTX_TXFFIL_M)) | (uint16_t)txLevel;\n    HWREGH(base + SPI_O_FFRX) = (HWREGH(base + SPI_O_FFRX) &\n                                 (~SPI_FFRX_RXFFIL_M)) | (uint16_t)rxLevel;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Set the FIFO interrupt levels. // HWREGH(base + SPI_O_FFTX) = (HWREGH(base + SPI_O_FFTX) & (~SPI_FFTX_TXFFIL_M)) | (uint16_t)txLevel; HWREGH(base + SPI_O_FFRX) = (HWREGH(base + SPI_O_FFRX) & (~SPI_FFRX_RXFFIL_M)) | (uint16_t)rxLevel; }",
+      "registersUsed": [
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIFFTX",
+        "SPIFFRX"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_getFIFOInterruptLevel",
+      "functionArgs": [
+        "base",
+        "*txLevel",
+        "*rxLevel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SPI_TxFIFOLevel",
+        "SPI_RxFIFOLevel"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Extract the transmit and receive FIFO levels.\n    //\n    *txLevel = (SPI_TxFIFOLevel)((uint16_t)(HWREGH(base + SPI_O_FFTX) &\n                                            SPI_FFTX_TXFFIL_M));\n    *rxLevel = (SPI_RxFIFOLevel)((uint16_t)(HWREGH(base + SPI_O_FFRX) &\n                                            SPI_FFRX_RXFFIL_M));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Extract the transmit and receive FIFO levels. // *txLevel = (SPI_TxFIFOLevel)((uint16_t)(HWREGH(base + SPI_O_FFTX) & SPI_FFTX_TXFFIL_M)); *rxLevel = (SPI_RxFIFOLevel)((uint16_t)(HWREGH(base + SPI_O_FFRX) & SPI_FFRX_RXFFIL_M)); }",
+      "registersUsed": [
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIFFTX",
+        "SPIFFRX"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_getTxFIFOStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline SPI_TxFIFOLevel",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Get the current FIFO status\n    //\n    return((SPI_TxFIFOLevel)((uint16_t)((HWREGH(base + SPI_O_FFTX) & SPI_FFTX_TXFFST_M) >>\n                                        SPI_FFTX_TXFFST_S)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Get the current FIFO status // return((SPI_TxFIFOLevel)((uint16_t)((HWREGH(base + SPI_O_FFTX) & SPI_FFTX_TXFFST_M) >> SPI_FFTX_TXFFST_S))); }",
+      "registersUsed": [
+        "FFTX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIFFTX"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_getRxFIFOStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline SPI_RxFIFOLevel",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Get the current FIFO status\n    //\n    return((SPI_RxFIFOLevel)((uint16_t)((HWREGH(base + SPI_O_FFRX) & SPI_FFRX_RXFFST_M) >>\n                                        SPI_FFRX_RXFFST_S)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Get the current FIFO status // return((SPI_RxFIFOLevel)((uint16_t)((HWREGH(base + SPI_O_FFRX) & SPI_FFRX_RXFFST_M) >> SPI_FFRX_RXFFST_S))); }",
+      "registersUsed": [
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIFFRX"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_isBusy",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Determine if the SPI is busy.\n    //\n    return((HWREGH(base + SPI_O_FFTX) & SPI_FFTX_TXFFST_M) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Determine if the SPI is busy. // return((HWREGH(base + SPI_O_FFTX) & SPI_FFTX_TXFFST_M) != 0U); }",
+      "registersUsed": [
+        "FFTX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIFFTX"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_writeDataNonBlocking",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Write data to the transmit buffer.\n    //\n    HWREGH(base + SPI_O_TXBUF) = data;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Write data to the transmit buffer. // HWREGH(base + SPI_O_TXBUF) = data; }",
+      "registersUsed": [
+        "TXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPITXBUF"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_readDataNonBlocking",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Check for data to read.\n    //\n    return(HWREGH(base + SPI_O_RXBUF));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Check for data to read. // return(HWREGH(base + SPI_O_RXBUF)); }",
+      "registersUsed": [
+        "RXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIRXBUF"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_writeDataBlockingFIFO",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Wait until space is available in the receive FIFO.\n    //\n    while(SPI_getTxFIFOStatus(base) == SPI_FIFO_TXFULL)\n    {\n    }\n\n    //\n    // Write data to the transmit buffer.\n    //\n    HWREGH(base + SPI_O_TXBUF) = data;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Wait until space is available in the receive FIFO. // while(SPI_getTxFIFOStatus(base) == SPI_FIFO_TXFULL) { } // // Write data to the transmit buffer. // HWREGH(base + SPI_O_TXBUF) = data; }",
+      "registersUsed": [
+        "TXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPITXBUF"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_readDataBlockingFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Wait until data is available in the receive FIFO.\n    //\n    while(SPI_getRxFIFOStatus(base) == SPI_FIFO_RXEMPTY)\n    {\n    }\n\n    //\n    // Check for data to read.\n    //\n    return(HWREGH(base + SPI_O_RXBUF));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Wait until data is available in the receive FIFO. // while(SPI_getRxFIFOStatus(base) == SPI_FIFO_RXEMPTY) { } // // Check for data to read. // return(HWREGH(base + SPI_O_RXBUF)); }",
+      "registersUsed": [
+        "RXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIRXBUF"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_writeDataBlockingNonFIFO",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Wait until the transmit buffer is not full.\n    //\n    while((HWREGH(base + SPI_O_STS) & SPI_STS_BUFFULL_FLAG) != 0U)\n    {\n    }\n\n    //\n    // Write data to the transmit buffer.\n    //\n    HWREGH(base + SPI_O_TXBUF) = data;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Wait until the transmit buffer is not full. // while((HWREGH(base + SPI_O_STS) & SPI_STS_BUFFULL_FLAG) != 0U) { } // // Write data to the transmit buffer. // HWREGH(base + SPI_O_TXBUF) = data; }",
+      "registersUsed": [
+        "STS",
+        "TXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPISTS",
+        "SPITXBUF"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_readDataBlockingNonFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Wait until data has been received.\n    //\n    while((HWREGH(base + SPI_O_STS) & SPI_STS_INT_FLAG) == 0U)\n    {\n    }\n\n    //\n    // Check for data to read.\n    //\n    return(HWREGH(base + SPI_O_RXBUF));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Wait until data has been received. // while((HWREGH(base + SPI_O_STS) & SPI_STS_INT_FLAG) == 0U) { } // // Check for data to read. // return(HWREGH(base + SPI_O_RXBUF)); }",
+      "registersUsed": [
+        "STS",
+        "RXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPISTS",
+        "SPIRXBUF"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_enableTriWire",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Set the tri-wire bit to enable 3-wire mode.\n    //\n    HWREGH(base + SPI_O_PRI) |= SPI_PRI_TRIWIRE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Set the tri-wire bit to enable 3-wire mode. // HWREGH(base + SPI_O_PRI) |= SPI_PRI_TRIWIRE; }",
+      "registersUsed": [
+        "PRI"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIPRI"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_disableTriWire",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Clear the tri-wire bit to disable 3-wire mode.\n    //\n    HWREGH(base + SPI_O_PRI) &= ~SPI_PRI_TRIWIRE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Clear the tri-wire bit to disable 3-wire mode. // HWREGH(base + SPI_O_PRI) &= ~SPI_PRI_TRIWIRE; }",
+      "registersUsed": [
+        "PRI"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIPRI"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_enableLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Set the bit that enables loopback mode.\n    //\n    HWREGH(base + SPI_O_CCR) |= SPI_CCR_SPILBK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Set the bit that enables loopback mode. // HWREGH(base + SPI_O_CCR) |= SPI_CCR_SPILBK; }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICCR"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_disableLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Clear the bit that enables loopback mode.\n    //\n    HWREGH(base + SPI_O_CCR) &= ~SPI_CCR_SPILBK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Clear the bit that enables loopback mode. // HWREGH(base + SPI_O_CCR) &= ~SPI_CCR_SPILBK; }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICCR"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_setPTESignalPolarity",
+      "functionArgs": [
+        "base",
+        "polarity"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SPI_PTEPolarity"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Write the polarity of the SPIPTE signal to the register.\n    //\n    HWREGH(base + SPI_O_PRI) = (HWREGH(base + SPI_O_PRI) & ~SPI_PRI_PTEINV) |\n                               (uint16_t)polarity;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Write the polarity of the SPIPTE signal to the register. // HWREGH(base + SPI_O_PRI) = (HWREGH(base + SPI_O_PRI) & ~SPI_PRI_PTEINV) | (uint16_t)polarity; }",
+      "registersUsed": [
+        "PRI"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIPRI"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_enableHighSpeedMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Set the bit that enables high speed mode.\n    //\n    HWREGH(base + SPI_O_CCR) |= SPI_CCR_HS_MODE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Set the bit that enables high speed mode. // HWREGH(base + SPI_O_CCR) |= SPI_CCR_HS_MODE; }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICCR"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_disableHighSpeedMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Clear the bit that enables high speed mode.\n    //\n    HWREGH(base + SPI_O_CCR) &= ~SPI_CCR_HS_MODE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Clear the bit that enables high speed mode. // HWREGH(base + SPI_O_CCR) &= ~SPI_CCR_HS_MODE; }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICCR"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_setEmulationMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SPI_EmulationMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Write the desired emulation mode to the register.\n    //\n    HWREGH(base + SPI_O_PRI) = (HWREGH(base + SPI_O_PRI) &\n                                ~(SPI_PRI_FREE | SPI_PRI_SOFT)) |\n                               (uint16_t)mode;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Write the desired emulation mode to the register. // HWREGH(base + SPI_O_PRI) = (HWREGH(base + SPI_O_PRI) & ~(SPI_PRI_FREE | SPI_PRI_SOFT)) | (uint16_t)mode; }",
+      "registersUsed": [
+        "PRI"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIPRI"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_setTxFifoTransmitDelay",
+      "functionArgs": [
+        "base",
+        "delay"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n    ASSERT(delay <= 0xFFU);\n\n    //\n    // Configure the FIFO Transmit Delay Bits\n    //\n    HWREGH(base + SPI_O_FFCT) = delay;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); ASSERT(delay <= 0xFFU); // // Configure the FIFO Transmit Delay Bits // HWREGH(base + SPI_O_FFCT) = delay; }",
+      "registersUsed": [
+        "FFCT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIFFCT"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_readRxEmulationBuffer",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Return Emulation Buffer Received Data\n    //\n    return(HWREGH(base + SPI_O_RXEMU));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Return Emulation Buffer Received Data // return(HWREGH(base + SPI_O_RXEMU)); }",
+      "registersUsed": [
+        "RXEMU"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIRXEMU"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_enableTalk",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Set the TALK bit\n    //\n    HWREGH(base + SPI_O_CTL) |= SPI_CTL_TALK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Set the TALK bit // HWREGH(base + SPI_O_CTL) |= SPI_CTL_TALK; }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICTL"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_disableTalk",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Set the TALK bit\n    //\n    HWREGH(base + SPI_O_CTL) &= ~SPI_CTL_TALK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Set the TALK bit // HWREGH(base + SPI_O_CTL) &= ~SPI_CTL_TALK; }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPICTL"
+      ]
+    },
+    {
+      "file": "spi.h",
+      "peripheral": "spi",
+      "functionName": "SPI_reset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SPI_isBaseValid(base));\n\n    //\n    // Write to SPRST bit the TX FIFO.\n    //\n    HWREGH(base + SPI_O_FFTX) &= ~SPI_FFTX_SPIRST;\n    HWREGH(base + SPI_O_FFTX) |= SPI_FFTX_SPIRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SPI_isBaseValid(base)); // // Write to SPRST bit the TX FIFO. // HWREGH(base + SPI_O_FFTX) &= ~SPI_FFTX_SPIRST; HWREGH(base + SPI_O_FFTX) |= SPI_FFTX_SPIRST; }",
+      "registersUsed": [
+        "FFTX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPIFFTX"
+      ]
+    }
+  ]
+}

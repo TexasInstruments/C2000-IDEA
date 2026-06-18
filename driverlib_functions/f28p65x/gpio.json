@@ -1,0 +1,1103 @@
+{
+  "name": "gpio",
+  "functions": [
+    {
+      "file": "gpio.c",
+      "peripheral": "gpio",
+      "functionName": "GPIO_setDirectionMode",
+      "functionArgs": [
+        "pin",
+        "pinIO"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "GPIO_Direction"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    volatile uint32_t *gpioBaseAddr;\n    uint32_t pinMask;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n\n    gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE +\n                   ((pin / 32U) * GPIO_CTRL_REGS_STEP);\n    pinMask = (uint32_t)1U << (pin % 32U);\n\n    EALLOW;\n\n    //\n    // Set the data direction\n    //\n    if(pinIO == GPIO_DIR_MODE_OUT)\n    {\n        //\n        // Output\n        //\n        gpioBaseAddr[GPIO_GPxDIR_INDEX] |= pinMask;\n    }\n    else\n    {\n        //\n        // Input\n        //\n        gpioBaseAddr[GPIO_GPxDIR_INDEX] &= ~pinMask;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioBaseAddr; uint32_t pinMask; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE + ((pin / 32U) * GPIO_CTRL_REGS_STEP); pinMask = (uint32_t)1U << (pin % 32U); EALLOW; // // Set the data direction // if(pinIO == GPIO_DIR_MODE_OUT) { // // Output // gpioBaseAddr[GPIO_GPxDIR_INDEX] |= pinMask; } else { // // Input // gpioBaseAddr[GPIO_GPxDIR_INDEX] &= ~pinMask; } EDIS; }",
+      "registersUsed": [
+        "GPADIR",
+        "GPBDIR",
+        "GPCDIR",
+        "GPDDIR",
+        "GPEDIR",
+        "GPFDIR",
+        "GPGDIR",
+        "GPHDIR"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPADIR",
+        "GPBDIR",
+        "GPCDIR",
+        "GPDDIR",
+        "GPEDIR",
+        "GPFDIR",
+        "GPGDIR",
+        "GPHDIR"
+      ]
+    },
+    {
+      "file": "gpio.c",
+      "peripheral": "gpio",
+      "functionName": "GPIO_getDirectionMode",
+      "functionArgs": [
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "GPIO_Direction",
+      "functionContent": "{\n    volatile uint32_t *gpioBaseAddr;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n\n    gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE +\n                   ((pin / 32U) * GPIO_CTRL_REGS_STEP);\n\n    return((GPIO_Direction)((uint32_t)((gpioBaseAddr[GPIO_GPxDIR_INDEX] >>\n                             (pin % 32U)) & 1U)));\n\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioBaseAddr; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE + ((pin / 32U) * GPIO_CTRL_REGS_STEP); return((GPIO_Direction)((uint32_t)((gpioBaseAddr[GPIO_GPxDIR_INDEX] >> (pin % 32U)) & 1U))); }",
+      "registersUsed": [
+        "GPADIR",
+        "GPBDIR",
+        "GPCDIR",
+        "GPDDIR",
+        "GPEDIR",
+        "GPFDIR",
+        "GPGDIR",
+        "GPHDIR"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPADIR",
+        "GPBDIR",
+        "GPCDIR",
+        "GPDDIR",
+        "GPEDIR",
+        "GPFDIR",
+        "GPGDIR",
+        "GPHDIR"
+      ]
+    },
+    {
+      "file": "gpio.c",
+      "peripheral": "gpio",
+      "functionName": "GPIO_setInterruptPin",
+      "functionArgs": [
+        "pin",
+        "extIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "GPIO_ExternalIntNum"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    XBAR_InputNum input;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n\n    //\n    // Pick the X-BAR input that corresponds to the requested XINT.\n    //\n    switch(extIntNum)\n    {\n        case GPIO_INT_XINT1:\n            input = XBAR_INPUT4;\n            break;\n\n        case GPIO_INT_XINT2:\n            input = XBAR_INPUT5;\n            break;\n\n        case GPIO_INT_XINT3:\n            input = XBAR_INPUT6;\n            break;\n\n        case GPIO_INT_XINT4:\n            input = XBAR_INPUT13;\n            break;\n\n        case GPIO_INT_XINT5:\n            input = XBAR_INPUT14;\n            break;\n\n        default:\n            //\n            // Invalid interrupt. Shouldn't happen if enum value is used.\n            // XBAR_INPUT1 isn't tied to an XINT, so we'll use it to check for\n            // a bad value.\n            //\n            input = XBAR_INPUT1;\n            break;\n    }\n\n    if(input != XBAR_INPUT1)\n    {\n        XBAR_setInputPin(INPUTXBAR_BASE, input, (uint16_t)pin);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ XBAR_InputNum input; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); // // Pick the X-BAR input that corresponds to the requested XINT. // switch(extIntNum) { case GPIO_INT_XINT1: input = XBAR_INPUT4; break; case GPIO_INT_XINT2: input = XBAR_INPUT5; break; case GPIO_INT_XINT3: input = XBAR_INPUT6; break; case GPIO_INT_XINT4: input = XBAR_INPUT13; break; case GPIO_INT_XINT5: input = XBAR_INPUT14; break; default: // // Invalid interrupt. Shouldn't happen if enum value is used. // XBAR_INPUT1 isn't tied to an XINT, so we'll use it to check for // a bad value. // input = XBAR_INPUT1; break; } if(input != XBAR_INPUT1) { XBAR_setInputPin(INPUTXBAR_BASE, input, (uint16_t)pin); } }",
+      "registersUsed": [
+        "1CR"
+      ],
+      "registersUsedMatchingBifield": [
+        "1CR"
+      ]
+    },
+    {
+      "file": "gpio.c",
+      "peripheral": "gpio",
+      "functionName": "GPIO_setPadConfig",
+      "functionArgs": [
+        "pin",
+        "pinType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    volatile uint32_t *gpioBaseAddr;\n    uint32_t pinMask;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n\n    gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE +\n                   ((pin / 32U) * GPIO_CTRL_REGS_STEP);\n    pinMask = (uint32_t)1U << (pin % 32U);\n\n    EALLOW;\n\n    //\n    // Enable open drain if necessary\n    //\n    if((pinType & GPIO_PIN_TYPE_OD) != 0U)\n    {\n        gpioBaseAddr[GPIO_GPxODR_INDEX] |= pinMask;\n    }\n    else\n    {\n        gpioBaseAddr[GPIO_GPxODR_INDEX] &= ~pinMask;\n    }\n\n    //\n    // Enable pull-up if necessary\n    //\n    if((pinType & GPIO_PIN_TYPE_PULLUP) != 0U)\n    {\n        gpioBaseAddr[GPIO_GPxPUD_INDEX] &= ~pinMask;\n    }\n    else\n    {\n        gpioBaseAddr[GPIO_GPxPUD_INDEX] |= pinMask;\n    }\n\n    //\n    // Invert polarity if necessary\n    //\n    if((pinType & GPIO_PIN_TYPE_INVERT) != 0U)\n    {\n        gpioBaseAddr[GPIO_GPxINV_INDEX] |= pinMask;\n    }\n    else\n    {\n        gpioBaseAddr[GPIO_GPxINV_INDEX] &= ~pinMask;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioBaseAddr; uint32_t pinMask; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE + ((pin / 32U) * GPIO_CTRL_REGS_STEP); pinMask = (uint32_t)1U << (pin % 32U); EALLOW; // // Enable open drain if necessary // if((pinType & GPIO_PIN_TYPE_OD) != 0U) { gpioBaseAddr[GPIO_GPxODR_INDEX] |= pinMask; } else { gpioBaseAddr[GPIO_GPxODR_INDEX] &= ~pinMask; } // // Enable pull-up if necessary // if((pinType & GPIO_PIN_TYPE_PULLUP) != 0U) { gpioBaseAddr[GPIO_GPxPUD_INDEX] &= ~pinMask; } else { gpioBaseAddr[GPIO_GPxPUD_INDEX] |= pinMask; } // // Invert polarity if necessary // if((pinType & GPIO_PIN_TYPE_INVERT) != 0U) { gpioBaseAddr[GPIO_GPxINV_INDEX] |= pinMask; } else { gpioBaseAddr[GPIO_GPxINV_INDEX] &= ~pinMask; } EDIS; }",
+      "registersUsed": [
+        "GPAPUD",
+        "GPBPUD",
+        "GPCPUD",
+        "GPDPUD",
+        "GPEPUD",
+        "GPFPUD",
+        "GPGPUD",
+        "GPHPUD",
+        "GPAINV",
+        "GPBINV",
+        "GPCINV",
+        "GPDINV",
+        "GPEINV",
+        "GPFINV",
+        "GPGINV",
+        "GPHINV",
+        "GPAODR",
+        "GPBODR",
+        "GPCODR",
+        "GPDODR",
+        "GPEODR",
+        "GPFODR",
+        "GPGODR",
+        "GPHODR"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPAPUD",
+        "GPBPUD",
+        "GPCPUD",
+        "GPDPUD",
+        "GPEPUD",
+        "GPFPUD",
+        "GPGPUD",
+        "GPHPUD",
+        "GPAINV",
+        "GPBINV",
+        "GPCINV",
+        "GPDINV",
+        "GPEINV",
+        "GPFINV",
+        "GPGINV",
+        "GPHINV",
+        "GPAODR",
+        "GPBODR",
+        "GPCODR",
+        "GPDODR",
+        "GPEODR",
+        "GPFODR",
+        "GPGODR",
+        "GPHODR"
+      ]
+    },
+    {
+      "file": "gpio.c",
+      "peripheral": "gpio",
+      "functionName": "GPIO_getPadConfig",
+      "functionArgs": [
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    volatile uint32_t *gpioBaseAddr;\n    uint32_t pinMask;\n    uint32_t pinTypeRes;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n\n    gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE +\n                   ((pin / 32U) * GPIO_CTRL_REGS_STEP);\n    pinMask = (uint32_t)1U << (pin % 32U);\n\n    pinTypeRes = GPIO_PIN_TYPE_STD;\n\n    //\n    // Get open drain value\n    //\n    if((gpioBaseAddr[GPIO_GPxODR_INDEX] & pinMask) != 0U)\n    {\n        pinTypeRes |= GPIO_PIN_TYPE_OD;\n    }\n\n    //\n    // Get pull-up value\n    //\n    if((gpioBaseAddr[GPIO_GPxPUD_INDEX] & pinMask) == 0U)\n    {\n        pinTypeRes |= GPIO_PIN_TYPE_PULLUP;\n    }\n\n    //\n    // Get polarity value\n    //\n    if((gpioBaseAddr[GPIO_GPxINV_INDEX] & pinMask) != 0U)\n    {\n        pinTypeRes |= GPIO_PIN_TYPE_INVERT;\n    }\n\n    return(pinTypeRes);\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioBaseAddr; uint32_t pinMask; uint32_t pinTypeRes; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE + ((pin / 32U) * GPIO_CTRL_REGS_STEP); pinMask = (uint32_t)1U << (pin % 32U); pinTypeRes = GPIO_PIN_TYPE_STD; // // Get open drain value // if((gpioBaseAddr[GPIO_GPxODR_INDEX] & pinMask) != 0U) { pinTypeRes |= GPIO_PIN_TYPE_OD; } // // Get pull-up value // if((gpioBaseAddr[GPIO_GPxPUD_INDEX] & pinMask) == 0U) { pinTypeRes |= GPIO_PIN_TYPE_PULLUP; } // // Get polarity value // if((gpioBaseAddr[GPIO_GPxINV_INDEX] & pinMask) != 0U) { pinTypeRes |= GPIO_PIN_TYPE_INVERT; } return(pinTypeRes); }",
+      "registersUsed": [
+        "GPAPUD",
+        "GPBPUD",
+        "GPCPUD",
+        "GPDPUD",
+        "GPEPUD",
+        "GPFPUD",
+        "GPGPUD",
+        "GPHPUD",
+        "GPAINV",
+        "GPBINV",
+        "GPCINV",
+        "GPDINV",
+        "GPEINV",
+        "GPFINV",
+        "GPGINV",
+        "GPHINV",
+        "GPAODR",
+        "GPBODR",
+        "GPCODR",
+        "GPDODR",
+        "GPEODR",
+        "GPFODR",
+        "GPGODR",
+        "GPHODR"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPAPUD",
+        "GPBPUD",
+        "GPCPUD",
+        "GPDPUD",
+        "GPEPUD",
+        "GPFPUD",
+        "GPGPUD",
+        "GPHPUD",
+        "GPAINV",
+        "GPBINV",
+        "GPCINV",
+        "GPDINV",
+        "GPEINV",
+        "GPFINV",
+        "GPGINV",
+        "GPHINV",
+        "GPAODR",
+        "GPBODR",
+        "GPCODR",
+        "GPDODR",
+        "GPEODR",
+        "GPFODR",
+        "GPGODR",
+        "GPHODR"
+      ]
+    },
+    {
+      "file": "gpio.c",
+      "peripheral": "gpio",
+      "functionName": "GPIO_setQualificationMode",
+      "functionArgs": [
+        "pin",
+        "qualification"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "GPIO_QualificationMode"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    volatile uint32_t *gpioBaseAddr;\n    uint32_t qSelIndex;\n    uint32_t shiftAmt;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n\n    gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE +\n                   ((pin / 32U) * GPIO_CTRL_REGS_STEP);\n    shiftAmt = (uint32_t)GPIO_GPAQSEL1_GPIO1_S * (pin % 16U);\n    qSelIndex = GPIO_GPxQSEL_INDEX + ((pin % 32U) / 16U);\n\n    //\n    // Write the input qualification mode to the register.\n    //\n    EALLOW;\n\n    gpioBaseAddr[qSelIndex] &= ~((uint32_t)GPIO_GPAQSEL1_GPIO0_M << shiftAmt);\n    gpioBaseAddr[qSelIndex] |= (uint32_t)qualification << shiftAmt;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioBaseAddr; uint32_t qSelIndex; uint32_t shiftAmt; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE + ((pin / 32U) * GPIO_CTRL_REGS_STEP); shiftAmt = (uint32_t)GPIO_GPAQSEL1_GPIO1_S * (pin % 16U); qSelIndex = GPIO_GPxQSEL_INDEX + ((pin % 32U) / 16U); // // Write the input qualification mode to the register. // EALLOW; gpioBaseAddr[qSelIndex] &= ~((uint32_t)GPIO_GPAQSEL1_GPIO0_M << shiftAmt); gpioBaseAddr[qSelIndex] |= (uint32_t)qualification << shiftAmt; EDIS; }",
+      "registersUsed": [
+        "GPAQSEL1",
+        "GPAQSEL2",
+        "GPBQSEL1",
+        "GPBQSEL2",
+        "GPCQSEL1",
+        "GPCQSEL2",
+        "GPDQSEL1",
+        "GPDQSEL2",
+        "GPEQSEL1",
+        "GPEQSEL2",
+        "GPFQSEL1",
+        "GPGQSEL1",
+        "GPGQSEL2",
+        "GPHQSEL1",
+        "GPHQSEL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPAQSEL1",
+        "GPAQSEL2",
+        "GPBQSEL1",
+        "GPBQSEL2",
+        "GPCQSEL1",
+        "GPCQSEL2",
+        "GPDQSEL1",
+        "GPDQSEL2",
+        "GPEQSEL1",
+        "GPEQSEL2",
+        "GPFQSEL1",
+        "GPGQSEL1",
+        "GPGQSEL2",
+        "GPHQSEL1",
+        "GPHQSEL2"
+      ]
+    },
+    {
+      "file": "gpio.c",
+      "peripheral": "gpio",
+      "functionName": "GPIO_getQualificationMode",
+      "functionArgs": [
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "GPIO_QualificationMode",
+      "functionContent": "{\n    volatile uint32_t *gpioBaseAddr;\n    uint32_t qSelIndex;\n    uint32_t qualRes;\n    uint32_t shiftAmt;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n\n    gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE +\n                   ((pin / 32U) * GPIO_CTRL_REGS_STEP);\n    shiftAmt = (uint32_t)GPIO_GPAQSEL1_GPIO1_S * (pin % 16U);\n    qSelIndex = GPIO_GPxQSEL_INDEX + ((pin % 32U) / 16U);\n\n    //\n    // Read the qualification mode register and shift and mask to get the\n    // value for the specified pin.\n    //\n    qualRes = (gpioBaseAddr[qSelIndex] >> shiftAmt) &\n              (uint32_t)GPIO_GPAQSEL1_GPIO0_M;\n    return((GPIO_QualificationMode)qualRes);\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioBaseAddr; uint32_t qSelIndex; uint32_t qualRes; uint32_t shiftAmt; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE + ((pin / 32U) * GPIO_CTRL_REGS_STEP); shiftAmt = (uint32_t)GPIO_GPAQSEL1_GPIO1_S * (pin % 16U); qSelIndex = GPIO_GPxQSEL_INDEX + ((pin % 32U) / 16U); // // Read the qualification mode register and shift and mask to get the // value for the specified pin. // qualRes = (gpioBaseAddr[qSelIndex] >> shiftAmt) & (uint32_t)GPIO_GPAQSEL1_GPIO0_M; return((GPIO_QualificationMode)qualRes); }",
+      "registersUsed": [
+        "GPAQSEL1",
+        "GPAQSEL2",
+        "GPBQSEL1",
+        "GPBQSEL2",
+        "GPCQSEL1",
+        "GPCQSEL2",
+        "GPDQSEL1",
+        "GPDQSEL2",
+        "GPEQSEL1",
+        "GPEQSEL2",
+        "GPFQSEL1",
+        "GPGQSEL1",
+        "GPGQSEL2",
+        "GPHQSEL1",
+        "GPHQSEL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPAQSEL1",
+        "GPAQSEL2",
+        "GPBQSEL1",
+        "GPBQSEL2",
+        "GPCQSEL1",
+        "GPCQSEL2",
+        "GPDQSEL1",
+        "GPDQSEL2",
+        "GPEQSEL1",
+        "GPEQSEL2",
+        "GPFQSEL1",
+        "GPGQSEL1",
+        "GPGQSEL2",
+        "GPHQSEL1",
+        "GPHQSEL2"
+      ]
+    },
+    {
+      "file": "gpio.c",
+      "peripheral": "gpio",
+      "functionName": "GPIO_setQualificationPeriod",
+      "functionArgs": [
+        "pin",
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    volatile uint32_t *gpioBaseAddr;\n    uint32_t pinMask, regVal, shiftAmt;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n    ASSERT((divider >= 1U) && (divider <= 510U));\n\n    shiftAmt = (pin % 32U) & ~((uint32_t)0x7U);\n    pinMask = (uint32_t)0xFFU << shiftAmt;\n\n    //\n    // Divide divider by two to get the value that needs to go into the field.\n    // Then shift it into the right place.\n    //\n    regVal = (divider / 2U) << shiftAmt;\n\n    //\n    // Write the divider parameter into the register.\n    //\n    gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE +\n                   ((pin / 32U) * GPIO_CTRL_REGS_STEP);\n\n    EALLOW;\n    gpioBaseAddr[GPIO_GPxCTRL_INDEX] &= ~pinMask;\n    gpioBaseAddr[GPIO_GPxCTRL_INDEX] |= regVal;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioBaseAddr; uint32_t pinMask, regVal, shiftAmt; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); ASSERT((divider >= 1U) && (divider <= 510U)); shiftAmt = (pin % 32U) & ~((uint32_t)0x7U); pinMask = (uint32_t)0xFFU << shiftAmt; // // Divide divider by two to get the value that needs to go into the field. // Then shift it into the right place. // regVal = (divider / 2U) << shiftAmt; // // Write the divider parameter into the register. // gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE + ((pin / 32U) * GPIO_CTRL_REGS_STEP); EALLOW; gpioBaseAddr[GPIO_GPxCTRL_INDEX] &= ~pinMask; gpioBaseAddr[GPIO_GPxCTRL_INDEX] |= regVal; EDIS; }",
+      "registersUsed": [
+        "GPACTRL",
+        "GPBCTRL",
+        "GPCCTRL",
+        "GPDCTRL",
+        "GPECTRL",
+        "GPFCTRL",
+        "GPGCTRL",
+        "GPHCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPACTRL",
+        "GPBCTRL",
+        "GPCCTRL",
+        "GPDCTRL",
+        "GPECTRL",
+        "GPFCTRL",
+        "GPGCTRL",
+        "GPHCTRL"
+      ]
+    },
+    {
+      "file": "gpio.c",
+      "peripheral": "gpio",
+      "functionName": "GPIO_setControllerCore",
+      "functionArgs": [
+        "pin",
+        "core"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "GPIO_CoreSelect"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    volatile uint32_t *gpioBaseAddr;\n    uint32_t cSelIndex;\n    uint32_t shiftAmt;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n\n    gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE +\n                   ((pin / 32U) * GPIO_CTRL_REGS_STEP);\n    shiftAmt = (uint32_t)GPIO_GPACSEL1_GPIO1_S * (pin % 8U);\n    cSelIndex = GPIO_GPxCSEL_INDEX + ((pin % 32U) / 8U);\n\n    //\n    // Write the core parameter into the register.\n    //\n    EALLOW;\n    gpioBaseAddr[cSelIndex] &= ~((uint32_t)GPIO_GPACSEL1_GPIO0_M << shiftAmt);\n    gpioBaseAddr[cSelIndex] |= (uint32_t)core << shiftAmt;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioBaseAddr; uint32_t cSelIndex; uint32_t shiftAmt; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE + ((pin / 32U) * GPIO_CTRL_REGS_STEP); shiftAmt = (uint32_t)GPIO_GPACSEL1_GPIO1_S * (pin % 8U); cSelIndex = GPIO_GPxCSEL_INDEX + ((pin % 32U) / 8U); // // Write the core parameter into the register. // EALLOW; gpioBaseAddr[cSelIndex] &= ~((uint32_t)GPIO_GPACSEL1_GPIO0_M << shiftAmt); gpioBaseAddr[cSelIndex] |= (uint32_t)core << shiftAmt; EDIS; }",
+      "registersUsed": [
+        "GPACSEL1",
+        "GPACSEL2",
+        "GPACSEL3",
+        "GPACSEL4",
+        "GPBCSEL1",
+        "GPBCSEL2",
+        "GPBCSEL3",
+        "GPBCSEL4",
+        "GPCCSEL1",
+        "GPCCSEL2",
+        "GPCCSEL3",
+        "GPCCSEL4",
+        "GPDCSEL1",
+        "GPDCSEL2",
+        "GPDCSEL3",
+        "GPDCSEL4",
+        "GPECSEL1",
+        "GPECSEL2",
+        "GPECSEL3",
+        "GPECSEL4",
+        "GPFCSEL1",
+        "GPFCSEL2",
+        "GPGCSEL1",
+        "GPGCSEL2",
+        "GPGCSEL3",
+        "GPGCSEL4",
+        "GPHCSEL1",
+        "GPHCSEL2",
+        "GPHCSEL3"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPACSEL1",
+        "GPACSEL2",
+        "GPACSEL3",
+        "GPACSEL4",
+        "GPBCSEL1",
+        "GPBCSEL2",
+        "GPBCSEL3",
+        "GPBCSEL4",
+        "GPCCSEL1",
+        "GPCCSEL2",
+        "GPCCSEL3",
+        "GPCCSEL4",
+        "GPDCSEL1",
+        "GPDCSEL2",
+        "GPDCSEL3",
+        "GPDCSEL4",
+        "GPECSEL1",
+        "GPECSEL2",
+        "GPECSEL3",
+        "GPECSEL4",
+        "GPFCSEL1",
+        "GPFCSEL2",
+        "GPGCSEL1",
+        "GPGCSEL2",
+        "GPGCSEL3",
+        "GPGCSEL4",
+        "GPHCSEL1",
+        "GPHCSEL2",
+        "GPHCSEL3"
+      ]
+    },
+    {
+      "file": "gpio.c",
+      "peripheral": "gpio",
+      "functionName": "GPIO_setAnalogMode",
+      "functionArgs": [
+        "pin",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "GPIO_AnalogMode"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    volatile uint32_t *gpioBaseAddr;\n    uint32_t pinMask;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(((pin >= 198U) && (pin <= 242U)) || (pin == 42U) || (pin == 43U));\n\n    pinMask = (uint32_t)1U << (pin % 32U);\n    gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE +\n                   ((pin / 32U) * GPIO_CTRL_REGS_STEP);\n\n    EALLOW;\n\n    //\n    // Set the analog mode selection.\n    //\n    if(mode == GPIO_ANALOG_ENABLED)\n    {\n        //\n        // Enable analog mode\n        //\n        gpioBaseAddr[GPIO_GPxAMSEL_INDEX] |= pinMask;\n        if(((pin >= 198U) && (pin <= 219U)) || ((pin >= 224U) && (pin <= 242U)))\n        {\n            //\n            // Set AGPIOCTL\n            //\n            HWREG((ANALOGSUBSYS_BASE + ASYSCTL_O_AGPIOCTRLG) +\n                   ((pin / 224U) * 2U)) |= (pinMask);\n        }\n    }\n    else\n    {\n        //\n        // Disable analog mode\n        //\n        gpioBaseAddr[GPIO_GPxAMSEL_INDEX] &= ~pinMask;\n        if(((pin >= 198U) && (pin <= 219U)) || ((pin >= 224U) && (pin <= 242U)))\n        {\n            //\n            // Clear AGPIOCTL\n            //\n            HWREG((ANALOGSUBSYS_BASE + ASYSCTL_O_AGPIOCTRLG) +\n                   ((pin / 224U) * 2U)) &= ~(pinMask);\n        }\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioBaseAddr; uint32_t pinMask; // // Check the arguments. // ASSERT(((pin >= 198U) && (pin <= 242U)) || (pin == 42U) || (pin == 43U)); pinMask = (uint32_t)1U << (pin % 32U); gpioBaseAddr = (uint32_t *)GPIOCTRL_BASE + ((pin / 32U) * GPIO_CTRL_REGS_STEP); EALLOW; // // Set the analog mode selection. // if(mode == GPIO_ANALOG_ENABLED) { // // Enable analog mode // gpioBaseAddr[GPIO_GPxAMSEL_INDEX] |= pinMask; if(((pin >= 198U) && (pin <= 219U)) || ((pin >= 224U) && (pin <= 242U))) { // // Set AGPIOCTL // HWREG((ANALOGSUBSYS_BASE + ASYSCTL_O_AGPIOCTRLG) + ((pin / 224U) * 2U)) |= (pinMask); } } else { // // Disable analog mode // gpioBaseAddr[GPIO_GPxAMSEL_INDEX] &= ~pinMask; if(((pin >= 198U) && (pin <= 219U)) || ((pin >= 224U) && (pin <= 242U))) { // // Clear AGPIOCTL // HWREG((ANALOGSUBSYS_BASE + ASYSCTL_O_AGPIOCTRLG) + ((pin / 224U) * 2U)) &= ~(pinMask); } } EDIS; }",
+      "registersUsed": [
+        "AGPIOCTRLG",
+        "GPBAMSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "AGPIOCTRLG",
+        "GPBAMSEL"
+      ]
+    },
+    {
+      "file": "gpio.c",
+      "peripheral": "gpio",
+      "functionName": "GPIO_setPinConfig",
+      "functionArgs": [
+        "pinConfig"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t muxRegAddr;\n    uint32_t pinMask, shiftAmt;\n\n    muxRegAddr = (uint32_t)GPIOCTRL_BASE + (pinConfig >> 16);\n    shiftAmt = ((pinConfig >> 8) & (uint32_t)0xFFU);\n    pinMask = (uint32_t)0x3U << shiftAmt;\n\n    EALLOW;\n\n    //\n    // Clear fields in MUX register first to avoid glitches\n    //\n    HWREG(muxRegAddr) &= ~pinMask;\n\n    //\n    // Write value into GMUX register\n    //\n    HWREG(muxRegAddr + GPIO_MUX_TO_GMUX) =\n        (HWREG(muxRegAddr + GPIO_MUX_TO_GMUX) & ~pinMask) |\n        (((pinConfig >> 2) & (uint32_t)0x3U) << shiftAmt);\n\n    //\n    // Write value into MUX register\n    //\n    HWREG(muxRegAddr) |= ((pinConfig & (uint32_t)0x3U) << shiftAmt);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t muxRegAddr; uint32_t pinMask, shiftAmt; muxRegAddr = (uint32_t)GPIOCTRL_BASE + (pinConfig >> 16); shiftAmt = ((pinConfig >> 8) & (uint32_t)0xFFU); pinMask = (uint32_t)0x3U << shiftAmt; EALLOW; // // Clear fields in MUX register first to avoid glitches // HWREG(muxRegAddr) &= ~pinMask; // // Write value into GMUX register // HWREG(muxRegAddr + GPIO_MUX_TO_GMUX) = (HWREG(muxRegAddr + GPIO_MUX_TO_GMUX) & ~pinMask) | (((pinConfig >> 2) & (uint32_t)0x3U) << shiftAmt); // // Write value into MUX register // HWREG(muxRegAddr) |= ((pinConfig & (uint32_t)0x3U) << shiftAmt); EDIS; }",
+      "registersUsed": [
+        "GPAMUX1",
+        "GPAMUX2",
+        "GPBMUX1",
+        "GPBMUX2",
+        "GPCMUX1",
+        "GPCMUX2",
+        "GPDMUX1",
+        "GPDMUX2",
+        "GPEMUX1",
+        "GPEMUX2",
+        "GPFMUX1",
+        "GPGMUX1",
+        "GPGMUX2",
+        "GPHMUX1",
+        "GPHMUX2",
+        "GPAGMUX1",
+        "GPAGMUX2",
+        "GPBGMUX1",
+        "GPBGMUX2",
+        "GPCGMUX1",
+        "GPCGMUX2",
+        "GPDGMUX1",
+        "GPDGMUX2",
+        "GPEGMUX1",
+        "GPEGMUX2",
+        "GPFGMUX1",
+        "GPGGMUX1",
+        "GPGGMUX2",
+        "GPHGMUX1",
+        "GPHGMUX2"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPAMUX1",
+        "GPAMUX2",
+        "GPBMUX1",
+        "GPBMUX2",
+        "GPCMUX1",
+        "GPCMUX2",
+        "GPDMUX1",
+        "GPDMUX2",
+        "GPEMUX1",
+        "GPEMUX2",
+        "GPFMUX1",
+        "GPGMUX1",
+        "GPGMUX2",
+        "GPHMUX1",
+        "GPHMUX2",
+        "GPAGMUX1",
+        "GPAGMUX2",
+        "GPBGMUX1",
+        "GPBGMUX2",
+        "GPCGMUX1",
+        "GPCGMUX2",
+        "GPDGMUX1",
+        "GPDGMUX2",
+        "GPEGMUX1",
+        "GPEGMUX2",
+        "GPFGMUX1",
+        "GPGGMUX1",
+        "GPGGMUX2",
+        "GPHGMUX1",
+        "GPHGMUX2"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_isPinValid",
+      "functionArgs": [
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((pin <= 168U) || ((pin >= 198U) && (pin <= 242U)));\n}\n",
+      "functionContentWithoutFormatting": "{ return((pin <= 168U) || ((pin >= 198U) && (pin <= 242U))); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_setInterruptType",
+      "functionArgs": [
+        "extIntNum",
+        "intType"
+      ],
+      "functionArgsTypes": [
+        "GPIO_ExternalIntNum",
+        "GPIO_IntType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write the selected polarity to the appropriate register.\n    //\n    HWREGH(XINT_BASE + (uint16_t)extIntNum) =\n        (HWREGH(XINT_BASE + (uint16_t)extIntNum) & ~XINT_1CR_POLARITY_M) |\n        (uint16_t)intType;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write the selected polarity to the appropriate register. // HWREGH(XINT_BASE + (uint16_t)extIntNum) = (HWREGH(XINT_BASE + (uint16_t)extIntNum) & ~XINT_1CR_POLARITY_M) | (uint16_t)intType; }",
+      "registersUsed": [
+        "1CR"
+      ],
+      "registersUsedMatchingBifield": [
+        "1CR"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_getInterruptType",
+      "functionArgs": [
+        "extIntNum"
+      ],
+      "functionArgsTypes": [
+        "GPIO_ExternalIntNum"
+      ],
+      "returnType": "static inline GPIO_IntType",
+      "functionContent": "{\n    //\n    // Read the selected polarity from the appropriate register.\n    //\n    return((GPIO_IntType)((uint16_t)(HWREGH(XINT_BASE + (uint16_t)extIntNum) &\n                                     XINT_1CR_POLARITY_M)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read the selected polarity from the appropriate register. // return((GPIO_IntType)((uint16_t)(HWREGH(XINT_BASE + (uint16_t)extIntNum) & XINT_1CR_POLARITY_M))); }",
+      "registersUsed": [
+        "1CR"
+      ],
+      "registersUsedMatchingBifield": [
+        "1CR"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_enableInterrupt",
+      "functionArgs": [
+        "extIntNum"
+      ],
+      "functionArgsTypes": [
+        "GPIO_ExternalIntNum"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the enable bit for the specified interrupt.\n    //\n    HWREGH(XINT_BASE + (uint16_t)extIntNum) |= XINT_1CR_ENABLE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the enable bit for the specified interrupt. // HWREGH(XINT_BASE + (uint16_t)extIntNum) |= XINT_1CR_ENABLE; }",
+      "registersUsed": [
+        "1CR"
+      ],
+      "registersUsedMatchingBifield": [
+        "1CR"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_disableInterrupt",
+      "functionArgs": [
+        "extIntNum"
+      ],
+      "functionArgsTypes": [
+        "GPIO_ExternalIntNum"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear the enable bit for the specified interrupt\n    //\n    HWREGH(XINT_BASE + (uint16_t)extIntNum) &= ~XINT_1CR_ENABLE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the enable bit for the specified interrupt // HWREGH(XINT_BASE + (uint16_t)extIntNum) &= ~XINT_1CR_ENABLE; }",
+      "registersUsed": [
+        "1CR"
+      ],
+      "registersUsedMatchingBifield": [
+        "1CR"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_getInterruptCounter",
+      "functionArgs": [
+        "extIntNum"
+      ],
+      "functionArgsTypes": [
+        "GPIO_ExternalIntNum"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    ASSERT(extIntNum <= GPIO_INT_XINT3);\n\n    //\n    // Read the counter value from the appropriate register.\n    //\n    return((HWREGH(XINT_BASE + XINT_O_1CTR + (uint16_t)extIntNum)));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(extIntNum <= GPIO_INT_XINT3); // // Read the counter value from the appropriate register. // return((HWREGH(XINT_BASE + XINT_O_1CTR + (uint16_t)extIntNum))); }",
+      "registersUsed": [
+        "1CR",
+        "1CTR"
+      ],
+      "registersUsedMatchingBifield": [
+        "1CR",
+        "1CTR"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_readPin",
+      "functionArgs": [
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) +\n                  ((pin / 32U) * GPIO_DATA_REGS_STEP);\n\n    return((gpioDataReg[GPIO_GPxDAT_INDEX] >> (pin % 32U)) & (uint32_t)0x1U);\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) + ((pin / 32U) * GPIO_DATA_REGS_STEP); return((gpioDataReg[GPIO_GPxDAT_INDEX] >> (pin % 32U)) & (uint32_t)0x1U); }",
+      "registersUsed": [
+        "GPADAT",
+        "GPBDAT",
+        "GPCDAT",
+        "GPDDAT",
+        "GPEDAT",
+        "GPFDAT",
+        "GPGDAT",
+        "GPHDAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPADAT",
+        "GPBDAT",
+        "GPCDAT",
+        "GPDDAT",
+        "GPEDAT",
+        "GPFDAT",
+        "GPGDAT",
+        "GPHDAT"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_readPinDataRegister",
+      "functionArgs": [
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIODATAREAD_BASE) +\n                  ((pin / 32U) * GPIO_DATA_READ_REGS_STEP);\n\n    return((gpioDataReg[GPIO_GPxDAT_R_INDEX] >> (pin % 32U)) & (uint32_t)0x1U);\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); gpioDataReg = (uint32_t *)((uintptr_t)GPIODATAREAD_BASE) + ((pin / 32U) * GPIO_DATA_READ_REGS_STEP); return((gpioDataReg[GPIO_GPxDAT_R_INDEX] >> (pin % 32U)) & (uint32_t)0x1U); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_writePin",
+      "functionArgs": [
+        "pin",
+        "outVal"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n    uint32_t pinMask;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) +\n                  ((pin / 32U) * GPIO_DATA_REGS_STEP);\n\n    pinMask = (uint32_t)1U << (pin % 32U);\n\n    if(outVal == 0U)\n    {\n        gpioDataReg[GPIO_GPxCLEAR_INDEX] = pinMask;\n    }\n    else\n    {\n        gpioDataReg[GPIO_GPxSET_INDEX] = pinMask;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; uint32_t pinMask; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) + ((pin / 32U) * GPIO_DATA_REGS_STEP); pinMask = (uint32_t)1U << (pin % 32U); if(outVal == 0U) { gpioDataReg[GPIO_GPxCLEAR_INDEX] = pinMask; } else { gpioDataReg[GPIO_GPxSET_INDEX] = pinMask; } }",
+      "registersUsed": [
+        "GPASET",
+        "GPBSET",
+        "GPCSET",
+        "GPDSET",
+        "GPESET",
+        "GPFSET",
+        "GPGSET",
+        "GPHSET",
+        "GPACLEAR",
+        "GPBCLEAR",
+        "GPCCLEAR",
+        "GPDCLEAR",
+        "GPECLEAR",
+        "GPFCLEAR",
+        "GPGCLEAR",
+        "GPHCLEAR"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPASET",
+        "GPBSET",
+        "GPCSET",
+        "GPDSET",
+        "GPESET",
+        "GPFSET",
+        "GPGSET",
+        "GPHSET",
+        "GPACLEAR",
+        "GPBCLEAR",
+        "GPCCLEAR",
+        "GPDCLEAR",
+        "GPECLEAR",
+        "GPFCLEAR",
+        "GPGCLEAR",
+        "GPHCLEAR"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_togglePin",
+      "functionArgs": [
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(GPIO_isPinValid(pin));\n\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) +\n                  ((pin / 32U) * GPIO_DATA_REGS_STEP);\n\n    gpioDataReg[GPIO_GPxTOGGLE_INDEX] = (uint32_t)1U << (pin % 32U);\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; // // Check the arguments. // ASSERT(GPIO_isPinValid(pin)); gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) + ((pin / 32U) * GPIO_DATA_REGS_STEP); gpioDataReg[GPIO_GPxTOGGLE_INDEX] = (uint32_t)1U << (pin % 32U); }",
+      "registersUsed": [
+        "GPATOGGLE",
+        "GPBTOGGLE",
+        "GPCTOGGLE",
+        "GPDTOGGLE",
+        "GPETOGGLE",
+        "GPFTOGGLE",
+        "GPGTOGGLE",
+        "GPHTOGGLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPATOGGLE",
+        "GPBTOGGLE",
+        "GPCTOGGLE",
+        "GPDTOGGLE",
+        "GPETOGGLE",
+        "GPFTOGGLE",
+        "GPGTOGGLE",
+        "GPHTOGGLE"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_readPortData",
+      "functionArgs": [
+        "port"
+      ],
+      "functionArgsTypes": [
+        "GPIO_Port"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n\n    //\n    // Get the starting address of the port's registers and return DATA.\n    //\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) +\n                  ((uint32_t)port * GPIO_DATA_REGS_STEP);\n\n    return(gpioDataReg[GPIO_GPxDAT_INDEX]);\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; // // Get the starting address of the port's registers and return DATA. // gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) + ((uint32_t)port * GPIO_DATA_REGS_STEP); return(gpioDataReg[GPIO_GPxDAT_INDEX]); }",
+      "registersUsed": [
+        "GPADAT",
+        "GPBDAT",
+        "GPCDAT",
+        "GPDDAT",
+        "GPEDAT",
+        "GPFDAT",
+        "GPGDAT",
+        "GPHDAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPADAT",
+        "GPBDAT",
+        "GPCDAT",
+        "GPDDAT",
+        "GPEDAT",
+        "GPFDAT",
+        "GPGDAT",
+        "GPHDAT"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_readPortDataRegister",
+      "functionArgs": [
+        "port"
+      ],
+      "functionArgsTypes": [
+        "GPIO_Port"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n\n    //\n    // Get the starting address of the port's registers and return DATA.\n    //\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIODATAREAD_BASE) +\n                  ((uint32_t)port * GPIO_DATA_READ_REGS_STEP);\n\n    return(gpioDataReg[GPIO_GPxDAT_R_INDEX]);\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; // // Get the starting address of the port's registers and return DATA. // gpioDataReg = (uint32_t *)((uintptr_t)GPIODATAREAD_BASE) + ((uint32_t)port * GPIO_DATA_READ_REGS_STEP); return(gpioDataReg[GPIO_GPxDAT_R_INDEX]); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_writePortData",
+      "functionArgs": [
+        "port",
+        "outVal"
+      ],
+      "functionArgsTypes": [
+        "GPIO_Port",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n\n    //\n    // Get the starting address of the port's registers and write to DATA.\n    //\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) +\n                  ((uint32_t)port * GPIO_DATA_REGS_STEP);\n\n    gpioDataReg[GPIO_GPxDAT_INDEX] = outVal;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; // // Get the starting address of the port's registers and write to DATA. // gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) + ((uint32_t)port * GPIO_DATA_REGS_STEP); gpioDataReg[GPIO_GPxDAT_INDEX] = outVal; }",
+      "registersUsed": [
+        "GPADAT",
+        "GPBDAT",
+        "GPCDAT",
+        "GPDDAT",
+        "GPEDAT",
+        "GPFDAT",
+        "GPGDAT",
+        "GPHDAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPADAT",
+        "GPBDAT",
+        "GPCDAT",
+        "GPDDAT",
+        "GPEDAT",
+        "GPFDAT",
+        "GPGDAT",
+        "GPHDAT"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_setPortPins",
+      "functionArgs": [
+        "port",
+        "pinMask"
+      ],
+      "functionArgsTypes": [
+        "GPIO_Port",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n\n    //\n    // Get the starting address of the port's registers and write to SET.\n    //\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) +\n                  ((uint32_t)port * GPIO_DATA_REGS_STEP);\n\n    gpioDataReg[GPIO_GPxSET_INDEX] = pinMask;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; // // Get the starting address of the port's registers and write to SET. // gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) + ((uint32_t)port * GPIO_DATA_REGS_STEP); gpioDataReg[GPIO_GPxSET_INDEX] = pinMask; }",
+      "registersUsed": [
+        "GPASET",
+        "GPBSET",
+        "GPCSET",
+        "GPDSET",
+        "GPESET",
+        "GPFSET",
+        "GPGSET",
+        "GPHSET"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPASET",
+        "GPBSET",
+        "GPCSET",
+        "GPDSET",
+        "GPESET",
+        "GPFSET",
+        "GPGSET",
+        "GPHSET"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_clearPortPins",
+      "functionArgs": [
+        "port",
+        "pinMask"
+      ],
+      "functionArgsTypes": [
+        "GPIO_Port",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n\n    //\n    // Get the starting address of the port's registers and write to CLEAR.\n    //\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) +\n                  ((uint32_t)port * GPIO_DATA_REGS_STEP);\n\n    gpioDataReg[GPIO_GPxCLEAR_INDEX] = pinMask;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; // // Get the starting address of the port's registers and write to CLEAR. // gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) + ((uint32_t)port * GPIO_DATA_REGS_STEP); gpioDataReg[GPIO_GPxCLEAR_INDEX] = pinMask; }",
+      "registersUsed": [
+        "GPACLEAR",
+        "GPBCLEAR",
+        "GPCCLEAR",
+        "GPDCLEAR",
+        "GPECLEAR",
+        "GPFCLEAR",
+        "GPGCLEAR",
+        "GPHCLEAR"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPACLEAR",
+        "GPBCLEAR",
+        "GPCCLEAR",
+        "GPDCLEAR",
+        "GPECLEAR",
+        "GPFCLEAR",
+        "GPGCLEAR",
+        "GPHCLEAR"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_togglePortPins",
+      "functionArgs": [
+        "port",
+        "pinMask"
+      ],
+      "functionArgsTypes": [
+        "GPIO_Port",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n\n    //\n    // Get the starting address of the port's registers and write to TOGGLE.\n    //\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) +\n                  ((uint32_t)port * GPIO_DATA_REGS_STEP);\n\n    gpioDataReg[GPIO_GPxTOGGLE_INDEX] = pinMask;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; // // Get the starting address of the port's registers and write to TOGGLE. // gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) + ((uint32_t)port * GPIO_DATA_REGS_STEP); gpioDataReg[GPIO_GPxTOGGLE_INDEX] = pinMask; }",
+      "registersUsed": [
+        "GPATOGGLE",
+        "GPBTOGGLE",
+        "GPCTOGGLE",
+        "GPDTOGGLE",
+        "GPETOGGLE",
+        "GPFTOGGLE",
+        "GPGTOGGLE",
+        "GPHTOGGLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPATOGGLE",
+        "GPBTOGGLE",
+        "GPCTOGGLE",
+        "GPDTOGGLE",
+        "GPETOGGLE",
+        "GPFTOGGLE",
+        "GPGTOGGLE",
+        "GPHTOGGLE"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_lockPortConfig",
+      "functionArgs": [
+        "port",
+        "pinMask"
+      ],
+      "functionArgsTypes": [
+        "GPIO_Port",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n\n    //\n    // Get the starting address of the port's registers and write to the lock.\n    //\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIOCTRL_BASE) +\n                  ((uint32_t)port * GPIO_CTRL_REGS_STEP);\n\n    EALLOW;\n    gpioDataReg[GPIO_GPxLOCK_INDEX] |= pinMask;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; // // Get the starting address of the port's registers and write to the lock. // gpioDataReg = (uint32_t *)((uintptr_t)GPIOCTRL_BASE) + ((uint32_t)port * GPIO_CTRL_REGS_STEP); EALLOW; gpioDataReg[GPIO_GPxLOCK_INDEX] |= pinMask; EDIS; }",
+      "registersUsed": [
+        "GPALOCK",
+        "GPBLOCK",
+        "GPCLOCK",
+        "GPDLOCK",
+        "GPELOCK",
+        "GPFLOCK",
+        "GPGLOCK",
+        "GPHLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPALOCK",
+        "GPBLOCK",
+        "GPCLOCK",
+        "GPDLOCK",
+        "GPELOCK",
+        "GPFLOCK",
+        "GPGLOCK",
+        "GPHLOCK"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_unlockPortConfig",
+      "functionArgs": [
+        "port",
+        "pinMask"
+      ],
+      "functionArgsTypes": [
+        "GPIO_Port",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n\n    //\n    // Get the starting address of the port's registers and write to the lock.\n    //\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIOCTRL_BASE) +\n                  ((uint32_t)port * GPIO_CTRL_REGS_STEP);\n\n    EALLOW;\n    gpioDataReg[GPIO_GPxLOCK_INDEX] &= ~pinMask;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; // // Get the starting address of the port's registers and write to the lock. // gpioDataReg = (uint32_t *)((uintptr_t)GPIOCTRL_BASE) + ((uint32_t)port * GPIO_CTRL_REGS_STEP); EALLOW; gpioDataReg[GPIO_GPxLOCK_INDEX] &= ~pinMask; EDIS; }",
+      "registersUsed": [
+        "GPALOCK",
+        "GPBLOCK",
+        "GPCLOCK",
+        "GPDLOCK",
+        "GPELOCK",
+        "GPFLOCK",
+        "GPGLOCK",
+        "GPHLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPALOCK",
+        "GPBLOCK",
+        "GPCLOCK",
+        "GPDLOCK",
+        "GPELOCK",
+        "GPFLOCK",
+        "GPGLOCK",
+        "GPHLOCK"
+      ]
+    },
+    {
+      "file": "gpio.h",
+      "peripheral": "gpio",
+      "functionName": "GPIO_commitPortConfig",
+      "functionArgs": [
+        "port",
+        "pinMask"
+      ],
+      "functionArgsTypes": [
+        "GPIO_Port",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    volatile uint32_t *gpioDataReg;\n\n    //\n    // Get the starting address of the port's registers and write to the lock.\n    //\n    gpioDataReg = (uint32_t *)((uintptr_t)GPIOCTRL_BASE) +\n                  ((uint32_t)port * GPIO_CTRL_REGS_STEP);\n\n    EALLOW;\n    gpioDataReg[GPIO_GPxCR_INDEX] |= pinMask;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint32_t *gpioDataReg; // // Get the starting address of the port's registers and write to the lock. // gpioDataReg = (uint32_t *)((uintptr_t)GPIOCTRL_BASE) + ((uint32_t)port * GPIO_CTRL_REGS_STEP); EALLOW; gpioDataReg[GPIO_GPxCR_INDEX] |= pinMask; EDIS; }",
+      "registersUsed": [
+        "GPACR",
+        "GPBCR",
+        "GPCCR",
+        "GPDCR",
+        "GPECR",
+        "GPFCR",
+        "GPGCR",
+        "GPHCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPACR",
+        "GPBCR",
+        "GPCCR",
+        "GPDCR",
+        "GPECR",
+        "GPFCR",
+        "GPGCR",
+        "GPHCR"
+      ]
+    }
+  ]
+}

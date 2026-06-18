@@ -1,0 +1,707 @@
+{
+  "name": "dcsm",
+  "functions": [
+    {
+      "file": "dcsm.c",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_unlockZone1CSM",
+      "functionArgs": [
+        "psCMDKey"
+      ],
+      "functionArgsTypes": [
+        "constDCSM_CSMPasswordKey*const"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t linkPointer;\n    uint32_t zsbBase  = (DCSM_Z1OTP_BASE + 0x20U); // base address of the ZSB\n    int32_t bitPos = 13; // Bits [13:0] point to a ZSB (14-bit link pointer)\n    int32_t zeroFound = 0;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(psCMDKey != NULL);\n\n    linkPointer = HWREG(DCSM_Z1_BASE + DCSM_O_Z1_LINKPOINTER);\n\n    //\n    // Bits 31 - 14 as most-significant 0 are invalid LinkPointer options\n    //\n    linkPointer = linkPointer << 18;\n\n    //\n    // Zone-Select Block (ZSB) selection using Link-Pointers\n    // and 0's bit position within the Link pointer\n    //\n    while((zeroFound == 0) && (bitPos > -1))\n    {\n        //\n        // The most significant bit position in the resolved link pointer\n        // which is 0, defines the valid base address for the ZSB.\n        //\n        if((linkPointer & 0x80000000U) == 0U)\n        {\n            zeroFound = 1;\n            //\n            // Base address of the ZSB is calculated using\n            // 0x20 as the slope/step with which zsbBase expands with\n            // change in the bitPos and 2*0x20 is the offset\n            //\n            zsbBase = (DCSM_Z1OTP_BASE + (((uint32_t)bitPos + 2U) * 0x20U));\n        }\n        else\n        {\n            //\n            // Move through the linkPointer to find the most significant\n            // bit position of 0\n            //\n            bitPos--;\n            linkPointer = linkPointer << 1;\n        }\n    }\n\n    //\n    // Perform dummy reads on the 128-bit password\n    // Using linkPointer because it is no longer needed\n    //\n    linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD0);\n    linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD1);\n    linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD2);\n    linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD3);\n\n    if(psCMDKey != NULL)\n    {\n        HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY0) = psCMDKey->csmKey0;\n        HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY1) = psCMDKey->csmKey1;\n        HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY2) = psCMDKey->csmKey2;\n        HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY3) = psCMDKey->csmKey3;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t linkPointer; uint32_t zsbBase = (DCSM_Z1OTP_BASE + 0x20U); // base address of the ZSB int32_t bitPos = 13; // Bits [13:0] point to a ZSB (14-bit link pointer) int32_t zeroFound = 0; // // Check the arguments. // ASSERT(psCMDKey != NULL); linkPointer = HWREG(DCSM_Z1_BASE + DCSM_O_Z1_LINKPOINTER); // // Bits 31 - 14 as most-significant 0 are invalid LinkPointer options // linkPointer = linkPointer << 18; // // Zone-Select Block (ZSB) selection using Link-Pointers // and 0's bit position within the Link pointer // while((zeroFound == 0) && (bitPos > -1)) { // // The most significant bit position in the resolved link pointer // which is 0, defines the valid base address for the ZSB. // if((linkPointer & 0x80000000U) == 0U) { zeroFound = 1; // // Base address of the ZSB is calculated using // 0x20 as the slope/step with which zsbBase expands with // change in the bitPos and 2*0x20 is the offset // zsbBase = (DCSM_Z1OTP_BASE + (((uint32_t)bitPos + 2U) * 0x20U)); } else { // // Move through the linkPointer to find the most significant // bit position of 0 // bitPos--; linkPointer = linkPointer << 1; } } // // Perform dummy reads on the 128-bit password // Using linkPointer because it is no longer needed // linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD0); linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD1); linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD2); linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD3); if(psCMDKey != NULL) { HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY0) = psCMDKey->csmKey0; HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY1) = psCMDKey->csmKey1; HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY2) = psCMDKey->csmKey2; HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY3) = psCMDKey->csmKey3; } }",
+      "registersUsed": [
+        "Z1_LINKPOINTER",
+        "Z1_CSMKEY0",
+        "Z1_CSMKEY1",
+        "Z1_CSMKEY2",
+        "Z1_CSMKEY3"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z1_LINKPOINTER",
+        "Z1_CSMKEY0",
+        "Z1_CSMKEY1",
+        "Z1_CSMKEY2",
+        "Z1_CSMKEY3"
+      ]
+    },
+    {
+      "file": "dcsm.c",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_unlockZone2CSM",
+      "functionArgs": [
+        "psCMDKey"
+      ],
+      "functionArgsTypes": [
+        "constDCSM_CSMPasswordKey*const"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t linkPointer;\n    uint32_t zsbBase = (DCSM_Z2OTP_BASE + 0x20U); // base address of the ZSB\n    int32_t bitPos = 13; // Bits [13:0] point to a ZSB (14-bit link pointer)\n    int32_t zeroFound = 0;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(psCMDKey != NULL);\n\n    linkPointer = HWREG(DCSM_Z2_BASE + DCSM_O_Z2_LINKPOINTER);\n\n    //\n    // Bits 31 - 14 as most-significant 0 are invalid LinkPointer options\n    //\n    linkPointer = linkPointer << 18;\n\n    //\n    // Zone-Select Block (ZSB) selection using Link-Pointers\n    // and 0's bit position within the Link pointer\n    //\n    while((zeroFound == 0) && (bitPos > -1))\n    {\n        //\n        // The most significant bit position in the resolved link pointer\n        // which is 0, defines the valid base address for the ZSB.\n        //\n        if((linkPointer & 0x80000000U) == 0U)\n        {\n            zeroFound = 1;\n            //\n            // Base address of the ZSB is calculated using\n            // 0x20 as the slope/step with which zsbBase expands with\n            // change in the bitPos and 2*0x20 is the offset\n            //\n            zsbBase = (DCSM_Z2OTP_BASE + (((uint32_t)bitPos + 2U) * 0x20U));\n        }\n        else\n        {\n            //\n            // Move through the linkPointer to find the most significant\n            // bit position of 0\n            //\n            bitPos--;\n            linkPointer = linkPointer << 1;\n        }\n    }\n\n    //\n    // Perform dummy reads on the 128-bit password\n    // Using linkPointer because it is no longer needed\n    //\n    linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD0);\n    linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD1);\n    linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD2);\n    linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD3);\n\n    if(psCMDKey != NULL)\n    {\n        HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY0) = psCMDKey->csmKey0;\n        HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY1) = psCMDKey->csmKey1;\n        HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY2) = psCMDKey->csmKey2;\n        HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY3) = psCMDKey->csmKey3;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t linkPointer; uint32_t zsbBase = (DCSM_Z2OTP_BASE + 0x20U); // base address of the ZSB int32_t bitPos = 13; // Bits [13:0] point to a ZSB (14-bit link pointer) int32_t zeroFound = 0; // // Check the arguments. // ASSERT(psCMDKey != NULL); linkPointer = HWREG(DCSM_Z2_BASE + DCSM_O_Z2_LINKPOINTER); // // Bits 31 - 14 as most-significant 0 are invalid LinkPointer options // linkPointer = linkPointer << 18; // // Zone-Select Block (ZSB) selection using Link-Pointers // and 0's bit position within the Link pointer // while((zeroFound == 0) && (bitPos > -1)) { // // The most significant bit position in the resolved link pointer // which is 0, defines the valid base address for the ZSB. // if((linkPointer & 0x80000000U) == 0U) { zeroFound = 1; // // Base address of the ZSB is calculated using // 0x20 as the slope/step with which zsbBase expands with // change in the bitPos and 2*0x20 is the offset // zsbBase = (DCSM_Z2OTP_BASE + (((uint32_t)bitPos + 2U) * 0x20U)); } else { // // Move through the linkPointer to find the most significant // bit position of 0 // bitPos--; linkPointer = linkPointer << 1; } } // // Perform dummy reads on the 128-bit password // Using linkPointer because it is no longer needed // linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD0); linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD1); linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD2); linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD3); if(psCMDKey != NULL) { HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY0) = psCMDKey->csmKey0; HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY1) = psCMDKey->csmKey1; HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY2) = psCMDKey->csmKey2; HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY3) = psCMDKey->csmKey3; } }",
+      "registersUsed": [
+        "Z2_LINKPOINTER",
+        "Z2_CSMKEY0",
+        "Z2_CSMKEY1",
+        "Z2_CSMKEY2",
+        "Z2_CSMKEY3"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z2_LINKPOINTER",
+        "Z2_CSMKEY0",
+        "Z2_CSMKEY1",
+        "Z2_CSMKEY2",
+        "Z2_CSMKEY3"
+      ]
+    },
+    {
+      "file": "dcsm.c",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_writeZone1CSM",
+      "functionArgs": [
+        "psCMDKey"
+      ],
+      "functionArgsTypes": [
+        "constDCSM_CSMPasswordKey*const"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(psCMDKey != NULL);\n\n    if(psCMDKey != NULL)\n    {\n        HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY0) = psCMDKey->csmKey0;\n        HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY1) = psCMDKey->csmKey1;\n        HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY2) = psCMDKey->csmKey2;\n        HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY3) = psCMDKey->csmKey3;\n    }\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(psCMDKey != NULL); if(psCMDKey != NULL) { HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY0) = psCMDKey->csmKey0; HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY1) = psCMDKey->csmKey1; HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY2) = psCMDKey->csmKey2; HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CSMKEY3) = psCMDKey->csmKey3; } }",
+      "registersUsed": [
+        "Z1_CSMKEY0",
+        "Z1_CSMKEY1",
+        "Z1_CSMKEY2",
+        "Z1_CSMKEY3"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z1_CSMKEY0",
+        "Z1_CSMKEY1",
+        "Z1_CSMKEY2",
+        "Z1_CSMKEY3"
+      ]
+    },
+    {
+      "file": "dcsm.c",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_writeZone2CSM",
+      "functionArgs": [
+        "psCMDKey"
+      ],
+      "functionArgsTypes": [
+        "constDCSM_CSMPasswordKey*const"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(psCMDKey != NULL);\n\n    if(psCMDKey != NULL)\n    {\n        HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY0) = psCMDKey->csmKey0;\n        HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY1) = psCMDKey->csmKey1;\n        HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY2) = psCMDKey->csmKey2;\n        HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY3) = psCMDKey->csmKey3;\n    }\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(psCMDKey != NULL); if(psCMDKey != NULL) { HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY0) = psCMDKey->csmKey0; HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY1) = psCMDKey->csmKey1; HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY2) = psCMDKey->csmKey2; HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CSMKEY3) = psCMDKey->csmKey3; } }",
+      "registersUsed": [
+        "Z2_CSMKEY0",
+        "Z2_CSMKEY1",
+        "Z2_CSMKEY2",
+        "Z2_CSMKEY3"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z2_CSMKEY0",
+        "Z2_CSMKEY1",
+        "Z2_CSMKEY2",
+        "Z2_CSMKEY3"
+      ]
+    },
+    {
+      "file": "dcsm.c",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getZone1FlashEXEStatus",
+      "functionArgs": [
+        "sector"
+      ],
+      "functionArgsTypes": [
+        "DCSM_Sector"
+      ],
+      "returnType": "DCSM_EXEOnlyStatus",
+      "functionContent": "{\n    uint16_t regValue;\n    uint16_t statusBitShift;\n    uint32_t regintValue;\n    DCSM_EXEOnlyStatus status;\n\n    //\n    // Check if sector belongs to this zone\n    //\n    if(DCSM_getFlashSectorZone(sector) != DCSM_MEMORY_ZONE1)\n    {\n        status = DCSM_INCORRECT_ZONE;\n    }\n    else\n    {\n        //\n        // Get the EXE status register\n        //\n        if(sector <= DCSM_BANK1_SECTOR_127_96)\n        {\n            regintValue = ((HWREG(DCSM_Z1_BASE + DCSM_O_Z1_EXEONLYSECT1R)) &\n                           DCSM_EXEONLYSECTR_M);\n            statusBitShift = (uint16_t)sector;\n            regValue = (uint16_t)regintValue;\n        }\n        else if(sector <= DCSM_BANK3_SECTOR_127_96)\n        {\n            regintValue = ((HWREG(DCSM_Z1_BASE + DCSM_O_Z1_EXEONLYSECT1R))\n                           >> DCSM_EXEONLYSECTR_S);\n\n            regValue = (uint16_t)regintValue;\n            statusBitShift = (uint16_t)sector & 0xFU;\n        }\n        else\n        {\n            regintValue = ((HWREG(DCSM_Z1_BASE + DCSM_O_Z1_EXEONLYSECT2R)) &\n                           DCSM_EXEONLYSECTR_M);\n            regValue = (uint16_t)regintValue;\n            statusBitShift = (uint16_t)sector & 0xFU;\n        }\n        //\n        // Get the EXE status of the Flash Sector\n        //\n        status = (DCSM_EXEOnlyStatus)(uint16_t)(((regValue >> statusBitShift) &\n                                                 0x01U));\n    }\n    return(status);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t regValue; uint16_t statusBitShift; uint32_t regintValue; DCSM_EXEOnlyStatus status; // // Check if sector belongs to this zone // if(DCSM_getFlashSectorZone(sector) != DCSM_MEMORY_ZONE1) { status = DCSM_INCORRECT_ZONE; } else { // // Get the EXE status register // if(sector <= DCSM_BANK1_SECTOR_127_96) { regintValue = ((HWREG(DCSM_Z1_BASE + DCSM_O_Z1_EXEONLYSECT1R)) & DCSM_EXEONLYSECTR_M); statusBitShift = (uint16_t)sector; regValue = (uint16_t)regintValue; } else if(sector <= DCSM_BANK3_SECTOR_127_96) { regintValue = ((HWREG(DCSM_Z1_BASE + DCSM_O_Z1_EXEONLYSECT1R)) >> DCSM_EXEONLYSECTR_S); regValue = (uint16_t)regintValue; statusBitShift = (uint16_t)sector & 0xFU; } else { regintValue = ((HWREG(DCSM_Z1_BASE + DCSM_O_Z1_EXEONLYSECT2R)) & DCSM_EXEONLYSECTR_M); regValue = (uint16_t)regintValue; statusBitShift = (uint16_t)sector & 0xFU; } // // Get the EXE status of the Flash Sector // status = (DCSM_EXEOnlyStatus)(uint16_t)(((regValue >> statusBitShift) & 0x01U)); } return(status); }",
+      "registersUsed": [
+        "Z1_EXEONLYSECT1R",
+        "Z1_EXEONLYSECT2R"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z1_EXEONLYSECT1R",
+        "Z1_EXEONLYSECT2R"
+      ]
+    },
+    {
+      "file": "dcsm.c",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getZone1RAMEXEStatus",
+      "functionArgs": [
+        "module"
+      ],
+      "functionArgsTypes": [
+        "DCSM_RAMModule"
+      ],
+      "returnType": "DCSM_EXEOnlyStatus",
+      "functionContent": "{\n    ASSERT(module != DCSM_CLA);\n    uint32_t status;\n\n    //\n    // Check if module belongs to this zone\n    //\n    if(DCSM_getRAMZone(module) != DCSM_MEMORY_ZONE1)\n    {\n        status = DCSM_INCORRECT_ZONE;\n    }\n    else\n    {\n        //\n        // Get the EXE status of the RAM Module\n        //\n        status = (uint16_t)((HWREGH(DCSM_Z1_BASE + DCSM_O_Z1_EXEONLYRAM1R) >>\n                             (uint16_t)module) & 0x01U);\n    }\n    return((DCSM_EXEOnlyStatus)status);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(module != DCSM_CLA); uint32_t status; // // Check if module belongs to this zone // if(DCSM_getRAMZone(module) != DCSM_MEMORY_ZONE1) { status = DCSM_INCORRECT_ZONE; } else { // // Get the EXE status of the RAM Module // status = (uint16_t)((HWREGH(DCSM_Z1_BASE + DCSM_O_Z1_EXEONLYRAM1R) >> (uint16_t)module) & 0x01U); } return((DCSM_EXEOnlyStatus)status); }",
+      "registersUsed": [
+        "Z1_EXEONLYRAM1R"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z1_EXEONLYRAM1R"
+      ]
+    },
+    {
+      "file": "dcsm.c",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getZone2FlashEXEStatus",
+      "functionArgs": [
+        "sector"
+      ],
+      "functionArgsTypes": [
+        "DCSM_Sector"
+      ],
+      "returnType": "DCSM_EXEOnlyStatus",
+      "functionContent": "{\n    uint16_t regValue;\n    uint16_t statusBitShift;\n    uint32_t regintValue;\n    DCSM_EXEOnlyStatus status;\n\n    //\n    // Check if sector belongs to this zone\n    //\n    if(DCSM_getFlashSectorZone(sector) != DCSM_MEMORY_ZONE2)\n    {\n        status = DCSM_INCORRECT_ZONE;\n    }\n    else\n    {\n        //\n        // Get the EXE status register\n        //\n        if(sector <= DCSM_BANK1_SECTOR_127_96)\n        {\n            regintValue = ((HWREG(DCSM_Z2_BASE +\n                                  DCSM_O_Z2_EXEONLYSECT1R)) &\n                           DCSM_EXEONLYSECTR_M);\n            statusBitShift = (uint16_t)sector;\n            regValue = (uint16_t)regintValue;\n        }\n        else if(sector <= DCSM_BANK3_SECTOR_127_96)\n        {\n            regintValue = ((HWREG(DCSM_Z2_BASE + DCSM_O_Z2_EXEONLYSECT1R))\n                           >> DCSM_EXEONLYSECTR_S);\n\n            regValue = (uint16_t)regintValue;\n            statusBitShift = (uint16_t)sector & 0xFU;\n        }\n        else\n        {\n            regintValue = ((HWREG(DCSM_Z2_BASE +\n                                  DCSM_O_Z2_EXEONLYSECT2R)) &\n                           DCSM_EXEONLYSECTR_M);\n            regValue = (uint16_t)regintValue;\n            statusBitShift = (uint16_t)sector & 0xFU;\n        }\n        //\n        // Get the EXE status of the Flash Sector\n        //\n        status = (DCSM_EXEOnlyStatus)(uint16_t)(((regValue >> statusBitShift) &\n                                                 0x01U));\n    }\n\n    return(status);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t regValue; uint16_t statusBitShift; uint32_t regintValue; DCSM_EXEOnlyStatus status; // // Check if sector belongs to this zone // if(DCSM_getFlashSectorZone(sector) != DCSM_MEMORY_ZONE2) { status = DCSM_INCORRECT_ZONE; } else { // // Get the EXE status register // if(sector <= DCSM_BANK1_SECTOR_127_96) { regintValue = ((HWREG(DCSM_Z2_BASE + DCSM_O_Z2_EXEONLYSECT1R)) & DCSM_EXEONLYSECTR_M); statusBitShift = (uint16_t)sector; regValue = (uint16_t)regintValue; } else if(sector <= DCSM_BANK3_SECTOR_127_96) { regintValue = ((HWREG(DCSM_Z2_BASE + DCSM_O_Z2_EXEONLYSECT1R)) >> DCSM_EXEONLYSECTR_S); regValue = (uint16_t)regintValue; statusBitShift = (uint16_t)sector & 0xFU; } else { regintValue = ((HWREG(DCSM_Z2_BASE + DCSM_O_Z2_EXEONLYSECT2R)) & DCSM_EXEONLYSECTR_M); regValue = (uint16_t)regintValue; statusBitShift = (uint16_t)sector & 0xFU; } // // Get the EXE status of the Flash Sector // status = (DCSM_EXEOnlyStatus)(uint16_t)(((regValue >> statusBitShift) & 0x01U)); } return(status); }",
+      "registersUsed": [
+        "Z2_EXEONLYSECT1R",
+        "Z2_EXEONLYSECT2R"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z2_EXEONLYSECT1R",
+        "Z2_EXEONLYSECT2R"
+      ]
+    },
+    {
+      "file": "dcsm.c",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getZone2RAMEXEStatus",
+      "functionArgs": [
+        "module"
+      ],
+      "functionArgsTypes": [
+        "DCSM_RAMModule"
+      ],
+      "returnType": "DCSM_EXEOnlyStatus",
+      "functionContent": "{\n    ASSERT(module != DCSM_CLA);\n    uint32_t status;\n\n    //\n    // Check if module belongs to this zone\n    //\n    if(DCSM_getRAMZone(module) != DCSM_MEMORY_ZONE2)\n    {\n        status = DCSM_INCORRECT_ZONE;\n    }\n    else\n    {\n        //\n        // Get the EXE status of the RAM Module\n        //\n        status = (uint16_t)((HWREGH(DCSM_Z2_BASE + DCSM_O_Z2_EXEONLYRAM1R) >>\n                             (uint16_t)module) & 0x01U);\n    }\n    return((DCSM_EXEOnlyStatus)status);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(module != DCSM_CLA); uint32_t status; // // Check if module belongs to this zone // if(DCSM_getRAMZone(module) != DCSM_MEMORY_ZONE2) { status = DCSM_INCORRECT_ZONE; } else { // // Get the EXE status of the RAM Module // status = (uint16_t)((HWREGH(DCSM_Z2_BASE + DCSM_O_Z2_EXEONLYRAM1R) >> (uint16_t)module) & 0x01U); } return((DCSM_EXEOnlyStatus)status); }",
+      "registersUsed": [
+        "Z2_EXEONLYRAM1R"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z2_EXEONLYRAM1R"
+      ]
+    },
+    {
+      "file": "dcsm.c",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_claimZoneSemaphore",
+      "functionArgs": [
+        "zone"
+      ],
+      "functionArgsTypes": [
+        "DCSM_SemaphoreZone"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    //\n    // FLSEM register address.\n    //\n    uint32_t regAddress = DCSMCOMMON_BASE + DCSM_O_FLSEM;\n\n    EALLOW;\n\n    //\n    // Write 0xA5 to the key and write the zone that is attempting to claim the\n    // Flash Pump Semaphore to the semaphore bits.\n    //\n    HWREGH(regAddress) = ((uint16_t)FLSEM_KEY << DCSM_FLSEM_KEY_S) |\n                         (uint16_t)zone;\n    EDIS;\n\n    //\n    // If the calling function was unable to claim the zone semaphore, then\n    // return false\n    //\n    return(((HWREGH(regAddress) & DCSM_FLSEM_SEM_M) == (uint16_t)zone) ?\n             true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ // // FLSEM register address. // uint32_t regAddress = DCSMCOMMON_BASE + DCSM_O_FLSEM; EALLOW; // // Write 0xA5 to the key and write the zone that is attempting to claim the // Flash Pump Semaphore to the semaphore bits. // HWREGH(regAddress) = ((uint16_t)FLSEM_KEY << DCSM_FLSEM_KEY_S) | (uint16_t)zone; EDIS; // // If the calling function was unable to claim the zone semaphore, then // return false // return(((HWREGH(regAddress) & DCSM_FLSEM_SEM_M) == (uint16_t)zone) ? true : false); }",
+      "registersUsed": [
+        "FLSEM"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLSEM"
+      ]
+    },
+    {
+      "file": "dcsm.c",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_releaseZoneSemaphore",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    //\n    // FLSEM register address.\n    //\n    uint32_t regAddress = DCSMCOMMON_BASE + DCSM_O_FLSEM;\n\n    EALLOW;\n\n    //\n    // Write 0xA5 to the key and write the zone that is attempting to claim the\n    // Flash Pump Semaphore to the semaphore bits.\n    //\n    HWREGH(regAddress) = ((uint16_t)FLSEM_KEY << DCSM_FLSEM_KEY_S);\n    EDIS;\n\n    //\n    // If the calling function was unable to release the zone semaphore, then\n    // return false\n    //\n    return(((HWREGH(regAddress) & DCSM_FLSEM_SEM_M) == 0x0U) ? true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ // // FLSEM register address. // uint32_t regAddress = DCSMCOMMON_BASE + DCSM_O_FLSEM; EALLOW; // // Write 0xA5 to the key and write the zone that is attempting to claim the // Flash Pump Semaphore to the semaphore bits. // HWREGH(regAddress) = ((uint16_t)FLSEM_KEY << DCSM_FLSEM_KEY_S); EDIS; // // If the calling function was unable to release the zone semaphore, then // return false // return(((HWREGH(regAddress) & DCSM_FLSEM_SEM_M) == 0x0U) ? true : false); }",
+      "registersUsed": [
+        "FLSEM"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLSEM"
+      ]
+    },
+    {
+      "file": "dcsm.c",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_readZone1CSMPwd",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t linkPointer;\n    uint32_t zsbBase  = (DCSM_Z1OTP_BASE + 0x20U); // base address of the ZSB\n\n    linkPointer = HWREG(DCSM_Z1_BASE + DCSM_O_Z1_LINKPOINTER);\n    //\n    // Bits 31 - 14 as most-significant 0 are invalid LinkPointer options\n    //\n    linkPointer = linkPointer << 18;\n\n    int32_t bitPos = 13; // Bits [13:0] point to a ZSB (14-bit link pointer)\n    int32_t zeroFound = 0;\n\n    //\n    // Zone-Select Block (ZSB) selection using Link-Pointers\n    // and 0's bit position within the Link pointer\n    //\n    while((zeroFound == 0) && (bitPos > -1))\n    {\n        //\n        // The most significant bit position in the resolved link pointer\n        // which is 0, defines the valid base address for the ZSB.\n        //\n        if((linkPointer & 0x80000000U) == 0U)\n        {\n            zeroFound = 1;\n            //\n            // Base address of the ZSB is calculated using\n            // 0x20 as the slope/step with which zsbBase expands with\n            // change in the bitPos and 2*0x20 is the offset\n            //\n            zsbBase = (DCSM_Z1OTP_BASE + (((uint32_t)bitPos + 2U) * 0x20U));\n        }\n        else\n        {\n            //\n            // Move through the linkPointer to find the most significant\n            // bit position of 0\n            //\n            bitPos--;\n            linkPointer = linkPointer << 1;\n        }\n    }\n\n    //\n    // Perform dummy reads on the 128-bit password\n    // Using linkPointer because it is no longer needed\n    //\n    linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD0);\n    linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD1);\n    linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD2);\n    linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD3);\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t linkPointer; uint32_t zsbBase = (DCSM_Z1OTP_BASE + 0x20U); // base address of the ZSB linkPointer = HWREG(DCSM_Z1_BASE + DCSM_O_Z1_LINKPOINTER); // // Bits 31 - 14 as most-significant 0 are invalid LinkPointer options // linkPointer = linkPointer << 18; int32_t bitPos = 13; // Bits [13:0] point to a ZSB (14-bit link pointer) int32_t zeroFound = 0; // // Zone-Select Block (ZSB) selection using Link-Pointers // and 0's bit position within the Link pointer // while((zeroFound == 0) && (bitPos > -1)) { // // The most significant bit position in the resolved link pointer // which is 0, defines the valid base address for the ZSB. // if((linkPointer & 0x80000000U) == 0U) { zeroFound = 1; // // Base address of the ZSB is calculated using // 0x20 as the slope/step with which zsbBase expands with // change in the bitPos and 2*0x20 is the offset // zsbBase = (DCSM_Z1OTP_BASE + (((uint32_t)bitPos + 2U) * 0x20U)); } else { // // Move through the linkPointer to find the most significant // bit position of 0 // bitPos--; linkPointer = linkPointer << 1; } } // // Perform dummy reads on the 128-bit password // Using linkPointer because it is no longer needed // linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD0); linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD1); linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD2); linkPointer = HWREG(zsbBase + DCSM_O_Z1_CSMPSWD3); }",
+      "registersUsed": [
+        "Z1_LINKPOINTER"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z1_LINKPOINTER"
+      ]
+    },
+    {
+      "file": "dcsm.c",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_readZone2CSMPwd",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t linkPointer;\n    uint32_t zsbBase = (DCSM_Z2OTP_BASE + 0x20U); // base address of the ZSB\n\n    linkPointer = HWREG(DCSM_Z2_BASE + DCSM_O_Z2_LINKPOINTER);\n    //\n    // Bits 31 - 14 as most-significant 0 are invalid LinkPointer options\n    //\n    linkPointer = linkPointer << 18;\n\n    int32_t bitPos = 13; // Bits [13:0] point to a ZSB (14-bit link pointer)\n    int32_t zeroFound = 0;\n\n    //\n    // Zone-Select Block (ZSB) selection using Link-Pointers\n    // and 0's bit position within the Link pointer\n    //\n    while((zeroFound == 0) && (bitPos > -1))\n    {\n        //\n        // The most significant bit position in the resolved link pointer\n        // which is 0, defines the valid base address for the ZSB.\n        //\n        if((linkPointer & 0x80000000U) == 0U)\n        {\n            zeroFound = 1;\n            //\n            // Base address of the ZSB is calculated using\n            // 0x20 as the slope/step with which zsbBase expands with\n            // change in the bitPos and 2*0x20 is the offset\n            //\n            zsbBase = (DCSM_Z2OTP_BASE + (((uint32_t)bitPos + 2U) * 0x20U));\n        }\n        else\n        {\n            //\n            // Move through the linkPointer to find the most significant\n            // bit position of 0\n            //\n            bitPos--;\n            linkPointer = linkPointer << 1;\n        }\n    }\n\n    //\n    // Perform dummy reads on the 128-bit password\n    // Using linkPointer because it is no longer needed\n    //\n    linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD0);\n    linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD1);\n    linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD2);\n    linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD3);\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t linkPointer; uint32_t zsbBase = (DCSM_Z2OTP_BASE + 0x20U); // base address of the ZSB linkPointer = HWREG(DCSM_Z2_BASE + DCSM_O_Z2_LINKPOINTER); // // Bits 31 - 14 as most-significant 0 are invalid LinkPointer options // linkPointer = linkPointer << 18; int32_t bitPos = 13; // Bits [13:0] point to a ZSB (14-bit link pointer) int32_t zeroFound = 0; // // Zone-Select Block (ZSB) selection using Link-Pointers // and 0's bit position within the Link pointer // while((zeroFound == 0) && (bitPos > -1)) { // // The most significant bit position in the resolved link pointer // which is 0, defines the valid base address for the ZSB. // if((linkPointer & 0x80000000U) == 0U) { zeroFound = 1; // // Base address of the ZSB is calculated using // 0x20 as the slope/step with which zsbBase expands with // change in the bitPos and 2*0x20 is the offset // zsbBase = (DCSM_Z2OTP_BASE + (((uint32_t)bitPos + 2U) * 0x20U)); } else { // // Move through the linkPointer to find the most significant // bit position of 0 // bitPos--; linkPointer = linkPointer << 1; } } // // Perform dummy reads on the 128-bit password // Using linkPointer because it is no longer needed // linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD0); linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD1); linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD2); linkPointer = HWREG(zsbBase + DCSM_O_Z2_CSMPSWD3); }",
+      "registersUsed": [
+        "Z2_LINKPOINTER"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z2_LINKPOINTER"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_secureZone1",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write to the FORCESEC bit.\n    //\n    HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CR)|= DCSM_Z1_CR_FORCESEC;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write to the FORCESEC bit. // HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CR)|= DCSM_Z1_CR_FORCESEC; }",
+      "registersUsed": [
+        "Z1_CR"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z1_CR"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_secureZone2",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write to the FORCESEC bit.\n    //\n    HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CR)|= DCSM_Z2_CR_FORCESEC;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write to the FORCESEC bit. // HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CR)|= DCSM_Z2_CR_FORCESEC; }",
+      "registersUsed": [
+        "Z2_CR"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z2_CR"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getZone1CSMSecurityStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline DCSM_SecurityStatus",
+      "functionContent": "{\n    uint32_t status;\n    DCSM_SecurityStatus returnStatus;\n    status = HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CR);\n\n    //\n    // if ARMED bit is set and UNSECURED bit is set then CSM is unsecured.\n    // Else it is secure.\n    //\n    if(((status & DCSM_Z1_CR_ARMED) != 0U) &&\n       ((status & DCSM_Z1_CR_UNSECURE) != 0U))\n    {\n        returnStatus = DCSM_STATUS_UNSECURE;\n    }\n    else if((status & DCSM_Z1_CR_ALLONE) == DCSM_Z1_CR_ALLONE)\n    {\n        returnStatus = DCSM_STATUS_BLOCKED;\n    }\n    else if((status & DCSM_Z1_CR_ALLZERO) == DCSM_Z1_CR_ALLZERO)\n    {\n        returnStatus = DCSM_STATUS_LOCKED;\n    }\n    else\n    {\n        returnStatus = DCSM_STATUS_SECURE;\n    }\n\n    return(returnStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t status; DCSM_SecurityStatus returnStatus; status = HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CR); // // if ARMED bit is set and UNSECURED bit is set then CSM is unsecured. // Else it is secure. // if(((status & DCSM_Z1_CR_ARMED) != 0U) && ((status & DCSM_Z1_CR_UNSECURE) != 0U)) { returnStatus = DCSM_STATUS_UNSECURE; } else if((status & DCSM_Z1_CR_ALLONE) == DCSM_Z1_CR_ALLONE) { returnStatus = DCSM_STATUS_BLOCKED; } else if((status & DCSM_Z1_CR_ALLZERO) == DCSM_Z1_CR_ALLZERO) { returnStatus = DCSM_STATUS_LOCKED; } else { returnStatus = DCSM_STATUS_SECURE; } return(returnStatus); }",
+      "registersUsed": [
+        "Z1_CR"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z1_CR"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getZone2CSMSecurityStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline DCSM_SecurityStatus",
+      "functionContent": "{\n    uint32_t status;\n    DCSM_SecurityStatus returnStatus;\n    status = HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CR);\n\n    //\n    // if ARMED bit is set and UNSECURED bit is set then CSM is unsecured.\n    // Else it is secure.\n    //\n    if(((status & DCSM_Z2_CR_ARMED) != 0U) &&\n       ((status & DCSM_Z2_CR_UNSECURE) != 0U))\n    {\n        returnStatus = DCSM_STATUS_UNSECURE;\n    }\n    else if((status & DCSM_Z2_CR_ALLONE) == DCSM_Z2_CR_ALLONE)\n    {\n        returnStatus = DCSM_STATUS_BLOCKED;\n    }\n    else if((status & DCSM_Z2_CR_ALLZERO) == DCSM_Z2_CR_ALLZERO)\n    {\n        returnStatus = DCSM_STATUS_LOCKED;\n    }\n    else\n    {\n        returnStatus = DCSM_STATUS_SECURE;\n    }\n\n    return(returnStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t status; DCSM_SecurityStatus returnStatus; status = HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CR); // // if ARMED bit is set and UNSECURED bit is set then CSM is unsecured. // Else it is secure. // if(((status & DCSM_Z2_CR_ARMED) != 0U) && ((status & DCSM_Z2_CR_UNSECURE) != 0U)) { returnStatus = DCSM_STATUS_UNSECURE; } else if((status & DCSM_Z2_CR_ALLONE) == DCSM_Z2_CR_ALLONE) { returnStatus = DCSM_STATUS_BLOCKED; } else if((status & DCSM_Z2_CR_ALLZERO) == DCSM_Z2_CR_ALLZERO) { returnStatus = DCSM_STATUS_LOCKED; } else { returnStatus = DCSM_STATUS_SECURE; } return(returnStatus); }",
+      "registersUsed": [
+        "Z2_CR"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z2_CR"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getZone1ControlStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint32_t stat;\n    //\n    // Return the contents of the CR register.\n    //\n\n    stat = ((HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CR)) >> DCSM_ZX_CR_S);\n\n    return((uint16_t)stat);\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t stat; // // Return the contents of the CR register. // stat = ((HWREG(DCSM_Z1_BASE + DCSM_O_Z1_CR)) >> DCSM_ZX_CR_S); return((uint16_t)stat); }",
+      "registersUsed": [
+        "Z1_CR"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z1_CR"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getZone2ControlStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    uint32_t stat;\n    //\n    // Return the contents of the CR register.\n    //\n    stat = ((HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CR)) >> DCSM_ZX_CR_S);\n\n    return((uint16_t)stat);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t stat; // // Return the contents of the CR register. // stat = ((HWREG(DCSM_Z2_BASE + DCSM_O_Z2_CR)) >> DCSM_ZX_CR_S); return((uint16_t)stat); }",
+      "registersUsed": [
+        "Z2_CR"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z2_CR"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getRAMZone",
+      "functionArgs": [
+        "module"
+      ],
+      "functionArgsTypes": [
+        "DCSM_RAMModule"
+      ],
+      "returnType": "static inline DCSM_MemoryStatus",
+      "functionContent": "{\n    uint16_t shift = (uint16_t)module * 2U;\n    uint32_t ramStatus;\n    //\n    //Read the RAMSTAT register for the specific RAM Module.\n    //\n    ramStatus = ((HWREG(DCSMCOMMON_BASE + DCSM_O_RAMSTAT1) >>\n                                shift) & 0x03U);\n    return((DCSM_MemoryStatus)ramStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t shift = (uint16_t)module * 2U; uint32_t ramStatus; // //Read the RAMSTAT register for the specific RAM Module. // ramStatus = ((HWREG(DCSMCOMMON_BASE + DCSM_O_RAMSTAT1) >> shift) & 0x03U); return((DCSM_MemoryStatus)ramStatus); }",
+      "registersUsed": [
+        "RAMSTAT1"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMSTAT1"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getFlashSectorZone",
+      "functionArgs": [
+        "sector"
+      ],
+      "functionArgsTypes": [
+        "DCSM_Sector"
+      ],
+      "returnType": "static inline DCSM_MemoryStatus",
+      "functionContent": "{\n    uint32_t sectStat;\n    uint16_t shift;\n\n    //\n    // Get the Sector status register for the specific bank\n    //\n    if(sector <= DCSM_BANK1_SECTOR_127_96)\n    {\n        sectStat = HWREG(DCSMCOMMON_BASE + DCSM_O_SECTSTAT1);\n        shift = (uint16_t)sector * 2U;\n    }\n    else if(sector <= DCSM_BANK3_SECTOR_127_96)\n    {\n        sectStat = HWREG(DCSMCOMMON_BASE + DCSM_O_SECTSTAT2);\n        shift = ((uint16_t)sector & 0xFU) * (uint16_t)2U;\n    }\n    else\n    {\n        sectStat = HWREG(DCSMCOMMON_BASE + DCSM_O_SECTSTAT3);\n        shift = ((uint16_t)sector & 0xFU) * (uint16_t)2U;\n    }\n\n    //\n    //Read the SECTSTAT register for the specific Flash Sector.\n    //\n    return((DCSM_MemoryStatus)((uint16_t)((sectStat >> shift) & 0x3U)));\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t sectStat; uint16_t shift; // // Get the Sector status register for the specific bank // if(sector <= DCSM_BANK1_SECTOR_127_96) { sectStat = HWREG(DCSMCOMMON_BASE + DCSM_O_SECTSTAT1); shift = (uint16_t)sector * 2U; } else if(sector <= DCSM_BANK3_SECTOR_127_96) { sectStat = HWREG(DCSMCOMMON_BASE + DCSM_O_SECTSTAT2); shift = ((uint16_t)sector & 0xFU) * (uint16_t)2U; } else { sectStat = HWREG(DCSMCOMMON_BASE + DCSM_O_SECTSTAT3); shift = ((uint16_t)sector & 0xFU) * (uint16_t)2U; } // //Read the SECTSTAT register for the specific Flash Sector. // return((DCSM_MemoryStatus)((uint16_t)((sectStat >> shift) & 0x3U))); }",
+      "registersUsed": [
+        "SECTSTAT1",
+        "SECTSTAT2",
+        "SECTSTAT3"
+      ],
+      "registersUsedMatchingBifield": [
+        "SECTSTAT1",
+        "SECTSTAT2",
+        "SECTSTAT3"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getZone1LinkPointerError",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Return the LinkPointer Error for specific bank\n    //\n    return(HWREG(DCSM_Z1_BASE + DCSM_O_Z1_LINKPOINTERERR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Return the LinkPointer Error for specific bank // return(HWREG(DCSM_Z1_BASE + DCSM_O_Z1_LINKPOINTERERR)); }",
+      "registersUsed": [
+        "Z1_LINKPOINTER",
+        "Z1_LINKPOINTERERR"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z1_LINKPOINTER",
+        "Z1_LINKPOINTERERR"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getZone2LinkPointerError",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Return the LinkPointer Error for specific bank\n    //\n    return(HWREG(DCSM_Z2_BASE + DCSM_O_Z2_LINKPOINTERERR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Return the LinkPointer Error for specific bank // return(HWREG(DCSM_Z2_BASE + DCSM_O_Z2_LINKPOINTERERR)); }",
+      "registersUsed": [
+        "Z2_LINKPOINTER",
+        "Z2_LINKPOINTERERR"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z2_LINKPOINTER",
+        "Z2_LINKPOINTERERR"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getFlashErrorStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return((bool)(HWREG(DCSMCOMMON_BASE + DCSM_O_SECERRSTAT) &\n                  DCSM_SECERRSTAT_ERR));\n}\n",
+      "functionContentWithoutFormatting": "{ return((bool)(HWREG(DCSMCOMMON_BASE + DCSM_O_SECERRSTAT) & DCSM_SECERRSTAT_ERR)); }",
+      "registersUsed": [
+        "SECERRSTAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SECERRSTAT"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_clearFlashErrorStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(DCSMCOMMON_BASE + DCSM_O_SECERRCLR) |= DCSM_SECERRCLR_ERR;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(DCSMCOMMON_BASE + DCSM_O_SECERRCLR) |= DCSM_SECERRCLR_ERR; }",
+      "registersUsed": [
+        "SECERRCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SECERRCLR"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_forceFlashErrorStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(DCSMCOMMON_BASE +\n          DCSM_O_SECERRFRC) = DCSM_SECERRFRC_ERR |\n                              ((uint32_t)DCSM_FORCE_SECERR_KEY\n                               << DCSM_SECERRFRC_KEY_S);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(DCSMCOMMON_BASE + DCSM_O_SECERRFRC) = DCSM_SECERRFRC_ERR | ((uint32_t)DCSM_FORCE_SECERR_KEY << DCSM_SECERRFRC_KEY_S); }",
+      "registersUsed": [
+        "SECERRFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "SECERRFRC"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getZone1OTPSecureLockStatus",
+      "functionArgs": [
+        "lockType"
+      ],
+      "functionArgsTypes": [
+        "DCSM_OTPLock"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    uint32_t status, returnStatus;\n    status = HWREG(DCSM_Z1_BASE + DCSM_O_Z1_OTPSECLOCK);\n\n    //\n    // Reflects the state of the OTP Sec LOCK feature.\n    //\n    if(lockType == DCSM_OTPSECLOCK_JTAG)\n    {\n        returnStatus = (status & DCSM_Z1_OTPSECLOCK_JTAGLOCK_M) >>\n                        DCSM_Z1_OTPSECLOCK_JTAGLOCK_S;\n    }\n    else if(lockType == DCSM_OTPSECLOCK_CRCLOCK)\n    {\n        returnStatus = (status & DCSM_Z1_OTPSECLOCK_CRCLOCK_M) >>\n                        DCSM_Z1_OTPSECLOCK_CRCLOCK_S;\n    }\n    else if(lockType == DCSM_OTPSECLOCK_PSWDLOCK)\n    {\n        returnStatus = (status & DCSM_Z1_OTPSECLOCK_PSWDLOCK_M) >>\n                        DCSM_Z1_OTPSECLOCK_PSWDLOCK_S;\n    }\n    else\n    {\n        returnStatus = (uint32_t)DCSM_OTPSECLOCK_INVALID;\n    }\n\n    return(returnStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t status, returnStatus; status = HWREG(DCSM_Z1_BASE + DCSM_O_Z1_OTPSECLOCK); // // Reflects the state of the OTP Sec LOCK feature. // if(lockType == DCSM_OTPSECLOCK_JTAG) { returnStatus = (status & DCSM_Z1_OTPSECLOCK_JTAGLOCK_M) >> DCSM_Z1_OTPSECLOCK_JTAGLOCK_S; } else if(lockType == DCSM_OTPSECLOCK_CRCLOCK) { returnStatus = (status & DCSM_Z1_OTPSECLOCK_CRCLOCK_M) >> DCSM_Z1_OTPSECLOCK_CRCLOCK_S; } else if(lockType == DCSM_OTPSECLOCK_PSWDLOCK) { returnStatus = (status & DCSM_Z1_OTPSECLOCK_PSWDLOCK_M) >> DCSM_Z1_OTPSECLOCK_PSWDLOCK_S; } else { returnStatus = (uint32_t)DCSM_OTPSECLOCK_INVALID; } return(returnStatus); }",
+      "registersUsed": [
+        "Z1_OTPSECLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z1_OTPSECLOCK"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getZone2OTPSecureLockStatus",
+      "functionArgs": [
+        "lockType"
+      ],
+      "functionArgsTypes": [
+        "DCSM_OTPLock"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    uint32_t status, returnStatus;\n    status = HWREG(DCSM_Z2_BASE + DCSM_O_Z2_OTPSECLOCK);\n\n    //\n    // Reflects the state of the OTP Sec LOCK feature.\n    //\n    if(lockType == DCSM_OTPSECLOCK_CRCLOCK)\n    {\n        returnStatus = (status & DCSM_Z2_OTPSECLOCK_CRCLOCK_M) >>\n                        DCSM_Z2_OTPSECLOCK_CRCLOCK_S;\n    }\n    else if(lockType == DCSM_OTPSECLOCK_PSWDLOCK)\n    {\n        returnStatus = (status & DCSM_Z2_OTPSECLOCK_PSWDLOCK_M) >>\n                        DCSM_Z2_OTPSECLOCK_PSWDLOCK_S;\n    }\n    else\n    {\n        returnStatus = (uint32_t)DCSM_OTPSECLOCK_INVALID;\n    }\n\n    return(returnStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t status, returnStatus; status = HWREG(DCSM_Z2_BASE + DCSM_O_Z2_OTPSECLOCK); // // Reflects the state of the OTP Sec LOCK feature. // if(lockType == DCSM_OTPSECLOCK_CRCLOCK) { returnStatus = (status & DCSM_Z2_OTPSECLOCK_CRCLOCK_M) >> DCSM_Z2_OTPSECLOCK_CRCLOCK_S; } else if(lockType == DCSM_OTPSECLOCK_PSWDLOCK) { returnStatus = (status & DCSM_Z2_OTPSECLOCK_PSWDLOCK_M) >> DCSM_Z2_OTPSECLOCK_PSWDLOCK_S; } else { returnStatus = (uint32_t)DCSM_OTPSECLOCK_INVALID; } return(returnStatus); }",
+      "registersUsed": [
+        "Z2_OTPSECLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "Z2_OTPSECLOCK"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getFlashDenyCodeStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    return((uint16_t)(HWREG(DCSMCOMMON_BASE + DCSM_O_DENYCODE) & 0xFFU));\n}\n",
+      "functionContentWithoutFormatting": "{ return((uint16_t)(HWREG(DCSMCOMMON_BASE + DCSM_O_DENYCODE) & 0xFFU)); }",
+      "registersUsed": [
+        "DENYCODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "DENYCODE"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getDeviceUIDLow",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Returns the device ID_UNIQUE value bits 31 to 0\n    //\n    return(HWREG(DCSMCOMMON_BASE + DCSM_O_UID_UNIQUE_31_0));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Returns the device ID_UNIQUE value bits 31 to 0 // return(HWREG(DCSMCOMMON_BASE + DCSM_O_UID_UNIQUE_31_0)); }",
+      "registersUsed": [
+        "UID_UNIQUE_31_0"
+      ],
+      "registersUsedMatchingBifield": [
+        "UID_UNIQUE_31_0"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getDeviceUIDHigh",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Returns the device ID_UNIQUE value bits 63 to 32\n    //\n    return(HWREG(DCSMCOMMON_BASE + DCSM_O_UID_UNIQUE_63_32));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Returns the device ID_UNIQUE value bits 63 to 32 // return(HWREG(DCSMCOMMON_BASE + DCSM_O_UID_UNIQUE_63_32)); }",
+      "registersUsed": [
+        "UID_UNIQUE_63_32"
+      ],
+      "registersUsedMatchingBifield": [
+        "UID_UNIQUE_63_32"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getDevicePartID",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Returns the device PARTIDH value\n    //\n    return(HWREG(DCSMCOMMON_BASE + DCSM_O_PARTIDH));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Returns the device PARTIDH value // return(HWREG(DCSMCOMMON_BASE + DCSM_O_PARTIDH)); }",
+      "registersUsed": [
+        "PARTIDH"
+      ],
+      "registersUsedMatchingBifield": [
+        "PARTIDH"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_getPerSemStatus",
+      "functionArgs": [
+        "grabType"
+      ],
+      "functionArgsTypes": [
+        "DCSM_PERSem"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n\n    //\n    // Returns the specific Flash wrapper semaphore register value\n    //\n    return(((HWREG(DCSMCOMMON_BASE + DCSM_O_PERSEM1) >> (uint32_t)grabType) &\n            0x3U));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Returns the specific Flash wrapper semaphore register value // return(((HWREG(DCSMCOMMON_BASE + DCSM_O_PERSEM1) >> (uint32_t)grabType) & 0x3U)); }",
+      "registersUsed": [
+        "PERSEM1"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERSEM1"
+      ]
+    },
+    {
+      "file": "dcsm.h",
+      "peripheral": "dcsm",
+      "functionName": "DCSM_forcePerSemStatus",
+      "functionArgs": [
+        "grabType",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "DCSM_PERSem",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Writes into the Flash wrapper semaphore register value\n    //\n    HWREG(DCSMCOMMON_BASE + DCSM_O_PERSEM1) = (((uint32_t)value & 0x3U) <<\n                                               (uint32_t)grabType)|\n                                              ((uint32_t)FLSEM_KEY <<\n                                               DCSM_PERSEM1_KEY_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Writes into the Flash wrapper semaphore register value // HWREG(DCSMCOMMON_BASE + DCSM_O_PERSEM1) = (((uint32_t)value & 0x3U) << (uint32_t)grabType)| ((uint32_t)FLSEM_KEY << DCSM_PERSEM1_KEY_S); EDIS; }",
+      "registersUsed": [
+        "PERSEM1"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERSEM1"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,483 @@
+{
+  "name": "ipc",
+  "functions": [
+    {
+      "file": "ipc.c",
+      "peripheral": "ipc",
+      "functionName": "IPC_sendCommand",
+      "functionArgs": [
+        "ipcType",
+        "flags",
+        "addrCorrEnable",
+        "command",
+        "addr",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t",
+        "bool",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    bool ret;\n\n    //\n    // Check whether the flags are not busy\n    //\n    if((IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_FLG & flags) == 0U)\n    {\n        ret = true;\n\n        if(addrCorrEnable)\n        {\n            //\n            // Update the command registers. ADDR register holds the offset\n            // from the base address of the MSG RAM\n            //\n            IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_SENDCOM  = command;\n            IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_SENDDATA = data;\n            IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_SENDADDR =\n                            addr - IPC_Instance[ipcType].IPC_MsgRam_LtoR;\n        }\n        else\n        {\n            //\n            // Update the command registers. addr param remains as is.\n            //\n            IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_SENDCOM  = command;\n            IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_SENDDATA = data;\n            IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_SENDADDR = addr;\n        }\n\n        //\n        // Set the flags to indicate the remote core\n        //\n        IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_SET = flags;\n    }\n    else\n    {\n        ret = false;\n    }\n\n    return(ret);\n}\n",
+      "functionContentWithoutFormatting": "{ bool ret; // // Check whether the flags are not busy // if((IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_FLG & flags) == 0U) { ret = true; if(addrCorrEnable) { // // Update the command registers. ADDR register holds the offset // from the base address of the MSG RAM // IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_SENDCOM = command; IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_SENDDATA = data; IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_SENDADDR = addr - IPC_Instance[ipcType].IPC_MsgRam_LtoR; } else { // // Update the command registers. addr param remains as is. // IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_SENDCOM = command; IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_SENDDATA = data; IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_SENDADDR = addr; } // // Set the flags to indicate the remote core // IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_SET = flags; } else { ret = false; } return(ret); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.c",
+      "peripheral": "ipc",
+      "functionName": "IPC_readCommand",
+      "functionArgs": [
+        "ipcType",
+        "flags",
+        "addrCorrEnable",
+        "*command",
+        "*addr",
+        "*data"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t",
+        "bool",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    bool ret;\n    uint32_t addrReg;\n\n    //\n    // Check whether the flags are not empty\n    //\n    if((IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_STS & flags) != 0U)\n    {\n        ret = true;\n\n        //\n        // Read the command registers\n        //\n        *command   = IPC_Instance[ipcType].IPC_RecvCmd_Reg->IPC_RECVCOM;\n        addrReg    = IPC_Instance[ipcType].IPC_RecvCmd_Reg->IPC_RECVADDR;\n        *data      = IPC_Instance[ipcType].IPC_RecvCmd_Reg->IPC_RECVDATA;\n\n        if(addrCorrEnable)\n        {\n            //\n            // Calculate the address form the offset\n            //\n            *addr = IPC_Instance[ipcType].IPC_MsgRam_RtoL +\n                    IPC_ADDR_OFFSET_CORR(addrReg,\n                                    IPC_Instance[ipcType].IPC_Offset_Corr);\n\n        }\n        else\n        {\n            *addr = addrReg;\n        }\n\n    }\n    else\n    {\n        ret = false;\n    }\n\n    return(ret);\n}\n",
+      "functionContentWithoutFormatting": "{ bool ret; uint32_t addrReg; // // Check whether the flags are not empty // if((IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_STS & flags) != 0U) { ret = true; // // Read the command registers // *command = IPC_Instance[ipcType].IPC_RecvCmd_Reg->IPC_RECVCOM; addrReg = IPC_Instance[ipcType].IPC_RecvCmd_Reg->IPC_RECVADDR; *data = IPC_Instance[ipcType].IPC_RecvCmd_Reg->IPC_RECVDATA; if(addrCorrEnable) { // // Calculate the address form the offset // *addr = IPC_Instance[ipcType].IPC_MsgRam_RtoL + IPC_ADDR_OFFSET_CORR(addrReg, IPC_Instance[ipcType].IPC_Offset_Corr); } else { *addr = addrReg; } } else { ret = false; } return(ret); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.c",
+      "peripheral": "ipc",
+      "functionName": "IPC_Type_tipcType,uint32_tipcInt,void",
+      "functionArgs": [
+        "void)"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void IPC_registerInterrupt(",
+      "functionContent": "{\n    //\n    // Check for arguments\n    //\n\n    ASSERT(ipcInt <= IPC_INT3);\n\n    //\n    // Get the corresponding interrupt number\n    //\n    uint32_t intNum = IPC_Instance[ipcType].IPC_IntNum[ipcInt];\n\n    //\n    // Register the interrupt handler\n    //\n\n    Interrupt_register(intNum, pfnHandler);\n\n    //\n    // Enable the interrupt\n    //\n    Interrupt_enable(intNum);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check for arguments // ASSERT(ipcInt <= IPC_INT3); // // Get the corresponding interrupt number // uint32_t intNum = IPC_Instance[ipcType].IPC_IntNum[ipcInt]; // // Register the interrupt handler // Interrupt_register(intNum, pfnHandler); // // Enable the interrupt // Interrupt_enable(intNum); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.c",
+      "peripheral": "ipc",
+      "functionName": "IPC_unregisterInterrupt",
+      "functionArgs": [
+        "ipcType",
+        "ipcInt"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check for arguments\n    //\n\n    ASSERT(ipcInt <= IPC_INT3);\n\n    //\n    // Get the corresponding interrupt number\n    //\n    uint32_t intNum = IPC_Instance[ipcType].IPC_IntNum[ipcInt];\n\n    //\n    // Disable the interrupt.\n    //\n    Interrupt_disable(intNum);\n\n    //\n    // Unregister the interrupt handler.\n    //\n\n    Interrupt_unregister(intNum);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check for arguments // ASSERT(ipcInt <= IPC_INT3); // // Get the corresponding interrupt number // uint32_t intNum = IPC_Instance[ipcType].IPC_IntNum[ipcInt]; // // Disable the interrupt. // Interrupt_disable(intNum); // // Unregister the interrupt handler. // Interrupt_unregister(intNum); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.c",
+      "peripheral": "ipc",
+      "functionName": "IPC_initMessageQueue",
+      "functionArgs": [
+        "ipcType",
+        "*msgQueue",
+        "ipcInt_L",
+        "ipcInt_R"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "volatileIPC_MessageQueue_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check for arguments\n    //\n    ASSERT(msgQueue != NULL);\n    ASSERT(ipcInt_L < IPC_NUM_OF_INTERRUPTS);\n    ASSERT(ipcInt_R < IPC_NUM_OF_INTERRUPTS);\n\n    IPC_PutBuffer_t *putBuffer = IPC_Instance[ipcType].IPC_PutBuffer;\n    IPC_GetBuffer_t *getBuffer = IPC_Instance[ipcType].IPC_GetBuffer;\n\n    //\n    // L->R Put Buffer and Index Initialization\n    //\n    msgQueue->PutBuffer     = putBuffer->Buffer[ipcInt_R];\n    msgQueue->PutWriteIndex = &(putBuffer->PutWriteIndex[ipcInt_R]);\n    msgQueue->GetReadIndex  = &(putBuffer->GetReadIndex[ipcInt_L]);\n    msgQueue->PutFlag       = (uint32_t)1U << ipcInt_R;\n\n    //\n    // L->R Get Buffer and Index Initialization\n    //\n    msgQueue->GetBuffer     = getBuffer->Buffer[ipcInt_L];\n    msgQueue->GetWriteIndex = &(getBuffer->GetWriteIndex[ipcInt_L]);\n    msgQueue->PutReadIndex  = &(getBuffer->PutReadIndex[ipcInt_R]);\n\n    //\n    // Initialize PutBuffer WriteIndex = 0 and GetBuffer ReadIndex = 0\n    //\n    *(msgQueue->PutWriteIndex) = 0U;\n    *(msgQueue->GetReadIndex)  = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check for arguments // ASSERT(msgQueue != NULL); ASSERT(ipcInt_L < IPC_NUM_OF_INTERRUPTS); ASSERT(ipcInt_R < IPC_NUM_OF_INTERRUPTS); IPC_PutBuffer_t *putBuffer = IPC_Instance[ipcType].IPC_PutBuffer; IPC_GetBuffer_t *getBuffer = IPC_Instance[ipcType].IPC_GetBuffer; // // L->R Put Buffer and Index Initialization // msgQueue->PutBuffer = putBuffer->Buffer[ipcInt_R]; msgQueue->PutWriteIndex = &(putBuffer->PutWriteIndex[ipcInt_R]); msgQueue->GetReadIndex = &(putBuffer->GetReadIndex[ipcInt_L]); msgQueue->PutFlag = (uint32_t)1U << ipcInt_R; // // L->R Get Buffer and Index Initialization // msgQueue->GetBuffer = getBuffer->Buffer[ipcInt_L]; msgQueue->GetWriteIndex = &(getBuffer->GetWriteIndex[ipcInt_L]); msgQueue->PutReadIndex = &(getBuffer->PutReadIndex[ipcInt_R]); // // Initialize PutBuffer WriteIndex = 0 and GetBuffer ReadIndex = 0 // *(msgQueue->PutWriteIndex) = 0U; *(msgQueue->GetReadIndex) = 0U; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.c",
+      "peripheral": "ipc",
+      "functionName": "IPC_sendMessageToQueue",
+      "functionArgs": [
+        "ipcType",
+        "*msgQueue",
+        "addrCorrEnable",
+        "*msg",
+        "block"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "volatileIPC_MessageQueue_t",
+        "bool",
+        "IPC_Message_t",
+        "bool"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    //\n    // Check for arguments\n    //\n    ASSERT(msgQueue != NULL);\n    ASSERT(msg != NULL);\n\n    uint16_t writeIndex;\n    uint16_t readIndex;\n    bool ret = true;\n\n    writeIndex = *(msgQueue->PutWriteIndex);\n    readIndex  = *(msgQueue->PutReadIndex);\n\n    //\n    // Wait until Put Buffer slot is free\n    //\n    while(((writeIndex + 1U) & IPC_MAX_BUFFER_INDEX) == readIndex)\n    {\n        //\n        // If designated as a \"Blocking\" function, and Put buffer is full,\n        // return immediately with fail status.\n        //\n        if(!block)\n        {\n            ret = false;\n            break;\n        }\n\n        readIndex = *(msgQueue->PutReadIndex);\n    }\n\n    if(ret != false)\n    {\n        //\n        // When slot is free, Write Message to PutBuffer, update PutWriteIndex,\n        // and set the CPU IPC INT Flag\n        //\n        msgQueue->PutBuffer[writeIndex] = *msg;\n\n        if(addrCorrEnable)\n        {\n            msgQueue->PutBuffer[writeIndex].address -=\n                IPC_Instance[ipcType].IPC_MsgRam_LtoR;\n        }\n\n        writeIndex = (writeIndex + 1U) & IPC_MAX_BUFFER_INDEX;\n        *(msgQueue->PutWriteIndex) = writeIndex;\n\n        IPC_setFlagLtoR(ipcType, msgQueue->PutFlag);\n    }\n\n    return(ret);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check for arguments // ASSERT(msgQueue != NULL); ASSERT(msg != NULL); uint16_t writeIndex; uint16_t readIndex; bool ret = true; writeIndex = *(msgQueue->PutWriteIndex); readIndex = *(msgQueue->PutReadIndex); // // Wait until Put Buffer slot is free // while(((writeIndex + 1U) & IPC_MAX_BUFFER_INDEX) == readIndex) { // // If designated as a \"Blocking\" function, and Put buffer is full, // return immediately with fail status. // if(!block) { ret = false; break; } readIndex = *(msgQueue->PutReadIndex); } if(ret != false) { // // When slot is free, Write Message to PutBuffer, update PutWriteIndex, // and set the CPU IPC INT Flag // msgQueue->PutBuffer[writeIndex] = *msg; if(addrCorrEnable) { msgQueue->PutBuffer[writeIndex].address -= IPC_Instance[ipcType].IPC_MsgRam_LtoR; } writeIndex = (writeIndex + 1U) & IPC_MAX_BUFFER_INDEX; *(msgQueue->PutWriteIndex) = writeIndex; IPC_setFlagLtoR(ipcType, msgQueue->PutFlag); } return(ret); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.c",
+      "peripheral": "ipc",
+      "functionName": "IPC_readMessageFromQueue",
+      "functionArgs": [
+        "ipcType",
+        "*msgQueue",
+        "addrCorrEnable",
+        "*msg",
+        "block"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "volatileIPC_MessageQueue_t",
+        "bool",
+        "IPC_Message_t",
+        "bool"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    //\n    // Check for arguments\n    //\n    ASSERT(msgQueue != NULL);\n    ASSERT(msg != NULL);\n\n    uint16_t writeIndex;\n    uint16_t readIndex;\n    bool ret = true;\n\n    writeIndex = *(msgQueue->GetWriteIndex);\n    readIndex  = *(msgQueue->GetReadIndex);\n\n    //\n    // Loop while GetBuffer is empty\n    //\n    while(writeIndex == readIndex)\n    {\n        //\n        // If designated as a \"Blocking\" function, and Get buffer is empty,\n        // return immediately with fail status.\n        //\n        if(!block)\n        {\n            ret = false;\n            break;\n        }\n\n        writeIndex = *(msgQueue->GetWriteIndex);\n    }\n\n    if(ret != false)\n    {\n        //\n        // If there is a message in GetBuffer, Read Message and update\n        // the ReadIndex\n        //\n        *msg = msgQueue->GetBuffer[readIndex];\n        if(addrCorrEnable)\n        {\n            msg->address = IPC_Instance[ipcType].IPC_MsgRam_RtoL +\n                           IPC_ADDR_OFFSET_CORR(msg->address,\n                                        IPC_Instance[ipcType].IPC_Offset_Corr);\n        }\n\n        readIndex = (readIndex + 1U) & IPC_MAX_BUFFER_INDEX;\n        *(msgQueue->GetReadIndex) = readIndex;\n    }\n\n    return(ret);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check for arguments // ASSERT(msgQueue != NULL); ASSERT(msg != NULL); uint16_t writeIndex; uint16_t readIndex; bool ret = true; writeIndex = *(msgQueue->GetWriteIndex); readIndex = *(msgQueue->GetReadIndex); // // Loop while GetBuffer is empty // while(writeIndex == readIndex) { // // If designated as a \"Blocking\" function, and Get buffer is empty, // return immediately with fail status. // if(!block) { ret = false; break; } writeIndex = *(msgQueue->GetWriteIndex); } if(ret != false) { // // If there is a message in GetBuffer, Read Message and update // the ReadIndex // *msg = msgQueue->GetBuffer[readIndex]; if(addrCorrEnable) { msg->address = IPC_Instance[ipcType].IPC_MsgRam_RtoL + IPC_ADDR_OFFSET_CORR(msg->address, IPC_Instance[ipcType].IPC_Offset_Corr); } readIndex = (readIndex + 1U) & IPC_MAX_BUFFER_INDEX; *(msgQueue->GetReadIndex) = readIndex; } return(ret); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_setFlagLtoR",
+      "functionArgs": [
+        "ipcType",
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_SET = flags;\n}\n",
+      "functionContentWithoutFormatting": "{ IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_SET = flags; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_clearFlagLtoR",
+      "functionArgs": [
+        "ipcType",
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_CLR = flags;\n}\n",
+      "functionContentWithoutFormatting": "{ IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_CLR = flags; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_ackFlagRtoL",
+      "functionArgs": [
+        "ipcType",
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_ACK = flags;\n}\n",
+      "functionContentWithoutFormatting": "{ IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_ACK = flags; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_isFlagBusyLtoR",
+      "functionArgs": [
+        "ipcType",
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return((IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_FLG & flags) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ return((IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_FLG & flags) != 0U); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_isFlagBusyRtoL",
+      "functionArgs": [
+        "ipcType",
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return((IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_STS & flags) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ return((IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_STS & flags) != 0U); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_waitForFlag",
+      "functionArgs": [
+        "ipcType",
+        "flag"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    while((IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_STS & flag) == 0U)\n    {\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ while((IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_STS & flag) == 0U) { } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_waitForAck",
+      "functionArgs": [
+        "ipcType",
+        "flag"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    while((IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_FLG & flag) != 0U)\n    {\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ while((IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_FLG & flag) != 0U) { } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_sync",
+      "functionArgs": [
+        "ipcType",
+        "flag"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    IPC_setFlagLtoR(ipcType, flag);\n    IPC_waitForFlag(ipcType, flag);\n    IPC_ackFlagRtoL(ipcType, flag);\n    IPC_waitForAck(ipcType, flag);\n}\n",
+      "functionContentWithoutFormatting": "{ IPC_setFlagLtoR(ipcType, flag); IPC_waitForFlag(ipcType, flag); IPC_ackFlagRtoL(ipcType, flag); IPC_waitForAck(ipcType, flag); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_init",
+      "functionArgs": [
+        "ipcType"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    IPC_clearFlagLtoR(ipcType, IPC_FLAG_ALL);\n}\n",
+      "functionContentWithoutFormatting": "{ IPC_clearFlagLtoR(ipcType, IPC_FLAG_ALL); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_sendResponse",
+      "functionArgs": [
+        "ipcType",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    IPC_Instance[ipcType].IPC_RecvCmd_Reg->IPC_LOCALREPLY = data;\n}\n",
+      "functionContentWithoutFormatting": "{ IPC_Instance[ipcType].IPC_RecvCmd_Reg->IPC_LOCALREPLY = data; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_getResponse",
+      "functionArgs": [
+        "ipcType"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_REMOTEREPLY);\n}\n",
+      "functionContentWithoutFormatting": "{ return(IPC_Instance[ipcType].IPC_SendCmd_Reg->IPC_REMOTEREPLY); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_setBootMode",
+      "functionArgs": [
+        "ipcType",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(ipcType == IPC_CPU1_L_CPU2_R);\n\n    IPC_Instance[ipcType].IPC_Boot_Pump_Reg->IPC_BOOTMODE = mode;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(ipcType == IPC_CPU1_L_CPU2_R); IPC_Instance[ipcType].IPC_Boot_Pump_Reg->IPC_BOOTMODE = mode; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_getBootMode",
+      "functionArgs": [
+        "ipcType"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(IPC_Instance[ipcType].IPC_Boot_Pump_Reg->IPC_BOOTMODE);\n}\n",
+      "functionContentWithoutFormatting": "{ return(IPC_Instance[ipcType].IPC_Boot_Pump_Reg->IPC_BOOTMODE); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_setBootStatus",
+      "functionArgs": [
+        "ipcType",
+        "status"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(ipcType == IPC_CPU2_L_CPU1_R);\n\n    IPC_Instance[ipcType].IPC_Boot_Pump_Reg->IPC_BOOTSTS = status;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(ipcType == IPC_CPU2_L_CPU1_R); IPC_Instance[ipcType].IPC_Boot_Pump_Reg->IPC_BOOTSTS = status; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_getBootStatus",
+      "functionArgs": [
+        "ipcType"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(IPC_Instance[ipcType].IPC_Boot_Pump_Reg->IPC_BOOTSTS);\n}\n",
+      "functionContentWithoutFormatting": "{ return(IPC_Instance[ipcType].IPC_Boot_Pump_Reg->IPC_BOOTSTS); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_getCounter",
+      "functionArgs": [
+        "ipcType"
+      ],
+      "functionArgsTypes": [
+        "IPC_Type_t"
+      ],
+      "returnType": "static inline uint64_t",
+      "functionContent": "{\n    //\n    // Get the Counter High and Low values. Read to the Counter low register\n    // saves the value of Counter High register.\n    //\n    uint32_t ctrL = IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_COUNTERL;\n    uint32_t ctrH = IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_COUNTERH;\n\n    //\n    // Return the 64-bit value of the counter\n    //\n    return(((uint64_t)ctrH << 32) | ((uint64_t)ctrL));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Get the Counter High and Low values. Read to the Counter low register // saves the value of Counter High register. // uint32_t ctrL = IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_COUNTERL; uint32_t ctrH = IPC_Instance[ipcType].IPC_Flag_Ctr_Reg->IPC_COUNTERH; // // Return the 64-bit value of the counter // return(((uint64_t)ctrH << 32) | ((uint64_t)ctrL)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_claimFlashSemaphore",
+      "functionArgs": [
+        "semOwner"
+      ],
+      "functionArgsTypes": [
+        "IPC_FlashSemOwner"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    uint32_t semRegister = IPC_CPUXTOCPUX_BASE + IPC_O_FLASHCTLSEM;\n\n    //\n    // Block until the SEM value is 0.\n    //\n    while(HWREG(semRegister) != 0U);\n\n    //\n    // Block until the semaphore is claimed.\n    //\n    while(HWREG(semRegister) != (uint32_t)semOwner)\n    {\n        HWREG(semRegister) = 0x5A5A0000U | (uint32_t)semOwner;\n    }\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; uint32_t semRegister = IPC_CPUXTOCPUX_BASE + IPC_O_FLASHCTLSEM; // // Block until the SEM value is 0. // while(HWREG(semRegister) != 0U); // // Block until the semaphore is claimed. // while(HWREG(semRegister) != (uint32_t)semOwner) { HWREG(semRegister) = 0x5A5A0000U | (uint32_t)semOwner; } EDIS; }",
+      "registersUsed": [
+        "FLASHCTLSEM",
+        "FLASHCTLSEM"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLASHCTLSEM",
+        "FLASHCTLSEM"
+      ]
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_releaseFlashSemaphore",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n    HWREG(IPC_CPUXTOCPUX_BASE + IPC_O_FLASHCTLSEM) = 0x5A5A0000U;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREG(IPC_CPUXTOCPUX_BASE + IPC_O_FLASHCTLSEM) = 0x5A5A0000U; EDIS; }",
+      "registersUsed": [
+        "FLASHCTLSEM",
+        "FLASHCTLSEM"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLASHCTLSEM",
+        "FLASHCTLSEM"
+      ]
+    }
+  ]
+}

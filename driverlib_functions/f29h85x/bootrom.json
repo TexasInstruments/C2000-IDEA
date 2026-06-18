@@ -1,0 +1,39 @@
+{
+  "name": "bootrom",
+  "functions": [
+    {
+      "file": "bootrom.c",
+      "peripheral": "bootrom",
+      "functionName": "BOOTROM_enablePullupUnbondedGpio",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t gpioA      = 0xFFFFFFFFU;\n    uint32_t gpioB      = 0xFFFFFFFFU;\n    uint32_t gpioC      = 0xFFFFFFFFU;\n    uint32_t gpioD      = 0xFFFFFFFFU;\n    uint32_t gpioF      = 0xFFFFFFFFU;\n    uint32_t gpioG      = 0xFFFFFFFFU;\n    uint32_t gpioH      = 0xFFFFFFFFU;\n\n    //\n    //  Read Pin Count\n    //\n    uint32_t pinCount    = \\\n        (HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDL) & SYSCTL_PARTIDL_PIN_COUNT_M) >> SYSCTL_PARTIDL_PIN_COUNT_S;\n\n    //\n    //  Get pull up enable settings for the pin count\n    //\n    switch(pinCount)\n    {\n        case PIN_COUNT_100:\n                gpioA = F29H85x_100_PIN_QFP_GPA;\n                gpioB = F29H85x_100_PIN_QFP_GPB;\n                gpioC = F29H85x_100_PIN_QFP_GPC;\n                gpioD = F29H85x_100_PIN_QFP_GPD;\n                gpioF = F29H85x_100_PIN_QFP_GPF;\n                gpioG = F29H85x_100_PIN_QFP_GPG;\n                gpioH = F29H85x_100_PIN_QFP_GPH;\n                break;\n\n        case PIN_COUNT_144:\n                gpioA = F29H85x_144_PIN_QFP_GPA;\n                gpioB = F29H85x_144_PIN_QFP_GPB;\n                gpioC = F29H85x_144_PIN_QFP_GPC;\n                gpioD = F29H85x_144_PIN_QFP_GPD;\n                gpioF = F29H85x_144_PIN_QFP_GPF;\n                gpioG = F29H85x_144_PIN_QFP_GPG;\n                gpioH = F29H85x_144_PIN_QFP_GPH;\n                break;\n\n        case PIN_COUNT_176:\n                gpioA = F29H85x_176_PIN_QFP_GPA;\n                gpioB = F29H85x_176_PIN_QFP_GPB;\n                gpioC = F29H85x_176_PIN_QFP_GPC;\n                gpioD = F29H85x_176_PIN_QFP_GPD;\n                gpioF = F29H85x_176_PIN_QFP_GPF;\n                gpioG = F29H85x_176_PIN_QFP_GPG;\n                gpioH = F29H85x_176_PIN_QFP_GPH;\n                break;\n\n        default:\n        case PIN_COUNT_256:\n                gpioA = F29H85x_256_PIN_BGA_GPA;\n                gpioB = F29H85x_256_PIN_BGA_GPB;\n                gpioC = F29H85x_256_PIN_BGA_GPC;\n                gpioD = F29H85x_256_PIN_BGA_GPD;\n                gpioF = F29H85x_256_PIN_BGA_GPF;\n                gpioG = F29H85x_256_PIN_BGA_GPG;\n                gpioH = F29H85x_256_PIN_BGA_GPH;\n                break;\n    }\n\n    //\n    //  Configure the pull up enable settings\n    //\n    HWREG(GPIOCTRL_BASE + GPIO_O_GPAPUD) = gpioA;\n    HWREG(GPIOCTRL_BASE + GPIO_O_GPBPUD) = gpioB;\n    HWREG(GPIOCTRL_BASE + GPIO_O_GPCPUD) = gpioC;\n    HWREG(GPIOCTRL_BASE + GPIO_O_GPDPUD) = gpioD;\n    HWREG(GPIOCTRL_BASE + GPIO_O_GPFPUD) = gpioF;\n    HWREG(GPIOCTRL_BASE + GPIO_O_GPGPUD) = gpioG;\n    HWREG(GPIOCTRL_BASE + GPIO_O_GPHPUD) = gpioH;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t gpioA = 0xFFFFFFFFU; uint32_t gpioB = 0xFFFFFFFFU; uint32_t gpioC = 0xFFFFFFFFU; uint32_t gpioD = 0xFFFFFFFFU; uint32_t gpioF = 0xFFFFFFFFU; uint32_t gpioG = 0xFFFFFFFFU; uint32_t gpioH = 0xFFFFFFFFU; // // Read Pin Count // uint32_t pinCount = \\ (HWREG(DEVCFG_BASE + SYSCTL_O_PARTIDL) & SYSCTL_PARTIDL_PIN_COUNT_M) >> SYSCTL_PARTIDL_PIN_COUNT_S; // // Get pull up enable settings for the pin count // switch(pinCount) { case PIN_COUNT_100: gpioA = F29H85x_100_PIN_QFP_GPA; gpioB = F29H85x_100_PIN_QFP_GPB; gpioC = F29H85x_100_PIN_QFP_GPC; gpioD = F29H85x_100_PIN_QFP_GPD; gpioF = F29H85x_100_PIN_QFP_GPF; gpioG = F29H85x_100_PIN_QFP_GPG; gpioH = F29H85x_100_PIN_QFP_GPH; break; case PIN_COUNT_144: gpioA = F29H85x_144_PIN_QFP_GPA; gpioB = F29H85x_144_PIN_QFP_GPB; gpioC = F29H85x_144_PIN_QFP_GPC; gpioD = F29H85x_144_PIN_QFP_GPD; gpioF = F29H85x_144_PIN_QFP_GPF; gpioG = F29H85x_144_PIN_QFP_GPG; gpioH = F29H85x_144_PIN_QFP_GPH; break; case PIN_COUNT_176: gpioA = F29H85x_176_PIN_QFP_GPA; gpioB = F29H85x_176_PIN_QFP_GPB; gpioC = F29H85x_176_PIN_QFP_GPC; gpioD = F29H85x_176_PIN_QFP_GPD; gpioF = F29H85x_176_PIN_QFP_GPF; gpioG = F29H85x_176_PIN_QFP_GPG; gpioH = F29H85x_176_PIN_QFP_GPH; break; default: case PIN_COUNT_256: gpioA = F29H85x_256_PIN_BGA_GPA; gpioB = F29H85x_256_PIN_BGA_GPB; gpioC = F29H85x_256_PIN_BGA_GPC; gpioD = F29H85x_256_PIN_BGA_GPD; gpioF = F29H85x_256_PIN_BGA_GPF; gpioG = F29H85x_256_PIN_BGA_GPG; gpioH = F29H85x_256_PIN_BGA_GPH; break; } // // Configure the pull up enable settings // HWREG(GPIOCTRL_BASE + GPIO_O_GPAPUD) = gpioA; HWREG(GPIOCTRL_BASE + GPIO_O_GPBPUD) = gpioB; HWREG(GPIOCTRL_BASE + GPIO_O_GPCPUD) = gpioC; HWREG(GPIOCTRL_BASE + GPIO_O_GPDPUD) = gpioD; HWREG(GPIOCTRL_BASE + GPIO_O_GPFPUD) = gpioF; HWREG(GPIOCTRL_BASE + GPIO_O_GPGPUD) = gpioG; HWREG(GPIOCTRL_BASE + GPIO_O_GPHPUD) = gpioH; }",
+      "registersUsed": [
+        "GPAPUD",
+        "GPBPUD",
+        "GPCPUD",
+        "GPDPUD",
+        "GPFPUD",
+        "GPGPUD",
+        "GPHPUD",
+        "PARTIDL"
+      ],
+      "registersUsedMatchingBifield": [
+        "GPAPUD",
+        "GPBPUD",
+        "GPCPUD",
+        "GPDPUD",
+        "GPFPUD",
+        "GPGPUD",
+        "GPHPUD",
+        "PARTIDL"
+      ]
+    }
+  ]
+}

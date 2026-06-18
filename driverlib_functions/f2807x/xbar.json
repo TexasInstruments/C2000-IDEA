@@ -1,0 +1,493 @@
+{
+  "name": "xbar",
+  "functions": [
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_setOutputMuxConfig",
+      "functionArgs": [
+        "output",
+        "muxConfig"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum",
+        "XBAR_OutputMuxConfig"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t shift;\n    uint16_t offset;\n\n    //\n    // If the configuration is for MUX16-31, we'll need an odd value to index\n    // into the config registers.\n    //\n    if(((uint32_t)muxConfig & 0x2000U) != 0U)\n    {\n        offset = ((uint16_t)output << 1U) + 2U;\n    }\n    else\n    {\n        offset = (uint16_t)output << 1U;\n    }\n\n    //\n    // Extract the shift from the input value.\n    //\n    shift = ((uint32_t)muxConfig >> 8U) & 0x1FU;\n\n    //\n    // Write the requested muxing value for this XBAR output.\n    //\n    EALLOW;\n\n    HWREG(XBAR_OUTPUT_CFG_REG_BASE + offset) =\n        (HWREG(XBAR_OUTPUT_CFG_REG_BASE + offset) &\n         ~((uint32_t)0x3U << shift)) |\n        (((uint32_t)muxConfig & 0x3U) << shift);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t shift; uint16_t offset; // // If the configuration is for MUX16-31, we'll need an odd value to index // into the config registers. // if(((uint32_t)muxConfig & 0x2000U) != 0U) { offset = ((uint16_t)output << 1U) + 2U; } else { offset = (uint16_t)output << 1U; } // // Extract the shift from the input value. // shift = ((uint32_t)muxConfig >> 8U) & 0x1FU; // // Write the requested muxing value for this XBAR output. // EALLOW; HWREG(XBAR_OUTPUT_CFG_REG_BASE + offset) = (HWREG(XBAR_OUTPUT_CFG_REG_BASE + offset) & ~((uint32_t)0x3U << shift)) | (((uint32_t)muxConfig & 0x3U) << shift); EDIS; }",
+      "registersUsed": [
+        "OUTPUT1MUX0TO15CFG",
+        "OUTPUT1MUX16TO31CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUT1MUX0TO15CFG",
+        "OUTPUT1MUX16TO31CFG"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_setEPWMMuxConfig",
+      "functionArgs": [
+        "trip",
+        "muxConfig"
+      ],
+      "functionArgsTypes": [
+        "XBAR_TripNum",
+        "XBAR_EPWMMuxConfig"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t shift;\n    uint16_t offset;\n\n    //\n    // If the configuration is for MUX16-31, we'll need an odd value to index\n    // into the config registers.\n    //\n    if(((uint32_t)muxConfig & 0x2000U) != 0U)\n    {\n        offset = ((uint16_t)trip << 1U) + 2U;\n    }\n    else\n    {\n        offset = (uint16_t)trip << 1U;\n    }\n\n    //\n    // Extract the shift from the input value.\n    //\n    shift = ((uint32_t)muxConfig >> 8U) & 0x1FU;\n\n    //\n    // Write the requested muxing value for this XBAR trip.\n    //\n    EALLOW;\n\n    HWREG(XBAR_EPWM_CFG_REG_BASE + (uint32_t)offset) =\n        (HWREG(XBAR_EPWM_CFG_REG_BASE + (uint32_t)offset) & ~(0x3UL << shift)) |\n        (((uint32_t)muxConfig & 0x3UL) << shift);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t shift; uint16_t offset; // // If the configuration is for MUX16-31, we'll need an odd value to index // into the config registers. // if(((uint32_t)muxConfig & 0x2000U) != 0U) { offset = ((uint16_t)trip << 1U) + 2U; } else { offset = (uint16_t)trip << 1U; } // // Extract the shift from the input value. // shift = ((uint32_t)muxConfig >> 8U) & 0x1FU; // // Write the requested muxing value for this XBAR trip. // EALLOW; HWREG(XBAR_EPWM_CFG_REG_BASE + (uint32_t)offset) = (HWREG(XBAR_EPWM_CFG_REG_BASE + (uint32_t)offset) & ~(0x3UL << shift)) | (((uint32_t)muxConfig & 0x3UL) << shift); EDIS; }",
+      "registersUsed": [
+        "TRIP4MUX0TO15CFG",
+        "TRIP4MUX16TO31CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "TRIP4MUX0TO15CFG",
+        "TRIP4MUX16TO31CFG"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_setCLBMuxConfig",
+      "functionArgs": [
+        "auxSignal",
+        "muxConfig"
+      ],
+      "functionArgsTypes": [
+        "XBAR_AuxSigNum",
+        "XBAR_CLBMuxConfig"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t shift;\n    uint16_t offset;\n\n    //\n    // If the configuration is for MUX16-31, we'll need an odd value to index\n    // into the config registers.\n    //\n    if(((uint32_t)muxConfig & 0x2000U) != 0U)\n    {\n        offset = ((uint16_t)auxSignal << 1U) + 2U;\n    }\n    else\n    {\n        offset = (uint16_t)auxSignal << 1U;\n    }\n\n    //\n    // Extract the shift from the input value.\n    //\n    shift = ((uint32_t)muxConfig >> 8U) & 0x1FU;\n\n    //\n    // Write the requested muxing value for this XBAR auxSignal.\n    //\n    EALLOW;\n\n\n    HWREG(XBAR_CLB_CFG_REG_BASE + (uint32_t)offset) =\n        (HWREG(XBAR_CLB_CFG_REG_BASE + (uint32_t)offset) & ~(0x3UL << shift)) |\n        (((uint32_t)muxConfig & 0x3UL) << shift);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t shift; uint16_t offset; // // If the configuration is for MUX16-31, we'll need an odd value to index // into the config registers. // if(((uint32_t)muxConfig & 0x2000U) != 0U) { offset = ((uint16_t)auxSignal << 1U) + 2U; } else { offset = (uint16_t)auxSignal << 1U; } // // Extract the shift from the input value. // shift = ((uint32_t)muxConfig >> 8U) & 0x1FU; // // Write the requested muxing value for this XBAR auxSignal. // EALLOW; HWREG(XBAR_CLB_CFG_REG_BASE + (uint32_t)offset) = (HWREG(XBAR_CLB_CFG_REG_BASE + (uint32_t)offset) & ~(0x3UL << shift)) | (((uint32_t)muxConfig & 0x3UL) << shift); EDIS; }",
+      "registersUsed": [
+        "AUXSIG0MUX0TO15CFG",
+        "AUXSIG0MUX16TO31CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "AUXSIG0MUX0TO15CFG",
+        "AUXSIG0MUX16TO31CFG"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_getInputFlagStatus",
+      "functionArgs": [
+        "inputFlag"
+      ],
+      "functionArgsTypes": [
+        "XBAR_InputFlag"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    uint32_t offset;\n    uint32_t inputMask;\n\n    //\n    // Determine flag register offset.\n    //\n    switch((uint16_t)inputFlag & XBAR_INPUT_FLG_REG_M)\n    {\n        case XBAR_INPUT_FLG_REG_1:\n            offset = XBAR_O_FLG1;\n            break;\n\n        case XBAR_INPUT_FLG_REG_2:\n            offset = XBAR_O_FLG2;\n            break;\n\n        case XBAR_INPUT_FLG_REG_3:\n            offset = XBAR_O_FLG3;\n            break;\n\n        default:\n            //\n            // This should never happen if a valid inputFlag value is used.\n            //\n            offset = 0U;\n            break;\n    }\n\n    //\n    // Get the status of the X-BAR input latch.\n    //\n    inputMask = (uint32_t)1U << ((uint32_t)inputFlag & XBAR_INPUT_FLG_INPUT_M);\n\n    return((HWREG(XBAR_BASE + offset) & inputMask) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t offset; uint32_t inputMask; // // Determine flag register offset. // switch((uint16_t)inputFlag & XBAR_INPUT_FLG_REG_M) { case XBAR_INPUT_FLG_REG_1: offset = XBAR_O_FLG1; break; case XBAR_INPUT_FLG_REG_2: offset = XBAR_O_FLG2; break; case XBAR_INPUT_FLG_REG_3: offset = XBAR_O_FLG3; break; default: // // This should never happen if a valid inputFlag value is used. // offset = 0U; break; } // // Get the status of the X-BAR input latch. // inputMask = (uint32_t)1U << ((uint32_t)inputFlag & XBAR_INPUT_FLG_INPUT_M); return((HWREG(XBAR_BASE + offset) & inputMask) != 0U); }",
+      "registersUsed": [
+        "FLG1",
+        "FLG2",
+        "FLG3"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLG1",
+        "FLG2",
+        "FLG3"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_clearInputFlag",
+      "functionArgs": [
+        "inputFlag"
+      ],
+      "functionArgsTypes": [
+        "XBAR_InputFlag"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t offset;\n    uint32_t inputMask;\n\n    //\n    // Determine flag clear register offset.\n    //\n    switch((uint16_t)inputFlag & XBAR_INPUT_FLG_REG_M)\n    {\n        case XBAR_INPUT_FLG_REG_1:\n            offset = XBAR_O_CLR1;\n            break;\n\n        case XBAR_INPUT_FLG_REG_2:\n            offset = XBAR_O_CLR2;\n            break;\n\n        case XBAR_INPUT_FLG_REG_3:\n            offset = XBAR_O_CLR3;\n            break;\n\n        default:\n            //\n            // This should never happen if a valid inputFlag value is used.\n            //\n            offset = 0U;\n            break;\n    }\n\n    //\n    // Set the bit that clears the X-BAR input latch.\n    //\n    inputMask = 1UL << ((uint32_t)inputFlag & XBAR_INPUT_FLG_INPUT_M);\n    HWREG(XBAR_BASE + offset) = inputMask;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t offset; uint32_t inputMask; // // Determine flag clear register offset. // switch((uint16_t)inputFlag & XBAR_INPUT_FLG_REG_M) { case XBAR_INPUT_FLG_REG_1: offset = XBAR_O_CLR1; break; case XBAR_INPUT_FLG_REG_2: offset = XBAR_O_CLR2; break; case XBAR_INPUT_FLG_REG_3: offset = XBAR_O_CLR3; break; default: // // This should never happen if a valid inputFlag value is used. // offset = 0U; break; } // // Set the bit that clears the X-BAR input latch. // inputMask = 1UL << ((uint32_t)inputFlag & XBAR_INPUT_FLG_INPUT_M); HWREG(XBAR_BASE + offset) = inputMask; }",
+      "registersUsed": [
+        "CLR1",
+        "CLR2",
+        "CLR3"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLR1",
+        "CLR2",
+        "CLR3"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_enableOutputMux",
+      "functionArgs": [
+        "output",
+        "muxes"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the enable bit.\n    //\n    EALLOW;\n\n    HWREG(XBAR_OUTPUT_EN_REG_BASE + (uint16_t)output) |= muxes;\n\n    EDIS;\n\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the enable bit. // EALLOW; HWREG(XBAR_OUTPUT_EN_REG_BASE + (uint16_t)output) |= muxes; EDIS; }",
+      "registersUsed": [
+        "OUTPUT1MUXENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUT1MUXENABLE"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_disableOutputMux",
+      "functionArgs": [
+        "output",
+        "muxes"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear the enable bit.\n    //\n    EALLOW;\n\n    HWREG(XBAR_OUTPUT_EN_REG_BASE + (uint16_t)output) &= ~(muxes);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the enable bit. // EALLOW; HWREG(XBAR_OUTPUT_EN_REG_BASE + (uint16_t)output) &= ~(muxes); EDIS; }",
+      "registersUsed": [
+        "OUTPUT1MUXENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUT1MUXENABLE"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_setOutputLatchMode",
+      "functionArgs": [
+        "output",
+        "enable"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum",
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Set or clear the latch setting bit based on the enable parameter.\n    //\n    if(enable)\n    {\n        HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLATCHENABLE) |=\n            0x1U << ((uint16_t)output / 2U);\n    }\n    else\n    {\n        HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLATCHENABLE) &=\n            ~(0x1U << ((uint16_t)output / 2U));\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Set or clear the latch setting bit based on the enable parameter. // if(enable) { HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLATCHENABLE) |= 0x1U << ((uint16_t)output / 2U); } else { HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLATCHENABLE) &= ~(0x1U << ((uint16_t)output / 2U)); } EDIS; }",
+      "registersUsed": [
+        "OUTPUTLATCH",
+        "OUTPUTLATCHENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTLATCH",
+        "OUTPUTLATCHENABLE"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_getOutputLatchStatus",
+      "functionArgs": [
+        "output"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Get the status of the Output X-BAR output latch.\n    //\n    return((HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLATCH) &\n            (0x1U << ((uint16_t)output / 2U))) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Get the status of the Output X-BAR output latch. // return((HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLATCH) & (0x1U << ((uint16_t)output / 2U))) != 0U); }",
+      "registersUsed": [
+        "OUTPUTLATCH"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTLATCH"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_clearOutputLatch",
+      "functionArgs": [
+        "output"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the bit that clears the corresponding OUTPUTLATCH bit.\n    //\n    HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLATCHCLR) |=\n        0x1U << ((uint16_t)output / 2U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the bit that clears the corresponding OUTPUTLATCH bit. // HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLATCHCLR) |= 0x1U << ((uint16_t)output / 2U); }",
+      "registersUsed": [
+        "OUTPUTLATCH",
+        "OUTPUTLATCHCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTLATCH",
+        "OUTPUTLATCHCLR"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_forceOutputLatch",
+      "functionArgs": [
+        "output"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the bit that forces the corresponding OUTPUTLATCH bit.\n    //\n    HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLATCHFRC) =\n        (uint16_t)0x1U << ((uint16_t)output / 2U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the bit that forces the corresponding OUTPUTLATCH bit. // HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLATCHFRC) = (uint16_t)0x1U << ((uint16_t)output / 2U); }",
+      "registersUsed": [
+        "OUTPUTLATCH",
+        "OUTPUTLATCHFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTLATCH",
+        "OUTPUTLATCHFRC"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_invertOutputSignal",
+      "functionArgs": [
+        "output",
+        "invert"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum",
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set or clear the polarity setting bit based on the invert parameter.\n    //\n    EALLOW;\n\n    if(invert)\n    {\n        HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTINV) |=\n            0x1U << ((uint16_t)output / 2U);\n    }\n    else\n    {\n        HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTINV) &=\n            ~(0x1U << ((uint16_t)output / 2U));\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set or clear the polarity setting bit based on the invert parameter. // EALLOW; if(invert) { HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTINV) |= 0x1U << ((uint16_t)output / 2U); } else { HWREGH(OUTPUTXBAR_BASE + XBAR_O_OUTPUTINV) &= ~(0x1U << ((uint16_t)output / 2U)); } EDIS; }",
+      "registersUsed": [
+        "OUTPUTINV"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTINV"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_enableEPWMMux",
+      "functionArgs": [
+        "trip",
+        "muxes"
+      ],
+      "functionArgsTypes": [
+        "XBAR_TripNum",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the enable bit.\n    //\n    EALLOW;\n\n    HWREG(XBAR_EPWM_EN_REG_BASE + (uint32_t)trip) |= muxes;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the enable bit. // EALLOW; HWREG(XBAR_EPWM_EN_REG_BASE + (uint32_t)trip) |= muxes; EDIS; }",
+      "registersUsed": [
+        "TRIP4MUXENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "TRIP4MUXENABLE"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_disableEPWMMux",
+      "functionArgs": [
+        "trip",
+        "muxes"
+      ],
+      "functionArgsTypes": [
+        "XBAR_TripNum",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear the enable bit.\n    //\n    EALLOW;\n\n    HWREG(XBAR_EPWM_EN_REG_BASE + (uint32_t)trip) &= ~(muxes);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the enable bit. // EALLOW; HWREG(XBAR_EPWM_EN_REG_BASE + (uint32_t)trip) &= ~(muxes); EDIS; }",
+      "registersUsed": [
+        "TRIP4MUXENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "TRIP4MUXENABLE"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_invertEPWMSignal",
+      "functionArgs": [
+        "trip",
+        "invert"
+      ],
+      "functionArgsTypes": [
+        "XBAR_TripNum",
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set or clear the polarity setting bit based on the invert parameter.\n    //\n    EALLOW;\n\n    if(invert)\n    {\n        HWREGH(EPWMXBAR_BASE + XBAR_O_TRIPOUTINV) |=\n            0x1U << ((uint16_t)trip / 2U);\n    }\n    else\n    {\n        HWREGH(EPWMXBAR_BASE + XBAR_O_TRIPOUTINV) &=\n            ~(0x1U << ((uint16_t)trip / 2U));\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set or clear the polarity setting bit based on the invert parameter. // EALLOW; if(invert) { HWREGH(EPWMXBAR_BASE + XBAR_O_TRIPOUTINV) |= 0x1U << ((uint16_t)trip / 2U); } else { HWREGH(EPWMXBAR_BASE + XBAR_O_TRIPOUTINV) &= ~(0x1U << ((uint16_t)trip / 2U)); } EDIS; }",
+      "registersUsed": [
+        "TRIPOUTINV"
+      ],
+      "registersUsedMatchingBifield": [
+        "TRIPOUTINV"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_setInputPin",
+      "functionArgs": [
+        "input",
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "XBAR_InputNum",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the argument.\n    //\n    ASSERT((pin <= XBAR_GPIO_MAX_CNT) ||\n           (pin == XBAR_GPIO_MUX_OTHER1) || (pin == XBAR_GPIO_MUX_OTHER2));\n\n    //\n    // Write the requested pin to the appropriate input select register.\n    //\n    EALLOW;\n\n    HWREGH(XBAR_INPUT_BASE + (uint16_t)input) = pin;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the argument. // ASSERT((pin <= XBAR_GPIO_MAX_CNT) || (pin == XBAR_GPIO_MUX_OTHER1) || (pin == XBAR_GPIO_MUX_OTHER2)); // // Write the requested pin to the appropriate input select register. // EALLOW; HWREGH(XBAR_INPUT_BASE + (uint16_t)input) = pin; EDIS; }",
+      "registersUsed": [
+        "INPUT1SELECT"
+      ],
+      "registersUsedMatchingBifield": [
+        "INPUT1SELECT"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_lockInput",
+      "functionArgs": [
+        "input"
+      ],
+      "functionArgsTypes": [
+        "XBAR_InputNum"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // lock the input in the INPUTSELECTLOCK register.\n    //\n    EALLOW;\n    HWREG(INPUTXBAR_BASE + XBAR_O_INPUTSELECTLOCK) =\n            1UL << (uint16_t)input;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // lock the input in the INPUTSELECTLOCK register. // EALLOW; HWREG(INPUTXBAR_BASE + XBAR_O_INPUTSELECTLOCK) = 1UL << (uint16_t)input; EDIS; }",
+      "registersUsed": [
+        "INPUTSELECTLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "INPUTSELECTLOCK"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_lockOutput",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Lock the Output X-BAR with the OUTPUTLOCK register.\n    // Write key 0x5A5A to the KEY bits and 1 to LOCK bit.\n    //\n    EALLOW;\n\n    HWREG(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLOCK) =\n        ((uint32_t)0x5A5A << XBAR_OUTPUTLOCK_KEY_S) |\n        (uint32_t)XBAR_OUTPUTLOCK_LOCK;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Lock the Output X-BAR with the OUTPUTLOCK register. // Write key 0x5A5A to the KEY bits and 1 to LOCK bit. // EALLOW; HWREG(OUTPUTXBAR_BASE + XBAR_O_OUTPUTLOCK) = ((uint32_t)0x5A5A << XBAR_OUTPUTLOCK_KEY_S) | (uint32_t)XBAR_OUTPUTLOCK_LOCK; EDIS; }",
+      "registersUsed": [
+        "OUTPUTLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTLOCK"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_lockEPWM",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Lock the ePWM X-BAR with the TRIPLOCK register.\n    // Write key 0x5A5A to the KEY bits and 1 to LOCK bit.\n    //\n    EALLOW;\n\n    HWREG(EPWMXBAR_BASE + XBAR_O_TRIPLOCK) =\n        ((uint32_t)0x5A5A << XBAR_TRIPLOCK_KEY_S) |\n        (uint32_t)XBAR_TRIPLOCK_LOCK;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Lock the ePWM X-BAR with the TRIPLOCK register. // Write key 0x5A5A to the KEY bits and 1 to LOCK bit. // EALLOW; HWREG(EPWMXBAR_BASE + XBAR_O_TRIPLOCK) = ((uint32_t)0x5A5A << XBAR_TRIPLOCK_KEY_S) | (uint32_t)XBAR_TRIPLOCK_LOCK; EDIS; }",
+      "registersUsed": [
+        "TRIPLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "TRIPLOCK"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_enableCLBMux",
+      "functionArgs": [
+        "auxSignal",
+        "muxes"
+      ],
+      "functionArgsTypes": [
+        "XBAR_AuxSigNum",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the enable bit.\n    //\n    EALLOW;\n\n    HWREG(XBAR_CLB_EN_REG_BASE + (uint32_t)auxSignal) |= muxes;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the enable bit. // EALLOW; HWREG(XBAR_CLB_EN_REG_BASE + (uint32_t)auxSignal) |= muxes; EDIS; }",
+      "registersUsed": [
+        "AUXSIG0MUXENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "AUXSIG0MUXENABLE"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_disableCLBMux",
+      "functionArgs": [
+        "auxSignal",
+        "muxes"
+      ],
+      "functionArgsTypes": [
+        "XBAR_AuxSigNum",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear the enable bit.\n    //\n    EALLOW;\n\n    HWREG(XBAR_CLB_EN_REG_BASE + (uint32_t)auxSignal) &= ~(muxes);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the enable bit. // EALLOW; HWREG(XBAR_CLB_EN_REG_BASE + (uint32_t)auxSignal) &= ~(muxes); EDIS; }",
+      "registersUsed": [
+        "AUXSIG0MUXENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "AUXSIG0MUXENABLE"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_invertCLBSignal",
+      "functionArgs": [
+        "auxSignal",
+        "invert"
+      ],
+      "functionArgsTypes": [
+        "XBAR_AuxSigNum",
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set or clear the polarity setting bit based on the invert parameter.\n    //\n    EALLOW;\n\n    if(invert)\n    {\n        HWREGH(CLBXBAR_BASE + XBAR_O_AUXSIGOUTINV) |=\n            0x1U << ((uint16_t)auxSignal / 2U);\n    }\n    else\n    {\n        HWREGH(CLBXBAR_BASE + XBAR_O_AUXSIGOUTINV) &=\n            ~(0x1U << ((uint16_t)auxSignal / 2U));\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set or clear the polarity setting bit based on the invert parameter. // EALLOW; if(invert) { HWREGH(CLBXBAR_BASE + XBAR_O_AUXSIGOUTINV) |= 0x1U << ((uint16_t)auxSignal / 2U); } else { HWREGH(CLBXBAR_BASE + XBAR_O_AUXSIGOUTINV) &= ~(0x1U << ((uint16_t)auxSignal / 2U)); } EDIS; }",
+      "registersUsed": [
+        "AUXSIGOUTINV"
+      ],
+      "registersUsedMatchingBifield": [
+        "AUXSIGOUTINV"
+      ]
+    }
+  ]
+}

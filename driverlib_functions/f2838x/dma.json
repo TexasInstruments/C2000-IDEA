@@ -1,0 +1,661 @@
+{
+  "name": "dma",
+  "functions": [
+    {
+      "file": "dma.c",
+      "peripheral": "dma",
+      "functionName": "DMA_configAddresses",
+      "functionArgs": [
+        "base",
+        "*destAddr",
+        "*srcAddr"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constvoid",
+        "constvoid"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Set up SOURCE address.\n    //\n    HWREG(base + DMA_O_SRC_BEG_ADDR_SHADOW) = (uint32_t)srcAddr;\n    HWREG(base + DMA_O_SRC_ADDR_SHADOW)     = (uint32_t)srcAddr;\n\n    //\n    // Set up DESTINATION address.\n    //\n    HWREG(base + DMA_O_DST_BEG_ADDR_SHADOW) = (uint32_t)destAddr;\n    HWREG(base + DMA_O_DST_ADDR_SHADOW)     = (uint32_t)destAddr;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); EALLOW; // // Set up SOURCE address. // HWREG(base + DMA_O_SRC_BEG_ADDR_SHADOW) = (uint32_t)srcAddr; HWREG(base + DMA_O_SRC_ADDR_SHADOW) = (uint32_t)srcAddr; // // Set up DESTINATION address. // HWREG(base + DMA_O_DST_BEG_ADDR_SHADOW) = (uint32_t)destAddr; HWREG(base + DMA_O_DST_ADDR_SHADOW) = (uint32_t)destAddr; EDIS; }",
+      "registersUsed": [
+        "SRC_BEG_ADDR_SHADOW",
+        "SRC_ADDR_SHADOW",
+        "DST_BEG_ADDR_SHADOW",
+        "DST_ADDR_SHADOW"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRC_BEG_ADDR_SHADOW",
+        "SRC_ADDR_SHADOW",
+        "DST_BEG_ADDR_SHADOW",
+        "DST_ADDR_SHADOW"
+      ]
+    },
+    {
+      "file": "dma.c",
+      "peripheral": "dma",
+      "functionName": "DMA_configBurst",
+      "functionArgs": [
+        "base",
+        "size",
+        "srcStep",
+        "destStep"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "int16_t",
+        "int16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n    ASSERT((size >= 1U) && (size <= 32U));\n    ASSERT(((srcStep >= -4096) && (srcStep <= 4095)) &&\n           ((destStep >= -4096) && (destStep <= 4095)));\n\n    EALLOW;\n\n    //\n    // Set up BURST registers.\n    //\n    HWREGH(base + DMA_O_BURST_SIZE)     = size - 1U;\n    HWREGH(base + DMA_O_SRC_BURST_STEP) = srcStep;\n    HWREGH(base + DMA_O_DST_BURST_STEP) = destStep;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); ASSERT((size >= 1U) && (size <= 32U)); ASSERT(((srcStep >= -4096) && (srcStep <= 4095)) && ((destStep >= -4096) && (destStep <= 4095))); EALLOW; // // Set up BURST registers. // HWREGH(base + DMA_O_BURST_SIZE) = size - 1U; HWREGH(base + DMA_O_SRC_BURST_STEP) = srcStep; HWREGH(base + DMA_O_DST_BURST_STEP) = destStep; EDIS; }",
+      "registersUsed": [
+        "BURST_SIZE",
+        "SRC_BURST_STEP",
+        "DST_BURST_STEP"
+      ],
+      "registersUsedMatchingBifield": [
+        "BURST_SIZE",
+        "SRC_BURST_STEP",
+        "DST_BURST_STEP"
+      ]
+    },
+    {
+      "file": "dma.c",
+      "peripheral": "dma",
+      "functionName": "DMA_configTransfer",
+      "functionArgs": [
+        "base",
+        "transferSize",
+        "srcStep",
+        "destStep"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "int16_t",
+        "int16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n    ASSERT(transferSize <= 0x10000U);\n    ASSERT(((srcStep >= -4096) && (srcStep <= 4095)) &&\n           ((destStep >= -4096) && (destStep <= 4095)));\n\n    EALLOW;\n\n    //\n    // Set up TRANSFER registers.\n    //\n    HWREGH(base + DMA_O_TRANSFER_SIZE)     = (uint16_t)(transferSize - 1U);\n    HWREGH(base + DMA_O_SRC_TRANSFER_STEP) = srcStep;\n    HWREGH(base + DMA_O_DST_TRANSFER_STEP) = destStep;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); ASSERT(transferSize <= 0x10000U); ASSERT(((srcStep >= -4096) && (srcStep <= 4095)) && ((destStep >= -4096) && (destStep <= 4095))); EALLOW; // // Set up TRANSFER registers. // HWREGH(base + DMA_O_TRANSFER_SIZE) = (uint16_t)(transferSize - 1U); HWREGH(base + DMA_O_SRC_TRANSFER_STEP) = srcStep; HWREGH(base + DMA_O_DST_TRANSFER_STEP) = destStep; EDIS; }",
+      "registersUsed": [
+        "TRANSFER_SIZE",
+        "SRC_TRANSFER_STEP",
+        "DST_TRANSFER_STEP"
+      ],
+      "registersUsedMatchingBifield": [
+        "TRANSFER_SIZE",
+        "SRC_TRANSFER_STEP",
+        "DST_TRANSFER_STEP"
+      ]
+    },
+    {
+      "file": "dma.c",
+      "peripheral": "dma",
+      "functionName": "DMA_configWrap",
+      "functionArgs": [
+        "base",
+        "srcWrapSize",
+        "srcStep",
+        "destWrapSize",
+        "destStep"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "int16_t",
+        "uint32_t",
+        "int16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n    ASSERT((srcWrapSize <= 0x10000U) || (destWrapSize <= 0x10000U));\n    ASSERT(((srcStep >= -4096) && (srcStep <= 4095)) &&\n           ((destStep >= -4096) && (destStep <= 4095)));\n\n    EALLOW;\n\n    //\n    // Set up WRAP registers.\n    //\n    HWREGH(base + DMA_O_SRC_WRAP_SIZE) = (uint16_t)(srcWrapSize - 1U);\n    HWREGH(base + DMA_O_SRC_WRAP_STEP) = srcStep;\n\n    HWREGH(base + DMA_O_DST_WRAP_SIZE) = (uint16_t)(destWrapSize - 1U);\n    HWREGH(base + DMA_O_DST_WRAP_STEP) = destStep;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); ASSERT((srcWrapSize <= 0x10000U) || (destWrapSize <= 0x10000U)); ASSERT(((srcStep >= -4096) && (srcStep <= 4095)) && ((destStep >= -4096) && (destStep <= 4095))); EALLOW; // // Set up WRAP registers. // HWREGH(base + DMA_O_SRC_WRAP_SIZE) = (uint16_t)(srcWrapSize - 1U); HWREGH(base + DMA_O_SRC_WRAP_STEP) = srcStep; HWREGH(base + DMA_O_DST_WRAP_SIZE) = (uint16_t)(destWrapSize - 1U); HWREGH(base + DMA_O_DST_WRAP_STEP) = destStep; EDIS; }",
+      "registersUsed": [
+        "SRC_WRAP_SIZE",
+        "SRC_WRAP_STEP",
+        "DST_WRAP_SIZE",
+        "DST_WRAP_STEP"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRC_WRAP_SIZE",
+        "SRC_WRAP_STEP",
+        "DST_WRAP_SIZE",
+        "DST_WRAP_STEP"
+      ]
+    },
+    {
+      "file": "dma.c",
+      "peripheral": "dma",
+      "functionName": "DMA_configMode",
+      "functionArgs": [
+        "base",
+        "trigger",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DMA_Trigger",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Set up trigger selection in the CMA/CLA trigger source selection\n    // registers. These are considered part of system control.\n    //\n    switch(base)\n    {\n        case DMA_CH1_BASE:\n            //\n            // Channel 1\n            //\n            HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) =\n                (HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) &\n                 ~((uint32_t)SYSCTL_DMACHSRCSEL1_CH1_M)) |\n                ((uint32_t)trigger << SYSCTL_DMACHSRCSEL1_CH1_S);\n\n            //\n            // Set peripheral interrupt select bits to the channel number.\n            //\n            HWREGH(DMA_CH1_BASE + DMA_O_MODE) =\n               (HWREGH(DMA_CH1_BASE + DMA_O_MODE) & ~DMA_MODE_PERINTSEL_M) | 1U;\n            break;\n\n        case DMA_CH2_BASE:\n            //\n            // Channel 2\n            //\n            HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) =\n                (HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) &\n                 ~((uint32_t)SYSCTL_DMACHSRCSEL1_CH2_M)) |\n                ((uint32_t)trigger << SYSCTL_DMACHSRCSEL1_CH2_S);\n\n            //\n            // Set peripheral interrupt select bits to the channel number.\n            //\n            HWREGH(DMA_CH2_BASE + DMA_O_MODE) =\n               (HWREGH(DMA_CH2_BASE + DMA_O_MODE) & ~DMA_MODE_PERINTSEL_M) | 2U;\n            break;\n\n        case DMA_CH3_BASE:\n            //\n            // Channel 3\n            //\n            HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) =\n                (HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) &\n                 ~((uint32_t)SYSCTL_DMACHSRCSEL1_CH3_M)) |\n                ((uint32_t)trigger << SYSCTL_DMACHSRCSEL1_CH3_S);\n\n            //\n            // Set peripheral interrupt select bits to the channel number.\n            //\n            HWREGH(DMA_CH3_BASE + DMA_O_MODE) =\n               (HWREGH(DMA_CH3_BASE + DMA_O_MODE) & ~DMA_MODE_PERINTSEL_M) | 3U;\n            break;\n\n        case DMA_CH4_BASE:\n            //\n            // Channel 4\n            //\n            HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) =\n                (HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) &\n                 ~((uint32_t)SYSCTL_DMACHSRCSEL1_CH4_M)) |\n                ((uint32_t)trigger << SYSCTL_DMACHSRCSEL1_CH4_S);\n\n            //\n            // Set peripheral interrupt select bits to the channel number.\n            //\n            HWREGH(DMA_CH4_BASE + DMA_O_MODE) =\n               (HWREGH(DMA_CH4_BASE + DMA_O_MODE) & ~DMA_MODE_PERINTSEL_M) | 4U;\n            break;\n\n        case DMA_CH5_BASE:\n            //\n            // Channel 5\n            //\n            HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL2) =\n                (HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL2) &\n                 ~((uint32_t)SYSCTL_DMACHSRCSEL2_CH5_M)) |\n                ((uint32_t)trigger << SYSCTL_DMACHSRCSEL2_CH5_S);\n\n            //\n            // Set peripheral interrupt select bits to the channel number.\n            //\n            HWREGH(DMA_CH5_BASE + DMA_O_MODE) =\n               (HWREGH(DMA_CH5_BASE + DMA_O_MODE) & ~DMA_MODE_PERINTSEL_M) | 5U;\n            break;\n\n        case DMA_CH6_BASE:\n            //\n            // Channel 6\n            //\n            HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL2) =\n                (HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL2) &\n                 ~((uint32_t)SYSCTL_DMACHSRCSEL2_CH6_M)) |\n                ((uint32_t)trigger << SYSCTL_DMACHSRCSEL2_CH6_S);\n\n            //\n            // Set peripheral interrupt select bits to the channel number.\n            //\n            HWREGH(DMA_CH6_BASE + DMA_O_MODE) =\n               (HWREGH(DMA_CH6_BASE + DMA_O_MODE) & ~DMA_MODE_PERINTSEL_M) | 6U;\n            break;\n\n        default:\n            //\n            // Invalid base.\n            //\n            break;\n    }\n\n    //\n    // Write the configuration to the mode register.\n    //\n    HWREGH(base + DMA_O_MODE) &= ~(DMA_MODE_DATASIZE | DMA_MODE_CONTINUOUS |\n                                   DMA_MODE_ONESHOT);\n    HWREGH(base + DMA_O_MODE) |= config;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); EALLOW; // // Set up trigger selection in the CMA/CLA trigger source selection // registers. These are considered part of system control. // switch(base) { case DMA_CH1_BASE: // // Channel 1 // HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) = (HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) & ~((uint32_t)SYSCTL_DMACHSRCSEL1_CH1_M)) | ((uint32_t)trigger << SYSCTL_DMACHSRCSEL1_CH1_S); // // Set peripheral interrupt select bits to the channel number. // HWREGH(DMA_CH1_BASE + DMA_O_MODE) = (HWREGH(DMA_CH1_BASE + DMA_O_MODE) & ~DMA_MODE_PERINTSEL_M) | 1U; break; case DMA_CH2_BASE: // // Channel 2 // HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) = (HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) & ~((uint32_t)SYSCTL_DMACHSRCSEL1_CH2_M)) | ((uint32_t)trigger << SYSCTL_DMACHSRCSEL1_CH2_S); // // Set peripheral interrupt select bits to the channel number. // HWREGH(DMA_CH2_BASE + DMA_O_MODE) = (HWREGH(DMA_CH2_BASE + DMA_O_MODE) & ~DMA_MODE_PERINTSEL_M) | 2U; break; case DMA_CH3_BASE: // // Channel 3 // HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) = (HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) & ~((uint32_t)SYSCTL_DMACHSRCSEL1_CH3_M)) | ((uint32_t)trigger << SYSCTL_DMACHSRCSEL1_CH3_S); // // Set peripheral interrupt select bits to the channel number. // HWREGH(DMA_CH3_BASE + DMA_O_MODE) = (HWREGH(DMA_CH3_BASE + DMA_O_MODE) & ~DMA_MODE_PERINTSEL_M) | 3U; break; case DMA_CH4_BASE: // // Channel 4 // HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) = (HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL1) & ~((uint32_t)SYSCTL_DMACHSRCSEL1_CH4_M)) | ((uint32_t)trigger << SYSCTL_DMACHSRCSEL1_CH4_S); // // Set peripheral interrupt select bits to the channel number. // HWREGH(DMA_CH4_BASE + DMA_O_MODE) = (HWREGH(DMA_CH4_BASE + DMA_O_MODE) & ~DMA_MODE_PERINTSEL_M) | 4U; break; case DMA_CH5_BASE: // // Channel 5 // HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL2) = (HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL2) & ~((uint32_t)SYSCTL_DMACHSRCSEL2_CH5_M)) | ((uint32_t)trigger << SYSCTL_DMACHSRCSEL2_CH5_S); // // Set peripheral interrupt select bits to the channel number. // HWREGH(DMA_CH5_BASE + DMA_O_MODE) = (HWREGH(DMA_CH5_BASE + DMA_O_MODE) & ~DMA_MODE_PERINTSEL_M) | 5U; break; case DMA_CH6_BASE: // // Channel 6 // HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL2) = (HWREG(DMACLASRCSEL_BASE + SYSCTL_O_DMACHSRCSEL2) & ~((uint32_t)SYSCTL_DMACHSRCSEL2_CH6_M)) | ((uint32_t)trigger << SYSCTL_DMACHSRCSEL2_CH6_S); // // Set peripheral interrupt select bits to the channel number. // HWREGH(DMA_CH6_BASE + DMA_O_MODE) = (HWREGH(DMA_CH6_BASE + DMA_O_MODE) & ~DMA_MODE_PERINTSEL_M) | 6U; break; default: // // Invalid base. // break; } // // Write the configuration to the mode register. // HWREGH(base + DMA_O_MODE) &= ~(DMA_MODE_DATASIZE | DMA_MODE_CONTINUOUS | DMA_MODE_ONESHOT); HWREGH(base + DMA_O_MODE) |= config; EDIS; }",
+      "registersUsed": [
+        "MODE",
+        "DMACHSRCSEL1",
+        "DMACHSRCSEL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE",
+        "DMACHSRCSEL1",
+        "DMACHSRCSEL2"
+      ]
+    },
+    {
+      "file": "dma.c",
+      "peripheral": "dma",
+      "functionName": "DMA_configChannel",
+      "functionArgs": [
+        "base",
+        "*transfParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constDMA_ConfigParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n    ASSERT(((transfParams->configSize == DMA_CFG_SIZE_16BIT) ||\n            (transfParams->configSize == DMA_CFG_SIZE_32BIT)) &&\n           ((transfParams->transferMode == DMA_CFG_ONESHOT_DISABLE) ||\n            (transfParams->transferMode == DMA_CFG_ONESHOT_ENABLE)) &&\n           ((transfParams->reinitMode == DMA_CFG_CONTINUOUS_DISABLE) ||\n            (transfParams->reinitMode == DMA_CFG_CONTINUOUS_ENABLE)));\n\n    //\n    // Configure DMA Channel\n    //\n    DMA_configAddresses(base, (const void *)transfParams->destAddr,\n                        (const void *)transfParams->srcAddr);\n\n    //\n    // Configure the size of each burst and the address step size\n    //\n    DMA_configBurst(base, transfParams->burstSize, transfParams->srcBurstStep,\n                    transfParams->destBurstStep);\n\n    //\n    // Configure the transfer size and the address step that is\n    // made after each burst.\n    //\n    DMA_configTransfer(base, transfParams->transferSize,\n                       transfParams->srcTransferStep,\n                       transfParams->destTransferStep);\n\n    //\n    // Configure the DMA channel's wrap settings\n    //\n    DMA_configWrap(base, transfParams->srcWrapSize, transfParams->srcWrapStep,\n                   transfParams->destWrapSize, transfParams->destWrapStep);\n\n    //\n    // Configure the DMA channel's trigger and mode\n    //\n    DMA_configMode(base, transfParams->transferTrigger,\n                   transfParams->transferMode | transfParams->reinitMode |\n                   transfParams->configSize);\n\n    //\n    // Enable the selected peripheral trigger to start a DMA transfer\n    //\n    DMA_enableTrigger(base);\n\n    if(transfParams->enableInterrupt)\n    {\n        //\n        // Set the channel interrupt mode\n        //\n        DMA_setInterruptMode(base, transfParams->interruptMode);\n\n        //\n        // Enable the indicated DMA channel interrupt source\n        //\n        DMA_enableInterrupt(base);\n    }\n    else\n    {\n        //\n        // Disable the indicated DMA channel interrupt source\n        //\n        DMA_disableInterrupt(base);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); ASSERT(((transfParams->configSize == DMA_CFG_SIZE_16BIT) || (transfParams->configSize == DMA_CFG_SIZE_32BIT)) && ((transfParams->transferMode == DMA_CFG_ONESHOT_DISABLE) || (transfParams->transferMode == DMA_CFG_ONESHOT_ENABLE)) && ((transfParams->reinitMode == DMA_CFG_CONTINUOUS_DISABLE) || (transfParams->reinitMode == DMA_CFG_CONTINUOUS_ENABLE))); // // Configure DMA Channel // DMA_configAddresses(base, (const void *)transfParams->destAddr, (const void *)transfParams->srcAddr); // // Configure the size of each burst and the address step size // DMA_configBurst(base, transfParams->burstSize, transfParams->srcBurstStep, transfParams->destBurstStep); // // Configure the transfer size and the address step that is // made after each burst. // DMA_configTransfer(base, transfParams->transferSize, transfParams->srcTransferStep, transfParams->destTransferStep); // // Configure the DMA channel's wrap settings // DMA_configWrap(base, transfParams->srcWrapSize, transfParams->srcWrapStep, transfParams->destWrapSize, transfParams->destWrapStep); // // Configure the DMA channel's trigger and mode // DMA_configMode(base, transfParams->transferTrigger, transfParams->transferMode | transfParams->reinitMode | transfParams->configSize); // // Enable the selected peripheral trigger to start a DMA transfer // DMA_enableTrigger(base); if(transfParams->enableInterrupt) { // // Set the channel interrupt mode // DMA_setInterruptMode(base, transfParams->interruptMode); // // Enable the indicated DMA channel interrupt source // DMA_enableInterrupt(base); } else { // // Disable the indicated DMA channel interrupt source // DMA_disableInterrupt(base); } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((base == DMA_CH1_BASE) || (base == DMA_CH2_BASE) ||\n           (base == DMA_CH3_BASE) || (base == DMA_CH4_BASE) ||\n           (base == DMA_CH5_BASE) || (base == DMA_CH6_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((base == DMA_CH1_BASE) || (base == DMA_CH2_BASE) || (base == DMA_CH3_BASE) || (base == DMA_CH4_BASE) || (base == DMA_CH5_BASE) || (base == DMA_CH6_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_initController",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Set the hard reset bit. One NOP is required after HARDRESET.\n    //\n    HWREGH(DMA_BASE + DMA_O_CTRL) |= DMA_CTRL_HARDRESET;\n    NOP;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Set the hard reset bit. One NOP is required after HARDRESET. // HWREGH(DMA_BASE + DMA_O_CTRL) |= DMA_CTRL_HARDRESET; NOP; EDIS; }",
+      "registersUsed": [
+        "CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_triggerSoftReset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Set the soft reset bit. One NOP is required after SOFTRESET.\n    //\n    HWREGH(base + DMA_O_CONTROL) |= DMA_CONTROL_SOFTRESET;\n    NOP;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Set the soft reset bit. One NOP is required after SOFTRESET. // HWREGH(base + DMA_O_CONTROL) |= DMA_CONTROL_SOFTRESET; NOP; EDIS; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_setEmulationMode",
+      "functionArgs": [
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "DMA_EmulationMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Set emulation mode\n    //\n    if(mode == DMA_EMULATION_STOP)\n    {\n        HWREGH(DMA_BASE + DMA_O_DEBUGCTRL) &= ~DMA_DEBUGCTRL_FREE;\n    }\n    else\n    {\n        HWREGH(DMA_BASE + DMA_O_DEBUGCTRL) |= DMA_DEBUGCTRL_FREE;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Set emulation mode // if(mode == DMA_EMULATION_STOP) { HWREGH(DMA_BASE + DMA_O_DEBUGCTRL) &= ~DMA_DEBUGCTRL_FREE; } else { HWREGH(DMA_BASE + DMA_O_DEBUGCTRL) |= DMA_DEBUGCTRL_FREE; } EDIS; }",
+      "registersUsed": [
+        "DEBUGCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DEBUGCTRL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_enableTrigger",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Set the peripheral interrupt trigger enable bit.\n    //\n    EALLOW;\n    HWREGH(base + DMA_O_MODE) |= DMA_MODE_PERINTE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Set the peripheral interrupt trigger enable bit. // EALLOW; HWREGH(base + DMA_O_MODE) |= DMA_MODE_PERINTE; EDIS; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_disableTrigger",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Clear the peripheral interrupt trigger enable bit.\n    //\n    EALLOW;\n    HWREGH(base + DMA_O_MODE) &= ~DMA_MODE_PERINTE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Clear the peripheral interrupt trigger enable bit. // EALLOW; HWREGH(base + DMA_O_MODE) &= ~DMA_MODE_PERINTE; EDIS; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_forceTrigger",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Set the peripheral interrupt trigger force bit.\n    //\n    EALLOW;\n    HWREGH(base + DMA_O_CONTROL) |= DMA_CONTROL_PERINTFRC;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Set the peripheral interrupt trigger force bit. // EALLOW; HWREGH(base + DMA_O_CONTROL) |= DMA_CONTROL_PERINTFRC; EDIS; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_clearTriggerFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Write a one to the clear bit to clear the peripheral trigger flag.\n    //\n    EALLOW;\n    HWREGH(base + DMA_O_CONTROL) |= DMA_CONTROL_PERINTCLR;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Write a one to the clear bit to clear the peripheral trigger flag. // EALLOW; HWREGH(base + DMA_O_CONTROL) |= DMA_CONTROL_PERINTCLR; EDIS; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_getTransferStatusFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Read the Transfer Status Flag and return appropriately.\n    //\n    return((HWREGH(base + DMA_O_CONTROL) & DMA_CONTROL_TRANSFERSTS) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Read the Transfer Status Flag and return appropriately. // return((HWREGH(base + DMA_O_CONTROL) & DMA_CONTROL_TRANSFERSTS) != 0U); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_getBurstStatusFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Read the Burst Status Flag and return appropriately.\n    //\n    return((HWREGH(base + DMA_O_CONTROL) & DMA_CONTROL_BURSTSTS) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Read the Burst Status Flag and return appropriately. // return((HWREGH(base + DMA_O_CONTROL) & DMA_CONTROL_BURSTSTS) != 0U); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_getRunStatusFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Read the Run Status Flag and return appropriately.\n    //\n    return((HWREGH(base + DMA_O_CONTROL) & DMA_CONTROL_RUNSTS) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Read the Run Status Flag and return appropriately. // return((HWREGH(base + DMA_O_CONTROL) & DMA_CONTROL_RUNSTS) != 0U); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_getOverflowFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Read the Overflow Flag and return appropriately.\n    //\n    return((HWREGH(base + DMA_O_CONTROL) & DMA_CONTROL_OVRFLG) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Read the Overflow Flag and return appropriately. // return((HWREGH(base + DMA_O_CONTROL) & DMA_CONTROL_OVRFLG) != 0U); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_getTriggerFlagStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Read the peripheral trigger flag and return appropriately.\n    //\n    return((HWREGH(base + DMA_O_CONTROL) & DMA_CONTROL_PERINTFLG) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Read the peripheral trigger flag and return appropriately. // return((HWREGH(base + DMA_O_CONTROL) & DMA_CONTROL_PERINTFLG) != 0U); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_startChannel",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Set the run bit.\n    //\n    EALLOW;\n    HWREGH(base + DMA_O_CONTROL) |= DMA_CONTROL_RUN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Set the run bit. // EALLOW; HWREGH(base + DMA_O_CONTROL) |= DMA_CONTROL_RUN; EDIS; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_stopChannel",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Set the halt bit.\n    //\n    EALLOW;\n    HWREGH(base + DMA_O_CONTROL) |= DMA_CONTROL_HALT;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Set the halt bit. // EALLOW; HWREGH(base + DMA_O_CONTROL) |= DMA_CONTROL_HALT; EDIS; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_enableInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Enable the specified DMA channel interrupt.\n    //\n    EALLOW;\n    HWREGH(base + DMA_O_MODE) |= DMA_MODE_CHINTE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Enable the specified DMA channel interrupt. // EALLOW; HWREGH(base + DMA_O_MODE) |= DMA_MODE_CHINTE; EDIS; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_disableInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Disable the specified DMA channel interrupt.\n    //\n    EALLOW;\n    HWREGH(base + DMA_O_MODE) &= ~DMA_MODE_CHINTE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Disable the specified DMA channel interrupt. // EALLOW; HWREGH(base + DMA_O_MODE) &= ~DMA_MODE_CHINTE; EDIS; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_enableOverrunInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Enable the specified DMA channel interrupt.\n    //\n    EALLOW;\n    HWREGH(base + DMA_O_MODE) |= DMA_MODE_OVRINTE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Enable the specified DMA channel interrupt. // EALLOW; HWREGH(base + DMA_O_MODE) |= DMA_MODE_OVRINTE; EDIS; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_disableOverrunInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Disable the specified DMA channel interrupt.\n    //\n    EALLOW;\n    HWREGH(base + DMA_O_MODE) &= ~DMA_MODE_OVRINTE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Disable the specified DMA channel interrupt. // EALLOW; HWREGH(base + DMA_O_MODE) &= ~DMA_MODE_OVRINTE; EDIS; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_clearErrorFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Write to the error clear bit.\n    //\n    EALLOW;\n    HWREGH(base + DMA_O_CONTROL) |= DMA_CONTROL_ERRCLR;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); // // Write to the error clear bit. // EALLOW; HWREGH(base + DMA_O_CONTROL) |= DMA_CONTROL_ERRCLR; EDIS; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_setInterruptMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DMA_InterruptMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Write the selected interrupt generation mode to the register.\n    //\n    if(mode == DMA_INT_AT_END)\n    {\n        HWREGH(base + DMA_O_MODE) |= DMA_MODE_CHINTMODE;\n    }\n    else\n    {\n        HWREGH(base + DMA_O_MODE) &= ~DMA_MODE_CHINTMODE;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); EALLOW; // // Write the selected interrupt generation mode to the register. // if(mode == DMA_INT_AT_END) { HWREGH(base + DMA_O_MODE) |= DMA_MODE_CHINTMODE; } else { HWREGH(base + DMA_O_MODE) &= ~DMA_MODE_CHINTMODE; } EDIS; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_setPriorityMode",
+      "functionArgs": [
+        "ch1IsHighPri"
+      ],
+      "functionArgsTypes": [
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n\n    //\n    // Write the selected priority mode to the register.\n    //\n    if(ch1IsHighPri)\n    {\n        HWREGH(DMA_BASE + DMA_O_PRIORITYCTRL1) |=\n            DMA_PRIORITYCTRL1_CH1PRIORITY;\n    }\n    else\n    {\n        HWREGH(DMA_BASE + DMA_O_PRIORITYCTRL1) &=\n            ~DMA_PRIORITYCTRL1_CH1PRIORITY;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Write the selected priority mode to the register. // if(ch1IsHighPri) { HWREGH(DMA_BASE + DMA_O_PRIORITYCTRL1) |= DMA_PRIORITYCTRL1_CH1PRIORITY; } else { HWREGH(DMA_BASE + DMA_O_PRIORITYCTRL1) &= ~DMA_PRIORITYCTRL1_CH1PRIORITY; } EDIS; }",
+      "registersUsed": [
+        "PRIORITYCTRL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "PRIORITYCTRL1"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_configSourceAddress",
+      "functionArgs": [
+        "base",
+        "*srcAddr"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constvoid"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Set up SOURCE address.\n    //\n    HWREG(base + DMA_O_SRC_BEG_ADDR_SHADOW) = (uint32_t)srcAddr;\n    HWREG(base + DMA_O_SRC_ADDR_SHADOW)     = (uint32_t)srcAddr;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); EALLOW; // // Set up SOURCE address. // HWREG(base + DMA_O_SRC_BEG_ADDR_SHADOW) = (uint32_t)srcAddr; HWREG(base + DMA_O_SRC_ADDR_SHADOW) = (uint32_t)srcAddr; EDIS; }",
+      "registersUsed": [
+        "SRC_BEG_ADDR_SHADOW",
+        "SRC_ADDR_SHADOW"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRC_BEG_ADDR_SHADOW",
+        "SRC_ADDR_SHADOW"
+      ]
+    },
+    {
+      "file": "dma.h",
+      "peripheral": "dma",
+      "functionName": "DMA_configDestAddress",
+      "functionArgs": [
+        "base",
+        "*destAddr"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constvoid"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Set up DESTINATION address.\n    //\n    HWREG(base + DMA_O_DST_BEG_ADDR_SHADOW) = (uint32_t)destAddr;\n    HWREG(base + DMA_O_DST_ADDR_SHADOW)     = (uint32_t)destAddr;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_isBaseValid(base)); EALLOW; // // Set up DESTINATION address. // HWREG(base + DMA_O_DST_BEG_ADDR_SHADOW) = (uint32_t)destAddr; HWREG(base + DMA_O_DST_ADDR_SHADOW) = (uint32_t)destAddr; EDIS; }",
+      "registersUsed": [
+        "DST_BEG_ADDR_SHADOW",
+        "DST_ADDR_SHADOW"
+      ],
+      "registersUsedMatchingBifield": [
+        "DST_BEG_ADDR_SHADOW",
+        "DST_ADDR_SHADOW"
+      ]
+    }
+  ]
+}

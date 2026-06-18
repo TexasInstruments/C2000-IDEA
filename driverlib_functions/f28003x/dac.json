@@ -1,0 +1,339 @@
+{
+  "name": "dac",
+  "functions": [
+    {
+      "file": "dac.c",
+      "peripheral": "dac",
+      "functionName": "DAC_tuneOffsetTrim",
+      "functionArgs": [
+        "base",
+        "referenceVoltage"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "float32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t oldOffsetTrim;\n    float32_t newOffsetTrim;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n    ASSERT(referenceVoltage > 0.0F);\n\n    //\n    // Get the sign-extended offset trim value\n    //\n    oldOffsetTrim = (HWREGH(base + DAC_O_TRIM) & DAC_TRIM_OFFSET_TRIM_M);\n    oldOffsetTrim = ((oldOffsetTrim & (uint16_t)DAC_REG_BYTE_MASK) ^\n                    (uint16_t)0x80) - (uint16_t)0x80;\n\n    //\n    // Calculate new offset trim value if DAC is operating at a reference\n    // voltage other than 2.5v.\n    //\n    newOffsetTrim = ((float32_t)(2.5 / referenceVoltage) *\n                     (float32_t)(int16_t)oldOffsetTrim);\n\n    //\n    // Check if the new offset trim value is valid\n    //\n    ASSERT(((int16_t)newOffsetTrim > -129) && ((int16_t)newOffsetTrim < 128));\n\n    //\n    // Set the new offset trim value\n    //\n    EALLOW;\n    HWREGH(base + DAC_O_TRIM) = (HWREGH(base + DAC_O_TRIM) &\n                                 ~DAC_TRIM_OFFSET_TRIM_M) |\n                                 (uint16_t)(int16_t)newOffsetTrim;\n\n    EDIS;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t oldOffsetTrim; float32_t newOffsetTrim; // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); ASSERT(referenceVoltage > 0.0F); // // Get the sign-extended offset trim value // oldOffsetTrim = (HWREGH(base + DAC_O_TRIM) & DAC_TRIM_OFFSET_TRIM_M); oldOffsetTrim = ((oldOffsetTrim & (uint16_t)DAC_REG_BYTE_MASK) ^ (uint16_t)0x80) - (uint16_t)0x80; // // Calculate new offset trim value if DAC is operating at a reference // voltage other than 2.5v. // newOffsetTrim = ((float32_t)(2.5 / referenceVoltage) * (float32_t)(int16_t)oldOffsetTrim); // // Check if the new offset trim value is valid // ASSERT(((int16_t)newOffsetTrim > -129) && ((int16_t)newOffsetTrim < 128)); // // Set the new offset trim value // EALLOW; HWREGH(base + DAC_O_TRIM) = (HWREGH(base + DAC_O_TRIM) & ~DAC_TRIM_OFFSET_TRIM_M) | (uint16_t)(int16_t)newOffsetTrim; EDIS; }",
+      "registersUsed": [
+        "TRIM"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACTRIM"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == DACA_BASE) ||\n           (base == DACB_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == DACA_BASE) || (base == DACB_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_getRevision",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n\n    //\n    // Get the revision value.\n    //\n    return(HWREGH(base + DAC_O_REV) & DAC_REV_REV_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); // // Get the revision value. // return(HWREGH(base + DAC_O_REV) & DAC_REV_REV_M); }",
+      "registersUsed": [
+        "REV"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACREV"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_setReferenceVoltage",
+      "functionArgs": [
+        "base",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DAC_ReferenceVoltage"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n\n    //\n    // Set the reference voltage\n    //\n    EALLOW;\n\n    HWREGH(base + DAC_O_CTL) = (HWREGH(base + DAC_O_CTL) &\n                                ~DAC_CTL_DACREFSEL) | (uint16_t)source;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); // // Set the reference voltage // EALLOW; HWREGH(base + DAC_O_CTL) = (HWREGH(base + DAC_O_CTL) & ~DAC_CTL_DACREFSEL) | (uint16_t)source; EDIS; }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACCTL"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_setGainMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DAC_GainMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n\n    //\n    // Set the gain mode\n    //\n    EALLOW;\n\n    HWREGH(base + DAC_O_CTL) = (HWREGH(base + DAC_O_CTL) &\n                                ~DAC_CTL_MODE) | (uint16_t)mode;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); // // Set the gain mode // EALLOW; HWREGH(base + DAC_O_CTL) = (HWREGH(base + DAC_O_CTL) & ~DAC_CTL_MODE) | (uint16_t)mode; EDIS; }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACCTL"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_setLoadMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DAC_LoadMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n\n    //\n    // Set the load mode\n    //\n    EALLOW;\n\n    HWREGH(base + DAC_O_CTL) = (HWREGH(base + DAC_O_CTL) &\n                                ~DAC_CTL_LOADMODE) | (uint16_t)mode;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); // // Set the load mode // EALLOW; HWREGH(base + DAC_O_CTL) = (HWREGH(base + DAC_O_CTL) & ~DAC_CTL_LOADMODE) | (uint16_t)mode; EDIS; }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACCTL"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_setPWMSyncSignal",
+      "functionArgs": [
+        "base",
+        "pwmSignal"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n    ASSERT((pwmSignal > 0U) && (pwmSignal < 17U));\n\n    //\n    // Set the PWM sync signal\n    //\n    EALLOW;\n\n    HWREGH(base + DAC_O_CTL) = (HWREGH(base + DAC_O_CTL) &\n                                ~DAC_CTL_SYNCSEL_M) |\n                               ((uint16_t)(pwmSignal - 1U) <<\n                                DAC_CTL_SYNCSEL_S);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); ASSERT((pwmSignal > 0U) && (pwmSignal < 17U)); // // Set the PWM sync signal // EALLOW; HWREGH(base + DAC_O_CTL) = (HWREGH(base + DAC_O_CTL) & ~DAC_CTL_SYNCSEL_M) | ((uint16_t)(pwmSignal - 1U) << DAC_CTL_SYNCSEL_S); EDIS; }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACCTL"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_getActiveValue",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n\n    //\n    // Get the active value\n    //\n    return(HWREGH(base + DAC_O_VALA) & DAC_VALA_DACVALA_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); // // Get the active value // return(HWREGH(base + DAC_O_VALA) & DAC_VALA_DACVALA_M); }",
+      "registersUsed": [
+        "VALA"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACVALA"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_setShadowValue",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n    ASSERT(value <= DAC_VALS_DACVALS_M);\n\n    //\n    // Set the shadow value\n    //\n    HWREGH(base + DAC_O_VALS) = (HWREGH(base + DAC_O_VALS) &\n                                 ~DAC_VALS_DACVALS_M) |\n                                (uint16_t)(value & DAC_VALS_DACVALS_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); ASSERT(value <= DAC_VALS_DACVALS_M); // // Set the shadow value // HWREGH(base + DAC_O_VALS) = (HWREGH(base + DAC_O_VALS) & ~DAC_VALS_DACVALS_M) | (uint16_t)(value & DAC_VALS_DACVALS_M); }",
+      "registersUsed": [
+        "VALS"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACVALS"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_getShadowValue",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n\n    //\n    // Get the shadow value\n    //\n    return(HWREGH(base + DAC_O_VALS) & DAC_VALS_DACVALS_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); // // Get the shadow value // return(HWREGH(base + DAC_O_VALS) & DAC_VALS_DACVALS_M); }",
+      "registersUsed": [
+        "VALS"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACVALS"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_enableOutput",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n\n    //\n    // Enable the output\n    //\n    EALLOW;\n\n    HWREGH(base + DAC_O_OUTEN) |= DAC_OUTEN_DACOUTEN;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); // // Enable the output // EALLOW; HWREGH(base + DAC_O_OUTEN) |= DAC_OUTEN_DACOUTEN; EDIS; }",
+      "registersUsed": [
+        "OUTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACOUTEN"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_disableOutput",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n\n    //\n    // Disable the output\n    //\n    EALLOW;\n\n    HWREGH(base + DAC_O_OUTEN) &= ~DAC_OUTEN_DACOUTEN;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); // // Disable the output // EALLOW; HWREGH(base + DAC_O_OUTEN) &= ~DAC_OUTEN_DACOUTEN; EDIS; }",
+      "registersUsed": [
+        "OUTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACOUTEN"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_setOffsetTrim",
+      "functionArgs": [
+        "base",
+        "offset"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "int16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n    ASSERT((offset > -129) && (offset < 128));\n\n    //\n    // Set the offset trim value\n    //\n    EALLOW;\n\n    HWREGH(base + DAC_O_TRIM) = (HWREGH(base + DAC_O_TRIM) &\n                                 ~DAC_TRIM_OFFSET_TRIM_M) | (uint16_t)offset;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); ASSERT((offset > -129) && (offset < 128)); // // Set the offset trim value // EALLOW; HWREGH(base + DAC_O_TRIM) = (HWREGH(base + DAC_O_TRIM) & ~DAC_TRIM_OFFSET_TRIM_M) | (uint16_t)offset; EDIS; }",
+      "registersUsed": [
+        "TRIM"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACTRIM"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_getOffsetTrim",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline int16_t",
+      "functionContent": "{\n    uint16_t value;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n\n    //\n    // Get the sign-extended offset trim value\n    //\n    value = (HWREGH(base + DAC_O_TRIM) & DAC_TRIM_OFFSET_TRIM_M);\n    value = ((value & (uint16_t)DAC_REG_BYTE_MASK) ^ (uint16_t)0x80) -\n            (uint16_t)0x80;\n\n    return((int16_t)value);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t value; // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); // // Get the sign-extended offset trim value // value = (HWREGH(base + DAC_O_TRIM) & DAC_TRIM_OFFSET_TRIM_M); value = ((value & (uint16_t)DAC_REG_BYTE_MASK) ^ (uint16_t)0x80) - (uint16_t)0x80; return((int16_t)value); }",
+      "registersUsed": [
+        "TRIM"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACTRIM"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_lockRegister",
+      "functionArgs": [
+        "base",
+        "reg"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n    ASSERT((reg & ~(DAC_LOCK_CONTROL | DAC_LOCK_SHADOW |\n                    DAC_LOCK_OUTPUT)) == 0U);\n\n    //\n    // Lock the specified registers\n    //\n    EALLOW;\n\n    HWREGH(base + DAC_O_LOCK) |= (DAC_LOCK_KEY | reg);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); ASSERT((reg & ~(DAC_LOCK_CONTROL | DAC_LOCK_SHADOW | DAC_LOCK_OUTPUT)) == 0U); // // Lock the specified registers // EALLOW; HWREGH(base + DAC_O_LOCK) |= (DAC_LOCK_KEY | reg); EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACLOCK"
+      ]
+    },
+    {
+      "file": "dac.h",
+      "peripheral": "dac",
+      "functionName": "DAC_isRegisterLocked",
+      "functionArgs": [
+        "base",
+        "reg"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DAC_isBaseValid(base));\n    ASSERT((reg & ~(DAC_LOCK_CONTROL | DAC_LOCK_SHADOW |\n                    DAC_LOCK_OUTPUT)) == 0U);\n\n    //\n    // Return the lock status on the specified registers\n    //\n    return(((HWREGH(base + DAC_O_LOCK) & reg) != 0U) ? true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DAC_isBaseValid(base)); ASSERT((reg & ~(DAC_LOCK_CONTROL | DAC_LOCK_SHADOW | DAC_LOCK_OUTPUT)) == 0U); // // Return the lock status on the specified registers // return(((HWREGH(base + DAC_O_LOCK) & reg) != 0U) ? true : false); }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACLOCK"
+      ]
+    }
+  ]
+}

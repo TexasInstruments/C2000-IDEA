@@ -1,0 +1,763 @@
+{
+  "name": "xbar",
+  "functions": [
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_selectOutputXbarInputSource",
+      "functionArgs": [
+        "base",
+        "output",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_OutputNum",
+        "XBAR_OutputXbarInputSource"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ASSERT(base == OUTPUTXBAR_BASE);\n\n    uint32_t group;\n    uint32_t inputMask;\n\n    group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S;\n\n    inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M);\n\n    HWREG(base + OUTPUT_XBAR_O_OUTPUTXBARG0SEL((uint32_t)output) +\n                                (group * XBAR_XBARGSEL_STEP)) |= inputMask;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(base == OUTPUTXBAR_BASE); uint32_t group; uint32_t inputMask; group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S; inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M); HWREG(base + OUTPUT_XBAR_O_OUTPUTXBARG0SEL((uint32_t)output) + (group * XBAR_XBARGSEL_STEP)) |= inputMask; }",
+      "registersUsed": [
+        "OUTPUTXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_deselectOutputXbarInputSource",
+      "functionArgs": [
+        "base",
+        "output",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_OutputNum",
+        "XBAR_OutputXbarInputSource"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ASSERT(base == OUTPUTXBAR_BASE);\n\n    uint32_t group;\n    uint32_t inputMask;\n\n    group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S;\n\n    inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M);\n\n    HWREG(base + OUTPUT_XBAR_O_OUTPUTXBARG0SEL((uint32_t)output) +\n                                (group * XBAR_XBARGSEL_STEP)) &= ~inputMask;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(base == OUTPUTXBAR_BASE); uint32_t group; uint32_t inputMask; group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S; inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M); HWREG(base + OUTPUT_XBAR_O_OUTPUTXBARG0SEL((uint32_t)output) + (group * XBAR_XBARGSEL_STEP)) &= ~inputMask; }",
+      "registersUsed": [
+        "OUTPUTXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_clearOutputXbarSourceSelection",
+      "functionArgs": [
+        "base",
+        "output"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_OutputNum"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t i;\n\n    ASSERT(base == OUTPUTXBAR_BASE);\n\n    for (i = 0U; i < 10U; i++)\n    {\n        HWREG(base + OUTPUT_XBAR_O_OUTPUTXBARG0SEL((uint32_t)output) +\n                                (i * XBAR_XBARGSEL_STEP)) &= 0U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t i; ASSERT(base == OUTPUTXBAR_BASE); for (i = 0U; i < 10U; i++) { HWREG(base + OUTPUT_XBAR_O_OUTPUTXBARG0SEL((uint32_t)output) + (i * XBAR_XBARGSEL_STEP)) &= 0U; } }",
+      "registersUsed": [
+        "OUTPUTXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_selectEpwmXbarInputSource",
+      "functionArgs": [
+        "trip",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "XBAR_TripNum",
+        "XBAR_EpwmXbarInputSource"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t group;\n    uint32_t inputMask;\n\n    group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S;\n\n    inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M);\n\n    HWREG(EPWMXBAR_BASE + EPWM_XBAR_O_PWMXBARG0SEL((uint32_t)trip) +\n                                (group * XBAR_XBARGSEL_STEP)) |= inputMask;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t group; uint32_t inputMask; group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S; inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M); HWREG(EPWMXBAR_BASE + EPWM_XBAR_O_PWMXBARG0SEL((uint32_t)trip) + (group * XBAR_XBARGSEL_STEP)) |= inputMask; }",
+      "registersUsed": [
+        "PWMXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "PWMXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_deselectEpwmXbarInputSource",
+      "functionArgs": [
+        "trip",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "XBAR_TripNum",
+        "XBAR_EpwmXbarInputSource"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t group;\n    uint32_t inputMask;\n\n    group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S;\n\n    inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M);\n\n    HWREG(EPWMXBAR_BASE + EPWM_XBAR_O_PWMXBARG0SEL((uint32_t)trip) +\n                                (group * XBAR_XBARGSEL_STEP)) &= ~inputMask;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t group; uint32_t inputMask; group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S; inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M); HWREG(EPWMXBAR_BASE + EPWM_XBAR_O_PWMXBARG0SEL((uint32_t)trip) + (group * XBAR_XBARGSEL_STEP)) &= ~inputMask; }",
+      "registersUsed": [
+        "PWMXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "PWMXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_clearEpwmXbarSourceSelection",
+      "functionArgs": [
+        "output"
+      ],
+      "functionArgsTypes": [
+        "XBAR_TripNum"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t i;\n\n    for (i = 0U; i < 10U; i++)\n    {\n        HWREG(EPWMXBAR_BASE + EPWM_XBAR_O_PWMXBARG0SEL((uint32_t)output)\n                                 + (i * XBAR_XBARGSEL_STEP)) &= 0U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t i; for (i = 0U; i < 10U; i++) { HWREG(EPWMXBAR_BASE + EPWM_XBAR_O_PWMXBARG0SEL((uint32_t)output) + (i * XBAR_XBARGSEL_STEP)) &= 0U; } }",
+      "registersUsed": [
+        "PWMXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "PWMXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_selectClbXbarInputSource",
+      "functionArgs": [
+        "auxSignal",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "XBAR_AuxSigNum",
+        "XBAR_ClbXbarInputSource"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t group;\n    uint32_t inputMask;\n\n    group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S;\n\n    inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M);\n\n    HWREG(CLBXBAR_BASE + CLB_XBAR_O_CLBXBARG0SEL((uint32_t)auxSignal) +\n                                 (group * XBAR_XBARGSEL_STEP)) |= inputMask;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t group; uint32_t inputMask; group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S; inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M); HWREG(CLBXBAR_BASE + CLB_XBAR_O_CLBXBARG0SEL((uint32_t)auxSignal) + (group * XBAR_XBARGSEL_STEP)) |= inputMask; }",
+      "registersUsed": [
+        "CLBXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLBXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_deselectClbXbarInputSource",
+      "functionArgs": [
+        "auxSignal",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "XBAR_AuxSigNum",
+        "XBAR_ClbXbarInputSource"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t group;\n    uint32_t inputMask;\n\n    group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S;\n\n    inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M);\n\n    HWREG(CLBXBAR_BASE + CLB_XBAR_O_CLBXBARG0SEL((uint32_t)auxSignal) +\n                                 (group * XBAR_XBARGSEL_STEP)) &= ~inputMask;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t group; uint32_t inputMask; group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S; inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M); HWREG(CLBXBAR_BASE + CLB_XBAR_O_CLBXBARG0SEL((uint32_t)auxSignal) + (group * XBAR_XBARGSEL_STEP)) &= ~inputMask; }",
+      "registersUsed": [
+        "CLBXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLBXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_clearClbXbarSourceSelection",
+      "functionArgs": [
+        "output"
+      ],
+      "functionArgsTypes": [
+        "XBAR_AuxSigNum"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t i;\n\n    for (i = 0U; i < 8U; i++)\n    {\n        HWREG(CLBXBAR_BASE + CLB_XBAR_O_CLBXBARG0SEL((uint32_t)output)\n                                 + (i * XBAR_XBARGSEL_STEP)) &= 0U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t i; for (i = 0U; i < 8U; i++) { HWREG(CLBXBAR_BASE + CLB_XBAR_O_CLBXBARG0SEL((uint32_t)output) + (i * XBAR_XBARGSEL_STEP)) &= 0U; } }",
+      "registersUsed": [
+        "CLBXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLBXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_selectMindbXbarInputSource",
+      "functionArgs": [
+        "output",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum",
+        "XBAR_MindbXbarInputSource"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t group;\n    uint32_t inputMask;\n\n    group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S;\n\n    inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M);\n\n    HWREG(MDLXBAR_BASE + MDL_XBAR_O_MDLXBARG0SEL((uint32_t)output) +\n                                 (group * XBAR_XBARGSEL_STEP)) |= inputMask;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t group; uint32_t inputMask; group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S; inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M); HWREG(MDLXBAR_BASE + MDL_XBAR_O_MDLXBARG0SEL((uint32_t)output) + (group * XBAR_XBARGSEL_STEP)) |= inputMask; }",
+      "registersUsed": [
+        "MDLXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDLXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_deselectMindbXbarInputSource",
+      "functionArgs": [
+        "output",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum",
+        "XBAR_MindbXbarInputSource"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t group;\n    uint32_t inputMask;\n\n    group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S;\n\n    inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M);\n\n    HWREG(MDLXBAR_BASE + MDL_XBAR_O_MDLXBARG0SEL((uint32_t)output) +\n                                 (group * XBAR_XBARGSEL_STEP)) &= ~inputMask;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t group; uint32_t inputMask; group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S; inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M); HWREG(MDLXBAR_BASE + MDL_XBAR_O_MDLXBARG0SEL((uint32_t)output) + (group * XBAR_XBARGSEL_STEP)) &= ~inputMask; }",
+      "registersUsed": [
+        "MDLXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDLXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_clearMindbXbarSourceSelection",
+      "functionArgs": [
+        "output"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t i;\n\n    for (i = 0U; i < 3U; i++)\n    {\n        HWREG(MDLXBAR_BASE + MDL_XBAR_O_MDLXBARG0SEL((uint32_t)output)\n                                 + (i * XBAR_XBARGSEL_STEP)) &= 0U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t i; for (i = 0U; i < 3U; i++) { HWREG(MDLXBAR_BASE + MDL_XBAR_O_MDLXBARG0SEL((uint32_t)output) + (i * XBAR_XBARGSEL_STEP)) &= 0U; } }",
+      "registersUsed": [
+        "MDLXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDLXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_selectIclXbarInputSource",
+      "functionArgs": [
+        "output",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum",
+        "XBAR_IclXbarInputSource"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t group;\n    uint32_t inputMask;\n\n    group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S;\n\n    inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M);\n\n    HWREG(ICLXBAR_BASE + ICL_XBAR_O_ICLXBARG0SEL((uint32_t)output) +\n                                 (group * XBAR_XBARGSEL_STEP)) |= inputMask;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t group; uint32_t inputMask; group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S; inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M); HWREG(ICLXBAR_BASE + ICL_XBAR_O_ICLXBARG0SEL((uint32_t)output) + (group * XBAR_XBARGSEL_STEP)) |= inputMask; }",
+      "registersUsed": [
+        "ICLXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "ICLXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_deselectIclXbarInputSource",
+      "functionArgs": [
+        "output",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum",
+        "XBAR_IclXbarInputSource"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t group;\n    uint32_t inputMask;\n\n    group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S;\n\n    inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M);\n\n    HWREG(ICLXBAR_BASE + ICL_XBAR_O_ICLXBARG0SEL((uint32_t)output) +\n                                 (group * XBAR_XBARGSEL_STEP)) &= ~inputMask;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t group; uint32_t inputMask; group = ((uint32_t)source & XBAR_INPUT_REG_M) >> XBAR_INPUT_REG_S; inputMask = (uint32_t)1U << ((uint32_t)source & XBAR_INPUT_INPUT_M); HWREG(ICLXBAR_BASE + ICL_XBAR_O_ICLXBARG0SEL((uint32_t)output) + (group * XBAR_XBARGSEL_STEP)) &= ~inputMask; }",
+      "registersUsed": [
+        "ICLXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "ICLXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_clearIclXbarSourceSelection",
+      "functionArgs": [
+        "output"
+      ],
+      "functionArgsTypes": [
+        "XBAR_OutputNum"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t i;\n\n    for (i = 0U; i < 3U; i++)\n    {\n        HWREG(ICLXBAR_BASE + ICL_XBAR_O_ICLXBARG0SEL((uint32_t)output)\n                                 + (i * XBAR_XBARGSEL_STEP)) &= 0U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t i; for (i = 0U; i < 3U; i++) { HWREG(ICLXBAR_BASE + ICL_XBAR_O_ICLXBARG0SEL((uint32_t)output) + (i * XBAR_XBARGSEL_STEP)) &= 0U; } }",
+      "registersUsed": [
+        "ICLXBARG0SEL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "ICLXBARG0SEL(i)"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_getInputFlagStatus",
+      "functionArgs": [
+        "inputFlag"
+      ],
+      "functionArgsTypes": [
+        "XBAR_InputFlag"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    uint32_t offset;\n    uint32_t inputMask;\n\n    //\n    // Determine flag register offset.\n    //\n    switch(((uint32_t)inputFlag & XBAR_INPUT_REG_M))\n    {\n        case XBAR_INPUT_FLG_REG_1:\n            offset = XBAR_O_FLG1;\n            break;\n\n        case XBAR_INPUT_FLG_REG_2:\n            offset = XBAR_O_FLG2;\n            break;\n\n        case XBAR_INPUT_FLG_REG_3:\n            offset = XBAR_O_FLG3;\n            break;\n\n        case XBAR_INPUT_FLG_REG_4:\n            offset = XBAR_O_FLG4;\n            break;\n\n        case XBAR_INPUT_FLG_REG_5:\n            offset = XBAR_O_FLG5;\n            break;\n\n        case XBAR_INPUT_FLG_REG_6:\n            offset = XBAR_O_FLG6;\n            break;\n\n        case XBAR_INPUT_FLG_REG_7:\n            offset = XBAR_O_FLG7;\n            break;\n\n        case XBAR_INPUT_FLG_REG_8:\n            offset = XBAR_O_FLG8;\n            break;\n\n        case XBAR_INPUT_FLG_REG_9:\n            offset = XBAR_O_FLG9;\n            break;\n\n        case XBAR_INPUT_FLG_REG_10:\n            offset = XBAR_O_FLG10;\n            break;\n\n        case XBAR_INPUT_FLG_REG_11:\n            offset = XBAR_O_FLG11;\n            break;\n\n        case XBAR_INPUT_FLG_REG_12:\n            offset = XBAR_O_FLG12;\n            break;\n\n        case XBAR_INPUT_FLG_REG_13:\n            offset = XBAR_O_FLG13;\n            break;\n\n        case XBAR_INPUT_FLG_REG_14:\n            offset = XBAR_O_FLG14;\n            break;\n\n        case XBAR_INPUT_FLG_REG_15:\n            offset = XBAR_O_FLG15;\n            break;\n\n        case XBAR_INPUT_FLG_REG_16:\n            offset = XBAR_O_FLG16;\n            break;\n\n        case XBAR_INPUT_FLG_REG_17:\n            offset = XBAR_O_FLG17;\n            break;\n\n        case XBAR_INPUT_FLG_REG_18:\n            offset = XBAR_O_FLG18;\n            break;\n\n        default:\n            //\n            // This should never happen if a valid inputFlag value is used.\n            //\n            offset = 0U;  // but offset 0U is for XBAR_O_FLG1\n            break;\n    }\n\n    //\n    // Get the status of the X-BAR input latch.\n    //\n    inputMask = (uint32_t)1U << ((uint32_t)inputFlag & XBAR_INPUT_INPUT_M);\n\n    return((HWREG(XBAR_BASE + offset) & inputMask) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t offset; uint32_t inputMask; // // Determine flag register offset. // switch(((uint32_t)inputFlag & XBAR_INPUT_REG_M)) { case XBAR_INPUT_FLG_REG_1: offset = XBAR_O_FLG1; break; case XBAR_INPUT_FLG_REG_2: offset = XBAR_O_FLG2; break; case XBAR_INPUT_FLG_REG_3: offset = XBAR_O_FLG3; break; case XBAR_INPUT_FLG_REG_4: offset = XBAR_O_FLG4; break; case XBAR_INPUT_FLG_REG_5: offset = XBAR_O_FLG5; break; case XBAR_INPUT_FLG_REG_6: offset = XBAR_O_FLG6; break; case XBAR_INPUT_FLG_REG_7: offset = XBAR_O_FLG7; break; case XBAR_INPUT_FLG_REG_8: offset = XBAR_O_FLG8; break; case XBAR_INPUT_FLG_REG_9: offset = XBAR_O_FLG9; break; case XBAR_INPUT_FLG_REG_10: offset = XBAR_O_FLG10; break; case XBAR_INPUT_FLG_REG_11: offset = XBAR_O_FLG11; break; case XBAR_INPUT_FLG_REG_12: offset = XBAR_O_FLG12; break; case XBAR_INPUT_FLG_REG_13: offset = XBAR_O_FLG13; break; case XBAR_INPUT_FLG_REG_14: offset = XBAR_O_FLG14; break; case XBAR_INPUT_FLG_REG_15: offset = XBAR_O_FLG15; break; case XBAR_INPUT_FLG_REG_16: offset = XBAR_O_FLG16; break; case XBAR_INPUT_FLG_REG_17: offset = XBAR_O_FLG17; break; case XBAR_INPUT_FLG_REG_18: offset = XBAR_O_FLG18; break; default: // // This should never happen if a valid inputFlag value is used. // offset = 0U; // but offset 0U is for XBAR_O_FLG1 break; } // // Get the status of the X-BAR input latch. // inputMask = (uint32_t)1U << ((uint32_t)inputFlag & XBAR_INPUT_INPUT_M); return((HWREG(XBAR_BASE + offset) & inputMask) != 0U); }",
+      "registersUsed": [
+        "FLG1",
+        "FLG2",
+        "FLG3",
+        "FLG4",
+        "FLG5",
+        "FLG6",
+        "FLG7",
+        "FLG8",
+        "FLG9",
+        "FLG10",
+        "FLG11",
+        "FLG12",
+        "FLG13",
+        "FLG14",
+        "FLG15",
+        "FLG16",
+        "FLG17",
+        "FLG18"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLG1",
+        "FLG2",
+        "FLG3",
+        "FLG4",
+        "FLG5",
+        "FLG6",
+        "FLG7",
+        "FLG8",
+        "FLG9",
+        "FLG10",
+        "FLG11",
+        "FLG12",
+        "FLG13",
+        "FLG14",
+        "FLG15",
+        "FLG16",
+        "FLG17",
+        "FLG18"
+      ]
+    },
+    {
+      "file": "xbar.c",
+      "peripheral": "xbar",
+      "functionName": "XBAR_clearInputFlag",
+      "functionArgs": [
+        "inputFlag"
+      ],
+      "functionArgsTypes": [
+        "XBAR_InputFlag"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t offset;\n    uint32_t inputMask;\n\n    //\n    // Determine flag clear register offset.\n    //\n    switch((uint32_t)inputFlag & XBAR_INPUT_REG_M)\n    {\n        case XBAR_INPUT_FLG_REG_1:\n            offset = XBAR_O_CLR1;\n            break;\n\n        case XBAR_INPUT_FLG_REG_2:\n            offset = XBAR_O_CLR2;\n            break;\n\n        case XBAR_INPUT_FLG_REG_3:\n            offset = XBAR_O_CLR3;\n            break;\n\n        case XBAR_INPUT_FLG_REG_4:\n            offset = XBAR_O_CLR4;\n            break;\n\n        case XBAR_INPUT_FLG_REG_5:\n            offset = XBAR_O_CLR5;\n            break;\n\n        case XBAR_INPUT_FLG_REG_6:\n            offset = XBAR_O_CLR6;\n            break;\n\n        case XBAR_INPUT_FLG_REG_7:\n            offset = XBAR_O_CLR7;\n            break;\n\n        case XBAR_INPUT_FLG_REG_8:\n            offset = XBAR_O_CLR8;\n            break;\n\n        case XBAR_INPUT_FLG_REG_9:\n            offset = XBAR_O_CLR9;\n            break;\n\n        case XBAR_INPUT_FLG_REG_10:\n            offset = XBAR_O_CLR10;\n            break;\n\n        case XBAR_INPUT_FLG_REG_11:\n            offset = XBAR_O_CLR11;\n            break;\n\n        case XBAR_INPUT_FLG_REG_12:\n            offset = XBAR_O_CLR12;\n            break;\n\n        case XBAR_INPUT_FLG_REG_13:\n            offset = XBAR_O_CLR13;\n            break;\n\n        case XBAR_INPUT_FLG_REG_14:\n            offset = XBAR_O_CLR14;\n            break;\n\n        case XBAR_INPUT_FLG_REG_15:\n            offset = XBAR_O_CLR15;\n            break;\n\n        case XBAR_INPUT_FLG_REG_16:\n            offset = XBAR_O_CLR16;\n            break;\n\n        case XBAR_INPUT_FLG_REG_17:\n            offset = XBAR_O_CLR17;\n            break;\n\n        case XBAR_INPUT_FLG_REG_18:\n            offset = XBAR_O_CLR18;\n            break;\n\n        default:\n            //\n            // This should never happen if a valid inputFlag value is used.\n            //\n            offset = 0U;\n            break;\n    }\n\n    //\n    // Set the bit that clears the X-BAR input latch.\n    //\n    inputMask = (uint32_t)1U << ((uint32_t)inputFlag & XBAR_INPUT_INPUT_M);\n    HWREG(XBAR_BASE + offset) = inputMask;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t offset; uint32_t inputMask; // // Determine flag clear register offset. // switch((uint32_t)inputFlag & XBAR_INPUT_REG_M) { case XBAR_INPUT_FLG_REG_1: offset = XBAR_O_CLR1; break; case XBAR_INPUT_FLG_REG_2: offset = XBAR_O_CLR2; break; case XBAR_INPUT_FLG_REG_3: offset = XBAR_O_CLR3; break; case XBAR_INPUT_FLG_REG_4: offset = XBAR_O_CLR4; break; case XBAR_INPUT_FLG_REG_5: offset = XBAR_O_CLR5; break; case XBAR_INPUT_FLG_REG_6: offset = XBAR_O_CLR6; break; case XBAR_INPUT_FLG_REG_7: offset = XBAR_O_CLR7; break; case XBAR_INPUT_FLG_REG_8: offset = XBAR_O_CLR8; break; case XBAR_INPUT_FLG_REG_9: offset = XBAR_O_CLR9; break; case XBAR_INPUT_FLG_REG_10: offset = XBAR_O_CLR10; break; case XBAR_INPUT_FLG_REG_11: offset = XBAR_O_CLR11; break; case XBAR_INPUT_FLG_REG_12: offset = XBAR_O_CLR12; break; case XBAR_INPUT_FLG_REG_13: offset = XBAR_O_CLR13; break; case XBAR_INPUT_FLG_REG_14: offset = XBAR_O_CLR14; break; case XBAR_INPUT_FLG_REG_15: offset = XBAR_O_CLR15; break; case XBAR_INPUT_FLG_REG_16: offset = XBAR_O_CLR16; break; case XBAR_INPUT_FLG_REG_17: offset = XBAR_O_CLR17; break; case XBAR_INPUT_FLG_REG_18: offset = XBAR_O_CLR18; break; default: // // This should never happen if a valid inputFlag value is used. // offset = 0U; break; } // // Set the bit that clears the X-BAR input latch. // inputMask = (uint32_t)1U << ((uint32_t)inputFlag & XBAR_INPUT_INPUT_M); HWREG(XBAR_BASE + offset) = inputMask; }",
+      "registersUsed": [
+        "CLR1",
+        "CLR2",
+        "CLR3",
+        "CLR4",
+        "CLR5",
+        "CLR6",
+        "CLR7",
+        "CLR8",
+        "CLR9",
+        "CLR10",
+        "CLR11",
+        "CLR12",
+        "CLR13",
+        "CLR14",
+        "CLR15",
+        "CLR16",
+        "CLR17",
+        "CLR18"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLR1",
+        "CLR2",
+        "CLR3",
+        "CLR4",
+        "CLR5",
+        "CLR6",
+        "CLR7",
+        "CLR8",
+        "CLR9",
+        "CLR10",
+        "CLR11",
+        "CLR12",
+        "CLR13",
+        "CLR14",
+        "CLR15",
+        "CLR16",
+        "CLR17",
+        "CLR18"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == INPUTXBAR_BASE) ||\n           (base == EPWMXBAR_BASE) ||\n           (base == CLBXBAR_BASE) ||\n           (base == OUTPUTXBAR_BASE) ||\n           (base == MDLXBAR_BASE) ||\n           (base == ICLXBAR_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == INPUTXBAR_BASE) || (base == EPWMXBAR_BASE) || (base == CLBXBAR_BASE) || (base == OUTPUTXBAR_BASE) || (base == MDLXBAR_BASE) || (base == ICLXBAR_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_FLAGS_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR1_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR2_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR3_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR4_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR5_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR6_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR7_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR8_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR9_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR10_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR11_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR12_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR13_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR14_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR15_FLAGS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == OUTPUTXBAR16_FLAGS_BASE_FRAME(0U))\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( ((base & BASE_ADDR_MASK) == OUTPUTXBAR1_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR2_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR3_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR4_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR5_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR6_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR7_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR8_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR9_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR10_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR11_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR12_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR13_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR14_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR15_FLAGS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == OUTPUTXBAR16_FLAGS_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_isGPIOPinValid",
+      "functionArgs": [
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n            (pin <= 105U) || (pin == 127U)    || // GPIO\n            ((pin >= 219U) && (pin <= 223U)) || // GPIO\n            ((pin >= 160U) && (pin <= 213U)) || // AIO\n            ((pin >= 224U) && (pin <= 249U))  // AGPIO\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (pin <= 105U) || (pin == 127U) || // GPIO ((pin >= 219U) && (pin <= 223U)) || // GPIO ((pin >= 160U) && (pin <= 213U)) || // AIO ((pin >= 224U) && (pin <= 249U)) // AGPIO ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_setInputPin",
+      "functionArgs": [
+        "base",
+        "input",
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_InputNum",
+        "uint16_t"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.XBAR_setInputPin\"))) static inline void",
+      "functionContent": "{\n    //\n    // Check the argument.\n    //\n    ASSERT(base == INPUTXBAR_BASE);\n    ASSERT(XBAR_isGPIOPinValid(pin) ||\n          ((pin >= XBAR_NON_GPIO_MIN_CNT) && (pin <= XBAR_NON_GPIO_MAX_CNT)));\n\n    //\n    // Write the requested pin to the appropriate input select register.\n    //\n    HWREGH(base + INPUT_XBAR_O_INPUTSELECT((uint32_t)input)) = pin;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the argument. // ASSERT(base == INPUTXBAR_BASE); ASSERT(XBAR_isGPIOPinValid(pin) || ((pin >= XBAR_NON_GPIO_MIN_CNT) && (pin <= XBAR_NON_GPIO_MAX_CNT))); // // Write the requested pin to the appropriate input select register. // HWREGH(base + INPUT_XBAR_O_INPUTSELECT((uint32_t)input)) = pin; }",
+      "registersUsed": [
+        "INPUTSELECT(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INPUTSELECT(i)"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_lockInput",
+      "functionArgs": [
+        "base",
+        "input"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_InputNum"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.XBAR_lockInput\"))) static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(base == INPUTXBAR_BASE);\n\n    //\n    // lock the input in the INPUTSELECTLOCK register.\n    //\n    if((uint16_t)input < 32U)\n    {\n        HWREG(base + INPUT_XBAR_O_INPUTSELECTLOCK1) |= 1UL << (uint16_t)input;\n    }\n    else\n    {\n        HWREG(base + INPUT_XBAR_O_INPUTSELECTLOCK2) |= 1UL <<\n                                                    ((uint16_t)input - 32U);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(base == INPUTXBAR_BASE); // // lock the input in the INPUTSELECTLOCK register. // if((uint16_t)input < 32U) { HWREG(base + INPUT_XBAR_O_INPUTSELECTLOCK1) |= 1UL << (uint16_t)input; } else { HWREG(base + INPUT_XBAR_O_INPUTSELECTLOCK2) |= 1UL << ((uint16_t)input - 32U); } }",
+      "registersUsed": [
+        "INPUTSELECT(i)",
+        "INPUTSELECTLOCK1",
+        "INPUTSELECTLOCK2"
+      ],
+      "registersUsedMatchingBifield": [
+        "INPUTSELECT(i)",
+        "INPUTSELECTLOCK1",
+        "INPUTSELECTLOCK2"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_getOutputSignalStatus",
+      "functionArgs": [
+        "base",
+        "output"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_OutputNum"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(base == OUTPUTXBAR_BASE);\n\n    uint32_t flagsBase;\n    flagsBase = OUTPUTXBAR1_FLAGS_BASE + ((uint32_t)output *\n                                                 XBAR_OUTPUTXBAR_FLAGS_OFFSET);\n\n    ASSERT(XBAR_FLAGS_isBaseValid(flagsBase));\n\n    //\n    // Get the status of the Output X-BAR output signal.\n    //\n    return(HWREGB(flagsBase + OUTPUT_XBAR_O_OUTPUTXBARSTATUS) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(base == OUTPUTXBAR_BASE); uint32_t flagsBase; flagsBase = OUTPUTXBAR1_FLAGS_BASE + ((uint32_t)output * XBAR_OUTPUTXBAR_FLAGS_OFFSET); ASSERT(XBAR_FLAGS_isBaseValid(flagsBase)); // // Get the status of the Output X-BAR output signal. // return(HWREGB(flagsBase + OUTPUT_XBAR_O_OUTPUTXBARSTATUS) != 0U); }",
+      "registersUsed": [
+        "OUTPUTXBARSTATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTXBARSTATUS"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_getOutputLatchStatus",
+      "functionArgs": [
+        "base",
+        "output"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_OutputNum"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(base == OUTPUTXBAR_BASE);\n\n    uint32_t flagsBase;\n    flagsBase = OUTPUTXBAR1_FLAGS_BASE + ((uint32_t)output *\n                                                 XBAR_OUTPUTXBAR_FLAGS_OFFSET);\n\n    ASSERT(XBAR_FLAGS_isBaseValid(flagsBase));\n\n    //\n    // Get the status of the Output X-BAR output latch flag.\n    //\n    return(HWREGB(flagsBase + OUTPUT_XBAR_O_OUTPUTXBARFLAG) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(base == OUTPUTXBAR_BASE); uint32_t flagsBase; flagsBase = OUTPUTXBAR1_FLAGS_BASE + ((uint32_t)output * XBAR_OUTPUTXBAR_FLAGS_OFFSET); ASSERT(XBAR_FLAGS_isBaseValid(flagsBase)); // // Get the status of the Output X-BAR output latch flag. // return(HWREGB(flagsBase + OUTPUT_XBAR_O_OUTPUTXBARFLAG) != 0U); }",
+      "registersUsed": [
+        "OUTPUTXBARFLAG"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTXBARFLAG"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_clearOutputLatch",
+      "functionArgs": [
+        "base",
+        "output"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_OutputNum"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(base == OUTPUTXBAR_BASE);\n\n    uint32_t flagsBase;\n    flagsBase = OUTPUTXBAR1_FLAGS_BASE + ((uint32_t)output *\n                                                 XBAR_OUTPUTXBAR_FLAGS_OFFSET);\n\n    ASSERT(XBAR_FLAGS_isBaseValid(flagsBase));\n\n    //\n    // Set the bit that clears the corresponding OUTPUT FLAG.\n    //\n    HWREGB(flagsBase + OUTPUT_XBAR_O_OUTPUTXBARFLAGCLEAR) =\n                                        OUTPUT_XBAR_OUTPUTXBARFLAGCLEAR_FLG;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(base == OUTPUTXBAR_BASE); uint32_t flagsBase; flagsBase = OUTPUTXBAR1_FLAGS_BASE + ((uint32_t)output * XBAR_OUTPUTXBAR_FLAGS_OFFSET); ASSERT(XBAR_FLAGS_isBaseValid(flagsBase)); // // Set the bit that clears the corresponding OUTPUT FLAG. // HWREGB(flagsBase + OUTPUT_XBAR_O_OUTPUTXBARFLAGCLEAR) = OUTPUT_XBAR_OUTPUTXBARFLAGCLEAR_FLG; }",
+      "registersUsed": [
+        "OUTPUTXBARFLAG",
+        "OUTPUTXBARFLAGCLEAR"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTXBARFLAG",
+        "OUTPUTXBARFLAGCLEAR"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_forceOutputLatch",
+      "functionArgs": [
+        "base",
+        "output"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_OutputNum"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(base == OUTPUTXBAR_BASE);\n\n    uint32_t flagsBase;\n    flagsBase = OUTPUTXBAR1_FLAGS_BASE + ((uint32_t)output *\n                                                 XBAR_OUTPUTXBAR_FLAGS_OFFSET);\n\n    ASSERT(XBAR_FLAGS_isBaseValid(flagsBase));\n\n    //\n    // Set the bit that forces the corresponding OUTPUTLATCH bit.\n    //\n    HWREGB(flagsBase + OUTPUT_XBAR_O_OUTPUTXBARFLAGFORCE) =\n                                    OUTPUT_XBAR_OUTPUTXBARFLAGFORCE_FLG;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(base == OUTPUTXBAR_BASE); uint32_t flagsBase; flagsBase = OUTPUTXBAR1_FLAGS_BASE + ((uint32_t)output * XBAR_OUTPUTXBAR_FLAGS_OFFSET); ASSERT(XBAR_FLAGS_isBaseValid(flagsBase)); // // Set the bit that forces the corresponding OUTPUTLATCH bit. // HWREGB(flagsBase + OUTPUT_XBAR_O_OUTPUTXBARFLAGFORCE) = OUTPUT_XBAR_OUTPUTXBARFLAGFORCE_FLG; }",
+      "registersUsed": [
+        "OUTPUTXBARFLAG",
+        "OUTPUTXBARFLAGFORCE"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTXBARFLAG",
+        "OUTPUTXBARFLAGFORCE"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_invertOutputSignalBeforeLatch",
+      "functionArgs": [
+        "base",
+        "output",
+        "invert"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_OutputNum",
+        "bool"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.XBAR_invertOutputSignalBeforeLatch\"))) static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(base == OUTPUTXBAR_BASE);\n\n    //\n    // Set or clear the polarity setting bit based on the invert parameter.\n    //\n    if(invert)\n    {\n        HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBARFLAGINVERT) |=\n                0x1U << ((uint16_t)output);\n    }\n    else\n    {\n        HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBARFLAGINVERT) &=\n                ~(0x1U << ((uint16_t)output));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(base == OUTPUTXBAR_BASE); // // Set or clear the polarity setting bit based on the invert parameter. // if(invert) { HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBARFLAGINVERT) |= 0x1U << ((uint16_t)output); } else { HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBARFLAGINVERT) &= ~(0x1U << ((uint16_t)output)); } }",
+      "registersUsed": [
+        "OUTPUTXBARFLAG",
+        "OUTPUTXBARFLAGINVERT"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTXBARFLAG",
+        "OUTPUTXBARFLAGINVERT"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_setOutputLatchMode",
+      "functionArgs": [
+        "base",
+        "output",
+        "enable"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_OutputNum",
+        "bool"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.XBAR_setOutputLatchMode\"))) static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(base == OUTPUTXBAR_BASE);\n\n    //\n    // Set or clear the latch setting bit based on the enable parameter.\n    //\n    if(enable)\n    {\n        HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBAROUTLATCH) |=\n               0x1U << ((uint16_t)output);\n    }\n    else\n    {\n        HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBAROUTLATCH) &=\n               ~(0x1U << ((uint16_t)output));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(base == OUTPUTXBAR_BASE); // // Set or clear the latch setting bit based on the enable parameter. // if(enable) { HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBAROUTLATCH) |= 0x1U << ((uint16_t)output); } else { HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBAROUTLATCH) &= ~(0x1U << ((uint16_t)output)); } }",
+      "registersUsed": [
+        "OUTPUTXBAROUTLATCH"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTXBAROUTLATCH"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_selectOutputStretchSource",
+      "functionArgs": [
+        "base",
+        "output",
+        "selectStretched"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_OutputNum",
+        "bool"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.XBAR_selectOutputStretchSource\"))) static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(base == OUTPUTXBAR_BASE);\n\n    //\n    // Set or clear the stretched pulse selection bit based on the\n    // selectStretched parameter.\n    //\n    if(selectStretched)\n    {\n        HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBAROUTSTRETCH) |=\n               0x1U << ((uint16_t)output);\n    }\n    else\n    {\n        HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBAROUTSTRETCH) &=\n               ~(0x1U << ((uint16_t)output));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(base == OUTPUTXBAR_BASE); // // Set or clear the stretched pulse selection bit based on the // selectStretched parameter. // if(selectStretched) { HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBAROUTSTRETCH) |= 0x1U << ((uint16_t)output); } else { HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBAROUTSTRETCH) &= ~(0x1U << ((uint16_t)output)); } }",
+      "registersUsed": [
+        "OUTPUTXBAROUTSTRETCH"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTXBAROUTSTRETCH"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_selectOutputStretchLength",
+      "functionArgs": [
+        "base",
+        "output",
+        "length"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_OutputNum",
+        "XBAR_OutputStretchLength"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.XBAR_selectOutputStretchLength\"))) static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(base == OUTPUTXBAR_BASE);\n\n    //\n    // Set or clear the length select bit based on the length parameter.\n    //\n    if(length == XBAR_OUTPUT_STRETCH_32SYSCLK)\n    {\n        HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBAROUTLENGTH) |=\n               0x1U << ((uint16_t)output);\n    }\n    else\n    {\n        HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBAROUTLENGTH) &=\n               ~(0x1U << ((uint16_t)output));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(base == OUTPUTXBAR_BASE); // // Set or clear the length select bit based on the length parameter. // if(length == XBAR_OUTPUT_STRETCH_32SYSCLK) { HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBAROUTLENGTH) |= 0x1U << ((uint16_t)output); } else { HWREGH(base + OUTPUT_XBAR_O_OUTPUTXBAROUTLENGTH) &= ~(0x1U << ((uint16_t)output)); } }",
+      "registersUsed": [
+        "OUTPUTXBAROUTLENGTH"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUTXBAROUTLENGTH"
+      ]
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_invertOutputSignal",
+      "functionArgs": [
+        "base",
+        "output",
+        "invert"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "XBAR_OutputNum",
+        "bool"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.XBAR_invertOutputSignal\"))) static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(XBAR_isBaseValid(base));\n\n    //\n    // Set or clear the polarity setting bit based on the invert parameter.\n    //\n    if(invert)\n    {\n        HWREGH(base + XBAR_XBAROUTINVERT) |= 0x1U << ((uint16_t)output);\n    }\n    else\n    {\n        HWREGH(base + XBAR_XBAROUTINVERT) &= ~(0x1U << ((uint16_t)output));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(XBAR_isBaseValid(base)); // // Set or clear the polarity setting bit based on the invert parameter. // if(invert) { HWREGH(base + XBAR_XBAROUTINVERT) |= 0x1U << ((uint16_t)output); } else { HWREGH(base + XBAR_XBAROUTINVERT) &= ~(0x1U << ((uint16_t)output)); } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "xbar.h",
+      "peripheral": "xbar",
+      "functionName": "XBAR_lockConfiguration",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.XBAR_lockConfiguration\"))) static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(XBAR_isBaseValid(base));\n\n    //\n    // Lock the Output X-BAR with the LOCK register.\n    // Write key 0x5A5A to the KEY bits and 1 to LOCK bit.\n    //\n\n    HWREG(base + XBAR_XBARLOCK_OFFSET) =\n         ((uint32_t)0x5A5A << XBAR_XBARLOCK_KEY_S) |\n         (uint32_t)XBAR_XBARLOCK_LOCK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(XBAR_isBaseValid(base)); // // Lock the Output X-BAR with the LOCK register. // Write key 0x5A5A to the KEY bits and 1 to LOCK bit. // HWREG(base + XBAR_XBARLOCK_OFFSET) = ((uint32_t)0x5A5A << XBAR_XBARLOCK_KEY_S) | (uint32_t)XBAR_XBARLOCK_LOCK; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    }
+  ]
+}

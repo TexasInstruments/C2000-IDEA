@@ -1,0 +1,1521 @@
+{
+  "name": "esm",
+  "functions": [
+    {
+      "file": "esm.c",
+      "peripheral": "esm",
+      "functionName": "ESM_configErrorEvent",
+      "functionArgs": [
+        "base",
+        "*configParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constESM_ConfigParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Calculate the group number & event number from the global event number.\n    //\n    uint32_t groupNum = configParams->event / 32U;\n    uint32_t eventNum = configParams->event % 32U;\n\n    //\n    // Set the Interrupt enable bit.\n    //\n    if(configParams->enableInterrupt == true)\n    {\n        HWREG(base + ESM_CPU_O_INTR_EN_SET(groupNum)) = (uint32_t)1U << eventNum;\n    }\n\n    //\n    // Set the interrupt priority level.\n    //\n    if(configParams->interruptPriorityLevel ==\n                                        ESM_INTERRUPT_PRIORITY_LEVEL_HIGH)\n    {\n        HWREG(base + ESM_CPU_O_INT_PRIO(groupNum)) |= 1U << eventNum;\n    }\n    else\n    {\n        HWREG(base + ESM_CPU_O_INT_PRIO(groupNum)) &= ~(1U << eventNum);\n    }\n\n    //\n    // Set the influence on the Error pin.\n    //\n    if(configParams->enableInfluenceOnErrorPin == true)\n    {\n        HWREG(base + ESM_CPU_O_PIN_EN_SET(groupNum)) = (uint32_t)1U << eventNum;\n    }\n    else\n    {\n        HWREG(base + ESM_CPU_O_PIN_EN_CLR(groupNum)) = (uint32_t)1U << eventNum;\n    }\n\n    //\n    // Set the influemce on the Critical priority interrupt.\n    //\n    if(configParams->enableCriticalPriorityInterruptInfluence == true)\n    {\n        HWREG(base + ESM_CPU_O_CRIT_EN_SET(groupNum)) = (uint32_t)1U << eventNum;\n    }\n    else\n    {\n        HWREG(base + ESM_CPU_O_CRIT_EN_CLR(groupNum)) = (uint32_t)1U << eventNum;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(ESM_isBaseValid(base)); // // Calculate the group number & event number from the global event number. // uint32_t groupNum = configParams->event / 32U; uint32_t eventNum = configParams->event % 32U; // // Set the Interrupt enable bit. // if(configParams->enableInterrupt == true) { HWREG(base + ESM_CPU_O_INTR_EN_SET(groupNum)) = (uint32_t)1U << eventNum; } // // Set the interrupt priority level. // if(configParams->interruptPriorityLevel == ESM_INTERRUPT_PRIORITY_LEVEL_HIGH) { HWREG(base + ESM_CPU_O_INT_PRIO(groupNum)) |= 1U << eventNum; } else { HWREG(base + ESM_CPU_O_INT_PRIO(groupNum)) &= ~(1U << eventNum); } // // Set the influence on the Error pin. // if(configParams->enableInfluenceOnErrorPin == true) { HWREG(base + ESM_CPU_O_PIN_EN_SET(groupNum)) = (uint32_t)1U << eventNum; } else { HWREG(base + ESM_CPU_O_PIN_EN_CLR(groupNum)) = (uint32_t)1U << eventNum; } // // Set the influemce on the Critical priority interrupt. // if(configParams->enableCriticalPriorityInterruptInfluence == true) { HWREG(base + ESM_CPU_O_CRIT_EN_SET(groupNum)) = (uint32_t)1U << eventNum; } else { HWREG(base + ESM_CPU_O_CRIT_EN_CLR(groupNum)) = (uint32_t)1U << eventNum; } }",
+      "registersUsed": [
+        "INTR_EN_SET(i)",
+        "INT_PRIO(i)",
+        "PIN_EN_SET(i)",
+        "PIN_EN_CLR(i)",
+        "CRIT_EN_SET(i)",
+        "CRIT_EN_CLR(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTR_EN_SET(i)",
+        "INT_PRIO(i)",
+        "PIN_EN_SET(i)",
+        "PIN_EN_CLR(i)",
+        "CRIT_EN_SET(i)",
+        "CRIT_EN_CLR(i)"
+      ]
+    },
+    {
+      "file": "esm.c",
+      "peripheral": "esm",
+      "functionName": "ESM_setErrorPinCounterPreload",
+      "functionArgs": [
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Set the preload value.\n    //\n    HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CNTR_PRE) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the preload value. // HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CNTR_PRE) = value; }",
+      "registersUsed": [
+        "PIN_CNTR",
+        "PIN_CNTR_PRE"
+      ],
+      "registersUsedMatchingBifield": [
+        "PIN_CNTR",
+        "PIN_CNTR_PRE"
+      ]
+    },
+    {
+      "file": "esm.c",
+      "peripheral": "esm",
+      "functionName": "ESM_setWatchdogCounterPreload",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE));\n\n    //\n    // Set the preload value.\n    //\n    HWREG(base + ESM_CPU_O_HI_PRI_WD_CNTR_PRE) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE)); // // Set the preload value. // HWREG(base + ESM_CPU_O_HI_PRI_WD_CNTR_PRE) = value; }",
+      "registersUsed": [
+        "HI_PRI",
+        "HI",
+        "HI_PRI_WD_CNTR",
+        "HI_PRI_WD_CNTR_PRE"
+      ],
+      "registersUsedMatchingBifield": [
+        "HI_PRI",
+        "HI",
+        "HI_PRI_WD_CNTR",
+        "HI_PRI_WD_CNTR_PRE"
+      ]
+    },
+    {
+      "file": "esm.c",
+      "peripheral": "esm",
+      "functionName": "ESM_setPWMCounterPreload",
+      "functionArgs": [
+        "highValue",
+        "lowValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(highValue <= ESM_SYS_PWMH_PIN_CNTR_PRE_COUNT_M);\n    ASSERT(lowValue <= ESM_SYS_PWML_PIN_CNTR_PRE_COUNT_M);\n\n    //\n    // Set the PWM period value\n    //\n    HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PWMH_PIN_CNTR_PRE) = highValue;\n    HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PWML_PIN_CNTR_PRE) = lowValue;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(highValue <= ESM_SYS_PWMH_PIN_CNTR_PRE_COUNT_M); ASSERT(lowValue <= ESM_SYS_PWML_PIN_CNTR_PRE_COUNT_M); // // Set the PWM period value // HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PWMH_PIN_CNTR_PRE) = highValue; HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PWML_PIN_CNTR_PRE) = lowValue; }",
+      "registersUsed": [
+        "PWMH_PIN_CNTR",
+        "PWMH_PIN_CNTR_PRE",
+        "PWML_PIN_CNTR",
+        "PWML_PIN_CNTR_PRE"
+      ],
+      "registersUsedMatchingBifield": [
+        "PWMH_PIN_CNTR",
+        "PWMH_PIN_CNTR_PRE",
+        "PWML_PIN_CNTR",
+        "PWML_PIN_CNTR_PRE"
+      ]
+    },
+    {
+      "file": "esm.c",
+      "peripheral": "esm",
+      "functionName": "ESM_configErrorPin",
+      "functionArgs": [
+        "*configParams"
+      ],
+      "functionArgsTypes": [
+        "constESM_ErrorPinConfigParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Configure the operation mode.\n    //\n    HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) =\n                       (uint8_t)((uint8_t)(HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) &\n                        ~(ESM_SYS_PIN_CTRL_KEY_M)) |\n                       ((uint8_t)configParams->mode << ESM_SYS_PIN_CTRL_KEY_S));\n\n    //\n    // Configure the ESM error output pin mode\n    //\n    HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) =\n                (HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) &\n                ~(ESM_SYS_PIN_CTRL_PWM_EN_M)) |\n                ((uint32_t)configParams->pinMode << ESM_SYS_PIN_CTRL_PWM_EN_S);\n\n    //\n    // Set the polarity of the Level mode\n    //\n    HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) =\n            (HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) &\n            ~(ESM_SYS_PIN_CTRL_POLARITY_M)) |\n            ((uint32_t)configParams->polarity << ESM_SYS_PIN_CTRL_POLARITY_S);\n\n    if(configParams->enableErrorPinMonitor)\n    {\n        //\n        // Enable the Error pin monitor.\n        //\n        HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_CFG) =\n                                                ESM_ERROR_PIN_MONITOR_ENABLE;\n    }\n    else\n    {\n        //\n        // Disable the Error pin monitor.\n        //\n        HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_CFG) =\n                                            ESM_ERROR_PIN_MONITOR_DISABLE;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Configure the operation mode. // HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) = (uint8_t)((uint8_t)(HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) & ~(ESM_SYS_PIN_CTRL_KEY_M)) | ((uint8_t)configParams->mode << ESM_SYS_PIN_CTRL_KEY_S)); // // Configure the ESM error output pin mode // HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) = (HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) & ~(ESM_SYS_PIN_CTRL_PWM_EN_M)) | ((uint32_t)configParams->pinMode << ESM_SYS_PIN_CTRL_PWM_EN_S); // // Set the polarity of the Level mode // HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) = (HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) & ~(ESM_SYS_PIN_CTRL_POLARITY_M)) | ((uint32_t)configParams->polarity << ESM_SYS_PIN_CTRL_POLARITY_S); if(configParams->enableErrorPinMonitor) { // // Enable the Error pin monitor. // HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_CFG) = ESM_ERROR_PIN_MONITOR_ENABLE; } else { // // Disable the Error pin monitor. // HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_CFG) = ESM_ERROR_PIN_MONITOR_DISABLE; } }",
+      "registersUsed": [
+        "PIN_CTRL",
+        "ERRPIN_MON_CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "PIN_CTRL",
+        "ERRPIN_MON_CFG"
+      ]
+    },
+    {
+      "file": "esm.c",
+      "peripheral": "esm",
+      "functionName": "ESM_config",
+      "functionArgs": [
+        "base",
+        "event",
+        "configType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_EventMap",
+        "ESM_ConfigType"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Calculate the group number & event number from the global event number.\n    //\n    uint32_t groupNum = (uint32_t)event / 32U;\n    uint32_t eventNum = (uint32_t)event % 32U;\n\n    //\n    // Set the Interrupt enable bit\n    //\n    HWREG(base + ESM_CPU_O_INTR_EN_SET(groupNum)) = (uint32_t)1U << eventNum;\n\n    switch(configType)\n    {\n        case ESM_CONFIG_LOW_PRIORITY_INTERRUPT:\n            //\n            // Configure Low priority interrupt\n            //\n            HWREG(base + ESM_CPU_O_INT_PRIO(groupNum)) &= ~(1U << eventNum);\n            break;\n\n        case ESM_CONFIG_NMI:\n            //\n            // Configure NMI\n            //\n            ASSERT(!(base == ESMSYSTEM_BASE));\n            HWREG(base + ESM_CPU_O_INT_PRIO(groupNum)) |= 1U << eventNum;\n            break;\n\n        case ESM_CONFIG_CRITICAL_PRIORITY_INTERRUPT:\n            //\n            // Configure Critical priority interrupt\n            //\n            HWREG(base + ESM_CPU_O_CRIT_EN_SET(groupNum)) = (uint32_t)1U << eventNum;\n            break;\n\n        case ESM_CONFIG_ERROR_PIN:\n            //\n            // Configure influence on Error Pin\n            //\n            ASSERT(base == ESMSYSTEM_BASE);\n            HWREG(base + ESM_CPU_O_PIN_EN_SET(groupNum)) = (uint32_t)1U << eventNum;\n            break;\n\n        default:\n            ASSERT((bool)false);\n            break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(ESM_isBaseValid(base)); // // Calculate the group number & event number from the global event number. // uint32_t groupNum = (uint32_t)event / 32U; uint32_t eventNum = (uint32_t)event % 32U; // // Set the Interrupt enable bit // HWREG(base + ESM_CPU_O_INTR_EN_SET(groupNum)) = (uint32_t)1U << eventNum; switch(configType) { case ESM_CONFIG_LOW_PRIORITY_INTERRUPT: // // Configure Low priority interrupt // HWREG(base + ESM_CPU_O_INT_PRIO(groupNum)) &= ~(1U << eventNum); break; case ESM_CONFIG_NMI: // // Configure NMI // ASSERT(!(base == ESMSYSTEM_BASE)); HWREG(base + ESM_CPU_O_INT_PRIO(groupNum)) |= 1U << eventNum; break; case ESM_CONFIG_CRITICAL_PRIORITY_INTERRUPT: // // Configure Critical priority interrupt // HWREG(base + ESM_CPU_O_CRIT_EN_SET(groupNum)) = (uint32_t)1U << eventNum; break; case ESM_CONFIG_ERROR_PIN: // // Configure influence on Error Pin // ASSERT(base == ESMSYSTEM_BASE); HWREG(base + ESM_CPU_O_PIN_EN_SET(groupNum)) = (uint32_t)1U << eventNum; break; default: ASSERT((bool)false); break; } }",
+      "registersUsed": [
+        "INTR_EN_SET(i)",
+        "INT_PRIO(i)",
+        "PIN_EN_SET(i)",
+        "CRIT_EN_SET(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTR_EN_SET(i)",
+        "INT_PRIO(i)",
+        "PIN_EN_SET(i)",
+        "CRIT_EN_SET(i)"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           ((base & BASE_ADDR_MASK) == ESMCPU1_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == ESMCPU2_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == ESMCPU3_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == ESMSYSTEM_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == ESMSAFETYAGG_BASE_FRAME(0U))\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( ((base & BASE_ADDR_MASK) == ESMCPU1_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == ESMCPU2_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == ESMCPU3_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == ESMSYSTEM_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == ESMSAFETYAGG_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_triggerSoftReset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Set the soft reset bits.\n    //\n    HWREGB(base + ESM_CPU_O_SFT_RST) = 0xFU;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(ESM_isBaseValid(base)); // // Set the soft reset bits. // HWREGB(base + ESM_CPU_O_SFT_RST) = 0xFU; }",
+      "registersUsed": [
+        "SFT_RST"
+      ],
+      "registersUsedMatchingBifield": [
+        "SFT_RST"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getLastResetSource",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline ESM_ResetSource",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Set the soft reset bits.\n    //\n    return((ESM_ResetSource)((HWREG(base + ESM_CPU_O_INFO) &\n                     ESM_CPU_INFO_LAST_RESET) == ESM_CPU_INFO_LAST_RESET));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(ESM_isBaseValid(base)); // // Set the soft reset bits. // return((ESM_ResetSource)((HWREG(base + ESM_CPU_O_INFO) & ESM_CPU_INFO_LAST_RESET) == ESM_CPU_INFO_LAST_RESET)); }",
+      "registersUsed": [
+        "INFO"
+      ],
+      "registersUsedMatchingBifield": [
+        "INFO"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_enableGlobal",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Global enable.\n    //\n    HWREGB(base + ESM_CPU_O_EN) = ESM_GLOBAL_ENABLE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Global enable. // HWREGB(base + ESM_CPU_O_EN) = ESM_GLOBAL_ENABLE; }",
+      "registersUsed": [
+        "EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "EN"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_disableGlobal",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Disable all interrupts\n    //\n    HWREGB(base + ESM_CPU_O_EN) = ESM_GLOBAL_DISABLE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Disable all interrupts // HWREGB(base + ESM_CPU_O_EN) = ESM_GLOBAL_DISABLE; }",
+      "registersUsed": [
+        "EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "EN"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_writeEOIVector",
+      "functionArgs": [
+        "base",
+        "vector"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_EOIVector"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Write the vector to the EOI register.\n    //\n    HWREGH(base + ESM_CPU_O_EOI) = (uint16_t)vector;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Write the vector to the EOI register. // HWREGH(base + ESM_CPU_O_EOI) = (uint16_t)vector; }",
+      "registersUsed": [
+        "EOI"
+      ],
+      "registersUsedMatchingBifield": [
+        "EOI"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_ackInterrupt",
+      "functionArgs": [
+        "base",
+        "interruptType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_InterruptType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Write the EOI vector to the EOI register based on the interrupt type.\n    //\n    HWREGH(base + ESM_CPU_O_EOI) = (uint16_t)interruptType;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Write the EOI vector to the EOI register based on the interrupt type. // HWREGH(base + ESM_CPU_O_EOI) = (uint16_t)interruptType; }",
+      "registersUsed": [
+        "EOI"
+      ],
+      "registersUsedMatchingBifield": [
+        "EOI"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_setErrorMode",
+      "functionArgs": [
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "ESM_OperationMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Configure the operation mode.\n    //\n    HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) =\n                                (uint8_t)((HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) &\n                                ~(ESM_SYS_PIN_CTRL_KEY_M)) |\n                                (uint8_t)((uint8_t)mode << ESM_SYS_PIN_CTRL_KEY_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Configure the operation mode. // HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) = (uint8_t)((HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) & ~(ESM_SYS_PIN_CTRL_KEY_M)) | (uint8_t)((uint8_t)mode << ESM_SYS_PIN_CTRL_KEY_S)); }",
+      "registersUsed": [
+        "PIN_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PIN_CTRL"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_clearErrorPin",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Configure the operation mode.\n    //\n    HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) =\n                         (uint8_t)((HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) &\n                         ~(ESM_SYS_PIN_CTRL_KEY_M)) |\n                         ((uint8_t)ESM_CLEAR_EVENT << ESM_SYS_PIN_CTRL_KEY_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Configure the operation mode. // HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) = (uint8_t)((HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) & ~(ESM_SYS_PIN_CTRL_KEY_M)) | ((uint8_t)ESM_CLEAR_EVENT << ESM_SYS_PIN_CTRL_KEY_S)); }",
+      "registersUsed": [
+        "PIN_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PIN_CTRL"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_setOutputPinMode",
+      "functionArgs": [
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "ESM_OutputPinMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Configure the ESM error output pin mode\n    //\n    HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) =\n                                (HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) &\n                                ~(ESM_SYS_PIN_CTRL_PWM_EN_M)) |\n                                ((uint32_t)mode << ESM_SYS_PIN_CTRL_PWM_EN_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Configure the ESM error output pin mode // HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) = (HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) & ~(ESM_SYS_PIN_CTRL_PWM_EN_M)) | ((uint32_t)mode << ESM_SYS_PIN_CTRL_PWM_EN_S); }",
+      "registersUsed": [
+        "PIN_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PIN_CTRL"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_setLevelModePolarity",
+      "functionArgs": [
+        "polarity"
+      ],
+      "functionArgsTypes": [
+        "ESM_LevelModePolarity"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the polarity of the Level mode\n    //\n    HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) =\n                        (HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) &\n                        ~(ESM_SYS_PIN_CTRL_POLARITY_M)) |\n                        ((uint32_t)polarity << ESM_SYS_PIN_CTRL_POLARITY_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the polarity of the Level mode // HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) = (HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CTRL) & ~(ESM_SYS_PIN_CTRL_POLARITY_M)) | ((uint32_t)polarity << ESM_SYS_PIN_CTRL_POLARITY_S); }",
+      "registersUsed": [
+        "PIN_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PIN_CTRL"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getErrorPinStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Return the status of the Error pin.\n    //\n    return(HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_STS) == ESM_SYS_PIN_STS_VAL);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Return the status of the Error pin. // return(HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_PIN_STS) == ESM_SYS_PIN_STS_VAL); }",
+      "registersUsed": [
+        "PIN_STS"
+      ],
+      "registersUsedMatchingBifield": [
+        "PIN_STS"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_enableHighPriorityWatchdog",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE));\n\n    //\n    // Enable the high priority watchdog\n    //\n    HWREGB(base + ESM_CPU_O_HI_PRI_WD_CFG) = ESM_WATCHDOG_ENABLE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE)); // // Enable the high priority watchdog // HWREGB(base + ESM_CPU_O_HI_PRI_WD_CFG) = ESM_WATCHDOG_ENABLE; }",
+      "registersUsed": [
+        "HI_PRI",
+        "HI",
+        "HI_PRI_WD_CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "HI_PRI",
+        "HI",
+        "HI_PRI_WD_CFG"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_disableHighPriorityWatchdog",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE));\n\n    //\n    // Disable the high priority watchdog\n    //\n    HWREGB(base + ESM_CPU_O_HI_PRI_WD_CFG) = ESM_WATCHDOG_DISABLE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE)); // // Disable the high priority watchdog // HWREGB(base + ESM_CPU_O_HI_PRI_WD_CFG) = ESM_WATCHDOG_DISABLE; }",
+      "registersUsed": [
+        "HI_PRI",
+        "HI",
+        "HI_PRI_WD_CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "HI_PRI",
+        "HI",
+        "HI_PRI_WD_CFG"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_enableHighPriorityWatchdogFreerun",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE));\n\n    //\n    // Enable the high priority watchdog\n    //\n    HWREGH(base + ESM_CPU_O_HI_PRI_WD_CFG) =\n                    (uint16_t)((HWREGH(base + ESM_CPU_O_HI_PRI_WD_CFG) &\n                    ~(ESM_CPU_HI_PRI_WD_CFG_EMU_FREE_M)) |\n                    ((uint16_t)ESM_WATCHDOG_ENABLE <<\n                    ESM_CPU_HI_PRI_WD_CFG_EMU_FREE_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE)); // // Enable the high priority watchdog // HWREGH(base + ESM_CPU_O_HI_PRI_WD_CFG) = (uint16_t)((HWREGH(base + ESM_CPU_O_HI_PRI_WD_CFG) & ~(ESM_CPU_HI_PRI_WD_CFG_EMU_FREE_M)) | ((uint16_t)ESM_WATCHDOG_ENABLE << ESM_CPU_HI_PRI_WD_CFG_EMU_FREE_S)); }",
+      "registersUsed": [
+        "HI_PRI",
+        "HI",
+        "HI_PRI_WD_CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "HI_PRI",
+        "HI",
+        "HI_PRI_WD_CFG"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_disableHighPriorityWatchdogFreerun",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE));\n\n    //\n    // Enable the high priority watchdog\n    //\n    HWREGH(base + ESM_CPU_O_HI_PRI_WD_CFG) =\n                    (uint16_t)((HWREGH(base + ESM_CPU_O_HI_PRI_WD_CFG) &\n                    ~(ESM_CPU_HI_PRI_WD_CFG_EMU_FREE_M)) |\n                    ((uint16_t)ESM_WATCHDOG_DISABLE <<\n                    ESM_CPU_HI_PRI_WD_CFG_EMU_FREE_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE)); // // Enable the high priority watchdog // HWREGH(base + ESM_CPU_O_HI_PRI_WD_CFG) = (uint16_t)((HWREGH(base + ESM_CPU_O_HI_PRI_WD_CFG) & ~(ESM_CPU_HI_PRI_WD_CFG_EMU_FREE_M)) | ((uint16_t)ESM_WATCHDOG_DISABLE << ESM_CPU_HI_PRI_WD_CFG_EMU_FREE_S)); }",
+      "registersUsed": [
+        "HI_PRI",
+        "HI",
+        "HI_PRI_WD_CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "HI_PRI",
+        "HI",
+        "HI_PRI_WD_CFG"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_enableErrorPinMonitor",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Enable the Error pin monitor.\n    //\n    HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_CFG) =\n                                                ESM_ERROR_PIN_MONITOR_ENABLE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Enable the Error pin monitor. // HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_CFG) = ESM_ERROR_PIN_MONITOR_ENABLE; }",
+      "registersUsed": [
+        "ERRPIN_MON_CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERRPIN_MON_CFG"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_disableErrorPinMonitor",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Disable the Error pin monitor.\n    //\n    HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_CFG) =\n                                            ESM_ERROR_PIN_MONITOR_DISABLE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Disable the Error pin monitor. // HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_CFG) = ESM_ERROR_PIN_MONITOR_DISABLE; }",
+      "registersUsed": [
+        "ERRPIN_MON_CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERRPIN_MON_CFG"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_setErrorPinMonitorInterrupt",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the Error pin monitor interrupt.\n    //\n    HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_INTR_SET) =\n                                            ESM_SYS_ERRPIN_MON_INTR_SET_VAL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the Error pin monitor interrupt. // HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_INTR_SET) = ESM_SYS_ERRPIN_MON_INTR_SET_VAL; }",
+      "registersUsed": [
+        "ERRPIN_MON_INTR_SET"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERRPIN_MON_INTR_SET"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_clearErrorPinMonitorInterrupt",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear the Error pin monitor interrupt.\n    //\n    HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_INTR_CLR) =\n                                            ESM_SYS_ERRPIN_MON_INTR_CLR_VAL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the Error pin monitor interrupt. // HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_INTR_CLR) = ESM_SYS_ERRPIN_MON_INTR_CLR_VAL; }",
+      "registersUsed": [
+        "ERRPIN_MON_INTR_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERRPIN_MON_INTR_CLR"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getErrorPinMonitorInterruptStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Get the Error pin monitor interrupt status\n    //\n    return(HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_INTR_SET) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Get the Error pin monitor interrupt status // return(HWREGB(ESMSYSTEM_BASE + ESM_SYS_O_ERRPIN_MON_INTR_SET) != 0U); }",
+      "registersUsed": [
+        "ERRPIN_MON_INTR_SET"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERRPIN_MON_INTR_SET"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "event"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_EventMap"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Calculate the group number & event number from the global event number.\n    //\n    uint32_t groupNum = (uint32_t)event / 32U;\n    uint32_t eventNum = (uint32_t)event % 32U;\n\n    //\n    // Set the Interrupt enable bit\n    //\n    HWREG(base + ESM_CPU_O_INTR_EN_SET(groupNum)) = (uint32_t)1U << eventNum;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Calculate the group number & event number from the global event number. // uint32_t groupNum = (uint32_t)event / 32U; uint32_t eventNum = (uint32_t)event % 32U; // // Set the Interrupt enable bit // HWREG(base + ESM_CPU_O_INTR_EN_SET(groupNum)) = (uint32_t)1U << eventNum; }",
+      "registersUsed": [
+        "INTR_EN_SET(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTR_EN_SET(i)"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "event"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_EventMap"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Calculate the group number & event number from the global event number.\n    //\n    uint32_t groupNum = (uint32_t)event / 32U;\n    uint32_t eventNum = (uint32_t)event % 32U;\n\n    //\n    // Set the Interrupt enable bit\n    //\n    HWREG(base + ESM_CPU_O_INTR_EN_CLR(groupNum)) = (uint32_t)1U << eventNum;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Calculate the group number & event number from the global event number. // uint32_t groupNum = (uint32_t)event / 32U; uint32_t eventNum = (uint32_t)event % 32U; // // Set the Interrupt enable bit // HWREG(base + ESM_CPU_O_INTR_EN_CLR(groupNum)) = (uint32_t)1U << eventNum; }",
+      "registersUsed": [
+        "INTR_EN_CLR(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTR_EN_CLR(i)"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_setInterruptPriorityLevel",
+      "functionArgs": [
+        "base",
+        "event",
+        "priority"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_EventMap",
+        "ESM_InterruptPriorityLevel"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE));\n\n    //\n    // Calculate the group number & event number from the global event number.\n    //\n    uint32_t groupNum = (uint32_t)event / 32U;\n    uint32_t eventNum = (uint32_t)event % 32U;\n\n    //\n    // Set the interrupt priority level for the event\n    //\n    if(priority == ESM_INTERRUPT_PRIORITY_LEVEL_HIGH)\n    {\n        HWREG(base + ESM_CPU_O_INT_PRIO(groupNum)) |= 1U << eventNum;\n    }\n    else\n    {\n        HWREG(base + ESM_CPU_O_INT_PRIO(groupNum)) &= ~(1U << eventNum);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE)); // // Calculate the group number & event number from the global event number. // uint32_t groupNum = (uint32_t)event / 32U; uint32_t eventNum = (uint32_t)event % 32U; // // Set the interrupt priority level for the event // if(priority == ESM_INTERRUPT_PRIORITY_LEVEL_HIGH) { HWREG(base + ESM_CPU_O_INT_PRIO(groupNum)) |= 1U << eventNum; } else { HWREG(base + ESM_CPU_O_INT_PRIO(groupNum)) &= ~(1U << eventNum); } }",
+      "registersUsed": [
+        "INT_PRIO(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_PRIO(i)"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_setRawInterruptStatus",
+      "functionArgs": [
+        "base",
+        "event"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_EventMap"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Calculate the group number & event number from the global event number.\n    //\n    uint32_t groupNum = (uint32_t)event / 32U;\n    uint32_t eventNum = (uint32_t)event % 32U;\n\n    //\n    // Get the interrupt status of the corresponding event.\n    //\n    HWREG(base + ESM_CPU_O_RAW(groupNum)) = (uint32_t)1U << eventNum;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Calculate the group number & event number from the global event number. // uint32_t groupNum = (uint32_t)event / 32U; uint32_t eventNum = (uint32_t)event % 32U; // // Get the interrupt status of the corresponding event. // HWREG(base + ESM_CPU_O_RAW(groupNum)) = (uint32_t)1U << eventNum; }",
+      "registersUsed": [
+        "RAW(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAW(i)"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getRawInterruptStatus",
+      "functionArgs": [
+        "base",
+        "event"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_EventMap"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Calculate the group number & event number from the global event number.\n    //\n    uint32_t groupNum = (uint32_t)event / 32U;\n    uint32_t eventNum = (uint32_t)event % 32U;\n\n    //\n    // Get the interrupt status of the corresponding event.\n    //\n    return(((HWREG(base + ESM_CPU_O_RAW(groupNum)) >> eventNum) & 1U) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Calculate the group number & event number from the global event number. // uint32_t groupNum = (uint32_t)event / 32U; uint32_t eventNum = (uint32_t)event % 32U; // // Get the interrupt status of the corresponding event. // return(((HWREG(base + ESM_CPU_O_RAW(groupNum)) >> eventNum) & 1U) != 0U); }",
+      "registersUsed": [
+        "RAW(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAW(i)"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getInterruptStatus",
+      "functionArgs": [
+        "base",
+        "event"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_EventMap"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Calculate the group number & event number from the global event number.\n    //\n    uint32_t groupNum = (uint32_t)event / 32U;\n    uint32_t eventNum = (uint32_t)event % 32U;\n\n    //\n    // Get the interrupt status of the corresponding event.\n    //\n    return(((HWREG(base + ESM_CPU_O_STS(groupNum)) >> eventNum) & 1U) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Calculate the group number & event number from the global event number. // uint32_t groupNum = (uint32_t)event / 32U; uint32_t eventNum = (uint32_t)event % 32U; // // Get the interrupt status of the corresponding event. // return(((HWREG(base + ESM_CPU_O_STS(groupNum)) >> eventNum) & 1U) != 0U); }",
+      "registersUsed": [
+        "STS(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "STS(i)"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_clearRawInterruptStatus",
+      "functionArgs": [
+        "base",
+        "event"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_EventMap"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Calculate the group number & event number from the global event number.\n    //\n    uint32_t groupNum = (uint32_t)event / 32U;\n    uint32_t eventNum = (uint32_t)event % 32U;\n\n    //\n    // Get the interrupt status of the corresponding event.\n    //\n    HWREG(base + ESM_CPU_O_STS(groupNum)) = (uint32_t)1U << eventNum;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Calculate the group number & event number from the global event number. // uint32_t groupNum = (uint32_t)event / 32U; uint32_t eventNum = (uint32_t)event % 32U; // // Get the interrupt status of the corresponding event. // HWREG(base + ESM_CPU_O_STS(groupNum)) = (uint32_t)1U << eventNum; }",
+      "registersUsed": [
+        "STS(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "STS(i)"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_setCriticalPriorityInterruptInfluence",
+      "functionArgs": [
+        "base",
+        "event",
+        "influence"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_EventMap",
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Calculate the group number & event number from the global event number.\n    //\n    uint32_t groupNum = (uint32_t)event / 32U;\n    uint32_t eventNum = (uint32_t)event % 32U;\n\n    //\n    // Set/clear the Critical Priority Interrupt Influence enable\n    //\n    if(influence == true)\n    {\n        HWREG(base + ESM_CPU_O_CRIT_EN_SET(groupNum)) = (uint32_t)1U << eventNum;\n    }\n    else\n    {\n        HWREG(base + ESM_CPU_O_CRIT_EN_CLR(groupNum)) = (uint32_t)1U << eventNum;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Calculate the group number & event number from the global event number. // uint32_t groupNum = (uint32_t)event / 32U; uint32_t eventNum = (uint32_t)event % 32U; // // Set/clear the Critical Priority Interrupt Influence enable // if(influence == true) { HWREG(base + ESM_CPU_O_CRIT_EN_SET(groupNum)) = (uint32_t)1U << eventNum; } else { HWREG(base + ESM_CPU_O_CRIT_EN_CLR(groupNum)) = (uint32_t)1U << eventNum; } }",
+      "registersUsed": [
+        "CRIT_EN_SET(i)",
+        "CRIT_EN_CLR(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "CRIT_EN_SET(i)",
+        "CRIT_EN_CLR(i)"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getCriticalPriorityInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    return((HWREG(base + ESM_CPU_O_INFO) & ESM_CPU_INFO_CRIT_INTR) ==\n                                                     ESM_CPU_INFO_CRIT_INTR);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); return((HWREG(base + ESM_CPU_O_INFO) & ESM_CPU_INFO_CRIT_INTR) == ESM_CPU_INFO_CRIT_INTR); }",
+      "registersUsed": [
+        "INFO"
+      ],
+      "registersUsedMatchingBifield": [
+        "INFO"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_setInfluenceOnErrorPin",
+      "functionArgs": [
+        "event",
+        "influence"
+      ],
+      "functionArgsTypes": [
+        "ESM_EventMap",
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Calculate the group number & event number from the global event number.\n    //\n    uint32_t groupNum = (uint32_t)event / 32U;\n    uint32_t eventNum = (uint32_t)event % 32U;\n\n    if(influence == true)\n    {\n        HWREG(ESMSYSTEM_BASE + ESM_CPU_O_PIN_EN_SET(groupNum)) =\n                                                            (uint32_t)1U << eventNum;\n    }\n    else\n    {\n        HWREG(ESMSYSTEM_BASE + ESM_CPU_O_PIN_EN_CLR(groupNum)) =\n                                                            (uint32_t)1U << eventNum;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Calculate the group number & event number from the global event number. // uint32_t groupNum = (uint32_t)event / 32U; uint32_t eventNum = (uint32_t)event % 32U; if(influence == true) { HWREG(ESMSYSTEM_BASE + ESM_CPU_O_PIN_EN_SET(groupNum)) = (uint32_t)1U << eventNum; } else { HWREG(ESMSYSTEM_BASE + ESM_CPU_O_PIN_EN_CLR(groupNum)) = (uint32_t)1U << eventNum; } }",
+      "registersUsed": [
+        "PIN_EN_SET(i)",
+        "PIN_EN_CLR(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "PIN_EN_SET(i)",
+        "PIN_EN_CLR(i)"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getLowPriorityInterruptStatus",
+      "functionArgs": [
+        "base",
+        "group"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_EventGroup"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    return((HWREGH(base + ESM_CPU_O_LOW) & (uint16_t)group) ==\n                                                            (uint16_t)group);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); return((HWREGH(base + ESM_CPU_O_LOW) & (uint16_t)group) == (uint16_t)group); }",
+      "registersUsed": [
+        "LOW"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOW"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getHighPriorityInterruptStatus",
+      "functionArgs": [
+        "base",
+        "group"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ESM_EventGroup"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE));\n\n    return((HWREGH(base + ESM_CPU_O_HI) & (uint16_t)group) == (uint16_t)group);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE)); return((HWREGH(base + ESM_CPU_O_HI) & (uint16_t)group) == (uint16_t)group); }",
+      "registersUsed": [
+        "HI"
+      ],
+      "registersUsedMatchingBifield": [
+        "HI"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getHighestLowPriorityInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    return((HWREG(base + ESM_CPU_O_LOW_PRI) & (ESM_CPU_LOW_PRI_PLS_M)) >>\n                                                    ESM_CPU_LOW_PRI_PLS_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); return((HWREG(base + ESM_CPU_O_LOW_PRI) & (ESM_CPU_LOW_PRI_PLS_M)) >> ESM_CPU_LOW_PRI_PLS_S); }",
+      "registersUsed": [
+        "LOW_PRI",
+        "LOW"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOW_PRI",
+        "LOW"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getHighestHighPriorityInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE));\n\n    return((HWREG(base + ESM_CPU_O_HI_PRI) & (ESM_CPU_HI_PRI_PLS_M)) >>\n                                                    ESM_CPU_HI_PRI_PLS_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base) && (base != ESMSYSTEM_BASE)); return((HWREG(base + ESM_CPU_O_HI_PRI) & (ESM_CPU_HI_PRI_PLS_M)) >> ESM_CPU_HI_PRI_PLS_S); }",
+      "registersUsed": [
+        "HI_PRI",
+        "HI"
+      ],
+      "registersUsedMatchingBifield": [
+        "HI_PRI",
+        "HI"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getErrorPinCounterValue",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CNTR));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(ESMSYSTEM_BASE + ESM_SYS_O_PIN_CNTR)); }",
+      "registersUsed": [
+        "PIN_CNTR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PIN_CNTR"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_lockErrorGroupInterruptConfig",
+      "functionArgs": [
+        "base",
+        "groups"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Set the lock bit for the specified groups.\n    //\n    HWREG(base + ESM_CPU_O_GROUP_N_LOCK) |= groups;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Set the lock bit for the specified groups. // HWREG(base + ESM_CPU_O_GROUP_N_LOCK) |= groups; }",
+      "registersUsed": [
+        "GROUP_N_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "GROUP_N_LOCK"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_unlockErrorGroupInterruptConfig",
+      "functionArgs": [
+        "base",
+        "groups"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Clear the lock bit for the specified groups to unlock.\n    //\n    HWREG(base + ESM_CPU_O_GROUP_N_LOCK) &= ~groups;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Clear the lock bit for the specified groups to unlock. // HWREG(base + ESM_CPU_O_GROUP_N_LOCK) &= ~groups; }",
+      "registersUsed": [
+        "GROUP_N_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "GROUP_N_LOCK"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_commitErrorGroupInterruptConfig",
+      "functionArgs": [
+        "base",
+        "groups"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    //\n    // Set the commit bit for the specified groups.\n    //\n    HWREG(base + ESM_CPU_O_GROUP_N_COMMIT) |= groups;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); // // Set the commit bit for the specified groups. // HWREG(base + ESM_CPU_O_GROUP_N_COMMIT) |= groups; }",
+      "registersUsed": [
+        "GROUP_N_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "GROUP_N_COMMIT"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_lockErrorPinInfluenceConfig",
+      "functionArgs": [
+        "groups"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(ESMSYSTEM_BASE + ESM_SYS_O_ERR_PIN_INFLUENCE_LOCK) |= groups;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ESMSYSTEM_BASE + ESM_SYS_O_ERR_PIN_INFLUENCE_LOCK) |= groups; }",
+      "registersUsed": [
+        "ERR_PIN_INFLUENCE_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_PIN_INFLUENCE_LOCK"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_unlockErrorPinInfluenceConfig",
+      "functionArgs": [
+        "groups"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(ESMSYSTEM_BASE + ESM_SYS_O_ERR_PIN_INFLUENCE_LOCK) &= ~groups;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ESMSYSTEM_BASE + ESM_SYS_O_ERR_PIN_INFLUENCE_LOCK) &= ~groups; }",
+      "registersUsed": [
+        "ERR_PIN_INFLUENCE_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_PIN_INFLUENCE_LOCK"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_commitErrorPinInfluenceConfig",
+      "functionArgs": [
+        "groups"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(ESMSYSTEM_BASE + ESM_SYS_O_ERR_PIN_INFLUENCE_COMMIT) |= groups;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ESMSYSTEM_BASE + ESM_SYS_O_ERR_PIN_INFLUENCE_COMMIT) |= groups; }",
+      "registersUsed": [
+        "ERR_PIN_INFLUENCE_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_PIN_INFLUENCE_COMMIT"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_lockCriticalPriorityInterruptInfluenceConfig",
+      "functionArgs": [
+        "base",
+        "groups"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    HWREG(base + ESM_CPU_O_CRI_PRI_INFLUENCE_LOCK) |= groups;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); HWREG(base + ESM_CPU_O_CRI_PRI_INFLUENCE_LOCK) |= groups; }",
+      "registersUsed": [
+        "CRI_PRI_INFLUENCE_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "CRI_PRI_INFLUENCE_LOCK"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_unlockCriticalPriorityInterruptInfluenceConfig",
+      "functionArgs": [
+        "base",
+        "groups"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    HWREG(base + ESM_CPU_O_CRI_PRI_INFLUENCE_LOCK) &= ~groups;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); HWREG(base + ESM_CPU_O_CRI_PRI_INFLUENCE_LOCK) &= ~groups; }",
+      "registersUsed": [
+        "CRI_PRI_INFLUENCE_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "CRI_PRI_INFLUENCE_LOCK"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_commitCriticalPriorityInterruptInfluenceConfig",
+      "functionArgs": [
+        "base",
+        "groups"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    HWREG(base + ESM_CPU_O_CRI_PRI_INFLUENCE_COMMIT) |= groups;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); HWREG(base + ESM_CPU_O_CRI_PRI_INFLUENCE_COMMIT) |= groups; }",
+      "registersUsed": [
+        "CRI_PRI_INFLUENCE_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "CRI_PRI_INFLUENCE_COMMIT"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_lockMMRConfig",
+      "functionArgs": [
+        "base",
+        "registers"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    HWREG(base + ESM_CPU_O_MMR_CONFIG_LOCK) |= registers;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); HWREG(base + ESM_CPU_O_MMR_CONFIG_LOCK) |= registers; }",
+      "registersUsed": [
+        "MMR_CONFIG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "MMR_CONFIG_LOCK"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_unlockMMRConfig",
+      "functionArgs": [
+        "base",
+        "registers"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    HWREG(base + ESM_CPU_O_MMR_CONFIG_LOCK) &= ~registers;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); HWREG(base + ESM_CPU_O_MMR_CONFIG_LOCK) &= ~registers; }",
+      "registersUsed": [
+        "MMR_CONFIG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "MMR_CONFIG_LOCK"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_commitMMRConfig",
+      "functionArgs": [
+        "base",
+        "registers"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    HWREG(base + ESM_CPU_O_MMR_CONFIG_COMMIT) |= registers;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); HWREG(base + ESM_CPU_O_MMR_CONFIG_COMMIT) |= registers; }",
+      "registersUsed": [
+        "MMR_CONFIG_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "MMR_CONFIG_COMMIT"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getGroupRawIntStatus",
+      "functionArgs": [
+        "base",
+        "group"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    return (HWREG(base + ESM_CPU_O_RAW(group)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); return (HWREG(base + ESM_CPU_O_RAW(group))); }",
+      "registersUsed": [
+        "RAW(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAW(i)"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_clearGroupIntStatus",
+      "functionArgs": [
+        "base",
+        "group"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ESM_isBaseValid(base));\n\n    HWREG(base + ESM_CPU_O_STS(group)) = 0xFFFFFFFFU;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ESM_isBaseValid(base)); HWREG(base + ESM_CPU_O_STS(group)) = 0xFFFFFFFFU; }",
+      "registersUsed": [
+        "STS(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "STS(i)"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_configSvbusRead",
+      "functionArgs": [
+        "inst",
+        "readAddress"
+      ],
+      "functionArgsTypes": [
+        "ESM_Instance",
+        "uint8_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    HWREG(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_ECC_VECTOR) =\n         (uint32_t)inst | ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS |\n         ((uint32_t)readAddress <<\n                    ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS_ADDRESS_S);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_ECC_VECTOR) = (uint32_t)inst | ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS | ((uint32_t)readAddress << ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS_ADDRESS_S); }",
+      "registersUsed": [
+        "ECC_VECTOR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ECC_VECTOR"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_triggerSvbusRead",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_ECC_VECTOR) |=\n                                ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_ECC_VECTOR) |= ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS; }",
+      "registersUsed": [
+        "ECC_VECTOR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ECC_VECTOR"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getSvbusReadAddress",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return((HWREG(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_ECC_VECTOR)\n            & (uint32_t)ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS_ADDRESS_M)\n            >> ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS_ADDRESS_S);\n}\n",
+      "functionContentWithoutFormatting": "{ return((HWREG(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_ECC_VECTOR) & (uint32_t)ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS_ADDRESS_M) >> ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS_ADDRESS_S); }",
+      "registersUsed": [
+        "ECC_VECTOR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ECC_VECTOR"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getSvbusReadStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return((HWREG(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_ECC_VECTOR)\n                    & ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS_DONE) ==\n                    ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS_DONE);\n}\n",
+      "functionContentWithoutFormatting": "{ return((HWREG(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_ECC_VECTOR) & ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS_DONE) == ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS_DONE); }",
+      "registersUsed": [
+        "ECC_VECTOR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ECC_VECTOR"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_clearSvbusReadStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_ECC_VECTOR) &=\n                    ~(uint32_t)ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS_DONE;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_ECC_VECTOR) &= ~(uint32_t)ESM_SAFETY_AGGREGATOR_ECC_VECTOR_RD_SVBUS_DONE; }",
+      "registersUsed": [
+        "ECC_VECTOR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ECC_VECTOR"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_ackDedInterrupt",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_DED_EOI_REG) =\n                                    ESM_SAFETY_AGGREGATOR_DED_EOI_REG_EOI_WR;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_DED_EOI_REG) = ESM_SAFETY_AGGREGATOR_DED_EOI_REG_EOI_WR; }",
+      "registersUsed": [
+        "DED_EOI_REG"
+      ],
+      "registersUsedMatchingBifield": [
+        "DED_EOI_REG"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getInterruptPendingStatus",
+      "functionArgs": [
+        "inst"
+      ],
+      "functionArgsTypes": [
+        "ESM_Instance"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return((HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_DED_STATUS_REG0)\n            & (uint8_t)inst) == (uint8_t)inst);\n}\n",
+      "functionContentWithoutFormatting": "{ return((HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_DED_STATUS_REG0) & (uint8_t)inst) == (uint8_t)inst); }",
+      "registersUsed": [
+        "DED_STATUS_REG0"
+      ],
+      "registersUsedMatchingBifield": [
+        "DED_STATUS_REG0"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_enableEdcInterrupt",
+      "functionArgs": [
+        "inst"
+      ],
+      "functionArgsTypes": [
+        "ESM_Instance"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_DED_ENABLE_SET_REG0)\n                                                        |= (uint8_t)inst;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_DED_ENABLE_SET_REG0) |= (uint8_t)inst; }",
+      "registersUsed": [
+        "DED_ENABLE_SET_REG0"
+      ],
+      "registersUsedMatchingBifield": [
+        "DED_ENABLE_SET_REG0"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_disableEdcInterrupt",
+      "functionArgs": [
+        "inst"
+      ],
+      "functionArgsTypes": [
+        "ESM_Instance"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_DED_ENABLE_CLR_REG0)\n                                                        |= (uint8_t)inst;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_DED_ENABLE_CLR_REG0) |= (uint8_t)inst; }",
+      "registersUsed": [
+        "DED_ENABLE_CLR_REG0"
+      ],
+      "registersUsedMatchingBifield": [
+        "DED_ENABLE_CLR_REG0"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_enableAggrErrorInterrupt",
+      "functionArgs": [
+        "errorType"
+      ],
+      "functionArgsTypes": [
+        "ESM_AggrErrorType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_ENABLE_SET)\n                                                 |= 1U << (uint8_t)errorType;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_ENABLE_SET) |= 1U << (uint8_t)errorType; }",
+      "registersUsed": [
+        "AGGR_ENABLE_SET"
+      ],
+      "registersUsedMatchingBifield": [
+        "AGGR_ENABLE_SET"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_disableAggrErrorInterrupt",
+      "functionArgs": [
+        "errorType"
+      ],
+      "functionArgsTypes": [
+        "ESM_AggrErrorType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_ENABLE_CLR)\n                                                 |= 1U << (uint8_t)errorType;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_ENABLE_CLR) |= 1U << (uint8_t)errorType; }",
+      "registersUsed": [
+        "AGGR_ENABLE_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "AGGR_ENABLE_CLR"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_forceAggrErrorInterrupt",
+      "functionArgs": [
+        "errorType"
+      ],
+      "functionArgsTypes": [
+        "ESM_AggrErrorType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_STATUS_SET) =\n      HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_STATUS_SET)\n      & (~(ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_PARITY_M <<\n        (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_TIMEOUT_S * (uint8_t)errorType)))\n      | (1U << (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_TIMEOUT_S *\n        (uint8_t)errorType));\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_STATUS_SET) = HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_STATUS_SET) & (~(ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_PARITY_M << (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_TIMEOUT_S * (uint8_t)errorType))) | (1U << (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_TIMEOUT_S * (uint8_t)errorType)); }",
+      "registersUsed": [
+        "AGGR_STATUS_SET"
+      ],
+      "registersUsedMatchingBifield": [
+        "AGGR_STATUS_SET"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_getAggrErrorInterruptStatus",
+      "functionArgs": [
+        "errorType"
+      ],
+      "functionArgsTypes": [
+        "ESM_AggrErrorType"
+      ],
+      "returnType": "static inline uint8_t",
+      "functionContent": "{\n    return((HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_STATUS_SET)\n            & (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_PARITY_M <<\n      (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_TIMEOUT_S * (uint8_t)errorType)))\n    >> (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_TIMEOUT_S * (uint8_t)errorType));\n}\n",
+      "functionContentWithoutFormatting": "{ return((HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_STATUS_SET) & (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_PARITY_M << (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_TIMEOUT_S * (uint8_t)errorType))) >> (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_TIMEOUT_S * (uint8_t)errorType)); }",
+      "registersUsed": [
+        "AGGR_STATUS_SET"
+      ],
+      "registersUsedMatchingBifield": [
+        "AGGR_STATUS_SET"
+      ]
+    },
+    {
+      "file": "esm.h",
+      "peripheral": "esm",
+      "functionName": "ESM_clearAggrErrorInterruptStatus",
+      "functionArgs": [
+        "errorType"
+      ],
+      "functionArgsTypes": [
+        "ESM_AggrErrorType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_STATUS_CLR) =\n      HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_STATUS_CLR)\n      & (~(ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_PARITY_M <<\n        (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_TIMEOUT_S * (uint8_t)errorType)))\n      | (1U << (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_TIMEOUT_S *\n        (uint8_t)errorType));\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_STATUS_CLR) = HWREGB(ESMSAFETYAGG_BASE + ESM_SAFETY_AGGREGATOR_O_AGGR_STATUS_CLR) & (~(ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_PARITY_M << (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_TIMEOUT_S * (uint8_t)errorType))) | (1U << (ESM_SAFETY_AGGREGATOR_AGGR_STATUS_SET_TIMEOUT_S * (uint8_t)errorType)); }",
+      "registersUsed": [
+        "AGGR_STATUS_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "AGGR_STATUS_CLR"
+      ]
+    }
+  ]
+}

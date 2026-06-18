@@ -1,0 +1,1063 @@
+{
+  "name": "flash",
+  "functions": [
+    {
+      "file": "flash.c",
+      "peripheral": "flash",
+      "functionName": "Flash_initModule",
+      "functionArgs": [
+        "ctrlBase",
+        "eccBase",
+        "waitstates"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n    ASSERT(Flash_isECCBaseValid(eccBase));\n    ASSERT(waitstates <= 0xFU);\n\n    //\n    // Set the bank fallback power modes to active.\n    //\n    Flash_setBankPowerMode(ctrlBase, FLASH_BANK0, FLASH_BANK_PWR_ACTIVE);\n    Flash_setBankPowerMode(ctrlBase, FLASH_BANK1, FLASH_BANK_PWR_ACTIVE);\n\n    //\n    // Power up flash bank and pump and this also sets the fall back mode of\n    // flash and pump as active\n    //\n    Flash_setPumpPowerMode(ctrlBase, FLASH_PUMP_PWR_ACTIVE);\n\n    //\n    // Disable cache and prefetch mechanism before changing wait states\n    //\n    Flash_disableCache(ctrlBase);\n    Flash_disablePrefetch(ctrlBase);\n\n    //\n    // Set waitstates according to frequency.\n    //\n    Flash_setWaitstates(ctrlBase, waitstates);\n\n\n    //\n    // Enable cache and prefetch mechanism to improve performance of code\n    // executed from flash.\n    //\n    Flash_enableCache(ctrlBase);\n    Flash_enablePrefetch(ctrlBase);\n\n    //\n    // At reset, ECC is enabled.  If it is disabled by application software and\n    // if application again wants to enable ECC.\n    //\n    Flash_enableECC(eccBase);\n\n    //\n    // Force a pipeline flush to ensure that the write to the last register\n    // configured occurs before returning.\n    //\n\n    FLASH_DELAY_CONFIG;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); ASSERT(Flash_isECCBaseValid(eccBase)); ASSERT(waitstates <= 0xFU); // // Set the bank fallback power modes to active. // Flash_setBankPowerMode(ctrlBase, FLASH_BANK0, FLASH_BANK_PWR_ACTIVE); Flash_setBankPowerMode(ctrlBase, FLASH_BANK1, FLASH_BANK_PWR_ACTIVE); // // Power up flash bank and pump and this also sets the fall back mode of // flash and pump as active // Flash_setPumpPowerMode(ctrlBase, FLASH_PUMP_PWR_ACTIVE); // // Disable cache and prefetch mechanism before changing wait states // Flash_disableCache(ctrlBase); Flash_disablePrefetch(ctrlBase); // // Set waitstates according to frequency. // Flash_setWaitstates(ctrlBase, waitstates); // // Enable cache and prefetch mechanism to improve performance of code // executed from flash. // Flash_enableCache(ctrlBase); Flash_enablePrefetch(ctrlBase); // // At reset, ECC is enabled. If it is disabled by application software and // if application again wants to enable ECC. // Flash_enableECC(eccBase); // // Force a pipeline flush to ensure that the write to the last register // configured occurs before returning. // FLASH_DELAY_CONFIG; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "flash.c",
+      "peripheral": "flash",
+      "functionName": "Flash_powerDown",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    //\n    // Power down the flash banks.\n    //\n    Flash_setBankPowerMode(ctrlBase, FLASH_BANK0, FLASH_BANK_PWR_SLEEP);\n    Flash_setBankPowerMode(ctrlBase, FLASH_BANK1, FLASH_BANK_PWR_SLEEP);\n\n    //\n    // Power down the flash pump.\n    //\n    Flash_setPumpPowerMode(ctrlBase, FLASH_PUMP_PWR_SLEEP);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); // // Power down the flash banks. // Flash_setBankPowerMode(ctrlBase, FLASH_BANK0, FLASH_BANK_PWR_SLEEP); Flash_setBankPowerMode(ctrlBase, FLASH_BANK1, FLASH_BANK_PWR_SLEEP); // // Power down the flash pump. // Flash_setPumpPowerMode(ctrlBase, FLASH_PUMP_PWR_SLEEP); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "flash.c",
+      "peripheral": "flash",
+      "functionName": "Flash_wakeFromLPM",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    //\n    // Set the bank fallback power modes to active.\n    //\n    Flash_setBankPowerMode(ctrlBase, FLASH_BANK0, FLASH_BANK_PWR_ACTIVE);\n    Flash_setBankPowerMode(ctrlBase, FLASH_BANK1, FLASH_BANK_PWR_ACTIVE);\n\n    //\n    // Set the flash pump power mode to active.\n    //\n    Flash_setPumpPowerMode(ctrlBase, FLASH_PUMP_PWR_ACTIVE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); // // Set the bank fallback power modes to active. // Flash_setBankPowerMode(ctrlBase, FLASH_BANK0, FLASH_BANK_PWR_ACTIVE); Flash_setBankPowerMode(ctrlBase, FLASH_BANK1, FLASH_BANK_PWR_ACTIVE); // // Set the flash pump power mode to active. // Flash_setPumpPowerMode(ctrlBase, FLASH_PUMP_PWR_ACTIVE); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_isCtrlBaseValid",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((ctrlBase == FLASH0CTRL_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((ctrlBase == FLASH0CTRL_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_isECCBaseValid",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((eccBase == FLASH0ECC_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((eccBase == FLASH0ECC_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setWaitstates",
+      "functionArgs": [
+        "ctrlBase",
+        "waitstates"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    //\n    // waitstates is 4 bits wide.\n    //\n    ASSERT(waitstates <= 0xFU);\n\n    EALLOW;\n    //\n    // Write flash read wait-state amount to appropriate register.\n    //\n    HWREG(ctrlBase + FLASH_O_FRDCNTL) =\n        (HWREG(ctrlBase + FLASH_O_FRDCNTL) &\n         ~(uint32_t)FLASH_FRDCNTL_RWAIT_M) |\n         ((uint32_t)waitstates << FLASH_FRDCNTL_RWAIT_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); // // waitstates is 4 bits wide. // ASSERT(waitstates <= 0xFU); EALLOW; // // Write flash read wait-state amount to appropriate register. // HWREG(ctrlBase + FLASH_O_FRDCNTL) = (HWREG(ctrlBase + FLASH_O_FRDCNTL) & ~(uint32_t)FLASH_FRDCNTL_RWAIT_M) | ((uint32_t)waitstates << FLASH_FRDCNTL_RWAIT_S); EDIS; }",
+      "registersUsed": [
+        "FRDCNTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRDCNTL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setBankPowerMode",
+      "functionArgs": [
+        "ctrlBase",
+        "bank",
+        "powerMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "Flash_BankNumber",
+        "Flash_BankPowerMode"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    EALLOW;\n\n    //\n    // Write the power mode to the appropriate register.\n    //\n    HWREG(ctrlBase + FLASH_O_FBFALLBACK) =\n        (HWREG(ctrlBase + FLASH_O_FBFALLBACK) &\n         ~((FLASH_FBFALLBACK_BNKPWR0_M) << ((uint32_t)bank * 2U))) |\n        ((uint32_t)powerMode << ((uint32_t)bank * 2U));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); EALLOW; // // Write the power mode to the appropriate register. // HWREG(ctrlBase + FLASH_O_FBFALLBACK) = (HWREG(ctrlBase + FLASH_O_FBFALLBACK) & ~((FLASH_FBFALLBACK_BNKPWR0_M) << ((uint32_t)bank * 2U))) | ((uint32_t)powerMode << ((uint32_t)bank * 2U)); EDIS; }",
+      "registersUsed": [
+        "FBFALLBACK"
+      ],
+      "registersUsedMatchingBifield": [
+        "FBFALLBACK"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setPumpPowerMode",
+      "functionArgs": [
+        "ctrlBase",
+        "powerMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "Flash_PumpPowerMode"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    EALLOW;\n\n    //\n    // Write the power mode to the appropriate register.\n    //\n    HWREG(ctrlBase + FLASH_O_FPAC1) =\n        (HWREG(ctrlBase + FLASH_O_FPAC1) &\n        ~(uint32_t)FLASH_FPAC1_PMPPWR) | (uint32_t)powerMode;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); EALLOW; // // Write the power mode to the appropriate register. // HWREG(ctrlBase + FLASH_O_FPAC1) = (HWREG(ctrlBase + FLASH_O_FPAC1) & ~(uint32_t)FLASH_FPAC1_PMPPWR) | (uint32_t)powerMode; EDIS; }",
+      "registersUsed": [
+        "FPAC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "FPAC1"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_enablePrefetch",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    EALLOW;\n\n    //\n    // Set the prefetch enable bit.\n    //\n    HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) |=\n            FLASH_FRD_INTF_CTRL_PREFETCH_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); EALLOW; // // Set the prefetch enable bit. // HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) |= FLASH_FRD_INTF_CTRL_PREFETCH_EN; EDIS; }",
+      "registersUsed": [
+        "FRD_INTF_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRD_INTF_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_disablePrefetch",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    EALLOW;\n\n    //\n    // Clear the prefetch enable bit.\n    //\n    HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) &=\n            ~(uint32_t)FLASH_FRD_INTF_CTRL_PREFETCH_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); EALLOW; // // Clear the prefetch enable bit. // HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) &= ~(uint32_t)FLASH_FRD_INTF_CTRL_PREFETCH_EN; EDIS; }",
+      "registersUsed": [
+        "FRD_INTF_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRD_INTF_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_enableCache",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    EALLOW;\n\n    //\n    // Set the data cache enable bit.\n    //\n    HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) |=\n            FLASH_FRD_INTF_CTRL_DATA_CACHE_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); EALLOW; // // Set the data cache enable bit. // HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) |= FLASH_FRD_INTF_CTRL_DATA_CACHE_EN; EDIS; }",
+      "registersUsed": [
+        "FRD_INTF_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRD_INTF_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_disableCache",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    EALLOW;\n\n    //\n    // Clear the data cache enable bit.\n    //\n    HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) &=\n            ~(uint32_t)FLASH_FRD_INTF_CTRL_DATA_CACHE_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); EALLOW; // // Clear the data cache enable bit. // HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) &= ~(uint32_t)FLASH_FRD_INTF_CTRL_DATA_CACHE_EN; EDIS; }",
+      "registersUsed": [
+        "FRD_INTF_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRD_INTF_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_enableECC",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n\n    //\n    // Write the key value 0xA to ECC_ENABLE register.\n    //\n    HWREG(eccBase + FLASH_O_ECC_ENABLE) =\n        (HWREG(eccBase + FLASH_O_ECC_ENABLE) &\n         ~(uint32_t)FLASH_ECC_ENABLE_ENABLE_M) | 0xAU;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; // // Write the key value 0xA to ECC_ENABLE register. // HWREG(eccBase + FLASH_O_ECC_ENABLE) = (HWREG(eccBase + FLASH_O_ECC_ENABLE) & ~(uint32_t)FLASH_ECC_ENABLE_ENABLE_M) | 0xAU; EDIS; }",
+      "registersUsed": [
+        "ECC_ENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "ECC_ENABLE"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_disableECC",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n\n    //\n    // Clear ECC enable field with the one's complement of the key.\n    //\n    HWREG(eccBase + FLASH_O_ECC_ENABLE) =\n        (HWREG(eccBase + FLASH_O_ECC_ENABLE) &\n         ~(uint32_t)FLASH_ECC_ENABLE_ENABLE_M) | 0x5U;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; // // Clear ECC enable field with the one's complement of the key. // HWREG(eccBase + FLASH_O_ECC_ENABLE) = (HWREG(eccBase + FLASH_O_ECC_ENABLE) & ~(uint32_t)FLASH_ECC_ENABLE_ENABLE_M) | 0x5U; EDIS; }",
+      "registersUsed": [
+        "ECC_ENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "ECC_ENABLE"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setBankActiveGracePeriod",
+      "functionArgs": [
+        "ctrlBase",
+        "period"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n    ASSERT( period <= 255U );\n\n    EALLOW;\n\n    //\n    // Write period to the BAGP of the FBAC register.\n    //\n    HWREG(ctrlBase + FLASH_O_FBAC) =\n          (HWREG(ctrlBase + FLASH_O_FBAC) &\n             ~(uint32_t)FLASH_FBAC_BAGP_M) | (period << FLASH_FBAC_BAGP_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); ASSERT( period <= 255U ); EALLOW; // // Write period to the BAGP of the FBAC register. // HWREG(ctrlBase + FLASH_O_FBAC) = (HWREG(ctrlBase + FLASH_O_FBAC) & ~(uint32_t)FLASH_FBAC_BAGP_M) | (period << FLASH_FBAC_BAGP_S); EDIS; }",
+      "registersUsed": [
+        "FBAC"
+      ],
+      "registersUsedMatchingBifield": [
+        "FBAC"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setPumpActiveGracePeriod",
+      "functionArgs": [
+        "ctrlBase",
+        "period"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    EALLOW;\n\n    //\n    // Write period to the PAGP of the FPAC2 register.\n    //\n    HWREG(ctrlBase + FLASH_O_FPAC2) =\n          (HWREG(ctrlBase + FLASH_O_FPAC2) &\n          ~(uint32_t)FLASH_FPAC2_PAGP_M) |\n          ((uint32_t)period << FLASH_FPAC2_PAGP_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); EALLOW; // // Write period to the PAGP of the FPAC2 register. // HWREG(ctrlBase + FLASH_O_FPAC2) = (HWREG(ctrlBase + FLASH_O_FPAC2) & ~(uint32_t)FLASH_FPAC2_PAGP_M) | ((uint32_t)period << FLASH_FPAC2_PAGP_S); EDIS; }",
+      "registersUsed": [
+        "FPAC2"
+      ],
+      "registersUsedMatchingBifield": [
+        "FPAC2"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setPumpWakeupTime",
+      "functionArgs": [
+        "ctrlBase",
+        "sysclkCycles"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    //\n    // PSLEEP = sysclkCycles/2. PSLEEP maximum value is 4095(12 bits wide)\n    //\n    ASSERT( sysclkCycles <= 8190U );\n\n    EALLOW;\n\n    //\n    // Write sysclkCycles/2 to PSLEEP of the FPAC1 register.\n    //\n    HWREG(ctrlBase + FLASH_O_FPAC1) =\n          (HWREG(ctrlBase + FLASH_O_FPAC1) &\n          ~(uint32_t)FLASH_FPAC1_PSLEEP_M) |\n          (((uint32_t)sysclkCycles / (uint32_t)2) <<\n          (uint32_t)FLASH_FPAC1_PSLEEP_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); // // PSLEEP = sysclkCycles/2. PSLEEP maximum value is 4095(12 bits wide) // ASSERT( sysclkCycles <= 8190U ); EALLOW; // // Write sysclkCycles/2 to PSLEEP of the FPAC1 register. // HWREG(ctrlBase + FLASH_O_FPAC1) = (HWREG(ctrlBase + FLASH_O_FPAC1) & ~(uint32_t)FLASH_FPAC1_PSLEEP_M) | (((uint32_t)sysclkCycles / (uint32_t)2) << (uint32_t)FLASH_FPAC1_PSLEEP_S); EDIS; }",
+      "registersUsed": [
+        "FPAC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "FPAC1"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_isBankReady",
+      "functionArgs": [
+        "ctrlBase",
+        "bank"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "Flash_BankNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    bool ready;\n    uint32_t bitMask = (uint32_t)FLASH_FBPRDY_BANK0RDY << (uint32_t)bank;\n    //\n    // Return the BANKXRDY bit in FBPRDY.\n    //\n    if((HWREG(ctrlBase + FLASH_O_FBPRDY) & bitMask) == bitMask)\n    {\n        ready = true;\n    }\n    else\n    {\n        ready = false;\n    }\n    return(ready);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); bool ready; uint32_t bitMask = (uint32_t)FLASH_FBPRDY_BANK0RDY << (uint32_t)bank; // // Return the BANKXRDY bit in FBPRDY. // if((HWREG(ctrlBase + FLASH_O_FBPRDY) & bitMask) == bitMask) { ready = true; } else { ready = false; } return(ready); }",
+      "registersUsed": [
+        "FBPRDY"
+      ],
+      "registersUsedMatchingBifield": [
+        "FBPRDY"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_isPumpReady",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    bool ready;\n\n    //\n    // Return the PUMPRDY bit in FBPRDY.\n    //\n    if((HWREG(ctrlBase + FLASH_O_FBPRDY) &\n        (uint32_t)FLASH_FBPRDY_PUMPRDY) == FLASH_FBPRDY_PUMPRDY)\n    {\n        ready = true;\n    }\n    else\n    {\n        ready = false;\n    }\n    return(ready);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); bool ready; // // Return the PUMPRDY bit in FBPRDY. // if((HWREG(ctrlBase + FLASH_O_FBPRDY) & (uint32_t)FLASH_FBPRDY_PUMPRDY) == FLASH_FBPRDY_PUMPRDY) { ready = true; } else { ready = false; } return(ready); }",
+      "registersUsed": [
+        "FBPRDY"
+      ],
+      "registersUsedMatchingBifield": [
+        "FBPRDY"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getSingleBitErrorAddressLow",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    return(HWREG(eccBase + FLASH_O_SINGLE_ERR_ADDR_LOW));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); return(HWREG(eccBase + FLASH_O_SINGLE_ERR_ADDR_LOW)); }",
+      "registersUsed": [
+        "SINGLE_ERR_ADDR_LOW"
+      ],
+      "registersUsedMatchingBifield": [
+        "SINGLE_ERR_ADDR_LOW"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getSingleBitErrorAddressHigh",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    return(HWREG(eccBase + FLASH_O_SINGLE_ERR_ADDR_HIGH));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); return(HWREG(eccBase + FLASH_O_SINGLE_ERR_ADDR_HIGH)); }",
+      "registersUsed": [
+        "SINGLE_ERR_ADDR_HIGH"
+      ],
+      "registersUsedMatchingBifield": [
+        "SINGLE_ERR_ADDR_HIGH"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getUncorrectableErrorAddressLow",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    return(HWREG(eccBase + FLASH_O_UNC_ERR_ADDR_LOW));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); return(HWREG(eccBase + FLASH_O_UNC_ERR_ADDR_LOW)); }",
+      "registersUsed": [
+        "UNC_ERR_ADDR_LOW"
+      ],
+      "registersUsedMatchingBifield": [
+        "UNC_ERR_ADDR_LOW"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getUncorrectableErrorAddressHigh",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    return(HWREG(eccBase + FLASH_O_UNC_ERR_ADDR_HIGH));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); return(HWREG(eccBase + FLASH_O_UNC_ERR_ADDR_HIGH)); }",
+      "registersUsed": [
+        "UNC_ERR_ADDR_HIGH"
+      ],
+      "registersUsedMatchingBifield": [
+        "UNC_ERR_ADDR_HIGH"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getLowErrorStatus",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline Flash_ErrorStatus",
+      "functionContent": "{\n    uint32_t errorStatus;\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Get the Low Error Status bits\n    //\n    errorStatus = (HWREG(eccBase + FLASH_O_ERR_STATUS) & 0x7UL);\n    return((Flash_ErrorStatus)errorStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t errorStatus; // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Get the Low Error Status bits // errorStatus = (HWREG(eccBase + FLASH_O_ERR_STATUS) & 0x7UL); return((Flash_ErrorStatus)errorStatus); }",
+      "registersUsed": [
+        "ERR_STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_STATUS"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getHighErrorStatus",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline Flash_ErrorStatus",
+      "functionContent": "{\n    uint32_t errorStatus;\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Get the High Error Status bits\n    //\n    errorStatus = ((HWREG(eccBase + FLASH_O_ERR_STATUS) >> 16U) & 0x7UL);\n    return((Flash_ErrorStatus)errorStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t errorStatus; // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Get the High Error Status bits // errorStatus = ((HWREG(eccBase + FLASH_O_ERR_STATUS) >> 16U) & 0x7UL); return((Flash_ErrorStatus)errorStatus); }",
+      "registersUsed": [
+        "ERR_STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_STATUS"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getLowErrorPosition",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    return((HWREG(eccBase + FLASH_O_ERR_POS) &\n            (uint32_t)FLASH_ERR_POS_ERR_POS_L_M) >>\n            FLASH_ERR_POS_ERR_POS_L_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); return((HWREG(eccBase + FLASH_O_ERR_POS) & (uint32_t)FLASH_ERR_POS_ERR_POS_L_M) >> FLASH_ERR_POS_ERR_POS_L_S); }",
+      "registersUsed": [
+        "ERR_POS"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_POS"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getHighErrorPosition",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    return((HWREG(eccBase + FLASH_O_ERR_POS) &\n            (uint32_t)FLASH_ERR_POS_ERR_POS_H_M) >>\n            FLASH_ERR_POS_ERR_POS_H_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); return((HWREG(eccBase + FLASH_O_ERR_POS) & (uint32_t)FLASH_ERR_POS_ERR_POS_H_M) >> FLASH_ERR_POS_ERR_POS_H_S); }",
+      "registersUsed": [
+        "ERR_POS"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_POS"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_clearLowErrorPosition",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_ERR_POS) &= ~(uint32_t)FLASH_ERR_POS_ERR_POS_L_M;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; HWREG(eccBase + FLASH_O_ERR_POS) &= ~(uint32_t)FLASH_ERR_POS_ERR_POS_L_M; EDIS; }",
+      "registersUsed": [
+        "ERR_POS"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_POS"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_clearHighErrorPosition",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_ERR_POS) &= ~(uint32_t)FLASH_ERR_POS_ERR_POS_H_M;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; HWREG(eccBase + FLASH_O_ERR_POS) &= ~(uint32_t)FLASH_ERR_POS_ERR_POS_H_M; EDIS; }",
+      "registersUsed": [
+        "ERR_POS"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_POS"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getLowErrorType",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline Flash_ErrorType",
+      "functionContent": "{\n    Flash_ErrorType errorType;\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Check which error type.\n    // If bit is 1 then ECC error, else it is a Data error.\n    //\n    if((HWREG(eccBase + FLASH_O_ERR_POS) & FLASH_ERR_POS_ERR_TYPE_L)\n                                == FLASH_ERR_POS_ERR_TYPE_L)\n    {\n        errorType =  FLASH_ECC_ERR;\n    }\n    else\n    {\n        errorType =  FLASH_DATA_ERR;\n    }\n\n    return(errorType);\n}\n",
+      "functionContentWithoutFormatting": "{ Flash_ErrorType errorType; // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Check which error type. // If bit is 1 then ECC error, else it is a Data error. // if((HWREG(eccBase + FLASH_O_ERR_POS) & FLASH_ERR_POS_ERR_TYPE_L) == FLASH_ERR_POS_ERR_TYPE_L) { errorType = FLASH_ECC_ERR; } else { errorType = FLASH_DATA_ERR; } return(errorType); }",
+      "registersUsed": [
+        "ERR_POS"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_POS"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getHighErrorType",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline Flash_ErrorType",
+      "functionContent": "{\n    Flash_ErrorType errorType;\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Check which error type.\n    // If bit is 1 then ECC error, else it is a Data error.\n    //\n    if((HWREG(eccBase + FLASH_O_ERR_POS) & FLASH_ERR_POS_ERR_TYPE_H)\n                                == FLASH_ERR_POS_ERR_TYPE_H)\n    {\n        errorType =  FLASH_ECC_ERR;\n    }\n    else\n    {\n        errorType =  FLASH_DATA_ERR;\n    }\n\n    return(errorType);\n}\n",
+      "functionContentWithoutFormatting": "{ Flash_ErrorType errorType; // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Check which error type. // If bit is 1 then ECC error, else it is a Data error. // if((HWREG(eccBase + FLASH_O_ERR_POS) & FLASH_ERR_POS_ERR_TYPE_H) == FLASH_ERR_POS_ERR_TYPE_H) { errorType = FLASH_ECC_ERR; } else { errorType = FLASH_DATA_ERR; } return(errorType); }",
+      "registersUsed": [
+        "ERR_POS"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_POS"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_clearLowErrorStatus",
+      "functionArgs": [
+        "eccBase",
+        "errorStatus"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n    ASSERT( errorStatus <= 7U );\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_ERR_STATUS_CLR) |= ((uint32_t)errorStatus);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); ASSERT( errorStatus <= 7U ); EALLOW; HWREG(eccBase + FLASH_O_ERR_STATUS_CLR) |= ((uint32_t)errorStatus); EDIS; }",
+      "registersUsed": [
+        "ERR_STATUS",
+        "ERR_STATUS_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_STATUS",
+        "ERR_STATUS_CLR"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_clearHighErrorStatus",
+      "functionArgs": [
+        "eccBase",
+        "errorStatus"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n    ASSERT( errorStatus <= 7U );\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_ERR_STATUS_CLR) |= ((uint32_t)errorStatus << 16U);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); ASSERT( errorStatus <= 7U ); EALLOW; HWREG(eccBase + FLASH_O_ERR_STATUS_CLR) |= ((uint32_t)errorStatus << 16U); EDIS; }",
+      "registersUsed": [
+        "ERR_STATUS",
+        "ERR_STATUS_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_STATUS",
+        "ERR_STATUS_CLR"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getErrorCount",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    return(HWREG(eccBase + FLASH_O_ERR_CNT) &\n            (uint32_t)FLASH_ERR_CNT_ERR_CNT_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); return(HWREG(eccBase + FLASH_O_ERR_CNT) & (uint32_t)FLASH_ERR_CNT_ERR_CNT_M); }",
+      "registersUsed": [
+        "ERR_CNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_CNT"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setErrorThreshold",
+      "functionArgs": [
+        "eccBase",
+        "threshold"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_ERR_THRESHOLD) = ((uint32_t)threshold &\n        (uint32_t)FLASH_ERR_THRESHOLD_ERR_THRESHOLD_M);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; HWREG(eccBase + FLASH_O_ERR_THRESHOLD) = ((uint32_t)threshold & (uint32_t)FLASH_ERR_THRESHOLD_ERR_THRESHOLD_M); EDIS; }",
+      "registersUsed": [
+        "ERR_THRESHOLD"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_THRESHOLD"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getInterruptFlag",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Read which type of error occurred.\n    //\n    return((HWREG(eccBase + FLASH_O_ERR_INTFLG) & (uint32_t)0x3U));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Read which type of error occurred. // return((HWREG(eccBase + FLASH_O_ERR_INTFLG) & (uint32_t)0x3U)); }",
+      "registersUsed": [
+        "ERR_INTFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_INTFLG"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_clearSingleErrorInterruptFlag",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_ERR_INTCLR) |=\n        FLASH_ERR_INTCLR_SINGLE_ERR_INTCLR;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; HWREG(eccBase + FLASH_O_ERR_INTCLR) |= FLASH_ERR_INTCLR_SINGLE_ERR_INTCLR; EDIS; }",
+      "registersUsed": [
+        "ERR_INTCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_INTCLR"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_clearUncorrectableInterruptFlag",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_ERR_INTCLR) |=\n        FLASH_ERR_INTCLR_UNC_ERR_INTCLR;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; HWREG(eccBase + FLASH_O_ERR_INTCLR) |= FLASH_ERR_INTCLR_UNC_ERR_INTCLR; EDIS; }",
+      "registersUsed": [
+        "ERR_INTCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERR_INTCLR"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setDataLowECCTest",
+      "functionArgs": [
+        "eccBase",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_FDATAL_TEST) = data;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; HWREG(eccBase + FLASH_O_FDATAL_TEST) = data; EDIS; }",
+      "registersUsed": [
+        "FDATAL_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "FDATAL_TEST"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setDataHighECCTest",
+      "functionArgs": [
+        "eccBase",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_FDATAH_TEST) = data;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; HWREG(eccBase + FLASH_O_FDATAH_TEST) = data; EDIS; }",
+      "registersUsed": [
+        "FDATAH_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "FDATAH_TEST"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setECCTestAddress",
+      "functionArgs": [
+        "eccBase",
+        "address"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Left shift the address 1 bit to make it byte-addressable\n    //\n    uint32_t byteAddress = address << 1;\n\n    EALLOW;\n\n    //\n    // Write bits 21-3 to the register.\n    //\n    HWREG(eccBase + FLASH_O_FADDR_TEST) = byteAddress;\n\n    EDIS;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Left shift the address 1 bit to make it byte-addressable // uint32_t byteAddress = address << 1; EALLOW; // // Write bits 21-3 to the register. // HWREG(eccBase + FLASH_O_FADDR_TEST) = byteAddress; EDIS; }",
+      "registersUsed": [
+        "FADDR_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "FADDR_TEST"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setECCTestECCBits",
+      "functionArgs": [
+        "eccBase",
+        "ecc"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    ASSERT( ecc <= 255U );\n    EALLOW;\n\n    //\n    // Write the 8 ECC Control Bits.\n    //\n    HWREG(eccBase + FLASH_O_FECC_TEST) =\n        ((uint32_t)ecc & (uint32_t)FLASH_FECC_TEST_ECC_M);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); ASSERT( ecc <= 255U ); EALLOW; // // Write the 8 ECC Control Bits. // HWREG(eccBase + FLASH_O_FECC_TEST) = ((uint32_t)ecc & (uint32_t)FLASH_FECC_TEST_ECC_M); EDIS; }",
+      "registersUsed": [
+        "FECC_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_TEST"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_enableECCTestMode",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_FECC_CTRL) |= FLASH_FECC_CTRL_ECC_TEST_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; HWREG(eccBase + FLASH_O_FECC_CTRL) |= FLASH_FECC_CTRL_ECC_TEST_EN; EDIS; }",
+      "registersUsed": [
+        "FECC_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_disableECCTestMode",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_FECC_CTRL) &=\n        ~(uint32_t)FLASH_FECC_CTRL_ECC_TEST_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; HWREG(eccBase + FLASH_O_FECC_CTRL) &= ~(uint32_t)FLASH_FECC_CTRL_ECC_TEST_EN; EDIS; }",
+      "registersUsed": [
+        "FECC_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_selectLowECCBlock",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_FECC_CTRL) &=\n        ~(uint32_t)FLASH_FECC_CTRL_ECC_SELECT;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; HWREG(eccBase + FLASH_O_FECC_CTRL) &= ~(uint32_t)FLASH_FECC_CTRL_ECC_SELECT; EDIS; }",
+      "registersUsed": [
+        "FECC_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_selectHighECCBlock",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_FECC_CTRL) |= FLASH_FECC_CTRL_ECC_SELECT;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; HWREG(eccBase + FLASH_O_FECC_CTRL) |= FLASH_FECC_CTRL_ECC_SELECT; EDIS; }",
+      "registersUsed": [
+        "FECC_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_performECCCalculation",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n    HWREG(eccBase + FLASH_O_FECC_CTRL) |= FLASH_FECC_CTRL_DO_ECC_CALC;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; HWREG(eccBase + FLASH_O_FECC_CTRL) |= FLASH_FECC_CTRL_DO_ECC_CALC; EDIS; }",
+      "registersUsed": [
+        "FECC_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getTestDataOutHigh",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    return(HWREG(eccBase + FLASH_O_FOUTH_TEST));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); return(HWREG(eccBase + FLASH_O_FOUTH_TEST)); }",
+      "registersUsed": [
+        "FOUTH_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "FOUTH_TEST"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getTestDataOutLow",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    return(HWREG(eccBase + FLASH_O_FOUTL_TEST));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); return(HWREG(eccBase + FLASH_O_FOUTL_TEST)); }",
+      "registersUsed": [
+        "FOUTL_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "FOUTL_TEST"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getECCTestStatus",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Read which type of error occurred.\n    //\n    return((HWREG(eccBase + FLASH_O_FECC_STATUS)) & (uint32_t)0x3U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Read which type of error occurred. // return((HWREG(eccBase + FLASH_O_FECC_STATUS)) & (uint32_t)0x3U); }",
+      "registersUsed": [
+        "FECC_STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_STATUS"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getECCTestErrorPosition",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Read the position bits and shift it to the right.\n    //\n    return((HWREG(eccBase + FLASH_O_FECC_STATUS) &\n        (uint32_t)FLASH_FECC_STATUS_DATA_ERR_POS_M) >>\n        FLASH_FECC_STATUS_DATA_ERR_POS_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Read the position bits and shift it to the right. // return((HWREG(eccBase + FLASH_O_FECC_STATUS) & (uint32_t)FLASH_FECC_STATUS_DATA_ERR_POS_M) >> FLASH_FECC_STATUS_DATA_ERR_POS_S); }",
+      "registersUsed": [
+        "FECC_STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_STATUS"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_getECCTestSingleBitErrorType",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline Flash_SingleBitErrorIndicator",
+      "functionContent": "{\n    uint32_t errorType;\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Read the ERR_TYPE bit to see where the single bit error was.\n    //\n    errorType = ((HWREG(eccBase + FLASH_O_FECC_STATUS) &\n                (uint32_t)FLASH_FECC_STATUS_ERR_TYPE) >> 8U);\n    return((Flash_SingleBitErrorIndicator)errorType);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t errorType; // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Read the ERR_TYPE bit to see where the single bit error was. // errorType = ((HWREG(eccBase + FLASH_O_FECC_STATUS) & (uint32_t)FLASH_FECC_STATUS_ERR_TYPE) >> 8U); return((Flash_SingleBitErrorIndicator)errorType); }",
+      "registersUsed": [
+        "FECC_STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_STATUS"
+      ]
+    }
+  ]
+}

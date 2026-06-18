@@ -1,0 +1,269 @@
+{
+  "name": "cputimer",
+  "functions": [
+    {
+      "file": "cputimer.c",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_setEmulationMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CPUTimer_EmulationMode"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ASSERT(CPUTimer_isBaseValid(base));\n    //\n    // Write to FREE_SOFT bits of register TCR\n    //\n      HWREGH(base + CPUTIMER_O_TCR) =\n            (uint16_t)((HWREGH(base + CPUTIMER_O_TCR) &\n            ~(CPUTIMER_TCR_FREE | CPUTIMER_TCR_SOFT)) |\n            (uint16_t)mode);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CPUTimer_isBaseValid(base)); // // Write to FREE_SOFT bits of register TCR // HWREGH(base + CPUTIMER_O_TCR) = (uint16_t)((HWREGH(base + CPUTIMER_O_TCR) & ~(CPUTIMER_TCR_FREE | CPUTIMER_TCR_SOFT)) | (uint16_t)mode); }",
+      "registersUsed": [
+        "TCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TCR"
+      ]
+    },
+    {
+      "file": "cputimer.h",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((base == CPUTIMER0_BASE) || (base == CPUTIMER1_BASE) ||\n           (base == CPUTIMER2_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((base == CPUTIMER0_BASE) || (base == CPUTIMER1_BASE) || (base == CPUTIMER2_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "cputimer.h",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_clearOverflowFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CPUTimer_isBaseValid(base));\n\n    //\n    // Set TIF bit of TCR register\n    //\n    HWREGH(base + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIF;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CPUTimer_isBaseValid(base)); // // Set TIF bit of TCR register // HWREGH(base + CPUTIMER_O_TCR) |= CPUTIMER_TCR_TIF; }",
+      "registersUsed": [
+        "TCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TCR"
+      ]
+    },
+    {
+      "file": "cputimer.h",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_disableInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CPUTimer_isBaseValid(base));\n\n    //\n    // Clear TIE bit of TCR register\n    //\n    HWREGH(base + CPUTIMER_O_TCR) &= (uint16_t)(~CPUTIMER_TCR_TIE);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CPUTimer_isBaseValid(base)); // // Clear TIE bit of TCR register // HWREGH(base + CPUTIMER_O_TCR) &= (uint16_t)(~CPUTIMER_TCR_TIE); }",
+      "registersUsed": [
+        "TCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TCR"
+      ]
+    },
+    {
+      "file": "cputimer.h",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_enableInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t tcrValue = 0;\n    ASSERT(CPUTimer_isBaseValid(base));\n\n    //\n    // Set TIE bit of TCR register\n    //\n    tcrValue = (uint16_t)(HWREGH(base + CPUTIMER_O_TCR) & (~CPUTIMER_TCR_TIF));\n    HWREGH(base + CPUTIMER_O_TCR) = tcrValue | CPUTIMER_TCR_TIE;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t tcrValue = 0; ASSERT(CPUTimer_isBaseValid(base)); // // Set TIE bit of TCR register // tcrValue = (uint16_t)(HWREGH(base + CPUTIMER_O_TCR) & (~CPUTIMER_TCR_TIF)); HWREGH(base + CPUTIMER_O_TCR) = tcrValue | CPUTIMER_TCR_TIE; }",
+      "registersUsed": [
+        "TCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TCR"
+      ]
+    },
+    {
+      "file": "cputimer.h",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_reloadTimerCounter",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t tcrValue = 0;\n    ASSERT(CPUTimer_isBaseValid(base));\n\n    //\n    // Set TRB bit of register TCR\n    //\n    tcrValue = (uint16_t)(HWREGH(base + CPUTIMER_O_TCR) & (~CPUTIMER_TCR_TIF));\n    HWREGH(base + CPUTIMER_O_TCR) = tcrValue | CPUTIMER_TCR_TRB;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t tcrValue = 0; ASSERT(CPUTimer_isBaseValid(base)); // // Set TRB bit of register TCR // tcrValue = (uint16_t)(HWREGH(base + CPUTIMER_O_TCR) & (~CPUTIMER_TCR_TIF)); HWREGH(base + CPUTIMER_O_TCR) = tcrValue | CPUTIMER_TCR_TRB; }",
+      "registersUsed": [
+        "TCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TCR"
+      ]
+    },
+    {
+      "file": "cputimer.h",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_stopTimer",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t tcrValue = 0;\n    ASSERT(CPUTimer_isBaseValid(base));\n\n    //\n    // Set TSS bit of register TCR\n    //\n    tcrValue = (uint16_t)(HWREGH(base + CPUTIMER_O_TCR) & (~CPUTIMER_TCR_TIF));\n    HWREGH(base + CPUTIMER_O_TCR) = tcrValue | CPUTIMER_TCR_TSS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t tcrValue = 0; ASSERT(CPUTimer_isBaseValid(base)); // // Set TSS bit of register TCR // tcrValue = (uint16_t)(HWREGH(base + CPUTIMER_O_TCR) & (~CPUTIMER_TCR_TIF)); HWREGH(base + CPUTIMER_O_TCR) = tcrValue | CPUTIMER_TCR_TSS; }",
+      "registersUsed": [
+        "TCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TCR"
+      ]
+    },
+    {
+      "file": "cputimer.h",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_resumeTimer",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CPUTimer_isBaseValid(base));\n\n    //\n    // Clear TSS bit of register TCR\n    //\n    HWREGH(base + CPUTIMER_O_TCR) &= (uint16_t)(~CPUTIMER_TCR_TSS);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CPUTimer_isBaseValid(base)); // // Clear TSS bit of register TCR // HWREGH(base + CPUTIMER_O_TCR) &= (uint16_t)(~CPUTIMER_TCR_TSS); }",
+      "registersUsed": [
+        "TCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TCR"
+      ]
+    },
+    {
+      "file": "cputimer.h",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_startTimer",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t tcrValue = 0;\n    ASSERT(CPUTimer_isBaseValid(base));\n\n    //\n    // Reload the timer counter\n    //\n    tcrValue = (uint16_t)(HWREGH(base + CPUTIMER_O_TCR) & (~CPUTIMER_TCR_TIF));\n    HWREGH(base + CPUTIMER_O_TCR) = tcrValue | CPUTIMER_TCR_TRB;\n\n    //\n    // Clear TSS bit of register TCR\n    //\n    HWREGH(base + CPUTIMER_O_TCR) &= (uint16_t)~CPUTIMER_TCR_TSS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t tcrValue = 0; ASSERT(CPUTimer_isBaseValid(base)); // // Reload the timer counter // tcrValue = (uint16_t)(HWREGH(base + CPUTIMER_O_TCR) & (~CPUTIMER_TCR_TIF)); HWREGH(base + CPUTIMER_O_TCR) = tcrValue | CPUTIMER_TCR_TRB; // // Clear TSS bit of register TCR // HWREGH(base + CPUTIMER_O_TCR) &= (uint16_t)~CPUTIMER_TCR_TSS; }",
+      "registersUsed": [
+        "TCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TCR"
+      ]
+    },
+    {
+      "file": "cputimer.h",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_setPeriod",
+      "functionArgs": [
+        "base",
+        "periodCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CPUTimer_isBaseValid(base));\n    ASSERT(periodCount > 1U);\n\n    //\n    // Load the MSB period Count\n    //\n    HWREG(base + CPUTIMER_O_PRD) = (periodCount - 1U);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CPUTimer_isBaseValid(base)); ASSERT(periodCount > 1U); // // Load the MSB period Count // HWREG(base + CPUTIMER_O_PRD) = (periodCount - 1U); }",
+      "registersUsed": [
+        "PRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "PRD"
+      ]
+    },
+    {
+      "file": "cputimer.h",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_getTimerCount",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    ASSERT(CPUTimer_isBaseValid(base));\n\n    //\n    // Get the TIMH:TIM registers value\n    //\n    return(HWREG(base + CPUTIMER_O_TIM));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CPUTimer_isBaseValid(base)); // // Get the TIMH:TIM registers value // return(HWREG(base + CPUTIMER_O_TIM)); }",
+      "registersUsed": [
+        "TIM"
+      ],
+      "registersUsedMatchingBifield": [
+        "TIM"
+      ]
+    },
+    {
+      "file": "cputimer.h",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_setPreScaler",
+      "functionArgs": [
+        "base",
+        "prescaler"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CPUTimer_isBaseValid(base));\n\n    //\n    // Writes to TPR.TDDR and TPRH.TDDRH bits\n    //\n    HWREGH(base + CPUTIMER_O_TPRH) = prescaler >> 8U;\n    HWREGH(base + CPUTIMER_O_TPR) = (prescaler & CPUTIMER_TPR_TDDR_M) ;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CPUTimer_isBaseValid(base)); // // Writes to TPR.TDDR and TPRH.TDDRH bits // HWREGH(base + CPUTIMER_O_TPRH) = prescaler >> 8U; HWREGH(base + CPUTIMER_O_TPR) = (prescaler & CPUTIMER_TPR_TDDR_M) ; }",
+      "registersUsed": [
+        "TPR",
+        "TPRH"
+      ],
+      "registersUsedMatchingBifield": [
+        "TPR",
+        "TPRH"
+      ]
+    },
+    {
+      "file": "cputimer.h",
+      "peripheral": "cputimer",
+      "functionName": "CPUTimer_getTimerOverflowStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    ASSERT(CPUTimer_isBaseValid(base));\n\n    //\n    // Check if TIF bits of register TCR are set\n    //\n    return(((HWREGH(base + CPUTIMER_O_TCR) & CPUTIMER_TCR_TIF) ==\n            CPUTIMER_TCR_TIF) ? true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CPUTimer_isBaseValid(base)); // // Check if TIF bits of register TCR are set // return(((HWREGH(base + CPUTIMER_O_TCR) & CPUTIMER_TCR_TIF) == CPUTIMER_TCR_TIF) ? true : false); }",
+      "registersUsed": [
+        "TCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TCR"
+      ]
+    }
+  ]
+}

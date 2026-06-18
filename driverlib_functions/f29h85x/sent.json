@@ -1,0 +1,1081 @@
+{
+  "name": "sent",
+  "functions": [
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\nreturn (\n           ((base & BASE_ADDR_MASK) == SENT1_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == SENT2_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == SENT3_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == SENT4_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == SENT5_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == SENT6_BASE_FRAME(0U))\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return ( ((base & BASE_ADDR_MASK) == SENT1_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == SENT2_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == SENT3_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == SENT4_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == SENT5_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == SENT6_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_enableSENTReceiver",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Enable SENT reveiver to monitor the SENT bus.\n    //\n\n    HWREG(base + SENT_O_RCFG) |= SENT_RCFG_RX_ENB;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Enable SENT reveiver to monitor the SENT bus. // HWREG(base + SENT_O_RCFG) |= SENT_RCFG_RX_ENB; }",
+      "registersUsed": [
+        "RCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_disableSENTReceiver",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Disable SENT receiver.\n    //\n\n    HWREG(base + SENT_O_RCFG) &= ~SENT_RCFG_RX_ENB;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Disable SENT receiver. // HWREG(base + SENT_O_RCFG) &= ~SENT_RCFG_RX_ENB; }",
+      "registersUsed": [
+        "RCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_enableSENTCRC",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Enable the CRC for fast and slow channel.\n    //\n\n    HWREG(base + SENT_O_RCFG) |= SENT_RCFG_RX_CRCENB;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Enable the CRC for fast and slow channel. // HWREG(base + SENT_O_RCFG) |= SENT_RCFG_RX_CRCENB; }",
+      "registersUsed": [
+        "RCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_disableSENTCRC",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Disable the CRC for fast and slow channel.\n    //\n\n    HWREG(base + SENT_O_RCFG) &= ~SENT_RCFG_RX_CRCENB;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Disable the CRC for fast and slow channel. // HWREG(base + SENT_O_RCFG) &= ~SENT_RCFG_RX_CRCENB; }",
+      "registersUsed": [
+        "RCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_enableSENTPausePulse",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Enable the pause pulse after the CRC.\n    //\n\n    HWREG(base + SENT_O_RCFG) |= SENT_RCFG_RX_PPENB;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Enable the pause pulse after the CRC. // HWREG(base + SENT_O_RCFG) |= SENT_RCFG_RX_PPENB; }",
+      "registersUsed": [
+        "RCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_disableSENTPausePulse",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Disable the pause pulse after the CRC.\n    //\n\n    HWREG(base + SENT_O_RCFG) &= ~SENT_RCFG_RX_PPENB;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Disable the pause pulse after the CRC. // HWREG(base + SENT_O_RCFG) &= ~SENT_RCFG_RX_PPENB; }",
+      "registersUsed": [
+        "RCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setCRCType",
+      "functionArgs": [
+        "base",
+        "crcType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_CRCType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n\n    //\n    // Set CRC type.\n    //\n\n    HWREG(base + SENT_O_RCFG) = (HWREG(base + SENT_O_RCFG) &\n                                ~SENT_RCFG_RX_CRCTYPE) | (uint32_t)crcType;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Set CRC type. // HWREG(base + SENT_O_RCFG) = (HWREG(base + SENT_O_RCFG) & ~SENT_RCFG_RX_CRCTYPE) | (uint32_t)crcType; }",
+      "registersUsed": [
+        "RCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setCRCWidth",
+      "functionArgs": [
+        "base",
+        "crcWidth"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_CRCWidth"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Set CRC width for fast channel.\n    //\n    HWREG(base + SENT_O_RCFG) = (HWREG(base + SENT_O_RCFG) &\n                                 ~SENT_RCFG_CRC_WIDTH_M) |\n                                 ((uint32_t)crcWidth << SENT_RCFG_CRC_WIDTH_S);\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Set CRC width for fast channel. // HWREG(base + SENT_O_RCFG) = (HWREG(base + SENT_O_RCFG) & ~SENT_RCFG_CRC_WIDTH_M) | ((uint32_t)crcWidth << SENT_RCFG_CRC_WIDTH_S); }",
+      "registersUsed": [
+        "RCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setDataNibble",
+      "functionArgs": [
+        "base",
+        "dataNibble"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_DataNibble"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Set the number of data nibbles for standard SENT.\n    //\n\n    HWREG(base + SENT_O_RCFG) =\n                            (HWREG(base + SENT_O_RCFG) & ~SENT_RCFG_RX_DNIB_M) |\n                            ((uint32_t)dataNibble) << SENT_RCFG_RX_DNIB_S;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Set the number of data nibbles for standard SENT. // HWREG(base + SENT_O_RCFG) = (HWREG(base + SENT_O_RCFG) & ~SENT_RCFG_RX_DNIB_M) | ((uint32_t)dataNibble) << SENT_RCFG_RX_DNIB_S; }",
+      "registersUsed": [
+        "RCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setTTClock",
+      "functionArgs": [
+        "base",
+        "ttClock"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Set the number of clock cycle per tick time.\n    //\n\n    HWREG(base + SENT_O_RCFG) = (HWREG(base + SENT_O_RCFG) &\n                                ~SENT_RCFG_TTCLK_M) |\n                                ((uint32_t)ttClock << SENT_RCFG_TTCLK_S);\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Set the number of clock cycle per tick time. // HWREG(base + SENT_O_RCFG) = (HWREG(base + SENT_O_RCFG) & ~SENT_RCFG_TTCLK_M) | ((uint32_t)ttClock << SENT_RCFG_TTCLK_S); }",
+      "registersUsed": [
+        "RCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setRxCRC",
+      "functionArgs": [
+        "base",
+        "rxCRC"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_RxCRC"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Set the number of clock cycle per tick time.\n    //\n\n    HWREG(base + SENT_O_RCFG) = (HWREG(base + SENT_O_RCFG) &\n                        ~SENT_RCFG_RX_CRC_WITH_STATUS) | ((uint32_t)rxCRC);\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Set the number of clock cycle per tick time. // HWREG(base + SENT_O_RCFG) = (HWREG(base + SENT_O_RCFG) & ~SENT_RCFG_RX_CRC_WITH_STATUS) | ((uint32_t)rxCRC); }",
+      "registersUsed": [
+        "RCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_getFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Return the received SENT fast channel data located at the\n    // top of the receive FIFO.\n    //\n\n    return(HWREG(base + SENT_O_RFDATA));\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Return the received SENT fast channel data located at the // top of the receive FIFO. // return(HWREG(base + SENT_O_RFDATA)); }",
+      "registersUsed": [
+        "RFDATA"
+      ],
+      "registersUsedMatchingBifield": [
+        "RFDATA"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_enableDMAtrigger",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Enable DMA trigger.\n    //\n\n    HWREG(base + SENT_O_RCFG2) |= SENT_RCFG2_DMA_ENB;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Enable DMA trigger. // HWREG(base + SENT_O_RCFG2) |= SENT_RCFG2_DMA_ENB; }",
+      "registersUsed": [
+        "RCFG",
+        "RCFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG",
+        "RCFG2"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_disableDMAtrigger",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Disable DMA trigger.\n    //\n\n    HWREG(base + SENT_O_RCFG2) &= ~SENT_RCFG2_DMA_ENB;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Disable DMA trigger. // HWREG(base + SENT_O_RCFG2) &= ~SENT_RCFG2_DMA_ENB; }",
+      "registersUsed": [
+        "RCFG",
+        "RCFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG",
+        "RCFG2"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_configureFIFOMode",
+      "functionArgs": [
+        "base",
+        "fifoMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_FIFOMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Configure FIFO Mode.\n    //\n\n    HWREG(base + SENT_O_RCFG2) = (HWREG(base + SENT_O_RCFG2) &\n                                 ~SENT_RCFG2_FIFO_MODE) | (uint32_t)fifoMode;\n\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Configure FIFO Mode. // HWREG(base + SENT_O_RCFG2) = (HWREG(base + SENT_O_RCFG2) & ~SENT_RCFG2_FIFO_MODE) | (uint32_t)fifoMode; }",
+      "registersUsed": [
+        "RCFG",
+        "RCFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG",
+        "RCFG2"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setGFILTClockCycle",
+      "functionArgs": [
+        "base",
+        "gFiltClock"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Set the number of clock cycle to be filtered out.\n    //\n\n    HWREG(base + SENT_O_RCFG2) = (HWREG(base + SENT_O_RCFG2) &\n                                ~SENT_RCFG2_GFILT_M) |\n                                ((uint32_t)gFiltClock << SENT_RCFG2_GFILT_S);\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Set the number of clock cycle to be filtered out. // HWREG(base + SENT_O_RCFG2) = (HWREG(base + SENT_O_RCFG2) & ~SENT_RCFG2_GFILT_M) | ((uint32_t)gFiltClock << SENT_RCFG2_GFILT_S); }",
+      "registersUsed": [
+        "RCFG",
+        "RCFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG",
+        "RCFG2"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_enableTimeStamp",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Enable Time Stamp.\n    //\n\n    HWREG(base + SENT_O_RCFG2) &= ~SENT_RCFG2_TSTAMP_DIS;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Enable Time Stamp. // HWREG(base + SENT_O_RCFG2) &= ~SENT_RCFG2_TSTAMP_DIS; }",
+      "registersUsed": [
+        "RCFG",
+        "RCFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG",
+        "RCFG2"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_disableTimeStamp",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Disable Time Stamp.\n    //\n\n    HWREG(base + SENT_O_RCFG2) |= SENT_RCFG2_TSTAMP_DIS;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Disable Time Stamp. // HWREG(base + SENT_O_RCFG2) |= SENT_RCFG2_TSTAMP_DIS; }",
+      "registersUsed": [
+        "RCFG",
+        "RCFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG",
+        "RCFG2"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_enableERRDATAwrite",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Enable Time Stamp\n    //\n\n    HWREG(base + SENT_O_RCFG2) &= ~SENT_RCFG2_NOWR_ERRDATA;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Enable Time Stamp // HWREG(base + SENT_O_RCFG2) &= ~SENT_RCFG2_NOWR_ERRDATA; }",
+      "registersUsed": [
+        "RCFG",
+        "RCFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG",
+        "RCFG2"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_disableERRDATAwrite",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Disable Time Stamp\n    //\n\n    HWREG(base + SENT_O_RCFG2) |= SENT_RCFG2_NOWR_ERRDATA;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Disable Time Stamp // HWREG(base + SENT_O_RCFG2) |= SENT_RCFG2_NOWR_ERRDATA; }",
+      "registersUsed": [
+        "RCFG",
+        "RCFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG",
+        "RCFG2"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_enableMTPMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Enable the MTP Mode\n    //\n\n    HWREG(base + SENT_O_RCFG2) |= SENT_RCFG2_MTP_MODE;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Enable the MTP Mode // HWREG(base + SENT_O_RCFG2) |= SENT_RCFG2_MTP_MODE; }",
+      "registersUsed": [
+        "RCFG",
+        "RCFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG",
+        "RCFG2"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_disableMTPMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Disable MTP Mode.\n    //\n\n    HWREG(base + SENT_O_RCFG2) &= ~SENT_RCFG2_MTP_MODE;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Disable MTP Mode. // HWREG(base + SENT_O_RCFG2) &= ~SENT_RCFG2_MTP_MODE; }",
+      "registersUsed": [
+        "RCFG",
+        "RCFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG",
+        "RCFG2"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setRFIFOTriggerLevel",
+      "functionArgs": [
+        "base",
+        "triggerLevel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_TriggerLevel"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Configure the trigger level for the receiver FIFO trigger interrupt and\n    // DMA trigger.\n    //\n\n    HWREG(base + SENT_O_RCFG2) = (HWREG(base + SENT_O_RCFG2) &\n                        ~SENT_RCFG2_RFIFO_TRIGLEV_M) |\n                        ((uint32_t)triggerLevel << SENT_RCFG2_RFIFO_TRIGLEV_S);\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Configure the trigger level for the receiver FIFO trigger interrupt and // DMA trigger. // HWREG(base + SENT_O_RCFG2) = (HWREG(base + SENT_O_RCFG2) & ~SENT_RCFG2_RFIFO_TRIGLEV_M) | ((uint32_t)triggerLevel << SENT_RCFG2_RFIFO_TRIGLEV_S); }",
+      "registersUsed": [
+        "RCFG",
+        "RCFG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCFG",
+        "RCFG2"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_enableSoftwareReset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Enable software reset.\n    //\n\n    HWREG(base + SENT_O_CSENT_SWR) |= SENT_CSENT_SWR_SWR;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Enable software reset. // HWREG(base + SENT_O_CSENT_SWR) |= SENT_CSENT_SWR_SWR; }",
+      "registersUsed": [
+        "CSENT_SWR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CSENT_SWR"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_disableSoftwareReset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Disable software reset.\n    //\n\n    HWREG(base + SENT_O_CSENT_SWR) &= ~SENT_CSENT_SWR_SWR;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Disable software reset. // HWREG(base + SENT_O_CSENT_SWR) &= ~SENT_CSENT_SWR_SWR; }",
+      "registersUsed": [
+        "CSENT_SWR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CSENT_SWR"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setDataSortingFormat",
+      "functionArgs": [
+        "base",
+        "dataNumber",
+        "nibbleNum",
+        "nibble"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_DataNumber",
+        "SENT_NibbleNumber",
+        "SENT_Nibble"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t dataOffset;\n    uint32_t shiftVal;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    dataOffset = (SENT_DATAxMAP_STEP * (uint32_t)dataNumber) + SENT_O_DATA0_MAP;\n    shiftVal = (uint32_t)nibbleNum * 4U;\n\n    //\n    // Configure the trigger level for the receiver FIFO trigger interrupt.\n    //\n\n    HWREG(base + dataOffset) = (HWREG(base + dataOffset) &\n                        ~(SENT_DATA0_MAP_D0_NIB0_M << shiftVal)) |\n                        ((uint32_t)nibble << shiftVal);\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t dataOffset; uint32_t shiftVal; // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); dataOffset = (SENT_DATAxMAP_STEP * (uint32_t)dataNumber) + SENT_O_DATA0_MAP; shiftVal = (uint32_t)nibbleNum * 4U; // // Configure the trigger level for the receiver FIFO trigger interrupt. // HWREG(base + dataOffset) = (HWREG(base + dataOffset) & ~(SENT_DATA0_MAP_D0_NIB0_M << shiftVal)) | ((uint32_t)nibble << shiftVal); }",
+      "registersUsed": [
+        "DATA0_MAP"
+      ],
+      "registersUsedMatchingBifield": [
+        "DATA0_MAP"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_configureTimeout",
+      "functionArgs": [
+        "base",
+        "timeOut"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Configure the timout for SENT module.\n    //\n\n    HWREG(base + SENT_O_CSENT_TO) = timeOut;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Configure the timout for SENT module. // HWREG(base + SENT_O_CSENT_TO) = timeOut; }",
+      "registersUsed": [
+        "CSENT_TO"
+      ],
+      "registersUsedMatchingBifield": [
+        "CSENT_TO"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_readSerialDataIn",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Returns the synchronized serial data input value.\n    //\n    return(HWREG(base + SENT_O_CSENT_RXD));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Returns the synchronized serial data input value. // return(HWREG(base + SENT_O_CSENT_RXD)); }",
+      "registersUsed": [
+        "CSENT_RXD"
+      ],
+      "registersUsedMatchingBifield": [
+        "CSENT_RXD"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Enable the specified interrupt.\n    //\n\n    HWREG(base + SENT_O_REINT) |= intFlags;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Enable the specified interrupt. // HWREG(base + SENT_O_REINT) |= intFlags; }",
+      "registersUsed": [
+        "REINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "REINT"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Disable the specified interrupt.\n    //\n\n    HWREG(base + SENT_O_REINT) &= ~intFlags;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Disable the specified interrupt. // HWREG(base + SENT_O_REINT) &= ~intFlags; }",
+      "registersUsed": [
+        "REINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "REINT"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_readInterruptStatus",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Disable the specified interrupt.\n    //\n    return(HWREG(base + SENT_O_RINTFLAG) & intFlags);\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Disable the specified interrupt. // return(HWREG(base + SENT_O_RINTFLAG) & intFlags); }",
+      "registersUsed": [
+        "RINTFLAG"
+      ],
+      "registersUsedMatchingBifield": [
+        "RINTFLAG"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setSWInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Set the specified interrupt.\n    //\n\n    HWREG(base + SENT_O_RSETINT) |= intFlags;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Set the specified interrupt. // HWREG(base + SENT_O_RSETINT) |= intFlags; }",
+      "registersUsed": [
+        "RSETINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "RSETINT"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_clearInterruptFlag",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Clear the specified interrupt.\n    //\n\n    HWREG(base + SENT_O_RCLRINT) |= intFlags;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Clear the specified interrupt. // HWREG(base + SENT_O_RCLRINT) |= intFlags; }",
+      "registersUsed": [
+        "RCLRINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCLRINT"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_getFrameData",
+      "functionArgs": [
+        "base",
+        "SENTWord"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Return the received work from SENT Fast channel data when FIFO is\n    // not enabled and it is memory mapped.\n    //\n\n    return(HWREG(base + SENT_O_MDATA((uint32_t)SENTWord)));\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(SENT_isBaseValid(base)); // // Return the received work from SENT Fast channel data when FIFO is // not enabled and it is memory mapped. // return(HWREG(base + SENT_O_MDATA((uint32_t)SENTWord))); }",
+      "registersUsed": [
+        "MDATA(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDATA(i)"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_enableMTPChannel",
+      "functionArgs": [
+        "base",
+        "channel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_Channel"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t channelOffset;\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    channelOffset = (SENT_MTP_CHANNEL_STEP * (uint32_t)channel) +\n                    SENT_O_BC_MTP_EN;\n\n    //\n    // Enable the channel to generate trigger pulses.\n    //\n\n    HWREG(base + channelOffset) |= SENT_BC_MTP_EN_MTP_EN;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t channelOffset; // // Check the arguments // ASSERT(SENT_isBaseValid(base)); channelOffset = (SENT_MTP_CHANNEL_STEP * (uint32_t)channel) + SENT_O_BC_MTP_EN; // // Enable the channel to generate trigger pulses. // HWREG(base + channelOffset) |= SENT_BC_MTP_EN_MTP_EN; }",
+      "registersUsed": [
+        "BC_MTP_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "BC_MTP_EN"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_disableMTPChannel",
+      "functionArgs": [
+        "base",
+        "channel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_Channel"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    uint32_t channelOffset;\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    channelOffset = (SENT_MTP_CHANNEL_STEP * (uint32_t)channel) +\n                    SENT_O_BC_MTP_EN;\n\n    //\n    // Disable the channel to generate trigger pulses.\n    //\n\n    HWREG(base + channelOffset) &= ~SENT_BC_MTP_EN_MTP_EN;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t channelOffset; // // Check the arguments // ASSERT(SENT_isBaseValid(base)); channelOffset = (SENT_MTP_CHANNEL_STEP * (uint32_t)channel) + SENT_O_BC_MTP_EN; // // Disable the channel to generate trigger pulses. // HWREG(base + channelOffset) &= ~SENT_BC_MTP_EN_MTP_EN; }",
+      "registersUsed": [
+        "BC_MTP_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "BC_MTP_EN"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setMTPPeriod",
+      "functionArgs": [
+        "base",
+        "channel",
+        "period"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_Channel",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t periodOffset;\n\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    periodOffset = (SENT_MTP_PERIOD_STEP * (uint32_t)channel) +\n                    SENT_O_BC_MTP_PERIOD;\n\n    //\n    // Set the period that the master trigger pulse output waveform is active.\n    //\n\n    HWREG(base + periodOffset) = (HWREG(base + periodOffset) &\n                                    ~SENT_BC_MTP_PERIOD_PERIOD_M) | period;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t periodOffset; // // Check the arguments // ASSERT(SENT_isBaseValid(base)); periodOffset = (SENT_MTP_PERIOD_STEP * (uint32_t)channel) + SENT_O_BC_MTP_PERIOD; // // Set the period that the master trigger pulse output waveform is active. // HWREG(base + periodOffset) = (HWREG(base + periodOffset) & ~SENT_BC_MTP_PERIOD_PERIOD_M) | period; }",
+      "registersUsed": [
+        "BC_MTP_PERIOD"
+      ],
+      "registersUsedMatchingBifield": [
+        "BC_MTP_PERIOD"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setMTPTriggerSelect",
+      "functionArgs": [
+        "base",
+        "channel",
+        "triggerSel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_Channel",
+        "SENT_Trigger"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t triggerOffset;\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    triggerOffset = (SENT_MTP_TRIGSEL_STEP * (uint32_t)channel) +\n                    SENT_O_BC_TRIGSEL;\n\n    //\n    // Set the trigger source which enables the MTPG.\n    //\n\n    HWREG(base + triggerOffset) = (HWREG(base + triggerOffset) &\n                                    ~SENT_BC_TRIGSEL_TRIGSEL_M) | (uint32_t)triggerSel;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t triggerOffset; // // Check the arguments // ASSERT(SENT_isBaseValid(base)); triggerOffset = (SENT_MTP_TRIGSEL_STEP * (uint32_t)channel) + SENT_O_BC_TRIGSEL; // // Set the trigger source which enables the MTPG. // HWREG(base + triggerOffset) = (HWREG(base + triggerOffset) & ~SENT_BC_TRIGSEL_TRIGSEL_M) | (uint32_t)triggerSel; }",
+      "registersUsed": [
+        "BC_TRIGSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "BC_TRIGSEL"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_enableMTPSoftwareTrigger",
+      "functionArgs": [
+        "base",
+        "channel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_Channel"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t triggerOffset;\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    triggerOffset = (SENT_MTP_SWTR_STEP + (uint32_t)channel) +\n                    SENT_O_BC_MTP_SWTR;\n\n    //\n    // Enable broadcast channel's software trigger.\n    //\n\n    HWREG(base + triggerOffset) |= SENT_BC_MTP_SWTR_SWTR;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t triggerOffset; // // Check the arguments // ASSERT(SENT_isBaseValid(base)); triggerOffset = (SENT_MTP_SWTR_STEP + (uint32_t)channel) + SENT_O_BC_MTP_SWTR; // // Enable broadcast channel's software trigger. // HWREG(base + triggerOffset) |= SENT_BC_MTP_SWTR_SWTR; }",
+      "registersUsed": [
+        "BC_MTP_SWTR"
+      ],
+      "registersUsedMatchingBifield": [
+        "BC_MTP_SWTR"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_disableMTPSoftwareTrigger",
+      "functionArgs": [
+        "base",
+        "channel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_Channel"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t triggerOffset;\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    triggerOffset = (SENT_MTP_SWTR_STEP + (uint32_t)channel) +\n                    SENT_O_BC_MTP_SWTR;\n\n    //\n    // Enable broadcast channel's software trigger.\n    //\n\n    HWREG(base + triggerOffset) &= ~SENT_BC_MTP_SWTR_SWTR;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t triggerOffset; // // Check the arguments // ASSERT(SENT_isBaseValid(base)); triggerOffset = (SENT_MTP_SWTR_STEP + (uint32_t)channel) + SENT_O_BC_MTP_SWTR; // // Enable broadcast channel's software trigger. // HWREG(base + triggerOffset) &= ~SENT_BC_MTP_SWTR_SWTR; }",
+      "registersUsed": [
+        "BC_MTP_SWTR"
+      ],
+      "registersUsedMatchingBifield": [
+        "BC_MTP_SWTR"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_configureMTPTimeout",
+      "functionArgs": [
+        "base",
+        "sensorNum",
+        "sensorTimeout"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_SensorNumber",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t sensorOffset;\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    sensorOffset = (SENT_MTP_TIMEOUT_STEP * (uint32_t)sensorNum) +\n                    SENT_O_S1_MTP_TO;\n\n    //\n    // Configure the timout for Sensor channels.\n    //\n\n    HWREG(base + sensorOffset) = sensorTimeout;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t sensorOffset; // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); sensorOffset = (SENT_MTP_TIMEOUT_STEP * (uint32_t)sensorNum) + SENT_O_S1_MTP_TO; // // Configure the timout for Sensor channels. // HWREG(base + sensorOffset) = sensorTimeout; }",
+      "registersUsed": [
+        "S1_MTP_TO"
+      ],
+      "registersUsedMatchingBifield": [
+        "S1_MTP_TO"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setBroadcastChMTPToggleTime",
+      "functionArgs": [
+        "base",
+        "compareNum",
+        "toggleTime"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_CompareNumber",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t toggleOffset;\n\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n    ASSERT(compareNum < SENT_MTP_CMP_10);\n\n    toggleOffset = (SENT_MTP_TOGGLETIME_STEP * (uint32_t)compareNum) +\n                    SENT_O_BC_MTP_CMP1;\n\n    //\n    // Set the toggle time for MTPG output of broadcast channel.\n    //\n\n    HWREG(base + toggleOffset) = (HWREG(base + toggleOffset) &\n                                 ~SENT_BC_MTP_CMP1_TOGGLETIME_M) | toggleTime;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t toggleOffset; // // Check the arguments // ASSERT(SENT_isBaseValid(base)); ASSERT(compareNum < SENT_MTP_CMP_10); toggleOffset = (SENT_MTP_TOGGLETIME_STEP * (uint32_t)compareNum) + SENT_O_BC_MTP_CMP1; // // Set the toggle time for MTPG output of broadcast channel. // HWREG(base + toggleOffset) = (HWREG(base + toggleOffset) & ~SENT_BC_MTP_CMP1_TOGGLETIME_M) | toggleTime; }",
+      "registersUsed": [
+        "BC_MTP_CMP1"
+      ],
+      "registersUsedMatchingBifield": [
+        "BC_MTP_CMP1"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setSensor1MTPToggleTime",
+      "functionArgs": [
+        "base",
+        "compareNum",
+        "toggleTime"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_CompareNumber",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t toggleOffset;\n\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    toggleOffset = (SENT_MTP_TOGGLETIME_STEP * (uint32_t)compareNum) +\n                    SENT_O_S1_MTP_CMP1;\n\n    //\n    // Set the toggle time for MTPG output of broadcast channel.\n    //\n\n    HWREG(base + toggleOffset) = (HWREG(base + toggleOffset) &\n                                 ~SENT_S1_MTP_CMP1_TOGGLETIME_M) | toggleTime;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t toggleOffset; // // Check the arguments // ASSERT(SENT_isBaseValid(base)); toggleOffset = (SENT_MTP_TOGGLETIME_STEP * (uint32_t)compareNum) + SENT_O_S1_MTP_CMP1; // // Set the toggle time for MTPG output of broadcast channel. // HWREG(base + toggleOffset) = (HWREG(base + toggleOffset) & ~SENT_S1_MTP_CMP1_TOGGLETIME_M) | toggleTime; }",
+      "registersUsed": [
+        "S1_MTP_CMP1"
+      ],
+      "registersUsedMatchingBifield": [
+        "S1_MTP_CMP1"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setSensor2MTPToggleTime",
+      "functionArgs": [
+        "base",
+        "compareNum",
+        "toggleTime"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_CompareNumber",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t toggleOffset;\n\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    toggleOffset = (SENT_MTP_TOGGLETIME_STEP * (uint32_t)compareNum) +\n                    SENT_O_S2_MTP_CMP1;\n\n    //\n    // Set the toggle time for MTPG output of broadcast channel.\n    //\n\n    HWREG(base + toggleOffset) = (HWREG(base + toggleOffset) &\n                                 ~SENT_S2_MTP_CMP1_TOGGLETIME_M) | toggleTime;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t toggleOffset; // // Check the arguments // ASSERT(SENT_isBaseValid(base)); toggleOffset = (SENT_MTP_TOGGLETIME_STEP * (uint32_t)compareNum) + SENT_O_S2_MTP_CMP1; // // Set the toggle time for MTPG output of broadcast channel. // HWREG(base + toggleOffset) = (HWREG(base + toggleOffset) & ~SENT_S2_MTP_CMP1_TOGGLETIME_M) | toggleTime; }",
+      "registersUsed": [
+        "S2_MTP_CMP1"
+      ],
+      "registersUsedMatchingBifield": [
+        "S2_MTP_CMP1"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setSensor3MTPToggleTime",
+      "functionArgs": [
+        "base",
+        "compareNum",
+        "toggleTime"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_CompareNumber",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t toggleOffset;\n\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    toggleOffset = (SENT_MTP_TOGGLETIME_STEP * (uint32_t)compareNum) +\n                    SENT_O_S3_MTP_CMP1;\n\n    //\n    // Set the toggle time for MTPG output of Sensor 3 channel.\n    //\n\n    HWREG(base + toggleOffset) = (HWREG(base + toggleOffset) &\n                                 ~SENT_S3_MTP_CMP1_TOGGLETIME_M) | toggleTime;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t toggleOffset; // // Check the arguments // ASSERT(SENT_isBaseValid(base)); toggleOffset = (SENT_MTP_TOGGLETIME_STEP * (uint32_t)compareNum) + SENT_O_S3_MTP_CMP1; // // Set the toggle time for MTPG output of Sensor 3 channel. // HWREG(base + toggleOffset) = (HWREG(base + toggleOffset) & ~SENT_S3_MTP_CMP1_TOGGLETIME_M) | toggleTime; }",
+      "registersUsed": [
+        "S3_MTP_CMP1"
+      ],
+      "registersUsedMatchingBifield": [
+        "S3_MTP_CMP1"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setSensor4MTPToggleTime",
+      "functionArgs": [
+        "base",
+        "compareNum",
+        "toggleTime"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SENT_CompareNumber",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t toggleOffset;\n\n    //\n    // Check the arguments\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    toggleOffset = (SENT_MTP_TOGGLETIME_STEP * (uint32_t)compareNum) +\n                    SENT_O_S4_MTP_CMP1;\n\n    //\n    // Set the toggle time for MTPG output of Sensor 4 channel.\n    //\n\n    HWREG(base + toggleOffset) = (HWREG(base + toggleOffset) &\n                                 ~SENT_S4_MTP_CMP1_TOGGLETIME_M) | toggleTime;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t toggleOffset; // // Check the arguments // ASSERT(SENT_isBaseValid(base)); toggleOffset = (SENT_MTP_TOGGLETIME_STEP * (uint32_t)compareNum) + SENT_O_S4_MTP_CMP1; // // Set the toggle time for MTPG output of Sensor 4 channel. // HWREG(base + toggleOffset) = (HWREG(base + toggleOffset) & ~SENT_S4_MTP_CMP1_TOGGLETIME_M) | toggleTime; }",
+      "registersUsed": [
+        "S4_MTP_CMP1"
+      ],
+      "registersUsedMatchingBifield": [
+        "S4_MTP_CMP1"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setMTPWaitTime",
+      "functionArgs": [
+        "base",
+        "waitTime"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Configure the global wait time in clock tick unit.\n    //\n\n    HWREG(base + SENT_O_WAITTIME) = (HWREG(base + SENT_O_WAITTIME) &\n                                    ~SENT_WAITTIME_WAITTIME_M) | waitTime;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Configure the global wait time in clock tick unit. // HWREG(base + SENT_O_WAITTIME) = (HWREG(base + SENT_O_WAITTIME) & ~SENT_WAITTIME_WAITTIME_M) | waitTime; }",
+      "registersUsed": [
+        "WAITTIME"
+      ],
+      "registersUsedMatchingBifield": [
+        "WAITTIME"
+      ]
+    },
+    {
+      "file": "sent.h",
+      "peripheral": "sent",
+      "functionName": "SENT_setMTPSoftwareReset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SENT_isBaseValid(base));\n\n    //\n    // Configure the MTPG global software reset.\n    //\n\n    HWREG(base + SENT_O_MTP_SWR) |= SENT_MTP_SWR_SWR;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SENT_isBaseValid(base)); // // Configure the MTPG global software reset. // HWREG(base + SENT_O_MTP_SWR) |= SENT_MTP_SWR_SWR; }",
+      "registersUsed": [
+        "MTP_SWR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MTP_SWR"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1137 @@
+{
+  "name": "wadi",
+  "functions": [
+    {
+      "file": "wadi.c",
+      "peripheral": "wadi",
+      "functionName": "WADI_configSignalAndTrigger",
+      "functionArgs": [
+        "base",
+        "signal1",
+        "signal2",
+        "trigger1",
+        "trigger2"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_InputSignal",
+        "WADI_InputSignal",
+        "WADI_Trigger1",
+        "WADI_Trigger2"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n\n    if(WADI_isWadi1(base))\n    {\n        ASSERT((trigger1 & 0xF0) == 0x10);\n        ASSERT((trigger2 & 0xF0) == 0x10);\n    }\n    else\n    {\n        ASSERT((trigger1 & 0xF0) == 0x20);\n        ASSERT((trigger2 & 0xF0) == 0x20);\n    }\n\n    HWREG(base + WADI_O_BLKCFG)\n        = (((signal1) << WADI_BLKCFG_SIG1IN_S) |\n        ((signal2) << WADI_BLKCFG_SIG2IN_S) |\n        ((trigger1 & 0x0F) << WADI_BLKCFG_TRIG1IN_S) |\n        ((trigger2 & 0x0F) << WADI_BLKCFG_TRIG2IN_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); if(WADI_isWadi1(base)) { ASSERT((trigger1 & 0xF0) == 0x10); ASSERT((trigger2 & 0xF0) == 0x10); } else { ASSERT((trigger1 & 0xF0) == 0x20); ASSERT((trigger2 & 0xF0) == 0x20); } HWREG(base + WADI_O_BLKCFG) = (((signal1) << WADI_BLKCFG_SIG1IN_S) | ((signal2) << WADI_BLKCFG_SIG2IN_S) | ((trigger1 & 0x0F) << WADI_BLKCFG_TRIG1IN_S) | ((trigger2 & 0x0F) << WADI_BLKCFG_TRIG2IN_S)); }",
+      "registersUsed": [
+        "BLKCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKCFG"
+      ]
+    },
+    {
+      "file": "wadi.c",
+      "peripheral": "wadi",
+      "functionName": "WADI_measurePulseWidth",
+      "functionArgs": [
+        "base",
+        "*configSignal",
+        "*configParams",
+        "*configCompare"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constWADI_SigConfig",
+        "constWADI_PulseWidthConfigParams",
+        "constWADI_PulseWidthConfigCompare"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    if(configSignal->signal == WADI_SIGNAL1)   // signal 1\n    {\n        //\n        // Enable the trigger and write the trigger mode\n        // in the BLKTRIGCFG register\n        //\n        HWREG(base + WADI_O_BLKTRIGCFG)\n                |= (configSignal->triggerMode << WADI_BLKTRIGCFG_TRIG1TYPE_S);\n\n        //\n        // Write the mode configurations in the SIG1CFG register\n        //\n        HWREG(base + WADI_O_SIG1CFG)\n                = ((configParams->aggrMode << WADI_SIG1CFG_AGGRMODE_S) |\n                (configParams->numAggr << WADI_SIG1CFG_NUMAGGR_S)|\n                (configParams->edgeSpan << WADI_SIG1CFG_EDGESPAN_S)|\n                (configParams->polarity << WADI_SIG1CFG_SIGPOL_S));\n\n        //\n        // Write the compare values in the Compare registers\n        //\n        HWREG(base + WADI_O_SIG1CMPA)\n                = ((configCompare->cmpAVal << WADI_SIG1CMPA_CMPA_S)|\n                (configCompare->cmpAMargin << WADI_SIG1CMPA_CMPAMARGIN_S));\n\n        HWREG(base + WADI_O_SIG1CMPB)\n                = ((configCompare->cmpBVal << WADI_SIG1CMPB_CMPB_S)|\n                (configCompare->cmpBMargin << WADI_SIG1CMPB_CMPBMARGIN_S));\n\n        HWREG(base + WADI_O_SIG1AVGCFG)\n                = ((configCompare->cmpAvgVal << WADI_SIG1AVGCFG_CMP_S)|\n                (configCompare->cmpAvgMargin << WADI_SIG1AVGCFG_CMPMARGIN_S));\n\n        HWREG(base + WADI_O_SIG1PKCFG)\n                = ((configCompare->cmpPkVal << WADI_SIG1PKCFG_CMP_S)|\n                (configCompare->cmpPkMargin << WADI_SIG1PKCFG_CMPMARGIN_S));\n\n        //\n        // Selecting the signal 1 for debug\n        //\n        HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL1;\n\n    }\n\n    else                            // signal 2\n    {\n        //\n        // Write the trigger mode in the BLKTRIGCFG register\n        //\n        HWREG(base + WADI_O_BLKTRIGCFG)\n                |= (configSignal->triggerMode << WADI_BLKTRIGCFG_TRIG2TYPE_S);\n\n\n        //\n        // Write the mode configurations in the SIG2CFG register\n        //\n        HWREG(base + WADI_O_SIG2CFG)\n                = ((configParams->aggrMode << WADI_SIG2CFG_AGGRMODE_S) |\n                (configParams->numAggr << WADI_SIG2CFG_NUMAGGR_S)|\n                (configParams->edgeSpan << WADI_SIG2CFG_EDGESPAN_S)|\n                (configParams->polarity << WADI_SIG2CFG_SIGPOL_S));\n\n        //\n        // Write the compare values in the Compare registers\n        //\n        HWREG(base + WADI_O_SIG2CMPA)\n                = ((configCompare->cmpAVal << WADI_SIG2CMPA_CMPA_S)|\n                (configCompare->cmpAMargin << WADI_SIG2CMPA_CMPAMARGIN_S));\n\n        HWREG(base + WADI_O_SIG2CMPB)\n                = ((configCompare->cmpBVal << WADI_SIG2CMPB_CMPB_S)|\n                (configCompare->cmpBMargin << WADI_SIG2CMPB_CMPBMARGIN_S));\n\n        HWREG(base + WADI_O_SIG2AVGCFG)\n                = ((configCompare->cmpAvgVal << WADI_SIG2AVGCFG_CMP_S)|\n                (configCompare->cmpAvgMargin << WADI_SIG2AVGCFG_CMPMARGIN_S));\n\n        HWREG(base + WADI_O_SIG2PKCFG)\n                = ((configCompare->cmpPkVal << WADI_SIG2PKCFG_CMP_S)|\n                (configCompare->cmpPkMargin << WADI_SIG2PKCFG_CMPMARGIN_S));\n\n        //\n        // Selecting the signal 2 for debug\n        //\n        HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL2;\n\n    }\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); if(configSignal->signal == WADI_SIGNAL1) // signal 1 { // // Enable the trigger and write the trigger mode // in the BLKTRIGCFG register // HWREG(base + WADI_O_BLKTRIGCFG) |= (configSignal->triggerMode << WADI_BLKTRIGCFG_TRIG1TYPE_S); // // Write the mode configurations in the SIG1CFG register // HWREG(base + WADI_O_SIG1CFG) = ((configParams->aggrMode << WADI_SIG1CFG_AGGRMODE_S) | (configParams->numAggr << WADI_SIG1CFG_NUMAGGR_S)| (configParams->edgeSpan << WADI_SIG1CFG_EDGESPAN_S)| (configParams->polarity << WADI_SIG1CFG_SIGPOL_S)); // // Write the compare values in the Compare registers // HWREG(base + WADI_O_SIG1CMPA) = ((configCompare->cmpAVal << WADI_SIG1CMPA_CMPA_S)| (configCompare->cmpAMargin << WADI_SIG1CMPA_CMPAMARGIN_S)); HWREG(base + WADI_O_SIG1CMPB) = ((configCompare->cmpBVal << WADI_SIG1CMPB_CMPB_S)| (configCompare->cmpBMargin << WADI_SIG1CMPB_CMPBMARGIN_S)); HWREG(base + WADI_O_SIG1AVGCFG) = ((configCompare->cmpAvgVal << WADI_SIG1AVGCFG_CMP_S)| (configCompare->cmpAvgMargin << WADI_SIG1AVGCFG_CMPMARGIN_S)); HWREG(base + WADI_O_SIG1PKCFG) = ((configCompare->cmpPkVal << WADI_SIG1PKCFG_CMP_S)| (configCompare->cmpPkMargin << WADI_SIG1PKCFG_CMPMARGIN_S)); // // Selecting the signal 1 for debug // HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL1; } else // signal 2 { // // Write the trigger mode in the BLKTRIGCFG register // HWREG(base + WADI_O_BLKTRIGCFG) |= (configSignal->triggerMode << WADI_BLKTRIGCFG_TRIG2TYPE_S); // // Write the mode configurations in the SIG2CFG register // HWREG(base + WADI_O_SIG2CFG) = ((configParams->aggrMode << WADI_SIG2CFG_AGGRMODE_S) | (configParams->numAggr << WADI_SIG2CFG_NUMAGGR_S)| (configParams->edgeSpan << WADI_SIG2CFG_EDGESPAN_S)| (configParams->polarity << WADI_SIG2CFG_SIGPOL_S)); // // Write the compare values in the Compare registers // HWREG(base + WADI_O_SIG2CMPA) = ((configCompare->cmpAVal << WADI_SIG2CMPA_CMPA_S)| (configCompare->cmpAMargin << WADI_SIG2CMPA_CMPAMARGIN_S)); HWREG(base + WADI_O_SIG2CMPB) = ((configCompare->cmpBVal << WADI_SIG2CMPB_CMPB_S)| (configCompare->cmpBMargin << WADI_SIG2CMPB_CMPBMARGIN_S)); HWREG(base + WADI_O_SIG2AVGCFG) = ((configCompare->cmpAvgVal << WADI_SIG2AVGCFG_CMP_S)| (configCompare->cmpAvgMargin << WADI_SIG2AVGCFG_CMPMARGIN_S)); HWREG(base + WADI_O_SIG2PKCFG) = ((configCompare->cmpPkVal << WADI_SIG2PKCFG_CMP_S)| (configCompare->cmpPkMargin << WADI_SIG2PKCFG_CMPMARGIN_S)); // // Selecting the signal 2 for debug // HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL2; } }",
+      "registersUsed": [
+        "BLKTRIGCFG",
+        "SIG1CFG",
+        "SIG1CMPA",
+        "SIG1CMPB",
+        "SIG1PKCFG",
+        "SIG1AVGCFG",
+        "SIG2CFG",
+        "SIG2CMPA",
+        "SIG2CMPB",
+        "SIG2PKCFG",
+        "SIG2AVGCFG",
+        "BLKERRCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKTRIGCFG",
+        "SIG1CFG",
+        "SIG1CMPA",
+        "SIG1CMPB",
+        "SIG1PKCFG",
+        "SIG1AVGCFG",
+        "SIG2CFG",
+        "SIG2CMPA",
+        "SIG2CMPB",
+        "SIG2PKCFG",
+        "SIG2AVGCFG",
+        "BLKERRCFG"
+      ]
+    },
+    {
+      "file": "wadi.c",
+      "peripheral": "wadi",
+      "functionName": "WADI_measureFrequency",
+      "functionArgs": [
+        "base",
+        "*configSignal",
+        "*configParams",
+        "*configCompare"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constWADI_SigConfig",
+        "constWADI_FreqConfigParams",
+        "constWADI_FreqConfigCompare"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    if(configSignal->signal == WADI_SIGNAL1) // signal 1\n    {\n        //\n        // Enable the trigger and write the trigger mode in\n        // in the BLKTRIGCFG register\n        //\n        HWREG(base + WADI_O_BLKTRIGCFG)\n                |= (configSignal->triggerMode << WADI_BLKTRIGCFG_TRIG1TYPE_S);\n\n        //\n        // Write the signal polarity in the the SIG1CFG register\n        //\n        // The edge span is set as 0x2U to detect every pulse of the\n        // configured type\n        //\n        HWREG(base + WADI_O_SIG1CFG)\n                = ((0x2U << WADI_SIG1CFG_EDGESPAN_S)|\n                (configParams->aggrMode << WADI_SIG1CFG_AGGRMODE_S)|\n                (configParams->numaggr << WADI_SIG1CFG_NUMAGGR_S)|\n                (configParams->polarity << WADI_SIG1CFG_SIGPOL_S));\n\n        if(configParams->freqMode == WADI_COMPARE_FREQ_MODE_FIXED_WINDOW)\n        {\n            //\n            // Enabling the edge count and writing the time window.\n            //\n            HWREG(base + WADI_O_SIG1EDGECFG)\n                = (WADI_SIG1EDGECFG_CNTEN |\n                (configParams->timeWindow << WADI_SIG1EDGECFG_TIMEWNDOW_S));\n        }\n        else\n        {\n            //\n            // Enabling the edge count\n            //\n            HWREG(base + WADI_O_SIG1EDGECFG) = (WADI_SIG1EDGECFG_CNTEN);\n\n            //\n            // Enabling the moving window mode and writing the\n            // moving window count and the moving window time\n            // in the SIG1EDGEMVWCFG register\n            //\n            HWREG(base + WADI_O_SIG1EDGEMVWCFG)\n            = ((WADI_SIG1EDGEMVWCFG_MVWEN)\n            | (configParams->movingCount << WADI_SIG1EDGEMVWCFG_MVWCNT_S)\n            | (configParams->mvwtime << WADI_SIG1EDGEMVWCFG_MVWTIME_S));\n        }\n\n        //\n        // Write the compare values in the compare registersw\n        //\n        HWREG(base + WADI_O_SIG1CMPA)\n                = ((configCompare->cmpAVal << WADI_SIG1CMPA_CMPA_S)|\n                (configCompare->cmpAMargin << WADI_SIG1CMPA_CMPAMARGIN_S));\n\n        HWREG(base + WADI_O_SIG1CMPB)\n                = ((configCompare->cmpBVal << WADI_SIG1CMPB_CMPB_S)|\n                (configCompare->cmpBMargin << WADI_SIG1CMPB_CMPBMARGIN_S));\n\n        HWREG(base + WADI_O_SIG1AVGCFG)\n                = ((configCompare->cmpAvgVal << WADI_SIG1AVGCFG_CMP_S)|\n                (configCompare->cmpAvgMargin << WADI_SIG1AVGCFG_CMPMARGIN_S));\n\n        HWREG(base + WADI_O_SIG1PKCFG)\n                = ((configCompare->cmpPkVal << WADI_SIG1PKCFG_CMP_S)|\n                (configCompare->cmpPkMargin << WADI_SIG1PKCFG_CMPMARGIN_S));\n\n        //\n        // Selecting the signal 1 for debug\n        //\n        HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL1;\n\n    }\n\n    else                                // signal 2\n    {\n        //\n        // Enable the trigger and write the trigger mode in\n        // in the BLKTRIGCFG register\n        //\n        HWREG(base + WADI_O_BLKTRIGCFG)\n                |= (configSignal->triggerMode << WADI_BLKTRIGCFG_TRIG2TYPE_S);\n\n        //\n        // Write the signal polarity in the the SIG2CFG register\n        //\n        // The edge span is set as 0x2U to detect every pulse of the\n        // configured type\n        //\n        HWREG(base + WADI_O_SIG2CFG)\n                =((0x2U << WADI_SIG2CFG_EDGESPAN_S)|\n                (configParams->aggrMode << WADI_SIG2CFG_AGGRMODE_S)|\n                (configParams->numaggr << WADI_SIG2CFG_NUMAGGR_S) |\n                (configParams->polarity << WADI_SIG2CFG_SIGPOL_S));\n\n        if(configParams->freqMode == WADI_COMPARE_FREQ_MODE_FIXED_WINDOW)\n        {\n            //\n            // Enabling the edge count and writing the time window\n            //\n            HWREG(base + WADI_O_SIG2EDGECFG)\n                = (WADI_SIG2EDGECFG_CNTEN |\n                (configParams->timeWindow << WADI_SIG2EDGECFG_TIMEWNDOW_S));\n        }\n        else\n        {\n            //\n            // Enabling the edge count\n            //\n            HWREG(base + WADI_O_SIG2EDGECFG) |= (WADI_SIG2EDGECFG_CNTEN);\n\n            //\n            // Setting the enable bit and writing the moving window tume\n            // and moving window time in the SIG2EDGEMVWCFG register\n            //\n            HWREG(base + WADI_O_SIG2EDGEMVWCFG)\n                = ((WADI_SIG2EDGEMVWCFG_MVWEN)\n                | (configParams->movingCount << WADI_SIG2EDGEMVWCFG_MVWCNT_S)\n                | (configParams->mvwtime << WADI_SIG2EDGEMVWCFG_MVWTIME_S));\n        }\n\n        //\n        // Write the compare values in the compare registers\n        //\n        HWREG(base + WADI_O_SIG2CMPA)\n                = ((configCompare->cmpAVal << WADI_SIG2CMPA_CMPA_S)|\n                (configCompare->cmpAMargin << WADI_SIG2CMPA_CMPAMARGIN_S));\n\n        HWREG(base + WADI_O_SIG2CMPB)\n                = ((configCompare->cmpBVal << WADI_SIG2CMPB_CMPB_S)|\n                (configCompare->cmpBMargin << WADI_SIG2CMPB_CMPBMARGIN_S));\n\n        HWREG(base + WADI_O_SIG2AVGCFG)\n                = ((configCompare->cmpAvgVal << WADI_SIG2AVGCFG_CMP_S)|\n                (configCompare->cmpAvgMargin << WADI_SIG2AVGCFG_CMPMARGIN_S));\n\n        HWREG(base + WADI_O_SIG2PKCFG)\n                = ((configCompare->cmpPkVal << WADI_SIG2PKCFG_CMP_S)|\n                (configCompare->cmpPkMargin << WADI_SIG2PKCFG_CMPMARGIN_S));\n\n        //\n        // Selecting the signal 2 for debug\n        //\n        HWREG(base + WADI_O_BLKERRCFG)|= WADI_DEBUG_SIGNAL2;\n\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); if(configSignal->signal == WADI_SIGNAL1) // signal 1 { // // Enable the trigger and write the trigger mode in // in the BLKTRIGCFG register // HWREG(base + WADI_O_BLKTRIGCFG) |= (configSignal->triggerMode << WADI_BLKTRIGCFG_TRIG1TYPE_S); // // Write the signal polarity in the the SIG1CFG register // // The edge span is set as 0x2U to detect every pulse of the // configured type // HWREG(base + WADI_O_SIG1CFG) = ((0x2U << WADI_SIG1CFG_EDGESPAN_S)| (configParams->aggrMode << WADI_SIG1CFG_AGGRMODE_S)| (configParams->numaggr << WADI_SIG1CFG_NUMAGGR_S)| (configParams->polarity << WADI_SIG1CFG_SIGPOL_S)); if(configParams->freqMode == WADI_COMPARE_FREQ_MODE_FIXED_WINDOW) { // // Enabling the edge count and writing the time window. // HWREG(base + WADI_O_SIG1EDGECFG) = (WADI_SIG1EDGECFG_CNTEN | (configParams->timeWindow << WADI_SIG1EDGECFG_TIMEWNDOW_S)); } else { // // Enabling the edge count // HWREG(base + WADI_O_SIG1EDGECFG) = (WADI_SIG1EDGECFG_CNTEN); // // Enabling the moving window mode and writing the // moving window count and the moving window time // in the SIG1EDGEMVWCFG register // HWREG(base + WADI_O_SIG1EDGEMVWCFG) = ((WADI_SIG1EDGEMVWCFG_MVWEN) | (configParams->movingCount << WADI_SIG1EDGEMVWCFG_MVWCNT_S) | (configParams->mvwtime << WADI_SIG1EDGEMVWCFG_MVWTIME_S)); } // // Write the compare values in the compare registersw // HWREG(base + WADI_O_SIG1CMPA) = ((configCompare->cmpAVal << WADI_SIG1CMPA_CMPA_S)| (configCompare->cmpAMargin << WADI_SIG1CMPA_CMPAMARGIN_S)); HWREG(base + WADI_O_SIG1CMPB) = ((configCompare->cmpBVal << WADI_SIG1CMPB_CMPB_S)| (configCompare->cmpBMargin << WADI_SIG1CMPB_CMPBMARGIN_S)); HWREG(base + WADI_O_SIG1AVGCFG) = ((configCompare->cmpAvgVal << WADI_SIG1AVGCFG_CMP_S)| (configCompare->cmpAvgMargin << WADI_SIG1AVGCFG_CMPMARGIN_S)); HWREG(base + WADI_O_SIG1PKCFG) = ((configCompare->cmpPkVal << WADI_SIG1PKCFG_CMP_S)| (configCompare->cmpPkMargin << WADI_SIG1PKCFG_CMPMARGIN_S)); // // Selecting the signal 1 for debug // HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL1; } else // signal 2 { // // Enable the trigger and write the trigger mode in // in the BLKTRIGCFG register // HWREG(base + WADI_O_BLKTRIGCFG) |= (configSignal->triggerMode << WADI_BLKTRIGCFG_TRIG2TYPE_S); // // Write the signal polarity in the the SIG2CFG register // // The edge span is set as 0x2U to detect every pulse of the // configured type // HWREG(base + WADI_O_SIG2CFG) =((0x2U << WADI_SIG2CFG_EDGESPAN_S)| (configParams->aggrMode << WADI_SIG2CFG_AGGRMODE_S)| (configParams->numaggr << WADI_SIG2CFG_NUMAGGR_S) | (configParams->polarity << WADI_SIG2CFG_SIGPOL_S)); if(configParams->freqMode == WADI_COMPARE_FREQ_MODE_FIXED_WINDOW) { // // Enabling the edge count and writing the time window // HWREG(base + WADI_O_SIG2EDGECFG) = (WADI_SIG2EDGECFG_CNTEN | (configParams->timeWindow << WADI_SIG2EDGECFG_TIMEWNDOW_S)); } else { // // Enabling the edge count // HWREG(base + WADI_O_SIG2EDGECFG) |= (WADI_SIG2EDGECFG_CNTEN); // // Setting the enable bit and writing the moving window tume // and moving window time in the SIG2EDGEMVWCFG register // HWREG(base + WADI_O_SIG2EDGEMVWCFG) = ((WADI_SIG2EDGEMVWCFG_MVWEN) | (configParams->movingCount << WADI_SIG2EDGEMVWCFG_MVWCNT_S) | (configParams->mvwtime << WADI_SIG2EDGEMVWCFG_MVWTIME_S)); } // // Write the compare values in the compare registers // HWREG(base + WADI_O_SIG2CMPA) = ((configCompare->cmpAVal << WADI_SIG2CMPA_CMPA_S)| (configCompare->cmpAMargin << WADI_SIG2CMPA_CMPAMARGIN_S)); HWREG(base + WADI_O_SIG2CMPB) = ((configCompare->cmpBVal << WADI_SIG2CMPB_CMPB_S)| (configCompare->cmpBMargin << WADI_SIG2CMPB_CMPBMARGIN_S)); HWREG(base + WADI_O_SIG2AVGCFG) = ((configCompare->cmpAvgVal << WADI_SIG2AVGCFG_CMP_S)| (configCompare->cmpAvgMargin << WADI_SIG2AVGCFG_CMPMARGIN_S)); HWREG(base + WADI_O_SIG2PKCFG) = ((configCompare->cmpPkVal << WADI_SIG2PKCFG_CMP_S)| (configCompare->cmpPkMargin << WADI_SIG2PKCFG_CMPMARGIN_S)); // // Selecting the signal 2 for debug // HWREG(base + WADI_O_BLKERRCFG)|= WADI_DEBUG_SIGNAL2; } }",
+      "registersUsed": [
+        "BLKTRIGCFG",
+        "SIG1CFG",
+        "SIG1CMPA",
+        "SIG1CMPB",
+        "SIG1PKCFG",
+        "SIG1AVGCFG",
+        "SIG1EDGECFG",
+        "SIG1EDGEMVWCFG",
+        "SIG2CFG",
+        "SIG2CMPA",
+        "SIG2CMPB",
+        "SIG2PKCFG",
+        "SIG2AVGCFG",
+        "SIG2EDGECFG",
+        "SIG2EDGEMVWCFG",
+        "BLKERRCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKTRIGCFG",
+        "SIG1CFG",
+        "SIG1CMPA",
+        "SIG1CMPB",
+        "SIG1PKCFG",
+        "SIG1AVGCFG",
+        "SIG1EDGECFG",
+        "SIG1EDGEMVWCFG",
+        "SIG2CFG",
+        "SIG2CMPA",
+        "SIG2CMPB",
+        "SIG2PKCFG",
+        "SIG2AVGCFG",
+        "SIG2EDGECFG",
+        "SIG2EDGEMVWCFG",
+        "BLKERRCFG"
+      ]
+    },
+    {
+      "file": "wadi.c",
+      "peripheral": "wadi",
+      "functionName": "WADI_compareSigToSigPulseWidth",
+      "functionArgs": [
+        "base",
+        "*configSignals",
+        "*configParams",
+        "*configCompare"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constWADI_SigToSigConfig",
+        "constWADI_SigToSigPWConfigParams",
+        "constWADI_SigToSigPWConfigCompare"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    //\n    // Enable the triggers and write the trigger modes in the\n    // BLKTRIGCFG register\n    //\n    HWREG(base + WADI_O_BLKTRIGCFG)\n        |= (configSignals->triggerMode1 << WADI_BLKTRIGCFG_TRIG1TYPE_S) |\n        (configSignals->triggerMode2 << WADI_BLKTRIGCFG_TRIG2TYPE_S);\n\n    //\n    // Write the mode configurations in the SIG1CFG and SIG2CFG register\n    //\n    HWREG(base + WADI_O_SIG1CFG)\n        = ((configParams->polarity << WADI_SIG1CFG_SIGPOL_S) |\n        (configParams->aggrMode << WADI_SIG1CFG_AGGRMODE_S) |\n        (configParams->numAggr << WADI_SIG1CFG_NUMAGGR_S) |\n        (configParams->edgeSpan << WADI_SIG1CFG_EDGESPAN_S));\n\n    HWREG(base + WADI_O_SIG2CFG)\n        = ((configParams->polarity << WADI_SIG2CFG_SIGPOL_S) |\n        (configParams->aggrMode << WADI_SIG2CFG_AGGRMODE_S) |\n        (configParams->numAggr << WADI_SIG2CFG_NUMAGGR_S) |\n        (configParams->edgeSpan << WADI_SIG2CFG_EDGESPAN_S));\n\n    //\n    // Enabling the signal to signal compare\n    //\n    HWREG(base + WADI_O_SIGTOSIGCFG) = WADI_SIGTOSIGCFG_SIGTOSIG_CMPEN;\n\n    //\n    // Write the compare values in the sig to sig compare registers\n    //\n    HWREG(base + WADI_O_SIGTOSIGCFG)\n        |= ((configCompare->cmpVal << WADI_SIGTOSIGCFG_CMP_S) |\n        (configCompare->cmpMargin << WADI_SIGTOSIGCFG_CMPMARGIN_S));\n\n    HWREG(base + WADI_O_SIGTOSIG_PKCFG)\n        = ((configCompare->cmpPkVal << WADI_SIGTOSIG_PKCFG_PKCMP_S) |\n        (configCompare->cmpPkMargin << WADI_SIGTOSIG_PKCFG_PKCMPMARGIN_S));\n\n    HWREG(base + WADI_O_SIGTOSIG_AVGCFG)\n        = ((configCompare->cmpAvgVal << WADI_SIGTOSIG_AVGCFG_AVGCMP_S) |\n        (configCompare->cmpAvgMargin << WADI_SIGTOSIG_AVGCFG_AVGCMPMARGIN_S));\n\n    //\n    // Selecting the signal to signal mode for debug\n    //\n    HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL_TO_SIGNAL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); // // Enable the triggers and write the trigger modes in the // BLKTRIGCFG register // HWREG(base + WADI_O_BLKTRIGCFG) |= (configSignals->triggerMode1 << WADI_BLKTRIGCFG_TRIG1TYPE_S) | (configSignals->triggerMode2 << WADI_BLKTRIGCFG_TRIG2TYPE_S); // // Write the mode configurations in the SIG1CFG and SIG2CFG register // HWREG(base + WADI_O_SIG1CFG) = ((configParams->polarity << WADI_SIG1CFG_SIGPOL_S) | (configParams->aggrMode << WADI_SIG1CFG_AGGRMODE_S) | (configParams->numAggr << WADI_SIG1CFG_NUMAGGR_S) | (configParams->edgeSpan << WADI_SIG1CFG_EDGESPAN_S)); HWREG(base + WADI_O_SIG2CFG) = ((configParams->polarity << WADI_SIG2CFG_SIGPOL_S) | (configParams->aggrMode << WADI_SIG2CFG_AGGRMODE_S) | (configParams->numAggr << WADI_SIG2CFG_NUMAGGR_S) | (configParams->edgeSpan << WADI_SIG2CFG_EDGESPAN_S)); // // Enabling the signal to signal compare // HWREG(base + WADI_O_SIGTOSIGCFG) = WADI_SIGTOSIGCFG_SIGTOSIG_CMPEN; // // Write the compare values in the sig to sig compare registers // HWREG(base + WADI_O_SIGTOSIGCFG) |= ((configCompare->cmpVal << WADI_SIGTOSIGCFG_CMP_S) | (configCompare->cmpMargin << WADI_SIGTOSIGCFG_CMPMARGIN_S)); HWREG(base + WADI_O_SIGTOSIG_PKCFG) = ((configCompare->cmpPkVal << WADI_SIGTOSIG_PKCFG_PKCMP_S) | (configCompare->cmpPkMargin << WADI_SIGTOSIG_PKCFG_PKCMPMARGIN_S)); HWREG(base + WADI_O_SIGTOSIG_AVGCFG) = ((configCompare->cmpAvgVal << WADI_SIGTOSIG_AVGCFG_AVGCMP_S) | (configCompare->cmpAvgMargin << WADI_SIGTOSIG_AVGCFG_AVGCMPMARGIN_S)); // // Selecting the signal to signal mode for debug // HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL_TO_SIGNAL; }",
+      "registersUsed": [
+        "SIGTOSIGCFG",
+        "SIGTOSIG_PKCFG",
+        "SIGTOSIG_AVGCFG",
+        "BLKTRIGCFG",
+        "SIG1CFG",
+        "SIG2CFG",
+        "BLKERRCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGTOSIGCFG",
+        "SIGTOSIG_PKCFG",
+        "SIGTOSIG_AVGCFG",
+        "BLKTRIGCFG",
+        "SIG1CFG",
+        "SIG2CFG",
+        "BLKERRCFG"
+      ]
+    },
+    {
+      "file": "wadi.c",
+      "peripheral": "wadi",
+      "functionName": "WADI_compareSigToSigFrequency",
+      "functionArgs": [
+        "base",
+        "*configSignals",
+        "*configParams",
+        "*configCompare"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constWADI_SigToSigConfig",
+        "constWADI_SigToSigFreqConfigParams",
+        "constWADI_SigToSigFreqConfigCompare"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    //\n    // Enable the triggers and write the trigger modes\n    //\n    HWREG(base + WADI_O_BLKTRIGCFG)\n        |= (configSignals->triggerMode1 << WADI_BLKTRIGCFG_TRIG1TYPE_S) |\n        (configSignals->triggerMode2 << WADI_BLKTRIGCFG_TRIG2TYPE_S);\n\n    //\n    // Write the polarity and edgespan in the SIG2CFG and SIG2CFG registers\n    //\n    HWREG(base + WADI_O_SIG1CFG)\n        = ((configParams->polarity << WADI_SIG1CFG_SIGPOL_S) |\n        (configParams->aggrMode << WADI_SIG1CFG_AGGRMODE_S) |\n        (configParams->numaggr << WADI_SIG1CFG_NUMAGGR_S) |\n        (0x2U << WADI_SIG1CFG_EDGESPAN_S));\n\n    HWREG(base + WADI_O_SIG2CFG)\n        = ((configParams->polarity << WADI_SIG2CFG_SIGPOL_S) |\n        (configParams->aggrMode << WADI_SIG2CFG_AGGRMODE_S) |\n        (configParams->numaggr << WADI_SIG2CFG_NUMAGGR_S) |\n        (0x2U << WADI_SIG2CFG_EDGESPAN_S));\n\n    if(configParams->freqMode == 0)  // frequency fixed window mode\n    {\n        //\n        // Enabling the edge count main mode compare and writing the time\n        // window in the SIG1EDGECFG and SIG2EDGECFG registers\n        //\n        HWREG(base + WADI_O_SIG1EDGECFG)\n            = (WADI_SIG1EDGECFG_CNTEN |\n            (configParams->timeWindow << WADI_SIG1EDGECFG_TIMEWNDOW_S));\n\n        HWREG(base + WADI_O_SIG2EDGECFG)\n            = (WADI_SIG2EDGECFG_CNTEN |\n            (configParams->timeWindow << WADI_SIG2EDGECFG_TIMEWNDOW_S));\n\n    }\n\n    else                               // frequency moving window mode\n    {\n\n        //\n        // Enabling the edge count\n        //\n        HWREG(base + WADI_O_SIG1EDGECFG) |= (WADI_SIG1EDGECFG_CNTEN);\n        HWREG(base + WADI_O_SIG2EDGECFG) |= (WADI_SIG2EDGECFG_CNTEN);\n\n        //\n        // Enabling the edge count moving window mode compare and writing the\n        // moving window time and moving window count in the SIG1EDGEMVWCFG\n        // and SIG2EDGEMVWCFG registers\n        //\n        HWREG(base + WADI_O_SIG1EDGEMVWCFG)\n            = ((WADI_SIG1EDGEMVWCFG_MVWEN) |\n            (configParams->mvwtime << WADI_SIG1EDGEMVWCFG_MVWTIME_S) |\n            (configParams->movingCount << WADI_SIG1EDGEMVWCFG_MVWCNT_S));\n\n        HWREG(base + WADI_O_SIG2EDGEMVWCFG)\n            = ((WADI_SIG2EDGEMVWCFG_MVWEN) |\n            (configParams->mvwtime << WADI_SIG2EDGEMVWCFG_MVWTIME_S) |\n            (configParams->movingCount << WADI_SIG2EDGEMVWCFG_MVWCNT_S));\n    }\n\n    //\n    // Enabling the signal to signal compare\n    //\n    HWREG(base + WADI_O_SIGTOSIGCFG) = WADI_SIGTOSIGCFG_SIGTOSIG_CMPEN;\n\n    HWREG(base + WADI_O_SIGTOSIGCFG)\n            |= ((configCompare->cmpVal << WADI_SIGTOSIGCFG_CMP_S) |\n            (configCompare->cmpMargin << WADI_SIGTOSIGCFG_CMPMARGIN_S));\n\n    HWREG(base + WADI_O_SIGTOSIG_PKCFG)\n        = ((configCompare->cmpPkVal << WADI_SIGTOSIG_PKCFG_PKCMP_S) |\n        (configCompare->cmpPkMargin << WADI_SIGTOSIG_PKCFG_PKCMPMARGIN_S));\n\n    HWREG(base + WADI_O_SIGTOSIG_AVGCFG)\n        = ((configCompare->cmpAvgVal << WADI_SIGTOSIG_AVGCFG_AVGCMP_S) |\n        (configCompare->cmpAvgMargin << WADI_SIGTOSIG_AVGCFG_AVGCMPMARGIN_S));\n\n\n    //\n    // Selecting the signal to signal mode for debug\n    //\n    HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL_TO_SIGNAL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); // // Enable the triggers and write the trigger modes // HWREG(base + WADI_O_BLKTRIGCFG) |= (configSignals->triggerMode1 << WADI_BLKTRIGCFG_TRIG1TYPE_S) | (configSignals->triggerMode2 << WADI_BLKTRIGCFG_TRIG2TYPE_S); // // Write the polarity and edgespan in the SIG2CFG and SIG2CFG registers // HWREG(base + WADI_O_SIG1CFG) = ((configParams->polarity << WADI_SIG1CFG_SIGPOL_S) | (configParams->aggrMode << WADI_SIG1CFG_AGGRMODE_S) | (configParams->numaggr << WADI_SIG1CFG_NUMAGGR_S) | (0x2U << WADI_SIG1CFG_EDGESPAN_S)); HWREG(base + WADI_O_SIG2CFG) = ((configParams->polarity << WADI_SIG2CFG_SIGPOL_S) | (configParams->aggrMode << WADI_SIG2CFG_AGGRMODE_S) | (configParams->numaggr << WADI_SIG2CFG_NUMAGGR_S) | (0x2U << WADI_SIG2CFG_EDGESPAN_S)); if(configParams->freqMode == 0) // frequency fixed window mode { // // Enabling the edge count main mode compare and writing the time // window in the SIG1EDGECFG and SIG2EDGECFG registers // HWREG(base + WADI_O_SIG1EDGECFG) = (WADI_SIG1EDGECFG_CNTEN | (configParams->timeWindow << WADI_SIG1EDGECFG_TIMEWNDOW_S)); HWREG(base + WADI_O_SIG2EDGECFG) = (WADI_SIG2EDGECFG_CNTEN | (configParams->timeWindow << WADI_SIG2EDGECFG_TIMEWNDOW_S)); } else // frequency moving window mode { // // Enabling the edge count // HWREG(base + WADI_O_SIG1EDGECFG) |= (WADI_SIG1EDGECFG_CNTEN); HWREG(base + WADI_O_SIG2EDGECFG) |= (WADI_SIG2EDGECFG_CNTEN); // // Enabling the edge count moving window mode compare and writing the // moving window time and moving window count in the SIG1EDGEMVWCFG // and SIG2EDGEMVWCFG registers // HWREG(base + WADI_O_SIG1EDGEMVWCFG) = ((WADI_SIG1EDGEMVWCFG_MVWEN) | (configParams->mvwtime << WADI_SIG1EDGEMVWCFG_MVWTIME_S) | (configParams->movingCount << WADI_SIG1EDGEMVWCFG_MVWCNT_S)); HWREG(base + WADI_O_SIG2EDGEMVWCFG) = ((WADI_SIG2EDGEMVWCFG_MVWEN) | (configParams->mvwtime << WADI_SIG2EDGEMVWCFG_MVWTIME_S) | (configParams->movingCount << WADI_SIG2EDGEMVWCFG_MVWCNT_S)); } // // Enabling the signal to signal compare // HWREG(base + WADI_O_SIGTOSIGCFG) = WADI_SIGTOSIGCFG_SIGTOSIG_CMPEN; HWREG(base + WADI_O_SIGTOSIGCFG) |= ((configCompare->cmpVal << WADI_SIGTOSIGCFG_CMP_S) | (configCompare->cmpMargin << WADI_SIGTOSIGCFG_CMPMARGIN_S)); HWREG(base + WADI_O_SIGTOSIG_PKCFG) = ((configCompare->cmpPkVal << WADI_SIGTOSIG_PKCFG_PKCMP_S) | (configCompare->cmpPkMargin << WADI_SIGTOSIG_PKCFG_PKCMPMARGIN_S)); HWREG(base + WADI_O_SIGTOSIG_AVGCFG) = ((configCompare->cmpAvgVal << WADI_SIGTOSIG_AVGCFG_AVGCMP_S) | (configCompare->cmpAvgMargin << WADI_SIGTOSIG_AVGCFG_AVGCMPMARGIN_S)); // // Selecting the signal to signal mode for debug // HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL_TO_SIGNAL; }",
+      "registersUsed": [
+        "SIGTOSIGCFG",
+        "SIGTOSIG_PKCFG",
+        "SIGTOSIG_AVGCFG",
+        "BLKTRIGCFG",
+        "SIG1CFG",
+        "SIG1EDGECFG",
+        "SIG1EDGEMVWCFG",
+        "SIG2CFG",
+        "SIG2EDGECFG",
+        "SIG2EDGEMVWCFG",
+        "BLKERRCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGTOSIGCFG",
+        "SIGTOSIG_PKCFG",
+        "SIGTOSIG_AVGCFG",
+        "BLKTRIGCFG",
+        "SIG1CFG",
+        "SIG1EDGECFG",
+        "SIG1EDGEMVWCFG",
+        "SIG2CFG",
+        "SIG2EDGECFG",
+        "SIG2EDGEMVWCFG",
+        "BLKERRCFG"
+      ]
+    },
+    {
+      "file": "wadi.c",
+      "peripheral": "wadi",
+      "functionName": "WADI_compareSigToSigDeadBandMode",
+      "functionArgs": [
+        "base",
+        "*configSignals",
+        "*configParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constWADI_SigToSigConfig",
+        "constWADI_SigToSigDeadbandConfigParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    //\n    // Enable the triggers and write the trigger modes in the\n    // BLKTRIGCFG register\n    //\n    HWREG(base + WADI_O_BLKTRIGCFG)\n        |= (configSignals->triggerMode1 << WADI_BLKTRIGCFG_TRIG1TYPE_S) |\n        (configSignals->triggerMode2 << WADI_BLKTRIGCFG_TRIG2TYPE_S);\n\n    //\n    // Enables the deadband check between two signals\n    //\n    HWREG(base + WADI_O_SIGTOSIGCFG)\n        |= WADI_SIGTOSIGCFG_SIGTOSIG_DBCMPEN;\n\n    //\n    // Write the polarity of the configured edges in the SIG1CFG\n    // SIG2CFG registers\n    //\n    HWREG(base + WADI_O_SIG1CFG)\n        |= (configParams->polarity1 << WADI_SIG1CFG_SIGPOL_S);\n\n    HWREG(base + WADI_O_SIG2CFG)\n        |= (configParams->polarity2 << WADI_SIG2CFG_SIGPOL_S);\n\n    //\n    // Write the deadband compare type in the SIGTOSIGCFG register\n    //\n    if(configParams->compareType == 0)  // Deadband of configured\n                                        // edge comparison\n    {\n        HWREG(base + WADI_O_SIGTOSIGCFG) &= ~WADI_SIGTOSIGCFG_DBCMPTYPE;\n    }\n\n    else                                // Deadband of configured and\n                                        // opposite edge pairs comparison\n    {\n        HWREG(base + WADI_O_SIGTOSIGCFG) |= WADI_SIGTOSIGCFG_DBCMPTYPE;\n    }\n\n    //\n    // Writing the compare values in the compare registers\n    //\n    HWREG(base + WADI_O_SIGTOSIG_DBOLAPA)\n        |= (configParams->compareA << WADI_SIGTOSIG_DBOLAPA_DBCMPA_S);\n\n    HWREG(base + WADI_O_SIGTOSIG_DBOLAPB)\n        |= (configParams->compareB << WADI_SIGTOSIG_DBOLAPB_DBCMPB_S);\n\n    //\n    // Selecting the signal to signal mode for debug\n    //\n    HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL_TO_SIGNAL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); // // Enable the triggers and write the trigger modes in the // BLKTRIGCFG register // HWREG(base + WADI_O_BLKTRIGCFG) |= (configSignals->triggerMode1 << WADI_BLKTRIGCFG_TRIG1TYPE_S) | (configSignals->triggerMode2 << WADI_BLKTRIGCFG_TRIG2TYPE_S); // // Enables the deadband check between two signals // HWREG(base + WADI_O_SIGTOSIGCFG) |= WADI_SIGTOSIGCFG_SIGTOSIG_DBCMPEN; // // Write the polarity of the configured edges in the SIG1CFG // SIG2CFG registers // HWREG(base + WADI_O_SIG1CFG) |= (configParams->polarity1 << WADI_SIG1CFG_SIGPOL_S); HWREG(base + WADI_O_SIG2CFG) |= (configParams->polarity2 << WADI_SIG2CFG_SIGPOL_S); // // Write the deadband compare type in the SIGTOSIGCFG register // if(configParams->compareType == 0) // Deadband of configured // edge comparison { HWREG(base + WADI_O_SIGTOSIGCFG) &= ~WADI_SIGTOSIGCFG_DBCMPTYPE; } else // Deadband of configured and // opposite edge pairs comparison { HWREG(base + WADI_O_SIGTOSIGCFG) |= WADI_SIGTOSIGCFG_DBCMPTYPE; } // // Writing the compare values in the compare registers // HWREG(base + WADI_O_SIGTOSIG_DBOLAPA) |= (configParams->compareA << WADI_SIGTOSIG_DBOLAPA_DBCMPA_S); HWREG(base + WADI_O_SIGTOSIG_DBOLAPB) |= (configParams->compareB << WADI_SIGTOSIG_DBOLAPB_DBCMPB_S); // // Selecting the signal to signal mode for debug // HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL_TO_SIGNAL; }",
+      "registersUsed": [
+        "SIGTOSIGCFG",
+        "SIGTOSIG_DBOLAPA",
+        "SIGTOSIG_DBOLAPB",
+        "BLKTRIGCFG",
+        "SIG1CFG",
+        "SIG2CFG",
+        "BLKERRCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGTOSIGCFG",
+        "SIGTOSIG_DBOLAPA",
+        "SIGTOSIG_DBOLAPB",
+        "BLKTRIGCFG",
+        "SIG1CFG",
+        "SIG2CFG",
+        "BLKERRCFG"
+      ]
+    },
+    {
+      "file": "wadi.c",
+      "peripheral": "wadi",
+      "functionName": "WADI_compareSigToSigPhaseOverlapMode",
+      "functionArgs": [
+        "base",
+        "*configSignals",
+        "*configParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constWADI_SigToSigConfig",
+        "constWADI_SigToSigPhaseOverlapCompareParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    //\n    // Enable the triggers and write the trigger modes in the\n    // BLKTRIGCFG register\n    //\n    HWREG(base + WADI_O_BLKTRIGCFG)\n        |= (configSignals->triggerMode1 << WADI_BLKTRIGCFG_TRIG1TYPE_S) |\n        (configSignals->triggerMode2 << WADI_BLKTRIGCFG_TRIG2TYPE_S);\n\n    //\n    // Enables the phase overlap check between two signals\n    //\n    HWREG(base + WADI_O_SIGTOSIGCFG) |= WADI_SIGTOSIGCFG_SIGTOSIG_OLAPCMPEN;\n\n    //\n    // Write the polarity of the Configured edges in the SIG1CFG\n    // SIG2CFG registers\n    //\n    HWREG(base + WADI_O_SIG1CFG)\n        |= (configParams->polarity1 << WADI_SIG1CFG_SIGPOL_S);\n\n    HWREG(base + WADI_O_SIG2CFG)\n        |= (configParams->polarity2 << WADI_SIG2CFG_SIGPOL_S);\n\n    //\n    // Write the phase overlap compare type in the SIGTOSIGCFG register\n    //\n    if(configParams->compareType == 0) // Overlap of levels\n                                        // per configuration\n    {\n        HWREG(base + WADI_O_SIGTOSIGCFG) &= ~WADI_SIGTOSIGCFG_OLAPCMPTYPE;\n    }\n\n    else                                // Overlap of levels per configuration\n                                        // and complementary levels\n    {\n        HWREG(base + WADI_O_SIGTOSIGCFG)|= WADI_SIGTOSIGCFG_OLAPCMPTYPE;\n    }\n\n    //\n    // Writing the compare values in the compare registers\n    //\n    HWREG(base + WADI_O_SIGTOSIG_DBOLAPA)\n        |= (configParams->compareA << WADI_SIGTOSIG_DBOLAPA_OLAPCMPA_S);\n    HWREG(base + WADI_O_SIGTOSIG_DBOLAPA)\n        |= (configParams->compareAMargin <<\n            WADI_SIGTOSIG_DBOLAPA_OLAPCMPAMARGIN_S);\n\n    HWREG(base + WADI_O_SIGTOSIG_DBOLAPB)\n        |= (configParams->compareB << WADI_SIGTOSIG_DBOLAPB_OLAPCMPB_S);\n    HWREG(base + WADI_O_SIGTOSIG_DBOLAPB)\n        |= (configParams->compareBMargin <<\n            WADI_SIGTOSIG_DBOLAPB_OLAPCMPBMARGIN_S);\n\n    //\n    // Selecting the signal to signal mode for debug\n    //\n    HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL_TO_SIGNAL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); // // Enable the triggers and write the trigger modes in the // BLKTRIGCFG register // HWREG(base + WADI_O_BLKTRIGCFG) |= (configSignals->triggerMode1 << WADI_BLKTRIGCFG_TRIG1TYPE_S) | (configSignals->triggerMode2 << WADI_BLKTRIGCFG_TRIG2TYPE_S); // // Enables the phase overlap check between two signals // HWREG(base + WADI_O_SIGTOSIGCFG) |= WADI_SIGTOSIGCFG_SIGTOSIG_OLAPCMPEN; // // Write the polarity of the Configured edges in the SIG1CFG // SIG2CFG registers // HWREG(base + WADI_O_SIG1CFG) |= (configParams->polarity1 << WADI_SIG1CFG_SIGPOL_S); HWREG(base + WADI_O_SIG2CFG) |= (configParams->polarity2 << WADI_SIG2CFG_SIGPOL_S); // // Write the phase overlap compare type in the SIGTOSIGCFG register // if(configParams->compareType == 0) // Overlap of levels // per configuration { HWREG(base + WADI_O_SIGTOSIGCFG) &= ~WADI_SIGTOSIGCFG_OLAPCMPTYPE; } else // Overlap of levels per configuration // and complementary levels { HWREG(base + WADI_O_SIGTOSIGCFG)|= WADI_SIGTOSIGCFG_OLAPCMPTYPE; } // // Writing the compare values in the compare registers // HWREG(base + WADI_O_SIGTOSIG_DBOLAPA) |= (configParams->compareA << WADI_SIGTOSIG_DBOLAPA_OLAPCMPA_S); HWREG(base + WADI_O_SIGTOSIG_DBOLAPA) |= (configParams->compareAMargin << WADI_SIGTOSIG_DBOLAPA_OLAPCMPAMARGIN_S); HWREG(base + WADI_O_SIGTOSIG_DBOLAPB) |= (configParams->compareB << WADI_SIGTOSIG_DBOLAPB_OLAPCMPB_S); HWREG(base + WADI_O_SIGTOSIG_DBOLAPB) |= (configParams->compareBMargin << WADI_SIGTOSIG_DBOLAPB_OLAPCMPBMARGIN_S); // // Selecting the signal to signal mode for debug // HWREG(base + WADI_O_BLKERRCFG) = WADI_DEBUG_SIGNAL_TO_SIGNAL; }",
+      "registersUsed": [
+        "SIGTOSIGCFG",
+        "SIGTOSIG_DBOLAPA",
+        "SIGTOSIG_DBOLAPB",
+        "BLKTRIGCFG",
+        "SIG1CFG",
+        "SIG2CFG",
+        "BLKERRCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGTOSIGCFG",
+        "SIGTOSIG_DBOLAPA",
+        "SIGTOSIG_DBOLAPB",
+        "BLKTRIGCFG",
+        "SIG1CFG",
+        "SIG2CFG",
+        "BLKERRCFG"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n        return(\n           ((base & BASE_ADDR_MASK) == WADI1BLK1CONFIG_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == WADI1BLK2CONFIG_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == WADI1BLK3CONFIG_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == WADI1BLK4CONFIG_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == WADI2BLK1CONFIG_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == WADI2BLK2CONFIG_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == WADI2BLK3CONFIG_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == WADI2BLK4CONFIG_BASE_FRAME(0U))\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( ((base & BASE_ADDR_MASK) == WADI1BLK1CONFIG_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == WADI1BLK2CONFIG_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == WADI1BLK3CONFIG_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == WADI1BLK4CONFIG_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == WADI2BLK1CONFIG_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == WADI2BLK2CONFIG_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == WADI2BLK3CONFIG_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == WADI2BLK4CONFIG_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_isSSSBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n        return(\n           ((base & BASE_ADDR_MASK) == WADI1OPERSSS_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == WADI2OPERSSS_BASE_FRAME(0U))\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( ((base & BASE_ADDR_MASK) == WADI1OPERSSS_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == WADI2OPERSSS_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_isWadi1",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n        return(\n           ((base & BASE_ADDR_MASK) == WADI1BLK1CONFIG_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == WADI1BLK2CONFIG_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == WADI1BLK3CONFIG_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == WADI1BLK4CONFIG_BASE_FRAME(0U))\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( ((base & BASE_ADDR_MASK) == WADI1BLK1CONFIG_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == WADI1BLK2CONFIG_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == WADI1BLK3CONFIG_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == WADI1BLK4CONFIG_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_enableClock",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    //\n    // Write to the BLKCFG register\n    //\n    HWREGB(base + WADI_O_BLKCFG) = (uint8_t)WADI_BLKCFG_CLKEN;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); // // Write to the BLKCFG register // HWREGB(base + WADI_O_BLKCFG) = (uint8_t)WADI_BLKCFG_CLKEN; }",
+      "registersUsed": [
+        "BLKCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKCFG"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_disableClock",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    //\n    // Write to the BLKCFG register\n    //\n    HWREGB(base + WADI_O_BLKCFG) &= (uint8_t)~WADI_BLKCFG_CLKEN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); // // Write to the BLKCFG register // HWREGB(base + WADI_O_BLKCFG) &= (uint8_t)~WADI_BLKCFG_CLKEN; }",
+      "registersUsed": [
+        "BLKCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKCFG"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_enableSoftwareTrigger",
+      "functionArgs": [
+        "base",
+        "signal"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_Signal"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    //\n    // Enable the software trigger for the signal\n    //\n    if(signal == WADI_SIGNAL1)\n    {\n        HWREG(base + WADI_O_BLKTRIGCFG) |= WADI_BLKTRIGCFG_TRIG1SWEN;\n    }\n    else\n    {\n        HWREG(base + WADI_O_BLKTRIGCFG) |= WADI_BLKTRIGCFG_TRIG2SWEN;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); // // Enable the software trigger for the signal // if(signal == WADI_SIGNAL1) { HWREG(base + WADI_O_BLKTRIGCFG) |= WADI_BLKTRIGCFG_TRIG1SWEN; } else { HWREG(base + WADI_O_BLKTRIGCFG) |= WADI_BLKTRIGCFG_TRIG2SWEN; } }",
+      "registersUsed": [
+        "BLKTRIGCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKTRIGCFG"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_setTriggerMode",
+      "functionArgs": [
+        "base",
+        "signal",
+        "triggerMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_Signal",
+        "WADI_TriggerMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    if(signal == WADI_SIGNAL1)  //! signal 1\n    {\n        HWREGB(base + WADI_O_BLKTRIGCFG)\n            |= (uint8_t)(((uint32_t)triggerMode << WADI_BLKTRIGCFG_TRIG1TYPE_S));\n    }\n    else                        //! signal 2\n    {\n        HWREG(base + WADI_O_BLKTRIGCFG)\n            |= ((uint32_t)triggerMode << WADI_BLKTRIGCFG_TRIG2TYPE_S);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); if(signal == WADI_SIGNAL1) //! signal 1 { HWREGB(base + WADI_O_BLKTRIGCFG) |= (uint8_t)(((uint32_t)triggerMode << WADI_BLKTRIGCFG_TRIG1TYPE_S)); } else //! signal 2 { HWREG(base + WADI_O_BLKTRIGCFG) |= ((uint32_t)triggerMode << WADI_BLKTRIGCFG_TRIG2TYPE_S); } }",
+      "registersUsed": [
+        "BLKTRIGCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKTRIGCFG"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_enableBaseTimer",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Enabling the base timer.\n    //\n    HWREG(base + WADI_O_BASETIMERHIGH) |= WADI_BASETIMERHIGH_ENBASETIMER;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Enabling the base timer. // HWREG(base + WADI_O_BASETIMERHIGH) |= WADI_BASETIMERHIGH_ENBASETIMER; }",
+      "registersUsed": [
+        "BASETIMERHIGH"
+      ],
+      "registersUsedMatchingBifield": [
+        "BASETIMERHIGH"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_disableBaseTimer",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Clearing the ENBASETIMER bit in the BASETIMERHIGH register\n    //\n    HWREG(base + WADI_O_BASETIMERHIGH) &= ~WADI_BASETIMERHIGH_ENBASETIMER;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Clearing the ENBASETIMER bit in the BASETIMERHIGH register // HWREG(base + WADI_O_BASETIMERHIGH) &= ~WADI_BASETIMERHIGH_ENBASETIMER; }",
+      "registersUsed": [
+        "BASETIMERHIGH"
+      ],
+      "registersUsedMatchingBifield": [
+        "BASETIMERHIGH"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Enable interrupt for the specific source\n    //\n    HWREG(base + WADI_O_INTSTSMASK) |= source;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Enable interrupt for the specific source // HWREG(base + WADI_O_INTSTSMASK) |= source; }",
+      "registersUsed": [
+        "INTSTS",
+        "INTSTSMASK"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTSTS",
+        "INTSTSMASK"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Disable interrupt for the specific source\n    //\n    HWREG(base + WADI_O_INTSTSMASK) &= ~source;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Disable interrupt for the specific source // HWREG(base + WADI_O_INTSTSMASK) &= ~source; }",
+      "registersUsed": [
+        "INTSTS",
+        "INTSTSMASK"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTSTS",
+        "INTSTSMASK"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_clearInterrupt",
+      "functionArgs": [
+        "base",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Clear interrupt for the specific source\n    //\n    HWREG(base + WADI_O_INTSTSCLR) |= source;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Clear interrupt for the specific source // HWREG(base + WADI_O_INTSTSCLR) |= source; }",
+      "registersUsed": [
+        "INTSTS",
+        "INTSTSCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTSTS",
+        "INTSTSCLR"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_forceInterrupt",
+      "functionArgs": [
+        "base",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Force interrupt for the specific source\n    //\n    HWREG(base + WADI_O_INTSTSFRC) |= source;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Force interrupt for the specific source // HWREG(base + WADI_O_INTSTSFRC) |= source; }",
+      "registersUsed": [
+        "INTSTS",
+        "INTSTSFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTSTS",
+        "INTSTSFRC"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_getInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Read the Block Mask Interrupt Status\n    //\n    return(HWREG(base + WADI_O_BLKSMASKSTS));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Read the Block Mask Interrupt Status // return(HWREG(base + WADI_O_BLKSMASKSTS)); }",
+      "registersUsed": [
+        "BLKSMASKSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKSMASKSTS"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_setSSSTriggerWord",
+      "functionArgs": [
+        "base",
+        "error"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    //\n    // Write in the SSS_EVTMASK register\n    //\n    HWREG(base + WADI_O_SSS_EVTMASK)|= error;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); // // Write in the SSS_EVTMASK register // HWREG(base + WADI_O_SSS_EVTMASK)|= error; }",
+      "registersUsed": [
+        "SSS_EVTMASK"
+      ],
+      "registersUsedMatchingBifield": [
+        "SSS_EVTMASK"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_configSSSEvent",
+      "functionArgs": [
+        "base",
+        "event",
+        "blockError"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_Event",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Convert bitmask to event index (0 to 7)\n    //\n    uint32_t index = 0, temp;\n    temp = (uint32_t)event >> 1;\n    while (temp != 0U)\n    {\n        index++;\n        temp >>= 1;\n    }\n\n    //\n    // Calculate register offset\n    //\n\n    uint32_t offset;\n    if(index < 4)\n    {\n        offset = WADI_O_SSS_EVT1CFG + (index * 4U);\n    }\n    else\n    {\n        offset = WADI_O_SSS_EVT5CFG + ((index % 4U) * 4U);\n    }\n\n    HWREG(base + offset) |= blockError;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Convert bitmask to event index (0 to 7) // uint32_t index = 0, temp; temp = (uint32_t)event >> 1; while (temp != 0U) { index++; temp >>= 1; } // // Calculate register offset // uint32_t offset; if(index < 4) { offset = WADI_O_SSS_EVT1CFG + (index * 4U); } else { offset = WADI_O_SSS_EVT5CFG + ((index % 4U) * 4U); } HWREG(base + offset) |= blockError; }",
+      "registersUsed": [
+        "SSS_EVT1CFG",
+        "SSS_EVT5CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SSS_EVT1CFG",
+        "SSS_EVT5CFG"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_configSSSTriggerSequence",
+      "functionArgs": [
+        "base",
+        "startEvent",
+        "endEvent"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_Event",
+        "WADI_Event"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t temp;\n    uint32_t i                  = 0U;\n    uint32_t indexStartEvent    = 0;\n    uint32_t indexEndEvent      = 0;\n    uint32_t reg1               = 0;\n    uint32_t reg2               = 0;\n    uint8_t  trigType[8]        = {0};\n\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Converting the bitmask to event index\n    //\n    temp = (uint32_t)startEvent >> 1;\n    while (temp != 0U)\n    {\n        indexStartEvent++;\n        temp >>= 1;\n    }\n\n    temp = (uint32_t)endEvent >> 1;\n    while (temp != 0U)\n    {\n        indexEndEvent++;\n        temp >>= 1;\n    }\n\n    ASSERT(indexStartEvent <= indexEndEvent);\n\n    //\n    // Get the current trigger settings\n    //\n    reg1 = HWREG(base + WADI_O_SSS_TRIGEVT1_4CFG);\n    for(i = 0; i < 4U; i++)\n    {\n        trigType[i] = (uint8_t)((reg1 >> ((i % 4U) * 8U)) & 0xFFU);\n    }\n\n    if(indexEndEvent >= 4U)\n    {\n        reg2 = HWREG(base + WADI_O_SSS_TRIGEVT5_8CFG);\n        for(i = 4U; i < 8U; i++)\n        {\n            trigType[i] = (uint8_t)((reg2 >> ((i % 4U) * 8U)) & 0xFFU);\n        }\n    }\n\n    //\n    //  Update the trigger type for events between start and end event only\n    //\n    for (i = indexStartEvent; i <= indexEndEvent; i++)\n    {\n        if(i == indexEndEvent)\n        {\n            trigType[i] = 0x1U; //!< start with immediate\n        }\n        else\n        {\n            trigType[i] = 0x9U; //!< in sequence\n        }\n    }\n\n    //\n    // The complement must be written before the actual value\n    //\n    reg1 = 0U;\n    for (i = 0; i < 4U; i++)\n    {\n        uint8_t val = trigType[i] & 0xFU;\n        uint8_t byte = ((~val & 0xFU) << 4U) | val;\n        reg1 |= ((uint32_t)byte << ((i % 4U) * 8U));\n    }\n    HWREG(base + WADI_O_SSS_TRIGEVT1_4CFG) = reg1;\n\n    if(indexEndEvent >= 4U)\n    {\n        reg2 = 0U;\n        for (i = 4U; i < 8U; i++)\n        {\n            uint8_t val = trigType[i] & 0xFU;\n            uint8_t byte = ((~val & 0xFU) << 4U) | val;\n            reg2 |= ((uint32_t)byte << ((i % 4U) * 8U));\n        }\n        HWREG(base + WADI_O_SSS_TRIGEVT5_8CFG) = reg2;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t temp; uint32_t i = 0U; uint32_t indexStartEvent = 0; uint32_t indexEndEvent = 0; uint32_t reg1 = 0; uint32_t reg2 = 0; uint8_t trigType[8] = {0}; // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Converting the bitmask to event index // temp = (uint32_t)startEvent >> 1; while (temp != 0U) { indexStartEvent++; temp >>= 1; } temp = (uint32_t)endEvent >> 1; while (temp != 0U) { indexEndEvent++; temp >>= 1; } ASSERT(indexStartEvent <= indexEndEvent); // // Get the current trigger settings // reg1 = HWREG(base + WADI_O_SSS_TRIGEVT1_4CFG); for(i = 0; i < 4U; i++) { trigType[i] = (uint8_t)((reg1 >> ((i % 4U) * 8U)) & 0xFFU); } if(indexEndEvent >= 4U) { reg2 = HWREG(base + WADI_O_SSS_TRIGEVT5_8CFG); for(i = 4U; i < 8U; i++) { trigType[i] = (uint8_t)((reg2 >> ((i % 4U) * 8U)) & 0xFFU); } } // // Update the trigger type for events between start and end event only // for (i = indexStartEvent; i <= indexEndEvent; i++) { if(i == indexEndEvent) { trigType[i] = 0x1U; //!< start with immediate } else { trigType[i] = 0x9U; //!< in sequence } } // // The complement must be written before the actual value // reg1 = 0U; for (i = 0; i < 4U; i++) { uint8_t val = trigType[i] & 0xFU; uint8_t byte = ((~val & 0xFU) << 4U) | val; reg1 |= ((uint32_t)byte << ((i % 4U) * 8U)); } HWREG(base + WADI_O_SSS_TRIGEVT1_4CFG) = reg1; if(indexEndEvent >= 4U) { reg2 = 0U; for (i = 4U; i < 8U; i++) { uint8_t val = trigType[i] & 0xFU; uint8_t byte = ((~val & 0xFU) << 4U) | val; reg2 |= ((uint32_t)byte << ((i % 4U) * 8U)); } HWREG(base + WADI_O_SSS_TRIGEVT5_8CFG) = reg2; } }",
+      "registersUsed": [
+        "SSS_TRIGEVT1_4CFG",
+        "SSS_TRIGEVT5_8CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SSS_TRIGEVT1_4CFG",
+        "SSS_TRIGEVT5_8CFG"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_configSSSOutputEventTrigger",
+      "functionArgs": [
+        "base",
+        "outputEvent",
+        "eventTrig"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_OutputEvent",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Convert bitmask to output event index (0 to 7)\n    //\n    uint32_t outputEventIndex = 0, temp;\n    temp = (uint32_t)outputEvent >> 1;\n    while (temp != 0U)\n    {\n        outputEventIndex++;\n        temp >>= 1;\n    }\n\n    //\n    // Configuring which events will trigger the particular output event\n    //\n    if(outputEventIndex < 4)\n    {\n        HWREGB(base + WADI_O_SSS_OUTEVT1TRIGCFG + (outputEventIndex * 4U))\n                                                        |= (uint8_t)eventTrig;\n    }\n    else\n    {\n        HWREGB(base + WADI_O_SSS_OUTEVT5TRIGCFG +\n                ((outputEventIndex % 4) * 4U)) |= (uint8_t)eventTrig;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Convert bitmask to output event index (0 to 7) // uint32_t outputEventIndex = 0, temp; temp = (uint32_t)outputEvent >> 1; while (temp != 0U) { outputEventIndex++; temp >>= 1; } // // Configuring which events will trigger the particular output event // if(outputEventIndex < 4) { HWREGB(base + WADI_O_SSS_OUTEVT1TRIGCFG + (outputEventIndex * 4U)) |= (uint8_t)eventTrig; } else { HWREGB(base + WADI_O_SSS_OUTEVT5TRIGCFG + ((outputEventIndex % 4) * 4U)) |= (uint8_t)eventTrig; } }",
+      "registersUsed": [
+        "SSS_OUTEVT1TRIGCFG",
+        "SSS_OUTEVT5TRIGCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SSS_OUTEVT1TRIGCFG",
+        "SSS_OUTEVT5TRIGCFG"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_configSSSOutputEventParamsWithLink",
+      "functionArgs": [
+        "base",
+        "outputEvent",
+        "outputAction",
+        "duration",
+        "linkOutputEvent"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_OutputEvent",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Convert bitmask to output event index (0 to 7)\n    //\n    uint32_t outputEventIndex = 0, temp;\n    temp = (uint32_t)outputEvent >> 1;\n    while (temp != 0U)\n    {\n        outputEventIndex++;\n        temp >>= 1;\n    }\n\n    //\n    // Writing the signals that this output event can override\n    //\n    if(outputEventIndex < 4U)\n    {\n        HWREGB(base + WADI_O_SSS_BLKSOUTEVT1CFG + (outputEventIndex * 4U))\n                                                |= (uint8_t)(outputAction);\n    }\n    else\n    {\n        HWREGB(base + WADI_O_SSS_BLKSOUTEVT5CFG +\n                ((outputEventIndex % 4U) * 4U)) |= (uint8_t)(outputAction);\n    }\n\n    //\n    // Setting the duration of the Output event\n    //\n    if(outputEventIndex < 4U)\n    {\n        HWREG(base + WADI_O_SSS_OUTEVT1DUR + (outputEventIndex * 4U))\n                                                            |= (duration);\n    }\n    else\n    {\n        HWREG(base + WADI_O_SSS_OUTEVT5DUR + ((outputEventIndex % 4U) * 4U))\n                                                            |= (duration);\n    }\n\n    //\n    // Linking the output event to the other output events if needed\n    //\n    HWREG(base + WADI_O_SSS_OUTEVT1LINKCFG + (outputEventIndex * 4U))\n                                                |= linkOutputEvent;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Convert bitmask to output event index (0 to 7) // uint32_t outputEventIndex = 0, temp; temp = (uint32_t)outputEvent >> 1; while (temp != 0U) { outputEventIndex++; temp >>= 1; } // // Writing the signals that this output event can override // if(outputEventIndex < 4U) { HWREGB(base + WADI_O_SSS_BLKSOUTEVT1CFG + (outputEventIndex * 4U)) |= (uint8_t)(outputAction); } else { HWREGB(base + WADI_O_SSS_BLKSOUTEVT5CFG + ((outputEventIndex % 4U) * 4U)) |= (uint8_t)(outputAction); } // // Setting the duration of the Output event // if(outputEventIndex < 4U) { HWREG(base + WADI_O_SSS_OUTEVT1DUR + (outputEventIndex * 4U)) |= (duration); } else { HWREG(base + WADI_O_SSS_OUTEVT5DUR + ((outputEventIndex % 4U) * 4U)) |= (duration); } // // Linking the output event to the other output events if needed // HWREG(base + WADI_O_SSS_OUTEVT1LINKCFG + (outputEventIndex * 4U)) |= linkOutputEvent; }",
+      "registersUsed": [
+        "SSS_OUTEVT1LINKCFG",
+        "SSS_BLKSOUTEVT1CFG",
+        "SSS_OUTEVT1DUR",
+        "SSS_BLKSOUTEVT5CFG",
+        "SSS_OUTEVT5DUR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SSS_OUTEVT1LINKCFG",
+        "SSS_BLKSOUTEVT1CFG",
+        "SSS_OUTEVT1DUR",
+        "SSS_BLKSOUTEVT5CFG",
+        "SSS_OUTEVT5DUR"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_configSSSOutputEventParamsWithoutLink",
+      "functionArgs": [
+        "base",
+        "outputEvent",
+        "outputAction",
+        "duration"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_OutputEvent",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Convert bitmask to output event index (0 to 7)\n    //\n    uint32_t outputEventIndex = 0, temp;\n    temp = (uint32_t)outputEvent >> 1;\n    while (temp != 0U)\n    {\n        outputEventIndex++;\n        temp >>= 1;\n    }\n\n    //\n    // Writing the signals that this output event can override\n    //\n    if(outputEventIndex < 4U)\n    {\n        HWREGB(base + WADI_O_SSS_BLKSOUTEVT1CFG + (outputEventIndex * 4U))\n                                                |= (uint8_t)(outputAction);\n    }\n    else\n    {\n        HWREGB(base + WADI_O_SSS_BLKSOUTEVT5CFG +\n               ((outputEventIndex % 4U) * 4U)) |= (uint8_t)(outputAction);\n    }\n\n    //\n    // Setting the duration of the Output event\n    //\n    if(outputEventIndex < 4U)\n    {\n        HWREG(base + WADI_O_SSS_OUTEVT1DUR + (outputEventIndex * 4U))\n                                                            |= (duration);\n    }\n    else\n    {\n        HWREG(base + WADI_O_SSS_OUTEVT5DUR + ((outputEventIndex % 4U) * 4U))\n                                                            |= (duration);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Convert bitmask to output event index (0 to 7) // uint32_t outputEventIndex = 0, temp; temp = (uint32_t)outputEvent >> 1; while (temp != 0U) { outputEventIndex++; temp >>= 1; } // // Writing the signals that this output event can override // if(outputEventIndex < 4U) { HWREGB(base + WADI_O_SSS_BLKSOUTEVT1CFG + (outputEventIndex * 4U)) |= (uint8_t)(outputAction); } else { HWREGB(base + WADI_O_SSS_BLKSOUTEVT5CFG + ((outputEventIndex % 4U) * 4U)) |= (uint8_t)(outputAction); } // // Setting the duration of the Output event // if(outputEventIndex < 4U) { HWREG(base + WADI_O_SSS_OUTEVT1DUR + (outputEventIndex * 4U)) |= (duration); } else { HWREG(base + WADI_O_SSS_OUTEVT5DUR + ((outputEventIndex % 4U) * 4U)) |= (duration); } }",
+      "registersUsed": [
+        "SSS_BLKSOUTEVT1CFG",
+        "SSS_OUTEVT1DUR",
+        "SSS_BLKSOUTEVT5CFG",
+        "SSS_OUTEVT5DUR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SSS_BLKSOUTEVT1CFG",
+        "SSS_OUTEVT1DUR",
+        "SSS_BLKSOUTEVT5CFG",
+        "SSS_OUTEVT5DUR"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_selectSSSOutputEvent",
+      "functionArgs": [
+        "base",
+        "outputSignal",
+        "outputEventSSS"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_OutputSignal",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Selecting the output events to be muxed to the corresponding\n    // output signal\n    //\n    if(outputSignal < 4U)\n    {\n        HWREG(base + WADI_O_SSS_BLK1_2OUTSEL)\n            |= (outputEventSSS << (outputSignal * 8U));\n    }\n    else\n    {\n        HWREG(base + WADI_O_SSS_BLK3_4OUTSEL)\n            |= (outputEventSSS << ((outputSignal % 4U) * 8U));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Selecting the output events to be muxed to the corresponding // output signal // if(outputSignal < 4U) { HWREG(base + WADI_O_SSS_BLK1_2OUTSEL) |= (outputEventSSS << (outputSignal * 8U)); } else { HWREG(base + WADI_O_SSS_BLK3_4OUTSEL) |= (outputEventSSS << ((outputSignal % 4U) * 8U)); } }",
+      "registersUsed": [
+        "SSS_BLK1_2OUTSEL",
+        "SSS_BLK3_4OUTSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SSS_BLK1_2OUTSEL",
+        "SSS_BLK3_4OUTSEL"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_overrideSig",
+      "functionArgs": [
+        "base",
+        "signal",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_Signal",
+        "WADI_SigOverride"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    //\n    // Write to the BLKERRCFG register\n    //\n    if(signal == WADI_SIGNAL1)  //!< signal 1\n    {\n        HWREG(base + WADI_O_BLKERRCFG)\n            |= (mode << WADI_BLKERRCFG_OVERIDESIG1_S);\n    }\n    else                        //!< signal 2\n    {\n         HWREG(base + WADI_O_BLKERRCFG)\n            |= (mode << WADI_BLKERRCFG_OVERIDESIG2_S);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); // // Write to the BLKERRCFG register // if(signal == WADI_SIGNAL1) //!< signal 1 { HWREG(base + WADI_O_BLKERRCFG) |= (mode << WADI_BLKERRCFG_OVERIDESIG1_S); } else //!< signal 2 { HWREG(base + WADI_O_BLKERRCFG) |= (mode << WADI_BLKERRCFG_OVERIDESIG2_S); } }",
+      "registersUsed": [
+        "BLKERRCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKERRCFG"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_overrideSigToSig",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_SigToSigOverride"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    //\n    // Write to the BLKERRCFG register\n    //\n    HWREG(base + WADI_O_BLKERRCFG)\n        |= (mode << WADI_BLKERRCFG_OVERIDESIGTOSIG_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); // // Write to the BLKERRCFG register // HWREG(base + WADI_O_BLKERRCFG) |= (mode << WADI_BLKERRCFG_OVERIDESIGTOSIG_S); }",
+      "registersUsed": [
+        "BLKERRCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKERRCFG"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_enableDmaTrigger",
+      "functionArgs": [
+        "base",
+        "dmaSources"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Enable the DMA trigger for that particular source\n    //\n    HWREG(base + WADI_O_DMATRIGEN) |= dmaSources;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Enable the DMA trigger for that particular source // HWREG(base + WADI_O_DMATRIGEN) |= dmaSources; }",
+      "registersUsed": [
+        "DMATRIGEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMATRIGEN"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_disableDmaTrigger",
+      "functionArgs": [
+        "base",
+        "dmaSources"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Clear the DMA trigger for that particular source\n    //\n    HWREG(base + WADI_O_DMATRIGEN) &= ~dmaSources;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Clear the DMA trigger for that particular source // HWREG(base + WADI_O_DMATRIGEN) &= ~dmaSources; }",
+      "registersUsed": [
+        "DMATRIGEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMATRIGEN"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_enableFilteredWrite",
+      "functionArgs": [
+        "base",
+        "dmaSources"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Enable filtered write for that particular source\n    //\n    HWREG(base + WADI_O_DMAFILTWRCFG) |= dmaSources;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Enable filtered write for that particular source // HWREG(base + WADI_O_DMAFILTWRCFG) |= dmaSources; }",
+      "registersUsed": [
+        "DMAFILTWRCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMAFILTWRCFG"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_disableFilteredWrite",
+      "functionArgs": [
+        "base",
+        "dmaSources"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Disable filtered write for that particular source\n    //\n    HWREG(base + WADI_O_DMAFILTWRCFG) &= ~dmaSources;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Disable filtered write for that particular source // HWREG(base + WADI_O_DMAFILTWRCFG) &= ~dmaSources; }",
+      "registersUsed": [
+        "DMAFILTWRCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMAFILTWRCFG"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_clearDmaStatus",
+      "functionArgs": [
+        "base",
+        "dmaSources"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Clear that DMA status for the particular source\n    //\n    HWREG(base + WADI_O_DMASTSUPDATE) &= ~dmaSources;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Clear that DMA status for the particular source // HWREG(base + WADI_O_DMASTSUPDATE) &= ~dmaSources; }",
+      "registersUsed": [
+        "DMASTSUPDATE"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMASTSUPDATE"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_lockConfigReg",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Lock WADI configuration registers\n    //\n    HWREG(base + WADI_O_CFGREGLOCK) = WADI_CFGREGLOCK_LOCK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Lock WADI configuration registers // HWREG(base + WADI_O_CFGREGLOCK) = WADI_CFGREGLOCK_LOCK; }",
+      "registersUsed": [
+        "CFGREGLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "CFGREGLOCK"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_unlockConfigReg",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Unlock WADI configuration registers\n    //\n    HWREG(base + WADI_O_CFGREGLOCK) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Unlock WADI configuration registers // HWREG(base + WADI_O_CFGREGLOCK) = 0U; }",
+      "registersUsed": [
+        "CFGREGLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "CFGREGLOCK"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_commitConfigReg",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Commits the lock on the WADI configuration registers\n    //\n    HWREG(base + WADI_O_CFGREGCOMMIT) = WADI_CFGREGCOMMIT_COMMIT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Commits the lock on the WADI configuration registers // HWREG(base + WADI_O_CFGREGCOMMIT) = WADI_CFGREGCOMMIT_COMMIT; }",
+      "registersUsed": [
+        "CFGREGCOMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "CFGREGCOMMIT"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_lockOperationalReg",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Lock WADI opeational registers\n    //\n    HWREG(base + WADI_O_OPERREGLOCK) = WADI_OPERREGLOCK_LOCK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Lock WADI opeational registers // HWREG(base + WADI_O_OPERREGLOCK) = WADI_OPERREGLOCK_LOCK; }",
+      "registersUsed": [
+        "OPERREGLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "OPERREGLOCK"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_unlockOperationalReg",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Unlock WADI configuration registers\n    //\n    HWREG(base + WADI_O_OPERREGLOCK) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Unlock WADI configuration registers // HWREG(base + WADI_O_OPERREGLOCK) = 0U; }",
+      "registersUsed": [
+        "OPERREGLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "OPERREGLOCK"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_commitOperationalReg",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isSSSBaseValid(base));\n\n    //\n    // Commits the lock on the WADI operational registers\n    //\n    HWREG(base + WADI_O_OPERREGCOMMIT) = WADI_OPERREGCOMMIT_COMMIT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isSSSBaseValid(base)); // // Commits the lock on the WADI operational registers // HWREG(base + WADI_O_OPERREGCOMMIT) = WADI_OPERREGCOMMIT_COMMIT; }",
+      "registersUsed": [
+        "OPERREGCOMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "OPERREGCOMMIT"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_getErrorEventType",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline WADI_ErrorEventType",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    return ((WADI_ErrorEventType)((HWREG(base + WADI_O_BLKERRINFO) & WADI_BLKERRINFO_ERRTYPE_M) >> WADI_BLKERRINFO_ERRTYPE_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); return ((WADI_ErrorEventType)((HWREG(base + WADI_O_BLKERRINFO) & WADI_BLKERRINFO_ERRTYPE_M) >> WADI_BLKERRINFO_ERRTYPE_S)); }",
+      "registersUsed": [
+        "BLKERRINFO"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKERRINFO"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_getBlockErrorStatus",
+      "functionArgs": [
+        "base",
+        "*blockErrorStatus"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_blockErrorStatus"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t blkErrStatus = 0U;\n\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n    ASSERT(NULL != blockErrorStatus);\n\n    blkErrStatus = HWREG(base + WADI_O_BLKERRSTS);\n\n    blockErrorStatus->sig1CmpAErr        = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG1CMPAERR_M)             >> WADI_BLKERRSTS_SIG1CMPAERR_S);\n    blockErrorStatus->sig1PeakErr        = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG1PKERR_M)               >> WADI_BLKERRSTS_SIG1PKERR_S);\n    blockErrorStatus->sig1AvgErr         = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG1AVGERR_M)              >> WADI_BLKERRSTS_SIG1AVGERR_S);\n    blockErrorStatus->sig1CmpBErr        = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG1CMPBERR_M)             >> WADI_BLKERRSTS_SIG1CMPBERR_S);\n    blockErrorStatus->sig2CmpAErr        = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG2CMPAERR_M)             >> WADI_BLKERRSTS_SIG2CMPAERR_S);\n    blockErrorStatus->sig2PeakErr        = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG2PKERR_M)               >> WADI_BLKERRSTS_SIG2PKERR_S);\n    blockErrorStatus->sig2AvgErr         = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG2AVGERR_M)              >> WADI_BLKERRSTS_SIG2AVGERR_S);\n    blockErrorStatus->sig2CmpBErr        = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG2CMPBERR_M)             >> WADI_BLKERRSTS_SIG2CMPBERR_S);\n    blockErrorStatus->sig2SigCmpErr      = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_CMPERR_M)         >> WADI_BLKERRSTS_SIGTOSIG_CMPERR_S);\n    blockErrorStatus->sig2SigPeakErr     = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_PKERR_M)          >> WADI_BLKERRSTS_SIGTOSIG_PKERR_S);\n    blockErrorStatus->sig2SigAvgErr      = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_AVGERR_M)         >> WADI_BLKERRSTS_SIGTOSIG_AVGERR_S);\n    blockErrorStatus->sig2SigDbCmpAErr   = (bool)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_DBCMPAERR)                 >> WADI_BLKERRSTS_SIGTOSIG_DBCMPAERR_S);\n    blockErrorStatus->sig2SigDbCmpBErr   = (bool)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_DBCMPBERR)                 >> WADI_BLKERRSTS_SIGTOSIG_DBCMPBERR_S);\n    blockErrorStatus->sig2SigOlapCmpAErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_OLAPCMPAERR_M)    >> WADI_BLKERRSTS_SIGTOSIG_OLAPCMPAERR_S);\n    blockErrorStatus->sig2SigOlapCmpBErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_OLAPCMPBERR_M)    >> WADI_BLKERRSTS_SIGTOSIG_OLAPCMPBERR_S);\n    blockErrorStatus->sigErr             = (bool)((blkErrStatus & WADI_BLKERRSTS_SIG_ERR)                            >> WADI_BLKERRSTS_SIG_ERR_S);\n    blockErrorStatus->sig2SigErr         = (bool)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_ERR)                       >> WADI_BLKERRSTS_SIGTOSIG_ERR_S);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t blkErrStatus = 0U; // // Check the arguments // ASSERT(WADI_isBaseValid(base)); ASSERT(NULL != blockErrorStatus); blkErrStatus = HWREG(base + WADI_O_BLKERRSTS); blockErrorStatus->sig1CmpAErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG1CMPAERR_M) >> WADI_BLKERRSTS_SIG1CMPAERR_S); blockErrorStatus->sig1PeakErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG1PKERR_M) >> WADI_BLKERRSTS_SIG1PKERR_S); blockErrorStatus->sig1AvgErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG1AVGERR_M) >> WADI_BLKERRSTS_SIG1AVGERR_S); blockErrorStatus->sig1CmpBErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG1CMPBERR_M) >> WADI_BLKERRSTS_SIG1CMPBERR_S); blockErrorStatus->sig2CmpAErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG2CMPAERR_M) >> WADI_BLKERRSTS_SIG2CMPAERR_S); blockErrorStatus->sig2PeakErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG2PKERR_M) >> WADI_BLKERRSTS_SIG2PKERR_S); blockErrorStatus->sig2AvgErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG2AVGERR_M) >> WADI_BLKERRSTS_SIG2AVGERR_S); blockErrorStatus->sig2CmpBErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIG2CMPBERR_M) >> WADI_BLKERRSTS_SIG2CMPBERR_S); blockErrorStatus->sig2SigCmpErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_CMPERR_M) >> WADI_BLKERRSTS_SIGTOSIG_CMPERR_S); blockErrorStatus->sig2SigPeakErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_PKERR_M) >> WADI_BLKERRSTS_SIGTOSIG_PKERR_S); blockErrorStatus->sig2SigAvgErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_AVGERR_M) >> WADI_BLKERRSTS_SIGTOSIG_AVGERR_S); blockErrorStatus->sig2SigDbCmpAErr = (bool)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_DBCMPAERR) >> WADI_BLKERRSTS_SIGTOSIG_DBCMPAERR_S); blockErrorStatus->sig2SigDbCmpBErr = (bool)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_DBCMPBERR) >> WADI_BLKERRSTS_SIGTOSIG_DBCMPBERR_S); blockErrorStatus->sig2SigOlapCmpAErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_OLAPCMPAERR_M) >> WADI_BLKERRSTS_SIGTOSIG_OLAPCMPAERR_S); blockErrorStatus->sig2SigOlapCmpBErr = (WADI_BlockErr)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_OLAPCMPBERR_M) >> WADI_BLKERRSTS_SIGTOSIG_OLAPCMPBERR_S); blockErrorStatus->sigErr = (bool)((blkErrStatus & WADI_BLKERRSTS_SIG_ERR) >> WADI_BLKERRSTS_SIG_ERR_S); blockErrorStatus->sig2SigErr = (bool)((blkErrStatus & WADI_BLKERRSTS_SIGTOSIG_ERR) >> WADI_BLKERRSTS_SIGTOSIG_ERR_S); }",
+      "registersUsed": [
+        "BLKERRSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKERRSTS"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_clearBlockErrorStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    HWREG(base + WADI_O_BLKERRSTS) = 0x00000000U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); HWREG(base + WADI_O_BLKERRSTS) = 0x00000000U; }",
+      "registersUsed": [
+        "BLKERRSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKERRSTS"
+      ]
+    },
+    {
+      "file": "wadi.h",
+      "peripheral": "wadi",
+      "functionName": "WADI_selectErrorCount",
+      "functionArgs": [
+        "base",
+        "errCntSelect"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "WADI_ErrorCountSelect"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(WADI_isBaseValid(base));\n\n    HWREG(base + WADI_O_BLKERRCFG) |= (((uint32_t)errCntSelect << WADI_BLKERRCFG_ERRCNTSEL_S) & WADI_BLKERRCFG_ERRCNTSEL_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(WADI_isBaseValid(base)); HWREG(base + WADI_O_BLKERRCFG) |= (((uint32_t)errCntSelect << WADI_BLKERRCFG_ERRCNTSEL_S) & WADI_BLKERRCFG_ERRCNTSEL_M); }",
+      "registersUsed": [
+        "BLKERRCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "BLKERRCFG"
+      ]
+    }
+  ]
+}

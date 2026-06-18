@@ -1,0 +1,675 @@
+{
+  "name": "dlt",
+  "functions": [
+    {
+      "file": "dlt.c",
+      "peripheral": "dlt",
+      "functionName": "DLT_configTagFilter",
+      "functionArgs": [
+        "*configParams"
+      ],
+      "functionArgsTypes": [
+        "constDLT_ConfigTagFilterParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    HWREGH(CPUDLT_BASE + DLT_O_TAG_FILTER_START_REF) =\n                                               configParams->startReference;\n    HWREGH(CPUDLT_BASE + DLT_O_TAG_FILTER_START_MASK) =\n                                                    configParams->startMask;\n    HWREGH(CPUDLT_BASE + DLT_O_TAG_FILTER_END_REF) =\n                                                 configParams->endReference;\n    HWREGH(CPUDLT_BASE + DLT_O_TAG_FILTER_END_MASK) = configParams->endMask;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(CPUDLT_BASE + DLT_O_TAG_FILTER_START_REF) = configParams->startReference; HWREGH(CPUDLT_BASE + DLT_O_TAG_FILTER_START_MASK) = configParams->startMask; HWREGH(CPUDLT_BASE + DLT_O_TAG_FILTER_END_REF) = configParams->endReference; HWREGH(CPUDLT_BASE + DLT_O_TAG_FILTER_END_MASK) = configParams->endMask; }",
+      "registersUsed": [
+        "TAG_FILTER_START_REF",
+        "TAG_FILTER_START_MASK",
+        "TAG_FILTER_END_REF",
+        "TAG_FILTER_END_MASK"
+      ],
+      "registersUsedMatchingBifield": [
+        "TAG_FILTER_START_REF",
+        "TAG_FILTER_START_MASK",
+        "TAG_FILTER_END_REF",
+        "TAG_FILTER_END_MASK"
+      ]
+    },
+    {
+      "file": "dlt.c",
+      "peripheral": "dlt",
+      "functionName": "DLT_configERADFilter",
+      "functionArgs": [
+        "startEvents",
+        "endEvents"
+      ],
+      "functionArgsTypes": [
+        "uint64_t",
+        "uint64_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_ERAD_START_MASK_L) = (uint32_t)startEvents;\n    HWREG(CPUDLT_BASE + DLT_O_ERAD_START_MASK_H) =\n                                            (uint32_t)(startEvents >> 32U);\n    HWREG(CPUDLT_BASE + DLT_O_ERAD_END_MASK_L) = (uint32_t)endEvents;\n    HWREG(CPUDLT_BASE + DLT_O_ERAD_END_MASK_H) =\n                                            (uint32_t)(endEvents >> 32U);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_ERAD_START_MASK_L) = (uint32_t)startEvents; HWREG(CPUDLT_BASE + DLT_O_ERAD_START_MASK_H) = (uint32_t)(startEvents >> 32U); HWREG(CPUDLT_BASE + DLT_O_ERAD_END_MASK_L) = (uint32_t)endEvents; HWREG(CPUDLT_BASE + DLT_O_ERAD_END_MASK_H) = (uint32_t)(endEvents >> 32U); }",
+      "registersUsed": [
+        "ERAD_START_MASK_L",
+        "ERAD_START_MASK_H",
+        "ERAD_END_MASK_L",
+        "ERAD_END_MASK_H"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERAD_START_MASK_L",
+        "ERAD_START_MASK_H",
+        "ERAD_END_MASK_L",
+        "ERAD_END_MASK_H"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_isFIFOBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    //\n    // Check if the base address of the DLT FIFO is valid\n    //\n    return(\n           ((base & BASE_ADDR_MASK) == CPU1DLTFIFO_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == CPU2DLTFIFO_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == CPU3DLTFIFO_BASE_FRAME(0U))\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base address of the DLT FIFO is valid // return( ((base & BASE_ADDR_MASK) == CPU1DLTFIFO_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == CPU2DLTFIFO_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == CPU3DLTFIFO_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_enableLinkPermission",
+      "functionArgs": [
+        "link"
+      ],
+      "functionArgsTypes": [
+        "SSU_Link"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_LINK_EN) |= 1U << (uint32_t)link;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_LINK_EN) |= 1U << (uint32_t)link; }",
+      "registersUsed": [
+        "LINK_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "LINK_EN"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_disableLinkPermission",
+      "functionArgs": [
+        "link"
+      ],
+      "functionArgsTypes": [
+        "SSU_Link"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_LINK_EN) &= ~(1U << (uint32_t)link);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_LINK_EN) &= ~(1U << (uint32_t)link); }",
+      "registersUsed": [
+        "LINK_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "LINK_EN"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_enableModule",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_CONTROL) |= (DLT_CONTROL_KEY |\n                                           DLT_CONTROL_DLT_EN);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_CONTROL) |= (DLT_CONTROL_KEY | DLT_CONTROL_DLT_EN); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_disableModule",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_CONTROL) = DLT_CONTROL_KEY |\n        (HWREG(CPUDLT_BASE + DLT_O_CONTROL) & (~(uint32_t)DLT_CONTROL_DLT_EN));\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_CONTROL) = DLT_CONTROL_KEY | (HWREG(CPUDLT_BASE + DLT_O_CONTROL) & (~(uint32_t)DLT_CONTROL_DLT_EN)); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_enableERADFilter",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_CONTROL) |= (DLT_CONTROL_KEY |\n                                           DLT_CONTROL_ERAD_FILTER_EN);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_CONTROL) |= (DLT_CONTROL_KEY | DLT_CONTROL_ERAD_FILTER_EN); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_disableERADFilter",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_CONTROL) = DLT_CONTROL_KEY |\n                                   (HWREG(CPUDLT_BASE + DLT_O_CONTROL) &\n                                    (~(uint32_t)DLT_CONTROL_ERAD_FILTER_EN));\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_CONTROL) = DLT_CONTROL_KEY | (HWREG(CPUDLT_BASE + DLT_O_CONTROL) & (~(uint32_t)DLT_CONTROL_ERAD_FILTER_EN)); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_enableTagFilter",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_CONTROL) |= (DLT_CONTROL_KEY |\n                                           DLT_CONTROL_TAG_FILTER_EN);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_CONTROL) |= (DLT_CONTROL_KEY | DLT_CONTROL_TAG_FILTER_EN); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_disableTagFilter",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_CONTROL) = DLT_CONTROL_KEY |\n                                   (HWREG(CPUDLT_BASE + DLT_O_CONTROL) &\n                                    (~(uint32_t)DLT_CONTROL_TAG_FILTER_EN));\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_CONTROL) = DLT_CONTROL_KEY | (HWREG(CPUDLT_BASE + DLT_O_CONTROL) & (~(uint32_t)DLT_CONTROL_TAG_FILTER_EN)); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_setCaptureMode",
+      "functionArgs": [
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "DLT_CaptureMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_CONTROL) = DLT_CONTROL_KEY |\n                                         (HWREG(CPUDLT_BASE + DLT_O_CONTROL) &\n                                          (~(uint32_t)DLT_CONTROL_CAP_MODE)) |\n                                    ((uint32_t)mode << DLT_CONTROL_CAP_MODE_S);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_CONTROL) = DLT_CONTROL_KEY | (HWREG(CPUDLT_BASE + DLT_O_CONTROL) & (~(uint32_t)DLT_CONTROL_CAP_MODE)) | ((uint32_t)mode << DLT_CONTROL_CAP_MODE_S); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_resetFilter",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_CONTROL) |= (DLT_CONTROL_KEY |\n                                           DLT_CONTROL_FILTER_RST);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_CONTROL) |= (DLT_CONTROL_KEY | DLT_CONTROL_FILTER_RST); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_enableDMA",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) =\n                            (HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) &\n                            (~(uint32_t)DLT_FIFO_CONTROL_DMA_EN)) |\n                            DLT_FIFO_CONTROL_DMA_EN;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) = (HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) & (~(uint32_t)DLT_FIFO_CONTROL_DMA_EN)) | DLT_FIFO_CONTROL_DMA_EN; }",
+      "registersUsed": [
+        "FIFO_CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FIFO_CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_disableDMA",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) =\n                            HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) &\n                            (~(uint32_t)DLT_FIFO_CONTROL_DMA_EN);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) = HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) & (~(uint32_t)DLT_FIFO_CONTROL_DMA_EN); }",
+      "registersUsed": [
+        "FIFO_CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FIFO_CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_resetFIFO",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) |= DLT_FIFO_CONTROL_FIFO_RST;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) |= DLT_FIFO_CONTROL_FIFO_RST; }",
+      "registersUsed": [
+        "FIFO_CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FIFO_CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_setFIFOTriggerLevel",
+      "functionArgs": [
+        "triggerLevel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(triggerLevel <= 0xFFU);\n\n    HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) =\n                        (HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) &\n                        (~(uint32_t)DLT_FIFO_CONTROL_WR_CTR_TRIG_LEVEL_M)) |\n                ((triggerLevel - 1U) << DLT_FIFO_CONTROL_WR_CTR_TRIG_LEVEL_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(triggerLevel <= 0xFFU); HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) = (HWREG(CPUDLT_BASE + DLT_O_FIFO_CONTROL) & (~(uint32_t)DLT_FIFO_CONTROL_WR_CTR_TRIG_LEVEL_M)) | ((triggerLevel - 1U) << DLT_FIFO_CONTROL_WR_CTR_TRIG_LEVEL_S); }",
+      "registersUsed": [
+        "FIFO_CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FIFO_CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_resetTimer",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGH(CPUDLT_BASE + DLT_O_TIMER_CONTROL) = DLT_TIMER_CONTROL_TIMER2_RST;\n    HWREGH(CPUDLT_BASE + DLT_O_TIMER_CONTROL) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(CPUDLT_BASE + DLT_O_TIMER_CONTROL) = DLT_TIMER_CONTROL_TIMER2_RST; HWREGH(CPUDLT_BASE + DLT_O_TIMER_CONTROL) = 0U; }",
+      "registersUsed": [
+        "TIMER_CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TIMER_CONTROL"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_getFIFOWordStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(HWREG(CPUDLT_BASE + DLT_O_FIFO_STS) & DLT_FIFO_STS_WORD_CTR_M);\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(CPUDLT_BASE + DLT_O_FIFO_STS) & DLT_FIFO_STS_WORD_CTR_M); }",
+      "registersUsed": [
+        "FIFO_STS"
+      ],
+      "registersUsedMatchingBifield": [
+        "FIFO_STS"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_getFIFOWriteStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return((HWREG(CPUDLT_BASE + DLT_O_FIFO_STS) & DLT_FIFO_STS_WR_CTR_M)\n                                               >> DLT_FIFO_STS_WR_CTR_S);\n}\n",
+      "functionContentWithoutFormatting": "{ return((HWREG(CPUDLT_BASE + DLT_O_FIFO_STS) & DLT_FIFO_STS_WR_CTR_M) >> DLT_FIFO_STS_WR_CTR_S); }",
+      "registersUsed": [
+        "FIFO_STS"
+      ],
+      "registersUsedMatchingBifield": [
+        "FIFO_STS"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_getFIFOReadPointer",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(HWREG(CPUDLT_BASE + DLT_O_FIFO_PTR) & DLT_FIFO_PTR_RD_PTR_M);\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(CPUDLT_BASE + DLT_O_FIFO_PTR) & DLT_FIFO_PTR_RD_PTR_M); }",
+      "registersUsed": [
+        "FIFO_PTR"
+      ],
+      "registersUsedMatchingBifield": [
+        "FIFO_PTR"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_getFIFOWritePointer",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return((HWREG(CPUDLT_BASE + DLT_O_FIFO_PTR) & DLT_FIFO_PTR_WR_PTR_M)\n                                               >> DLT_FIFO_PTR_WR_PTR_S);\n}\n",
+      "functionContentWithoutFormatting": "{ return((HWREG(CPUDLT_BASE + DLT_O_FIFO_PTR) & DLT_FIFO_PTR_WR_PTR_M) >> DLT_FIFO_PTR_WR_PTR_S); }",
+      "registersUsed": [
+        "FIFO_PTR"
+      ],
+      "registersUsedMatchingBifield": [
+        "FIFO_PTR"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_getTimerCount",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(HWREG(CPUDLT_BASE + DLT_O_TIMER2_COUNT));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(CPUDLT_BASE + DLT_O_TIMER2_COUNT)); }",
+      "registersUsed": [
+        "TIMER2_COUNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "TIMER2_COUNT"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_getGlobalInterruptStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return(0U != (HWREGH(CPUDLT_BASE + DLT_O_INT_FLG) & DLT_INT_FLG_INT));\n}\n",
+      "functionContentWithoutFormatting": "{ return(0U != (HWREGH(CPUDLT_BASE + DLT_O_INT_FLG) & DLT_INT_FLG_INT)); }",
+      "registersUsed": [
+        "INT_FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_FLG"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_getTimer1OverflowStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return(0U != (HWREGH(CPUDLT_BASE + DLT_O_INT_FLG) & DLT_INT_FLG_TIMER1_OVF));\n}\n",
+      "functionContentWithoutFormatting": "{ return(0U != (HWREGH(CPUDLT_BASE + DLT_O_INT_FLG) & DLT_INT_FLG_TIMER1_OVF)); }",
+      "registersUsed": [
+        "INT_FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_FLG"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_getTimer2OverflowStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return(0U != (HWREGH(CPUDLT_BASE + DLT_O_INT_FLG) & DLT_INT_FLG_TIMER2_OVF));\n}\n",
+      "functionContentWithoutFormatting": "{ return(0U != (HWREGH(CPUDLT_BASE + DLT_O_INT_FLG) & DLT_INT_FLG_TIMER2_OVF)); }",
+      "registersUsed": [
+        "INT_FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_FLG"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_getFIFOOverflowStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return(0U != (HWREGH(CPUDLT_BASE + DLT_O_INT_FLG) & DLT_INT_FLG_FIFO_OVF));\n}\n",
+      "functionContentWithoutFormatting": "{ return(0U != (HWREGH(CPUDLT_BASE + DLT_O_INT_FLG) & DLT_INT_FLG_FIFO_OVF)); }",
+      "registersUsed": [
+        "INT_FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_FLG"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_getFIFOUnderflowStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return(0U != (HWREGH(CPUDLT_BASE + DLT_O_INT_FLG) & DLT_INT_FLG_FIFO_UF));\n}\n",
+      "functionContentWithoutFormatting": "{ return(0U != (HWREGH(CPUDLT_BASE + DLT_O_INT_FLG) & DLT_INT_FLG_FIFO_UF)); }",
+      "registersUsed": [
+        "INT_FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_FLG"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_getFIFOTriggerLevelStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return(0U != (HWREGH(CPUDLT_BASE + DLT_O_INT_FLG) & DLT_INT_FLG_FIFO_TRIG));\n}\n",
+      "functionContentWithoutFormatting": "{ return(0U != (HWREGH(CPUDLT_BASE + DLT_O_INT_FLG) & DLT_INT_FLG_FIFO_TRIG)); }",
+      "registersUsed": [
+        "INT_FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_FLG"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_enableInterrupt",
+      "functionArgs": [
+        "events"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGH(CPUDLT_BASE + DLT_O_INT_EN) |= (uint16_t)events;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(CPUDLT_BASE + DLT_O_INT_EN) |= (uint16_t)events; }",
+      "registersUsed": [
+        "INT_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_EN"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_disableInterrupt",
+      "functionArgs": [
+        "events"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGH(CPUDLT_BASE + DLT_O_INT_EN) &= ~(uint16_t)events;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(CPUDLT_BASE + DLT_O_INT_EN) &= ~(uint16_t)events; }",
+      "registersUsed": [
+        "INT_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_EN"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_forceEvent",
+      "functionArgs": [
+        "events"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGH(CPUDLT_BASE + DLT_O_INT_FRC) = (uint16_t)events;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(CPUDLT_BASE + DLT_O_INT_FRC) = (uint16_t)events; }",
+      "registersUsed": [
+        "INT_FRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_FRC"
+      ]
+    },
+    {
+      "file": "dlt.h",
+      "peripheral": "dlt",
+      "functionName": "DLT_clearEvent",
+      "functionArgs": [
+        "events"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGH(CPUDLT_BASE + DLT_O_INT_CLR) = (uint16_t)events;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(CPUDLT_BASE + DLT_O_INT_CLR) = (uint16_t)events; }",
+      "registersUsed": [
+        "INT_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_CLR"
+      ]
+    }
+  ]
+}

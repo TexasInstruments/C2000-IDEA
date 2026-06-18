@@ -1,0 +1,355 @@
+{
+  "name": "interrupt",
+  "functions": [
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_clearIFR",
+      "functionArgs": [
+        "group"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static void",
+      "functionContent": "{\n    switch(group)\n    {\n        case 0x0001U:\n            IFR &= ~(uint16_t)0x0001U;\n            break;\n        case 0x0002U:\n            IFR &= ~(uint16_t)0x0002U;\n            break;\n        case 0x0004U:\n            IFR &= ~(uint16_t)0x0004U;\n            break;\n        case 0x0008U:\n            IFR &= ~(uint16_t)0x0008U;\n            break;\n        case 0x0010U:\n            IFR &= ~(uint16_t)0x0010U;\n            break;\n        case 0x0020U:\n            IFR &= ~(uint16_t)0x0020U;\n            break;\n        case 0x0040U:\n            IFR &= ~(uint16_t)0x0040U;\n            break;\n        case 0x0080U:\n            IFR &= ~(uint16_t)0x0080U;\n            break;\n        case 0x0100U:\n            IFR &= ~(uint16_t)0x0100U;\n            break;\n        case 0x0200U:\n            IFR &= ~(uint16_t)0x0200U;\n            break;\n        case 0x0400U:\n            IFR &= ~(uint16_t)0x0400U;\n            break;\n        case 0x0800U:\n            IFR &= ~(uint16_t)0x0800U;\n            break;\n        case 0x1000U:\n            IFR &= ~(uint16_t)0x1000U;\n            break;\n        case 0x2000U:\n            IFR &= ~(uint16_t)0x2000U;\n            break;\n        case 0x4000U:\n            IFR &= ~(uint16_t)0x4000U;\n            break;\n        case 0x8000U:\n            IFR &= ~(uint16_t)0x8000U;\n            break;\n        default:\n            //\n            // Invalid group mask.\n            //\n            ASSERT((bool)false);\n            break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ switch(group) { case 0x0001U: IFR &= ~(uint16_t)0x0001U; break; case 0x0002U: IFR &= ~(uint16_t)0x0002U; break; case 0x0004U: IFR &= ~(uint16_t)0x0004U; break; case 0x0008U: IFR &= ~(uint16_t)0x0008U; break; case 0x0010U: IFR &= ~(uint16_t)0x0010U; break; case 0x0020U: IFR &= ~(uint16_t)0x0020U; break; case 0x0040U: IFR &= ~(uint16_t)0x0040U; break; case 0x0080U: IFR &= ~(uint16_t)0x0080U; break; case 0x0100U: IFR &= ~(uint16_t)0x0100U; break; case 0x0200U: IFR &= ~(uint16_t)0x0200U; break; case 0x0400U: IFR &= ~(uint16_t)0x0400U; break; case 0x0800U: IFR &= ~(uint16_t)0x0800U; break; case 0x1000U: IFR &= ~(uint16_t)0x1000U; break; case 0x2000U: IFR &= ~(uint16_t)0x2000U; break; case 0x4000U: IFR &= ~(uint16_t)0x4000U; break; case 0x8000U: IFR &= ~(uint16_t)0x8000U; break; default: // // Invalid group mask. // ASSERT((bool)false); break; } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_initModule",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Disable and clear all interrupts at the CPU\n    //\n    (void)Interrupt_disableGlobal();\n    IER = 0x0000U;\n    IFR = 0x0000U;\n\n    //\n    // Clear all PIEIER registers\n    //\n    HWREGH(PIECTRL_BASE + PIE_O_IER1) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IER2) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IER3) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IER4) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IER5) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IER6) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IER7) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IER8) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IER9) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IER10) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IER11) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IER12) = 0U;\n\n    //\n    // Clear all PIEIFR registers\n    //\n    HWREGH(PIECTRL_BASE + PIE_O_IFR1) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IFR2) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IFR3) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IFR4) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IFR5) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IFR6) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IFR7) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IFR8) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IFR9) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IFR10) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IFR11) = 0U;\n    HWREGH(PIECTRL_BASE + PIE_O_IFR12) = 0U;\n\n    //\n    // Enable vector fetching from PIE block\n    //\n    HWREGH(PIECTRL_BASE + PIE_O_CTRL) |= PIE_CTRL_ENPIE;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Disable and clear all interrupts at the CPU // (void)Interrupt_disableGlobal(); IER = 0x0000U; IFR = 0x0000U; // // Clear all PIEIER registers // HWREGH(PIECTRL_BASE + PIE_O_IER1) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IER2) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IER3) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IER4) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IER5) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IER6) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IER7) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IER8) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IER9) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IER10) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IER11) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IER12) = 0U; // // Clear all PIEIFR registers // HWREGH(PIECTRL_BASE + PIE_O_IFR1) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IFR2) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IFR3) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IFR4) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IFR5) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IFR6) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IFR7) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IFR8) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IFR9) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IFR10) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IFR11) = 0U; HWREGH(PIECTRL_BASE + PIE_O_IFR12) = 0U; // // Enable vector fetching from PIE block // HWREGH(PIECTRL_BASE + PIE_O_CTRL) |= PIE_CTRL_ENPIE; }",
+      "registersUsed": [
+        "CTRL",
+        "IER1",
+        "IFR1",
+        "IER2",
+        "IFR2",
+        "IER3",
+        "IFR3",
+        "IER4",
+        "IFR4",
+        "IER5",
+        "IFR5",
+        "IER6",
+        "IFR6",
+        "IER7",
+        "IFR7",
+        "IER8",
+        "IFR8",
+        "IER9",
+        "IFR9",
+        "IER10",
+        "IFR10",
+        "IER11",
+        "IFR11",
+        "IER12",
+        "IFR12"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL",
+        "IER1",
+        "IFR1",
+        "IER2",
+        "IFR2",
+        "IER3",
+        "IFR3",
+        "IER4",
+        "IFR4",
+        "IER5",
+        "IFR5",
+        "IER6",
+        "IFR6",
+        "IER7",
+        "IFR7",
+        "IER8",
+        "IFR8",
+        "IER9",
+        "IFR9",
+        "IER10",
+        "IFR10",
+        "IER11",
+        "IFR11",
+        "IER12",
+        "IFR12"
+      ]
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_defaultHandler",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__interrupt void",
+      "functionContent": "{\n    uint16_t pieVect;\n    uint16_t vectID;\n\n    //\n    // Calculate the vector ID. If the vector is in the lower PIE, it's the\n    // offset of the vector that was fetched (bits 7:1 of PIECTRL.PIEVECT)\n    // divided by two.\n    //\n    pieVect = HWREGH(PIECTRL_BASE + PIE_O_CTRL);\n    vectID = (pieVect & 0xFEU) >> 1U;\n\n    //\n    // If the vector is in the upper PIE, the vector ID is 128 or higher.\n    //\n    if(pieVect >= 0x0E00U)\n    {\n        vectID += 128U;\n    }\n\n    //\n    // Something has gone wrong. An interrupt without a proper registered\n    // handler function has occurred. To help you debug the issue, local\n    // variable vectID contains the vector ID of the interrupt that occurred.\n    //\n    ESTOP0;\n    for(;;)\n    {\n        ;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t pieVect; uint16_t vectID; // // Calculate the vector ID. If the vector is in the lower PIE, it's the // offset of the vector that was fetched (bits 7:1 of PIECTRL.PIEVECT) // divided by two. // pieVect = HWREGH(PIECTRL_BASE + PIE_O_CTRL); vectID = (pieVect & 0xFEU) >> 1U; // // If the vector is in the upper PIE, the vector ID is 128 or higher. // if(pieVect >= 0x0E00U) { vectID += 128U; } // // Something has gone wrong. An interrupt without a proper registered // handler function has occurred. To help you debug the issue, local // variable vectID contains the vector ID of the interrupt that occurred. // ESTOP0; for(;;) { ; } }",
+      "registersUsed": [
+        "CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL"
+      ]
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_illegalOperationHandler",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__interrupt void",
+      "functionContent": "{\n    //\n    // Something has gone wrong.  The CPU has tried to execute an illegal\n    // instruction, generating an illegal instruction trap (ITRAP).\n    //\n    ESTOP0;\n    for(;;)\n    {\n        ;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Something has gone wrong. The CPU has tried to execute an illegal // instruction, generating an illegal instruction trap (ITRAP). // ESTOP0; for(;;) { ; } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_nmiHandler",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__interrupt void",
+      "functionContent": "{\n    //\n    // A non-maskable interrupt has occurred, indicating that a hardware error\n    // has occurred in the system.  You can use SysCtl_getNMIFlagStatus() to\n    // to read the NMIFLG register and determine what caused the NMI.\n    //\n    ESTOP0;\n    for(;;)\n    {\n        ;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // A non-maskable interrupt has occurred, indicating that a hardware error // has occurred in the system. You can use SysCtl_getNMIFlagStatus() to // to read the NMIFLG register and determine what caused the NMI. // ESTOP0; for(;;) { ; } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_initVectorTable",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t i;\n\n    EALLOW;\n\n    //\n    // We skip the first three locations because they are initialized by Boot\n    // ROM with boot variables.\n    //\n    for(i = 3U; i < 128U; i++)\n    {\n        HWREG(PIEVECTTABLE_BASE + (2U * i)) =\n            (uint32_t)Interrupt_defaultHandler;\n    }\n\n    //\n    // NMI and ITRAP get their own handlers.\n    //\n    HWREG(PIEVECTTABLE_BASE + ((INT_NMI >> 16U) * 2U)) =\n        (uint32_t)Interrupt_nmiHandler;\n    HWREG(PIEVECTTABLE_BASE + ((INT_ILLEGAL >> 16U) * 2U)) =\n        (uint32_t)Interrupt_illegalOperationHandler;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; EALLOW; // // We skip the first three locations because they are initialized by Boot // ROM with boot variables. // for(i = 3U; i < 128U; i++) { HWREG(PIEVECTTABLE_BASE + (2U * i)) = (uint32_t)Interrupt_defaultHandler; } // // NMI and ITRAP get their own handlers. // HWREG(PIEVECTTABLE_BASE + ((INT_NMI >> 16U) * 2U)) = (uint32_t)Interrupt_nmiHandler; HWREG(PIEVECTTABLE_BASE + ((INT_ILLEGAL >> 16U) * 2U)) = (uint32_t)Interrupt_illegalOperationHandler; EDIS; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_enable",
+      "functionArgs": [
+        "interruptNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    bool intsDisabled;\n    uint16_t intGroup;\n    uint16_t groupMask;\n    uint16_t vectID;\n\n    vectID = (uint16_t)(interruptNumber >> 16U);\n\n    //\n    // Globally disable interrupts but save status\n    //\n    intsDisabled = Interrupt_disableGlobal();\n\n    //\n    // PIE Interrupts\n    //\n    if(vectID >= 0x20U)\n    {\n        intGroup = (uint16_t)(((interruptNumber & 0xFF00UL) >> 8U) - 1U);\n        groupMask = (uint16_t)1U << intGroup;\n\n        HWREGH((PIECTRL_BASE + PIE_O_IER1 + (intGroup * 2U))) |=\n            (uint16_t)1U << ((interruptNumber & 0xFFU) - 1U);\n\n        //\n        // Enable PIE Group Interrupt\n        //\n        IER |= groupMask;\n    }\n\n    //\n    // INT13, INT14, DLOGINT, & RTOSINT\n    //\n    else if((vectID >= 0x0DU) && (vectID <= 0x10U))\n    {\n        IER |= (uint16_t)1U << (vectID - 1U);\n    }\n    else\n    {\n        //\n        // Other interrupts\n        //\n    }\n\n    //\n    // Re-enable interrupts if they were enabled\n    //\n    if(!intsDisabled)\n    {\n        (void)Interrupt_enableGlobal();\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ bool intsDisabled; uint16_t intGroup; uint16_t groupMask; uint16_t vectID; vectID = (uint16_t)(interruptNumber >> 16U); // // Globally disable interrupts but save status // intsDisabled = Interrupt_disableGlobal(); // // PIE Interrupts // if(vectID >= 0x20U) { intGroup = (uint16_t)(((interruptNumber & 0xFF00UL) >> 8U) - 1U); groupMask = (uint16_t)1U << intGroup; HWREGH((PIECTRL_BASE + PIE_O_IER1 + (intGroup * 2U))) |= (uint16_t)1U << ((interruptNumber & 0xFFU) - 1U); // // Enable PIE Group Interrupt // IER |= groupMask; } // // INT13, INT14, DLOGINT, & RTOSINT // else if((vectID >= 0x0DU) && (vectID <= 0x10U)) { IER |= (uint16_t)1U << (vectID - 1U); } else { // // Other interrupts // } // // Re-enable interrupts if they were enabled // if(!intsDisabled) { (void)Interrupt_enableGlobal(); } }",
+      "registersUsed": [
+        "IER1"
+      ],
+      "registersUsedMatchingBifield": [
+        "IER1"
+      ]
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_disable",
+      "functionArgs": [
+        "interruptNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    bool intsDisabled;\n    uint16_t intGroup;\n    uint16_t groupMask;\n    uint16_t vectID;\n\n    vectID = (uint16_t)(interruptNumber >> 16U);\n\n    intsDisabled = Interrupt_disableGlobal();\n\n    //\n    // PIE Interrupts\n    //\n    if(vectID >= 0x20U)\n    {\n        intGroup = (uint16_t)(((interruptNumber & 0xFF00UL) >> 8U) - 1U);\n        groupMask = (uint16_t)1U << intGroup;\n\n        //\n        // Disable individual PIE interrupt\n        //\n        HWREGH((PIECTRL_BASE + PIE_O_IER1 + (intGroup * 2U))) &=\n            ~(1U << ((interruptNumber & 0xFFUL) - 1U));\n\n        //\n        // Wait for any pending interrupts to get to the CPU\n        //\n        NOP;\n        NOP;\n        NOP;\n        NOP;\n        NOP;\n\n        Interrupt_clearIFR(groupMask);\n\n        //\n        // Acknowledge any interrupts\n        //\n        HWREGH(PIECTRL_BASE + PIE_O_ACK) = groupMask;\n    }\n\n    //\n    // INT13, INT14, DLOGINT, & RTOSINT\n    //\n    else if((vectID >= 0x0DU) && (vectID <= 0x10U))\n    {\n        IER &= ~((uint16_t)1U << (vectID - 1U));\n\n        //\n        // Wait for any pending interrupts to get to the CPU\n        //\n        NOP;\n        NOP;\n        NOP;\n        NOP;\n        NOP;\n\n        Interrupt_clearIFR((uint16_t)1U << (vectID - 1U));\n    }\n    else\n    {\n        //\n        // Other interrupts\n        //\n    }\n\n    //\n    // Re-enable interrupts if they were enabled\n    //\n    if(!intsDisabled)\n    {\n        (void)Interrupt_enableGlobal();\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ bool intsDisabled; uint16_t intGroup; uint16_t groupMask; uint16_t vectID; vectID = (uint16_t)(interruptNumber >> 16U); intsDisabled = Interrupt_disableGlobal(); // // PIE Interrupts // if(vectID >= 0x20U) { intGroup = (uint16_t)(((interruptNumber & 0xFF00UL) >> 8U) - 1U); groupMask = (uint16_t)1U << intGroup; // // Disable individual PIE interrupt // HWREGH((PIECTRL_BASE + PIE_O_IER1 + (intGroup * 2U))) &= ~(1U << ((interruptNumber & 0xFFUL) - 1U)); // // Wait for any pending interrupts to get to the CPU // NOP; NOP; NOP; NOP; NOP; Interrupt_clearIFR(groupMask); // // Acknowledge any interrupts // HWREGH(PIECTRL_BASE + PIE_O_ACK) = groupMask; } // // INT13, INT14, DLOGINT, & RTOSINT // else if((vectID >= 0x0DU) && (vectID <= 0x10U)) { IER &= ~((uint16_t)1U << (vectID - 1U)); // // Wait for any pending interrupts to get to the CPU // NOP; NOP; NOP; NOP; NOP; Interrupt_clearIFR((uint16_t)1U << (vectID - 1U)); } else { // // Other interrupts // } // // Re-enable interrupts if they were enabled // if(!intsDisabled) { (void)Interrupt_enableGlobal(); } }",
+      "registersUsed": [
+        "ACK",
+        "IER1"
+      ],
+      "registersUsedMatchingBifield": [
+        "ACK",
+        "IER1"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_enableGlobal",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Enable processor interrupts.\n    //\n    return(((__enable_interrupts() & 0x1U) != 0U) ? true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Enable processor interrupts. // return(((__enable_interrupts() & 0x1U) != 0U) ? true : false); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_disableGlobal",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Disable processor interrupts.\n    //\n    return(((__disable_interrupts() & 0x1U) != 0U) ? true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Disable processor interrupts. // return(((__disable_interrupts() & 0x1U) != 0U) ? true : false); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_register",
+      "functionArgs": [
+        "void)"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    //\n    // Calculate appropriate address for the interrupt number\n    //\n    address = (uint32_t)PIEVECTTABLE_BASE +\n              (((interruptNumber & 0xFFFF0000U) >> 16U) * 2U);\n\n    //\n    // Copy ISR address into PIE table\n    //\n    EALLOW;\n    HWREG(address) = (uint32_t)handler;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; // // Calculate appropriate address for the interrupt number // address = (uint32_t)PIEVECTTABLE_BASE + (((interruptNumber & 0xFFFF0000U) >> 16U) * 2U); // // Copy ISR address into PIE table // EALLOW; HWREG(address) = (uint32_t)handler; EDIS; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_unregister",
+      "functionArgs": [
+        "interruptNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    //\n    // Calculate appropriate address for the interrupt number\n    //\n    address = (uint32_t)PIEVECTTABLE_BASE +\n              (((interruptNumber & 0xFFFF0000U) >> 16U) * 2U);\n\n    //\n    // Copy default ISR address into PIE table\n    //\n    EALLOW;\n    HWREG(address) = (uint32_t)Interrupt_defaultHandler;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; // // Calculate appropriate address for the interrupt number // address = (uint32_t)PIEVECTTABLE_BASE + (((interruptNumber & 0xFFFF0000U) >> 16U) * 2U); // // Copy default ISR address into PIE table // EALLOW; HWREG(address) = (uint32_t)Interrupt_defaultHandler; EDIS; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_enableInCPU",
+      "functionArgs": [
+        "cpuInterrupt"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the interrupt bits in the CPU.\n    //\n    IER |= cpuInterrupt;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the interrupt bits in the CPU. // IER |= cpuInterrupt; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_disableInCPU",
+      "functionArgs": [
+        "cpuInterrupt"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear the interrupt bits in the CPU.\n    //\n    IER &= ~cpuInterrupt;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the interrupt bits in the CPU. // IER &= ~cpuInterrupt; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_clearACKGroup",
+      "functionArgs": [
+        "group"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set interrupt group acknowledge bits\n    //\n    HWREGH(PIECTRL_BASE + PIE_O_ACK) = group;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set interrupt group acknowledge bits // HWREGH(PIECTRL_BASE + PIE_O_ACK) = group; }",
+      "registersUsed": [
+        "ACK"
+      ],
+      "registersUsedMatchingBifield": [
+        "ACK"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_enablePIE",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGH(PIECTRL_BASE + PIE_O_CTRL) |= PIE_CTRL_ENPIE;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(PIECTRL_BASE + PIE_O_CTRL) |= PIE_CTRL_ENPIE; }",
+      "registersUsed": [
+        "CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_disablePIE",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGH(PIECTRL_BASE + PIE_O_CTRL) &= ~PIE_CTRL_ENPIE;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(PIECTRL_BASE + PIE_O_CTRL) &= ~PIE_CTRL_ENPIE; }",
+      "registersUsed": [
+        "CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL"
+      ]
+    }
+  ]
+}

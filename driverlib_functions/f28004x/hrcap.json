@@ -1,0 +1,373 @@
+{
+  "name": "hrcap",
+  "functions": [
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == HRCAP6_BASE) ||\n           (base == HRCAP7_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == HRCAP6_BASE) || (base == HRCAP7_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_enableHighResolution",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Set HRE bit.\n    //\n    HWREGH(base + HRCAP_O_HRCTL) |= HRCAP_HRCTL_HRE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); EALLOW; // // Set HRE bit. // HWREGH(base + HRCAP_O_HRCTL) |= HRCAP_HRCTL_HRE; EDIS; }",
+      "registersUsed": [
+        "HRCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCTL"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_disableHighResolution",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Set HRE bit.\n    //\n    HWREGH(base + HRCAP_O_HRCTL) &= ~HRCAP_HRCTL_HRE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); EALLOW; // // Set HRE bit. // HWREGH(base + HRCAP_O_HRCTL) &= ~HRCAP_HRCTL_HRE; EDIS; }",
+      "registersUsed": [
+        "HRCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCTL"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_enableHighResolutionClock",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n\n    EALLOW;\n    //\n    // Set HRCLKE bit.\n    //\n    HWREGH(base + HRCAP_O_HRCTL) |= HRCAP_HRCTL_HRCLKE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); EALLOW; // // Set HRCLKE bit. // HWREGH(base + HRCAP_O_HRCTL) |= HRCAP_HRCTL_HRCLKE; EDIS; }",
+      "registersUsed": [
+        "HRCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCTL"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_disbleHighResolutionClock",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Clear HRCLKE bit.\n    //\n    HWREGH(base + HRCAP_O_HRCTL) &= ~HRCAP_HRCTL_HRCLKE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); EALLOW; // // Clear HRCLKE bit. // HWREGH(base + HRCAP_O_HRCTL) &= ~HRCAP_HRCTL_HRCLKE; EDIS; }",
+      "registersUsed": [
+        "HRCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCTL"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_startCalibration",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Set CALIBSTART bit.\n    //\n    HWREGH(base + HRCAP_O_HRCTL) |= HRCAP_HRCTL_CALIBSTART;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); EALLOW; // // Set CALIBSTART bit. // HWREGH(base + HRCAP_O_HRCTL) |= HRCAP_HRCTL_CALIBSTART; EDIS; }",
+      "registersUsed": [
+        "HRCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCTL"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_setCalibrationMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Write to CALIBSTS and CALIBCONT bits.\n    //\n    HWREGH(base + HRCAP_O_HRCTL) |= HRCAP_HRCTL_CALIBCONT;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); EALLOW; // // Write to CALIBSTS and CALIBCONT bits. // HWREGH(base + HRCAP_O_HRCTL) |= HRCAP_HRCTL_CALIBCONT; EDIS; }",
+      "registersUsed": [
+        "HRCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCTL"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_enableCalibrationInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n    ASSERT((intFlags & ~(HRCAP_CALIBRATION_DONE |\n                       HRCAP_CALIBRATION_PERIOD_OVERFLOW)) == 0U);\n\n    EALLOW;\n\n    //\n    // Set CALIBDONE or CALPRDCHKSTS.\n    //\n    HWREGH(base + HRCAP_O_HRINTEN) |= intFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); ASSERT((intFlags & ~(HRCAP_CALIBRATION_DONE | HRCAP_CALIBRATION_PERIOD_OVERFLOW)) == 0U); EALLOW; // // Set CALIBDONE or CALPRDCHKSTS. // HWREGH(base + HRCAP_O_HRINTEN) |= intFlags; EDIS; }",
+      "registersUsed": [
+        "HRINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRINTEN"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_disableCalibrationInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n    ASSERT((intFlags & ~(HRCAP_CALIBRATION_DONE |\n                       HRCAP_CALIBRATION_PERIOD_OVERFLOW)) == 0U);\n\n    EALLOW;\n\n    //\n    // Clear CALIBDONE or CALPRDCHKSTS.\n    //\n    HWREGH(base + HRCAP_O_HRINTEN) &= ~intFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); ASSERT((intFlags & ~(HRCAP_CALIBRATION_DONE | HRCAP_CALIBRATION_PERIOD_OVERFLOW)) == 0U); EALLOW; // // Clear CALIBDONE or CALPRDCHKSTS. // HWREGH(base + HRCAP_O_HRINTEN) &= ~intFlags; EDIS; }",
+      "registersUsed": [
+        "HRINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRINTEN"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_getCalibrationFlags",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n\n    //\n    // Return contents of HRFLG register.\n    //\n    return((uint16_t)(HWREGH(base + HRCAP_O_HRFLG) & 0x7U));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); // // Return contents of HRFLG register. // return((uint16_t)(HWREGH(base + HRCAP_O_HRFLG) & 0x7U)); }",
+      "registersUsed": [
+        "HRFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRFLG"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_clearCalibrationFlags",
+      "functionArgs": [
+        "base",
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n    ASSERT((flags == (HRCAP_CALIBRATION_DONE |\n                      HRCAP_GLOBAL_CALIBRATION_INTERRUPT)) ||\n           (flags == (HRCAP_CALIBRATION_PERIOD_OVERFLOW |\n                      HRCAP_GLOBAL_CALIBRATION_INTERRUPT)) ||\n           (flags == (HRCAP_CALIBRATION_DONE |\n                      HRCAP_GLOBAL_CALIBRATION_INTERRUPT |\n                      HRCAP_CALIBRATION_PERIOD_OVERFLOW)));\n\n    //\n    // Write to HRCLR register.\n    //\n    HWREGH(base + HRCAP_O_HRCLR) |= flags;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); ASSERT((flags == (HRCAP_CALIBRATION_DONE | HRCAP_GLOBAL_CALIBRATION_INTERRUPT)) || (flags == (HRCAP_CALIBRATION_PERIOD_OVERFLOW | HRCAP_GLOBAL_CALIBRATION_INTERRUPT)) || (flags == (HRCAP_CALIBRATION_DONE | HRCAP_GLOBAL_CALIBRATION_INTERRUPT | HRCAP_CALIBRATION_PERIOD_OVERFLOW))); // // Write to HRCLR register. // HWREGH(base + HRCAP_O_HRCLR) |= flags; }",
+      "registersUsed": [
+        "HRCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCLR"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_isCalibrationBusy",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n\n    //\n    // Read CALIBSTS bit.\n    //\n    return((HWREGH(base + HRCAP_O_HRCTL) & HRCAP_HRCTL_CALIBSTS) ==\n             HRCAP_HRCTL_CALIBSTS);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); // // Read CALIBSTS bit. // return((HWREGH(base + HRCAP_O_HRCTL) & HRCAP_HRCTL_CALIBSTS) == HRCAP_HRCTL_CALIBSTS); }",
+      "registersUsed": [
+        "HRCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCTL"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_forceCalibrationFlags",
+      "functionArgs": [
+        "base",
+        "flag"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n    ASSERT((flag & ~(HRCAP_CALIBRATION_DONE |\n                    HRCAP_CALIBRATION_PERIOD_OVERFLOW)) == 0U);\n\n    EALLOW;\n\n    //\n    // Write to CALIBDONE or CALPRDCHKSTS bit.\n    //\n    HWREGH(base + HRCAP_O_HRFRC) |= flag;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); ASSERT((flag & ~(HRCAP_CALIBRATION_DONE | HRCAP_CALIBRATION_PERIOD_OVERFLOW)) == 0U); EALLOW; // // Write to CALIBDONE or CALPRDCHKSTS bit. // HWREGH(base + HRCAP_O_HRFRC) |= flag; EDIS; }",
+      "registersUsed": [
+        "HRFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRFRC"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_setCalibrationPeriod",
+      "functionArgs": [
+        "base",
+        "sysclkHz"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + HRCAP_O_HRCALPRD) = (sysclkHz * 16U) / 10000U;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); EALLOW; HWREG(base + HRCAP_O_HRCALPRD) = (sysclkHz * 16U) / 10000U; EDIS; }",
+      "registersUsed": [
+        "HRCALPRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCALPRD"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_configCalibrationPeriod",
+      "functionArgs": [
+        "base",
+        "sysclkHz",
+        "periodInMs"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "float"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + HRCAP_O_HRCALPRD) =\n                    (uint32_t)((float32_t)sysclkHz * periodInMs / 1000.0F);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); EALLOW; HWREG(base + HRCAP_O_HRCALPRD) = (uint32_t)((float32_t)sysclkHz * periodInMs / 1000.0F); EDIS; }",
+      "registersUsed": [
+        "HRCALPRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRCALPRD"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_getCalibrationClockPeriod",
+      "functionArgs": [
+        "base",
+        "clockSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "HRCAP_CalibrationClockSource"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n\n    //\n    // Return HRCAP_O_HRSYSCLKCAP or HRCAP_O_HRCLKCAP.\n    //\n    return(HWREG(base + HRCAP_O_HRSYSCLKCAP + (uint32_t)clockSource));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); // // Return HRCAP_O_HRSYSCLKCAP or HRCAP_O_HRCLKCAP. // return(HWREG(base + HRCAP_O_HRSYSCLKCAP + (uint32_t)clockSource)); }",
+      "registersUsed": [
+        "HRSYSCLKCAP",
+        "HRCLKCAP"
+      ],
+      "registersUsedMatchingBifield": [
+        "HRSYSCLKCAP",
+        "HRCLKCAP"
+      ]
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_getScaleFactor",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline float32_t",
+      "functionContent": "{\n    ASSERT(HRCAP_isBaseValid(base));\n\n    //\n    // Calculate and return the scale factor.\n    //\n    return((float32_t)HRCAP_getCalibrationClockPeriod(base,\n                                            HRCAP_CALIBRATION_CLOCK_SYSCLK) /\n           (float32_t)HRCAP_getCalibrationClockPeriod(base,\n                                            HRCAP_CALIBRATION_CLOCK_HRCLK));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(HRCAP_isBaseValid(base)); // // Calculate and return the scale factor. // return((float32_t)HRCAP_getCalibrationClockPeriod(base, HRCAP_CALIBRATION_CLOCK_SYSCLK) / (float32_t)HRCAP_getCalibrationClockPeriod(base, HRCAP_CALIBRATION_CLOCK_HRCLK)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "hrcap.h",
+      "peripheral": "hrcap",
+      "functionName": "HRCAP_convertEventTimeStampNanoseconds",
+      "functionArgs": [
+        "timeStamp",
+        "scaleFactor"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "float32_t"
+      ],
+      "returnType": "static inline float32_t",
+      "functionContent": "{\n    //\n    // Convert the raw count value to nanoseconds using the given scale factor.\n    //\n    return((float32_t)timeStamp * scaleFactor * ((float32_t)10.0 /\n                                                 (float32_t)128.0));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Convert the raw count value to nanoseconds using the given scale factor. // return((float32_t)timeStamp * scaleFactor * ((float32_t)10.0 / (float32_t)128.0)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    }
+  ]
+}

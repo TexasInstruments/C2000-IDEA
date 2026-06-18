@@ -1,0 +1,733 @@
+{
+  "name": "aes",
+  "functions": [
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_configureModule",
+      "functionArgs": [
+        "base",
+        "*config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constAES_ConfigParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Write the ctrl register with new value and backup the save context field\n    //\n    HWREG_BP(base + AES_O_CTRL) = ((HWREG_BP(base + AES_O_CTRL) &\n                                    ~AES_CONFIG_M)  |\n                                   ((uint32_t)config->direction  |\n                                    (uint32_t)config->keySize  |\n                                    (uint32_t)config-> opMode     |\n                                    (uint32_t)config->ctrWidth |\n                                    (uint32_t)config->ccmLenWidth |\n                                    (uint32_t)config->ccmAuthLenWidth));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Write the ctrl register with new value and backup the save context field // HWREG_BP(base + AES_O_CTRL) = ((HWREG_BP(base + AES_O_CTRL) & ~AES_CONFIG_M) | ((uint32_t)config->direction | (uint32_t)config->keySize | (uint32_t)config-> opMode | (uint32_t)config->ctrWidth | (uint32_t)config->ccmLenWidth | (uint32_t)config->ccmAuthLenWidth)); }",
+      "registersUsed": [
+        "CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL"
+      ]
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_setKey1",
+      "functionArgs": [
+        "base",
+        "key[]",
+        "keySize"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constuint32_t",
+        "AES_KeySize"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // With all key sizes, the first 4 words are written.\n    //\n    HWREG_BP(base + AES_O_KEY1_0) = key[0U];\n    HWREG_BP(base + AES_O_KEY1_1) = key[1U];\n    HWREG_BP(base + AES_O_KEY1_2) = key[2U];\n    HWREG_BP(base + AES_O_KEY1_3) = key[3U];\n\n    //\n    // The key is 192 or 256 bits.  Write the next 2 words.\n    //\n    if(keySize != AES_KEY_SIZE_128BIT)\n    {\n        HWREG_BP(base + AES_O_KEY1_4) = key[4U];\n        HWREG_BP(base + AES_O_KEY1_5) = key[5U];\n    }\n\n    //\n    // The key is 256 bits.  Write the last 2 words.\n    //\n    if(keySize == AES_KEY_SIZE_256BIT)\n    {\n        HWREG_BP(base + AES_O_KEY1_6) = key[6U];\n        HWREG_BP(base + AES_O_KEY1_7) = key[7U];\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // With all key sizes, the first 4 words are written. // HWREG_BP(base + AES_O_KEY1_0) = key[0U]; HWREG_BP(base + AES_O_KEY1_1) = key[1U]; HWREG_BP(base + AES_O_KEY1_2) = key[2U]; HWREG_BP(base + AES_O_KEY1_3) = key[3U]; // // The key is 192 or 256 bits. Write the next 2 words. // if(keySize != AES_KEY_SIZE_128BIT) { HWREG_BP(base + AES_O_KEY1_4) = key[4U]; HWREG_BP(base + AES_O_KEY1_5) = key[5U]; } // // The key is 256 bits. Write the last 2 words. // if(keySize == AES_KEY_SIZE_256BIT) { HWREG_BP(base + AES_O_KEY1_6) = key[6U]; HWREG_BP(base + AES_O_KEY1_7) = key[7U]; } }",
+      "registersUsed": [
+        "KEY1_6",
+        "KEY1_7",
+        "KEY1_4",
+        "KEY1_5",
+        "KEY1_2",
+        "KEY1_3",
+        "KEY1_0",
+        "KEY1_1"
+      ],
+      "registersUsedMatchingBifield": [
+        "KEY1_6",
+        "KEY1_7",
+        "KEY1_4",
+        "KEY1_5",
+        "KEY1_2",
+        "KEY1_3",
+        "KEY1_0",
+        "KEY1_1"
+      ]
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_setKey2",
+      "functionArgs": [
+        "base",
+        "key[]",
+        "keySize"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constuint32_t",
+        "AES_KeySize"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // With all key sizes, the first 4 words are written.\n    //\n    HWREG_BP(base + AES_O_KEY2_0) = key[0U];\n    HWREG_BP(base + AES_O_KEY2_1) = key[1U];\n    HWREG_BP(base + AES_O_KEY2_2) = key[2U];\n    HWREG_BP(base + AES_O_KEY2_3) = key[3U];\n\n    //\n    // The key is 192 or 256 bits.  Write the next 2 words.\n    //\n    if(keySize != AES_KEY_SIZE_128BIT)\n    {\n        HWREG_BP(base + AES_O_KEY2_4) = key[4U];\n        HWREG_BP(base + AES_O_KEY2_5) = key[5U];\n    }\n\n    //\n    // The key is 256 bits.  Write the last 2 words.\n    //\n    if(keySize == AES_KEY_SIZE_256BIT)\n    {\n        HWREG_BP(base + AES_O_KEY2_6) = key[6U];\n        HWREG_BP(base + AES_O_KEY2_7) = key[7U];\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // With all key sizes, the first 4 words are written. // HWREG_BP(base + AES_O_KEY2_0) = key[0U]; HWREG_BP(base + AES_O_KEY2_1) = key[1U]; HWREG_BP(base + AES_O_KEY2_2) = key[2U]; HWREG_BP(base + AES_O_KEY2_3) = key[3U]; // // The key is 192 or 256 bits. Write the next 2 words. // if(keySize != AES_KEY_SIZE_128BIT) { HWREG_BP(base + AES_O_KEY2_4) = key[4U]; HWREG_BP(base + AES_O_KEY2_5) = key[5U]; } // // The key is 256 bits. Write the last 2 words. // if(keySize == AES_KEY_SIZE_256BIT) { HWREG_BP(base + AES_O_KEY2_6) = key[6U]; HWREG_BP(base + AES_O_KEY2_7) = key[7U]; } }",
+      "registersUsed": [
+        "KEY2_6",
+        "KEY2_7",
+        "KEY2_4",
+        "KEY2_5",
+        "KEY2_2",
+        "KEY2_3",
+        "KEY2_0",
+        "KEY2_1"
+      ],
+      "registersUsedMatchingBifield": [
+        "KEY2_6",
+        "KEY2_7",
+        "KEY2_4",
+        "KEY2_5",
+        "KEY2_2",
+        "KEY2_3",
+        "KEY2_0",
+        "KEY2_1"
+      ]
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_setKey3",
+      "functionArgs": [
+        "base",
+        "key[]"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constuint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // With all key sizes, the first 4 words are written.\n    //\n    HWREG_BP(base + AES_O_KEY2_4) = key[0U];\n    HWREG_BP(base + AES_O_KEY2_5) = key[1U];\n    HWREG_BP(base + AES_O_KEY2_6) = key[2U];\n    HWREG_BP(base + AES_O_KEY2_7) = key[3U];\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // With all key sizes, the first 4 words are written. // HWREG_BP(base + AES_O_KEY2_4) = key[0U]; HWREG_BP(base + AES_O_KEY2_5) = key[1U]; HWREG_BP(base + AES_O_KEY2_6) = key[2U]; HWREG_BP(base + AES_O_KEY2_7) = key[3U]; }",
+      "registersUsed": [
+        "KEY2_6",
+        "KEY2_7",
+        "KEY2_4",
+        "KEY2_5"
+      ],
+      "registersUsedMatchingBifield": [
+        "KEY2_6",
+        "KEY2_7",
+        "KEY2_4",
+        "KEY2_5"
+      ]
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_setInitializationVector",
+      "functionArgs": [
+        "base",
+        "iniVector[]"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constuint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Set Initialization vector.\n    //\n    HWREG_BP(base + AES_O_IV_IN_OUT_0) = iniVector[0U];\n    HWREG_BP(base + AES_O_IV_IN_OUT_1) = iniVector[1U];\n    HWREG_BP(base + AES_O_IV_IN_OUT_2) = iniVector[2U];\n    HWREG_BP(base + AES_O_IV_IN_OUT_3) = iniVector[3U];\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Set Initialization vector. // HWREG_BP(base + AES_O_IV_IN_OUT_0) = iniVector[0U]; HWREG_BP(base + AES_O_IV_IN_OUT_1) = iniVector[1U]; HWREG_BP(base + AES_O_IV_IN_OUT_2) = iniVector[2U]; HWREG_BP(base + AES_O_IV_IN_OUT_3) = iniVector[3U]; }",
+      "registersUsed": [
+        "IV_IN_OUT_0",
+        "IV_IN_OUT_1",
+        "IV_IN_OUT_2",
+        "IV_IN_OUT_3"
+      ],
+      "registersUsedMatchingBifield": [
+        "IV_IN_OUT_0",
+        "IV_IN_OUT_1",
+        "IV_IN_OUT_2",
+        "IV_IN_OUT_3"
+      ]
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_readInitializationVector",
+      "functionArgs": [
+        "base",
+        "iniVector[]"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Read the initialization vector\n    //\n    iniVector[0U] = HWREG_BP(base + AES_O_IV_IN_OUT_0);\n    iniVector[1U] = HWREG_BP(base + AES_O_IV_IN_OUT_1);\n    iniVector[2U] = HWREG_BP(base + AES_O_IV_IN_OUT_2);\n    iniVector[3U] = HWREG_BP(base + AES_O_IV_IN_OUT_3);\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Read the initialization vector // iniVector[0U] = HWREG_BP(base + AES_O_IV_IN_OUT_0); iniVector[1U] = HWREG_BP(base + AES_O_IV_IN_OUT_1); iniVector[2U] = HWREG_BP(base + AES_O_IV_IN_OUT_2); iniVector[3U] = HWREG_BP(base + AES_O_IV_IN_OUT_3); }",
+      "registersUsed": [
+        "IV_IN_OUT_0",
+        "IV_IN_OUT_1",
+        "IV_IN_OUT_2",
+        "IV_IN_OUT_3"
+      ],
+      "registersUsedMatchingBifield": [
+        "IV_IN_OUT_0",
+        "IV_IN_OUT_1",
+        "IV_IN_OUT_2",
+        "IV_IN_OUT_3"
+      ]
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_readTag",
+      "functionArgs": [
+        "base",
+        "tagData[]"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Wait for the output context to be ready.\n    //\n    while((AES_CTRL_SVCTXTRDY & (HWREG_BP(base + AES_O_CTRL))) !=\n          AES_CTRL_SVCTXTRDY)\n    {\n    }\n\n    //\n    // Read the tag data.\n    //\n    tagData[0U] = HWREG_BP(base + AES_O_TAG_OUT_0);\n    tagData[1U] = HWREG_BP(base + AES_O_TAG_OUT_1);\n    tagData[2U] = HWREG_BP(base + AES_O_TAG_OUT_2);\n    tagData[3U] = HWREG_BP(base + AES_O_TAG_OUT_3);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Wait for the output context to be ready. // while((AES_CTRL_SVCTXTRDY & (HWREG_BP(base + AES_O_CTRL))) != AES_CTRL_SVCTXTRDY) { } // // Read the tag data. // tagData[0U] = HWREG_BP(base + AES_O_TAG_OUT_0); tagData[1U] = HWREG_BP(base + AES_O_TAG_OUT_1); tagData[2U] = HWREG_BP(base + AES_O_TAG_OUT_2); tagData[3U] = HWREG_BP(base + AES_O_TAG_OUT_3); }",
+      "registersUsed": [
+        "CTRL",
+        "TAG_OUT_0",
+        "TAG_OUT_1",
+        "TAG_OUT_2",
+        "TAG_OUT_3"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL",
+        "TAG_OUT_0",
+        "TAG_OUT_1",
+        "TAG_OUT_2",
+        "TAG_OUT_3"
+      ]
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_readDataNonBlocking",
+      "functionArgs": [
+        "base",
+        "destArray[]"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    bool temp;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Check if the output is ready before reading the data.  If it is not\n    // ready, return false.\n    //\n    if((AES_CTRL_OUTPUT_READY & (HWREG_BP(base + AES_O_CTRL))) !=\n        AES_CTRL_OUTPUT_READY)\n    {\n        temp = false;\n    }\n    else\n    {\n        //\n        // Read a block of data from the data registers\n        //\n        destArray[0U] = HWREG_BP(base + AES_O_DATA_IN_OUT_3);\n        destArray[1U] = HWREG_BP(base + AES_O_DATA_IN_OUT_2);\n        destArray[2U] = HWREG_BP(base + AES_O_DATA_IN_OUT_1);\n        destArray[3U] = HWREG_BP(base + AES_O_DATA_IN_OUT_0);\n\n        //\n        // Read successful, return true.\n        //\n        temp = true;\n    }\n    return(temp);\n}\n",
+      "functionContentWithoutFormatting": "{ bool temp; // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Check if the output is ready before reading the data. If it is not // ready, return false. // if((AES_CTRL_OUTPUT_READY & (HWREG_BP(base + AES_O_CTRL))) != AES_CTRL_OUTPUT_READY) { temp = false; } else { // // Read a block of data from the data registers // destArray[0U] = HWREG_BP(base + AES_O_DATA_IN_OUT_3); destArray[1U] = HWREG_BP(base + AES_O_DATA_IN_OUT_2); destArray[2U] = HWREG_BP(base + AES_O_DATA_IN_OUT_1); destArray[3U] = HWREG_BP(base + AES_O_DATA_IN_OUT_0); // // Read successful, return true. // temp = true; } return(temp); }",
+      "registersUsed": [
+        "CTRL",
+        "DATA_IN_OUT_0",
+        "DATA_IN_OUT_1",
+        "DATA_IN_OUT_2",
+        "DATA_IN_OUT_3"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL",
+        "DATA_IN_OUT_0",
+        "DATA_IN_OUT_1",
+        "DATA_IN_OUT_2",
+        "DATA_IN_OUT_3"
+      ]
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_readDataBlocking",
+      "functionArgs": [
+        "base",
+        "destArray[]"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Wait for the output to be ready before reading the data.\n    //\n    while((AES_CTRL_OUTPUT_READY & (HWREG_BP(base + AES_O_CTRL))) !=\n           AES_CTRL_OUTPUT_READY)\n    {\n    }\n\n    //\n    // Read a block of data from the data registers\n    //\n    destArray[0U] = HWREG_BP(base + AES_O_DATA_IN_OUT_3);\n    destArray[1U] = HWREG_BP(base + AES_O_DATA_IN_OUT_2);\n    destArray[2U] = HWREG_BP(base + AES_O_DATA_IN_OUT_1);\n    destArray[3U] = HWREG_BP(base + AES_O_DATA_IN_OUT_0);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Wait for the output to be ready before reading the data. // while((AES_CTRL_OUTPUT_READY & (HWREG_BP(base + AES_O_CTRL))) != AES_CTRL_OUTPUT_READY) { } // // Read a block of data from the data registers // destArray[0U] = HWREG_BP(base + AES_O_DATA_IN_OUT_3); destArray[1U] = HWREG_BP(base + AES_O_DATA_IN_OUT_2); destArray[2U] = HWREG_BP(base + AES_O_DATA_IN_OUT_1); destArray[3U] = HWREG_BP(base + AES_O_DATA_IN_OUT_0); }",
+      "registersUsed": [
+        "CTRL",
+        "DATA_IN_OUT_0",
+        "DATA_IN_OUT_1",
+        "DATA_IN_OUT_2",
+        "DATA_IN_OUT_3"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL",
+        "DATA_IN_OUT_0",
+        "DATA_IN_OUT_1",
+        "DATA_IN_OUT_2",
+        "DATA_IN_OUT_3"
+      ]
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_writeDataNonBlocking",
+      "functionArgs": [
+        "base",
+        "srcArray[]"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constuint32_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    bool temp;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Check if the input is ready.  If not, then return false.\n    //\n    if((AES_CTRL_INPUT_READY & (HWREG_BP(base + AES_O_CTRL))) !=\n        AES_CTRL_INPUT_READY)\n    {\n        temp = false;\n    }\n    else\n    {\n        //\n        // Write a block of data into the data registers.\n        //\n        HWREG_BP(base + AES_O_DATA_IN_OUT_3) = srcArray[0U];\n        HWREG_BP(base + AES_O_DATA_IN_OUT_2) = srcArray[1U];\n        HWREG_BP(base + AES_O_DATA_IN_OUT_1) = srcArray[2U];\n        HWREG_BP(base + AES_O_DATA_IN_OUT_0) = srcArray[3U];\n\n        //\n        // Write successful, return true.\n        //\n        temp = true;\n    }\n    return(temp);\n}\n",
+      "functionContentWithoutFormatting": "{ bool temp; // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Check if the input is ready. If not, then return false. // if((AES_CTRL_INPUT_READY & (HWREG_BP(base + AES_O_CTRL))) != AES_CTRL_INPUT_READY) { temp = false; } else { // // Write a block of data into the data registers. // HWREG_BP(base + AES_O_DATA_IN_OUT_3) = srcArray[0U]; HWREG_BP(base + AES_O_DATA_IN_OUT_2) = srcArray[1U]; HWREG_BP(base + AES_O_DATA_IN_OUT_1) = srcArray[2U]; HWREG_BP(base + AES_O_DATA_IN_OUT_0) = srcArray[3U]; // // Write successful, return true. // temp = true; } return(temp); }",
+      "registersUsed": [
+        "CTRL",
+        "DATA_IN_OUT_0",
+        "DATA_IN_OUT_1",
+        "DATA_IN_OUT_2",
+        "DATA_IN_OUT_3"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL",
+        "DATA_IN_OUT_0",
+        "DATA_IN_OUT_1",
+        "DATA_IN_OUT_2",
+        "DATA_IN_OUT_3"
+      ]
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_writeDataBlocking",
+      "functionArgs": [
+        "base",
+        "srcArray[]"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constuint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Wait for input ready.\n    //\n    while((AES_CTRL_INPUT_READY & (HWREG_BP(base + AES_O_CTRL))) !=\n          AES_CTRL_INPUT_READY)\n    {\n    }\n\n    //\n    // Write a block of data into the data registers.\n    //\n    HWREG_BP(base + AES_O_DATA_IN_OUT_3) = srcArray[0U];\n    HWREG_BP(base + AES_O_DATA_IN_OUT_2) = srcArray[1U];\n    HWREG_BP(base + AES_O_DATA_IN_OUT_1) = srcArray[2U];\n    HWREG_BP(base + AES_O_DATA_IN_OUT_0) = srcArray[3U];\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Wait for input ready. // while((AES_CTRL_INPUT_READY & (HWREG_BP(base + AES_O_CTRL))) != AES_CTRL_INPUT_READY) { } // // Write a block of data into the data registers. // HWREG_BP(base + AES_O_DATA_IN_OUT_3) = srcArray[0U]; HWREG_BP(base + AES_O_DATA_IN_OUT_2) = srcArray[1U]; HWREG_BP(base + AES_O_DATA_IN_OUT_1) = srcArray[2U]; HWREG_BP(base + AES_O_DATA_IN_OUT_0) = srcArray[3U]; }",
+      "registersUsed": [
+        "CTRL",
+        "DATA_IN_OUT_0",
+        "DATA_IN_OUT_1",
+        "DATA_IN_OUT_2",
+        "DATA_IN_OUT_3"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL",
+        "DATA_IN_OUT_0",
+        "DATA_IN_OUT_1",
+        "DATA_IN_OUT_2",
+        "DATA_IN_OUT_3"
+      ]
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_processData",
+      "functionArgs": [
+        "base",
+        "srcArray[]",
+        "destArray[]",
+        "dataLength"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constuint32_t",
+        "uint32_t",
+        "uint64_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    uint64_t count;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Write the length register first, which triggers the engine to start\n    // using this context.\n    //\n    AES_setDataLength(base, dataLength);\n\n    //\n    // Now loop until the blocks are written.\n    //\n    for(count = 0U; count < ((dataLength + 15U) / 16U); count++)\n    {\n        //\n        // Write the data registers.\n        //\n        AES_writeDataBlocking(base, srcArray + (count * 4U));\n\n        //\n        // Read the data registers.\n        //\n        AES_readDataBlocking(base, destArray + (count * 4U));\n    }\n\n    //\n    // Return true to indicate successful completion of the function.\n    //\n    return((bool)true);\n}\n",
+      "functionContentWithoutFormatting": "{ uint64_t count; // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Write the length register first, which triggers the engine to start // using this context. // AES_setDataLength(base, dataLength); // // Now loop until the blocks are written. // for(count = 0U; count < ((dataLength + 15U) / 16U); count++) { // // Write the data registers. // AES_writeDataBlocking(base, srcArray + (count * 4U)); // // Read the data registers. // AES_readDataBlocking(base, destArray + (count * 4U)); } // // Return true to indicate successful completion of the function. // return((bool)true); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_authenticateData",
+      "functionArgs": [
+        "base",
+        "srcArray[]",
+        "dataLength",
+        "tagArray[]"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constuint32_t",
+        "uint64_t",
+        "uint32_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    uint32_t count;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Write the length register first, which triggers the engine to start\n    // using this context.\n    //\n    AES_setDataLength(base, dataLength);\n\n    //\n    // Now loop until the blocks are written.\n    //\n    for(count = 0U; count < ((dataLength + 15U) / 16U); count++)\n    {\n        //\n        // Write the data registers.\n        //\n        AES_writeDataBlocking(base, srcArray + (count * 4U));\n    }\n\n    //\n    // Read the hash tag value.\n    //\n    AES_readTag(base, tagArray);\n\n    //\n    // Return true to indicate successful completion of the function.\n    //\n    return((bool)true);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t count; // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Write the length register first, which triggers the engine to start // using this context. // AES_setDataLength(base, dataLength); // // Now loop until the blocks are written. // for(count = 0U; count < ((dataLength + 15U) / 16U); count++) { // // Write the data registers. // AES_writeDataBlocking(base, srcArray + (count * 4U)); } // // Read the hash tag value. // AES_readTag(base, tagArray); // // Return true to indicate successful completion of the function. // return((bool)true); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_processDatainAuthMode",
+      "functionArgs": [
+        "base",
+        "srcArray[]",
+        "destArray[]",
+        "dataLength",
+        "authDataArray[]",
+        "authDataLength",
+        "tagArray[]"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constuint32_t",
+        "uint32_t",
+        "uint64_t",
+        "constuint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    uint32_t count;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Set the data length.\n    //\n    AES_setDataLength(base, dataLength);\n\n    //\n    // Set the additional authentication data length.\n    //\n    AES_setAuthDataLength(base, authDataLength);\n\n    //\n    // Now loop until the authentication data blocks are written.\n    //\n    for(count = 0U; count < ((authDataLength  + 15U) / 16U); count++)\n    {\n        //\n        // Write the data registers.\n        //\n        AES_writeDataBlocking(base, authDataArray + (count * 4U));\n    }\n\n    //\n    // Now loop until the data blocks are written.\n    //\n    for(count = 0U; count < ((dataLength + 15U) / 16U); count++)\n    {\n        //\n        // Write the data registers.\n        //\n        AES_writeDataBlocking(base, srcArray + (count * 4U));\n\n        //\n        //\n        // Read the data registers.\n        //\n        AES_readDataBlocking(base, destArray + (count * 4U));\n    }\n\n    //\n    // Read the hash tag value.\n    //\n    AES_readTag(base, tagArray);\n\n    //\n    // Return true to indicate successful completion of the function.\n    //\n    return((bool)true);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t count; // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Set the data length. // AES_setDataLength(base, dataLength); // // Set the additional authentication data length. // AES_setAuthDataLength(base, authDataLength); // // Now loop until the authentication data blocks are written. // for(count = 0U; count < ((authDataLength + 15U) / 16U); count++) { // // Write the data registers. // AES_writeDataBlocking(base, authDataArray + (count * 4U)); } // // Now loop until the data blocks are written. // for(count = 0U; count < ((dataLength + 15U) / 16U); count++) { // // Write the data registers. // AES_writeDataBlocking(base, srcArray + (count * 4U)); // // // Read the data registers. // AES_readDataBlocking(base, destArray + (count * 4U)); } // // Read the hash tag value. // AES_readTag(base, tagArray); // // Return true to indicate successful completion of the function. // return((bool)true); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "aes.c",
+      "peripheral": "aes",
+      "functionName": "AES_getInterruptStatus",
+      "functionArgs": [
+        "base",
+        "intMask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "bool"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    uint32_t intStatus, intEnable, temp;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Read the IRQ status register and return the value.\n    //\n    intStatus = HWREG_BP(base + AES_O_IRQSTATUS);\n    if(intMask)\n    {\n        intEnable = HWREG_BP(base + AES_O_IRQENABLE);\n        temp = intStatus & intEnable;\n    }\n    else\n    {\n        temp = intStatus;\n    }\n    return(temp);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t intStatus, intEnable, temp; // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Read the IRQ status register and return the value. // intStatus = HWREG_BP(base + AES_O_IRQSTATUS); if(intMask) { intEnable = HWREG_BP(base + AES_O_IRQENABLE); temp = intStatus & intEnable; } else { temp = intStatus; } return(temp); }",
+      "registersUsed": [
+        "IRQSTATUS",
+        "IRQENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "IRQSTATUS",
+        "IRQENABLE"
+      ]
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(base == AESA_BASE);\n\n\n\n}\n",
+      "functionContentWithoutFormatting": "{ return(base == AESA_BASE); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_isWrapperBaseValid",
+      "functionArgs": [
+        "wrapperBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(wrapperBase == AESA_SS_BASE);\n}\n",
+      "functionContentWithoutFormatting": "{ return(wrapperBase == AESA_SS_BASE); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_performSoftReset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Trigger the reset.\n    //\n    HWREG_BP(base + AES_O_SYSCONFIG) |= AES_SYSCONFIG_SOFTRESET;\n\n    //\n    // Wait for the reset to finish.\n    //\n    while((HWREG_BP(base + AES_O_SYSSTATUS) &\n            AES_SYSSTATUS_RESETDONE) != AES_SYSSTATUS_RESETDONE)\n    {\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Trigger the reset. // HWREG_BP(base + AES_O_SYSCONFIG) |= AES_SYSCONFIG_SOFTRESET; // // Wait for the reset to finish. // while((HWREG_BP(base + AES_O_SYSSTATUS) & AES_SYSSTATUS_RESETDONE) != AES_SYSSTATUS_RESETDONE) { } }",
+      "registersUsed": [
+        "SYSCONFIG",
+        "SYSSTATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "SYSCONFIG",
+        "SYSSTATUS"
+      ]
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_setDataLength",
+      "functionArgs": [
+        "base",
+        "length"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint64_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Write the length register by shifting the 64-bit length.\n    //\n    HWREG_BP(base + AES_O_C_LENGTH_0) = (uint32_t)(length);\n    HWREG_BP(base + AES_O_C_LENGTH_1) = (uint32_t)(length >> 32U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Write the length register by shifting the 64-bit length. // HWREG_BP(base + AES_O_C_LENGTH_0) = (uint32_t)(length); HWREG_BP(base + AES_O_C_LENGTH_1) = (uint32_t)(length >> 32U); }",
+      "registersUsed": [
+        "C_LENGTH_0",
+        "C_LENGTH_1"
+      ],
+      "registersUsedMatchingBifield": [
+        "C_LENGTH_0",
+        "C_LENGTH_1"
+      ]
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_setAuthDataLength",
+      "functionArgs": [
+        "base",
+        "authLength"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    //\n    // Write the length into the register.\n    //\n    HWREG_BP(base + AES_O_AUTH_LENGTH) = authLength;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); // // Write the length into the register. // HWREG_BP(base + AES_O_AUTH_LENGTH) = authLength; }",
+      "registersUsed": [
+        "AUTH_LENGTH"
+      ],
+      "registersUsedMatchingBifield": [
+        "AUTH_LENGTH"
+      ]
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n    ASSERT((intFlags & AES_AESINT_M) != 0U);\n\n    //\n    // Enable the Interrupts.\n    //\n    HWREG_BP(base + AES_O_IRQENABLE) |= (intFlags & AES_AESINT_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); ASSERT((intFlags & AES_AESINT_M) != 0U); // // Enable the Interrupts. // HWREG_BP(base + AES_O_IRQENABLE) |= (intFlags & AES_AESINT_M); }",
+      "registersUsed": [
+        "IRQENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "IRQENABLE"
+      ]
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n    ASSERT((intFlags & AES_AESINT_M) != 0U);\n\n    //\n    // Disable the Interrupts.\n    //\n    HWREG_BP(base + AES_O_IRQENABLE) &= ~(intFlags & AES_AESINT_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); ASSERT((intFlags & AES_AESINT_M) != 0U); // // Disable the Interrupts. // HWREG_BP(base + AES_O_IRQENABLE) &= ~(intFlags & AES_AESINT_M); }",
+      "registersUsed": [
+        "IRQENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "IRQENABLE"
+      ]
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_enableGlobalInterrupt",
+      "functionArgs": [
+        "wrapperBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isWrapperBaseValid(wrapperBase));\n\n    //\n    // Enable the AES global interrupt at wrapper level.\n    //\n    HWREG_BP(wrapperBase + AES_SS_O_AES_GLB_INT_FLG) |=\n                                               AES_SS_AES_GLB_INT_FLG_INT_FLG;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isWrapperBaseValid(wrapperBase)); // // Enable the AES global interrupt at wrapper level. // HWREG_BP(wrapperBase + AES_SS_O_AES_GLB_INT_FLG) |= AES_SS_AES_GLB_INT_FLG_INT_FLG; }",
+      "registersUsed": [
+        "AES_GLB_INT_FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "AES_GLB_INT_FLG"
+      ]
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_disableGlobalInterrupt",
+      "functionArgs": [
+        "wrapperBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isWrapperBaseValid(wrapperBase));\n\n    //\n    // Disable the AES global interrupt at wrapper level.\n    //\n    HWREG_BP(wrapperBase + AES_SS_O_AES_GLB_INT_FLG) &=\n                                              ~AES_SS_AES_GLB_INT_FLG_INT_FLG;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isWrapperBaseValid(wrapperBase)); // // Disable the AES global interrupt at wrapper level. // HWREG_BP(wrapperBase + AES_SS_O_AES_GLB_INT_FLG) &= ~AES_SS_AES_GLB_INT_FLG_INT_FLG; }",
+      "registersUsed": [
+        "AES_GLB_INT_FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "AES_GLB_INT_FLG"
+      ]
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_clearGlobalInterrupt",
+      "functionArgs": [
+        "wrapperBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isWrapperBaseValid(wrapperBase));\n\n    //\n    // Clear the AES global interrupt flag at wrapper level.\n    //\n    HWREG_BP(wrapperBase + AES_SS_O_AES_GLB_INT_CLR) |=\n                                            AES_SS_AES_GLB_INT_CLR_INT_FLG_CLR;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isWrapperBaseValid(wrapperBase)); // // Clear the AES global interrupt flag at wrapper level. // HWREG_BP(wrapperBase + AES_SS_O_AES_GLB_INT_CLR) |= AES_SS_AES_GLB_INT_CLR_INT_FLG_CLR; }",
+      "registersUsed": [
+        "AES_GLB_INT_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "AES_GLB_INT_CLR"
+      ]
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_getGlobalInterruptStatus",
+      "functionArgs": [
+        "wrapperBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isWrapperBaseValid(wrapperBase));\n\n    //\n    // Return the AES wrapper level global interrupt status.\n    //\n    return((HWREG_BP(wrapperBase + AES_SS_O_AES_GLB_INT_FLG) &\n           AES_SS_AES_GLB_INT_FLG_INT_FLG) == AES_SS_AES_GLB_INT_FLG_INT_FLG);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isWrapperBaseValid(wrapperBase)); // // Return the AES wrapper level global interrupt status. // return((HWREG_BP(wrapperBase + AES_SS_O_AES_GLB_INT_FLG) & AES_SS_AES_GLB_INT_FLG_INT_FLG) == AES_SS_AES_GLB_INT_FLG_INT_FLG); }",
+      "registersUsed": [
+        "AES_GLB_INT_FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "AES_GLB_INT_FLG"
+      ]
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_registerInterrupt",
+      "functionArgs": [
+        "void)"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Register the interrupt handler.\n    //\n    ASSERT(AES_isBaseValid(base));\n\n    Interrupt_register(INT_AES_SINTREQUEST, fnHandler);\n\n    //\n    // Enable the interrupt\n    //\n    Interrupt_enable(INT_AES_SINTREQUEST);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Register the interrupt handler. // ASSERT(AES_isBaseValid(base)); Interrupt_register(INT_AES_SINTREQUEST, fnHandler); // // Enable the interrupt // Interrupt_enable(INT_AES_SINTREQUEST); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_unregisterInterrupt",
+      "functionArgs": [
+        "intNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Disable the interrupt.\n    //\n    Interrupt_disable(intNum);\n\n    //\n    // Unregister the interrupt handler.\n    //\n    Interrupt_unregister(intNum);\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Disable the interrupt. // Interrupt_disable(intNum); // // Unregister the interrupt handler. // Interrupt_unregister(intNum); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_enableDMARequest",
+      "functionArgs": [
+        "base",
+        "reqFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n    ASSERT((reqFlags & AES_DMA_EN_M) != 0U);\n\n    //\n    // Enable DMA requests.\n    //\n    HWREG_BP(base + AES_O_SYSCONFIG) |= reqFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); ASSERT((reqFlags & AES_DMA_EN_M) != 0U); // // Enable DMA requests. // HWREG_BP(base + AES_O_SYSCONFIG) |= reqFlags; }",
+      "registersUsed": [
+        "SYSCONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SYSCONFIG"
+      ]
+    },
+    {
+      "file": "aes.h",
+      "peripheral": "aes",
+      "functionName": "AES_disableDMARequest",
+      "functionArgs": [
+        "base",
+        "reqFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(AES_isBaseValid(base));\n    ASSERT((reqFlags & AES_DMA_EN_M) != 0U);\n\n    //\n    // Disable DMA requests.\n    //\n    HWREG_BP(base + AES_O_SYSCONFIG) &= ~reqFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(AES_isBaseValid(base)); ASSERT((reqFlags & AES_DMA_EN_M) != 0U); // // Disable DMA requests. // HWREG_BP(base + AES_O_SYSCONFIG) &= ~reqFlags; }",
+      "registersUsed": [
+        "SYSCONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SYSCONFIG"
+      ]
+    }
+  ]
+}

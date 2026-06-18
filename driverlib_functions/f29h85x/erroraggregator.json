@@ -1,0 +1,277 @@
+{
+  "name": "erroraggregator",
+  "functions": [
+    {
+      "file": "erroraggregator.c",
+      "peripheral": "erroraggregator",
+      "functionName": "ErrorAggregator_getCpuErrorInfo",
+      "functionArgs": [
+        "base",
+        "cpuId",
+        "*cpuErrorInfo"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ErrorAggregator_SourceCpu",
+        "ErrorAggregator_CpuErrorInfo"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t cpuBaseAddr;\n    //\n    // Check the arguments\n    //\n    ASSERT(ErrorAggregator_isBaseValid(base));\n    ASSERT((EA_SRC_CPU1 == cpuId) || (EA_SRC_CPU2 == cpuId) || (EA_SRC_CPU3 == cpuId));\n    ASSERT(NULL != cpuErrorInfo);\n\n    //\n    //  Populate the CPUx error info\n    //\n    cpuBaseAddr = base + (cpuId * ERROR_AGGREGATOR_CPU_REG_OFFSET);\n\n    if(NULL != cpuErrorInfo)\n    {\n        //\n        //  PR\n        //\n        cpuErrorInfo->pr.highPriErrAddr         = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_PR_HIGHPRIO_ERROR_ADDRESS);\n        cpuErrorInfo->pr.lowPriErrAddr          = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_PR_LOWPRIO_ERROR_ADDRESS);\n        cpuErrorInfo->pr.errorType              = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_PR_ERROR_TYPE);\n        cpuErrorInfo->pr.pcAddr                 = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_PR_PC);\n        //\n        //  DR1\n        //\n        cpuErrorInfo->dr1.highPriErrAddr        = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR1_HIGHPRIO_ERROR_ADDRESS);\n        cpuErrorInfo->dr1.lowPriErrAddr         = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR1_LOWPRIO_ERROR_ADDRESS);\n        cpuErrorInfo->dr1.errorType             = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR1_ERROR_TYPE);\n        cpuErrorInfo->dr1.pcAddr                = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR1_PC);\n        //\n        //  DR2\n        //\n        cpuErrorInfo->dr2.highPriErrAddr        = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR2_HIGHPRIO_ERROR_ADDRESS);\n        cpuErrorInfo->dr2.lowPriErrAddr         = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR2_LOWPRIO_ERROR_ADDRESS);\n        cpuErrorInfo->dr2.errorType             = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR2_ERROR_TYPE);\n        cpuErrorInfo->dr2.pcAddr                = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR2_PC);\n        //\n        //  DW\n        //\n        cpuErrorInfo->dw.highPriErrAddr         = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DW_HIGHPRIO_ERROR_ADDRESS);\n        cpuErrorInfo->dw.lowPriErrAddr          = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DW_LOWPRIO_ERROR_ADDRESS);\n        cpuErrorInfo->dw.errorType              = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DW_ERROR_TYPE);\n        cpuErrorInfo->dw.pcAddr                 = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DW_PC);\n        //\n        //  INT\n        //\n        cpuErrorInfo->interrupt.highPriErrAddr  = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_INT_HIGHPRIO_ERROR_ADDRESS);\n        cpuErrorInfo->interrupt.lowPriErrAddr   = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_INT_LOWPRIO_ERROR_ADDRESS);\n        cpuErrorInfo->interrupt.errorType       = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_INT_ERROR_TYPE);\n        cpuErrorInfo->interrupt.pcAddr          = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_INT_PC);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t cpuBaseAddr; // // Check the arguments // ASSERT(ErrorAggregator_isBaseValid(base)); ASSERT((EA_SRC_CPU1 == cpuId) || (EA_SRC_CPU2 == cpuId) || (EA_SRC_CPU3 == cpuId)); ASSERT(NULL != cpuErrorInfo); // // Populate the CPUx error info // cpuBaseAddr = base + (cpuId * ERROR_AGGREGATOR_CPU_REG_OFFSET); if(NULL != cpuErrorInfo) { // // PR // cpuErrorInfo->pr.highPriErrAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_PR_HIGHPRIO_ERROR_ADDRESS); cpuErrorInfo->pr.lowPriErrAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_PR_LOWPRIO_ERROR_ADDRESS); cpuErrorInfo->pr.errorType = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_PR_ERROR_TYPE); cpuErrorInfo->pr.pcAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_PR_PC); // // DR1 // cpuErrorInfo->dr1.highPriErrAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR1_HIGHPRIO_ERROR_ADDRESS); cpuErrorInfo->dr1.lowPriErrAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR1_LOWPRIO_ERROR_ADDRESS); cpuErrorInfo->dr1.errorType = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR1_ERROR_TYPE); cpuErrorInfo->dr1.pcAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR1_PC); // // DR2 // cpuErrorInfo->dr2.highPriErrAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR2_HIGHPRIO_ERROR_ADDRESS); cpuErrorInfo->dr2.lowPriErrAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR2_LOWPRIO_ERROR_ADDRESS); cpuErrorInfo->dr2.errorType = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR2_ERROR_TYPE); cpuErrorInfo->dr2.pcAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR2_PC); // // DW // cpuErrorInfo->dw.highPriErrAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DW_HIGHPRIO_ERROR_ADDRESS); cpuErrorInfo->dw.lowPriErrAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DW_LOWPRIO_ERROR_ADDRESS); cpuErrorInfo->dw.errorType = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DW_ERROR_TYPE); cpuErrorInfo->dw.pcAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DW_PC); // // INT // cpuErrorInfo->interrupt.highPriErrAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_INT_HIGHPRIO_ERROR_ADDRESS); cpuErrorInfo->interrupt.lowPriErrAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_INT_LOWPRIO_ERROR_ADDRESS); cpuErrorInfo->interrupt.errorType = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_INT_ERROR_TYPE); cpuErrorInfo->interrupt.pcAddr = HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_INT_PC); } }",
+      "registersUsed": [
+        "CPU1_PR_HIGHPRIO_ERROR_ADDRESS",
+        "CPU1_PR_LOWPRIO_ERROR_ADDRESS",
+        "CPU1_PR_ERROR_TYPE",
+        "CPU1_PR_PC",
+        "CPU1_DR1_HIGHPRIO_ERROR_ADDRESS",
+        "CPU1_DR1_LOWPRIO_ERROR_ADDRESS",
+        "CPU1_DR1_ERROR_TYPE",
+        "CPU1_DR1_PC",
+        "CPU1_DR2_HIGHPRIO_ERROR_ADDRESS",
+        "CPU1_DR2_LOWPRIO_ERROR_ADDRESS",
+        "CPU1_DR2_ERROR_TYPE",
+        "CPU1_DR2_PC",
+        "CPU1_DW_HIGHPRIO_ERROR_ADDRESS",
+        "CPU1_DW_LOWPRIO_ERROR_ADDRESS",
+        "CPU1_DW_ERROR_TYPE",
+        "CPU1_DW_PC",
+        "CPU1_INT_HIGHPRIO_ERROR_ADDRESS",
+        "CPU1_INT_LOWPRIO_ERROR_ADDRESS",
+        "CPU1_INT_ERROR_TYPE",
+        "CPU1_INT_PC"
+      ],
+      "registersUsedMatchingBifield": [
+        "CPU1_PR_HIGHPRIO_ERROR_ADDRESS",
+        "CPU1_PR_LOWPRIO_ERROR_ADDRESS",
+        "CPU1_PR_ERROR_TYPE",
+        "CPU1_PR_PC",
+        "CPU1_DR1_HIGHPRIO_ERROR_ADDRESS",
+        "CPU1_DR1_LOWPRIO_ERROR_ADDRESS",
+        "CPU1_DR1_ERROR_TYPE",
+        "CPU1_DR1_PC",
+        "CPU1_DR2_HIGHPRIO_ERROR_ADDRESS",
+        "CPU1_DR2_LOWPRIO_ERROR_ADDRESS",
+        "CPU1_DR2_ERROR_TYPE",
+        "CPU1_DR2_PC",
+        "CPU1_DW_HIGHPRIO_ERROR_ADDRESS",
+        "CPU1_DW_LOWPRIO_ERROR_ADDRESS",
+        "CPU1_DW_ERROR_TYPE",
+        "CPU1_DW_PC",
+        "CPU1_INT_HIGHPRIO_ERROR_ADDRESS",
+        "CPU1_INT_LOWPRIO_ERROR_ADDRESS",
+        "CPU1_INT_ERROR_TYPE",
+        "CPU1_INT_PC"
+      ]
+    },
+    {
+      "file": "erroraggregator.c",
+      "peripheral": "erroraggregator",
+      "functionName": "ErrorAggregator_getRtdmaErrorInfo",
+      "functionArgs": [
+        "base",
+        "rtdmaId",
+        "*rtdmaErrorInfo"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ErrorAggregator_SourceRtdma",
+        "ErrorAggregator_RtdmaErrorInfo"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t rtdmaBaseAddr;\n    //\n    // Check the arguments\n    //\n    ASSERT(ErrorAggregator_isBaseValid(base));\n    ASSERT((EA_SRC_RTDMA1 == rtdmaId) || (EA_SRC_RTDMA2 == rtdmaId));\n    ASSERT(NULL != rtdmaErrorInfo);\n\n    //\n    //  Populate the RTDMAx error info\n    //\n    rtdmaBaseAddr = base + (rtdmaId * ERROR_AGGREGATOR_RTDMA_REG_OFFSET);\n\n    if(NULL != rtdmaErrorInfo)\n    {\n        //\n        //  DR\n        //\n        rtdmaErrorInfo->dr.highPriErrAddr       = HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DR_HIGHPRIO_ERROR_ADDRESS);\n        rtdmaErrorInfo->dr.lowPriErrAddr        = HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DR_LOWPRIO_ERROR_ADDRESS);\n        rtdmaErrorInfo->dr.errorType            = HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DR_ERROR_TYPE);\n        rtdmaErrorInfo->dr.pcAddr               = 0x00000000U;\n        //\n        //  DW\n        //\n        rtdmaErrorInfo->dw.highPriErrAddr       = HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DW_HIGHPRIO_ERROR_ADDRESS);\n        rtdmaErrorInfo->dw.lowPriErrAddr        = HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DW_LOWPRIO_ERROR_ADDRESS);\n        rtdmaErrorInfo->dw.errorType            = HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DW_ERROR_TYPE);\n        rtdmaErrorInfo->dw.pcAddr               = 0x00000000U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t rtdmaBaseAddr; // // Check the arguments // ASSERT(ErrorAggregator_isBaseValid(base)); ASSERT((EA_SRC_RTDMA1 == rtdmaId) || (EA_SRC_RTDMA2 == rtdmaId)); ASSERT(NULL != rtdmaErrorInfo); // // Populate the RTDMAx error info // rtdmaBaseAddr = base + (rtdmaId * ERROR_AGGREGATOR_RTDMA_REG_OFFSET); if(NULL != rtdmaErrorInfo) { // // DR // rtdmaErrorInfo->dr.highPriErrAddr = HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DR_HIGHPRIO_ERROR_ADDRESS); rtdmaErrorInfo->dr.lowPriErrAddr = HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DR_LOWPRIO_ERROR_ADDRESS); rtdmaErrorInfo->dr.errorType = HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DR_ERROR_TYPE); rtdmaErrorInfo->dr.pcAddr = 0x00000000U; // // DW // rtdmaErrorInfo->dw.highPriErrAddr = HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DW_HIGHPRIO_ERROR_ADDRESS); rtdmaErrorInfo->dw.lowPriErrAddr = HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DW_LOWPRIO_ERROR_ADDRESS); rtdmaErrorInfo->dw.errorType = HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DW_ERROR_TYPE); rtdmaErrorInfo->dw.pcAddr = 0x00000000U; } }",
+      "registersUsed": [
+        "RTDMA1_DR_HIGHPRIO_ERROR_ADDRESS",
+        "RTDMA1_DR_LOWPRIO_ERROR_ADDRESS",
+        "RTDMA1_DR_ERROR_TYPE",
+        "RTDMA1_DW_HIGHPRIO_ERROR_ADDRESS",
+        "RTDMA1_DW_LOWPRIO_ERROR_ADDRESS",
+        "RTDMA1_DW_ERROR_TYPE"
+      ],
+      "registersUsedMatchingBifield": [
+        "RTDMA1_DR_HIGHPRIO_ERROR_ADDRESS",
+        "RTDMA1_DR_LOWPRIO_ERROR_ADDRESS",
+        "RTDMA1_DR_ERROR_TYPE",
+        "RTDMA1_DW_HIGHPRIO_ERROR_ADDRESS",
+        "RTDMA1_DW_LOWPRIO_ERROR_ADDRESS",
+        "RTDMA1_DW_ERROR_TYPE"
+      ]
+    },
+    {
+      "file": "erroraggregator.c",
+      "peripheral": "erroraggregator",
+      "functionName": "ErrorAggregator_getSsuErrorInfo",
+      "functionArgs": [
+        "base",
+        "*ssuErrorInfo"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ErrorAggregator_ErrorInfo"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(ErrorAggregator_isBaseValid(base));\n    ASSERT(NULL != ssuErrorInfo);\n\n    if(NULL != ssuErrorInfo)\n    {\n        //\n        //  Populate the SSU error info\n        //\n        ssuErrorInfo->highPriErrAddr            = HWREG(base + ERROR_AGGREGATOR_O_SSU_HIGHPRIO_ERROR_ADDRESS);\n        ssuErrorInfo->lowPriErrAddr             = 0x00000000U;\n        ssuErrorInfo->errorType                 = HWREG(base + ERROR_AGGREGATOR_O_SSU_ERROR_TYPE);\n        ssuErrorInfo->pcAddr                    = 0x00000000U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(ErrorAggregator_isBaseValid(base)); ASSERT(NULL != ssuErrorInfo); if(NULL != ssuErrorInfo) { // // Populate the SSU error info // ssuErrorInfo->highPriErrAddr = HWREG(base + ERROR_AGGREGATOR_O_SSU_HIGHPRIO_ERROR_ADDRESS); ssuErrorInfo->lowPriErrAddr = 0x00000000U; ssuErrorInfo->errorType = HWREG(base + ERROR_AGGREGATOR_O_SSU_ERROR_TYPE); ssuErrorInfo->pcAddr = 0x00000000U; } }",
+      "registersUsed": [
+        "SSU_HIGHPRIO_ERROR_ADDRESS",
+        "SSU_ERROR_TYPE"
+      ],
+      "registersUsedMatchingBifield": [
+        "SSU_HIGHPRIO_ERROR_ADDRESS",
+        "SSU_ERROR_TYPE"
+      ]
+    },
+    {
+      "file": "erroraggregator.c",
+      "peripheral": "erroraggregator",
+      "functionName": "ErrorAggregator_getEthercatErrorInfo",
+      "functionArgs": [
+        "base",
+        "*ethercatErrorInfo"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ErrorAggregator_ErrorInfo"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(ErrorAggregator_isBaseValid(base));\n    ASSERT(NULL != ethercatErrorInfo);\n\n    if(NULL != ethercatErrorInfo)\n    {\n        //\n        //  Populate the Ethercat error info\n        //\n        ethercatErrorInfo->highPriErrAddr       = HWREG(base + ERROR_AGGREGATOR_O_ETHERCAT_HIGHPRIO_ERROR_ADDRESS);\n        ethercatErrorInfo->lowPriErrAddr        = 0x00000000U;\n        ethercatErrorInfo->errorType            = HWREG(base + ERROR_AGGREGATOR_O_ETHERCAT_ERROR_TYPE);\n        ethercatErrorInfo->pcAddr               = 0x00000000U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(ErrorAggregator_isBaseValid(base)); ASSERT(NULL != ethercatErrorInfo); if(NULL != ethercatErrorInfo) { // // Populate the Ethercat error info // ethercatErrorInfo->highPriErrAddr = HWREG(base + ERROR_AGGREGATOR_O_ETHERCAT_HIGHPRIO_ERROR_ADDRESS); ethercatErrorInfo->lowPriErrAddr = 0x00000000U; ethercatErrorInfo->errorType = HWREG(base + ERROR_AGGREGATOR_O_ETHERCAT_ERROR_TYPE); ethercatErrorInfo->pcAddr = 0x00000000U; } }",
+      "registersUsed": [
+        "ETHERCAT_HIGHPRIO_ERROR_ADDRESS",
+        "ETHERCAT_ERROR_TYPE"
+      ],
+      "registersUsedMatchingBifield": [
+        "ETHERCAT_HIGHPRIO_ERROR_ADDRESS",
+        "ETHERCAT_ERROR_TYPE"
+      ]
+    },
+    {
+      "file": "erroraggregator.c",
+      "peripheral": "erroraggregator",
+      "functionName": "ErrorAggregator_clearCpuError",
+      "functionArgs": [
+        "base",
+        "cpuId"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ErrorAggregator_SourceCpu"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t cpuBaseAddr;\n    //\n    // Check the arguments\n    //\n    ASSERT(ErrorAggregator_isBaseValid(base));\n    ASSERT((EA_SRC_CPU1 == cpuId) || (EA_SRC_CPU2 == cpuId) || (EA_SRC_CPU3 == cpuId));\n\n    //\n    //  Clear the CPUx errors\n    //\n    cpuBaseAddr = base + (cpuId * ERROR_AGGREGATOR_CPU_REG_OFFSET);\n    //\n    //  PR\n    //\n    HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_PR_ERROR_TYPE_CLR)  = 0xFFFFFFFFU;\n    //\n    //  DR1\n    //\n    HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR1_ERROR_TYPE_CLR) = 0xFFFFFFFFU;\n    //\n    //  DR2\n    //\n    HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR2_ERROR_TYPE_CLR) = 0xFFFFFFFFU;\n    //\n    //  DW\n    //\n    HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DW_ERROR_TYPE_CLR)  = 0xFFFFFFFFU;\n    //\n    //  INT\n    //\n    HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_INT_ERROR_TYPE_CLR) = 0xFFFFFFFFU;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t cpuBaseAddr; // // Check the arguments // ASSERT(ErrorAggregator_isBaseValid(base)); ASSERT((EA_SRC_CPU1 == cpuId) || (EA_SRC_CPU2 == cpuId) || (EA_SRC_CPU3 == cpuId)); // // Clear the CPUx errors // cpuBaseAddr = base + (cpuId * ERROR_AGGREGATOR_CPU_REG_OFFSET); // // PR // HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_PR_ERROR_TYPE_CLR) = 0xFFFFFFFFU; // // DR1 // HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR1_ERROR_TYPE_CLR) = 0xFFFFFFFFU; // // DR2 // HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DR2_ERROR_TYPE_CLR) = 0xFFFFFFFFU; // // DW // HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_DW_ERROR_TYPE_CLR) = 0xFFFFFFFFU; // // INT // HWREG(cpuBaseAddr + ERROR_AGGREGATOR_O_CPU1_INT_ERROR_TYPE_CLR) = 0xFFFFFFFFU; }",
+      "registersUsed": [
+        "CPU1_PR_ERROR_TYPE",
+        "CPU1_PR_ERROR_TYPE_CLR",
+        "CPU1_DR1_ERROR_TYPE",
+        "CPU1_DR1_ERROR_TYPE_CLR",
+        "CPU1_DR2_ERROR_TYPE",
+        "CPU1_DR2_ERROR_TYPE_CLR",
+        "CPU1_DW_ERROR_TYPE",
+        "CPU1_DW_ERROR_TYPE_CLR",
+        "CPU1_INT_ERROR_TYPE",
+        "CPU1_INT_ERROR_TYPE_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CPU1_PR_ERROR_TYPE",
+        "CPU1_PR_ERROR_TYPE_CLR",
+        "CPU1_DR1_ERROR_TYPE",
+        "CPU1_DR1_ERROR_TYPE_CLR",
+        "CPU1_DR2_ERROR_TYPE",
+        "CPU1_DR2_ERROR_TYPE_CLR",
+        "CPU1_DW_ERROR_TYPE",
+        "CPU1_DW_ERROR_TYPE_CLR",
+        "CPU1_INT_ERROR_TYPE",
+        "CPU1_INT_ERROR_TYPE_CLR"
+      ]
+    },
+    {
+      "file": "erroraggregator.c",
+      "peripheral": "erroraggregator",
+      "functionName": "ErrorAggregator_clearRtdmaError",
+      "functionArgs": [
+        "base",
+        "rtdmaId"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ErrorAggregator_SourceRtdma"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t rtdmaBaseAddr;\n    //\n    // Check the arguments\n    //\n    ASSERT(ErrorAggregator_isBaseValid(base));\n    ASSERT((EA_SRC_RTDMA1 == rtdmaId) || (EA_SRC_RTDMA2 == rtdmaId));\n\n    //\n    //  Clear RTDMAx errors\n    //\n    rtdmaBaseAddr = base + (rtdmaId * ERROR_AGGREGATOR_RTDMA_REG_OFFSET);\n    //\n    //  DR\n    //\n    HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DR_ERROR_TYPE_CLR)  = 0xFFFFFFFFU;\n    //\n    //  DW\n    //\n    HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DW_ERROR_TYPE_CLR)  = 0xFFFFFFFFU;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t rtdmaBaseAddr; // // Check the arguments // ASSERT(ErrorAggregator_isBaseValid(base)); ASSERT((EA_SRC_RTDMA1 == rtdmaId) || (EA_SRC_RTDMA2 == rtdmaId)); // // Clear RTDMAx errors // rtdmaBaseAddr = base + (rtdmaId * ERROR_AGGREGATOR_RTDMA_REG_OFFSET); // // DR // HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DR_ERROR_TYPE_CLR) = 0xFFFFFFFFU; // // DW // HWREG(rtdmaBaseAddr + ERROR_AGGREGATOR_O_RTDMA1_DW_ERROR_TYPE_CLR) = 0xFFFFFFFFU; }",
+      "registersUsed": [
+        "RTDMA1_DR_ERROR_TYPE",
+        "RTDMA1_DR_ERROR_TYPE_CLR",
+        "RTDMA1_DW_ERROR_TYPE",
+        "RTDMA1_DW_ERROR_TYPE_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "RTDMA1_DR_ERROR_TYPE",
+        "RTDMA1_DR_ERROR_TYPE_CLR",
+        "RTDMA1_DW_ERROR_TYPE",
+        "RTDMA1_DW_ERROR_TYPE_CLR"
+      ]
+    },
+    {
+      "file": "erroraggregator.c",
+      "peripheral": "erroraggregator",
+      "functionName": "ErrorAggregator_clearSsuError",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(ErrorAggregator_isBaseValid(base));\n\n    //\n    //  Clear SSU errors\n    //\n    HWREG(base + ERROR_AGGREGATOR_O_SSU_ERROR_TYPE_CLR) = 0xFFFFFFFFU;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(ErrorAggregator_isBaseValid(base)); // // Clear SSU errors // HWREG(base + ERROR_AGGREGATOR_O_SSU_ERROR_TYPE_CLR) = 0xFFFFFFFFU; }",
+      "registersUsed": [
+        "SSU_ERROR_TYPE",
+        "SSU_ERROR_TYPE_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SSU_ERROR_TYPE",
+        "SSU_ERROR_TYPE_CLR"
+      ]
+    },
+    {
+      "file": "erroraggregator.c",
+      "peripheral": "erroraggregator",
+      "functionName": "ErrorAggregator_clearEthercatError",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(ErrorAggregator_isBaseValid(base));\n\n    //\n    //  Clear Ethercat errors\n    //\n    HWREG(base + ERROR_AGGREGATOR_O_ETHERCAT_ERROR_TYPE_CLR)    = 0xFFFFFFFFU;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(ErrorAggregator_isBaseValid(base)); // // Clear Ethercat errors // HWREG(base + ERROR_AGGREGATOR_O_ETHERCAT_ERROR_TYPE_CLR) = 0xFFFFFFFFU; }",
+      "registersUsed": [
+        "ETHERCAT_ERROR_TYPE",
+        "ETHERCAT_ERROR_TYPE_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ETHERCAT_ERROR_TYPE",
+        "ETHERCAT_ERROR_TYPE_CLR"
+      ]
+    },
+    {
+      "file": "erroraggregator.h",
+      "peripheral": "erroraggregator",
+      "functionName": "ErrorAggregator_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((base & BASE_ADDR_MASK) == ERRORAGGREGATOR_BASE_FRAME(0U));\n}\n",
+      "functionContentWithoutFormatting": "{ return((base & BASE_ADDR_MASK) == ERRORAGGREGATOR_BASE_FRAME(0U)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    }
+  ]
+}

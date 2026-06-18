@@ -1,0 +1,1599 @@
+{
+  "name": "cmpss",
+  "functions": [
+    {
+      "file": "cmpss.c",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configFilterHigh",
+      "functionArgs": [
+        "base",
+        "samplePrescale",
+        "sampleWindow",
+        "threshold"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t regValue;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT(samplePrescale <= 16777215UL);\n    ASSERT((sampleWindow >= 1U) && (sampleWindow <= 64U));\n    ASSERT((threshold - 1U) >= ((sampleWindow - 1U) / 2U));\n\n    //\n    // Shift the sample window and threshold values into the correct positions\n    // and write them to the appropriate register.\n    //\n    regValue = ((sampleWindow - 1U) << CMPSS_CTRIPHFILCTL_SAMPWIN_S) |\n               ((threshold - 1U) << CMPSS_CTRIPHFILCTL_THRESH_S);\n\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_CTRIPHFILCTL) =\n        (HWREGH(base + CMPSS_O_CTRIPHFILCTL) &\n         ~(CMPSS_CTRIPHFILCTL_SAMPWIN_M | CMPSS_CTRIPHFILCTL_THRESH_M)) |\n        regValue;\n\n    //\n    // Set the filter sample clock prescale for the high comparator.\n    //\n    HWREGH(base + CMPSS_O_CTRIPHFILCLKCTL)  = (uint16_t)samplePrescale;\n    HWREGH(base + CMPSS_O_CTRIPHFILCLKCTL2) = (uint16_t)(samplePrescale >> 16U);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t regValue; // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT(samplePrescale <= 16777215UL); ASSERT((sampleWindow >= 1U) && (sampleWindow <= 64U)); ASSERT((threshold - 1U) >= ((sampleWindow - 1U) / 2U)); // // Shift the sample window and threshold values into the correct positions // and write them to the appropriate register. // regValue = ((sampleWindow - 1U) << CMPSS_CTRIPHFILCTL_SAMPWIN_S) | ((threshold - 1U) << CMPSS_CTRIPHFILCTL_THRESH_S); EALLOW; HWREGH(base + CMPSS_O_CTRIPHFILCTL) = (HWREGH(base + CMPSS_O_CTRIPHFILCTL) & ~(CMPSS_CTRIPHFILCTL_SAMPWIN_M | CMPSS_CTRIPHFILCTL_THRESH_M)) | regValue; // // Set the filter sample clock prescale for the high comparator. // HWREGH(base + CMPSS_O_CTRIPHFILCLKCTL) = (uint16_t)samplePrescale; HWREGH(base + CMPSS_O_CTRIPHFILCLKCTL2) = (uint16_t)(samplePrescale >> 16U); EDIS; }",
+      "registersUsed": [
+        "CTRIPHFILCTL",
+        "CTRIPHFILCLKCTL",
+        "CTRIPHFILCLKCTL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRIPHFILCTL",
+        "CTRIPHFILCLKCTL",
+        "CTRIPHFILCLKCTL2"
+      ]
+    },
+    {
+      "file": "cmpss.c",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configFilterLow",
+      "functionArgs": [
+        "base",
+        "samplePrescale",
+        "sampleWindow",
+        "threshold"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t regValue;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT(samplePrescale <= 16777215UL);\n    ASSERT((sampleWindow >= 1U) && (sampleWindow <= 64U));\n    ASSERT((threshold - 1U) >= ((sampleWindow - 1U) / 2U));\n\n    //\n    // Shift the sample window and threshold values into the correct positions\n    // and write them to the appropriate register.\n    //\n    regValue = ((sampleWindow - 1U) << CMPSS_CTRIPLFILCTL_SAMPWIN_S) |\n               ((threshold - 1U) << CMPSS_CTRIPLFILCTL_THRESH_S);\n\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_CTRIPLFILCTL) =\n        (HWREGH(base + CMPSS_O_CTRIPLFILCTL) &\n         ~(CMPSS_CTRIPLFILCTL_SAMPWIN_M | CMPSS_CTRIPLFILCTL_THRESH_M)) |\n        regValue;\n\n    //\n    // Set the filter sample clock prescale for the low comparator.\n    //\n    HWREGH(base + CMPSS_O_CTRIPLFILCLKCTL) = (uint16_t)samplePrescale;\n    HWREGH(base + CMPSS_O_CTRIPLFILCLKCTL2) = (uint16_t)(samplePrescale >> 16U);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t regValue; // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT(samplePrescale <= 16777215UL); ASSERT((sampleWindow >= 1U) && (sampleWindow <= 64U)); ASSERT((threshold - 1U) >= ((sampleWindow - 1U) / 2U)); // // Shift the sample window and threshold values into the correct positions // and write them to the appropriate register. // regValue = ((sampleWindow - 1U) << CMPSS_CTRIPLFILCTL_SAMPWIN_S) | ((threshold - 1U) << CMPSS_CTRIPLFILCTL_THRESH_S); EALLOW; HWREGH(base + CMPSS_O_CTRIPLFILCTL) = (HWREGH(base + CMPSS_O_CTRIPLFILCTL) & ~(CMPSS_CTRIPLFILCTL_SAMPWIN_M | CMPSS_CTRIPLFILCTL_THRESH_M)) | regValue; // // Set the filter sample clock prescale for the low comparator. // HWREGH(base + CMPSS_O_CTRIPLFILCLKCTL) = (uint16_t)samplePrescale; HWREGH(base + CMPSS_O_CTRIPLFILCLKCTL2) = (uint16_t)(samplePrescale >> 16U); EDIS; }",
+      "registersUsed": [
+        "CTRIPLFILCTL",
+        "CTRIPLFILCLKCTL",
+        "CTRIPLFILCLKCTL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRIPLFILCTL",
+        "CTRIPLFILCLKCTL",
+        "CTRIPLFILCLKCTL2"
+      ]
+    },
+    {
+      "file": "cmpss.c",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configLatchOnPWMSYNC",
+      "functionArgs": [
+        "base",
+        "highEnable",
+        "lowEnable"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "bool",
+        "bool"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // If the highEnable is true, set the bit that will enable PWMSYNC to reset\n    // the high comparator digital filter latch. If not, clear the bit.\n    //\n    EALLOW;\n\n    if(highEnable)\n    {\n        HWREGH(base + CMPSS_O_COMPSTSCLR) |= CMPSS_COMPSTSCLR_HSYNCCLREN;\n    }\n    else\n    {\n        HWREGH(base + CMPSS_O_COMPSTSCLR) &= ~CMPSS_COMPSTSCLR_HSYNCCLREN;\n    }\n\n    //\n    // If the lowEnable is true, set the bit that will enable PWMSYNC to reset\n    // the low comparator digital filter latch. If not, clear the bit.\n    //\n    if(lowEnable)\n    {\n        HWREGH(base + CMPSS_O_COMPSTSCLR) |= CMPSS_COMPSTSCLR_LSYNCCLREN;\n    }\n    else\n    {\n        HWREGH(base + CMPSS_O_COMPSTSCLR) &= ~CMPSS_COMPSTSCLR_LSYNCCLREN;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // If the highEnable is true, set the bit that will enable PWMSYNC to reset // the high comparator digital filter latch. If not, clear the bit. // EALLOW; if(highEnable) { HWREGH(base + CMPSS_O_COMPSTSCLR) |= CMPSS_COMPSTSCLR_HSYNCCLREN; } else { HWREGH(base + CMPSS_O_COMPSTSCLR) &= ~CMPSS_COMPSTSCLR_HSYNCCLREN; } // // If the lowEnable is true, set the bit that will enable PWMSYNC to reset // the low comparator digital filter latch. If not, clear the bit. // if(lowEnable) { HWREGH(base + CMPSS_O_COMPSTSCLR) |= CMPSS_COMPSTSCLR_LSYNCCLREN; } else { HWREGH(base + CMPSS_O_COMPSTSCLR) &= ~CMPSS_COMPSTSCLR_LSYNCCLREN; } EDIS; }",
+      "registersUsed": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ]
+    },
+    {
+      "file": "cmpss.c",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configRamp",
+      "functionArgs": [
+        "base",
+        "maxRampVal",
+        "decrementVal",
+        "delayVal",
+        "pwmSyncSrc",
+        "useRampValShdw"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t",
+        "uint16_t",
+        "uint16_t",
+        "bool"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT(delayVal <= CMPSS_RAMPHDLYS_DELAY_M);\n    ASSERT((pwmSyncSrc >= 1U) && (pwmSyncSrc <= 12U));\n\n    EALLOW;\n\n    //\n    // Write the ramp generator source to the register\n    //\n    HWREGH(base + CMPSS_O_COMPDACHCTL) =\n        (HWREGH(base + CMPSS_O_COMPDACHCTL) &\n         ~CMPSS_COMPDACHCTL_RAMPSOURCE_M) |\n        ((uint16_t)(pwmSyncSrc - 1U) << CMPSS_COMPDACHCTL_RAMPSOURCE_S);\n\n    //\n    // Set or clear the bit that determines from where the max ramp value\n    // should be loaded.\n    //\n    if(useRampValShdw)\n    {\n        HWREGH(base + CMPSS_O_COMPDACHCTL) |= CMPSS_COMPDACHCTL_RAMPLOADSEL;\n    }\n    else\n    {\n        HWREGH(base + CMPSS_O_COMPDACHCTL) &= ~CMPSS_COMPDACHCTL_RAMPLOADSEL;\n    }\n\n    EDIS;\n\n    //\n    // Write the maximum ramp value to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPHREFS) = maxRampVal;\n\n    //\n    // Write the ramp decrement value to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPHSTEPVALS) = decrementVal;\n\n    //\n    // Write the ramp delay value to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPHDLYS) = delayVal;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT(delayVal <= CMPSS_RAMPHDLYS_DELAY_M); ASSERT((pwmSyncSrc >= 1U) && (pwmSyncSrc <= 12U)); EALLOW; // // Write the ramp generator source to the register // HWREGH(base + CMPSS_O_COMPDACHCTL) = (HWREGH(base + CMPSS_O_COMPDACHCTL) & ~CMPSS_COMPDACHCTL_RAMPSOURCE_M) | ((uint16_t)(pwmSyncSrc - 1U) << CMPSS_COMPDACHCTL_RAMPSOURCE_S); // // Set or clear the bit that determines from where the max ramp value // should be loaded. // if(useRampValShdw) { HWREGH(base + CMPSS_O_COMPDACHCTL) |= CMPSS_COMPDACHCTL_RAMPLOADSEL; } else { HWREGH(base + CMPSS_O_COMPDACHCTL) &= ~CMPSS_COMPDACHCTL_RAMPLOADSEL; } EDIS; // // Write the maximum ramp value to the shadow register. // HWREGH(base + CMPSS_O_RAMPHREFS) = maxRampVal; // // Write the ramp decrement value to the shadow register. // HWREGH(base + CMPSS_O_RAMPHSTEPVALS) = decrementVal; // // Write the ramp delay value to the shadow register. // HWREGH(base + CMPSS_O_RAMPHDLYS) = delayVal; }",
+      "registersUsed": [
+        "COMPDACHCTL",
+        "RAMPHREFS",
+        "RAMPHSTEPVALS",
+        "RAMPHDLYS"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL",
+        "RAMPHREFS",
+        "RAMPHSTEPVALS",
+        "RAMPHDLYS"
+      ]
+    },
+    {
+      "file": "cmpss.c",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configRampHigh",
+      "functionArgs": [
+        "base",
+        "rampDir",
+        "rampRef",
+        "stepVal",
+        "delayVal",
+        "pwmSyncSrc",
+        "useRampValShdw"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_RampDirection",
+        "uint16_t",
+        "uint16_t",
+        "uint16_t",
+        "uint16_t",
+        "bool"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT(delayVal <= CMPSS_RAMPHDLYS_DELAY_M);\n    ASSERT((pwmSyncSrc >= 1U) && (pwmSyncSrc <= 12U));\n    //\n    // Configure ramp direction\n    //\n    CMPSS_setRampDirectionHigh(base, rampDir);\n\n    //\n    // Write the ramp generator sync source to the register\n    //\n    CMPSS_configureSyncSourceHigh(base, pwmSyncSrc);\n\n    EALLOW;\n\n    //\n    // Set or clear the bit that determines from where the ramp reference value\n    // should be loaded.\n    //\n    if(useRampValShdw)\n    {\n        HWREGH(base + CMPSS_O_COMPDACHCTL) |= CMPSS_COMPDACHCTL_RAMPLOADSEL;\n    }\n    else\n    {\n        HWREGH(base + CMPSS_O_COMPDACHCTL) &= ~CMPSS_COMPDACHCTL_RAMPLOADSEL;\n    }\n\n    EDIS;\n\n    //\n    // Write the ramp reference value to the shadow register.\n    //\n    CMPSS_setRampReferenceHigh(base, rampRef);\n\n    //\n    // Write the ramp step value to the shadow register.\n    //\n    CMPSS_setRampStepHigh(base, stepVal);\n\n    //\n    // Write the ramp delay value to the shadow register.\n    //\n    CMPSS_setRampDelayHigh(base, delayVal);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT(delayVal <= CMPSS_RAMPHDLYS_DELAY_M); ASSERT((pwmSyncSrc >= 1U) && (pwmSyncSrc <= 12U)); // // Configure ramp direction // CMPSS_setRampDirectionHigh(base, rampDir); // // Write the ramp generator sync source to the register // CMPSS_configureSyncSourceHigh(base, pwmSyncSrc); EALLOW; // // Set or clear the bit that determines from where the ramp reference value // should be loaded. // if(useRampValShdw) { HWREGH(base + CMPSS_O_COMPDACHCTL) |= CMPSS_COMPDACHCTL_RAMPLOADSEL; } else { HWREGH(base + CMPSS_O_COMPDACHCTL) &= ~CMPSS_COMPDACHCTL_RAMPLOADSEL; } EDIS; // // Write the ramp reference value to the shadow register. // CMPSS_setRampReferenceHigh(base, rampRef); // // Write the ramp step value to the shadow register. // CMPSS_setRampStepHigh(base, stepVal); // // Write the ramp delay value to the shadow register. // CMPSS_setRampDelayHigh(base, delayVal); }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    },
+    {
+      "file": "cmpss.c",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configRampLow",
+      "functionArgs": [
+        "base",
+        "rampDir",
+        "rampRef",
+        "stepVal",
+        "delayVal",
+        "pwmSyncSrc",
+        "useRampValShdw"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_RampDirection",
+        "uint16_t",
+        "uint16_t",
+        "uint16_t",
+        "uint16_t",
+        "bool"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT(delayVal <= CMPSS_RAMPLDLYS_DELAY_M);\n    ASSERT((pwmSyncSrc >= 1U) && (pwmSyncSrc <= 12U));\n\n    //\n    // Configure ramp direction\n    //\n    CMPSS_setRampDirectionLow(base, rampDir);\n\n    //\n    // Write the ramp generator sync source to the register\n    //\n    CMPSS_configureSyncSourceLow(base, pwmSyncSrc);\n\n    EALLOW;\n\n    //\n    // Set or clear the bit that determines from where the ramp reference value\n    // should be loaded.\n    //\n    if(useRampValShdw)\n    {\n        HWREGH(base + CMPSS_O_COMPDACHCTL) |= CMPSS_COMPDACHCTL_RAMPLOADSEL;\n    }\n    else\n    {\n        HWREGH(base + CMPSS_O_COMPDACHCTL) &= ~CMPSS_COMPDACHCTL_RAMPLOADSEL;\n    }\n\n    EDIS;\n\n    //\n    // Write the ramp reference value to the shadow register.\n    //\n    CMPSS_setRampReferenceLow(base, rampRef);\n\n    //\n    // Write the ramp step value to the shadow register.\n    //\n    CMPSS_setRampStepLow(base, stepVal);\n\n    //\n    // Write the ramp delay value to the shadow register.\n    //\n    CMPSS_setRampDelayLow(base, delayVal);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT(delayVal <= CMPSS_RAMPLDLYS_DELAY_M); ASSERT((pwmSyncSrc >= 1U) && (pwmSyncSrc <= 12U)); // // Configure ramp direction // CMPSS_setRampDirectionLow(base, rampDir); // // Write the ramp generator sync source to the register // CMPSS_configureSyncSourceLow(base, pwmSyncSrc); EALLOW; // // Set or clear the bit that determines from where the ramp reference value // should be loaded. // if(useRampValShdw) { HWREGH(base + CMPSS_O_COMPDACHCTL) |= CMPSS_COMPDACHCTL_RAMPLOADSEL; } else { HWREGH(base + CMPSS_O_COMPDACHCTL) &= ~CMPSS_COMPDACHCTL_RAMPLOADSEL; } EDIS; // // Write the ramp reference value to the shadow register. // CMPSS_setRampReferenceLow(base, rampRef); // // Write the ramp step value to the shadow register. // CMPSS_setRampStepLow(base, stepVal); // // Write the ramp delay value to the shadow register. // CMPSS_setRampDelayLow(base, delayVal); }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == CMPSS1_BASE) ||\n           (base == CMPSS2_BASE) ||\n           (base == CMPSS3_BASE) ||\n           (base == CMPSS4_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == CMPSS1_BASE) || (base == CMPSS2_BASE) || (base == CMPSS3_BASE) || (base == CMPSS4_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_enableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Set the bit that enables the CMPSS module.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPCTL) |= CMPSS_COMPCTL_COMPDACE;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Set the bit that enables the CMPSS module. // EALLOW; HWREGH(base + CMPSS_O_COMPCTL) |= CMPSS_COMPCTL_COMPDACE; EDIS; }",
+      "registersUsed": [
+        "COMPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_disableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Clear the bit that enables the CMPSS module.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPCTL) &= ~CMPSS_COMPCTL_COMPDACE;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Clear the bit that enables the CMPSS module. // EALLOW; HWREGH(base + CMPSS_O_COMPCTL) &= ~CMPSS_COMPCTL_COMPDACE; EDIS; }",
+      "registersUsed": [
+        "COMPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configHighComparator",
+      "functionArgs": [
+        "base",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the high comparator configuration to the appropriate register.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPCTL) =\n        (HWREGH(base + CMPSS_O_COMPCTL) & ~CMPSS_HICMP_CTL_M) | config;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the high comparator configuration to the appropriate register. // EALLOW; HWREGH(base + CMPSS_O_COMPCTL) = (HWREGH(base + CMPSS_O_COMPCTL) & ~CMPSS_HICMP_CTL_M) | config; EDIS; }",
+      "registersUsed": [
+        "COMPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configLowComparator",
+      "functionArgs": [
+        "base",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the low comparator configuration to the appropriate register.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPCTL) =\n        (HWREGH(base + CMPSS_O_COMPCTL) & ~CMPSS_LOCMP_CTL_M) | (config << 8U);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the low comparator configuration to the appropriate register. // EALLOW; HWREGH(base + CMPSS_O_COMPCTL) = (HWREGH(base + CMPSS_O_COMPCTL) & ~CMPSS_LOCMP_CTL_M) | (config << 8U); EDIS; }",
+      "registersUsed": [
+        "COMPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configOutputsHigh",
+      "functionArgs": [
+        "base",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the high comparator output settings to the appropriate register.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPCTL) = (HWREGH(base + CMPSS_O_COMPCTL) &\n                                      ~(CMPSS_COMPCTL_CTRIPOUTHSEL_M |\n                                        CMPSS_COMPCTL_CTRIPHSEL_M))  |\n                                     config;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the high comparator output settings to the appropriate register. // EALLOW; HWREGH(base + CMPSS_O_COMPCTL) = (HWREGH(base + CMPSS_O_COMPCTL) & ~(CMPSS_COMPCTL_CTRIPOUTHSEL_M | CMPSS_COMPCTL_CTRIPHSEL_M)) | config; EDIS; }",
+      "registersUsed": [
+        "COMPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configOutputsLow",
+      "functionArgs": [
+        "base",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the low comparator output settings to the appropriate register.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPCTL) = (HWREGH(base + CMPSS_O_COMPCTL) &\n                                      ~(CMPSS_COMPCTL_CTRIPOUTLSEL_M |\n                                        CMPSS_COMPCTL_CTRIPLSEL_M)) |\n                                     (config << 8U);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the low comparator output settings to the appropriate register. // EALLOW; HWREGH(base + CMPSS_O_COMPCTL) = (HWREGH(base + CMPSS_O_COMPCTL) & ~(CMPSS_COMPCTL_CTRIPOUTLSEL_M | CMPSS_COMPCTL_CTRIPLSEL_M)) | (config << 8U); EDIS; }",
+      "registersUsed": [
+        "COMPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Return contents of the status register.\n    //\n    return(HWREGH(base + CMPSS_O_COMPSTS));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Return contents of the status register. // return(HWREGH(base + CMPSS_O_COMPSTS)); }",
+      "registersUsed": [
+        "COMPSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPSTS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configDAC",
+      "functionArgs": [
+        "base",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the DAC configuration to the appropriate register.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPDACHCTL) = (HWREGH(base + CMPSS_O_COMPDACHCTL) &\n                                          ~(CMPSS_COMPDACHCTL_SWLOADSEL      |\n                                        CMPSS_COMPDACHCTL_DACSOURCE)) | config;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the DAC configuration to the appropriate register. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL) = (HWREGH(base + CMPSS_O_COMPDACHCTL) & ~(CMPSS_COMPDACHCTL_SWLOADSEL | CMPSS_COMPDACHCTL_DACSOURCE)) | config; EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configDACHigh",
+      "functionArgs": [
+        "base",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the DAC configuration to the appropriate register.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPDACHCTL) = (HWREGH(base + CMPSS_O_COMPDACHCTL) &\n                                          ~(CMPSS_COMPDACHCTL_SWLOADSEL      |\n                                          CMPSS_COMPDACHCTL_DACSOURCE))      |\n                                         config;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the DAC configuration to the appropriate register. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL) = (HWREGH(base + CMPSS_O_COMPDACHCTL) & ~(CMPSS_COMPDACHCTL_SWLOADSEL | CMPSS_COMPDACHCTL_DACSOURCE)) | config; EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configDACLow",
+      "functionArgs": [
+        "base",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the DAC configuration to the appropriate register.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPDACLCTL) = (HWREGH(base + CMPSS_O_COMPDACLCTL) &\n                                          ~(CMPSS_COMPDACLCTL_DACSOURCE))    |\n                                          config;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the DAC configuration to the appropriate register. // EALLOW; HWREGH(base + CMPSS_O_COMPDACLCTL) = (HWREGH(base + CMPSS_O_COMPDACLCTL) & ~(CMPSS_COMPDACLCTL_DACSOURCE)) | config; EDIS; }",
+      "registersUsed": [
+        "COMPDACLCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACLCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setDACValueHigh",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT(value < 4096U);\n\n    //\n    // Write the DAC value to the DAC value shadow register.\n    //\n    HWREGH(base + CMPSS_O_DACHVALS) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT(value < 4096U); // // Write the DAC value to the DAC value shadow register. // HWREGH(base + CMPSS_O_DACHVALS) = value; }",
+      "registersUsed": [
+        "DACHVALS"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACHVALS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setDACValueLow",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT(value < 4096U);\n\n    //\n    // Write the DAC value to the DAC value shadow register.\n    //\n    HWREGH(base + CMPSS_O_DACLVALS) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT(value < 4096U); // // Write the DAC value to the DAC value shadow register. // HWREGH(base + CMPSS_O_DACLVALS) = value; }",
+      "registersUsed": [
+        "DACLVALS"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACLVALS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_initFilterHigh",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Set the high comparator filter initialization bit.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_CTRIPHFILCTL) |= CMPSS_CTRIPHFILCTL_FILINIT;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Set the high comparator filter initialization bit. // EALLOW; HWREGH(base + CMPSS_O_CTRIPHFILCTL) |= CMPSS_CTRIPHFILCTL_FILINIT; EDIS; }",
+      "registersUsed": [
+        "CTRIPHFILCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRIPHFILCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_initFilterLow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Set the low comparator filter initialization bit.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_CTRIPLFILCTL) |= CMPSS_CTRIPLFILCTL_FILINIT;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Set the low comparator filter initialization bit. // EALLOW; HWREGH(base + CMPSS_O_CTRIPLFILCTL) |= CMPSS_CTRIPLFILCTL_FILINIT; EDIS; }",
+      "registersUsed": [
+        "CTRIPLFILCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRIPLFILCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configureFilterInputHigh",
+      "functionArgs": [
+        "base",
+        "filtInput"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_FilterInput"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT((uint16_t)filtInput <= 7U);\n\n    //\n    // Set the high comparator filter initialization bit.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_CTRIPHFILCTL) = (HWREGH(base + CMPSS_O_CTRIPHFILCTL) &\n                                           ~CMPSS_CTRIPHFILCTL_FILTINSEL_M)    |\n                                          (uint16_t)filtInput ;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT((uint16_t)filtInput <= 7U); // // Set the high comparator filter initialization bit. // EALLOW; HWREGH(base + CMPSS_O_CTRIPHFILCTL) = (HWREGH(base + CMPSS_O_CTRIPHFILCTL) & ~CMPSS_CTRIPHFILCTL_FILTINSEL_M) | (uint16_t)filtInput ; EDIS; }",
+      "registersUsed": [
+        "CTRIPHFILCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRIPHFILCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configureFilterInputLow",
+      "functionArgs": [
+        "base",
+        "filtInput"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_FilterInput"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT((uint16_t)filtInput <= 7U);\n\n    //\n    // Set the low comparator filter initialization bit.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_CTRIPLFILCTL) = (HWREGH(base + CMPSS_O_CTRIPLFILCTL) &\n                                           ~CMPSS_CTRIPLFILCTL_FILTINSEL_M)    |\n                                          (uint16_t)filtInput;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT((uint16_t)filtInput <= 7U); // // Set the low comparator filter initialization bit. // EALLOW; HWREGH(base + CMPSS_O_CTRIPLFILCTL) = (HWREGH(base + CMPSS_O_CTRIPLFILCTL) & ~CMPSS_CTRIPLFILCTL_FILTINSEL_M) | (uint16_t)filtInput; EDIS; }",
+      "registersUsed": [
+        "CTRIPLFILCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRIPLFILCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getDACValueHigh",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the DAC value to the DAC value shadow register.\n    //\n    return(HWREGH(base + CMPSS_O_DACHVALA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the DAC value to the DAC value shadow register. // return(HWREGH(base + CMPSS_O_DACHVALA)); }",
+      "registersUsed": [
+        "DACHVALA"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACHVALA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getDACValueLow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the DAC value to the DAC value shadow register.\n    //\n    return(HWREGH(base + CMPSS_O_DACLVALA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the DAC value to the DAC value shadow register. // return(HWREGH(base + CMPSS_O_DACLVALA)); }",
+      "registersUsed": [
+        "DACLVALA"
+      ],
+      "registersUsedMatchingBifield": [
+        "DACLVALA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_clearFilterLatchHigh",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Set the bit that generates a reset pulse to the digital filter latch.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPSTSCLR) |= CMPSS_COMPSTSCLR_HLATCHCLR;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Set the bit that generates a reset pulse to the digital filter latch. // EALLOW; HWREGH(base + CMPSS_O_COMPSTSCLR) |= CMPSS_COMPSTSCLR_HLATCHCLR; EDIS; }",
+      "registersUsed": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_clearFilterLatchLow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Set the bit that generates a reset pulse to the digital filter latch.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPSTSCLR) |= CMPSS_COMPSTSCLR_LLATCHCLR;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Set the bit that generates a reset pulse to the digital filter latch. // EALLOW; HWREGH(base + CMPSS_O_COMPSTSCLR) |= CMPSS_COMPSTSCLR_LLATCHCLR; EDIS; }",
+      "registersUsed": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setMaxRampValue",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the maximum ramp value to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPHREFS) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the maximum ramp value to the shadow register. // HWREGH(base + CMPSS_O_RAMPHREFS) = value; }",
+      "registersUsed": [
+        "RAMPHREFS"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHREFS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getMaxRampValue",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Read the maximum ramp value from the register.\n    //\n    return(HWREGH(base + CMPSS_O_RAMPHREFA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Read the maximum ramp value from the register. // return(HWREGH(base + CMPSS_O_RAMPHREFA)); }",
+      "registersUsed": [
+        "RAMPHREFA"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHREFA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setRampDecValue",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the ramp decrement value to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPHSTEPVALS) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the ramp decrement value to the shadow register. // HWREGH(base + CMPSS_O_RAMPHSTEPVALS) = value; }",
+      "registersUsed": [
+        "RAMPHSTEPVALS"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHSTEPVALS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getRampDecValue",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Read the ramp decrement value from the register.\n    //\n    return(HWREGH(base + CMPSS_O_RAMPHSTEPVALA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Read the ramp decrement value from the register. // return(HWREGH(base + CMPSS_O_RAMPHSTEPVALA)); }",
+      "registersUsed": [
+        "RAMPHSTEPVALA"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHSTEPVALA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setRampDelayValue",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT(value < 8192U);\n\n    //\n    // Write the ramp delay value to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPHDLYS) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT(value < 8192U); // // Write the ramp delay value to the shadow register. // HWREGH(base + CMPSS_O_RAMPHDLYS) = value; }",
+      "registersUsed": [
+        "RAMPHDLYS"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHDLYS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getRampDelayValue",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Read the ramp delay value from the register.\n    //\n    return(HWREGH(base + CMPSS_O_RAMPHDLYA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Read the ramp delay value from the register. // return(HWREGH(base + CMPSS_O_RAMPHDLYA)); }",
+      "registersUsed": [
+        "RAMPHDLYA"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHDLYA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setRampDirectionHigh",
+      "functionArgs": [
+        "base",
+        "dir"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_RampDirection"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the ramp direction value to the shadow register.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACHCTL) = (HWREGH(base + CMPSS_O_COMPDACHCTL) &\n                                          ~(CMPSS_COMPDACHCTL_RAMPDIR)) |\n                                          (uint16_t)dir;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the ramp direction value to the shadow register. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL) = (HWREGH(base + CMPSS_O_COMPDACHCTL) & ~(CMPSS_COMPDACHCTL_RAMPDIR)) | (uint16_t)dir; EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setRampReferenceHigh",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the ramp reference value to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPHREFS) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the ramp reference value to the shadow register. // HWREGH(base + CMPSS_O_RAMPHREFS) = value; }",
+      "registersUsed": [
+        "RAMPHREFS"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHREFS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getRampReferenceHigh",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Read the maximum ramp value from the register.\n    //\n    return(HWREGH(base + CMPSS_O_RAMPHREFA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Read the maximum ramp value from the register. // return(HWREGH(base + CMPSS_O_RAMPHREFA)); }",
+      "registersUsed": [
+        "RAMPHREFA"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHREFA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setRampStepHigh",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the ramp step value to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPHSTEPVALS) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the ramp step value to the shadow register. // HWREGH(base + CMPSS_O_RAMPHSTEPVALS) = value; }",
+      "registersUsed": [
+        "RAMPHSTEPVALS"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHSTEPVALS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getRampStepHigh",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Read the high ramp generator step value from the register.\n    //\n    return(HWREGH(base + CMPSS_O_RAMPHSTEPVALA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Read the high ramp generator step value from the register. // return(HWREGH(base + CMPSS_O_RAMPHSTEPVALA)); }",
+      "registersUsed": [
+        "RAMPHSTEPVALA"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHSTEPVALA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setRampDelayHigh",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT(value < 8192U);\n\n    //\n    // Write the ramp delay value to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPHDLYS) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT(value < 8192U); // // Write the ramp delay value to the shadow register. // HWREGH(base + CMPSS_O_RAMPHDLYS) = value; }",
+      "registersUsed": [
+        "RAMPHDLYS"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHDLYS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getRampDelayHigh",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Read the ramp delay value from the register.\n    //\n    return(HWREGH(base + CMPSS_O_RAMPHDLYA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Read the ramp delay value from the register. // return(HWREGH(base + CMPSS_O_RAMPHDLYA)); }",
+      "registersUsed": [
+        "RAMPHDLYA"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHDLYA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setRampDirectionLow",
+      "functionArgs": [
+        "base",
+        "dir"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_RampDirection"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the ramp direction value to the shadow register.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACLCTL) = (HWREGH(base + CMPSS_O_COMPDACLCTL) &\n                                          ~(CMPSS_COMPDACLCTL_RAMPDIR)) |\n                                          (uint16_t)dir;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the ramp direction value to the shadow register. // EALLOW; HWREGH(base + CMPSS_O_COMPDACLCTL) = (HWREGH(base + CMPSS_O_COMPDACLCTL) & ~(CMPSS_COMPDACLCTL_RAMPDIR)) | (uint16_t)dir; EDIS; }",
+      "registersUsed": [
+        "COMPDACLCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACLCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setRampReferenceLow",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the ramp reference value to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPLREFS) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the ramp reference value to the shadow register. // HWREGH(base + CMPSS_O_RAMPLREFS) = value; }",
+      "registersUsed": [
+        "RAMPLREFS"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPLREFS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getRampReferenceLow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Read the ramp reference value from the register.\n    //\n    return(HWREGH(base + CMPSS_O_RAMPLREFA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Read the ramp reference value from the register. // return(HWREGH(base + CMPSS_O_RAMPLREFA)); }",
+      "registersUsed": [
+        "RAMPLREFA"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPLREFA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setRampStepLow",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the ramp step value to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPLSTEPVALS) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the ramp step value to the shadow register. // HWREGH(base + CMPSS_O_RAMPLSTEPVALS) = value; }",
+      "registersUsed": [
+        "RAMPLSTEPVALS"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPLSTEPVALS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getRampStepLow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Read the low ramp generator step value from the register.\n    //\n    return(HWREGH(base + CMPSS_O_RAMPLSTEPVALA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Read the low ramp generator step value from the register. // return(HWREGH(base + CMPSS_O_RAMPLSTEPVALA)); }",
+      "registersUsed": [
+        "RAMPLSTEPVALA"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPLSTEPVALA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setRampDelayLow",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT(value < 8192U);\n\n    //\n    // Write the ramp delay value to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPLDLYS) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT(value < 8192U); // // Write the ramp delay value to the shadow register. // HWREGH(base + CMPSS_O_RAMPLDLYS) = value; }",
+      "registersUsed": [
+        "RAMPLDLYS"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPLDLYS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getRampDelayLow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Read the ramp delay value from the register.\n    //\n    return(HWREGH(base + CMPSS_O_RAMPLDLYA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Read the ramp delay value from the register. // return(HWREGH(base + CMPSS_O_RAMPLDLYA)); }",
+      "registersUsed": [
+        "RAMPLDLYA"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPLDLYA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configureRampXTriggerHigh",
+      "functionArgs": [
+        "base",
+        "trigger"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_RampXTrigger"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the ramp delay value to the shadow register.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACHCTL2) =\n                                     (HWREGH(base + CMPSS_O_COMPDACHCTL2) &\n                                      ~CMPSS_COMPDACHCTL2_XTRIGCFG_M)     |\n                                     ((uint16_t)trigger <<\n                                      CMPSS_COMPDACHCTL2_XTRIGCFG_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the ramp delay value to the shadow register. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL2) = (HWREGH(base + CMPSS_O_COMPDACHCTL2) & ~CMPSS_COMPDACHCTL2_XTRIGCFG_M) | ((uint16_t)trigger << CMPSS_COMPDACHCTL2_XTRIGCFG_S); EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL",
+        "COMPDACHCTL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL",
+        "COMPDACHCTL2"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configureSyncSourceHigh",
+      "functionArgs": [
+        "base",
+        "syncSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the ramp delay value to the shadow register.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACHCTL) = (HWREGH(base + CMPSS_O_COMPDACHCTL) &\n                                          ~CMPSS_COMPDACHCTL_RAMPSOURCE_M)   |\n                                         ((uint16_t)(syncSource - 1U)       <<\n                                          CMPSS_COMPDACHCTL_RAMPSOURCE_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the ramp delay value to the shadow register. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL) = (HWREGH(base + CMPSS_O_COMPDACHCTL) & ~CMPSS_COMPDACHCTL_RAMPSOURCE_M) | ((uint16_t)(syncSource - 1U) << CMPSS_COMPDACHCTL_RAMPSOURCE_S); EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configureSyncSourceLow",
+      "functionArgs": [
+        "base",
+        "syncSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Write the ramp delay value to the shadow register.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACLCTL) = (HWREGH(base + CMPSS_O_COMPDACLCTL) &\n                                          ~CMPSS_COMPDACLCTL_RAMPSOURCE_M)   |\n                                         ((uint16_t)(syncSource - 1U)       <<\n                                          CMPSS_COMPDACLCTL_RAMPSOURCE_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Write the ramp delay value to the shadow register. // EALLOW; HWREGH(base + CMPSS_O_COMPDACLCTL) = (HWREGH(base + CMPSS_O_COMPDACLCTL) & ~CMPSS_COMPDACLCTL_RAMPSOURCE_M) | ((uint16_t)(syncSource - 1U) << CMPSS_COMPDACLCTL_RAMPSOURCE_S); EDIS; }",
+      "registersUsed": [
+        "COMPDACLCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACLCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setRampClockDividerHigh",
+      "functionArgs": [
+        "base",
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_RampClockDiv"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT((uint16_t)divider <= CMPSS_RAMPHCTLS_RAMPCLKDIV_M);\n\n    //\n    // Write the high ramp generator clock divider to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPHCTLS) = (uint16_t)divider;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT((uint16_t)divider <= CMPSS_RAMPHCTLS_RAMPCLKDIV_M); // // Write the high ramp generator clock divider to the shadow register. // HWREGH(base + CMPSS_O_RAMPHCTLS) = (uint16_t)divider; }",
+      "registersUsed": [
+        "RAMPHCTLS"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHCTLS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getRampClockDividerHigh",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Read the high ramp generator clock divider from the register.\n    //\n    return(HWREGH(base + CMPSS_O_RAMPHCTLA) & CMPSS_RAMPHCTLA_RAMPCLKDIV_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Read the high ramp generator clock divider from the register. // return(HWREGH(base + CMPSS_O_RAMPHCTLA) & CMPSS_RAMPHCTLA_RAMPCLKDIV_M); }",
+      "registersUsed": [
+        "RAMPHCTLA"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPHCTLA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setRampClockDividerLow",
+      "functionArgs": [
+        "base",
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_RampClockDiv"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT((uint16_t)divider <= CMPSS_RAMPLCTLS_RAMPCLKDIV_M);\n\n    //\n    // Write the low ramp generator clock divider to the shadow register.\n    //\n    HWREGH(base + CMPSS_O_RAMPLCTLS) = (uint16_t)divider;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT((uint16_t)divider <= CMPSS_RAMPLCTLS_RAMPCLKDIV_M); // // Write the low ramp generator clock divider to the shadow register. // HWREGH(base + CMPSS_O_RAMPLCTLS) = (uint16_t)divider; }",
+      "registersUsed": [
+        "RAMPLCTLS"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPLCTLS"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_getRampClockDividerLow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Read the low ramp generator clock divider from the register.\n    //\n    return(HWREGH(base + CMPSS_O_RAMPLCTLA) & CMPSS_RAMPLCTLA_RAMPCLKDIV_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Read the low ramp generator clock divider from the register. // return(HWREGH(base + CMPSS_O_RAMPLCTLA) & CMPSS_RAMPLCTLA_RAMPCLKDIV_M); }",
+      "registersUsed": [
+        "RAMPLCTLA"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAMPLCTLA"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_setHysteresis",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT(value <= 4U);\n\n    //\n    // Read the ramp delay value from the register.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPHYSCTL) = value;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT(value <= 4U); // // Read the ramp delay value from the register. // EALLOW; HWREGH(base + CMPSS_O_COMPHYSCTL) = value; EDIS; }",
+      "registersUsed": [
+        "COMPHYSCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPHYSCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_enableLatchResetOnPWMSYNCHigh",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPSTSCLR) |= CMPSS_COMPSTSCLR_HSYNCCLREN;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); EALLOW; HWREGH(base + CMPSS_O_COMPSTSCLR) |= CMPSS_COMPSTSCLR_HSYNCCLREN; EDIS; }",
+      "registersUsed": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_disableLatchResetOnPWMSYNCHigh",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPSTSCLR) &= ~CMPSS_COMPSTSCLR_HSYNCCLREN;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); EALLOW; HWREGH(base + CMPSS_O_COMPSTSCLR) &= ~CMPSS_COMPSTSCLR_HSYNCCLREN; EDIS; }",
+      "registersUsed": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_enableLatchResetOnPWMSYNCLow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPSTSCLR) |= CMPSS_COMPSTSCLR_LSYNCCLREN;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); EALLOW; HWREGH(base + CMPSS_O_COMPSTSCLR) |= CMPSS_COMPSTSCLR_LSYNCCLREN; EDIS; }",
+      "registersUsed": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_disableLatchResetOnPWMSYNCLow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPSTSCLR) &= ~CMPSS_COMPSTSCLR_LSYNCCLREN;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); EALLOW; HWREGH(base + CMPSS_O_COMPSTSCLR) &= ~CMPSS_COMPSTSCLR_LSYNCCLREN; EDIS; }",
+      "registersUsed": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPSTS",
+        "COMPSTSCLR"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configBlanking",
+      "functionArgs": [
+        "base",
+        "pwmBlankSrc"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT((pwmBlankSrc >= 1U) && (pwmBlankSrc <= 16U));\n\n    //\n    // Write the blank source number to the appropriate register.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPDACHCTL) =\n       (HWREGH(base + CMPSS_O_COMPDACHCTL) & ~CMPSS_COMPDACHCTL_BLANKSOURCE_M) |\n       ((pwmBlankSrc - 1U) << CMPSS_COMPDACHCTL_BLANKSOURCE_S);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT((pwmBlankSrc >= 1U) && (pwmBlankSrc <= 16U)); // // Write the blank source number to the appropriate register. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL) = (HWREGH(base + CMPSS_O_COMPDACHCTL) & ~CMPSS_COMPDACHCTL_BLANKSOURCE_M) | ((pwmBlankSrc - 1U) << CMPSS_COMPDACHCTL_BLANKSOURCE_S); EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_enableBlanking",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Set the bit that enables the PWMBLANK signal.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACHCTL) |= CMPSS_COMPDACHCTL_BLANKEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Set the bit that enables the PWMBLANK signal. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL) |= CMPSS_COMPDACHCTL_BLANKEN; EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_disableBlanking",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Clear the bit that enables the PWMBLANK signal.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACHCTL) &= ~CMPSS_COMPDACHCTL_BLANKEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Clear the bit that enables the PWMBLANK signal. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL) &= ~CMPSS_COMPDACHCTL_BLANKEN; EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configBlankingSourceHigh",
+      "functionArgs": [
+        "base",
+        "pwmBlankSrc"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT((pwmBlankSrc >= 1U) && (pwmBlankSrc <= 16U));\n\n    //\n    // Write the blank source number to the appropriate register.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPDACHCTL) =\n       (HWREGH(base + CMPSS_O_COMPDACHCTL) & ~CMPSS_COMPDACHCTL_BLANKSOURCE_M) |\n       ((pwmBlankSrc - 1U) << CMPSS_COMPDACHCTL_BLANKSOURCE_S);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT((pwmBlankSrc >= 1U) && (pwmBlankSrc <= 16U)); // // Write the blank source number to the appropriate register. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL) = (HWREGH(base + CMPSS_O_COMPDACHCTL) & ~CMPSS_COMPDACHCTL_BLANKSOURCE_M) | ((pwmBlankSrc - 1U) << CMPSS_COMPDACHCTL_BLANKSOURCE_S); EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_enableBlankingHigh",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Set the bit that enables the PWMBLANK signal.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACHCTL) |= CMPSS_COMPDACHCTL_BLANKEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Set the bit that enables the PWMBLANK signal. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL) |= CMPSS_COMPDACHCTL_BLANKEN; EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_disableBlankingHigh",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Clear the bit that enables the PWMBLANK signal.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACHCTL) &= ~CMPSS_COMPDACHCTL_BLANKEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Clear the bit that enables the PWMBLANK signal. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL) &= ~CMPSS_COMPDACHCTL_BLANKEN; EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_configBlankingSourceLow",
+      "functionArgs": [
+        "base",
+        "pwmBlankSrc"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT((pwmBlankSrc >= 1U) && (pwmBlankSrc <= 16U));\n\n    //\n    // Write the blank source number to the appropriate register.\n    //\n    EALLOW;\n\n    HWREGH(base + CMPSS_O_COMPDACLCTL) = (HWREGH(base + CMPSS_O_COMPDACLCTL) &\n                        ~CMPSS_COMPDACLCTL_BLANKSOURCE_M) |\n                        ((pwmBlankSrc - 1U) << CMPSS_COMPDACLCTL_BLANKSOURCE_S);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT((pwmBlankSrc >= 1U) && (pwmBlankSrc <= 16U)); // // Write the blank source number to the appropriate register. // EALLOW; HWREGH(base + CMPSS_O_COMPDACLCTL) = (HWREGH(base + CMPSS_O_COMPDACLCTL) & ~CMPSS_COMPDACLCTL_BLANKSOURCE_M) | ((pwmBlankSrc - 1U) << CMPSS_COMPDACLCTL_BLANKSOURCE_S); EDIS; }",
+      "registersUsed": [
+        "COMPDACLCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACLCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_enableBlankingLow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Set the bit that enables the PWMBLANK signal.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACLCTL) |= CMPSS_COMPDACLCTL_BLANKEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Set the bit that enables the PWMBLANK signal. // EALLOW; HWREGH(base + CMPSS_O_COMPDACLCTL) |= CMPSS_COMPDACLCTL_BLANKEN; EDIS; }",
+      "registersUsed": [
+        "COMPDACLCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACLCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_disableBlankingLow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n\n    //\n    // Clear the bit that enables the PWMBLANK signal.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACLCTL) &= ~CMPSS_COMPDACLCTL_BLANKEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); // // Clear the bit that enables the PWMBLANK signal. // EALLOW; HWREGH(base + CMPSS_O_COMPDACLCTL) &= ~CMPSS_COMPDACLCTL_BLANKEN; EDIS; }",
+      "registersUsed": [
+        "COMPDACLCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACLCTL"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_selectBlankSourceGroupHigh",
+      "functionArgs": [
+        "base",
+        "group"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_EPWMGroup"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT((uint16_t)group <= 1U);\n\n    //\n    // Configure the Blanking source group.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACHCTL2) =\n                                (HWREGH(base + CMPSS_O_COMPDACHCTL2) &\n                                 ~CMPSS_COMPDACHCTL2_BLANKSOURCEUSEL) |\n                                ((uint16_t)group << CMPSS_BLANKSOURCEUSEL_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT((uint16_t)group <= 1U); // // Configure the Blanking source group. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL2) = (HWREGH(base + CMPSS_O_COMPDACHCTL2) & ~CMPSS_COMPDACHCTL2_BLANKSOURCEUSEL) | ((uint16_t)group << CMPSS_BLANKSOURCEUSEL_S); EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL",
+        "COMPDACHCTL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL",
+        "COMPDACHCTL2"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_selectBlankSourceGroupLow",
+      "functionArgs": [
+        "base",
+        "group"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_EPWMGroup"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT((uint16_t)group <= 1U);\n\n    //\n    // Configure the Blanking source group.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACLCTL2) =\n                                (HWREGH(base + CMPSS_O_COMPDACLCTL2) &\n                                 ~CMPSS_COMPDACLCTL2_BLANKSOURCEUSEL) |\n                                ((uint16_t)group << CMPSS_BLANKSOURCEUSEL_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT((uint16_t)group <= 1U); // // Configure the Blanking source group. // EALLOW; HWREGH(base + CMPSS_O_COMPDACLCTL2) = (HWREGH(base + CMPSS_O_COMPDACLCTL2) & ~CMPSS_COMPDACLCTL2_BLANKSOURCEUSEL) | ((uint16_t)group << CMPSS_BLANKSOURCEUSEL_S); EDIS; }",
+      "registersUsed": [
+        "COMPDACLCTL",
+        "COMPDACLCTL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACLCTL",
+        "COMPDACLCTL2"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_selectRampSourceGroupHigh",
+      "functionArgs": [
+        "base",
+        "group"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_EPWMGroup"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT((uint16_t)group <= 1U);\n\n    //\n    // Configure the Blanking source group.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACHCTL2) =\n                                    (HWREGH(base + CMPSS_O_COMPDACHCTL2) &\n                                     ~CMPSS_COMPDACHCTL2_RAMPSOURCEUSEL) |\n                                    ((uint16_t)group << CMPSS_RAMPSOURCEUSEL_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT((uint16_t)group <= 1U); // // Configure the Blanking source group. // EALLOW; HWREGH(base + CMPSS_O_COMPDACHCTL2) = (HWREGH(base + CMPSS_O_COMPDACHCTL2) & ~CMPSS_COMPDACHCTL2_RAMPSOURCEUSEL) | ((uint16_t)group << CMPSS_RAMPSOURCEUSEL_S); EDIS; }",
+      "registersUsed": [
+        "COMPDACHCTL",
+        "COMPDACHCTL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACHCTL",
+        "COMPDACHCTL2"
+      ]
+    },
+    {
+      "file": "cmpss.h",
+      "peripheral": "cmpss",
+      "functionName": "CMPSS_selectRampSourceGroupLow",
+      "functionArgs": [
+        "base",
+        "group"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CMPSS_EPWMGroup"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(CMPSS_isBaseValid(base));\n    ASSERT((uint16_t)group <= 1U);\n\n    //\n    // Configure the Blanking source group.\n    //\n    EALLOW;\n    HWREGH(base + CMPSS_O_COMPDACLCTL2) =\n                                    (HWREGH(base + CMPSS_O_COMPDACLCTL2) &\n                                     ~CMPSS_COMPDACLCTL2_RAMPSOURCEUSEL) |\n                                    ((uint16_t)group << CMPSS_RAMPSOURCEUSEL_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(CMPSS_isBaseValid(base)); ASSERT((uint16_t)group <= 1U); // // Configure the Blanking source group. // EALLOW; HWREGH(base + CMPSS_O_COMPDACLCTL2) = (HWREGH(base + CMPSS_O_COMPDACLCTL2) & ~CMPSS_COMPDACLCTL2_RAMPSOURCEUSEL) | ((uint16_t)group << CMPSS_RAMPSOURCEUSEL_S); EDIS; }",
+      "registersUsed": [
+        "COMPDACLCTL",
+        "COMPDACLCTL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMPDACLCTL",
+        "COMPDACLCTL2"
+      ]
+    }
+  ]
+}

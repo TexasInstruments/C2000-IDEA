@@ -1,0 +1,813 @@
+{
+  "name": "clb",
+  "functions": [
+    {
+      "file": "clb.c",
+      "peripheral": "clb",
+      "functionName": "CLB_configCounterLoadMatch",
+      "functionArgs": [
+        "base",
+        "counterID",
+        "load",
+        "match1",
+        "match2"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CLB_Counters",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    EALLOW;\n    switch(counterID)\n    {\n        case CLB_CTR0:\n            CLB_writeInterface(base, CLB_ADDR_COUNTER_0_LOAD, load);\n            CLB_writeInterface(base, CLB_ADDR_COUNTER_0_MATCH1, match1);\n            CLB_writeInterface(base, CLB_ADDR_COUNTER_0_MATCH2, match2);\n            break;\n\n        case CLB_CTR1:\n            CLB_writeInterface(base, CLB_ADDR_COUNTER_1_LOAD, load);\n            CLB_writeInterface(base, CLB_ADDR_COUNTER_1_MATCH1, match1);\n            CLB_writeInterface(base, CLB_ADDR_COUNTER_1_MATCH2, match2);\n            break;\n\n        case CLB_CTR2:\n            CLB_writeInterface(base, CLB_ADDR_COUNTER_2_LOAD, load);\n            CLB_writeInterface(base, CLB_ADDR_COUNTER_2_MATCH1, match1);\n            CLB_writeInterface(base, CLB_ADDR_COUNTER_2_MATCH2, match2);\n            break;\n\n        default:\n            //\n            // Invalid counterID value\n            //\n            break;\n    }\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); EALLOW; switch(counterID) { case CLB_CTR0: CLB_writeInterface(base, CLB_ADDR_COUNTER_0_LOAD, load); CLB_writeInterface(base, CLB_ADDR_COUNTER_0_MATCH1, match1); CLB_writeInterface(base, CLB_ADDR_COUNTER_0_MATCH2, match2); break; case CLB_CTR1: CLB_writeInterface(base, CLB_ADDR_COUNTER_1_LOAD, load); CLB_writeInterface(base, CLB_ADDR_COUNTER_1_MATCH1, match1); CLB_writeInterface(base, CLB_ADDR_COUNTER_1_MATCH2, match2); break; case CLB_CTR2: CLB_writeInterface(base, CLB_ADDR_COUNTER_2_LOAD, load); CLB_writeInterface(base, CLB_ADDR_COUNTER_2_MATCH1, match1); CLB_writeInterface(base, CLB_ADDR_COUNTER_2_MATCH2, match2); break; default: // // Invalid counterID value // break; } EDIS; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "clb.c",
+      "peripheral": "clb",
+      "functionName": "CLB_clearFIFOs",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t i;\n\n    ASSERT(CLB_isBaseValid(base));\n\n    for(i = 0U; i < CLB_FIFO_SIZE; i++)\n    {\n        HWREG(base + CLB_DATAEXCH + (uint32_t)CLB_O_PULL(i)) = 0U;\n    }\n\n    HWREG(base + CLB_LOGICCTL + CLB_O_BUF_PTR) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; ASSERT(CLB_isBaseValid(base)); for(i = 0U; i < CLB_FIFO_SIZE; i++) { HWREG(base + CLB_DATAEXCH + (uint32_t)CLB_O_PULL(i)) = 0U; } HWREG(base + CLB_LOGICCTL + CLB_O_BUF_PTR) = 0U; }",
+      "registersUsed": [
+        "BUF_PTR",
+        "PULL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "BUF_PTR",
+        "PULL(i)"
+      ]
+    },
+    {
+      "file": "clb.c",
+      "peripheral": "clb",
+      "functionName": "CLB_writeFIFOs",
+      "functionArgs": [
+        "",
+        "pullData[]"
+      ],
+      "functionArgsTypes": [
+        "uint32_tbase",
+        "constuint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    //\n    // Clear the FIFO and pointer\n    //\n    CLB_clearFIFOs(base);\n\n    //\n    // Write data into the FIFO.\n    //\n    HWREG(base + CLB_DATAEXCH + CLB_O_PULL(0U)) = pullData[0U];\n    HWREG(base + CLB_DATAEXCH + CLB_O_PULL(1U)) = pullData[1U];\n    HWREG(base + CLB_DATAEXCH + CLB_O_PULL(2U)) = pullData[2U];\n    HWREG(base + CLB_DATAEXCH + CLB_O_PULL(3U)) = pullData[3U];\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); // // Clear the FIFO and pointer // CLB_clearFIFOs(base); // // Write data into the FIFO. // HWREG(base + CLB_DATAEXCH + CLB_O_PULL(0U)) = pullData[0U]; HWREG(base + CLB_DATAEXCH + CLB_O_PULL(1U)) = pullData[1U]; HWREG(base + CLB_DATAEXCH + CLB_O_PULL(2U)) = pullData[2U]; HWREG(base + CLB_DATAEXCH + CLB_O_PULL(3U)) = pullData[3U]; }",
+      "registersUsed": [
+        "PULL(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "PULL(i)"
+      ]
+    },
+    {
+      "file": "clb.c",
+      "peripheral": "clb",
+      "functionName": "CLB_readFIFOs",
+      "functionArgs": [
+        "",
+        "pushData[]"
+      ],
+      "functionArgsTypes": [
+        "uint32_tbase",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    //\n    // Read data from the FIFO.\n    //\n    pushData[0U] = HWREG(base + CLB_DATAEXCH + CLB_O_PUSH(0U)) ;\n    pushData[1U] = HWREG(base + CLB_DATAEXCH + CLB_O_PUSH(1U)) ;\n    pushData[2U] = HWREG(base + CLB_DATAEXCH + CLB_O_PUSH(2U)) ;\n    pushData[3U] = HWREG(base + CLB_DATAEXCH + CLB_O_PUSH(3U)) ;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); // // Read data from the FIFO. // pushData[0U] = HWREG(base + CLB_DATAEXCH + CLB_O_PUSH(0U)) ; pushData[1U] = HWREG(base + CLB_DATAEXCH + CLB_O_PUSH(1U)) ; pushData[2U] = HWREG(base + CLB_DATAEXCH + CLB_O_PUSH(2U)) ; pushData[3U] = HWREG(base + CLB_DATAEXCH + CLB_O_PUSH(3U)) ; }",
+      "registersUsed": [
+        "PUSH(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "PUSH(i)"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == CLB1_BASE) ||\n           (base == CLB2_BASE) ||\n           (base == CLB3_BASE) ||\n           (base == CLB4_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == CLB1_BASE) || (base == CLB2_BASE) || (base == CLB3_BASE) || (base == CLB4_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_isAddressValid",
+      "functionArgs": [
+        "address"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return(address <= (CLB_ADDR_HLC_BASE + CLB_NUM_HLC_INSTR));\n}\n",
+      "functionContentWithoutFormatting": "{ return(address <= (CLB_ADDR_HLC_BASE + CLB_NUM_HLC_INSTR)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_enableCLB",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    EALLOW;\n    HWREGH(base + CLB_LOGICCTL + CLB_O_LOAD_EN) |= CLB_LOAD_EN_GLOBAL_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); EALLOW; HWREGH(base + CLB_LOGICCTL + CLB_O_LOAD_EN) |= CLB_LOAD_EN_GLOBAL_EN; EDIS; }",
+      "registersUsed": [
+        "LOAD_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOAD_EN"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_disableCLB",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    EALLOW;\n    HWREGH(base + CLB_LOGICCTL + CLB_O_LOAD_EN) &= ~CLB_LOAD_EN_GLOBAL_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); EALLOW; HWREGH(base + CLB_LOGICCTL + CLB_O_LOAD_EN) &= ~CLB_LOAD_EN_GLOBAL_EN; EDIS; }",
+      "registersUsed": [
+        "LOAD_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOAD_EN"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_enableLock",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    //\n    // Setting the lock bit requires key 0x5A5A to be written at the same time\n    //\n    EALLOW;\n    HWREG(base + CLB_LOGICCTL + CLB_O_LOCK) =\n        (uint32_t)CLB_LOCK_LOCK | ((uint32_t)CLB_LOCK_KEY << CLB_LOCK_KEY_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); // // Setting the lock bit requires key 0x5A5A to be written at the same time // EALLOW; HWREG(base + CLB_LOGICCTL + CLB_O_LOCK) = (uint32_t)CLB_LOCK_LOCK | ((uint32_t)CLB_LOCK_KEY << CLB_LOCK_KEY_S); EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_writeInterface",
+      "functionArgs": [
+        "base",
+        "address",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n    ASSERT(CLB_isAddressValid(address));\n\n    EALLOW;\n    HWREG(base + CLB_LOGICCTL + CLB_O_LOAD_ADDR) = address;\n    HWREG(base + CLB_LOGICCTL + CLB_O_LOAD_DATA) =  value;\n    HWREG(base + CLB_LOGICCTL + CLB_O_LOAD_EN) |= CLB_LOAD_EN_LOAD_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); ASSERT(CLB_isAddressValid(address)); EALLOW; HWREG(base + CLB_LOGICCTL + CLB_O_LOAD_ADDR) = address; HWREG(base + CLB_LOGICCTL + CLB_O_LOAD_DATA) = value; HWREG(base + CLB_LOGICCTL + CLB_O_LOAD_EN) |= CLB_LOAD_EN_LOAD_EN; EDIS; }",
+      "registersUsed": [
+        "LOAD_EN",
+        "LOAD_ADDR",
+        "LOAD_DATA"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOAD_EN",
+        "LOAD_ADDR",
+        "LOAD_DATA"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_selectInputFilter",
+      "functionArgs": [
+        "base",
+        "inID",
+        "filterType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CLB_Inputs",
+        "CLB_FilterType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t shiftVal;\n\n    ASSERT(CLB_isBaseValid(base));\n\n    //\n    // Each input has a 2-bit field in this register so need to calculate\n    // shift amount accordingly.\n    //\n    shiftVal = (uint16_t)inID << 1;\n\n    HWREGH(base + CLB_LOGICCTL + CLB_O_INPUT_FILTER) =\n        (HWREGH(base + CLB_LOGICCTL + CLB_O_INPUT_FILTER) &\n         ~(CLB_INPUT_FILTER_FIN0_M << shiftVal)) |\n        ((uint16_t)filterType << shiftVal);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t shiftVal; ASSERT(CLB_isBaseValid(base)); // // Each input has a 2-bit field in this register so need to calculate // shift amount accordingly. // shiftVal = (uint16_t)inID << 1; HWREGH(base + CLB_LOGICCTL + CLB_O_INPUT_FILTER) = (HWREGH(base + CLB_LOGICCTL + CLB_O_INPUT_FILTER) & ~(CLB_INPUT_FILTER_FIN0_M << shiftVal)) | ((uint16_t)filterType << shiftVal); }",
+      "registersUsed": [
+        "INPUT_FILTER"
+      ],
+      "registersUsedMatchingBifield": [
+        "INPUT_FILTER"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_enableSynchronization",
+      "functionArgs": [
+        "base",
+        "inID"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CLB_Inputs"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    HWREGH(base + CLB_LOGICCTL + CLB_O_INPUT_FILTER + 1U) |=\n                                                    ((uint16_t)1U << (uint16_t)inID);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); HWREGH(base + CLB_LOGICCTL + CLB_O_INPUT_FILTER + 1U) |= ((uint16_t)1U << (uint16_t)inID); }",
+      "registersUsed": [
+        "INPUT_FILTER"
+      ],
+      "registersUsedMatchingBifield": [
+        "INPUT_FILTER"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_disableSynchronization",
+      "functionArgs": [
+        "base",
+        "inID"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CLB_Inputs"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    HWREGH(base + CLB_LOGICCTL + CLB_O_INPUT_FILTER + 1U) &=\n                                                    ~(1U << (uint16_t)inID);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); HWREGH(base + CLB_LOGICCTL + CLB_O_INPUT_FILTER + 1U) &= ~(1U << (uint16_t)inID); }",
+      "registersUsed": [
+        "INPUT_FILTER"
+      ],
+      "registersUsedMatchingBifield": [
+        "INPUT_FILTER"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_configGPInputMux",
+      "functionArgs": [
+        "base",
+        "inID",
+        "gpMuxCfg"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CLB_Inputs",
+        "CLB_GPInputMux"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    HWREGH(base + CLB_LOGICCTL + CLB_O_IN_MUX_SEL_0) =\n        (HWREGH(base + CLB_LOGICCTL + CLB_O_IN_MUX_SEL_0) &\n         ~(CLB_IN_MUX_SEL_0_SEL_GP_IN_0 << (uint16_t)inID)) |\n        ((uint16_t)gpMuxCfg << (uint16_t)inID);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); HWREGH(base + CLB_LOGICCTL + CLB_O_IN_MUX_SEL_0) = (HWREGH(base + CLB_LOGICCTL + CLB_O_IN_MUX_SEL_0) & ~(CLB_IN_MUX_SEL_0_SEL_GP_IN_0 << (uint16_t)inID)) | ((uint16_t)gpMuxCfg << (uint16_t)inID); }",
+      "registersUsed": [
+        "IN_MUX_SEL_0"
+      ],
+      "registersUsedMatchingBifield": [
+        "IN_MUX_SEL_0"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_setGPREG",
+      "functionArgs": [
+        "base",
+        "gpRegVal"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    HWREG(base + CLB_LOGICCTL + CLB_O_GP_REG) = gpRegVal;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); HWREG(base + CLB_LOGICCTL + CLB_O_GP_REG) = gpRegVal; }",
+      "registersUsed": [
+        "GP_REG"
+      ],
+      "registersUsedMatchingBifield": [
+        "GP_REG"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_getGPREG",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    return(HWREG(base + CLB_LOGICCTL + CLB_O_GP_REG));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); return(HWREG(base + CLB_LOGICCTL + CLB_O_GP_REG)); }",
+      "registersUsed": [
+        "GP_REG"
+      ],
+      "registersUsedMatchingBifield": [
+        "GP_REG"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_configLocalInputMux",
+      "functionArgs": [
+        "base",
+        "inID",
+        "localMuxCfg"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CLB_Inputs",
+        "CLB_LocalInputMux"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t shiftVal;\n\n    ASSERT(CLB_isBaseValid(base));\n\n    //\n    // Each local input has a 5-bit field in this register so need to calculate\n    // shift amount accordingly.\n    //\n    shiftVal = (uint16_t)inID * CLB_LCL_MUX_SEL_1_LCL_MUX_SEL_IN_1_S;\n\n    if(inID < CLB_IN4)\n    {\n        HWREG(base + CLB_LOGICCTL + CLB_O_LCL_MUX_SEL_1) =\n            (HWREG(base + CLB_LOGICCTL + CLB_O_LCL_MUX_SEL_1) &\n             ~((uint32_t)CLB_LCL_MUX_SEL_1_LCL_MUX_SEL_IN_0_M << shiftVal)) |\n            ((uint32_t)localMuxCfg << shiftVal);\n    }\n    else\n    {\n        //\n        // Calculating shift amount for inputs > input3\n        //\n        shiftVal -= 4U * CLB_LCL_MUX_SEL_1_LCL_MUX_SEL_IN_1_S;\n        HWREG(base + CLB_LOGICCTL + CLB_O_LCL_MUX_SEL_2) =\n            (HWREG(base + CLB_LOGICCTL + CLB_O_LCL_MUX_SEL_2) &\n             ~((uint32_t)CLB_LCL_MUX_SEL_1_LCL_MUX_SEL_IN_0_M << shiftVal)) |\n            ((uint32_t)localMuxCfg << shiftVal);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t shiftVal; ASSERT(CLB_isBaseValid(base)); // // Each local input has a 5-bit field in this register so need to calculate // shift amount accordingly. // shiftVal = (uint16_t)inID * CLB_LCL_MUX_SEL_1_LCL_MUX_SEL_IN_1_S; if(inID < CLB_IN4) { HWREG(base + CLB_LOGICCTL + CLB_O_LCL_MUX_SEL_1) = (HWREG(base + CLB_LOGICCTL + CLB_O_LCL_MUX_SEL_1) & ~((uint32_t)CLB_LCL_MUX_SEL_1_LCL_MUX_SEL_IN_0_M << shiftVal)) | ((uint32_t)localMuxCfg << shiftVal); } else { // // Calculating shift amount for inputs > input3 // shiftVal -= 4U * CLB_LCL_MUX_SEL_1_LCL_MUX_SEL_IN_1_S; HWREG(base + CLB_LOGICCTL + CLB_O_LCL_MUX_SEL_2) = (HWREG(base + CLB_LOGICCTL + CLB_O_LCL_MUX_SEL_2) & ~((uint32_t)CLB_LCL_MUX_SEL_1_LCL_MUX_SEL_IN_0_M << shiftVal)) | ((uint32_t)localMuxCfg << shiftVal); } }",
+      "registersUsed": [
+        "LCL_MUX_SEL_1",
+        "LCL_MUX_SEL_2"
+      ],
+      "registersUsedMatchingBifield": [
+        "LCL_MUX_SEL_1",
+        "LCL_MUX_SEL_2"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_configGlobalInputMux",
+      "functionArgs": [
+        "base",
+        "inID",
+        "globalMuxCfg"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CLB_Inputs",
+        "CLB_GlobalInputMux"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t shiftVal;\n\n    ASSERT(CLB_isBaseValid(base));\n\n    //\n    // Each input has a 5-bit field in this register so need to calculate\n    // shift amount accordingly.\n    //\n    shiftVal = (uint16_t)inID * CLB_GLBL_MUX_SEL_1_GLBL_MUX_SEL_IN_1_S;\n\n    if(inID < CLB_IN4)\n    {\n        HWREG(base + CLB_LOGICCTL + CLB_O_GLBL_MUX_SEL_1) =\n            (HWREG(base + CLB_LOGICCTL + CLB_O_GLBL_MUX_SEL_1) &\n             ~((uint32_t)CLB_GLBL_MUX_SEL_1_GLBL_MUX_SEL_IN_0_M << shiftVal)) |\n            ((uint32_t)globalMuxCfg << shiftVal);\n    }\n    else\n    {\n        shiftVal -= 4U * CLB_GLBL_MUX_SEL_1_GLBL_MUX_SEL_IN_1_S;\n        HWREG(base + CLB_LOGICCTL + CLB_O_GLBL_MUX_SEL_2) =\n            (HWREG(base + CLB_LOGICCTL + CLB_O_GLBL_MUX_SEL_2) &\n             ~((uint32_t)CLB_GLBL_MUX_SEL_1_GLBL_MUX_SEL_IN_0_M << shiftVal)) |\n            ((uint32_t)globalMuxCfg << shiftVal);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t shiftVal; ASSERT(CLB_isBaseValid(base)); // // Each input has a 5-bit field in this register so need to calculate // shift amount accordingly. // shiftVal = (uint16_t)inID * CLB_GLBL_MUX_SEL_1_GLBL_MUX_SEL_IN_1_S; if(inID < CLB_IN4) { HWREG(base + CLB_LOGICCTL + CLB_O_GLBL_MUX_SEL_1) = (HWREG(base + CLB_LOGICCTL + CLB_O_GLBL_MUX_SEL_1) & ~((uint32_t)CLB_GLBL_MUX_SEL_1_GLBL_MUX_SEL_IN_0_M << shiftVal)) | ((uint32_t)globalMuxCfg << shiftVal); } else { shiftVal -= 4U * CLB_GLBL_MUX_SEL_1_GLBL_MUX_SEL_IN_1_S; HWREG(base + CLB_LOGICCTL + CLB_O_GLBL_MUX_SEL_2) = (HWREG(base + CLB_LOGICCTL + CLB_O_GLBL_MUX_SEL_2) & ~((uint32_t)CLB_GLBL_MUX_SEL_1_GLBL_MUX_SEL_IN_0_M << shiftVal)) | ((uint32_t)globalMuxCfg << shiftVal); } }",
+      "registersUsed": [
+        "GLBL_MUX_SEL_1",
+        "GLBL_MUX_SEL_2"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLBL_MUX_SEL_1",
+        "GLBL_MUX_SEL_2"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_setOutputMask",
+      "functionArgs": [
+        "base",
+        "",
+        "enable"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_toutputMask",
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    if(enable == (bool)true)\n     {\n        HWREG(base + CLB_LOGICCTL + CLB_O_OUT_EN) |= outputMask;\n     }\n    else\n     {\n        HWREG(base + CLB_LOGICCTL + CLB_O_OUT_EN) &= ~outputMask;\n     }\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); if(enable == (bool)true) { HWREG(base + CLB_LOGICCTL + CLB_O_OUT_EN) |= outputMask; } else { HWREG(base + CLB_LOGICCTL + CLB_O_OUT_EN) &= ~outputMask; } }",
+      "registersUsed": [
+        "OUT_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUT_EN"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_getInterruptTag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    return(HWREGH(base + CLB_LOGICCTL + CLB_O_INTR_TAG_REG));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); return(HWREGH(base + CLB_LOGICCTL + CLB_O_INTR_TAG_REG)); }",
+      "registersUsed": [
+        "INTR_TAG_REG"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTR_TAG_REG"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_clearInterruptTag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    HWREGH(base + CLB_LOGICCTL + CLB_O_INTR_TAG_REG) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); HWREGH(base + CLB_LOGICCTL + CLB_O_INTR_TAG_REG) = 0U; }",
+      "registersUsed": [
+        "INTR_TAG_REG"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTR_TAG_REG"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_selectLUT4Inputs",
+      "functionArgs": [
+        "base",
+        "lut4In0",
+        "lut4In1",
+        "lut4In2",
+        "lut4In3"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + CLB_O_LUT4_IN0) = lut4In0;\n    HWREG(base + CLB_O_LUT4_IN1) = lut4In1;\n    HWREG(base + CLB_O_LUT4_IN2) = lut4In2;\n    HWREG(base + CLB_O_LUT4_IN3) = lut4In3;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); EALLOW; HWREG(base + CLB_O_LUT4_IN0) = lut4In0; HWREG(base + CLB_O_LUT4_IN1) = lut4In1; HWREG(base + CLB_O_LUT4_IN2) = lut4In2; HWREG(base + CLB_O_LUT4_IN3) = lut4In3; EDIS; }",
+      "registersUsed": [
+        "LUT4_IN0",
+        "LUT4_IN1",
+        "LUT4_IN2",
+        "LUT4_IN3"
+      ],
+      "registersUsedMatchingBifield": [
+        "LUT4_IN0",
+        "LUT4_IN1",
+        "LUT4_IN2",
+        "LUT4_IN3"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_configLUT4Function",
+      "functionArgs": [
+        "base",
+        "lut4Fn10",
+        "lut4Fn2"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + CLB_O_LUT4_FN1_0) = lut4Fn10;\n    HWREG(base + CLB_O_LUT4_FN2) = lut4Fn2;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); EALLOW; HWREG(base + CLB_O_LUT4_FN1_0) = lut4Fn10; HWREG(base + CLB_O_LUT4_FN2) = lut4Fn2; EDIS; }",
+      "registersUsed": [
+        "LUT4_FN1_0",
+        "LUT4_FN2"
+      ],
+      "registersUsedMatchingBifield": [
+        "LUT4_FN1_0",
+        "LUT4_FN2"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_selectFSMInputs",
+      "functionArgs": [
+        "base",
+        "external0",
+        "external1",
+        "extra0",
+        "extra1"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + CLB_O_FSM_EXTERNAL_IN0) = external0;\n    HWREG(base + CLB_O_FSM_EXTERNAL_IN1) = external1;\n    HWREG(base + CLB_O_FSM_EXTRA_IN0) = extra0;\n    HWREG(base + CLB_O_FSM_EXTRA_IN1) = extra1;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); EALLOW; HWREG(base + CLB_O_FSM_EXTERNAL_IN0) = external0; HWREG(base + CLB_O_FSM_EXTERNAL_IN1) = external1; HWREG(base + CLB_O_FSM_EXTRA_IN0) = extra0; HWREG(base + CLB_O_FSM_EXTRA_IN1) = extra1; EDIS; }",
+      "registersUsed": [
+        "FSM_EXTRA_IN0",
+        "FSM_EXTERNAL_IN0",
+        "FSM_EXTERNAL_IN1",
+        "FSM_EXTRA_IN1"
+      ],
+      "registersUsedMatchingBifield": [
+        "FSM_EXTRA_IN0",
+        "FSM_EXTERNAL_IN0",
+        "FSM_EXTERNAL_IN1",
+        "FSM_EXTRA_IN1"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_configFSMLUTFunction",
+      "functionArgs": [
+        "base",
+        "fsmLutFn10",
+        "fsmLutFn2"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + CLB_O_FSM_LUT_FN1_0) = fsmLutFn10;\n    HWREG(base + CLB_O_FSM_LUT_FN2) = fsmLutFn2;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); EALLOW; HWREG(base + CLB_O_FSM_LUT_FN1_0) = fsmLutFn10; HWREG(base + CLB_O_FSM_LUT_FN2) = fsmLutFn2; EDIS; }",
+      "registersUsed": [
+        "FSM_LUT_FN1_0",
+        "FSM_LUT_FN2"
+      ],
+      "registersUsedMatchingBifield": [
+        "FSM_LUT_FN1_0",
+        "FSM_LUT_FN2"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_configFSMNextState",
+      "functionArgs": [
+        "base",
+        "nextState0",
+        "nextState1",
+        "nextState2"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + CLB_O_FSM_NEXT_STATE_0) = nextState0;\n    HWREG(base + CLB_O_FSM_NEXT_STATE_1) = nextState1;\n    HWREG(base + CLB_O_FSM_NEXT_STATE_2) = nextState2;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); EALLOW; HWREG(base + CLB_O_FSM_NEXT_STATE_0) = nextState0; HWREG(base + CLB_O_FSM_NEXT_STATE_1) = nextState1; HWREG(base + CLB_O_FSM_NEXT_STATE_2) = nextState2; EDIS; }",
+      "registersUsed": [
+        "FSM_NEXT_STATE_0",
+        "FSM_NEXT_STATE_1",
+        "FSM_NEXT_STATE_2"
+      ],
+      "registersUsedMatchingBifield": [
+        "FSM_NEXT_STATE_0",
+        "FSM_NEXT_STATE_1",
+        "FSM_NEXT_STATE_2"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_selectCounterInputs",
+      "functionArgs": [
+        "base",
+        "reset",
+        "event",
+        "mode0",
+        "mode1"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + CLB_O_COUNT_RESET) = reset;\n    HWREG(base + CLB_O_COUNT_EVENT) = event;\n    HWREG(base + CLB_O_COUNT_MODE_0) = mode0;\n    HWREG(base + CLB_O_COUNT_MODE_1) = mode1;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); EALLOW; HWREG(base + CLB_O_COUNT_RESET) = reset; HWREG(base + CLB_O_COUNT_EVENT) = event; HWREG(base + CLB_O_COUNT_MODE_0) = mode0; HWREG(base + CLB_O_COUNT_MODE_1) = mode1; EDIS; }",
+      "registersUsed": [
+        "COUNT_RESET",
+        "COUNT_MODE_1",
+        "COUNT_MODE_0",
+        "COUNT_EVENT"
+      ],
+      "registersUsedMatchingBifield": [
+        "COUNT_RESET",
+        "COUNT_MODE_1",
+        "COUNT_MODE_0",
+        "COUNT_EVENT"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_configMiscCtrlModes",
+      "functionArgs": [
+        "base",
+        "miscCtrl"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + CLB_O_MISC_CONTROL) = miscCtrl;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); EALLOW; HWREG(base + CLB_O_MISC_CONTROL) = miscCtrl; EDIS; }",
+      "registersUsed": [
+        "MISC_CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "MISC_CONTROL"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_configOutputLUT",
+      "functionArgs": [
+        "base",
+        "outID",
+        "outputCfg"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CLB_Outputs",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + CLB_O_OUTPUT_LUT_0 + ((uint32_t)sizeof(uint32_t) * (uint32_t)outID)) = outputCfg;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); EALLOW; HWREG(base + CLB_O_OUTPUT_LUT_0 + ((uint32_t)sizeof(uint32_t) * (uint32_t)outID)) = outputCfg; EDIS; }",
+      "registersUsed": [
+        "OUTPUT_LUT_0",
+        "OUTPUT_LUT_1",
+        "OUTPUT_LUT_2",
+        "OUTPUT_LUT_3",
+        "OUTPUT_LUT_4",
+        "OUTPUT_LUT_5",
+        "OUTPUT_LUT_6",
+        "OUTPUT_LUT_7"
+      ],
+      "registersUsedMatchingBifield": [
+        "OUTPUT_LUT_0",
+        "OUTPUT_LUT_1",
+        "OUTPUT_LUT_2",
+        "OUTPUT_LUT_3",
+        "OUTPUT_LUT_4",
+        "OUTPUT_LUT_5",
+        "OUTPUT_LUT_6",
+        "OUTPUT_LUT_7"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_configHLCEventSelect",
+      "functionArgs": [
+        "base",
+        "eventSel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + CLB_O_HLC_EVENT_SEL) = eventSel;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); EALLOW; HWREG(base + CLB_O_HLC_EVENT_SEL) = eventSel; EDIS; }",
+      "registersUsed": [
+        "HLC_EVENT_SEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HLC_EVENT_SEL"
+      ]
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_programHLCInstruction",
+      "functionArgs": [
+        "base",
+        "instructionNum",
+        "instruction"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n    ASSERT(instructionNum < 32U);\n\n    CLB_writeInterface(base, CLB_ADDR_HLC_BASE + instructionNum, instruction);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); ASSERT(instructionNum < 32U); CLB_writeInterface(base, CLB_ADDR_HLC_BASE + instructionNum, instruction); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_setHLCRegisters",
+      "functionArgs": [
+        "base",
+        "r0Init",
+        "r1Init",
+        "r2Init",
+        "r3Init"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    CLB_writeInterface(base, CLB_ADDR_HLC_R0, r0Init);\n    CLB_writeInterface(base, CLB_ADDR_HLC_R1, r1Init);\n    CLB_writeInterface(base, CLB_ADDR_HLC_R2, r2Init);\n    CLB_writeInterface(base, CLB_ADDR_HLC_R3, r3Init);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); CLB_writeInterface(base, CLB_ADDR_HLC_R0, r0Init); CLB_writeInterface(base, CLB_ADDR_HLC_R1, r1Init); CLB_writeInterface(base, CLB_ADDR_HLC_R2, r2Init); CLB_writeInterface(base, CLB_ADDR_HLC_R3, r3Init); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_getRegister",
+      "functionArgs": [
+        "base",
+        "registerID"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "CLB_Register"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    return(HWREG(base + CLB_LOGICCTL + (uint32_t)registerID));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); return(HWREG(base + CLB_LOGICCTL + (uint32_t)registerID)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "clb.h",
+      "peripheral": "clb",
+      "functionName": "CLB_getOutputStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    ASSERT(CLB_isBaseValid(base));\n\n    return(HWREG(base + CLB_LOGICCTL + CLB_O_DBG_OUT));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(CLB_isBaseValid(base)); return(HWREG(base + CLB_LOGICCTL + CLB_O_DBG_OUT)); }",
+      "registersUsed": [
+        "DBG_OUT"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBG_OUT"
+      ]
+    }
+  ]
+}

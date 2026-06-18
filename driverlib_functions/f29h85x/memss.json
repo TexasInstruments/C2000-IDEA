@@ -1,0 +1,191 @@
+{
+  "name": "memss",
+  "functions": [
+    {
+      "file": "memss.c",
+      "peripheral": "memss",
+      "functionName": "Memss_lockAllRegisters",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    Memss_lockConfig(MEMSS_RAM_LPA0);\n    Memss_lockConfig(MEMSS_RAM_LPA1);\n    Memss_lockConfig(MEMSS_RAM_LDA0);\n    Memss_lockConfig(MEMSS_RAM_LDA1);\n    Memss_lockConfig(MEMSS_RAM_LDA2);\n    Memss_lockConfig(MEMSS_RAM_LDA3);\n    Memss_lockConfig(MEMSS_RAM_LDA4);\n    Memss_lockConfig(MEMSS_RAM_LDA5);\n    Memss_lockConfig(MEMSS_RAM_LDA6);\n    Memss_lockConfig(MEMSS_RAM_LDA7);\n    Memss_lockConfig(MEMSS_RAM_CPA0);\n    Memss_lockConfig(MEMSS_RAM_CPA1);\n    Memss_lockConfig(MEMSS_RAM_CDA0);\n    Memss_lockConfig(MEMSS_RAM_CDA1);\n    Memss_lockConfig(MEMSS_RAM_CDA2);\n    Memss_lockConfig(MEMSS_RAM_CDA3);\n    Memss_lockConfig(MEMSS_RAM_CDA4);\n    Memss_lockConfig(MEMSS_RAM_CDA5);\n    Memss_lockConfig(MEMSS_RAM_CDA6);\n    Memss_lockConfig(MEMSS_RAM_CDA7);\n    Memss_lockConfig(MEMSS_RAM_CDA8);\n    Memss_lockConfig(MEMSS_RAM_CDA9);\n    Memss_lockConfig(MEMSS_RAM_CDA10);\n    Memss_lockConfig(MEMSS_RAM_CDA11);\n    Memss_lockConfig(MEMSS_RAM_M0);\n}\n",
+      "functionContentWithoutFormatting": "{ Memss_lockConfig(MEMSS_RAM_LPA0); Memss_lockConfig(MEMSS_RAM_LPA1); Memss_lockConfig(MEMSS_RAM_LDA0); Memss_lockConfig(MEMSS_RAM_LDA1); Memss_lockConfig(MEMSS_RAM_LDA2); Memss_lockConfig(MEMSS_RAM_LDA3); Memss_lockConfig(MEMSS_RAM_LDA4); Memss_lockConfig(MEMSS_RAM_LDA5); Memss_lockConfig(MEMSS_RAM_LDA6); Memss_lockConfig(MEMSS_RAM_LDA7); Memss_lockConfig(MEMSS_RAM_CPA0); Memss_lockConfig(MEMSS_RAM_CPA1); Memss_lockConfig(MEMSS_RAM_CDA0); Memss_lockConfig(MEMSS_RAM_CDA1); Memss_lockConfig(MEMSS_RAM_CDA2); Memss_lockConfig(MEMSS_RAM_CDA3); Memss_lockConfig(MEMSS_RAM_CDA4); Memss_lockConfig(MEMSS_RAM_CDA5); Memss_lockConfig(MEMSS_RAM_CDA6); Memss_lockConfig(MEMSS_RAM_CDA7); Memss_lockConfig(MEMSS_RAM_CDA8); Memss_lockConfig(MEMSS_RAM_CDA9); Memss_lockConfig(MEMSS_RAM_CDA10); Memss_lockConfig(MEMSS_RAM_CDA11); Memss_lockConfig(MEMSS_RAM_M0); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "memss.c",
+      "peripheral": "memss",
+      "functionName": "Memss_unlockAllRegisters",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    Memss_unlockConfig(MEMSS_RAM_LPA0);\n    Memss_unlockConfig(MEMSS_RAM_LPA1);\n    Memss_unlockConfig(MEMSS_RAM_LDA0);\n    Memss_unlockConfig(MEMSS_RAM_LDA1);\n    Memss_unlockConfig(MEMSS_RAM_LDA2);\n    Memss_unlockConfig(MEMSS_RAM_LDA3);\n    Memss_unlockConfig(MEMSS_RAM_LDA4);\n    Memss_unlockConfig(MEMSS_RAM_LDA5);\n    Memss_unlockConfig(MEMSS_RAM_LDA6);\n    Memss_unlockConfig(MEMSS_RAM_LDA7);\n    Memss_unlockConfig(MEMSS_RAM_CPA0);\n    Memss_unlockConfig(MEMSS_RAM_CPA1);\n    Memss_unlockConfig(MEMSS_RAM_CDA0);\n    Memss_unlockConfig(MEMSS_RAM_CDA1);\n    Memss_unlockConfig(MEMSS_RAM_CDA2);\n    Memss_unlockConfig(MEMSS_RAM_CDA3);\n    Memss_unlockConfig(MEMSS_RAM_CDA4);\n    Memss_unlockConfig(MEMSS_RAM_CDA5);\n    Memss_unlockConfig(MEMSS_RAM_CDA6);\n    Memss_unlockConfig(MEMSS_RAM_CDA7);\n    Memss_unlockConfig(MEMSS_RAM_CDA8);\n    Memss_unlockConfig(MEMSS_RAM_CDA9);\n    Memss_unlockConfig(MEMSS_RAM_CDA10);\n    Memss_unlockConfig(MEMSS_RAM_CDA11);\n    Memss_unlockConfig(MEMSS_RAM_M0);\n}\n",
+      "functionContentWithoutFormatting": "{ Memss_unlockConfig(MEMSS_RAM_LPA0); Memss_unlockConfig(MEMSS_RAM_LPA1); Memss_unlockConfig(MEMSS_RAM_LDA0); Memss_unlockConfig(MEMSS_RAM_LDA1); Memss_unlockConfig(MEMSS_RAM_LDA2); Memss_unlockConfig(MEMSS_RAM_LDA3); Memss_unlockConfig(MEMSS_RAM_LDA4); Memss_unlockConfig(MEMSS_RAM_LDA5); Memss_unlockConfig(MEMSS_RAM_LDA6); Memss_unlockConfig(MEMSS_RAM_LDA7); Memss_unlockConfig(MEMSS_RAM_CPA0); Memss_unlockConfig(MEMSS_RAM_CPA1); Memss_unlockConfig(MEMSS_RAM_CDA0); Memss_unlockConfig(MEMSS_RAM_CDA1); Memss_unlockConfig(MEMSS_RAM_CDA2); Memss_unlockConfig(MEMSS_RAM_CDA3); Memss_unlockConfig(MEMSS_RAM_CDA4); Memss_unlockConfig(MEMSS_RAM_CDA5); Memss_unlockConfig(MEMSS_RAM_CDA6); Memss_unlockConfig(MEMSS_RAM_CDA7); Memss_unlockConfig(MEMSS_RAM_CDA8); Memss_unlockConfig(MEMSS_RAM_CDA9); Memss_unlockConfig(MEMSS_RAM_CDA10); Memss_unlockConfig(MEMSS_RAM_CDA11); Memss_unlockConfig(MEMSS_RAM_M0); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "memss.c",
+      "peripheral": "memss",
+      "functionName": "Memss_commitAllRegisters",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    Memss_commitConfig(MEMSS_RAM_LPA0);\n    Memss_commitConfig(MEMSS_RAM_LPA1);\n    Memss_commitConfig(MEMSS_RAM_LDA0);\n    Memss_commitConfig(MEMSS_RAM_LDA1);\n    Memss_commitConfig(MEMSS_RAM_LDA2);\n    Memss_commitConfig(MEMSS_RAM_LDA3);\n    Memss_commitConfig(MEMSS_RAM_LDA4);\n    Memss_commitConfig(MEMSS_RAM_LDA5);\n    Memss_commitConfig(MEMSS_RAM_LDA6);\n    Memss_commitConfig(MEMSS_RAM_LDA7);\n    Memss_commitConfig(MEMSS_RAM_CPA0);\n    Memss_commitConfig(MEMSS_RAM_CPA1);\n    Memss_commitConfig(MEMSS_RAM_CDA0);\n    Memss_commitConfig(MEMSS_RAM_CDA1);\n    Memss_commitConfig(MEMSS_RAM_CDA2);\n    Memss_commitConfig(MEMSS_RAM_CDA3);\n    Memss_commitConfig(MEMSS_RAM_CDA4);\n    Memss_commitConfig(MEMSS_RAM_CDA5);\n    Memss_commitConfig(MEMSS_RAM_CDA6);\n    Memss_commitConfig(MEMSS_RAM_CDA7);\n    Memss_commitConfig(MEMSS_RAM_CDA8);\n    Memss_commitConfig(MEMSS_RAM_CDA9);\n    Memss_commitConfig(MEMSS_RAM_CDA10);\n    Memss_commitConfig(MEMSS_RAM_CDA11);\n    Memss_commitConfig(MEMSS_RAM_M0);\n}\n",
+      "functionContentWithoutFormatting": "{ Memss_commitConfig(MEMSS_RAM_LPA0); Memss_commitConfig(MEMSS_RAM_LPA1); Memss_commitConfig(MEMSS_RAM_LDA0); Memss_commitConfig(MEMSS_RAM_LDA1); Memss_commitConfig(MEMSS_RAM_LDA2); Memss_commitConfig(MEMSS_RAM_LDA3); Memss_commitConfig(MEMSS_RAM_LDA4); Memss_commitConfig(MEMSS_RAM_LDA5); Memss_commitConfig(MEMSS_RAM_LDA6); Memss_commitConfig(MEMSS_RAM_LDA7); Memss_commitConfig(MEMSS_RAM_CPA0); Memss_commitConfig(MEMSS_RAM_CPA1); Memss_commitConfig(MEMSS_RAM_CDA0); Memss_commitConfig(MEMSS_RAM_CDA1); Memss_commitConfig(MEMSS_RAM_CDA2); Memss_commitConfig(MEMSS_RAM_CDA3); Memss_commitConfig(MEMSS_RAM_CDA4); Memss_commitConfig(MEMSS_RAM_CDA5); Memss_commitConfig(MEMSS_RAM_CDA6); Memss_commitConfig(MEMSS_RAM_CDA7); Memss_commitConfig(MEMSS_RAM_CDA8); Memss_commitConfig(MEMSS_RAM_CDA9); Memss_commitConfig(MEMSS_RAM_CDA10); Memss_commitConfig(MEMSS_RAM_CDA11); Memss_commitConfig(MEMSS_RAM_M0); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "memss.h",
+      "peripheral": "memss",
+      "functionName": "Memss_initMemory",
+      "functionArgs": [
+        "ram"
+      ],
+      "functionArgsTypes": [
+        "Memss_RAM"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.Memss_initMemory\"))) static inline void",
+      "functionContent": "{\n    HWREG((uint32_t)ram) |= MEMSS_INIT;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG((uint32_t)ram) |= MEMSS_INIT; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "memss.h",
+      "peripheral": "memss",
+      "functionName": "Memss_getInitStatus",
+      "functionArgs": [
+        "ram"
+      ],
+      "functionArgsTypes": [
+        "Memss_RAM"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return((HWREG((uint32_t)ram) & MEMSS_INIT_STS) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ return((HWREG((uint32_t)ram) & MEMSS_INIT_STS) != 0U); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "memss.h",
+      "peripheral": "memss",
+      "functionName": "Memss_setRAMTestMode",
+      "functionArgs": [
+        "ram",
+        "testMode"
+      ],
+      "functionArgsTypes": [
+        "Memss_RAM",
+        "Memss_RAMTestMode"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.Memss_setRAMTestMode\"))) static inline void",
+      "functionContent": "{\n    HWREG((uint32_t)ram) =\n                 (HWREG((uint32_t)ram) & ~(uint32_t)MEMSS_TESTMODE_M) |\n                 ((uint32_t)testMode << MEMSS_TESTMODE_S);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG((uint32_t)ram) = (HWREG((uint32_t)ram) & ~(uint32_t)MEMSS_TESTMODE_M) | ((uint32_t)testMode << MEMSS_TESTMODE_S); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "memss.h",
+      "peripheral": "memss",
+      "functionName": "Memss_lockConfig",
+      "functionArgs": [
+        "mem"
+      ],
+      "functionArgsTypes": [
+        "Memss_RAM"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.Memss_lockConfig\"))) static inline void",
+      "functionContent": "{\n    HWREG((uint32_t)mem + 4U) = 1U;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG((uint32_t)mem + 4U) = 1U; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "memss.h",
+      "peripheral": "memss",
+      "functionName": "Memss_unlockConfig",
+      "functionArgs": [
+        "mem"
+      ],
+      "functionArgsTypes": [
+        "Memss_RAM"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.Memss_unlockConfig\"))) static inline void",
+      "functionContent": "{\n    HWREG((uint32_t)mem + 4U) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG((uint32_t)mem + 4U) = 0U; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "memss.h",
+      "peripheral": "memss",
+      "functionName": "Memss_commitConfig",
+      "functionArgs": [
+        "mem"
+      ],
+      "functionArgsTypes": [
+        "Memss_RAM"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.Memss_commitConfig\"))) static inline void",
+      "functionContent": "{\n    HWREG((uint32_t)mem + 8U) = 1U;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG((uint32_t)mem + 8U) = 1U; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "memss.h",
+      "peripheral": "memss",
+      "functionName": "Memss_enableDlb",
+      "functionArgs": [
+        "cpuId"
+      ],
+      "functionArgsTypes": [
+        "Memss_CpuId"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.Memss_enableDlb\"))) static inline void",
+      "functionContent": "{\n    HWREG(MEMSSMISCI_BASE + MEMSS_O_MEM_DLB_CONFIG) |= \\\n                            ((uint32_t)1U << (uint32_t)cpuId);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(MEMSSMISCI_BASE + MEMSS_O_MEM_DLB_CONFIG) |= \\ ((uint32_t)1U << (uint32_t)cpuId); }",
+      "registersUsed": [
+        "MEM_DLB_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "MEM_DLB_CONFIG"
+      ]
+    },
+    {
+      "file": "memss.h",
+      "peripheral": "memss",
+      "functionName": "Memss_disableDlb",
+      "functionArgs": [
+        "cpuId"
+      ],
+      "functionArgsTypes": [
+        "Memss_CpuId"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.Memss_disableDlb\"))) static inline void",
+      "functionContent": "{\n    HWREG(MEMSSMISCI_BASE + MEMSS_O_MEM_DLB_CONFIG) &= \\\n                            ~(((uint32_t)1U << (uint32_t)cpuId));\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(MEMSSMISCI_BASE + MEMSS_O_MEM_DLB_CONFIG) &= \\ ~(((uint32_t)1U << (uint32_t)cpuId)); }",
+      "registersUsed": [
+        "MEM_DLB_CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "MEM_DLB_CONFIG"
+      ]
+    }
+  ]
+}

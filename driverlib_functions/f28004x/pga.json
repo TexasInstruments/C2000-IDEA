@@ -1,0 +1,167 @@
+{
+  "name": "pga",
+  "functions": [
+    {
+      "file": "pga.h",
+      "peripheral": "pga",
+      "functionName": "PGA_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == PGA1_BASE) ||\n           (base == PGA2_BASE) ||\n           (base == PGA3_BASE) ||\n           (base == PGA4_BASE) ||\n           (base == PGA5_BASE) ||\n           (base == PGA6_BASE) ||\n           (base == PGA7_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == PGA1_BASE) || (base == PGA2_BASE) || (base == PGA3_BASE) || (base == PGA4_BASE) || (base == PGA5_BASE) || (base == PGA6_BASE) || (base == PGA7_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "pga.h",
+      "peripheral": "pga",
+      "functionName": "PGA_enable",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n   ASSERT(PGA_isBaseValid(base));\n\n   //\n   // Set PGAEN bit\n   //\n   EALLOW;\n   HWREG(base + PGA_O_CTL) |= (uint32_t)PGA_CTL_PGAEN;\n   EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(PGA_isBaseValid(base)); // // Set PGAEN bit // EALLOW; HWREG(base + PGA_O_CTL) |= (uint32_t)PGA_CTL_PGAEN; EDIS; }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PGACTL"
+      ]
+    },
+    {
+      "file": "pga.h",
+      "peripheral": "pga",
+      "functionName": "PGA_disable",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n   ASSERT(PGA_isBaseValid(base));\n\n   //\n   // Clear PGAEN bit\n   //\n   EALLOW;\n   HWREG(base + PGA_O_CTL) &= ~((uint32_t)PGA_CTL_PGAEN);\n   EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(PGA_isBaseValid(base)); // // Clear PGAEN bit // EALLOW; HWREG(base + PGA_O_CTL) &= ~((uint32_t)PGA_CTL_PGAEN); EDIS; }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PGACTL"
+      ]
+    },
+    {
+      "file": "pga.h",
+      "peripheral": "pga",
+      "functionName": "PGA_setGain",
+      "functionArgs": [
+        "base",
+        "gainValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "PGA_GainValue"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(PGA_isBaseValid(base));\n\n    //\n    // Write to the GAIN bits\n    //\n    EALLOW;\n    HWREG(base + PGA_O_CTL) = ((HWREG(base + PGA_O_CTL) &\n                                ~((uint32_t)PGA_CTL_GAIN_M)) |\n                               (uint16_t)gainValue);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(PGA_isBaseValid(base)); // // Write to the GAIN bits // EALLOW; HWREG(base + PGA_O_CTL) = ((HWREG(base + PGA_O_CTL) & ~((uint32_t)PGA_CTL_GAIN_M)) | (uint16_t)gainValue); EDIS; }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PGACTL"
+      ]
+    },
+    {
+      "file": "pga.h",
+      "peripheral": "pga",
+      "functionName": "PGA_setFilterResistor",
+      "functionArgs": [
+        "base",
+        "resistorValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "PGA_LowPassResistorValue"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(PGA_isBaseValid(base));\n\n    //\n    // Write to the FILTRESSEL bits\n    //\n    EALLOW;\n    HWREG(base + PGA_O_CTL) =\n                          ((HWREG(base + PGA_O_CTL) &\n                            ~((uint32_t)PGA_CTL_FILTRESSEL_M)) |\n                           (uint16_t)resistorValue);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(PGA_isBaseValid(base)); // // Write to the FILTRESSEL bits // EALLOW; HWREG(base + PGA_O_CTL) = ((HWREG(base + PGA_O_CTL) & ~((uint32_t)PGA_CTL_FILTRESSEL_M)) | (uint16_t)resistorValue); EDIS; }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PGACTL"
+      ]
+    },
+    {
+      "file": "pga.h",
+      "peripheral": "pga",
+      "functionName": "PGA_getPGARevision",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n\n    ASSERT(PGA_isBaseValid(base));\n\n    //\n    // return PGA revision number\n    //\n    return((uint16_t)(HWREGH(base + PGA_O_TYPE) & PGA_TYPE_REV_M));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(PGA_isBaseValid(base)); // // return PGA revision number // return((uint16_t)(HWREGH(base + PGA_O_TYPE) & PGA_TYPE_REV_M)); }",
+      "registersUsed": [
+        "TYPE"
+      ],
+      "registersUsedMatchingBifield": [
+        "PGATYPE"
+      ]
+    },
+    {
+      "file": "pga.h",
+      "peripheral": "pga",
+      "functionName": "PGA_getPGAType",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n\n    ASSERT(PGA_isBaseValid(base));\n\n    //\n    // return PGA Type number\n    //\n    return((uint16_t)(HWREGH(base + PGA_O_TYPE) >> PGA_TYPE_TYPE_S));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(PGA_isBaseValid(base)); // // return PGA Type number // return((uint16_t)(HWREGH(base + PGA_O_TYPE) >> PGA_TYPE_TYPE_S)); }",
+      "registersUsed": [
+        "TYPE"
+      ],
+      "registersUsedMatchingBifield": [
+        "PGATYPE"
+      ]
+    },
+    {
+      "file": "pga.h",
+      "peripheral": "pga",
+      "functionName": "PGA_lockRegisters",
+      "functionArgs": [
+        "base",
+        "registerType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    ASSERT(PGA_isBaseValid(base));\n    ASSERT((registerType < 0x3DU) &&\n           ((registerType & 0x2U) == 0U));\n\n    //\n    // Write to the appropriate bits of PGALOCK register bits\n    //\n    EALLOW;\n    HWREGH(base + PGA_O_LOCK) |= registerType;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(PGA_isBaseValid(base)); ASSERT((registerType < 0x3DU) && ((registerType & 0x2U) == 0U)); // // Write to the appropriate bits of PGALOCK register bits // EALLOW; HWREGH(base + PGA_O_LOCK) |= registerType; EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "PGALOCK"
+      ]
+    }
+  ]
+}

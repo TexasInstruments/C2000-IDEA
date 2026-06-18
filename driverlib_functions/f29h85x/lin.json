@@ -1,0 +1,2131 @@
+{
+  "name": "lin",
+  "functions": [
+    {
+      "file": "lin.c",
+      "peripheral": "lin",
+      "functionName": "LIN_initModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Reset LIN module\n    // Release from hard reset\n    //\n    LIN_disableModule(base);\n    LIN_enableModule(base);\n\n    //\n    // Enter Software Reset State\n    //\n    LIN_enterSoftwareReset(base);\n\n    //\n    // Enable LIN Mode\n    //\n    LIN_disableSCIMode(base);\n\n    //\n    // Set LIN mode to Commander\n    //\n    LIN_setLINMode(base, LIN_MODE_LIN_COMMANDER);\n\n    //\n    // Enable Fixed baud rate mode\n    //\n    LIN_disableAutomaticBaudrate(base);\n\n    //\n    // Use the set frame length and not ID4/ID5 bits for length control\n    //\n    LIN_setCommMode(base, LIN_COMM_LIN_USELENGTHVAL);\n\n    //\n    // Setup to continue operating on emulation suspend\n    //\n    LIN_setDebugSuspendMode(base, LIN_DEBUG_COMPLETE);\n\n    //\n    // Use Enhanced Checksum\n    //\n    LIN_setChecksumType(base, LIN_CHECKSUM_ENHANCED);\n\n    //\n    // Message filtering uses responder task ID byte\n    //\n    LIN_setMessageFiltering(base, LIN_MSG_FILTER_IDRESPONDER);\n\n    //\n    // Disable Internal loopback for external communication\n    //\n    LIN_disableIntLoopback(base);\n\n    //\n    // Enable multi-buffer mode\n    //\n    LIN_enableMultibufferMode(base);\n\n    //\n    // Enable parity check on received ID\n    //\n    LIN_enableParity(base);\n\n    //\n    // Enable transfer of data to and from the shift registers\n    //\n    LIN_enableDataTransmitter(base);\n    LIN_enableDataReceiver(base);\n\n    //\n    // Enable the triggering of checksum compare on extended frames\n    //\n    LIN_triggerChecksumCompare(base);\n\n    //\n    // Set LIN interrupts to disabled\n    //\n    LIN_disableInterrupt(base, LIN_INT_ALL);\n\n    //\n    // Set Baud Rate Settings\n    //\n    LIN_setBaudRatePrescaler(base, 96U, 11U);\n    LIN_setMaximumBaudRate(base, 100000000U, 20000U);\n\n    //\n    // Set response field to 1 byte\n    //\n    LIN_setFrameLength(base, 1U);\n\n    //\n    // Configure sync field\n    // Sync break (13 + 5 = 18 Tbits)\n    // Sync delimiter (1 + 3 = 4 Tbits)\n    //\n    LIN_setSyncFields(base, 5U, 3U);\n\n    //\n    // Set Mask ID so TX/RX match will always happen\n    //\n    LIN_setTxMask(base, 0xFFU);\n    LIN_setRxMask(base, 0xFFU);\n\n    //\n    // Disable IODFT testing and external loopback mode\n    //\n    LIN_disableExtLoopback(base);\n\n    //\n    // Finally exit SW reset and enter LIN ready state\n    //\n    LIN_exitSoftwareReset(base);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Reset LIN module // Release from hard reset // LIN_disableModule(base); LIN_enableModule(base); // // Enter Software Reset State // LIN_enterSoftwareReset(base); // // Enable LIN Mode // LIN_disableSCIMode(base); // // Set LIN mode to Commander // LIN_setLINMode(base, LIN_MODE_LIN_COMMANDER); // // Enable Fixed baud rate mode // LIN_disableAutomaticBaudrate(base); // // Use the set frame length and not ID4/ID5 bits for length control // LIN_setCommMode(base, LIN_COMM_LIN_USELENGTHVAL); // // Setup to continue operating on emulation suspend // LIN_setDebugSuspendMode(base, LIN_DEBUG_COMPLETE); // // Use Enhanced Checksum // LIN_setChecksumType(base, LIN_CHECKSUM_ENHANCED); // // Message filtering uses responder task ID byte // LIN_setMessageFiltering(base, LIN_MSG_FILTER_IDRESPONDER); // // Disable Internal loopback for external communication // LIN_disableIntLoopback(base); // // Enable multi-buffer mode // LIN_enableMultibufferMode(base); // // Enable parity check on received ID // LIN_enableParity(base); // // Enable transfer of data to and from the shift registers // LIN_enableDataTransmitter(base); LIN_enableDataReceiver(base); // // Enable the triggering of checksum compare on extended frames // LIN_triggerChecksumCompare(base); // // Set LIN interrupts to disabled // LIN_disableInterrupt(base, LIN_INT_ALL); // // Set Baud Rate Settings // LIN_setBaudRatePrescaler(base, 96U, 11U); LIN_setMaximumBaudRate(base, 100000000U, 20000U); // // Set response field to 1 byte // LIN_setFrameLength(base, 1U); // // Configure sync field // Sync break (13 + 5 = 18 Tbits) // Sync delimiter (1 + 3 = 4 Tbits) // LIN_setSyncFields(base, 5U, 3U); // // Set Mask ID so TX/RX match will always happen // LIN_setTxMask(base, 0xFFU); LIN_setRxMask(base, 0xFFU); // // Disable IODFT testing and external loopback mode // LIN_disableExtLoopback(base); // // Finally exit SW reset and enter LIN ready state // LIN_exitSoftwareReset(base); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "lin.c",
+      "peripheral": "lin",
+      "functionName": "LIN_initSCIModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Reset LIN module\n    // Release from hard reset\n    //\n    LIN_disableModule(base);\n    LIN_enableModule(base);\n\n    //\n    // Enter LIN reset state to perform configurations\n    //\n    LIN_enterSoftwareReset(base);\n\n    //\n    // Switch LIN into SCI mode\n    //\n    LIN_enableSCIMode(base);\n\n    //\n    // Set the SCI communication mode to idle line\n    //\n    LIN_setSCICommMode(base, LIN_COMM_SCI_IDLELINE);\n\n    //\n    // Module set to complete operations when halted by debugger\n    //\n    LIN_setDebugSuspendMode(base, LIN_DEBUG_COMPLETE);\n\n    //\n    // Disable Internal loopback for external communication\n    //\n    LIN_disableIntLoopback(base);\n\n    //\n    // Set SCI to transmit one stop bit\n    //\n    LIN_setSCIStopBits(base, LIN_SCI_STOP_ONE);\n\n    //\n    // Disable multi-buffer mode\n    //\n    LIN_disableMultibufferMode(base);\n\n    //\n    // Disable parity check\n    //\n    LIN_disableSCIParity(base);\n\n    //\n    // Enable transfer of data to and from the shift registers\n    //\n    LIN_enableDataTransmitter(base);\n    LIN_enableDataReceiver(base);\n\n    //\n    // Set SCI interrupts to disabled\n    //\n    LIN_disableSCIInterrupt(base, LIN_SCI_INT_ALL);\n\n    //\n    // Set Baud Rate Settings\n    //\n    LIN_setBaudRatePrescaler(base, 96U, 11U);\n\n    //\n    // Set character length as 8-bits\n    //\n    LIN_setSCICharLength(base, 8U);\n\n    //\n    // Set to 1 character in response field\n    //\n    LIN_setSCIFrameLength(base, 1U);\n\n    //\n    // Disable IODFT testing and external loopback mode\n    //\n    LIN_disableExtLoopback(base);\n\n    //\n    // Finally exit SW reset and enter ready state\n    //\n    LIN_exitSoftwareReset(base);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Reset LIN module // Release from hard reset // LIN_disableModule(base); LIN_enableModule(base); // // Enter LIN reset state to perform configurations // LIN_enterSoftwareReset(base); // // Switch LIN into SCI mode // LIN_enableSCIMode(base); // // Set the SCI communication mode to idle line // LIN_setSCICommMode(base, LIN_COMM_SCI_IDLELINE); // // Module set to complete operations when halted by debugger // LIN_setDebugSuspendMode(base, LIN_DEBUG_COMPLETE); // // Disable Internal loopback for external communication // LIN_disableIntLoopback(base); // // Set SCI to transmit one stop bit // LIN_setSCIStopBits(base, LIN_SCI_STOP_ONE); // // Disable multi-buffer mode // LIN_disableMultibufferMode(base); // // Disable parity check // LIN_disableSCIParity(base); // // Enable transfer of data to and from the shift registers // LIN_enableDataTransmitter(base); LIN_enableDataReceiver(base); // // Set SCI interrupts to disabled // LIN_disableSCIInterrupt(base, LIN_SCI_INT_ALL); // // Set Baud Rate Settings // LIN_setBaudRatePrescaler(base, 96U, 11U); // // Set character length as 8-bits // LIN_setSCICharLength(base, 8U); // // Set to 1 character in response field // LIN_setSCIFrameLength(base, 1U); // // Disable IODFT testing and external loopback mode // LIN_disableExtLoopback(base); // // Finally exit SW reset and enter ready state // LIN_exitSoftwareReset(base); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "lin.c",
+      "peripheral": "lin",
+      "functionName": "LIN_sendData",
+      "functionArgs": [
+        "base",
+        "*data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    int16_t i;\n    uint16_t length;\n    uint16_t *pData;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Get the length from the SCIFORMAT register.\n    //\n    length = HWREGH(base + LIN_O_SCIFORMAT + 0x2U);\n\n    pData = data + length;\n\n    //\n    // Shift each 8-bit piece of data into the correct register.\n    //\n    for(i = (int16_t)length; i >= 0; i--)\n    {\n        if(pData != NULL)\n        {\n            HWREGB(base + LIN_O_TD0 +\n                   (uint16_t)((uint16_t)i ^ 3U)) = (uint8_t)*pData;\n            pData--;\n        }\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ int16_t i; uint16_t length; uint16_t *pData; // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Get the length from the SCIFORMAT register. // length = HWREGH(base + LIN_O_SCIFORMAT + 0x2U); pData = data + length; // // Shift each 8-bit piece of data into the correct register. // for(i = (int16_t)length; i >= 0; i--) { if(pData != NULL) { HWREGB(base + LIN_O_TD0 + (uint16_t)((uint16_t)i ^ 3U)) = (uint8_t)*pData; pData--; } } }",
+      "registersUsed": [
+        "SCIFORMAT",
+        "TD0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFORMAT",
+        "TD0"
+      ]
+    },
+    {
+      "file": "lin.c",
+      "peripheral": "lin",
+      "functionName": "LIN_getData",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t*const"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t i;\n    uint16_t length;\n    uint16_t *pData = data;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Get the length from the SCIFORMAT register.\n    //\n    length = HWREGH(base + LIN_O_SCIFORMAT + 0x2U);\n\n    //\n    // Read each 8-bit piece of data.\n    //\n    for(i = 0U; i <= length; i++)\n    {\n        if(pData != NULL)\n        {\n            *pData = HWREGB(base + LIN_O_RD0 + (uint16_t)(i ^ 3U));\n            pData++;\n        }\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; uint16_t length; uint16_t *pData = data; // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Get the length from the SCIFORMAT register. // length = HWREGH(base + LIN_O_SCIFORMAT + 0x2U); // // Read each 8-bit piece of data. // for(i = 0U; i <= length; i++) { if(pData != NULL) { *pData = HWREGB(base + LIN_O_RD0 + (uint16_t)(i ^ 3U)); pData++; } } }",
+      "registersUsed": [
+        "SCIFORMAT",
+        "RD0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFORMAT",
+        "RD0"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           ((base & BASE_ADDR_MASK) == LINA_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == LINB_BASE_FRAME(0U))\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( ((base & BASE_ADDR_MASK) == LINA_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == LINB_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setLINMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_LINMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Write the LIN mode to the appropriate register.\n    //\n\n    HWREGH(base + LIN_O_SCIGCR1) = (HWREGH(base + LIN_O_SCIGCR1) &\n                                   (uint16_t)(~(LIN_SCIGCR1_CLK_COMMANDER)))\n                                   | (uint16_t)mode;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Write the LIN mode to the appropriate register. // HWREGH(base + LIN_O_SCIGCR1) = (HWREGH(base + LIN_O_SCIGCR1) & (uint16_t)(~(LIN_SCIGCR1_CLK_COMMANDER))) | (uint16_t)mode; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setMaximumBaudRate",
+      "functionArgs": [
+        "base",
+        "vclk",
+        "mbr"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Calculate maximum permissible operating baud rate (within 10% of\n    // provided maximum baud rate)\n    //\n    float32_t mbrUpperLimit = (float32_t)mbr * 1.1F;\n\n    //\n    // Calculate maximum baud rate prescaler\n    //\n    HWREGH(base + LIN_O_MBRSR) = (uint16_t)(vclk / ((uint32_t)mbrUpperLimit));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Calculate maximum permissible operating baud rate (within 10% of // provided maximum baud rate) // float32_t mbrUpperLimit = (float32_t)mbr * 1.1F; // // Calculate maximum baud rate prescaler // HWREGH(base + LIN_O_MBRSR) = (uint16_t)(vclk / ((uint32_t)mbrUpperLimit)); }",
+      "registersUsed": [
+        "MBRSR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MBRSR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setMessageFiltering",
+      "functionArgs": [
+        "base",
+        "type"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_MessageFilter"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Sets the message filtering type\n    //\n    if(type == LIN_MSG_FILTER_IDBYTE)\n    {\n        HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_HGENCTRL));\n    }\n    else\n    {\n        HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_HGENCTRL;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Sets the message filtering type // if(type == LIN_MSG_FILTER_IDBYTE) { HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_HGENCTRL)); } else { HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_HGENCTRL; } }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableParity",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Enable the parity mode\n    //\n    HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_PARITYENA;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Enable the parity mode // HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_PARITYENA; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableParity",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Disable the parity mode\n    //\n    HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_PARITYENA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Disable the parity mode // HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_PARITYENA)); }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_generateParityID",
+      "functionArgs": [
+        "identifier"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n\n    uint16_t p0, p1, parityIdentifier;\n\n    //\n    // Calculate parity bits and generate updated identifier\n    //\n    p0 = ((identifier & LIN_ID0) ^ ((identifier & LIN_ID1) >> 1U) ^\n          ((identifier & LIN_ID2) >> 2U) ^ ((identifier & LIN_ID4) >> 4U));\n    p1 = (uint16_t)(!(bool)(((identifier & LIN_ID1) >> 1U)\n                    ^ ((identifier & LIN_ID3) >> 3U)\n                    ^ ((identifier & LIN_ID4) >> 4U)\n                    ^ ((identifier & LIN_ID5) >> 5U)));\n    parityIdentifier = identifier | ((p0 << 6U) | (p1 << 7U));\n\n    return(parityIdentifier);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t p0, p1, parityIdentifier; // // Calculate parity bits and generate updated identifier // p0 = ((identifier & LIN_ID0) ^ ((identifier & LIN_ID1) >> 1U) ^ ((identifier & LIN_ID2) >> 2U) ^ ((identifier & LIN_ID4) >> 4U)); p1 = (uint16_t)(!(bool)(((identifier & LIN_ID1) >> 1U) ^ ((identifier & LIN_ID3) >> 3U) ^ ((identifier & LIN_ID4) >> 4U) ^ ((identifier & LIN_ID5) >> 5U))); parityIdentifier = identifier | ((p0 << 6U) | (p1 << 7U)); return(parityIdentifier); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setIDByte",
+      "functionArgs": [
+        "base",
+        "identifier"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGH(base + LIN_O_ID) = (HWREGH(base + LIN_O_ID) &\n                                (uint16_t)(~(LIN_ID_IDBYTE_M))) |\n                               (uint16_t)(identifier & LIN_ID_IDBYTE_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGH(base + LIN_O_ID) = (HWREGH(base + LIN_O_ID) & (uint16_t)(~(LIN_ID_IDBYTE_M))) | (uint16_t)(identifier & LIN_ID_IDBYTE_M); }",
+      "registersUsed": [
+        "ID"
+      ],
+      "registersUsedMatchingBifield": [
+        "ID"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setIDResponderTask",
+      "functionArgs": [
+        "base",
+        "identifier"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGH(base + LIN_O_ID) = ((HWREGH(base + LIN_O_ID) &\n                               (uint16_t)(~(LIN_ID_IDRESPONDERTASKBYTE_M))) |\n                               (uint16_t)((identifier & LIN_ID_IDBYTE_M) <<\n                               LIN_ID_IDRESPONDERTASKBYTE_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGH(base + LIN_O_ID) = ((HWREGH(base + LIN_O_ID) & (uint16_t)(~(LIN_ID_IDRESPONDERTASKBYTE_M))) | (uint16_t)((identifier & LIN_ID_IDBYTE_M) << LIN_ID_IDRESPONDERTASKBYTE_S)); }",
+      "registersUsed": [
+        "ID"
+      ],
+      "registersUsedMatchingBifield": [
+        "ID"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_sendWakeupSignal",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Set key in Byte 0 (MSB) of transmit buffer 0 register\n    //\n    HWREGB(base + LIN_O_TD0 + 0x3U) = LIN_WAKEUP_KEY;\n\n    //\n    // Transmit TDO for wakeup\n    //\n    HWREGB(base + LIN_O_SCIGCR2 + 0x1U) = 0x1U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Set key in Byte 0 (MSB) of transmit buffer 0 register // HWREGB(base + LIN_O_TD0 + 0x3U) = LIN_WAKEUP_KEY; // // Transmit TDO for wakeup // HWREGB(base + LIN_O_SCIGCR2 + 0x1U) = 0x1U; }",
+      "registersUsed": [
+        "SCIGCR2",
+        "TD0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR2",
+        "TD0"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enterSleep",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGB(base + LIN_O_SCIGCR2) = 0x1U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGB(base + LIN_O_SCIGCR2) = 0x1U; }",
+      "registersUsed": [
+        "SCIGCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR2"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_sendChecksum",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREG(base + LIN_O_SCIGCR2) |= LIN_SCIGCR2_SC;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREG(base + LIN_O_SCIGCR2) |= LIN_SCIGCR2_SC; }",
+      "registersUsed": [
+        "SCIGCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR2"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_triggerChecksumCompare",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREG(base + LIN_O_SCIGCR2) |= LIN_SCIGCR2_CC;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREG(base + LIN_O_SCIGCR2) |= LIN_SCIGCR2_CC; }",
+      "registersUsed": [
+        "SCIGCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR2"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_isTxReady",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Read Tx Buffer flag and return status\n    //\n    return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_TXRDY) ==\n           LIN_SCIFLR_TXRDY);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Read Tx Buffer flag and return status // return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_TXRDY) == LIN_SCIFLR_TXRDY); }",
+      "registersUsed": [
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setFrameLength",
+      "functionArgs": [
+        "base",
+        "length"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((length > 0U) && (length < 9U));\n\n    //\n    // Set frame length value\n    //\n    HWREGB(base + LIN_O_SCIFORMAT + 0x2U) = (uint8_t)(length - 1U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((length > 0U) && (length < 9U)); // // Set frame length value // HWREGB(base + LIN_O_SCIFORMAT + 0x2U) = (uint8_t)(length - 1U); }",
+      "registersUsed": [
+        "SCIFORMAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFORMAT"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setCommMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_CommMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Write communication mode selection to the appropriate bit.\n    //\n    HWREGH(base + LIN_O_SCIGCR1) = (HWREGH(base + LIN_O_SCIGCR1) &\n                                    (uint16_t)(~(LIN_SCIGCR1_COMMMODE)))\n                                    | (uint16_t)mode;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Write communication mode selection to the appropriate bit. // HWREGH(base + LIN_O_SCIGCR1) = (HWREGH(base + LIN_O_SCIGCR1) & (uint16_t)(~(LIN_SCIGCR1_COMMMODE))) | (uint16_t)mode; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setTxMask",
+      "functionArgs": [
+        "base",
+        "mask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Clear previous mask value and set new mask\n    //\n    HWREGB(base + LIN_O_MASK) = (uint8_t)(mask);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Clear previous mask value and set new mask // HWREGB(base + LIN_O_MASK) = (uint8_t)(mask); }",
+      "registersUsed": [
+        "MASK"
+      ],
+      "registersUsedMatchingBifield": [
+        "MASK"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setRxMask",
+      "functionArgs": [
+        "base",
+        "mask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Clear previous mask value and set new mask\n    //\n    HWREGB(base + LIN_O_MASK + 0x2U) = (uint8_t)(mask);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Clear previous mask value and set new mask // HWREGB(base + LIN_O_MASK + 0x2U) = (uint8_t)(mask); }",
+      "registersUsed": [
+        "MASK"
+      ],
+      "registersUsedMatchingBifield": [
+        "MASK"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_getTxMask",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    return(HWREGH(base + LIN_O_MASK) & LIN_MASK_TXIDMASK_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); return(HWREGH(base + LIN_O_MASK) & LIN_MASK_TXIDMASK_M); }",
+      "registersUsed": [
+        "MASK"
+      ],
+      "registersUsedMatchingBifield": [
+        "MASK"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_getRxMask",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    return(HWREGH(base + LIN_O_MASK + 0x2U) & LIN_MASK_TXIDMASK_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); return(HWREGH(base + LIN_O_MASK + 0x2U) & LIN_MASK_TXIDMASK_M); }",
+      "registersUsed": [
+        "MASK"
+      ],
+      "registersUsedMatchingBifield": [
+        "MASK"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_isRxReady",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Check Rx ready flag and return status\n    //\n    return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_RXRDY) ==\n           LIN_SCIFLR_RXRDY);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Check Rx ready flag and return status // return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_RXRDY) == LIN_SCIFLR_RXRDY); }",
+      "registersUsed": [
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_getRxIdentifier",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    return(HWREGH(base + LIN_O_ID + 0x2U) & 0xFFU);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); return(HWREGH(base + LIN_O_ID + 0x2U) & 0xFFU); }",
+      "registersUsed": [
+        "ID"
+      ],
+      "registersUsedMatchingBifield": [
+        "ID"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_isTxMatch",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Read Tx ID flag and return status\n    //\n    return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_IDTXFLAG) ==\n           LIN_SCIFLR_IDTXFLAG);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Read Tx ID flag and return status // return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_IDTXFLAG) == LIN_SCIFLR_IDTXFLAG); }",
+      "registersUsed": [
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_isRxMatch",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Read Rx ID flag and return status\n    //\n    return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_IDRXFLAG) ==\n           LIN_SCIFLR_IDRXFLAG);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Read Rx ID flag and return status // return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_IDRXFLAG) == LIN_SCIFLR_IDRXFLAG); }",
+      "registersUsed": [
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Set specified interrupts\n    //\n    HWREG(base + LIN_O_SCISETINT) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Set specified interrupts // HWREG(base + LIN_O_SCISETINT) = intFlags; }",
+      "registersUsed": [
+        "SCISETINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCISETINT"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Set specified interrupts to be cleared\n    //\n    HWREG(base + LIN_O_SCICLEARINT) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Set specified interrupts to be cleared // HWREG(base + LIN_O_SCICLEARINT) = intFlags; }",
+      "registersUsed": [
+        "SCICLEARINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICLEARINT"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_clearInterruptStatus",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Clear the status flags\n    //\n    HWREG(base + LIN_O_SCIFLR) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Clear the status flags // HWREG(base + LIN_O_SCIFLR) = intFlags; }",
+      "registersUsed": [
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setInterruptLevel0",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Clear interrupt levels to 0\n    //\n    HWREG(base + LIN_O_SCICLEARINTLVL) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Clear interrupt levels to 0 // HWREG(base + LIN_O_SCICLEARINTLVL) = intFlags; }",
+      "registersUsed": [
+        "SCICLEARINT",
+        "SCICLEARINTLVL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICLEARINT",
+        "SCICLEARINTLVL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setInterruptLevel1",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Set interrupt levels to 1\n    //\n    HWREG(base + LIN_O_SCISETINTLVL) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Set interrupt levels to 1 // HWREG(base + LIN_O_SCISETINTLVL) = intFlags; }",
+      "registersUsed": [
+        "SCISETINT",
+        "SCISETINTLVL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCISETINT",
+        "SCISETINTLVL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableModuleErrors",
+      "functionArgs": [
+        "base",
+        "errors"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n\n    //\n    // Enable write access\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = LIN_IO_DFT_KEY;\n\n    //\n    // Enable specified error bits\n    //\n    HWREG(base + LIN_O_IODFTCTRL) |= errors;\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; // // Enable write access // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = LIN_IO_DFT_KEY; // // Enable specified error bits // HWREG(base + LIN_O_IODFTCTRL) |= errors; // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; }",
+      "registersUsed": [
+        "IODFTCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "IODFTCTRL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableModuleErrors",
+      "functionArgs": [
+        "base",
+        "errors"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n\n    //\n    // Enable write access\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = LIN_IO_DFT_KEY;\n\n    //\n    // Disable specified error bits\n    //\n    HWREG(base + LIN_O_IODFTCTRL) &= ~(errors);\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; // // Enable write access // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = LIN_IO_DFT_KEY; // // Disable specified error bits // HWREG(base + LIN_O_IODFTCTRL) &= ~(errors); // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; }",
+      "registersUsed": [
+        "IODFTCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "IODFTCTRL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableAutomaticBaudrate",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_ADAPT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_ADAPT; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableAutomaticBaudrate",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_ADAPT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_ADAPT)); }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_stopExtendedFrame",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Set stop bit\n    //\n    HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_STOPEXTFRAME;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Set stop bit // HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_STOPEXTFRAME; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setChecksumType",
+      "functionArgs": [
+        "base",
+        "type"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_ChecksumType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    if(type == LIN_CHECKSUM_ENHANCED)\n    {\n        HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_CTYPE;\n    }\n    else\n    {\n        HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_CTYPE));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); if(type == LIN_CHECKSUM_ENHANCED) { HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_CTYPE; } else { HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_CTYPE)); } }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setSyncFields",
+      "functionArgs": [
+        "base",
+        "syncBreak",
+        "delimiter"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT(syncBreak < 8U);\n    ASSERT((delimiter >= 1U) && (delimiter < 5U));\n\n    //\n    // Set new sync values\n    //\n    HWREGH(base + LIN_O_COMP) = (syncBreak | ((delimiter - 1U) <<\n                                                LIN_COMP_SDEL_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT(syncBreak < 8U); ASSERT((delimiter >= 1U) && (delimiter < 5U)); // // Set new sync values // HWREGH(base + LIN_O_COMP) = (syncBreak | ((delimiter - 1U) << LIN_COMP_SDEL_S)); }",
+      "registersUsed": [
+        "COMP"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMP"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableSCIMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Enable SCI communications mode\n    //\n    HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_LINMODE));\n    HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_CLK_COMMANDER |\n                                    LIN_SCIGCR1_TIMINGMODE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Enable SCI communications mode // HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_LINMODE)); HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_CLK_COMMANDER | LIN_SCIGCR1_TIMINGMODE; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableSCIMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Disable SCI communications mode\n    //\n    HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_CLK_COMMANDER |\n                                      LIN_SCIGCR1_TIMINGMODE));\n    HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_LINMODE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Disable SCI communications mode // HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_CLK_COMMANDER | LIN_SCIGCR1_TIMINGMODE)); HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_LINMODE; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setSCICommMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_SCICommMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Write communication mode selection to the appropriate bit.\n    //\n    HWREGH(base + LIN_O_SCIGCR1) = (HWREGH(base + LIN_O_SCIGCR1) &\n                                    (uint16_t)(~(LIN_SCIGCR1_COMMMODE)))\n                                    | (uint16_t)mode;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Write communication mode selection to the appropriate bit. // HWREGH(base + LIN_O_SCIGCR1) = (HWREGH(base + LIN_O_SCIGCR1) & (uint16_t)(~(LIN_SCIGCR1_COMMMODE))) | (uint16_t)mode; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableSCIParity",
+      "functionArgs": [
+        "base",
+        "parity"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_SCIParityType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Enable the parity mode\n    //\n    HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_PARITYENA;\n\n    //\n    // Set the parity type\n    //\n    if(parity == LIN_SCI_PAR_ODD)\n    {\n        HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_PARITY));\n    }\n    else\n    {\n        HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_PARITY;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Enable the parity mode // HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_PARITYENA; // // Set the parity type // if(parity == LIN_SCI_PAR_ODD) { HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_PARITY)); } else { HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_PARITY; } }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableSCIParity",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Disable the parity mode\n    //\n    HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_PARITYENA));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Disable the parity mode // HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_PARITYENA)); }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setSCIStopBits",
+      "functionArgs": [
+        "base",
+        "number"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_SCIStopBits"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Set the number of stop bits\n    //\n    if(number == LIN_SCI_STOP_ONE)\n    {\n        HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_STOP));\n    }\n    else\n    {\n        HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_STOP;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Set the number of stop bits // if(number == LIN_SCI_STOP_ONE) { HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_STOP)); } else { HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_STOP; } }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableSCISleepMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Set sleep mode bit\n    //\n    HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_SLEEP;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Set sleep mode bit // HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_SLEEP; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableSCISleepMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Clear sleep mode bit\n    //\n    HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_SLEEP));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Clear sleep mode bit // HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_SLEEP)); }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enterSCILowPower",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Set low power bit\n    //\n    HWREGB(base + LIN_O_SCIGCR2) = 0x1U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Set low power bit // HWREGB(base + LIN_O_SCIGCR2) = 0x1U; }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIGCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIGCR2"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_exitSCILowPower",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Clear low power bit\n    //\n    HWREGB(base + LIN_O_SCIGCR2) = 0x0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Clear low power bit // HWREGB(base + LIN_O_SCIGCR2) = 0x0U; }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIGCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIGCR2"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setSCICharLength",
+      "functionArgs": [
+        "base",
+        "numBits"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n    ASSERT((numBits > 0U) && (numBits < 9U));\n\n    //\n    // Set the number of bits per character\n    //\n    HWREGB(base + LIN_O_SCIFORMAT) = (uint8_t)(numBits - 1U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); ASSERT((numBits > 0U) && (numBits < 9U)); // // Set the number of bits per character // HWREGB(base + LIN_O_SCIFORMAT) = (uint8_t)(numBits - 1U); }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIFORMAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIFORMAT"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setSCIFrameLength",
+      "functionArgs": [
+        "base",
+        "length"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n    ASSERT((length > 0U) && (length < 9U));\n\n    //\n    // Set number of characters\n    //\n    HWREGB(base + LIN_O_SCIFORMAT + 0x2U) = (uint8_t)(length - 1U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); ASSERT((length > 0U) && (length < 9U)); // // Set number of characters // HWREGB(base + LIN_O_SCIFORMAT + 0x2U) = (uint8_t)(length - 1U); }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIFORMAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIFORMAT"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_isSCIDataAvailable",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Read Rx Ready flag and return status\n    //\n    return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_RXRDY) ==\n           LIN_SCIFLR_RXRDY);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Read Rx Ready flag and return status // return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_RXRDY) == LIN_SCIFLR_RXRDY); }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_isSCISpaceAvailable",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Read Tx buffer flag and return status\n    //\n    return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_TXRDY) ==\n           LIN_SCIFLR_TXRDY);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Read Tx buffer flag and return status // return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_TXRDY) == LIN_SCIFLR_TXRDY); }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_readSCICharNonBlocking",
+      "functionArgs": [
+        "base",
+        "emulation"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "bool"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Read specific data register\n    //\n    return(HWREGH(base + LIN_O_SCIED + (uint16_t)((uint16_t)(!emulation) * 0x4U)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Read specific data register // return(HWREGH(base + LIN_O_SCIED + (uint16_t)((uint16_t)(!emulation) * 0x4U))); }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIED"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIED"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_readSCICharBlocking",
+      "functionArgs": [
+        "base",
+        "emulation"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "bool"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Wait until a character is available in buffer.\n    //\n    while(!LIN_isSCIDataAvailable(base))\n    {\n        ;\n    }\n\n    //\n    // Read specific data register\n    //\n    return(HWREGH(base + LIN_O_SCIED\n            + (uint16_t)((uint16_t)(!emulation) * 0x4U)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Wait until a character is available in buffer. // while(!LIN_isSCIDataAvailable(base)) { ; } // // Read specific data register // return(HWREGH(base + LIN_O_SCIED + (uint16_t)((uint16_t)(!emulation) * 0x4U))); }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIED"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIED"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_writeSCICharNonBlocking",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n    ASSERT(data <= LIN_SCITD_TD_M);\n\n    //\n    // Set the Tx Data\n    //\n    HWREGB(base + LIN_O_SCITD) = (uint8_t)data;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); ASSERT(data <= LIN_SCITD_TD_M); // // Set the Tx Data // HWREGB(base + LIN_O_SCITD) = (uint8_t)data; }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCITD"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCITD"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_writeSCICharBlocking",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n    ASSERT(data <= LIN_SCITD_TD_M);\n\n    //\n    // Wait until space is available in the transmit buffer.\n    //\n    while(!LIN_isSCISpaceAvailable(base))\n    {\n        ;\n    }\n\n    //\n    // Set the Tx Data\n    //\n    HWREGB(base + LIN_O_SCITD) = (uint8_t)data;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); ASSERT(data <= LIN_SCITD_TD_M); // // Wait until space is available in the transmit buffer. // while(!LIN_isSCISpaceAvailable(base)) { ; } // // Set the Tx Data // HWREGB(base + LIN_O_SCITD) = (uint8_t)data; }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCITD"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCITD"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableSCIModuleErrors",
+      "functionArgs": [
+        "base",
+        "errors"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n\n    //\n    // Enable write access\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = LIN_IO_DFT_KEY;\n\n    //\n    // Enable specified error bits\n    //\n    HWREG(base + LIN_O_IODFTCTRL) |= errors;\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; // // Enable write access // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = LIN_IO_DFT_KEY; // // Enable specified error bits // HWREG(base + LIN_O_IODFTCTRL) |= errors; // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; }",
+      "registersUsed": [
+        "SCIGCR1",
+        "IODFTCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "IODFTCTRL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableSCIModuleErrors",
+      "functionArgs": [
+        "base",
+        "errors"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n\n    //\n    // Enable write access\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = LIN_IO_DFT_KEY;\n\n    //\n    // Disable specified error bits\n    //\n    HWREG(base + LIN_O_IODFTCTRL) &= ~(errors);\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; // // Enable write access // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = LIN_IO_DFT_KEY; // // Disable specified error bits // HWREG(base + LIN_O_IODFTCTRL) &= ~(errors); // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; }",
+      "registersUsed": [
+        "SCIGCR1",
+        "IODFTCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "IODFTCTRL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableSCIInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Set specified interrupts\n    //\n    HWREG(base + LIN_O_SCISETINT) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Set specified interrupts // HWREG(base + LIN_O_SCISETINT) = intFlags; }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCISETINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCISETINT"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableSCIInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Set specified interrupts to be cleared\n    //\n    HWREG(base + LIN_O_SCICLEARINT) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Set specified interrupts to be cleared // HWREG(base + LIN_O_SCICLEARINT) = intFlags; }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCICLEARINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCICLEARINT"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_clearSCIInterruptStatus",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Clear the status flags\n    //\n    HWREG(base + LIN_O_SCIFLR) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Clear the status flags // HWREG(base + LIN_O_SCIFLR) = intFlags; }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setSCIInterruptLevel0",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Clear interrupt levels to 0\n    //\n    HWREG(base + LIN_O_SCICLEARINTLVL) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Clear interrupt levels to 0 // HWREG(base + LIN_O_SCICLEARINTLVL) = intFlags; }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCICLEARINT",
+        "SCICLEARINTLVL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCICLEARINT",
+        "SCICLEARINTLVL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setSCIInterruptLevel1",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Set interrupt levels to 1\n    //\n    HWREG(base + LIN_O_SCISETINTLVL) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Set interrupt levels to 1 // HWREG(base + LIN_O_SCISETINTLVL) = intFlags; }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCISETINT",
+        "SCISETINTLVL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCISETINT",
+        "SCISETINTLVL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_isSCIReceiverIdle",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Read Rx Idle flag and return status\n    //\n    return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_IDLE) == 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Read Rx Idle flag and return status // return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_IDLE) == 0U); }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_getSCITxFrameType",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Read Tx Wake flag and return status\n    //\n    return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_TXWAKE) ==\n           LIN_SCIFLR_TXWAKE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Read Tx Wake flag and return status // return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_TXWAKE) == LIN_SCIFLR_TXWAKE); }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_getSCIRxFrameType",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Read Rx Wake flag and return status\n    //\n    return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_RXWAKE) ==\n           LIN_SCIFLR_RXWAKE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Read Rx Wake flag and return status // return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_RXWAKE) == LIN_SCIFLR_RXWAKE); }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_isSCIBreakDetected",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U);\n\n    //\n    // Read Break condition flag and return status\n    //\n    return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_BRKDT) ==\n           LIN_SCIFLR_BRKDT);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT((HWREGH(base + LIN_O_SCIGCR1) & LIN_SCIGCR1_LINMODE) == 0U); // // Read Break condition flag and return status // return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_BRKDT) == LIN_SCIFLR_BRKDT); }",
+      "registersUsed": [
+        "SCIGCR1",
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1",
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Set reset bit.\n    //\n    HWREGB(base + LIN_O_SCIGCR0) = LIN_SCIGCR0_RESET;\n\n    //\n    // Enable TX and RX pin control functionality\n    //\n    HWREGB(base + LIN_O_SCIPIO0) = (LIN_SCIPIO0_RXFUNC | LIN_SCIPIO0_TXFUNC);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Set reset bit. // HWREGB(base + LIN_O_SCIGCR0) = LIN_SCIGCR0_RESET; // // Enable TX and RX pin control functionality // HWREGB(base + LIN_O_SCIPIO0) = (LIN_SCIPIO0_RXFUNC | LIN_SCIPIO0_TXFUNC); }",
+      "registersUsed": [
+        "SCIGCR0",
+        "SCIPIO0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR0",
+        "SCIPIO0"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Disable TX and RX pin control functionality\n    //\n    HWREGB(base + LIN_O_SCIPIO0) = (uint8_t)(~(LIN_SCIPIO0_RXFUNC\n                                                | LIN_SCIPIO0_TXFUNC));\n\n    //\n    // Clear reset bit.\n    //\n    HWREGB(base + LIN_O_SCIGCR0) = (uint8_t)(~(LIN_SCIGCR0_RESET));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Disable TX and RX pin control functionality // HWREGB(base + LIN_O_SCIPIO0) = (uint8_t)(~(LIN_SCIPIO0_RXFUNC | LIN_SCIPIO0_TXFUNC)); // // Clear reset bit. // HWREGB(base + LIN_O_SCIGCR0) = (uint8_t)(~(LIN_SCIGCR0_RESET)); }",
+      "registersUsed": [
+        "SCIGCR0",
+        "SCIPIO0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR0",
+        "SCIPIO0"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setBaudRatePrescaler",
+      "functionArgs": [
+        "base",
+        "prescaler",
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT(prescaler <= (LIN_BRSR_SCI_LIN_PSL_M | LIN_BRSR_SCI_LIN_PSH_M));\n    ASSERT(divider <= (LIN_BRSR_M_M >> LIN_BRSR_M_S));\n\n    //\n    // Set baud rate prescaler and divider\n    //\n    HWREG(base + LIN_O_BRSR) = (prescaler | (divider << LIN_BRSR_M_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT(prescaler <= (LIN_BRSR_SCI_LIN_PSL_M | LIN_BRSR_SCI_LIN_PSH_M)); ASSERT(divider <= (LIN_BRSR_M_M >> LIN_BRSR_M_S)); // // Set baud rate prescaler and divider // HWREG(base + LIN_O_BRSR) = (prescaler | (divider << LIN_BRSR_M_S)); }",
+      "registersUsed": [
+        "BRSR"
+      ],
+      "registersUsedMatchingBifield": [
+        "BRSR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableDataTransmitter",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Enable transmit bit\n    //\n    HWREG(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_TXENA;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Enable transmit bit // HWREG(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_TXENA; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableDataTransmitter",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Disable transmit bit\n    //\n    HWREG(base + LIN_O_SCIGCR1) &= ~(LIN_SCIGCR1_TXENA);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Disable transmit bit // HWREG(base + LIN_O_SCIGCR1) &= ~(LIN_SCIGCR1_TXENA); }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableDataReceiver",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Enable receive bit\n    //\n    HWREG(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_RXENA;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Enable receive bit // HWREG(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_RXENA; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableDataReceiver",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Disable receive bit\n    //\n    HWREG(base + LIN_O_SCIGCR1) &= ~(LIN_SCIGCR1_RXENA);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Disable receive bit // HWREG(base + LIN_O_SCIGCR1) &= ~(LIN_SCIGCR1_RXENA); }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_performSoftwareReset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_SWNRST));\n    HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_SWNRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_SWNRST)); HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_SWNRST; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enterSoftwareReset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_SWNRST));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_SWNRST)); }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_exitSoftwareReset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_SWNRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_SWNRST; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_isBusBusy",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Read Bus busy flag and return status\n    //\n    return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_BUSY) ==\n           LIN_SCIFLR_BUSY);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Read Bus busy flag and return status // return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_BUSY) == LIN_SCIFLR_BUSY); }",
+      "registersUsed": [
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_isTxBufferEmpty",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Read Tx Empty Flag and return status\n    //\n    return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_TXEMPTY) ==\n           LIN_SCIFLR_TXEMPTY);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Read Tx Empty Flag and return status // return((HWREGH(base + LIN_O_SCIFLR) & LIN_SCIFLR_TXEMPTY) == LIN_SCIFLR_TXEMPTY); }",
+      "registersUsed": [
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableExtLoopback",
+      "functionArgs": [
+        "base",
+        "loopbackType",
+        "path"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_LoopbackType",
+        "LIN_AnalogLoopback"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n\n    //\n    // Enable Loopback either in Analog or Digital Mode\n    //\n    HWREGH(base + LIN_O_IODFTCTRL) = (((uint16_t)LIN_IO_DFT_KEY <<\n                                        LIN_IODFTCTRL_IODFTENA_S) |\n                                        (uint16_t)loopbackType |\n                                        (uint16_t)path);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; // // Enable Loopback either in Analog or Digital Mode // HWREGH(base + LIN_O_IODFTCTRL) = (((uint16_t)LIN_IO_DFT_KEY << LIN_IODFTCTRL_IODFTENA_S) | (uint16_t)loopbackType | (uint16_t)path); }",
+      "registersUsed": [
+        "IODFTCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "IODFTCTRL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableExtLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Disable Loopback Mode\n    //\n    HWREGH(base + LIN_O_IODFTCTRL) = (uint16_t)(~(LIN_IODFTCTRL_IODFTENA_M |\n                                        LIN_IODFTCTRL_LPBENA |\n                                        LIN_IODFTCTRL_RXPENA));\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Disable Loopback Mode // HWREGH(base + LIN_O_IODFTCTRL) = (uint16_t)(~(LIN_IODFTCTRL_IODFTENA_M | LIN_IODFTCTRL_LPBENA | LIN_IODFTCTRL_RXPENA)); }",
+      "registersUsed": [
+        "IODFTCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "IODFTCTRL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableIntLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Enable the internal loopback\n    //\n    HWREG(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_LOOPBACK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Enable the internal loopback // HWREG(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_LOOPBACK; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableIntLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Disable the internal loopback\n    //\n    HWREG(base + LIN_O_SCIGCR1) &= ~(LIN_SCIGCR1_LOOPBACK);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Disable the internal loopback // HWREG(base + LIN_O_SCIGCR1) &= ~(LIN_SCIGCR1_LOOPBACK); }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_getInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Read and return the flag register\n    //\n    return(HWREG(base + LIN_O_SCIFLR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Read and return the flag register // return(HWREG(base + LIN_O_SCIFLR)); }",
+      "registersUsed": [
+        "SCIFLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_getInterruptLevel",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Gets the interrupt levels for all sources\n    //\n    return(HWREG(base + LIN_O_SCISETINTLVL));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Gets the interrupt levels for all sources // return(HWREG(base + LIN_O_SCISETINTLVL)); }",
+      "registersUsed": [
+        "SCISETINT",
+        "SCISETINTLVL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCISETINT",
+        "SCISETINTLVL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_getInterruptLine0Offset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Get interrupt vector line offset\n    //\n    return(HWREGH(base + LIN_O_SCIINTVECT0) & LIN_SCIINTVECT0_INTVECT0_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Get interrupt vector line offset // return(HWREGH(base + LIN_O_SCIINTVECT0) & LIN_SCIINTVECT0_INTVECT0_M); }",
+      "registersUsed": [
+        "SCIINTVECT0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIINTVECT0"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_getInterruptLine1Offset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Get interrupt vector line offset\n    //\n    return(HWREGH(base + LIN_O_SCIINTVECT1) & LIN_SCIINTVECT1_INTVECT1_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Get interrupt vector line offset // return(HWREGH(base + LIN_O_SCIINTVECT1) & LIN_SCIINTVECT1_INTVECT1_M); }",
+      "registersUsed": [
+        "SCIINTVECT1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIINTVECT1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableMultibufferMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_MBUFMODE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGH(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_MBUFMODE; }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableMultibufferMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_MBUFMODE));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGH(base + LIN_O_SCIGCR1) &= (uint16_t)(~(LIN_SCIGCR1_MBUFMODE)); }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setTransmitDelay",
+      "functionArgs": [
+        "base",
+        "delay"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n    ASSERT(delay < 8U);\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n\n    //\n    // Enable write access\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = LIN_IO_DFT_KEY;\n\n    //\n    // Clear delay value\n    //\n    HWREG(base + LIN_O_IODFTCTRL) &= ~(LIN_IODFTCTRL_TXSHIFT_M);\n\n    //\n    // Set the delay value\n    //\n    HWREG(base + LIN_O_IODFTCTRL) |= ((uint32_t)delay <<\n                                        LIN_IODFTCTRL_TXSHIFT_S);\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); ASSERT(delay < 8U); // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; // // Enable write access // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = LIN_IO_DFT_KEY; // // Clear delay value // HWREG(base + LIN_O_IODFTCTRL) &= ~(LIN_IODFTCTRL_TXSHIFT_M); // // Set the delay value // HWREG(base + LIN_O_IODFTCTRL) |= ((uint32_t)delay << LIN_IODFTCTRL_TXSHIFT_S); // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; }",
+      "registersUsed": [
+        "IODFTCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "IODFTCTRL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setPinSampleMask",
+      "functionArgs": [
+        "base",
+        "mask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_PinSampleMask"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n\n    //\n    // Enable write access\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = LIN_IO_DFT_KEY;\n\n    //\n    // Clear pin mask\n    //\n    HWREG(base + LIN_O_IODFTCTRL) &= ~(LIN_IODFTCTRL_PINSAMPLEMASK_M);\n\n    //\n    // Set new pin mask value\n    //\n    HWREG(base + LIN_O_IODFTCTRL) |= ((uint32_t)mask <<\n                                        LIN_IODFTCTRL_PINSAMPLEMASK_S);\n\n    //\n    // Clear the IO DFT Enable Key\n    //\n    HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; // // Enable write access // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = LIN_IO_DFT_KEY; // // Clear pin mask // HWREG(base + LIN_O_IODFTCTRL) &= ~(LIN_IODFTCTRL_PINSAMPLEMASK_M); // // Set new pin mask value // HWREG(base + LIN_O_IODFTCTRL) |= ((uint32_t)mask << LIN_IODFTCTRL_PINSAMPLEMASK_S); // // Clear the IO DFT Enable Key // HWREGB(base + LIN_O_IODFTCTRL + 0x2U) = 0x0U; }",
+      "registersUsed": [
+        "IODFTCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "IODFTCTRL"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_setDebugSuspendMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_DebugMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Set the debug suspend mode type\n    //\n\n    if(mode == LIN_DEBUG_FROZEN)\n    {\n        HWREG(base + LIN_O_SCIGCR1) &= ~(LIN_SCIGCR1_CONT);\n    }\n    else\n    {\n        HWREG(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_CONT;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Set the debug suspend mode type // if(mode == LIN_DEBUG_FROZEN) { HWREG(base + LIN_O_SCIGCR1) &= ~(LIN_SCIGCR1_CONT); } else { HWREG(base + LIN_O_SCIGCR1) |= LIN_SCIGCR1_CONT; } }",
+      "registersUsed": [
+        "SCIGCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIGCR1"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_enableGlobalInterrupt",
+      "functionArgs": [
+        "base",
+        "line"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_InterruptLine"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGH(base + LIN_O_GLB_INT_EN) |= (uint16_t)LIN_GLB_INT_EN_GLBINT0_EN <<\n                                      (uint16_t)line;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGH(base + LIN_O_GLB_INT_EN) |= (uint16_t)LIN_GLB_INT_EN_GLBINT0_EN << (uint16_t)line; }",
+      "registersUsed": [
+        "GLB_INT_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLB_INT_EN"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_disableGlobalInterrupt",
+      "functionArgs": [
+        "base",
+        "line"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_InterruptLine"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGH(base + LIN_O_GLB_INT_EN) &= (uint16_t)(~(LIN_GLB_INT_EN_GLBINT0_EN\n                                        << (uint16_t)line));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGH(base + LIN_O_GLB_INT_EN) &= (uint16_t)(~(LIN_GLB_INT_EN_GLBINT0_EN << (uint16_t)line)); }",
+      "registersUsed": [
+        "GLB_INT_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLB_INT_EN"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_clearGlobalInterruptStatus",
+      "functionArgs": [
+        "base",
+        "line"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_InterruptLine"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    HWREGB(base + LIN_O_GLB_INT_CLR) = (uint8_t)LIN_GLB_INT_CLR_INT0_FLG_CLR <<\n                                        (uint8_t)line;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); HWREGB(base + LIN_O_GLB_INT_CLR) = (uint8_t)LIN_GLB_INT_CLR_INT0_FLG_CLR << (uint8_t)line; }",
+      "registersUsed": [
+        "GLB_INT_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLB_INT_CLR"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_getGlobalInterruptStatus",
+      "functionArgs": [
+        "base",
+        "line"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_InterruptLine"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Read the flag register and return true if the specified flag is set.\n    //\n    return((HWREGH(base + LIN_O_GLB_INT_FLG) &\n            ((uint16_t)LIN_GLB_INT_FLG_INT0_FLG << (uint16_t)line)) ==\n           ((uint16_t)LIN_GLB_INT_FLG_INT0_FLG << (uint16_t)line));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Read the flag register and return true if the specified flag is set. // return((HWREGH(base + LIN_O_GLB_INT_FLG) & ((uint16_t)LIN_GLB_INT_FLG_INT0_FLG << (uint16_t)line)) == ((uint16_t)LIN_GLB_INT_FLG_INT0_FLG << (uint16_t)line)); }",
+      "registersUsed": [
+        "GLB_INT_FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLB_INT_FLG"
+      ]
+    },
+    {
+      "file": "lin.h",
+      "peripheral": "lin",
+      "functionName": "LIN_getPinStatus",
+      "functionArgs": [
+        "base",
+        "pin"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "LIN_PinType"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(LIN_isBaseValid(base));\n\n    //\n    // Read RX/Tx pin value and return status\n    //\n    return((HWREGH(base + LIN_O_SCIPIO2) & (uint16_t)pin) == (uint16_t)pin);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(LIN_isBaseValid(base)); // // Read RX/Tx pin value and return status // return((HWREGH(base + LIN_O_SCIPIO2) & (uint16_t)pin) == (uint16_t)pin); }",
+      "registersUsed": [
+        "SCIPIO2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIPIO2"
+      ]
+    }
+  ]
+}

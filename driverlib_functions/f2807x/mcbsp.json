@@ -1,0 +1,1981 @@
+{
+  "name": "mcbsp",
+  "functions": [
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_transmit16BitDataNonBlocking",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Write data.\n    //\n    McBSP_write16bitData(base, data);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Write data. // McBSP_write16bitData(base, data); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_transmit16BitDataBlocking",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Check if Transmitter buffer is ready.\n    //\n    while(!McBSP_isTxReady(base))\n    {\n    }\n\n    //\n    // Write data.\n    //\n    McBSP_write16bitData(base, data);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Check if Transmitter buffer is ready. // while(!McBSP_isTxReady(base)) { } // // Write data. // McBSP_write16bitData(base, data); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_transmit32BitDataNonBlocking",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Write data.\n    //\n    McBSP_write32bitData(base, data);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Write data. // McBSP_write32bitData(base, data); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_transmit32BitDataBlocking",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Check if Transmitter buffer is ready.\n    //\n    while(!McBSP_isTxReady(base))\n    {\n    }\n\n    //\n    // Write data.\n    //\n    McBSP_write32bitData(base, data);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Check if Transmitter buffer is ready. // while(!McBSP_isTxReady(base)) { } // // Write data. // McBSP_write32bitData(base, data); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_receive16BitDataNonBlocking",
+      "functionArgs": [
+        "base",
+        "*receiveData"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Read the data.\n    //\n    *receiveData = McBSP_read16bitData(base);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Read the data. // *receiveData = McBSP_read16bitData(base); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_receive16BitDataBlocking",
+      "functionArgs": [
+        "base",
+        "*receiveData"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Wait until new data arrives.\n    //\n    while(!McBSP_isRxReady(base))\n    {\n    }\n\n    //\n    // Read the data.\n    //\n    *receiveData = McBSP_read16bitData(base);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Wait until new data arrives. // while(!McBSP_isRxReady(base)) { } // // Read the data. // *receiveData = McBSP_read16bitData(base); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_receive32BitDataNonBlocking",
+      "functionArgs": [
+        "base",
+        "*receiveData"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Read the data.\n    //\n    *receiveData = McBSP_read32bitData(base);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Read the data. // *receiveData = McBSP_read32bitData(base); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_receive32BitDataBlocking",
+      "functionArgs": [
+        "base",
+        "*receiveData"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Wait until new data arrives.\n    //\n    while(!McBSP_isRxReady(base))\n    {\n    }\n\n    //\n    // Read the data.\n    //\n    *receiveData = McBSP_read32bitData(base);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Wait until new data arrives. // while(!McBSP_isRxReady(base)) { } // // Read the data. // *receiveData = McBSP_read32bitData(base); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxDataSize",
+      "functionArgs": [
+        "base",
+        "dataFrame",
+        "bitsPerWord",
+        "wordsPerFrame"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_DataPhaseFrame",
+        "constMcBSP_DataBitsPerWord",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n    ASSERT(wordsPerFrame < 128U);\n\n    if(dataFrame == MCBSP_PHASE_ONE_FRAME)\n    {\n        //\n        // Set bits per word , write to RWDLEN1 and words per frame , write to\n        // RFRLEN1.\n        //\n        HWREGH(base + MCBSP_O_RCR1) =\n        ((HWREGH(base + MCBSP_O_RCR1) & ~MCBSP_RCR1_M) |\n         ((uint16_t)bitsPerWord | (wordsPerFrame << MCBSP_RCR1_RFRLEN1_S)));\n    }\n    else\n    {\n        //\n        // Set bits per word , write to RWDLEN2 and words per frame, write to\n        // RFRLEN2.\n        //\n        HWREGH(base + MCBSP_O_RCR2) =\n        ((HWREGH(base + MCBSP_O_RCR2) & ~MCBSP_RCR2_M) |\n         ((uint16_t)bitsPerWord | (wordsPerFrame << MCBSP_RCR2_RFRLEN2_S)));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); ASSERT(wordsPerFrame < 128U); if(dataFrame == MCBSP_PHASE_ONE_FRAME) { // // Set bits per word , write to RWDLEN1 and words per frame , write to // RFRLEN1. // HWREGH(base + MCBSP_O_RCR1) = ((HWREGH(base + MCBSP_O_RCR1) & ~MCBSP_RCR1_M) | ((uint16_t)bitsPerWord | (wordsPerFrame << MCBSP_RCR1_RFRLEN1_S))); } else { // // Set bits per word , write to RWDLEN2 and words per frame, write to // RFRLEN2. // HWREGH(base + MCBSP_O_RCR2) = ((HWREGH(base + MCBSP_O_RCR2) & ~MCBSP_RCR2_M) | ((uint16_t)bitsPerWord | (wordsPerFrame << MCBSP_RCR2_RFRLEN2_S))); } }",
+      "registersUsed": [
+        "RCR2",
+        "RCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCR2",
+        "RCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxDataSize",
+      "functionArgs": [
+        "base",
+        "dataFrame",
+        "bitsPerWord",
+        "wordsPerFrame"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_DataPhaseFrame",
+        "constMcBSP_DataBitsPerWord",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n    ASSERT(wordsPerFrame < 128U);\n\n    if(dataFrame == MCBSP_PHASE_ONE_FRAME)\n    {\n        //\n        // Set bits per word XWDLEN1 and words per frame XFRLEN1.\n        //\n        HWREGH(base + MCBSP_O_XCR1) =\n        ((HWREGH(base + MCBSP_O_XCR1) & ~MCBSP_XCR1_M) |\n        ((uint16_t)bitsPerWord | (wordsPerFrame << MCBSP_XCR1_XFRLEN1_S)));\n    }\n    else\n    {\n        //\n        // Set bits per word XWDLEN2 and words per frame XFRLEN2.\n        //\n        HWREGH(base + MCBSP_O_XCR2) =\n        ((HWREGH(base + MCBSP_O_XCR2) & ~MCBSP_XCR2_M) |\n         ((uint16_t)bitsPerWord | (wordsPerFrame << MCBSP_XCR2_XFRLEN2_S)));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); ASSERT(wordsPerFrame < 128U); if(dataFrame == MCBSP_PHASE_ONE_FRAME) { // // Set bits per word XWDLEN1 and words per frame XFRLEN1. // HWREGH(base + MCBSP_O_XCR1) = ((HWREGH(base + MCBSP_O_XCR1) & ~MCBSP_XCR1_M) | ((uint16_t)bitsPerWord | (wordsPerFrame << MCBSP_XCR1_XFRLEN1_S))); } else { // // Set bits per word XWDLEN2 and words per frame XFRLEN2. // HWREGH(base + MCBSP_O_XCR2) = ((HWREGH(base + MCBSP_O_XCR2) & ~MCBSP_XCR2_M) | ((uint16_t)bitsPerWord | (wordsPerFrame << MCBSP_XCR2_XFRLEN2_S))); } }",
+      "registersUsed": [
+        "XCR2",
+        "XCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "XCR2",
+        "XCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_disableRxChannel",
+      "functionArgs": [
+        "base",
+        "partition",
+        "channel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_MultichannelPartition",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t block;\n    uint16_t bitOffset;\n    uint16_t registerOffset;\n    uint16_t oddBlock;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n    ASSERT(channel < 128U);\n\n    //\n    // Determine channel block.\n    //\n    block = channel >> 4U;\n\n    //\n    // Determine bit location.\n    //\n    bitOffset = channel - (block * 16U);\n\n    //\n    // Determine register offset for Eight partition.\n    //\n    if(partition == MCBSP_MULTICHANNEL_EIGHT_PARTITION)\n    {\n        //\n        // For channel number  0 - 31.\n        //\n        if(channel < 32U)\n        {\n            //\n            // Determines whether it is RCERA or RCERB.\n            //\n            registerOffset = channel >> 4U;\n        }\n\n        //\n        // For channel number 32 - 127.\n        //\n        else\n        {\n            //\n            // Determines whether it is RCERC or RCERD or RCERE or RCERF or\n            // RCERG or RCERH.\n            //\n            oddBlock = (block & 1U);\n            registerOffset = oddBlock + (2U * (block - (2U + oddBlock))) +\n                             0x5U;\n        }\n    }\n\n    //\n    // Determine register offset for Two partition.\n    //\n    else\n    {\n        //\n        // Determine whether it is RCERA or RCERB.\n        //\n        registerOffset = block & 0x1U;\n    }\n\n    HWREGH(base + MCBSP_O_RCERA + registerOffset) &= ~(1U << bitOffset);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t block; uint16_t bitOffset; uint16_t registerOffset; uint16_t oddBlock; // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); ASSERT(channel < 128U); // // Determine channel block. // block = channel >> 4U; // // Determine bit location. // bitOffset = channel - (block * 16U); // // Determine register offset for Eight partition. // if(partition == MCBSP_MULTICHANNEL_EIGHT_PARTITION) { // // For channel number 0 - 31. // if(channel < 32U) { // // Determines whether it is RCERA or RCERB. // registerOffset = channel >> 4U; } // // For channel number 32 - 127. // else { // // Determines whether it is RCERC or RCERD or RCERE or RCERF or // RCERG or RCERH. // oddBlock = (block & 1U); registerOffset = oddBlock + (2U * (block - (2U + oddBlock))) + 0x5U; } } // // Determine register offset for Two partition. // else { // // Determine whether it is RCERA or RCERB. // registerOffset = block & 0x1U; } HWREGH(base + MCBSP_O_RCERA + registerOffset) &= ~(1U << bitOffset); }",
+      "registersUsed": [
+        "RCERA",
+        "RCERB",
+        "RCERC",
+        "RCERD",
+        "RCERE",
+        "RCERF",
+        "RCERG",
+        "RCERH"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCERA",
+        "RCERB",
+        "RCERC",
+        "RCERD",
+        "RCERE",
+        "RCERF",
+        "RCERG",
+        "RCERH"
+      ]
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableRxChannel",
+      "functionArgs": [
+        "base",
+        "partition",
+        "channel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_MultichannelPartition",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t block;\n    uint16_t bitOffset;\n    uint16_t registerOffset;\n    uint16_t oddBlock;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n    ASSERT(channel < 128U);\n\n    //\n    // Determine channel block.\n    //\n    block = channel >> 4U;\n\n    //\n    // Determine bit location.\n    //\n    bitOffset = channel - (block * 16U);\n\n    //\n    // Determine register offset for Eight partition.\n    //\n    if(partition == MCBSP_MULTICHANNEL_EIGHT_PARTITION)\n    {\n        //\n        // For channel number  0 - 31.\n        //\n        if(channel < 32U)\n        {\n            //\n            // Determines whether it is RCERA or RCERB.\n            //\n            registerOffset = channel >> 4U;\n        }\n\n        //\n        // For channel number  32 - 127.\n        //\n        else\n        {\n            //\n            // Determines whether it is RCERC or RCERD or RCERE or RCERF or\n            // RCERG or RCERH.\n            //\n            oddBlock = (block & 1U);\n            registerOffset = oddBlock + (2U * (block - (2U + oddBlock))) +\n                             0x5U;\n        }\n    }\n\n    //\n    // Determine register offset for Two partition.\n    //\n    else\n    {\n        //\n        // Determine whether it is RCERA or RCERB.\n        //\n        registerOffset = block & 0x1U;\n    }\n\n    HWREGH(base + MCBSP_O_RCERA + registerOffset) |= (1U << bitOffset);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t block; uint16_t bitOffset; uint16_t registerOffset; uint16_t oddBlock; // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); ASSERT(channel < 128U); // // Determine channel block. // block = channel >> 4U; // // Determine bit location. // bitOffset = channel - (block * 16U); // // Determine register offset for Eight partition. // if(partition == MCBSP_MULTICHANNEL_EIGHT_PARTITION) { // // For channel number 0 - 31. // if(channel < 32U) { // // Determines whether it is RCERA or RCERB. // registerOffset = channel >> 4U; } // // For channel number 32 - 127. // else { // // Determines whether it is RCERC or RCERD or RCERE or RCERF or // RCERG or RCERH. // oddBlock = (block & 1U); registerOffset = oddBlock + (2U * (block - (2U + oddBlock))) + 0x5U; } } // // Determine register offset for Two partition. // else { // // Determine whether it is RCERA or RCERB. // registerOffset = block & 0x1U; } HWREGH(base + MCBSP_O_RCERA + registerOffset) |= (1U << bitOffset); }",
+      "registersUsed": [
+        "RCERA",
+        "RCERB",
+        "RCERC",
+        "RCERD",
+        "RCERE",
+        "RCERF",
+        "RCERG",
+        "RCERH"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCERA",
+        "RCERB",
+        "RCERC",
+        "RCERD",
+        "RCERE",
+        "RCERF",
+        "RCERG",
+        "RCERH"
+      ]
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_disableTxChannel",
+      "functionArgs": [
+        "base",
+        "partition",
+        "channel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_MultichannelPartition",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t block;\n    uint16_t bitOffset;\n    uint16_t registerOffset;\n    uint16_t oddBlock;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n    ASSERT(channel < 128U);\n\n    //\n    // Determine channel block.\n    //\n    block = channel >> 4U;\n\n    //\n    // Determine bit location.\n    //\n    bitOffset = channel - (block * 16U);\n\n    //\n    // Determine register offset for Eight partition.\n    //\n    if(partition == MCBSP_MULTICHANNEL_EIGHT_PARTITION)\n    {\n        //\n        // For channel number  0 - 31.\n        //\n        if(channel < 32U)\n        {\n            //\n            // Determines whether it is XCERA or XCERB.\n            //\n            registerOffset = channel >> 4U;\n        }\n\n        //\n        // For channel number  32 - 127.\n        //\n        else\n        {\n            //\n            // Determines whether it is XCERC or XCERD or XCERE or XCERF or\n            // XCERG or XCERH.\n            //\n            oddBlock = (block & 1U);\n            registerOffset = oddBlock + (2U * (block - (2U + oddBlock))) +\n                             0x5U;\n        }\n    }\n\n    //\n    // Determine register offset for Two partition.\n    //\n    else\n    {\n        //\n        // Determine whether it is XCERA or XCERB.\n        //\n        registerOffset = block & 0x1U;\n    }\n\n    HWREGH(base + MCBSP_O_XCERA + registerOffset) &= ~(1U << bitOffset);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t block; uint16_t bitOffset; uint16_t registerOffset; uint16_t oddBlock; // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); ASSERT(channel < 128U); // // Determine channel block. // block = channel >> 4U; // // Determine bit location. // bitOffset = channel - (block * 16U); // // Determine register offset for Eight partition. // if(partition == MCBSP_MULTICHANNEL_EIGHT_PARTITION) { // // For channel number 0 - 31. // if(channel < 32U) { // // Determines whether it is XCERA or XCERB. // registerOffset = channel >> 4U; } // // For channel number 32 - 127. // else { // // Determines whether it is XCERC or XCERD or XCERE or XCERF or // XCERG or XCERH. // oddBlock = (block & 1U); registerOffset = oddBlock + (2U * (block - (2U + oddBlock))) + 0x5U; } } // // Determine register offset for Two partition. // else { // // Determine whether it is XCERA or XCERB. // registerOffset = block & 0x1U; } HWREGH(base + MCBSP_O_XCERA + registerOffset) &= ~(1U << bitOffset); }",
+      "registersUsed": [
+        "XCERA",
+        "XCERB",
+        "XCERC",
+        "XCERD",
+        "XCERE",
+        "XCERF",
+        "XCERG",
+        "XCERH"
+      ],
+      "registersUsedMatchingBifield": [
+        "XCERA",
+        "XCERB",
+        "XCERC",
+        "XCERD",
+        "XCERE",
+        "XCERF",
+        "XCERG",
+        "XCERH"
+      ]
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableTxChannel",
+      "functionArgs": [
+        "base",
+        "partition",
+        "channel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_MultichannelPartition",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t block;\n    uint16_t bitOffset;\n    uint16_t registerOffset;\n    uint16_t oddBlock;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n    ASSERT(channel < 128U);\n\n    //\n    // Determine channel block.\n    //\n    block = channel >> 4U;\n\n    //\n    // Determine bit location.\n    //\n    bitOffset = channel - (block * 16U);\n\n    //\n    // Determine register offset for Eight partition.\n    //\n    if(partition == MCBSP_MULTICHANNEL_EIGHT_PARTITION)\n    {\n        //\n        // For channel number  0 - 31.\n        //\n        if(channel < 32U)\n        {\n            //\n            // Determines whether it is XCERA or XCERB.\n            //\n            registerOffset = channel >> 4U;\n        }\n\n        //\n        // For channel number  32 - 127.\n        //\n        else\n        {\n            //\n            // Determines whether it is XCERC or XCERD or XCERE or XCERF or\n            // XCERG or XCERH.\n            //\n            oddBlock = (block & 1U);\n            registerOffset = oddBlock + (2U * (block - (2U + oddBlock))) +\n                             0x5U;\n        }\n    }\n\n    //\n    // Determine register offset for Two partition.\n    //\n    else\n    {\n        //\n        // Determine wheter it is XCERA or XCERB.\n        //\n        registerOffset = block & 0x1U;\n    }\n\n    HWREGH(base + MCBSP_O_XCERA + registerOffset) |= (1U << bitOffset);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t block; uint16_t bitOffset; uint16_t registerOffset; uint16_t oddBlock; // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); ASSERT(channel < 128U); // // Determine channel block. // block = channel >> 4U; // // Determine bit location. // bitOffset = channel - (block * 16U); // // Determine register offset for Eight partition. // if(partition == MCBSP_MULTICHANNEL_EIGHT_PARTITION) { // // For channel number 0 - 31. // if(channel < 32U) { // // Determines whether it is XCERA or XCERB. // registerOffset = channel >> 4U; } // // For channel number 32 - 127. // else { // // Determines whether it is XCERC or XCERD or XCERE or XCERF or // XCERG or XCERH. // oddBlock = (block & 1U); registerOffset = oddBlock + (2U * (block - (2U + oddBlock))) + 0x5U; } } // // Determine register offset for Two partition. // else { // // Determine wheter it is XCERA or XCERB. // registerOffset = block & 0x1U; } HWREGH(base + MCBSP_O_XCERA + registerOffset) |= (1U << bitOffset); }",
+      "registersUsed": [
+        "XCERA",
+        "XCERB",
+        "XCERC",
+        "XCERD",
+        "XCERE",
+        "XCERF",
+        "XCERG",
+        "XCERH"
+      ],
+      "registersUsedMatchingBifield": [
+        "XCERA",
+        "XCERB",
+        "XCERC",
+        "XCERD",
+        "XCERE",
+        "XCERF",
+        "XCERG",
+        "XCERH"
+      ]
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_configureTxClock",
+      "functionArgs": [
+        "base",
+        "*ptrClockParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_ClockParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Select TX clock source as SRG or External.\n    //\n    McBSP_setTxClockSource(base,\n                           (McBSP_TxClockSource)ptrClockParams->clockSourceTx);\n\n    //\n    // Check if using SRG to drive Transmitter clock.\n    //\n    if((McBSP_TxClockSource)ptrClockParams->clockSourceTx ==\n        MCBSP_INTERNAL_TX_CLOCK_SOURCE)\n    {\n        //\n        // Set the SRG clock source.\n        //\n        McBSP_setTxSRGClockSource(base,\n                     (McBSP_SRGTxClockSource)ptrClockParams->clockTxSRGSource);\n\n        //\n        // Check if SRG is clocked from MCLKR pin. GSYNC feature can be enabled\n        // in this case as SRG input clock source is MCLKR pin.\n        //\n        if((McBSP_SRGTxClockSource)ptrClockParams->clockTxSRGSource ==\n           MCBSP_SRG_TX_CLOCK_SOURCE_MCLKR_PIN)\n        {\n            //\n            // Set the input clock polarity.\n            //\n            McBSP_setRxClockPolarity(base,\n                    (McBSP_RxClockPolarity)ptrClockParams->clockMCLKRPolarity);\n\n            //\n            // Check if SRG is to be synced with FSR that is GSYNC is to be\n            // enabled or not.\n            //\n            if(ptrClockParams->clockSRGSyncFlag)\n            {\n                McBSP_enableSRGSyncFSR(base);\n            }\n            else\n            {\n                McBSP_disableSRGSyncFSR(base);\n            }\n        }\n\n        //\n        // Set SRG clock divider.\n        //\n        McBSP_setSRGDataClockDivider(base,\n                                    (uint16_t)ptrClockParams->clockSRGDivider);\n    }\n\n    //\n    // Input polarity if using external clock on MCLKX.\n    // Output polarity if using SRG as clock source.\n    //\n    McBSP_setTxClockPolarity(base,\n                    (McBSP_TxClockPolarity)ptrClockParams->clockMCLKXPolarity);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Select TX clock source as SRG or External. // McBSP_setTxClockSource(base, (McBSP_TxClockSource)ptrClockParams->clockSourceTx); // // Check if using SRG to drive Transmitter clock. // if((McBSP_TxClockSource)ptrClockParams->clockSourceTx == MCBSP_INTERNAL_TX_CLOCK_SOURCE) { // // Set the SRG clock source. // McBSP_setTxSRGClockSource(base, (McBSP_SRGTxClockSource)ptrClockParams->clockTxSRGSource); // // Check if SRG is clocked from MCLKR pin. GSYNC feature can be enabled // in this case as SRG input clock source is MCLKR pin. // if((McBSP_SRGTxClockSource)ptrClockParams->clockTxSRGSource == MCBSP_SRG_TX_CLOCK_SOURCE_MCLKR_PIN) { // // Set the input clock polarity. // McBSP_setRxClockPolarity(base, (McBSP_RxClockPolarity)ptrClockParams->clockMCLKRPolarity); // // Check if SRG is to be synced with FSR that is GSYNC is to be // enabled or not. // if(ptrClockParams->clockSRGSyncFlag) { McBSP_enableSRGSyncFSR(base); } else { McBSP_disableSRGSyncFSR(base); } } // // Set SRG clock divider. // McBSP_setSRGDataClockDivider(base, (uint16_t)ptrClockParams->clockSRGDivider); } // // Input polarity if using external clock on MCLKX. // Output polarity if using SRG as clock source. // McBSP_setTxClockPolarity(base, (McBSP_TxClockPolarity)ptrClockParams->clockMCLKXPolarity); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_configureRxClock",
+      "functionArgs": [
+        "base",
+        "*ptrClockParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_ClockParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Select RX clock source as SRG or External.\n    //\n    McBSP_setRxClockSource(base,\n                           (McBSP_RxClockSource)ptrClockParams->clockSourceRx);\n\n    //\n    // Check if using SRG to drive Receiver clock.\n    //\n    if((McBSP_RxClockSource)ptrClockParams->clockSourceRx ==\n        MCBSP_INTERNAL_RX_CLOCK_SOURCE)\n    {\n        //\n        // Set the SRG clock source.\n        //\n        McBSP_setRxSRGClockSource(base,\n                     (McBSP_SRGRxClockSource)ptrClockParams->clockRxSRGSource);\n\n        //\n        // Check if SRG is clocked from MCLKX pin. GSYNC cannot be enabled in\n        // this case as GSYNC feature can be used only when SRG clock source is\n        // MCLKR pin.\n        //\n        if((McBSP_SRGRxClockSource)ptrClockParams->clockRxSRGSource ==\n           MCBSP_SRG_RX_CLOCK_SOURCE_MCLKX_PIN)\n        {\n            //\n            // Set the input clock polarity.\n            //\n            McBSP_setTxClockPolarity(base,\n                    (McBSP_TxClockPolarity)ptrClockParams->clockMCLKXPolarity);\n        }\n\n        //\n        // Set SRG clock divider.\n        //\n        McBSP_setSRGDataClockDivider(base,\n                                    (uint16_t)ptrClockParams->clockSRGDivider);\n    }\n\n    //\n    // Input polarity if using external clock on MCLKR.\n    // Output polarity if using SRG as clock source.\n    //\n    McBSP_setRxClockPolarity(base,\n                    (McBSP_RxClockPolarity)ptrClockParams->clockMCLKRPolarity);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Select RX clock source as SRG or External. // McBSP_setRxClockSource(base, (McBSP_RxClockSource)ptrClockParams->clockSourceRx); // // Check if using SRG to drive Receiver clock. // if((McBSP_RxClockSource)ptrClockParams->clockSourceRx == MCBSP_INTERNAL_RX_CLOCK_SOURCE) { // // Set the SRG clock source. // McBSP_setRxSRGClockSource(base, (McBSP_SRGRxClockSource)ptrClockParams->clockRxSRGSource); // // Check if SRG is clocked from MCLKX pin. GSYNC cannot be enabled in // this case as GSYNC feature can be used only when SRG clock source is // MCLKR pin. // if((McBSP_SRGRxClockSource)ptrClockParams->clockRxSRGSource == MCBSP_SRG_RX_CLOCK_SOURCE_MCLKX_PIN) { // // Set the input clock polarity. // McBSP_setTxClockPolarity(base, (McBSP_TxClockPolarity)ptrClockParams->clockMCLKXPolarity); } // // Set SRG clock divider. // McBSP_setSRGDataClockDivider(base, (uint16_t)ptrClockParams->clockSRGDivider); } // // Input polarity if using external clock on MCLKR. // Output polarity if using SRG as clock source. // McBSP_setRxClockPolarity(base, (McBSP_RxClockPolarity)ptrClockParams->clockMCLKRPolarity); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_configureTxFrameSync",
+      "functionArgs": [
+        "base",
+        "*ptrFsyncParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_TxFsyncParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Select frame-sync signal source.\n    //\n    McBSP_setTxFrameSyncSource(base,\n                        (McBSP_TxFrameSyncSource)ptrFsyncParams->syncSourceTx);\n\n    //\n    // Check if using internal frame-sync source.\n    //\n    if((McBSP_TxFrameSyncSource)ptrFsyncParams->syncSourceTx ==\n        MCBSP_TX_INTERNAL_FRAME_SYNC_SOURCE)\n    {\n        //\n        // Select the internal frame-sync trigger source.\n        //\n        McBSP_setTxInternalFrameSyncSource(base,\n               (McBSP_TxInternalFrameSyncSource)ptrFsyncParams->syncIntSource);\n\n        //\n        // Check if using SRG FSG to trigger frame-sync pulse and GSYNC feature\n        // is disabled that is FSG is not derived from external MCLKR pin.\n        //\n        if((ptrFsyncParams->syncIntSource ==\n            MCBSP_TX_INTERNAL_FRAME_SYNC_SRG) &&\n           (ptrFsyncParams->syncSRGSyncFSRFlag == false))\n        {\n            //\n            // Set the frame-sync pulse period and width dividers.\n            //\n            McBSP_setFrameSyncPulsePeriod(base,\n                                           ptrFsyncParams->syncClockDivider);\n            McBSP_setFrameSyncPulseWidthDivider(base,\n                                             ptrFsyncParams->syncPulseDivider);\n        }\n    }\n\n    //\n    // Set the frame-sync polarity.\n    //\n    McBSP_setTxFrameSyncPolarity(base,\n                   (McBSP_TxFrameSyncPolarity)ptrFsyncParams->syncFSXPolarity);\n\n    //\n    // Configure frame-sync error detect flag.\n    //\n    if(ptrFsyncParams->syncErrorDetect)\n    {\n        McBSP_enableTxFrameSyncErrorDetection(base);\n    }\n    else\n    {\n        McBSP_disableTxFrameSyncErrorDetection(base);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Select frame-sync signal source. // McBSP_setTxFrameSyncSource(base, (McBSP_TxFrameSyncSource)ptrFsyncParams->syncSourceTx); // // Check if using internal frame-sync source. // if((McBSP_TxFrameSyncSource)ptrFsyncParams->syncSourceTx == MCBSP_TX_INTERNAL_FRAME_SYNC_SOURCE) { // // Select the internal frame-sync trigger source. // McBSP_setTxInternalFrameSyncSource(base, (McBSP_TxInternalFrameSyncSource)ptrFsyncParams->syncIntSource); // // Check if using SRG FSG to trigger frame-sync pulse and GSYNC feature // is disabled that is FSG is not derived from external MCLKR pin. // if((ptrFsyncParams->syncIntSource == MCBSP_TX_INTERNAL_FRAME_SYNC_SRG) && (ptrFsyncParams->syncSRGSyncFSRFlag == false)) { // // Set the frame-sync pulse period and width dividers. // McBSP_setFrameSyncPulsePeriod(base, ptrFsyncParams->syncClockDivider); McBSP_setFrameSyncPulseWidthDivider(base, ptrFsyncParams->syncPulseDivider); } } // // Set the frame-sync polarity. // McBSP_setTxFrameSyncPolarity(base, (McBSP_TxFrameSyncPolarity)ptrFsyncParams->syncFSXPolarity); // // Configure frame-sync error detect flag. // if(ptrFsyncParams->syncErrorDetect) { McBSP_enableTxFrameSyncErrorDetection(base); } else { McBSP_disableTxFrameSyncErrorDetection(base); } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_configureRxFrameSync",
+      "functionArgs": [
+        "base",
+        "*ptrFsyncParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_RxFsyncParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Select frame-sync signal source.\n    //\n    McBSP_setRxFrameSyncSource(base,\n                        (McBSP_RxFrameSyncSource)ptrFsyncParams->syncSourceRx);\n\n    //\n    // If using internal frame-sync source.\n    //\n    if(ptrFsyncParams->syncSourceRx == MCBSP_RX_INTERNAL_FRAME_SYNC_SOURCE)\n    {\n        //\n        // Check if GSYNC feature is disabled that is FSG is not derived\n        // from external MCLKR pin.\n        //\n        if(ptrFsyncParams->syncSRGSyncFSRFlag == false)\n        {\n            //\n            // Set the frame-sync pulse period and width dividers.\n            //\n            McBSP_setFrameSyncPulsePeriod(base,\n                                           ptrFsyncParams->syncClockDivider);\n            McBSP_setFrameSyncPulseWidthDivider(base,\n                                           ptrFsyncParams->syncPulseDivider);\n        }\n    }\n\n    //\n    // Set the frame-sync polarity.\n    //\n    McBSP_setRxFrameSyncPolarity(base,\n                   (McBSP_RxFrameSyncPolarity)ptrFsyncParams->syncFSRPolarity);\n\n    //\n    // Configure frame-sync error detect flag.\n    //\n    if(ptrFsyncParams->syncErrorDetect)\n    {\n        McBSP_enableRxFrameSyncErrorDetection(base);\n    }\n    else\n    {\n        McBSP_disableTxFrameSyncErrorDetection(base);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Select frame-sync signal source. // McBSP_setRxFrameSyncSource(base, (McBSP_RxFrameSyncSource)ptrFsyncParams->syncSourceRx); // // If using internal frame-sync source. // if(ptrFsyncParams->syncSourceRx == MCBSP_RX_INTERNAL_FRAME_SYNC_SOURCE) { // // Check if GSYNC feature is disabled that is FSG is not derived // from external MCLKR pin. // if(ptrFsyncParams->syncSRGSyncFSRFlag == false) { // // Set the frame-sync pulse period and width dividers. // McBSP_setFrameSyncPulsePeriod(base, ptrFsyncParams->syncClockDivider); McBSP_setFrameSyncPulseWidthDivider(base, ptrFsyncParams->syncPulseDivider); } } // // Set the frame-sync polarity. // McBSP_setRxFrameSyncPolarity(base, (McBSP_RxFrameSyncPolarity)ptrFsyncParams->syncFSRPolarity); // // Configure frame-sync error detect flag. // if(ptrFsyncParams->syncErrorDetect) { McBSP_enableRxFrameSyncErrorDetection(base); } else { McBSP_disableTxFrameSyncErrorDetection(base); } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_configureTxDataFormat",
+      "functionArgs": [
+        "base",
+        "*ptrDataParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_TxDataParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set loop back mode.\n    //\n    if(ptrDataParams->loopbackModeFlag)\n    {\n        McBSP_enableLoopback(base);\n    }\n    else\n    {\n        McBSP_disableLoopback(base);\n    }\n\n    //\n    // Configure the module to work in McBSP.\n    //\n    McBSP_setClockStopMode(base, MCBSP_CLOCK_MCBSP_MODE);\n\n    //\n    // Start with single phase - a TX must at least has a single phase.\n    //\n    McBSP_setTxDataSize(base, MCBSP_PHASE_ONE_FRAME,\n                        (McBSP_DataBitsPerWord)ptrDataParams->phase1WordLength,\n                        ptrDataParams->phase1FrameLength);\n\n    //\n    // Disable second phase by default.\n    //\n    McBSP_disableTwoPhaseTx(base);\n\n    //\n    // Check if second phase is being used.\n    //\n    if(ptrDataParams->twoPhaseModeFlag)\n    {\n        //\n        // Enable second phase.\n        //\n        McBSP_enableTwoPhaseTx(base);\n\n        //\n        // Set the parameters for the second phase.\n        //\n        McBSP_setTxDataSize(base, MCBSP_PHASE_TWO_FRAME,\n                        (McBSP_DataBitsPerWord)ptrDataParams->phase2WordLength,\n                         ptrDataParams->phase2FrameLength);\n    }\n\n    //\n    // Set the Tx companding mode.\n    //\n    McBSP_setTxCompandingMode(base,\n                          (McBSP_CompandingMode)ptrDataParams->compandingMode);\n\n    //\n    // Set Tx data delay in bits.\n    //\n    McBSP_setTxDataDelayBits(base,\n                            (McBSP_DataDelayBits)ptrDataParams->dataDelayBits);\n\n    //\n    // Set DX pin delay.\n    //\n    if(ptrDataParams->pinDelayEnableFlag)\n    {\n        McBSP_enableDxPinDelay(base);\n    }\n    else\n    {\n        McBSP_disableDxPinDelay(base);\n    }\n\n    //\n    // Set the transmitter interrupt source.\n    //\n    McBSP_setTxInterruptSource(base,\n                        (McBSP_TxInterruptSource)ptrDataParams->interruptMode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set loop back mode. // if(ptrDataParams->loopbackModeFlag) { McBSP_enableLoopback(base); } else { McBSP_disableLoopback(base); } // // Configure the module to work in McBSP. // McBSP_setClockStopMode(base, MCBSP_CLOCK_MCBSP_MODE); // // Start with single phase - a TX must at least has a single phase. // McBSP_setTxDataSize(base, MCBSP_PHASE_ONE_FRAME, (McBSP_DataBitsPerWord)ptrDataParams->phase1WordLength, ptrDataParams->phase1FrameLength); // // Disable second phase by default. // McBSP_disableTwoPhaseTx(base); // // Check if second phase is being used. // if(ptrDataParams->twoPhaseModeFlag) { // // Enable second phase. // McBSP_enableTwoPhaseTx(base); // // Set the parameters for the second phase. // McBSP_setTxDataSize(base, MCBSP_PHASE_TWO_FRAME, (McBSP_DataBitsPerWord)ptrDataParams->phase2WordLength, ptrDataParams->phase2FrameLength); } // // Set the Tx companding mode. // McBSP_setTxCompandingMode(base, (McBSP_CompandingMode)ptrDataParams->compandingMode); // // Set Tx data delay in bits. // McBSP_setTxDataDelayBits(base, (McBSP_DataDelayBits)ptrDataParams->dataDelayBits); // // Set DX pin delay. // if(ptrDataParams->pinDelayEnableFlag) { McBSP_enableDxPinDelay(base); } else { McBSP_disableDxPinDelay(base); } // // Set the transmitter interrupt source. // McBSP_setTxInterruptSource(base, (McBSP_TxInterruptSource)ptrDataParams->interruptMode); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_configureRxDataFormat",
+      "functionArgs": [
+        "base",
+        "*ptrDataParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_RxDataParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set loop back mode.\n    //\n    if(ptrDataParams->loopbackModeFlag)\n    {\n        McBSP_enableLoopback(base);\n    }\n    else\n    {\n        McBSP_disableLoopback(base);\n    }\n\n    //\n    // Configure the module to work in McBSP mode.\n    //\n    McBSP_setClockStopMode(base, MCBSP_CLOCK_MCBSP_MODE);\n\n    //\n    // Start with single phase - an RX must at least have a single phase.\n    //\n    McBSP_setRxDataSize(base, MCBSP_PHASE_ONE_FRAME,\n                        (McBSP_DataBitsPerWord)ptrDataParams->phase1WordLength,\n                         ptrDataParams->phase1FrameLength);\n\n    //\n    // Disable second phase by default.\n    //\n    McBSP_disableTwoPhaseRx(base);\n\n    //\n    // Check if second phase is to be enabled.\n    //\n    if(ptrDataParams->twoPhaseModeFlag)\n    {\n        //\n        // Enable second phase.\n        //\n        McBSP_enableTwoPhaseRx(base);\n\n        //\n        // Set the parameters for the second phase.\n        //\n        McBSP_setRxDataSize(base, MCBSP_PHASE_TWO_FRAME,\n                        (McBSP_DataBitsPerWord)ptrDataParams->phase2WordLength,\n                         ptrDataParams->phase2FrameLength);\n    }\n\n    //\n    // Set the receiver companding mode.\n    //\n    McBSP_setRxCompandingMode(base,\n                          (McBSP_CompandingMode)ptrDataParams->compandingMode);\n\n    //\n    // Set receiver data delay in bits.\n    //\n    McBSP_setRxDataDelayBits(base,\n                         (McBSP_DataDelayBits)ptrDataParams->dataDelayBits);\n\n    //\n    // Set receiver sign-extension and justification mode.\n    //\n    McBSP_setRxSignExtension(base,\n                        (McBSP_RxSignExtensionMode)ptrDataParams->signExtMode);\n\n    //\n    // Set the receiver interrupt source.\n    //\n    McBSP_setRxInterruptSource(base,\n                        (McBSP_RxInterruptSource)ptrDataParams->interruptMode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set loop back mode. // if(ptrDataParams->loopbackModeFlag) { McBSP_enableLoopback(base); } else { McBSP_disableLoopback(base); } // // Configure the module to work in McBSP mode. // McBSP_setClockStopMode(base, MCBSP_CLOCK_MCBSP_MODE); // // Start with single phase - an RX must at least have a single phase. // McBSP_setRxDataSize(base, MCBSP_PHASE_ONE_FRAME, (McBSP_DataBitsPerWord)ptrDataParams->phase1WordLength, ptrDataParams->phase1FrameLength); // // Disable second phase by default. // McBSP_disableTwoPhaseRx(base); // // Check if second phase is to be enabled. // if(ptrDataParams->twoPhaseModeFlag) { // // Enable second phase. // McBSP_enableTwoPhaseRx(base); // // Set the parameters for the second phase. // McBSP_setRxDataSize(base, MCBSP_PHASE_TWO_FRAME, (McBSP_DataBitsPerWord)ptrDataParams->phase2WordLength, ptrDataParams->phase2FrameLength); } // // Set the receiver companding mode. // McBSP_setRxCompandingMode(base, (McBSP_CompandingMode)ptrDataParams->compandingMode); // // Set receiver data delay in bits. // McBSP_setRxDataDelayBits(base, (McBSP_DataDelayBits)ptrDataParams->dataDelayBits); // // Set receiver sign-extension and justification mode. // McBSP_setRxSignExtension(base, (McBSP_RxSignExtensionMode)ptrDataParams->signExtMode); // // Set the receiver interrupt source. // McBSP_setRxInterruptSource(base, (McBSP_RxInterruptSource)ptrDataParams->interruptMode); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_configureTxMultichannel",
+      "functionArgs": [
+        "base",
+        "*ptrMchnParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_TxMultichannelParams"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t index;\n    uint16_t block;\n    uint16_t partitionAblock;\n    uint16_t partitionBblock;\n    uint16_t partitionAflag;\n    uint16_t partitionBflag;\n    uint16_t errorTx;\n\n    errorTx = 0U;\n    partitionAblock = 0U;\n    partitionBblock = 0U;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Configure Tx Channel Selection mode.\n    //\n    McBSP_setTxChannelMode(base,\n                       (McBSP_TxChannelMode)ptrMchnParams->multichannelModeTx);\n\n    //\n    // Configuration for multichannel selections that is for\n    // MCBSP_TX_CHANNEL_SELECTION_ENABLED,\n    // MCBSP_ENABLE_MASKED_TX_CHANNEL_SELECTION or\n    // MCBSP_SYMMERTIC_RX_TX_SELECTION.\n    //\n    if(((McBSP_TxChannelMode)ptrMchnParams->multichannelModeTx) !=\n         MCBSP_ALL_TX_CHANNELS_ENABLED)\n    {\n        //\n        // Select 2 partition or 8 partition.\n        //\n        McBSP_setTxMultichannelPartition(base,\n                      (McBSP_MultichannelPartition)ptrMchnParams->partitionTx);\n\n        //\n        // Disable dual phase transmission mode.\n        //\n        McBSP_disableTwoPhaseTx(base);\n\n        //\n        // Multichannel configuration for 2 partition mode.\n        //\n        if((McBSP_MultichannelPartition)ptrMchnParams->partitionTx ==\n            MCBSP_MULTICHANNEL_TWO_PARTITION)\n        {\n            if(((uint16_t)ptrMchnParams->channelCountTx) > 32U)\n            {\n                errorTx = MCBSP_ERROR_EXCEEDED_CHANNELS;\n            }\n            partitionAflag = 0U;\n            partitionBflag = 0U;\n\n            //\n            // Assign blocks to partition for the provided channels and\n            // enable the channels. Only the channels which belong to the\n            // block currently assigned to partition A or B can be enabled.\n            //\n            for(index = 0U; index < (uint16_t)ptrMchnParams->channelCountTx;\n                index++)\n            {\n                //\n                // Get the block to which channel belongs.\n                //\n                block = (uint16_t)(*((ptrMchnParams->ptrChannelsListTx) +\n                                     index)) >> 4U;\n\n                //\n                // Check if channel block can be assigned to partition A. Only\n                // even numbered blocks can be assigned to partition A.\n                //\n                if((block & 0x1U) == 0U)\n                {\n                    //\n                    // Check if block is yet to be assigned to partition A.\n                    //\n                    if(partitionAflag == 0U)\n                    {\n                        //\n                        // Assign block to partition A.\n                        //\n                        McBSP_setTxTwoPartitionBlock(base,\n                                                  (McBSP_PartitionBlock)block);\n\n                        //\n                        // Set flag to indicate that a block is now assigned\n                        // to partition A. Only one block can be assigned to\n                        // a partition at a time in 2 partition mode.\n                        //\n                        partitionAflag = 1U;\n                        partitionAblock = block;\n                    }\n\n                    //\n                    // Check if the channel to be enabled belong to the block\n                    // assigned to partition A.\n                    //\n                    if(partitionAblock == block)\n                    {\n                        //\n                        // Enable the channel belonging to the block assigned\n                        // to partition A.\n                        //\n                        McBSP_enableTxChannel(base,\n                                              MCBSP_MULTICHANNEL_TWO_PARTITION,\n                               (uint16_t)(*(ptrMchnParams->ptrChannelsListTx)\n                                              + index));\n                    }\n                    else\n                    {\n                        errorTx = MCBSP_ERROR_2_PARTITION_A;\n                    }\n                }\n\n                //\n                // Check if channel block can be assigned to partition B. Only\n                // odd numbered blocks can be assigned to partition B.\n                //\n                else\n                {\n                    //\n                    // Check if block is yet to be assigned to partition B.\n                    //\n                    if(partitionBflag == 0U)\n                    {\n                        //\n                        // Assign block to partition B.\n                        //\n                        McBSP_setTxTwoPartitionBlock(base,\n                                                  (McBSP_PartitionBlock)block);\n\n                        //\n                        // Set flag to indicate that a block is now assigned\n                        // to partition B. Only one block can be assigned to\n                        // a partition at a time in 2 partition mode.\n                        //\n                        partitionBflag = 1U;\n                        partitionBblock = block;\n                    }\n\n                    //\n                    // Check if the channel to be enabled belong to the block\n                    // assigned to partition B.\n                    //\n                    if(partitionBblock == block)\n                    {\n                        //\n                        // Enable the channel belonging to the block assigned\n                        // to partition B.\n                        //\n                        McBSP_enableTxChannel(base,\n                                              MCBSP_MULTICHANNEL_TWO_PARTITION,\n                               (uint16_t)(*((ptrMchnParams->ptrChannelsListTx)\n                                              + index)));\n                    }\n                    else\n                    {\n                        errorTx |= MCBSP_ERROR_2_PARTITION_B;\n                    }\n                }\n            }\n        }\n\n        //\n        // Multichannel configuration for 8 partition mode.\n        //\n        else\n        {\n            if((uint16_t)ptrMchnParams->channelCountTx > 128U)\n            {\n                errorTx = MCBSP_ERROR_EXCEEDED_CHANNELS;\n            }\n            for(index = 0U; index < (uint16_t)ptrMchnParams->channelCountTx;\n                index++)\n            {\n                //\n                // Enable the Tx channels.\n                //\n                McBSP_enableTxChannel(base, MCBSP_MULTICHANNEL_EIGHT_PARTITION,\n                               (uint16_t)(*((ptrMchnParams->ptrChannelsListTx)\n                                      + index)));\n            }\n        }\n    }\n    return(errorTx);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t index; uint16_t block; uint16_t partitionAblock; uint16_t partitionBblock; uint16_t partitionAflag; uint16_t partitionBflag; uint16_t errorTx; errorTx = 0U; partitionAblock = 0U; partitionBblock = 0U; // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Configure Tx Channel Selection mode. // McBSP_setTxChannelMode(base, (McBSP_TxChannelMode)ptrMchnParams->multichannelModeTx); // // Configuration for multichannel selections that is for // MCBSP_TX_CHANNEL_SELECTION_ENABLED, // MCBSP_ENABLE_MASKED_TX_CHANNEL_SELECTION or // MCBSP_SYMMERTIC_RX_TX_SELECTION. // if(((McBSP_TxChannelMode)ptrMchnParams->multichannelModeTx) != MCBSP_ALL_TX_CHANNELS_ENABLED) { // // Select 2 partition or 8 partition. // McBSP_setTxMultichannelPartition(base, (McBSP_MultichannelPartition)ptrMchnParams->partitionTx); // // Disable dual phase transmission mode. // McBSP_disableTwoPhaseTx(base); // // Multichannel configuration for 2 partition mode. // if((McBSP_MultichannelPartition)ptrMchnParams->partitionTx == MCBSP_MULTICHANNEL_TWO_PARTITION) { if(((uint16_t)ptrMchnParams->channelCountTx) > 32U) { errorTx = MCBSP_ERROR_EXCEEDED_CHANNELS; } partitionAflag = 0U; partitionBflag = 0U; // // Assign blocks to partition for the provided channels and // enable the channels. Only the channels which belong to the // block currently assigned to partition A or B can be enabled. // for(index = 0U; index < (uint16_t)ptrMchnParams->channelCountTx; index++) { // // Get the block to which channel belongs. // block = (uint16_t)(*((ptrMchnParams->ptrChannelsListTx) + index)) >> 4U; // // Check if channel block can be assigned to partition A. Only // even numbered blocks can be assigned to partition A. // if((block & 0x1U) == 0U) { // // Check if block is yet to be assigned to partition A. // if(partitionAflag == 0U) { // // Assign block to partition A. // McBSP_setTxTwoPartitionBlock(base, (McBSP_PartitionBlock)block); // // Set flag to indicate that a block is now assigned // to partition A. Only one block can be assigned to // a partition at a time in 2 partition mode. // partitionAflag = 1U; partitionAblock = block; } // // Check if the channel to be enabled belong to the block // assigned to partition A. // if(partitionAblock == block) { // // Enable the channel belonging to the block assigned // to partition A. // McBSP_enableTxChannel(base, MCBSP_MULTICHANNEL_TWO_PARTITION, (uint16_t)(*(ptrMchnParams->ptrChannelsListTx) + index)); } else { errorTx = MCBSP_ERROR_2_PARTITION_A; } } // // Check if channel block can be assigned to partition B. Only // odd numbered blocks can be assigned to partition B. // else { // // Check if block is yet to be assigned to partition B. // if(partitionBflag == 0U) { // // Assign block to partition B. // McBSP_setTxTwoPartitionBlock(base, (McBSP_PartitionBlock)block); // // Set flag to indicate that a block is now assigned // to partition B. Only one block can be assigned to // a partition at a time in 2 partition mode. // partitionBflag = 1U; partitionBblock = block; } // // Check if the channel to be enabled belong to the block // assigned to partition B. // if(partitionBblock == block) { // // Enable the channel belonging to the block assigned // to partition B. // McBSP_enableTxChannel(base, MCBSP_MULTICHANNEL_TWO_PARTITION, (uint16_t)(*((ptrMchnParams->ptrChannelsListTx) + index))); } else { errorTx |= MCBSP_ERROR_2_PARTITION_B; } } } } // // Multichannel configuration for 8 partition mode. // else { if((uint16_t)ptrMchnParams->channelCountTx > 128U) { errorTx = MCBSP_ERROR_EXCEEDED_CHANNELS; } for(index = 0U; index < (uint16_t)ptrMchnParams->channelCountTx; index++) { // // Enable the Tx channels. // McBSP_enableTxChannel(base, MCBSP_MULTICHANNEL_EIGHT_PARTITION, (uint16_t)(*((ptrMchnParams->ptrChannelsListTx) + index))); } } } return(errorTx); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_configureRxMultichannel",
+      "functionArgs": [
+        "base",
+        "*ptrMchnParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_RxMultichannelParams"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t index;\n    uint16_t block;\n    uint16_t partitionAblock;\n    uint16_t partitionBblock;\n    uint16_t partitionAflag;\n    uint16_t partitionBflag;\n    uint16_t errorRx;\n\n    errorRx = 0U;\n    partitionAblock = 0U;\n    partitionBblock = 0U;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Configure Tx Channel Selection mode.\n    //\n    McBSP_setRxChannelMode(base,\n                       (McBSP_RxChannelMode)ptrMchnParams->multichannelModeRx);\n\n    //\n    // Select 2 partition or 8 partition.\n    //\n    McBSP_setRxMultichannelPartition(base,\n                      (McBSP_MultichannelPartition)ptrMchnParams->partitionRx);\n\n    //\n    // Configuration for multichannel selections that is for\n    // MCBSP_RX_CHANNEL_SELECTION_ENABLED.\n    //\n    if((ptrMchnParams->multichannelModeRx) ==\n       MCBSP_RX_CHANNEL_SELECTION_ENABLED)\n    {\n        //\n        // Disable dual phase reception mode.\n        //\n        McBSP_disableTwoPhaseRx(base);\n\n        //\n        // Multichannel configuration for 2 partition mode.\n        //\n        if((McBSP_MultichannelPartition)ptrMchnParams->partitionRx ==\n            MCBSP_MULTICHANNEL_TWO_PARTITION)\n        {\n            if((uint16_t)ptrMchnParams->channelCountRx > 32U)\n            {\n                errorRx = MCBSP_ERROR_EXCEEDED_CHANNELS;\n            }\n            partitionAflag = 0U;\n            partitionBflag = 0U;\n\n            //\n            // Assign blocks to partition for the provided channels and\n            // enable the channels. Only the channels which belong to the\n            // block currently assigned to partition A or B can be enabled.\n            //\n            for(index = 0U; index < (uint16_t)ptrMchnParams->channelCountRx;\n                index++)\n            {\n                //\n                // Get the block to which channel belongs.\n                //\n                block = (*((ptrMchnParams->ptrChannelsListRx) + index)) >> 4U;\n\n                //\n                // Check if channel block can be assigned to partition A. Only\n                // even numbered blocks can be assigned to partition A.\n                //\n                if((block & 0x1U) == 0U)\n                {\n                    //\n                    // Check if block is yet to be assigned to partition A.\n                    //\n                    if(partitionAflag == 0U)\n                    {\n                        //\n                        // Assign block to partition A.\n                        //\n                        McBSP_setRxTwoPartitionBlock(base,\n                                                  (McBSP_PartitionBlock)block);\n\n                        //\n                        // Set flag to indicate that a block is now assigned\n                        // to partition A. Only one block can be assigned to\n                        // a partition at a time in 2 partition mode.\n                        //\n                        partitionAflag = 1U;\n                        partitionAblock = block;\n                    }\n\n                    //\n                    // Check if the channel to be enabled belong to the block\n                    // assigned to partition A.\n                    //\n                    if(partitionAblock == block)\n                    {\n                        //\n                        // Enable the channel belonging to the block assigned\n                        // to partition A.\n                        //\n                        McBSP_enableRxChannel(base,\n                                              MCBSP_MULTICHANNEL_TWO_PARTITION,\n                              (uint16_t)(*((ptrMchnParams->ptrChannelsListRx)\n                                              + index)));\n                    }\n                    else\n                    {\n                        errorRx = MCBSP_ERROR_2_PARTITION_A;\n                    }\n                }\n\n                //\n                // Check if channel block can be assigned to partition B. Only\n                // odd numbered blocks can be assigned to partition B.\n                //\n                else\n                {\n                    //\n                    // Check if block is yet to be assigned to partition B.\n                    //\n                    if(partitionBflag == 0U)\n                    {\n                        //\n                        // Assign block to partition B.\n                        //\n                        McBSP_setRxTwoPartitionBlock(base,\n                                                  (McBSP_PartitionBlock)block);\n                        //\n                        // Set flag to indicate that a block is now assigned\n                        // to partition B. Only one block can be assigned to\n                        // a partition at a time in 2 partition mode.\n                        //\n                        partitionBflag = 1U;\n                        partitionBblock = block;\n                    }\n\n                    //\n                    // Check if the channel to be enabled belong to the block\n                    // assigned to partition B.\n                    //\n                    if(partitionBblock == block)\n                    {\n                        //\n                        // Enable the Rx channel belonging to the block\n                        // assigned to partition B.\n                        //\n                        McBSP_enableRxChannel(base,\n                                              MCBSP_MULTICHANNEL_TWO_PARTITION,\n                              (uint16_t)(*((ptrMchnParams->ptrChannelsListRx)\n                                              + index)));\n                    }\n                    else\n                    {\n                        errorRx |= MCBSP_ERROR_2_PARTITION_B;\n                    }\n                }\n            }\n        }\n\n        //\n        // Multichannel configuration for 8 partition mode.\n        //\n        else\n        {\n            if(ptrMchnParams->channelCountRx > 128U)\n            {\n                errorRx = MCBSP_ERROR_EXCEEDED_CHANNELS;\n            }\n            for(index = 0U; index < (uint16_t)ptrMchnParams->channelCountRx;\n                index++)\n            {\n                //\n                // Enable the Rx channels.\n                //\n                McBSP_enableRxChannel(base,\n                                      MCBSP_MULTICHANNEL_EIGHT_PARTITION,\n                   (uint16_t)(*((ptrMchnParams->ptrChannelsListRx) + index)));\n            }\n        }\n    }\n    return(errorRx);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t index; uint16_t block; uint16_t partitionAblock; uint16_t partitionBblock; uint16_t partitionAflag; uint16_t partitionBflag; uint16_t errorRx; errorRx = 0U; partitionAblock = 0U; partitionBblock = 0U; // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Configure Tx Channel Selection mode. // McBSP_setRxChannelMode(base, (McBSP_RxChannelMode)ptrMchnParams->multichannelModeRx); // // Select 2 partition or 8 partition. // McBSP_setRxMultichannelPartition(base, (McBSP_MultichannelPartition)ptrMchnParams->partitionRx); // // Configuration for multichannel selections that is for // MCBSP_RX_CHANNEL_SELECTION_ENABLED. // if((ptrMchnParams->multichannelModeRx) == MCBSP_RX_CHANNEL_SELECTION_ENABLED) { // // Disable dual phase reception mode. // McBSP_disableTwoPhaseRx(base); // // Multichannel configuration for 2 partition mode. // if((McBSP_MultichannelPartition)ptrMchnParams->partitionRx == MCBSP_MULTICHANNEL_TWO_PARTITION) { if((uint16_t)ptrMchnParams->channelCountRx > 32U) { errorRx = MCBSP_ERROR_EXCEEDED_CHANNELS; } partitionAflag = 0U; partitionBflag = 0U; // // Assign blocks to partition for the provided channels and // enable the channels. Only the channels which belong to the // block currently assigned to partition A or B can be enabled. // for(index = 0U; index < (uint16_t)ptrMchnParams->channelCountRx; index++) { // // Get the block to which channel belongs. // block = (*((ptrMchnParams->ptrChannelsListRx) + index)) >> 4U; // // Check if channel block can be assigned to partition A. Only // even numbered blocks can be assigned to partition A. // if((block & 0x1U) == 0U) { // // Check if block is yet to be assigned to partition A. // if(partitionAflag == 0U) { // // Assign block to partition A. // McBSP_setRxTwoPartitionBlock(base, (McBSP_PartitionBlock)block); // // Set flag to indicate that a block is now assigned // to partition A. Only one block can be assigned to // a partition at a time in 2 partition mode. // partitionAflag = 1U; partitionAblock = block; } // // Check if the channel to be enabled belong to the block // assigned to partition A. // if(partitionAblock == block) { // // Enable the channel belonging to the block assigned // to partition A. // McBSP_enableRxChannel(base, MCBSP_MULTICHANNEL_TWO_PARTITION, (uint16_t)(*((ptrMchnParams->ptrChannelsListRx) + index))); } else { errorRx = MCBSP_ERROR_2_PARTITION_A; } } // // Check if channel block can be assigned to partition B. Only // odd numbered blocks can be assigned to partition B. // else { // // Check if block is yet to be assigned to partition B. // if(partitionBflag == 0U) { // // Assign block to partition B. // McBSP_setRxTwoPartitionBlock(base, (McBSP_PartitionBlock)block); // // Set flag to indicate that a block is now assigned // to partition B. Only one block can be assigned to // a partition at a time in 2 partition mode. // partitionBflag = 1U; partitionBblock = block; } // // Check if the channel to be enabled belong to the block // assigned to partition B. // if(partitionBblock == block) { // // Enable the Rx channel belonging to the block // assigned to partition B. // McBSP_enableRxChannel(base, MCBSP_MULTICHANNEL_TWO_PARTITION, (uint16_t)(*((ptrMchnParams->ptrChannelsListRx) + index))); } else { errorRx |= MCBSP_ERROR_2_PARTITION_B; } } } } // // Multichannel configuration for 8 partition mode. // else { if(ptrMchnParams->channelCountRx > 128U) { errorRx = MCBSP_ERROR_EXCEEDED_CHANNELS; } for(index = 0U; index < (uint16_t)ptrMchnParams->channelCountRx; index++) { // // Enable the Rx channels. // McBSP_enableRxChannel(base, MCBSP_MULTICHANNEL_EIGHT_PARTITION, (uint16_t)(*((ptrMchnParams->ptrChannelsListRx) + index))); } } } return(errorRx); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_configureSPIMasterMode",
+      "functionArgs": [
+        "base",
+        "*ptrSPIMasterMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_SPIMasterModeParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Configure clock stop mode.\n    //\n    if(((ptrSPIMasterMode->clockStopMode) == MCBSP_CLOCK_SPI_MODE_NO_DELAY) ||\n       ((ptrSPIMasterMode->clockStopMode) == MCBSP_CLOCK_SPI_MODE_DELAY))\n    {\n        //\n        // Set SPI mode.\n        //\n        McBSP_setClockStopMode(base,\n                         (McBSP_ClockStopMode)ptrSPIMasterMode->clockStopMode);\n\n        //\n        // Set loop back mode.\n        //\n        if(ptrSPIMasterMode->loopbackModeFlag)\n        {\n            McBSP_enableLoopback(base);\n        }\n        else\n        {\n            McBSP_disableLoopback(base);\n        }\n\n        //\n        // Configure module as master. Use SRG as clock source for driving\n        // master clock. MCLKX pin will be the master clock out pin.\n        //\n        McBSP_setTxClockSource(base, MCBSP_INTERNAL_TX_CLOCK_SOURCE);\n\n        //\n        // Set internal clock (LSPCLK) as SRG clock source.\n        //\n        McBSP_setTxSRGClockSource(base, MCBSP_SRG_TX_CLOCK_SOURCE_LSPCLK);\n\n        //\n        // Set SRG clock divider for generating CLKG.\n        //\n        McBSP_setSRGDataClockDivider(base,\n                                  (uint16_t)ptrSPIMasterMode->clockSRGDivider);\n\n        //\n        // Set the output master clock polarity.\n        //\n        McBSP_setTxClockPolarity(base,\n                             (McBSP_TxClockPolarity)ptrSPIMasterMode->spiMode);\n\n        //\n        // Set FSX as an output driven by SRG.\n        //\n        McBSP_setTxFrameSyncSource(base, MCBSP_TX_INTERNAL_FRAME_SYNC_SOURCE);\n\n        //\n        // FSX is triggered when data is written to DXR registers.\n        //\n        McBSP_setTxInternalFrameSyncSource(base,\n                                           MCBSP_TX_INTERNAL_FRAME_SYNC_DATA);\n\n        //\n        // Set the polarity for FSX pin as active low.\n        //\n        McBSP_setTxFrameSyncPolarity(base,\n                                     MCBSP_TX_FRAME_SYNC_POLARITY_LOW);\n\n        //\n        // Disable dual phase mode.\n        //\n        McBSP_disableTwoPhaseTx(base);\n\n        //\n        // Set the data format for transmission & reception.\n        //\n        McBSP_setTxDataSize(base, MCBSP_PHASE_ONE_FRAME,\n                      (McBSP_DataBitsPerWord)ptrSPIMasterMode->wordLength, 0U);\n        McBSP_setRxDataSize(base, MCBSP_PHASE_ONE_FRAME,\n                      (McBSP_DataBitsPerWord)ptrSPIMasterMode->wordLength, 0U);\n\n        //\n        // Set one bit data delay for transmission & reception to set correct\n        // setup time on FSX signal.\n        //\n        McBSP_setTxDataDelayBits(base, MCBSP_DATA_DELAY_BIT_1);\n        McBSP_setRxDataDelayBits(base, MCBSP_DATA_DELAY_BIT_1);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Configure clock stop mode. // if(((ptrSPIMasterMode->clockStopMode) == MCBSP_CLOCK_SPI_MODE_NO_DELAY) || ((ptrSPIMasterMode->clockStopMode) == MCBSP_CLOCK_SPI_MODE_DELAY)) { // // Set SPI mode. // McBSP_setClockStopMode(base, (McBSP_ClockStopMode)ptrSPIMasterMode->clockStopMode); // // Set loop back mode. // if(ptrSPIMasterMode->loopbackModeFlag) { McBSP_enableLoopback(base); } else { McBSP_disableLoopback(base); } // // Configure module as master. Use SRG as clock source for driving // master clock. MCLKX pin will be the master clock out pin. // McBSP_setTxClockSource(base, MCBSP_INTERNAL_TX_CLOCK_SOURCE); // // Set internal clock (LSPCLK) as SRG clock source. // McBSP_setTxSRGClockSource(base, MCBSP_SRG_TX_CLOCK_SOURCE_LSPCLK); // // Set SRG clock divider for generating CLKG. // McBSP_setSRGDataClockDivider(base, (uint16_t)ptrSPIMasterMode->clockSRGDivider); // // Set the output master clock polarity. // McBSP_setTxClockPolarity(base, (McBSP_TxClockPolarity)ptrSPIMasterMode->spiMode); // // Set FSX as an output driven by SRG. // McBSP_setTxFrameSyncSource(base, MCBSP_TX_INTERNAL_FRAME_SYNC_SOURCE); // // FSX is triggered when data is written to DXR registers. // McBSP_setTxInternalFrameSyncSource(base, MCBSP_TX_INTERNAL_FRAME_SYNC_DATA); // // Set the polarity for FSX pin as active low. // McBSP_setTxFrameSyncPolarity(base, MCBSP_TX_FRAME_SYNC_POLARITY_LOW); // // Disable dual phase mode. // McBSP_disableTwoPhaseTx(base); // // Set the data format for transmission & reception. // McBSP_setTxDataSize(base, MCBSP_PHASE_ONE_FRAME, (McBSP_DataBitsPerWord)ptrSPIMasterMode->wordLength, 0U); McBSP_setRxDataSize(base, MCBSP_PHASE_ONE_FRAME, (McBSP_DataBitsPerWord)ptrSPIMasterMode->wordLength, 0U); // // Set one bit data delay for transmission & reception to set correct // setup time on FSX signal. // McBSP_setTxDataDelayBits(base, MCBSP_DATA_DELAY_BIT_1); McBSP_setRxDataDelayBits(base, MCBSP_DATA_DELAY_BIT_1); } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.c",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_configureSPISlaveMode",
+      "functionArgs": [
+        "base",
+        "*ptrSPISlaveMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_SPISlaveModeParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n\n    //\n    // Configure clock stop mode.\n    //\n    if(((ptrSPISlaveMode->clockStopMode) == MCBSP_CLOCK_SPI_MODE_NO_DELAY) ||\n       ((ptrSPISlaveMode->clockStopMode) == MCBSP_CLOCK_SPI_MODE_DELAY))\n    {\n        //\n        // Set SPI mode.\n        //\n        McBSP_setClockStopMode(base,\n                          (McBSP_ClockStopMode)ptrSPISlaveMode->clockStopMode);\n        //\n        // Set loop back mode.\n        //\n        if(ptrSPISlaveMode->loopbackModeFlag)\n        {\n            McBSP_enableLoopback(base);\n        }\n        else\n        {\n            McBSP_disableLoopback(base);\n        }\n\n        //\n        // Configure module as Slave. MCLKX pin acts as input slave\n        // clock and is driven externally by SPI master.\n        //\n        McBSP_setTxClockSource(base, MCBSP_EXTERNAL_TX_CLOCK_SOURCE);\n\n        //\n        // Set the input slave clock polarity.\n        //\n        McBSP_setTxClockPolarity(base,\n                              (McBSP_TxClockPolarity)ptrSPISlaveMode->spiMode);\n\n        //\n        // Set internal clock (LSPCLK) as SRG clock source. SRG is used to\n        // synchronize McBSP logic with externally generated master clock.\n        //\n        McBSP_setRxSRGClockSource(base, MCBSP_SRG_RX_CLOCK_SOURCE_LSPCLK);\n\n        //\n        // Assign a clock divider value of 1 for generating CLKG.\n        //\n        McBSP_setSRGDataClockDivider(base, 1U);\n\n        //\n        // Set FSX as an input which is driven by slave-enable signal\n        // from SPI master.\n        //\n        McBSP_setTxFrameSyncSource(base, MCBSP_TX_EXTERNAL_FRAME_SYNC_SOURCE);\n\n        //\n        // Set the polarity for FSX pin as active low.\n        //\n        McBSP_setTxFrameSyncPolarity(base,\n                                     MCBSP_TX_FRAME_SYNC_POLARITY_LOW);\n\n        //\n        // Disable dual phase mode.\n        //\n        McBSP_disableTwoPhaseTx(base);\n\n        //\n        // Set the data format for transmission & reception..\n        //\n        McBSP_setTxDataSize(base, MCBSP_PHASE_ONE_FRAME,\n                       (McBSP_DataBitsPerWord)ptrSPISlaveMode->wordLength, 0U);\n        McBSP_setRxDataSize(base, MCBSP_PHASE_ONE_FRAME,\n                       (McBSP_DataBitsPerWord)ptrSPISlaveMode->wordLength, 0U);\n\n        //\n        // Set zero bit data delay for transmission & reception.\n        //\n        McBSP_setTxDataDelayBits(base, MCBSP_DATA_DELAY_BIT_0);\n        McBSP_setRxDataDelayBits(base, MCBSP_DATA_DELAY_BIT_0);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Configure clock stop mode. // if(((ptrSPISlaveMode->clockStopMode) == MCBSP_CLOCK_SPI_MODE_NO_DELAY) || ((ptrSPISlaveMode->clockStopMode) == MCBSP_CLOCK_SPI_MODE_DELAY)) { // // Set SPI mode. // McBSP_setClockStopMode(base, (McBSP_ClockStopMode)ptrSPISlaveMode->clockStopMode); // // Set loop back mode. // if(ptrSPISlaveMode->loopbackModeFlag) { McBSP_enableLoopback(base); } else { McBSP_disableLoopback(base); } // // Configure module as Slave. MCLKX pin acts as input slave // clock and is driven externally by SPI master. // McBSP_setTxClockSource(base, MCBSP_EXTERNAL_TX_CLOCK_SOURCE); // // Set the input slave clock polarity. // McBSP_setTxClockPolarity(base, (McBSP_TxClockPolarity)ptrSPISlaveMode->spiMode); // // Set internal clock (LSPCLK) as SRG clock source. SRG is used to // synchronize McBSP logic with externally generated master clock. // McBSP_setRxSRGClockSource(base, MCBSP_SRG_RX_CLOCK_SOURCE_LSPCLK); // // Assign a clock divider value of 1 for generating CLKG. // McBSP_setSRGDataClockDivider(base, 1U); // // Set FSX as an input which is driven by slave-enable signal // from SPI master. // McBSP_setTxFrameSyncSource(base, MCBSP_TX_EXTERNAL_FRAME_SYNC_SOURCE); // // Set the polarity for FSX pin as active low. // McBSP_setTxFrameSyncPolarity(base, MCBSP_TX_FRAME_SYNC_POLARITY_LOW); // // Disable dual phase mode. // McBSP_disableTwoPhaseTx(base); // // Set the data format for transmission & reception.. // McBSP_setTxDataSize(base, MCBSP_PHASE_ONE_FRAME, (McBSP_DataBitsPerWord)ptrSPISlaveMode->wordLength, 0U); McBSP_setRxDataSize(base, MCBSP_PHASE_ONE_FRAME, (McBSP_DataBitsPerWord)ptrSPISlaveMode->wordLength, 0U); // // Set zero bit data delay for transmission & reception. // McBSP_setTxDataDelayBits(base, MCBSP_DATA_DELAY_BIT_0); McBSP_setRxDataDelayBits(base, MCBSP_DATA_DELAY_BIT_0); } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == MCBSPA_BASE) ||\n           (base == MCBSPB_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == MCBSPA_BASE) || (base == MCBSPB_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_disableLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear DLB bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR1) &= ~MCBSP_SPCR1_DLB;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear DLB bit. // HWREGH(base + MCBSP_O_SPCR1) &= ~MCBSP_SPCR1_DLB; }",
+      "registersUsed": [
+        "SPCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set DLB bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR1) |= MCBSP_SPCR1_DLB;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set DLB bit. // HWREGH(base + MCBSP_O_SPCR1) |= MCBSP_SPCR1_DLB; }",
+      "registersUsed": [
+        "SPCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxSignExtension",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_RxSignExtensionMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Write to RJUST bits.\n    //\n    HWREGH(base + MCBSP_O_SPCR1) =\n    ((HWREGH(base + MCBSP_O_SPCR1) & ~MCBSP_SPCR1_RJUST_M ) | (uint16_t)mode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Write to RJUST bits. // HWREGH(base + MCBSP_O_SPCR1) = ((HWREGH(base + MCBSP_O_SPCR1) & ~MCBSP_SPCR1_RJUST_M ) | (uint16_t)mode); }",
+      "registersUsed": [
+        "SPCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setClockStopMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_ClockStopMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Write to CLKSTP bits.\n    //\n    HWREGH(base + MCBSP_O_SPCR1) =\n    ((HWREGH(base + MCBSP_O_SPCR1) & ~MCBSP_SPCR1_CLKSTP_M) | (uint16_t)mode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Write to CLKSTP bits. // HWREGH(base + MCBSP_O_SPCR1) = ((HWREGH(base + MCBSP_O_SPCR1) & ~MCBSP_SPCR1_CLKSTP_M) | (uint16_t)mode); }",
+      "registersUsed": [
+        "SPCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_disableDxPinDelay",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set DXENA bit\n    //\n    HWREGH(base + MCBSP_O_SPCR1) &= ~MCBSP_SPCR1_DXENA;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set DXENA bit // HWREGH(base + MCBSP_O_SPCR1) &= ~MCBSP_SPCR1_DXENA; }",
+      "registersUsed": [
+        "SPCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableDxPinDelay",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set DXENA bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR1) |= MCBSP_SPCR1_DXENA;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set DXENA bit. // HWREGH(base + MCBSP_O_SPCR1) |= MCBSP_SPCR1_DXENA; }",
+      "registersUsed": [
+        "SPCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxInterruptSource",
+      "functionArgs": [
+        "base",
+        "interruptSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_RxInterruptSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Write to RINTM bits.\n    //\n    HWREGH(base + MCBSP_O_SPCR1) =\n    ((HWREGH(base + MCBSP_O_SPCR1) & ~MCBSP_SPCR1_RINTM_M) |\n     (uint16_t)interruptSource);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Write to RINTM bits. // HWREGH(base + MCBSP_O_SPCR1) = ((HWREGH(base + MCBSP_O_SPCR1) & ~MCBSP_SPCR1_RINTM_M) | (uint16_t)interruptSource); }",
+      "registersUsed": [
+        "SPCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_clearRxFrameSyncError",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear RSYNCERR bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR1) &= ~MCBSP_SPCR1_RSYNCERR;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear RSYNCERR bit. // HWREGH(base + MCBSP_O_SPCR1) &= ~MCBSP_SPCR1_RSYNCERR; }",
+      "registersUsed": [
+        "SPCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_getRxErrorStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Return the value of RFULL & RSYNCERR bit.\n    //\n    return(HWREGH(base + MCBSP_O_SPCR1) & (MCBSP_SPCR1_RFULL |\n                                           MCBSP_SPCR1_RSYNCERR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Return the value of RFULL & RSYNCERR bit. // return(HWREGH(base + MCBSP_O_SPCR1) & (MCBSP_SPCR1_RFULL | MCBSP_SPCR1_RSYNCERR)); }",
+      "registersUsed": [
+        "SPCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_isRxReady",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Check RRDY bit.\n    //\n    return((HWREGH(base + MCBSP_O_SPCR1) & MCBSP_SPCR1_RRDY)\n           == MCBSP_SPCR1_RRDY);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Check RRDY bit. // return((HWREGH(base + MCBSP_O_SPCR1) & MCBSP_SPCR1_RRDY) == MCBSP_SPCR1_RRDY); }",
+      "registersUsed": [
+        "SPCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_resetReceiver",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear RRST bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR1) &= ~ MCBSP_SPCR1_RRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear RRST bit. // HWREGH(base + MCBSP_O_SPCR1) &= ~ MCBSP_SPCR1_RRST; }",
+      "registersUsed": [
+        "SPCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableReceiver",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set RRST bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR1) |= MCBSP_SPCR1_RRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set RRST bit. // HWREGH(base + MCBSP_O_SPCR1) |= MCBSP_SPCR1_RRST; }",
+      "registersUsed": [
+        "SPCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setEmulationMode",
+      "functionArgs": [
+        "base",
+        "emulationMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_EmulationMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // write to FREE and SOFT bits.\n    //\n    HWREGH(base + MCBSP_O_SPCR2) =\n    ((HWREGH(base + MCBSP_O_SPCR2) & ~(MCBSP_SPCR2_FREE | MCBSP_SPCR2_SOFT))\n     | (uint16_t)emulationMode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // write to FREE and SOFT bits. // HWREGH(base + MCBSP_O_SPCR2) = ((HWREGH(base + MCBSP_O_SPCR2) & ~(MCBSP_SPCR2_FREE | MCBSP_SPCR2_SOFT)) | (uint16_t)emulationMode); }",
+      "registersUsed": [
+        "SPCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_resetFrameSyncLogic",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear FRST bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR2) &= ~MCBSP_SPCR2_FRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear FRST bit. // HWREGH(base + MCBSP_O_SPCR2) &= ~MCBSP_SPCR2_FRST; }",
+      "registersUsed": [
+        "SPCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableFrameSyncLogic",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set FRST bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR2) |= MCBSP_SPCR2_FRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set FRST bit. // HWREGH(base + MCBSP_O_SPCR2) |= MCBSP_SPCR2_FRST; }",
+      "registersUsed": [
+        "SPCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_resetSampleRateGenerator",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear GRST bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR2) &= ~MCBSP_SPCR2_GRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear GRST bit. // HWREGH(base + MCBSP_O_SPCR2) &= ~MCBSP_SPCR2_GRST; }",
+      "registersUsed": [
+        "SPCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableSampleRateGenerator",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set GRST bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR2) |= MCBSP_SPCR2_GRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set GRST bit. // HWREGH(base + MCBSP_O_SPCR2) |= MCBSP_SPCR2_GRST; }",
+      "registersUsed": [
+        "SPCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxInterruptSource",
+      "functionArgs": [
+        "base",
+        "interruptSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_TxInterruptSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Write to XINTM bits.\n    //\n    HWREGH(base + MCBSP_O_SPCR2) =\n    ((HWREGH(base + MCBSP_O_SPCR2) & ~MCBSP_SPCR2_XINTM_M) |\n     (uint16_t)interruptSource);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Write to XINTM bits. // HWREGH(base + MCBSP_O_SPCR2) = ((HWREGH(base + MCBSP_O_SPCR2) & ~MCBSP_SPCR2_XINTM_M) | (uint16_t)interruptSource); }",
+      "registersUsed": [
+        "SPCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_getTxErrorStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Return the value of XEMPTY & XSYNCERR bit.\n    //\n    return(HWREGH(base + MCBSP_O_SPCR2) & (MCBSP_SPCR2_XEMPTY |\n                                           MCBSP_SPCR2_XSYNCERR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Return the value of XEMPTY & XSYNCERR bit. // return(HWREGH(base + MCBSP_O_SPCR2) & (MCBSP_SPCR2_XEMPTY | MCBSP_SPCR2_XSYNCERR)); }",
+      "registersUsed": [
+        "SPCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_clearTxFrameSyncError",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear XSYNCERR bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR2) &= ~MCBSP_SPCR2_XSYNCERR;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear XSYNCERR bit. // HWREGH(base + MCBSP_O_SPCR2) &= ~MCBSP_SPCR2_XSYNCERR; }",
+      "registersUsed": [
+        "SPCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_isTxReady",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Check XRDY bit.\n    //\n    return((HWREGH(base + MCBSP_O_SPCR2) & MCBSP_SPCR2_XRDY)\n           == MCBSP_SPCR2_XRDY);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Check XRDY bit. // return((HWREGH(base + MCBSP_O_SPCR2) & MCBSP_SPCR2_XRDY) == MCBSP_SPCR2_XRDY); }",
+      "registersUsed": [
+        "SPCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_resetTransmitter",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear XRST bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR2) &= ~MCBSP_SPCR2_XRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear XRST bit. // HWREGH(base + MCBSP_O_SPCR2) &= ~MCBSP_SPCR2_XRST; }",
+      "registersUsed": [
+        "SPCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableTransmitter",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set XRST bit.\n    //\n    HWREGH(base + MCBSP_O_SPCR2) |= MCBSP_SPCR2_XRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set XRST bit. // HWREGH(base + MCBSP_O_SPCR2) |= MCBSP_SPCR2_XRST; }",
+      "registersUsed": [
+        "SPCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SPCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_disableTwoPhaseRx",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear RPHASE bit.\n    //\n    HWREGH(base + MCBSP_O_RCR2) &= ~MCBSP_RCR2_RPHASE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear RPHASE bit. // HWREGH(base + MCBSP_O_RCR2) &= ~MCBSP_RCR2_RPHASE; }",
+      "registersUsed": [
+        "RCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableTwoPhaseRx",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set RPHASE bit.\n    //\n    HWREGH(base + MCBSP_O_RCR2) |= MCBSP_RCR2_RPHASE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set RPHASE bit. // HWREGH(base + MCBSP_O_RCR2) |= MCBSP_RCR2_RPHASE; }",
+      "registersUsed": [
+        "RCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxCompandingMode",
+      "functionArgs": [
+        "base",
+        "compandingMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_CompandingMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Write to RCOMPAND bits.\n    //\n    HWREGH(base + MCBSP_O_RCR2) =\n    ((HWREGH(base + MCBSP_O_RCR2) & ~MCBSP_RCR2_RCOMPAND_M) |\n     (uint16_t)compandingMode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Write to RCOMPAND bits. // HWREGH(base + MCBSP_O_RCR2) = ((HWREGH(base + MCBSP_O_RCR2) & ~MCBSP_RCR2_RCOMPAND_M) | (uint16_t)compandingMode); }",
+      "registersUsed": [
+        "RCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_disableRxFrameSyncErrorDetection",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set RFIG bit.\n    //\n    HWREGH(base + MCBSP_O_RCR2) |= MCBSP_RCR2_RFIG;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set RFIG bit. // HWREGH(base + MCBSP_O_RCR2) |= MCBSP_RCR2_RFIG; }",
+      "registersUsed": [
+        "RCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableRxFrameSyncErrorDetection",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear RFIG bit.\n    //\n    HWREGH(base + MCBSP_O_RCR2) &= ~MCBSP_RCR2_RFIG;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear RFIG bit. // HWREGH(base + MCBSP_O_RCR2) &= ~MCBSP_RCR2_RFIG; }",
+      "registersUsed": [
+        "RCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxDataDelayBits",
+      "functionArgs": [
+        "base",
+        "delayBits"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_DataDelayBits"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Write to RDATDLY bits.\n    //\n    HWREGH(base + MCBSP_O_RCR2) =\n    ((HWREGH(base + MCBSP_O_RCR2) & ~MCBSP_RCR2_RDATDLY_M) |\n     (uint16_t)delayBits);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Write to RDATDLY bits. // HWREGH(base + MCBSP_O_RCR2) = ((HWREGH(base + MCBSP_O_RCR2) & ~MCBSP_RCR2_RDATDLY_M) | (uint16_t)delayBits); }",
+      "registersUsed": [
+        "RCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "RCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_disableTwoPhaseTx",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear XPHASE bit.\n    //\n    HWREGH(base + MCBSP_O_XCR2) &= ~MCBSP_XCR2_XPHASE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear XPHASE bit. // HWREGH(base + MCBSP_O_XCR2) &= ~MCBSP_XCR2_XPHASE; }",
+      "registersUsed": [
+        "XCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "XCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableTwoPhaseTx",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set XPHASE bit\n    //\n    HWREGH(base + MCBSP_O_XCR2) |= MCBSP_XCR2_XPHASE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set XPHASE bit // HWREGH(base + MCBSP_O_XCR2) |= MCBSP_XCR2_XPHASE; }",
+      "registersUsed": [
+        "XCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "XCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxCompandingMode",
+      "functionArgs": [
+        "base",
+        "compandingMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_CompandingMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Write to XCOMPAND bits.\n    //\n    HWREGH(base + MCBSP_O_XCR2) =\n    ((HWREGH(base + MCBSP_O_XCR2) & ~MCBSP_XCR2_XCOMPAND_M) |\n     (uint16_t)compandingMode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Write to XCOMPAND bits. // HWREGH(base + MCBSP_O_XCR2) = ((HWREGH(base + MCBSP_O_XCR2) & ~MCBSP_XCR2_XCOMPAND_M) | (uint16_t)compandingMode); }",
+      "registersUsed": [
+        "XCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "XCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_disableTxFrameSyncErrorDetection",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set XFIG bit.\n    //\n    HWREGH(base + MCBSP_O_XCR2) |= MCBSP_XCR2_XFIG;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set XFIG bit. // HWREGH(base + MCBSP_O_XCR2) |= MCBSP_XCR2_XFIG; }",
+      "registersUsed": [
+        "XCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "XCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableTxFrameSyncErrorDetection",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear XFIG bit.\n    //\n    HWREGH(base + MCBSP_O_XCR2) &= ~MCBSP_XCR2_XFIG;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear XFIG bit. // HWREGH(base + MCBSP_O_XCR2) &= ~MCBSP_XCR2_XFIG; }",
+      "registersUsed": [
+        "XCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "XCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxDataDelayBits",
+      "functionArgs": [
+        "base",
+        "delayBits"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_DataDelayBits"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Write to XDATDLY bits.\n    //\n    HWREGH(base + MCBSP_O_XCR2) =\n    ((HWREGH(base + MCBSP_O_XCR2) & ~MCBSP_XCR2_XDATDLY_M) |\n     (uint16_t)delayBits);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Write to XDATDLY bits. // HWREGH(base + MCBSP_O_XCR2) = ((HWREGH(base + MCBSP_O_XCR2) & ~MCBSP_XCR2_XDATDLY_M) | (uint16_t)delayBits); }",
+      "registersUsed": [
+        "XCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "XCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setFrameSyncPulsePeriod",
+      "functionArgs": [
+        "base",
+        "frameClockDivider"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n    ASSERT(frameClockDivider < 4096U);\n\n    //\n    // Assign value to FPER to set the pulse width.\n    //\n    HWREGH(base + MCBSP_O_SRGR2) =\n    ((HWREGH(base + MCBSP_O_SRGR2) & ~MCBSP_SRGR2_FPER_M) | frameClockDivider);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); ASSERT(frameClockDivider < 4096U); // // Assign value to FPER to set the pulse width. // HWREGH(base + MCBSP_O_SRGR2) = ((HWREGH(base + MCBSP_O_SRGR2) & ~MCBSP_SRGR2_FPER_M) | frameClockDivider); }",
+      "registersUsed": [
+        "SRGR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRGR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setFrameSyncPulseWidthDivider",
+      "functionArgs": [
+        "base",
+        "pulseWidthDivider"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n    ASSERT(pulseWidthDivider < 256U);\n\n    //\n    // Assign value to FWID to set sync clock rate.\n    //\n    HWREGH(base + MCBSP_O_SRGR1) =\n    ((HWREGH(base + MCBSP_O_SRGR1) & ~MCBSP_SRGR1_FWID_M) |\n     (uint16_t)(pulseWidthDivider << MCBSP_SRGR1_FWID_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); ASSERT(pulseWidthDivider < 256U); // // Assign value to FWID to set sync clock rate. // HWREGH(base + MCBSP_O_SRGR1) = ((HWREGH(base + MCBSP_O_SRGR1) & ~MCBSP_SRGR1_FWID_M) | (uint16_t)(pulseWidthDivider << MCBSP_SRGR1_FWID_S)); }",
+      "registersUsed": [
+        "SRGR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRGR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setSRGDataClockDivider",
+      "functionArgs": [
+        "base",
+        "dataClockDivider"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n    ASSERT(dataClockDivider < 256U);\n\n    //\n    // Assign value to CLKGDV to set data clock rate.\n    //\n    HWREGH(base + MCBSP_O_SRGR1) =\n    ((HWREGH(base + MCBSP_O_SRGR1) & ~MCBSP_SRGR1_CLKGDV_M) |\n     dataClockDivider);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); ASSERT(dataClockDivider < 256U); // // Assign value to CLKGDV to set data clock rate. // HWREGH(base + MCBSP_O_SRGR1) = ((HWREGH(base + MCBSP_O_SRGR1) & ~MCBSP_SRGR1_CLKGDV_M) | dataClockDivider); }",
+      "registersUsed": [
+        "SRGR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRGR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_disableSRGSyncFSR",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear GSYNC  bit.\n    //\n    HWREGH(base + MCBSP_O_SRGR2) &= ~MCBSP_SRGR2_GSYNC;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear GSYNC bit. // HWREGH(base + MCBSP_O_SRGR2) &= ~MCBSP_SRGR2_GSYNC; }",
+      "registersUsed": [
+        "SRGR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRGR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableSRGSyncFSR",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set GSYNC bit.\n    //\n    HWREGH(base + MCBSP_O_SRGR2) |= MCBSP_SRGR2_GSYNC;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set GSYNC bit. // HWREGH(base + MCBSP_O_SRGR2) |= MCBSP_SRGR2_GSYNC; }",
+      "registersUsed": [
+        "SRGR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRGR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxSRGClockSource",
+      "functionArgs": [
+        "base",
+        "srgClockSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_SRGRxClockSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set or clear CLKSM bit.\n    //\n    HWREGH(base + MCBSP_O_SRGR2) =\n    ((HWREGH(base + MCBSP_O_SRGR2) & ~MCBSP_SRGR2_CLKSM) |\n     ((uint16_t)((uint16_t)srgClockSource & 0x1U) << 13U));\n\n    //\n    // Set or clear SCLKME bit.\n    //\n    HWREGH(base + MCBSP_O_PCR) =\n    ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_SCLKME) |\n     (uint16_t)(((uint16_t)srgClockSource >> 1U) << 7U));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set or clear CLKSM bit. // HWREGH(base + MCBSP_O_SRGR2) = ((HWREGH(base + MCBSP_O_SRGR2) & ~MCBSP_SRGR2_CLKSM) | ((uint16_t)((uint16_t)srgClockSource & 0x1U) << 13U)); // // Set or clear SCLKME bit. // HWREGH(base + MCBSP_O_PCR) = ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_SCLKME) | (uint16_t)(((uint16_t)srgClockSource >> 1U) << 7U)); }",
+      "registersUsed": [
+        "SRGR2",
+        "PCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRGR2",
+        "PCR"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxSRGClockSource",
+      "functionArgs": [
+        "base",
+        "srgClockSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_SRGTxClockSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set or clear CLKSM bit.\n    //\n    HWREGH(base + MCBSP_O_SRGR2) =\n    ((HWREGH(base + MCBSP_O_SRGR2) & ~MCBSP_SRGR2_CLKSM) |\n     ((uint16_t)((uint16_t)srgClockSource & 0x1U) << 13U));\n    //\n    // Set or clear SCLKME bit.\n    //\n    HWREGH(base + MCBSP_O_PCR) =\n    ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_SCLKME) |\n     (uint16_t)(((uint16_t)srgClockSource >> 1U) << 7U));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set or clear CLKSM bit. // HWREGH(base + MCBSP_O_SRGR2) = ((HWREGH(base + MCBSP_O_SRGR2) & ~MCBSP_SRGR2_CLKSM) | ((uint16_t)((uint16_t)srgClockSource & 0x1U) << 13U)); // // Set or clear SCLKME bit. // HWREGH(base + MCBSP_O_PCR) = ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_SCLKME) | (uint16_t)(((uint16_t)srgClockSource >> 1U) << 7U)); }",
+      "registersUsed": [
+        "SRGR2",
+        "PCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRGR2",
+        "PCR"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxInternalFrameSyncSource",
+      "functionArgs": [
+        "base",
+        "syncMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_TxInternalFrameSyncSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set or clear FSGM bit.\n    //\n    HWREGH(base + MCBSP_O_SRGR2) =\n    ((HWREGH(base + MCBSP_O_SRGR2) & ~MCBSP_SRGR2_FSGM) | (uint16_t)syncMode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set or clear FSGM bit. // HWREGH(base + MCBSP_O_SRGR2) = ((HWREGH(base + MCBSP_O_SRGR2) & ~MCBSP_SRGR2_FSGM) | (uint16_t)syncMode); }",
+      "registersUsed": [
+        "SRGR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRGR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxMultichannelPartition",
+      "functionArgs": [
+        "base",
+        "partition"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_MultichannelPartition"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set or Clear RMCME bit.\n    //\n    HWREGH(base + MCBSP_O_MCR1) =\n    ((HWREGH(base + MCBSP_O_MCR1) & ~MCBSP_MCR1_RMCME) | (uint16_t)partition);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set or Clear RMCME bit. // HWREGH(base + MCBSP_O_MCR1) = ((HWREGH(base + MCBSP_O_MCR1) & ~MCBSP_MCR1_RMCME) | (uint16_t)partition); }",
+      "registersUsed": [
+        "MCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxTwoPartitionBlock",
+      "functionArgs": [
+        "base",
+        "block"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_PartitionBlock"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    //Check the block value if it is 0,2,4,6 or 1,3,5,7.\n    //\n    if(((uint16_t)block ==  0U) ||\n       ((uint16_t)block ==  2U) ||\n       ((uint16_t)block ==  4U) ||\n       ((uint16_t)block ==  6U))\n    {\n        //\n        // write to RPABLK bits.\n        //\n        HWREGH(base + MCBSP_O_MCR1)  =\n        ((HWREGH(base + MCBSP_O_MCR1) & ~MCBSP_MCR1_RPABLK_M) |\n         (uint16_t)(((uint16_t)block >> 1U)<< 5U));\n    }\n    else\n    {\n        //\n        // write to RPBBLK bits.\n        //\n        HWREGH(base + MCBSP_O_MCR1)  =\n        ((HWREGH(base + MCBSP_O_MCR1) & ~MCBSP_MCR1_RPBBLK_M) |\n         (uint16_t)(((uint16_t)block >> 1U)<< 7U));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // //Check the block value if it is 0,2,4,6 or 1,3,5,7. // if(((uint16_t)block == 0U) || ((uint16_t)block == 2U) || ((uint16_t)block == 4U) || ((uint16_t)block == 6U)) { // // write to RPABLK bits. // HWREGH(base + MCBSP_O_MCR1) = ((HWREGH(base + MCBSP_O_MCR1) & ~MCBSP_MCR1_RPABLK_M) | (uint16_t)(((uint16_t)block >> 1U)<< 5U)); } else { // // write to RPBBLK bits. // HWREGH(base + MCBSP_O_MCR1) = ((HWREGH(base + MCBSP_O_MCR1) & ~MCBSP_MCR1_RPBBLK_M) | (uint16_t)(((uint16_t)block >> 1U)<< 7U)); } }",
+      "registersUsed": [
+        "MCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_getRxActiveBlock",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // return RCBLK bits.\n    //\n    return((HWREGH(base + MCBSP_O_MCR1) & MCBSP_MCR1_RCBLK_M) >>\n           MCBSP_MCR1_RCBLK_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // return RCBLK bits. // return((HWREGH(base + MCBSP_O_MCR1) & MCBSP_MCR1_RCBLK_M) >> MCBSP_MCR1_RCBLK_S); }",
+      "registersUsed": [
+        "MCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxChannelMode",
+      "functionArgs": [
+        "base",
+        "channelMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_RxChannelMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set or clear RMCM bit.\n    //\n    HWREGH(base + MCBSP_O_MCR1) =\n    ((HWREGH(base + MCBSP_O_MCR1) & ~MCBSP_MCR1_RMCM) | (uint16_t)channelMode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set or clear RMCM bit. // HWREGH(base + MCBSP_O_MCR1) = ((HWREGH(base + MCBSP_O_MCR1) & ~MCBSP_MCR1_RMCM) | (uint16_t)channelMode); }",
+      "registersUsed": [
+        "MCR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxMultichannelPartition",
+      "functionArgs": [
+        "base",
+        "partition"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_MultichannelPartition"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set or clear XMCME bit.\n    //\n    HWREGH(base + MCBSP_O_MCR2) =\n    ((HWREGH(base + MCBSP_O_MCR2) & ~MCBSP_MCR2_XMCME) | (uint16_t)partition);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set or clear XMCME bit. // HWREGH(base + MCBSP_O_MCR2) = ((HWREGH(base + MCBSP_O_MCR2) & ~MCBSP_MCR2_XMCME) | (uint16_t)partition); }",
+      "registersUsed": [
+        "MCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxTwoPartitionBlock",
+      "functionArgs": [
+        "base",
+        "block"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_PartitionBlock"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    if(((uint16_t)block ==  0U) ||\n       ((uint16_t)block ==  2U) ||\n       ((uint16_t)block ==  4U) ||\n       ((uint16_t)block ==  6U))\n    {\n        //\n        // write to XPABLK bits.\n        //\n        HWREGH(base + MCBSP_O_MCR2)  =\n        ((HWREGH(base + MCBSP_O_MCR2) & ~MCBSP_MCR2_XPABLK_M) |\n         ((uint16_t)((uint16_t)block >> 1U)<< 5U));\n    }\n    else\n    {\n        //\n        // write to XPBBLK bits.\n        //\n        HWREGH(base + MCBSP_O_MCR2)  =\n        ((HWREGH(base + MCBSP_O_MCR2) & ~MCBSP_MCR2_XPBBLK_M) |\n         ((uint16_t)((uint16_t)block >> 1U)<< 7U));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); if(((uint16_t)block == 0U) || ((uint16_t)block == 2U) || ((uint16_t)block == 4U) || ((uint16_t)block == 6U)) { // // write to XPABLK bits. // HWREGH(base + MCBSP_O_MCR2) = ((HWREGH(base + MCBSP_O_MCR2) & ~MCBSP_MCR2_XPABLK_M) | ((uint16_t)((uint16_t)block >> 1U)<< 5U)); } else { // // write to XPBBLK bits. // HWREGH(base + MCBSP_O_MCR2) = ((HWREGH(base + MCBSP_O_MCR2) & ~MCBSP_MCR2_XPBBLK_M) | ((uint16_t)((uint16_t)block >> 1U)<< 7U)); } }",
+      "registersUsed": [
+        "MCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_getTxActiveBlock",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // return XCBLK bits.\n    //\n    return((HWREGH(base + MCBSP_O_MCR2) & MCBSP_MCR2_XCBLK_M) >>\n           MCBSP_MCR2_XCBLK_S);\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // return XCBLK bits. // return((HWREGH(base + MCBSP_O_MCR2) & MCBSP_MCR2_XCBLK_M) >> MCBSP_MCR2_XCBLK_S); }",
+      "registersUsed": [
+        "MCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxChannelMode",
+      "functionArgs": [
+        "base",
+        "channelMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_TxChannelMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set values to the XMCM bits.\n    //\n    HWREGH(base + MCBSP_O_MCR2) =\n    ((HWREGH(base + MCBSP_O_MCR2) & ~MCBSP_MCR2_XMCM_M) |\n     (uint16_t)channelMode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set values to the XMCM bits. // HWREGH(base + MCBSP_O_MCR2) = ((HWREGH(base + MCBSP_O_MCR2) & ~MCBSP_MCR2_XMCM_M) | (uint16_t)channelMode); }",
+      "registersUsed": [
+        "MCR2"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCR2"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxFrameSyncSource",
+      "functionArgs": [
+        "base",
+        "syncSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_TxFrameSyncSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    //Set or Clear the FSXM bit.\n    //\n    HWREGH(base + MCBSP_O_PCR) =\n    ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_FSXM) | (uint16_t)syncSource);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // //Set or Clear the FSXM bit. // HWREGH(base + MCBSP_O_PCR) = ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_FSXM) | (uint16_t)syncSource); }",
+      "registersUsed": [
+        "PCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PCR"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxFrameSyncSource",
+      "functionArgs": [
+        "base",
+        "syncSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_RxFrameSyncSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set or clear FSRM bit.\n    //\n    HWREGH(base + MCBSP_O_PCR) =\n    ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_FSRM) | (uint16_t)syncSource);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set or clear FSRM bit. // HWREGH(base + MCBSP_O_PCR) = ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_FSRM) | (uint16_t)syncSource); }",
+      "registersUsed": [
+        "PCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PCR"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxClockSource",
+      "functionArgs": [
+        "base",
+        "clockSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_TxClockSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set or clear CLKXM bit.\n    //\n    HWREGH(base + MCBSP_O_PCR) =\n    ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_CLKXM ) | (uint16_t)clockSource);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set or clear CLKXM bit. // HWREGH(base + MCBSP_O_PCR) = ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_CLKXM ) | (uint16_t)clockSource); }",
+      "registersUsed": [
+        "PCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PCR"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxClockSource",
+      "functionArgs": [
+        "base",
+        "clockSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_RxClockSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set or clear CLKRM bit.\n    //\n    HWREGH(base + MCBSP_O_PCR) =\n    ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_CLKRM) | (uint16_t)clockSource);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set or clear CLKRM bit. // HWREGH(base + MCBSP_O_PCR) = ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_CLKRM) | (uint16_t)clockSource); }",
+      "registersUsed": [
+        "PCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PCR"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxFrameSyncPolarity",
+      "functionArgs": [
+        "base",
+        "syncPolarity"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_TxFrameSyncPolarity"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set or clear FSXP bit.\n    //\n    HWREGH(base + MCBSP_O_PCR) =\n    ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_FSXP) | (uint16_t)syncPolarity);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set or clear FSXP bit. // HWREGH(base + MCBSP_O_PCR) = ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_FSXP) | (uint16_t)syncPolarity); }",
+      "registersUsed": [
+        "PCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PCR"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxFrameSyncPolarity",
+      "functionArgs": [
+        "base",
+        "syncPolarity"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_RxFrameSyncPolarity"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set or clear FSRP bit.\n    //\n    HWREGH(base + MCBSP_O_PCR) =\n    ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_FSRP) | (uint16_t)syncPolarity);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set or clear FSRP bit. // HWREGH(base + MCBSP_O_PCR) = ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_FSRP) | (uint16_t)syncPolarity); }",
+      "registersUsed": [
+        "PCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PCR"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setTxClockPolarity",
+      "functionArgs": [
+        "base",
+        "clockPolarity"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_TxClockPolarity"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear CLKXP bit first , then set or clear CLKXP bit.\n    //\n    HWREGH(base + MCBSP_O_PCR) =\n    ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_CLKXP) |\n     (uint16_t)clockPolarity);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear CLKXP bit first , then set or clear CLKXP bit. // HWREGH(base + MCBSP_O_PCR) = ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_CLKXP) | (uint16_t)clockPolarity); }",
+      "registersUsed": [
+        "PCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PCR"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_setRxClockPolarity",
+      "functionArgs": [
+        "base",
+        "clockPolarity"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMcBSP_RxClockPolarity"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear CLKRP bit first , then set or clear CLKRP bit.\n    //\n    HWREGH(base + MCBSP_O_PCR) =\n    ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_CLKRP) |\n     (uint16_t)clockPolarity);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear CLKRP bit first , then set or clear CLKRP bit. // HWREGH(base + MCBSP_O_PCR) = ((HWREGH(base + MCBSP_O_PCR) & ~MCBSP_PCR_CLKRP) | (uint16_t)clockPolarity); }",
+      "registersUsed": [
+        "PCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PCR"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_read16bitData",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Read DRR1 register.\n    //\n    return(HWREGH(base + MCBSP_O_DRR1));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Read DRR1 register. // return(HWREGH(base + MCBSP_O_DRR1)); }",
+      "registersUsed": [
+        "DRR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "DRR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_read32bitData",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Read DDR1 register and return DDR2:DDR1.\n    //\n    return((((uint32_t)HWREGH(base + MCBSP_O_DRR2) << 16U) |\n            HWREGH(base + MCBSP_O_DRR1)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Read DDR1 register and return DDR2:DDR1. // return((((uint32_t)HWREGH(base + MCBSP_O_DRR2) << 16U) | HWREGH(base + MCBSP_O_DRR1))); }",
+      "registersUsed": [
+        "DRR2",
+        "DRR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "DRR2",
+        "DRR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_write16bitData",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Write to DXR1 register.\n    //\n    HWREGH(base + MCBSP_O_DXR1) = data;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Write to DXR1 register. // HWREGH(base + MCBSP_O_DXR1) = data; }",
+      "registersUsed": [
+        "DXR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "DXR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_write32bitData",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Write to DXR2 register first.\n    //\n    HWREGH(base + MCBSP_O_DXR2) = data >> 16U;\n\n    //\n    // Write to DXR1 register.\n    //\n    HWREGH(base + MCBSP_O_DXR1) = data & 0xFFFFU;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Write to DXR2 register first. // HWREGH(base + MCBSP_O_DXR2) = data >> 16U; // // Write to DXR1 register. // HWREGH(base + MCBSP_O_DXR1) = data & 0xFFFFU; }",
+      "registersUsed": [
+        "DXR2",
+        "DXR1"
+      ],
+      "registersUsedMatchingBifield": [
+        "DXR2",
+        "DXR1"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_getLeftJustifyData",
+      "functionArgs": [
+        "data",
+        "compandingType"
+      ],
+      "functionArgsTypes": [
+        "uint16_t",
+        "constMcBSP_CompandingType"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    return(data << (uint16_t)compandingType);\n}\n",
+      "functionContentWithoutFormatting": "{ return(data << (uint16_t)compandingType); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableRxInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set RINT ENA bit.\n    //\n    HWREGH(base + MCBSP_O_MFFINT) |= MCBSP_MFFINT_RINT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set RINT ENA bit. // HWREGH(base + MCBSP_O_MFFINT) |= MCBSP_MFFINT_RINT; }",
+      "registersUsed": [
+        "MFFINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "MFFINT"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_disableRxInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear RINT ENA bit.\n    //\n    HWREGH(base + MCBSP_O_MFFINT) |= ~(MCBSP_MFFINT_RINT);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear RINT ENA bit. // HWREGH(base + MCBSP_O_MFFINT) |= ~(MCBSP_MFFINT_RINT); }",
+      "registersUsed": [
+        "MFFINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "MFFINT"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_enableTxInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Set XINT ENA bit.\n    //\n    HWREGH(base + MCBSP_O_MFFINT) |= MCBSP_MFFINT_XINT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Set XINT ENA bit. // HWREGH(base + MCBSP_O_MFFINT) |= MCBSP_MFFINT_XINT; }",
+      "registersUsed": [
+        "MFFINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "MFFINT"
+      ]
+    },
+    {
+      "file": "mcbsp.h",
+      "peripheral": "mcbsp",
+      "functionName": "McBSP_disableTxInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(McBSP_isBaseValid(base));\n\n    //\n    // Clear XINT ENA bit.\n    //\n    HWREGH(base + MCBSP_O_MFFINT) |= ~(MCBSP_MFFINT_XINT);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(McBSP_isBaseValid(base)); // // Clear XINT ENA bit. // HWREGH(base + MCBSP_O_MFFINT) |= ~(MCBSP_MFFINT_XINT); }",
+      "registersUsed": [
+        "MFFINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "MFFINT"
+      ]
+    }
+  ]
+}

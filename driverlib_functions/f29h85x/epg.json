@@ -1,0 +1,841 @@
+{
+  "name": "epg",
+  "functions": [
+    {
+      "file": "epg.c",
+      "peripheral": "epg",
+      "functionName": "EPG_selectEPGDataOut",
+      "functionArgs": [
+        "muxbase",
+        "dataIn",
+        "dataOutSel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_DataIn",
+        "EPG_DataOutSel"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ASSERT(EPG_isMUXBaseValid(muxbase));\n\n    if((uint16_t)dataIn <= 31U)\n    {\n        HWREG(muxbase + EPG_O_MXSEL0) = ((HWREG(muxbase + EPG_O_MXSEL0) &\n                                         ~(1U << (uint32_t)dataIn)) |\n                                         ((uint32_t)dataOutSel <<\n                                          (uint32_t)dataIn));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isMUXBaseValid(muxbase)); if((uint16_t)dataIn <= 31U) { HWREG(muxbase + EPG_O_MXSEL0) = ((HWREG(muxbase + EPG_O_MXSEL0) & ~(1U << (uint32_t)dataIn)) | ((uint32_t)dataOutSel << (uint32_t)dataIn)); } }",
+      "registersUsed": [
+        "MXSEL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "MXSEL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n            (base & BASE_ADDR_MASK) == EPG_BASE_FRAME(0U)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base & BASE_ADDR_MASK) == EPG_BASE_FRAME(0U) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_isMUXBaseValid",
+      "functionArgs": [
+        "muxbase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n            (muxbase & BASE_ADDR_MASK) == EPGMUX_BASE_FRAME(0U)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (muxbase & BASE_ADDR_MASK) == EPGMUX_BASE_FRAME(0U) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_enableGlobal",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    HWREG(base + EPG_O_GCTL0) |= EPG_GCTL0_EN;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); HWREG(base + EPG_O_GCTL0) |= EPG_GCTL0_EN; }",
+      "registersUsed": [
+        "GCTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "GCTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_disableGlobal",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    HWREG(base + EPG_O_GCTL0) &= ~(uint32_t)EPG_GCTL0_EN;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); HWREG(base + EPG_O_GCTL0) &= ~(uint32_t)EPG_GCTL0_EN; }",
+      "registersUsed": [
+        "GCTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "GCTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_selectEPGOutput",
+      "functionArgs": [
+        "base",
+        "gPinNum",
+        "gPinOutSel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_OUT",
+        "EPG_OutputSelect"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regValue, bitFieldLoc, bitFieldVal;\n\n    ASSERT(EPG_isBaseValid(base));\n\n    bitFieldLoc = 1UL << ((uint16_t)gPinNum + EPG_GCTL0_EPGOUTSEL_S);\n    bitFieldVal = (uint32_t)gPinOutSel << ((uint16_t)gPinNum +\n                                           EPG_GCTL0_EPGOUTSEL_S);\n\n    regValue = (HWREG(base + EPG_O_GCTL0) & (~bitFieldLoc));\n    regValue |= bitFieldVal;\n\n    HWREG((base + EPG_O_GCTL0)) = regValue;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regValue, bitFieldLoc, bitFieldVal; ASSERT(EPG_isBaseValid(base)); bitFieldLoc = 1UL << ((uint16_t)gPinNum + EPG_GCTL0_EPGOUTSEL_S); bitFieldVal = (uint32_t)gPinOutSel << ((uint16_t)gPinNum + EPG_GCTL0_EPGOUTSEL_S); regValue = (HWREG(base + EPG_O_GCTL0) & (~bitFieldLoc)); regValue |= bitFieldVal; HWREG((base + EPG_O_GCTL0)) = regValue; }",
+      "registersUsed": [
+        "GCTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "GCTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_selectSignalOutput",
+      "functionArgs": [
+        "base",
+        "gPinNum",
+        "sigGenOutput"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_OUT",
+        "EPG_SignalGenOut"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regValue, bitFieldLoc, bitFieldVal;\n\n    ASSERT(EPG_isBaseValid(base));\n\n    bitFieldLoc = (uint32_t)EPG_GCTL3_EPGOUT0_SIGOUTSEL_M <<\n                  ((uint32_t)gPinNum * EPG_GCTL3_EPGOUT_SIGOUTSEL_BIT_L);\n\n    bitFieldVal = (uint32_t)sigGenOutput <<\n                  ((uint32_t)gPinNum * EPG_GCTL3_EPGOUT_SIGOUTSEL_BIT_L);\n\n    regValue = HWREG(base + EPG_O_GCTL3) & (~bitFieldLoc);\n    regValue |= bitFieldVal;\n\n    HWREG(base + EPG_O_GCTL3) = regValue;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regValue, bitFieldLoc, bitFieldVal; ASSERT(EPG_isBaseValid(base)); bitFieldLoc = (uint32_t)EPG_GCTL3_EPGOUT0_SIGOUTSEL_M << ((uint32_t)gPinNum * EPG_GCTL3_EPGOUT_SIGOUTSEL_BIT_L); bitFieldVal = (uint32_t)sigGenOutput << ((uint32_t)gPinNum * EPG_GCTL3_EPGOUT_SIGOUTSEL_BIT_L); regValue = HWREG(base + EPG_O_GCTL3) & (~bitFieldLoc); regValue |= bitFieldVal; HWREG(base + EPG_O_GCTL3) = regValue; }",
+      "registersUsed": [
+        "GCTL3"
+      ],
+      "registersUsedMatchingBifield": [
+        "GCTL3"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_selectClkOutput",
+      "functionArgs": [
+        "base",
+        "gPinNum",
+        "clkGenOutput"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_OUT",
+        "EPG_ClockGenOut"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regValue, bitFieldLoc, bitFieldVal;\n\n    ASSERT(EPG_isBaseValid(base));\n\n    bitFieldLoc = (uint32_t)EPG_GCTL2_EPGOUT0_CLKOUTSEL_M <<\n                  ((uint32_t)gPinNum * EPG_GCTL2_EPGOUT_CLKOUTSEL_BIT_L);\n\n    bitFieldVal = (uint32_t)clkGenOutput <<\n                  ((uint32_t)gPinNum * EPG_GCTL2_EPGOUT_CLKOUTSEL_BIT_L);\n\n    regValue = HWREG(base + EPG_O_GCTL2) & (~bitFieldLoc);\n    regValue |= bitFieldVal;\n\n    HWREG(base + EPG_O_GCTL2) = regValue;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regValue, bitFieldLoc, bitFieldVal; ASSERT(EPG_isBaseValid(base)); bitFieldLoc = (uint32_t)EPG_GCTL2_EPGOUT0_CLKOUTSEL_M << ((uint32_t)gPinNum * EPG_GCTL2_EPGOUT_CLKOUTSEL_BIT_L); bitFieldVal = (uint32_t)clkGenOutput << ((uint32_t)gPinNum * EPG_GCTL2_EPGOUT_CLKOUTSEL_BIT_L); regValue = HWREG(base + EPG_O_GCTL2) & (~bitFieldLoc); regValue |= bitFieldVal; HWREG(base + EPG_O_GCTL2) = regValue; }",
+      "registersUsed": [
+        "GCTL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "GCTL2"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_selectSigGenClkSource",
+      "functionArgs": [
+        "base",
+        "sigGenNum",
+        "clkGenOutput"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN",
+        "EPG_ClockGenGclkOut"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regValue, bitFieldLoc, bitFieldVal;\n\n    ASSERT(EPG_isBaseValid(base));\n\n    bitFieldLoc = (uint32_t)EPG_GCTL1_SIGGEN0_CLKSEL_M <<\n                  ((uint32_t)sigGenNum * EPG_GCTL1_SIGGEN_CLKSEL_BIT_L);\n\n    bitFieldVal = (uint32_t)clkGenOutput <<\n                  ((uint32_t)sigGenNum * EPG_GCTL1_SIGGEN_CLKSEL_BIT_L);\n\n    regValue = HWREG(base + EPG_O_GCTL1) & (~bitFieldLoc);\n    regValue |= bitFieldVal;\n\n    HWREG(base + EPG_O_GCTL1) |= regValue;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regValue, bitFieldLoc, bitFieldVal; ASSERT(EPG_isBaseValid(base)); bitFieldLoc = (uint32_t)EPG_GCTL1_SIGGEN0_CLKSEL_M << ((uint32_t)sigGenNum * EPG_GCTL1_SIGGEN_CLKSEL_BIT_L); bitFieldVal = (uint32_t)clkGenOutput << ((uint32_t)sigGenNum * EPG_GCTL1_SIGGEN_CLKSEL_BIT_L); regValue = HWREG(base + EPG_O_GCTL1) & (~bitFieldLoc); regValue |= bitFieldVal; HWREG(base + EPG_O_GCTL1) |= regValue; }",
+      "registersUsed": [
+        "GCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "GCTL1"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_setClkGenPeriod",
+      "functionArgs": [
+        "base",
+        "clkGenNum",
+        "periodValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_CLKGEN",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regValue, regLoc;\n\n    ASSERT(EPG_isBaseValid(base));\n    ASSERT(periodValue <= EPG_CLKDIV0_CTL0_PRD_M);\n\n    regLoc = (uint32_t)EPG_O_CLKDIV0_CTL0 + ((uint32_t)clkGenNum *\n                                             EPG_CLKDIV_REG_OFF);\n\n    regValue = HWREG(base + regLoc) & (~(uint32_t)EPG_CLKDIV0_CTL0_PRD_M);\n    regValue |= periodValue;\n\n    HWREG(base + regLoc) = regValue;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regValue, regLoc; ASSERT(EPG_isBaseValid(base)); ASSERT(periodValue <= EPG_CLKDIV0_CTL0_PRD_M); regLoc = (uint32_t)EPG_O_CLKDIV0_CTL0 + ((uint32_t)clkGenNum * EPG_CLKDIV_REG_OFF); regValue = HWREG(base + regLoc) & (~(uint32_t)EPG_CLKDIV0_CTL0_PRD_M); regValue |= periodValue; HWREG(base + regLoc) = regValue; }",
+      "registersUsed": [
+        "CLKDIV0_CTL0",
+        "CLKDIV1_CTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKDIV0_CTL0",
+        "CLKDIV1_CTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_setClkGenStopEdge",
+      "functionArgs": [
+        "base",
+        "clkGenNum",
+        "stopEdge"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_CLKGEN",
+        "EPG_ClockStopEdge"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regValue, regLoc;\n\n    ASSERT(EPG_isBaseValid(base));\n\n    regLoc = (uint32_t)EPG_O_CLKDIV0_CTL0 + ((uint32_t)clkGenNum *\n                                             EPG_CLKDIV_REG_OFF);\n\n    regValue = HWREG(base + regLoc) & ~(uint32_t)EPG_CLKDIV0_CTL0_CLKSTOP_M;\n    regValue |= ((uint32_t)stopEdge << EPG_CLKDIV0_CTL0_CLKSTOP_S);\n\n    HWREG(base + regLoc) = regValue;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regValue, regLoc; ASSERT(EPG_isBaseValid(base)); regLoc = (uint32_t)EPG_O_CLKDIV0_CTL0 + ((uint32_t)clkGenNum * EPG_CLKDIV_REG_OFF); regValue = HWREG(base + regLoc) & ~(uint32_t)EPG_CLKDIV0_CTL0_CLKSTOP_M; regValue |= ((uint32_t)stopEdge << EPG_CLKDIV0_CTL0_CLKSTOP_S); HWREG(base + regLoc) = regValue; }",
+      "registersUsed": [
+        "CLKDIV0_CTL0",
+        "CLKDIV1_CTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKDIV0_CTL0",
+        "CLKDIV1_CTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_setClkGenOffset",
+      "functionArgs": [
+        "base",
+        "clkGenNum",
+        "clkGenOutputNum",
+        "offsetValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_CLKGEN",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regValue, regLoc, bitFieldLoc, bitFieldVal;\n\n    ASSERT(EPG_isBaseValid(base));\n    ASSERT(clkGenOutputNum <= 3U);\n    ASSERT(offsetValue <= EPG_CLKDIV0_CLKOFFSET_CLK0OFFSET_M);\n\n    bitFieldLoc = (uint32_t)EPG_CLKDIV0_CLKOFFSET_CLK0OFFSET_M <<\n                  (clkGenOutputNum * EPG_CLKDIV_CLKOFFSET_BIT_L);\n\n    bitFieldVal = offsetValue << (clkGenOutputNum *\n                                            EPG_CLKDIV_CLKOFFSET_BIT_L);\n\n    regLoc = (uint32_t)EPG_O_CLKDIV0_CLKOFFSET + ((uint32_t)clkGenNum  *\n                                                  EPG_CLKDIV_REG_OFF);\n\n    regValue = HWREG(base + regLoc) & ~bitFieldLoc;\n    regValue |= bitFieldVal;\n\n    HWREG(base + regLoc) = regValue;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regValue, regLoc, bitFieldLoc, bitFieldVal; ASSERT(EPG_isBaseValid(base)); ASSERT(clkGenOutputNum <= 3U); ASSERT(offsetValue <= EPG_CLKDIV0_CLKOFFSET_CLK0OFFSET_M); bitFieldLoc = (uint32_t)EPG_CLKDIV0_CLKOFFSET_CLK0OFFSET_M << (clkGenOutputNum * EPG_CLKDIV_CLKOFFSET_BIT_L); bitFieldVal = offsetValue << (clkGenOutputNum * EPG_CLKDIV_CLKOFFSET_BIT_L); regLoc = (uint32_t)EPG_O_CLKDIV0_CLKOFFSET + ((uint32_t)clkGenNum * EPG_CLKDIV_REG_OFF); regValue = HWREG(base + regLoc) & ~bitFieldLoc; regValue |= bitFieldVal; HWREG(base + regLoc) = regValue; }",
+      "registersUsed": [
+        "CLKDIV0_CLKOFFSET",
+        "CLKDIV1_CLKOFFSET"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKDIV0_CLKOFFSET",
+        "CLKDIV1_CLKOFFSET"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_enableSignalGen",
+      "functionArgs": [
+        "base",
+        "sigGenNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n    ASSERT((uint16_t)sigGenNum <= 0U);\n\n    if(sigGenNum == EPG_SIGGEN0)\n    {\n        HWREG(base + EPG_O_GCTL0) |= EPG_GCTL0_SIGGEN0_EN;\n    }\n    else if(sigGenNum == EPG_SIGGEN1)\n    {\n        HWREG(base + EPG_O_GCTL0) |= EPG_GCTL0_SIGGEN1_EN;\n    }\n    else\n    {\n        //\n        // For correct inputs, this block is not expected to execute.\n        //\n        ESTOP0;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); ASSERT((uint16_t)sigGenNum <= 0U); if(sigGenNum == EPG_SIGGEN0) { HWREG(base + EPG_O_GCTL0) |= EPG_GCTL0_SIGGEN0_EN; } else if(sigGenNum == EPG_SIGGEN1) { HWREG(base + EPG_O_GCTL0) |= EPG_GCTL0_SIGGEN1_EN; } else { // // For correct inputs, this block is not expected to execute. // ESTOP0; } }",
+      "registersUsed": [
+        "GCTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "GCTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_disableSignalGen",
+      "functionArgs": [
+        "base",
+        "sigGenNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    if(sigGenNum == EPG_SIGGEN0)\n    {\n        HWREG(base + EPG_O_GCTL0) &= ~(uint32_t)EPG_GCTL0_SIGGEN0_EN;\n    }\n    else if(sigGenNum == EPG_SIGGEN1)\n    {\n        HWREG(base + EPG_O_GCTL0) &= ~(uint32_t)EPG_GCTL0_SIGGEN1_EN;\n    }\n    else\n    {\n        //\n        // For correct inputs, this block is not expected to execute.\n        //\n        ESTOP0;\n    }\n\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); if(sigGenNum == EPG_SIGGEN0) { HWREG(base + EPG_O_GCTL0) &= ~(uint32_t)EPG_GCTL0_SIGGEN0_EN; } else if(sigGenNum == EPG_SIGGEN1) { HWREG(base + EPG_O_GCTL0) &= ~(uint32_t)EPG_GCTL0_SIGGEN1_EN; } else { // // For correct inputs, this block is not expected to execute. // ESTOP0; } }",
+      "registersUsed": [
+        "GCTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "GCTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_setSignalGenMode",
+      "functionArgs": [
+        "base",
+        "sigGenNum",
+        "sigGenMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN",
+        "EPG_SignalGenMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regValue, regLoc;\n\n    ASSERT(EPG_isBaseValid(base));\n\n    regLoc = (uint32_t)EPG_O_SIGGEN0_CTL0 + ((uint32_t)sigGenNum *\n                                             EPG_SIGGEN_REG_OFF);\n\n    regValue = HWREG(base + regLoc) & ~(uint32_t)EPG_SIGGEN0_CTL0_MODE_M;\n    regValue |= (uint32_t)sigGenMode << EPG_SIGGEN0_CTL0_MODE_S;\n\n    HWREG(base + regLoc) = regValue;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regValue, regLoc; ASSERT(EPG_isBaseValid(base)); regLoc = (uint32_t)EPG_O_SIGGEN0_CTL0 + ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF); regValue = HWREG(base + regLoc) & ~(uint32_t)EPG_SIGGEN0_CTL0_MODE_M; regValue |= (uint32_t)sigGenMode << EPG_SIGGEN0_CTL0_MODE_S; HWREG(base + regLoc) = regValue; }",
+      "registersUsed": [
+        "SIGGEN0_CTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGGEN0_CTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_enableBitRevOnDataIn",
+      "functionArgs": [
+        "base",
+        "sigGenNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regLoc;\n\n    ASSERT(EPG_isBaseValid(base));\n\n    regLoc = (uint32_t)EPG_O_SIGGEN0_CTL0 + ((uint32_t)sigGenNum *\n                                             EPG_SIGGEN_REG_OFF);\n\n    HWREG(base + regLoc) |= EPG_SIGGEN0_CTL0_BRIN;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regLoc; ASSERT(EPG_isBaseValid(base)); regLoc = (uint32_t)EPG_O_SIGGEN0_CTL0 + ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF); HWREG(base + regLoc) |= EPG_SIGGEN0_CTL0_BRIN; }",
+      "registersUsed": [
+        "SIGGEN0_CTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGGEN0_CTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_disableBitRevOnDataIn",
+      "functionArgs": [
+        "base",
+        "sigGenNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regLoc;\n\n    ASSERT(EPG_isBaseValid(base));\n\n    regLoc = (uint32_t)EPG_O_SIGGEN0_CTL0 + ((uint32_t)sigGenNum *\n                                             EPG_SIGGEN_REG_OFF);\n\n    HWREG(base + regLoc) &= ~(uint32_t)EPG_SIGGEN0_CTL0_BRIN;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regLoc; ASSERT(EPG_isBaseValid(base)); regLoc = (uint32_t)EPG_O_SIGGEN0_CTL0 + ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF); HWREG(base + regLoc) &= ~(uint32_t)EPG_SIGGEN0_CTL0_BRIN; }",
+      "registersUsed": [
+        "SIGGEN0_CTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGGEN0_CTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_enableBitRevOnDataOut",
+      "functionArgs": [
+        "base",
+        "sigGenNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regLoc;\n\n\n    regLoc = (uint32_t)EPG_O_SIGGEN0_CTL0 + ((uint32_t)sigGenNum *\n                                             EPG_SIGGEN_REG_OFF);\n\n    HWREG(base + regLoc) |= EPG_SIGGEN0_CTL0_BROUT;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regLoc; regLoc = (uint32_t)EPG_O_SIGGEN0_CTL0 + ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF); HWREG(base + regLoc) |= EPG_SIGGEN0_CTL0_BROUT; }",
+      "registersUsed": [
+        "SIGGEN0_CTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGGEN0_CTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_disableBitRevOnDataOut",
+      "functionArgs": [
+        "base",
+        "sigGenNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regLoc;\n\n    ASSERT(EPG_isBaseValid(base));\n\n    regLoc = (uint32_t)EPG_O_SIGGEN0_CTL0 + ((uint32_t)sigGenNum *\n                                             EPG_SIGGEN_REG_OFF);\n\n    HWREG(base + regLoc) &= ~(uint32_t)EPG_SIGGEN0_CTL0_BROUT;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regLoc; ASSERT(EPG_isBaseValid(base)); regLoc = (uint32_t)EPG_O_SIGGEN0_CTL0 + ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF); HWREG(base + regLoc) &= ~(uint32_t)EPG_SIGGEN0_CTL0_BROUT; }",
+      "registersUsed": [
+        "SIGGEN0_CTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGGEN0_CTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_setDataBitLen",
+      "functionArgs": [
+        "base",
+        "sigGenNum",
+        "bitLength"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regValue, regLoc;\n\n    ASSERT(EPG_isBaseValid(base));\n    ASSERT(bitLength <= 0xFFU);\n\n    regLoc = (uint32_t)EPG_O_SIGGEN0_CTL0 + ((uint32_t)sigGenNum *\n                                             EPG_SIGGEN_REG_OFF);\n\n    regValue = HWREG(base + regLoc) & ~(uint32_t)EPG_SIGGEN0_CTL0_BITLENGTH_M;\n    regValue |= (bitLength << EPG_SIGGEN0_CTL0_BITLENGTH_S);\n\n    HWREG(base + regLoc) = regValue;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regValue, regLoc; ASSERT(EPG_isBaseValid(base)); ASSERT(bitLength <= 0xFFU); regLoc = (uint32_t)EPG_O_SIGGEN0_CTL0 + ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF); regValue = HWREG(base + regLoc) & ~(uint32_t)EPG_SIGGEN0_CTL0_BITLENGTH_M; regValue |= (bitLength << EPG_SIGGEN0_CTL0_BITLENGTH_S); HWREG(base + regLoc) = regValue; }",
+      "registersUsed": [
+        "SIGGEN0_CTL0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGGEN0_CTL0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_setData0In",
+      "functionArgs": [
+        "base",
+        "sigGenNum",
+        "data0Input"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN",
+        "EPG_SignalGenData0In"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regValue, regLoc;\n\n    ASSERT(EPG_isBaseValid(base));\n\n    regLoc = (uint32_t)EPG_O_SIGGEN0_CTL1 + ((uint32_t)sigGenNum *\n                                             EPG_SIGGEN_REG_OFF);\n\n    regValue = HWREG(base + regLoc) &\n                                    ~(uint32_t)EPG_SIGGEN0_CTL1_DATA0_INSEL_M;\n    regValue |= (uint32_t)data0Input;\n\n    HWREG(base + regLoc) = regValue;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regValue, regLoc; ASSERT(EPG_isBaseValid(base)); regLoc = (uint32_t)EPG_O_SIGGEN0_CTL1 + ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF); regValue = HWREG(base + regLoc) & ~(uint32_t)EPG_SIGGEN0_CTL1_DATA0_INSEL_M; regValue |= (uint32_t)data0Input; HWREG(base + regLoc) = regValue; }",
+      "registersUsed": [
+        "SIGGEN0_CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGGEN0_CTL1"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_setData63In",
+      "functionArgs": [
+        "base",
+        "sigGenNum",
+        "data63Input"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN",
+        "EPG_SignalGenData63In"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regValue, regLoc;\n\n    ASSERT(EPG_isBaseValid(base));\n\n    regLoc = (uint32_t)EPG_O_SIGGEN0_CTL1 + ((uint32_t)sigGenNum *\n                                             EPG_SIGGEN_REG_OFF);\n\n    regValue = HWREG(base + regLoc) &\n                                    ~(uint32_t)EPG_SIGGEN0_CTL1_DATA63_INSEL_M;\n    regValue |= (uint32_t)data63Input << EPG_SIGGEN0_CTL1_DATA63_INSEL_S;\n\n    HWREG(base + regLoc) = regValue;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regValue, regLoc; ASSERT(EPG_isBaseValid(base)); regLoc = (uint32_t)EPG_O_SIGGEN0_CTL1 + ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF); regValue = HWREG(base + regLoc) & ~(uint32_t)EPG_SIGGEN0_CTL1_DATA63_INSEL_M; regValue |= (uint32_t)data63Input << EPG_SIGGEN0_CTL1_DATA63_INSEL_S; HWREG(base + regLoc) = regValue; }",
+      "registersUsed": [
+        "SIGGEN0_CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGGEN0_CTL1"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_setData0Word",
+      "functionArgs": [
+        "base",
+        "sigGenNum",
+        "data0"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    HWREG(base + EPG_O_SIGGEN0_DATA0 + ((uint32_t)sigGenNum *\n                                        EPG_SIGGEN_REG_OFF)) = data0;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); HWREG(base + EPG_O_SIGGEN0_DATA0 + ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF)) = data0; }",
+      "registersUsed": [
+        "SIGGEN0_DATA0"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGGEN0_DATA0"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_setData1Word",
+      "functionArgs": [
+        "base",
+        "sigGenNum",
+        "data1"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    HWREG(base + EPG_O_SIGGEN0_DATA1 + ((uint32_t)sigGenNum *\n                                        EPG_SIGGEN_REG_OFF)) = data1;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); HWREG(base + EPG_O_SIGGEN0_DATA1 + ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF)) = data1; }",
+      "registersUsed": [
+        "SIGGEN0_DATA1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGGEN0_DATA1"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_getData0ActiveReg",
+      "functionArgs": [
+        "base",
+        "sigGenNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    return(HWREG(base + EPG_O_SIGGEN0_DATA0_ACTIVE +\n                 ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF)));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); return(HWREG(base + EPG_O_SIGGEN0_DATA0_ACTIVE + ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF))); }",
+      "registersUsed": [
+        "SIGGEN0_DATA0",
+        "SIGGEN0_DATA0_ACTIVE"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGGEN0_DATA0",
+        "SIGGEN0_DATA0_ACTIVE"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_getData1ActiveReg",
+      "functionArgs": [
+        "base",
+        "sigGenNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EPG_SIGGEN"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    return(HWREG(base + EPG_O_SIGGEN0_DATA1_ACTIVE +\n                 ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF)));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); return(HWREG(base + EPG_O_SIGGEN0_DATA1_ACTIVE + ((uint32_t)sigGenNum * EPG_SIGGEN_REG_OFF))); }",
+      "registersUsed": [
+        "SIGGEN0_DATA1",
+        "SIGGEN0_DATA1_ACTIVE"
+      ],
+      "registersUsedMatchingBifield": [
+        "SIGGEN0_DATA1",
+        "SIGGEN0_DATA1_ACTIVE"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_enableInterruptFlag",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    HWREG(base + EPG_O_GINTEN) |= intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); HWREG(base + EPG_O_GINTEN) |= intFlags; }",
+      "registersUsed": [
+        "GINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "GINTEN"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_disableInterruptFlag",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    HWREG(base + EPG_O_GINTEN) &= ~intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); HWREG(base + EPG_O_GINTEN) &= ~intFlags; }",
+      "registersUsed": [
+        "GINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "GINTEN"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_getInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    uint32_t status = 0U;\n\n    ASSERT(EPG_isBaseValid(base));\n\n    status = HWREG(base + EPG_O_GINTSTS);\n\n    return(status);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t status = 0U; ASSERT(EPG_isBaseValid(base)); status = HWREG(base + EPG_O_GINTSTS); return(status); }",
+      "registersUsed": [
+        "GINTSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "GINTSTS"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_clearInterruptFlag",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    HWREG(base + EPG_O_GINTCLR) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); HWREG(base + EPG_O_GINTCLR) = intFlags; }",
+      "registersUsed": [
+        "GINTCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "GINTCLR"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_forceInterruptFlag",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    HWREG(base + EPG_O_GINTFRC) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); HWREG(base + EPG_O_GINTFRC) = intFlags; }",
+      "registersUsed": [
+        "GINTFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "GINTFRC"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_lockReg",
+      "functionArgs": [
+        "base",
+        "regFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    HWREG(base + EPG_O_LOCK) |= regFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); HWREG(base + EPG_O_LOCK) |= regFlags; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_releaseLockReg",
+      "functionArgs": [
+        "base",
+        "regFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    HWREG(base + EPG_O_LOCK) &= ~regFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); HWREG(base + EPG_O_LOCK) &= ~regFlags; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_commitRegLock",
+      "functionArgs": [
+        "base",
+        "regFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isBaseValid(base));\n\n    HWREG(base + EPG_O_COMMIT) |= regFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isBaseValid(base)); HWREG(base + EPG_O_COMMIT) |= regFlags; }",
+      "registersUsed": [
+        "COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMMIT"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_lockMXSelReg",
+      "functionArgs": [
+        "muxbase",
+        "regFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isMUXBaseValid(muxbase));\n\n    HWREG(muxbase + EPG_O_MXSELLOCK) |= regFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isMUXBaseValid(muxbase)); HWREG(muxbase + EPG_O_MXSELLOCK) |= regFlags; }",
+      "registersUsed": [
+        "MXSELLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "MXSELLOCK"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_releaseLockMXSelReg",
+      "functionArgs": [
+        "muxbase",
+        "regFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isMUXBaseValid(muxbase));\n\n    HWREG(muxbase + EPG_O_MXSELLOCK) &= ~regFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isMUXBaseValid(muxbase)); HWREG(muxbase + EPG_O_MXSELLOCK) &= ~regFlags; }",
+      "registersUsed": [
+        "MXSELLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "MXSELLOCK"
+      ]
+    },
+    {
+      "file": "epg.h",
+      "peripheral": "epg",
+      "functionName": "EPG_commitMXSelRegLock",
+      "functionArgs": [
+        "muxbase",
+        "regFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(EPG_isMUXBaseValid(muxbase));\n\n    HWREG(muxbase + EPG_O_MXSELCOMMIT) |= regFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(EPG_isMUXBaseValid(muxbase)); HWREG(muxbase + EPG_O_MXSELCOMMIT) |= regFlags; }",
+      "registersUsed": [
+        "MXSELCOMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "MXSELCOMMIT"
+      ]
+    }
+  ]
+}

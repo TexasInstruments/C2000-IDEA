@@ -1,0 +1,383 @@
+{
+  "name": "lcm",
+  "functions": [
+    {
+      "file": "lcm.c",
+      "peripheral": "lcm",
+      "functionName": "LCM_runSelfTest",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "LCM_Status",
+      "functionContent": "{\n    LCM_Status ret;\n    uint16_t count = 0;\n\n    ASSERT(LCM_isBaseValid(base));\n\n    //\n    // Check if Lockstep feature is disabled.\n    // Check for any pending functional failure or test failure\n    //\n    if(!LCM_isLockStepEnabled(base)                       ||\n       (LCM_getLockStepCompareStatus(base)   == LCM_FAIL) ||\n       (LCM_getSelfTestStatus(base)          == LCM_FAIL) ||\n       (LCM_getComp1ErrForceTestStatus(base) == LCM_FAIL) ||\n       (LCM_getComp2ErrForceTestStatus(base) == LCM_FAIL))\n    {\n        ret = LCM_NOT_RUN;\n    }\n    else\n    {\n        //\n        // Enable self test and wait for completion.\n        // Use timeout for the wait\n        //\n        HWREG_BP(base + LCM_O_CONTROL) |= LCM_CONTROL_STEN;\n        while((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_STDONE) == 0U)\n        {\n            count++;\n            if(count == 20U)\n            {\n                break;\n            }\n        };\n\n        if((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_STPASS) == 0U)\n        {\n            ret = LCM_FAIL;\n        }\n        else\n        {\n            ret = LCM_PASS;\n        }\n\n        //\n        // Clear the flags\n        //\n        HWREG_BP(base + LCM_O_STATUS_CLEAR) = LCM_STATUS_CLEAR_STDONE |\n                                              LCM_STATUS_CLEAR_STPASS;\n    }\n\n    return(ret);\n}\n",
+      "functionContentWithoutFormatting": "{ LCM_Status ret; uint16_t count = 0; ASSERT(LCM_isBaseValid(base)); // // Check if Lockstep feature is disabled. // Check for any pending functional failure or test failure // if(!LCM_isLockStepEnabled(base) || (LCM_getLockStepCompareStatus(base) == LCM_FAIL) || (LCM_getSelfTestStatus(base) == LCM_FAIL) || (LCM_getComp1ErrForceTestStatus(base) == LCM_FAIL) || (LCM_getComp2ErrForceTestStatus(base) == LCM_FAIL)) { ret = LCM_NOT_RUN; } else { // // Enable self test and wait for completion. // Use timeout for the wait // HWREG_BP(base + LCM_O_CONTROL) |= LCM_CONTROL_STEN; while((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_STDONE) == 0U) { count++; if(count == 20U) { break; } }; if((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_STPASS) == 0U) { ret = LCM_FAIL; } else { ret = LCM_PASS; } // // Clear the flags // HWREG_BP(base + LCM_O_STATUS_CLEAR) = LCM_STATUS_CLEAR_STDONE | LCM_STATUS_CLEAR_STPASS; } return(ret); }",
+      "registersUsed": [
+        "CONTROL",
+        "STATUS",
+        "STATUS_CLEAR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL",
+        "STATUS",
+        "STATUS_CLEAR"
+      ]
+    },
+    {
+      "file": "lcm.c",
+      "peripheral": "lcm",
+      "functionName": "LCM_runComp1ErrorForceTest",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "LCM_Status",
+      "functionContent": "{\n    LCM_Status ret;\n    uint16_t count = 0;\n\n    ASSERT(LCM_isBaseValid(base));\n\n    //\n    // Check if Lockstep feature is disabled.\n    // Check for any pending functional failure or test failure\n    //\n    if(!LCM_isLockStepEnabled(base)                       ||\n       (LCM_getLockStepCompareStatus(base)   == LCM_FAIL) ||\n       (LCM_getSelfTestStatus(base)          == LCM_FAIL) ||\n       (LCM_getComp1ErrForceTestStatus(base) == LCM_FAIL) ||\n       (LCM_getComp2ErrForceTestStatus(base) == LCM_FAIL))\n    {\n        ret = LCM_NOT_RUN;\n    }\n    else\n    {\n        //\n        // Force comparator-1 lockstep compare error and wait for completion\n        // Use timeout for the wait\n        //\n        HWREG_BP(base + LCM_O_CONTROL) |= LCM_CONTROL_CMP1_ERR_FORCE;\n        while((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_CMP1_ERR_FORCE_DONE)\n                == 0U)\n        {\n            count++;\n            if(count == 20U)\n            {\n                break;\n            }\n        }\n\n        if((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_CMP1_ERR_FORCE_PASS) == 0U)\n        {\n            ret = LCM_FAIL;\n        }\n        else\n        {\n            ret = LCM_PASS;\n        }\n\n        //\n        // Clear the flags\n        //\n        HWREG_BP(base + LCM_O_STATUS_CLEAR) = LCM_STATUS_CMP1_ERR_FORCE_DONE |\n                                              LCM_STATUS_CMP1_ERR_FORCE_PASS;\n    }\n\n    return(ret);\n}\n",
+      "functionContentWithoutFormatting": "{ LCM_Status ret; uint16_t count = 0; ASSERT(LCM_isBaseValid(base)); // // Check if Lockstep feature is disabled. // Check for any pending functional failure or test failure // if(!LCM_isLockStepEnabled(base) || (LCM_getLockStepCompareStatus(base) == LCM_FAIL) || (LCM_getSelfTestStatus(base) == LCM_FAIL) || (LCM_getComp1ErrForceTestStatus(base) == LCM_FAIL) || (LCM_getComp2ErrForceTestStatus(base) == LCM_FAIL)) { ret = LCM_NOT_RUN; } else { // // Force comparator-1 lockstep compare error and wait for completion // Use timeout for the wait // HWREG_BP(base + LCM_O_CONTROL) |= LCM_CONTROL_CMP1_ERR_FORCE; while((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_CMP1_ERR_FORCE_DONE) == 0U) { count++; if(count == 20U) { break; } } if((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_CMP1_ERR_FORCE_PASS) == 0U) { ret = LCM_FAIL; } else { ret = LCM_PASS; } // // Clear the flags // HWREG_BP(base + LCM_O_STATUS_CLEAR) = LCM_STATUS_CMP1_ERR_FORCE_DONE | LCM_STATUS_CMP1_ERR_FORCE_PASS; } return(ret); }",
+      "registersUsed": [
+        "CONTROL",
+        "STATUS",
+        "STATUS_CLEAR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL",
+        "STATUS",
+        "STATUS_CLEAR"
+      ]
+    },
+    {
+      "file": "lcm.c",
+      "peripheral": "lcm",
+      "functionName": "LCM_runComp2ErrorForceTest",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "LCM_Status",
+      "functionContent": "{\n    LCM_Status ret;\n    uint16_t count = 0;\n\n    ASSERT(LCM_isBaseValid(base));\n\n    //\n    // Check if Lockstep feature is disabled.\n    // Check for any pending functional failure or test failure\n    //\n    if(!LCM_isLockStepEnabled(base)                       ||\n       (LCM_getLockStepCompareStatus(base)   == LCM_FAIL) ||\n       (LCM_getSelfTestStatus(base)          == LCM_FAIL) ||\n       (LCM_getComp1ErrForceTestStatus(base) == LCM_FAIL) ||\n       (LCM_getComp2ErrForceTestStatus(base) == LCM_FAIL))\n    {\n        ret = LCM_NOT_RUN;\n    }\n    else\n    {\n        //\n        // Force comparator-1 lockstep compare error and wait for completion\n        // Use timeout for the wait\n        //\n        HWREG_BP(base + LCM_O_CONTROL) |= LCM_CONTROL_CMP2_ERR_FORCE;\n        while((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_CMP2_ERR_FORCE_DONE)\n                == 0U)\n        {\n            count++;\n            if(count == 20U)\n            {\n                break;\n            }\n        }\n\n        if((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_CMP2_ERR_FORCE_PASS) == 0U)\n        {\n            ret = LCM_FAIL;\n        }\n        else\n        {\n            ret = LCM_PASS;\n        }\n\n        //\n        // Clear the flags\n        //\n        HWREG_BP(base + LCM_O_STATUS_CLEAR) = LCM_STATUS_CMP2_ERR_FORCE_DONE |\n                                              LCM_STATUS_CMP2_ERR_FORCE_PASS;\n    }\n\n    return(ret);\n}\n",
+      "functionContentWithoutFormatting": "{ LCM_Status ret; uint16_t count = 0; ASSERT(LCM_isBaseValid(base)); // // Check if Lockstep feature is disabled. // Check for any pending functional failure or test failure // if(!LCM_isLockStepEnabled(base) || (LCM_getLockStepCompareStatus(base) == LCM_FAIL) || (LCM_getSelfTestStatus(base) == LCM_FAIL) || (LCM_getComp1ErrForceTestStatus(base) == LCM_FAIL) || (LCM_getComp2ErrForceTestStatus(base) == LCM_FAIL)) { ret = LCM_NOT_RUN; } else { // // Force comparator-1 lockstep compare error and wait for completion // Use timeout for the wait // HWREG_BP(base + LCM_O_CONTROL) |= LCM_CONTROL_CMP2_ERR_FORCE; while((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_CMP2_ERR_FORCE_DONE) == 0U) { count++; if(count == 20U) { break; } } if((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_CMP2_ERR_FORCE_PASS) == 0U) { ret = LCM_FAIL; } else { ret = LCM_PASS; } // // Clear the flags // HWREG_BP(base + LCM_O_STATUS_CLEAR) = LCM_STATUS_CMP2_ERR_FORCE_DONE | LCM_STATUS_CMP2_ERR_FORCE_PASS; } return(ret); }",
+      "registersUsed": [
+        "CONTROL",
+        "STATUS",
+        "STATUS_CLEAR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL",
+        "STATUS",
+        "STATUS_CLEAR"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n      return((base == LCM_CPU2_BASE) || (base == LCM_CPU2_DMA1_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((base == LCM_CPU2_BASE) || (base == LCM_CPU2_DMA1_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_enableLockstepCompare",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    HWREGH(base + LCM_O_CONTROL) = LCM_CONTROL_CMPEN;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); HWREGH(base + LCM_O_CONTROL) = LCM_CONTROL_CMPEN; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_disableLockstepCompare",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    HWREGH(base + LCM_O_CONTROL) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); HWREGH(base + LCM_O_CONTROL) = 0U; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_isLockStepEnabled",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    return((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_LSEN) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); return((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_LSEN) != 0U); }",
+      "registersUsed": [
+        "STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "STATUS"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_isDebuggerConnected",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    return((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_DBGCON) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); return((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_DBGCON) != 0U); }",
+      "registersUsed": [
+        "STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "STATUS"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_getLockStepCompareStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline LCM_Status",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    return(((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_CMP_FAIL) == 0U) ?\n           LCM_PASS : LCM_FAIL);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); return(((HWREG_BP(base + LCM_O_STATUS) & LCM_STATUS_CMP_FAIL) == 0U) ? LCM_PASS : LCM_FAIL); }",
+      "registersUsed": [
+        "STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "STATUS"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_getSelfTestStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline LCM_Status",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    uint32_t st = HWREG_BP(base + LCM_O_STATUS);\n\n    return(\n        ((st & LCM_STATUS_STDONE) == 0U) ? LCM_NOT_RUN :\n        ((st & LCM_STATUS_STPASS) == 0U) ? LCM_FAIL : LCM_PASS\n    );\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); uint32_t st = HWREG_BP(base + LCM_O_STATUS); return( ((st & LCM_STATUS_STDONE) == 0U) ? LCM_NOT_RUN : ((st & LCM_STATUS_STPASS) == 0U) ? LCM_FAIL : LCM_PASS ); }",
+      "registersUsed": [
+        "STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "STATUS"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_getComp1ErrForceTestStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline LCM_Status",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    uint32_t st = HWREG_BP(base + LCM_O_STATUS);\n\n    return(\n        ((st & LCM_STATUS_CMP1_ERR_FORCE_DONE) == 0U) ? LCM_NOT_RUN :\n        ((st & LCM_STATUS_CMP1_ERR_FORCE_PASS) == 0U) ? LCM_FAIL : LCM_PASS\n    );\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); uint32_t st = HWREG_BP(base + LCM_O_STATUS); return( ((st & LCM_STATUS_CMP1_ERR_FORCE_DONE) == 0U) ? LCM_NOT_RUN : ((st & LCM_STATUS_CMP1_ERR_FORCE_PASS) == 0U) ? LCM_FAIL : LCM_PASS ); }",
+      "registersUsed": [
+        "STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "STATUS"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_getComp2ErrForceTestStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline LCM_Status",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    uint32_t st = HWREG_BP(base + LCM_O_STATUS);\n\n    return(\n        ((st & LCM_STATUS_CMP2_ERR_FORCE_DONE) == 0U) ? LCM_NOT_RUN :\n        ((st & LCM_STATUS_CMP2_ERR_FORCE_PASS) == 0U) ? LCM_FAIL : LCM_PASS\n    );\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); uint32_t st = HWREG_BP(base + LCM_O_STATUS); return( ((st & LCM_STATUS_CMP2_ERR_FORCE_DONE) == 0U) ? LCM_NOT_RUN : ((st & LCM_STATUS_CMP2_ERR_FORCE_PASS) == 0U) ? LCM_FAIL : LCM_PASS ); }",
+      "registersUsed": [
+        "STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "STATUS"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_clearFlags",
+      "functionArgs": [
+        "base",
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    HWREG_BP(base + LCM_O_STATUS_CLEAR) = flags;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); HWREG_BP(base + LCM_O_STATUS_CLEAR) = flags; }",
+      "registersUsed": [
+        "STATUS",
+        "STATUS_CLEAR"
+      ],
+      "registersUsedMatchingBifield": [
+        "STATUS",
+        "STATUS_CLEAR"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_enableParityTest",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    HWREGH(base + LCM_O_PARITY_TEST) = 0xA;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); HWREGH(base + LCM_O_PARITY_TEST) = 0xA; }",
+      "registersUsed": [
+        "PARITY_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "PARITY_TEST"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_disableParityTest",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    HWREGH(base + LCM_O_PARITY_TEST) = 0x5;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); HWREGH(base + LCM_O_PARITY_TEST) = 0x5; }",
+      "registersUsed": [
+        "PARITY_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "PARITY_TEST"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_lockRegister",
+      "functionArgs": [
+        "base",
+        "regs"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    HWREG_BP(base + LCM_O_LOCK) |= regs;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); HWREG_BP(base + LCM_O_LOCK) |= regs; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_unlockRegister",
+      "functionArgs": [
+        "base",
+        "regs"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    HWREG_BP(base + LCM_O_LOCK) &= ~regs;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); HWREG_BP(base + LCM_O_LOCK) &= ~regs; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "lcm.h",
+      "peripheral": "lcm",
+      "functionName": "LCM_commitRegister",
+      "functionArgs": [
+        "base",
+        "regs"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(LCM_isBaseValid(base));\n\n    HWREG_BP(base + LCM_O_COMMIT) &= ~regs;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(LCM_isBaseValid(base)); HWREG_BP(base + LCM_O_COMMIT) &= ~regs; }",
+      "registersUsed": [
+        "COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMMIT"
+      ]
+    }
+  ]
+}

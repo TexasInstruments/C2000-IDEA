@@ -1,0 +1,1037 @@
+{
+  "name": "eqep",
+  "functions": [
+    {
+      "file": "eqep.c",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setCompareConfig",
+      "functionArgs": [
+        "base",
+        "config",
+        "compareValue",
+        "cycles"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t regValue;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n    ASSERT(cycles <= (EQEP_QPOSCTL_PCSPW_M + 1U));\n\n    //\n    // Set the compare match value\n    //\n    HWREG(base + EQEP_O_QPOSCMP) = compareValue;\n\n    //\n    // Set the shadow register settings and pulse width.\n    //\n    regValue = (config & (uint16_t)(EQEP_QPOSCTL_PCSHDW |\n                  EQEP_QPOSCTL_PCLOAD)) | (cycles - 1U);\n\n    HWREGH(base + EQEP_O_QPOSCTL) = (HWREGH(base + EQEP_O_QPOSCTL) &\n                                     ~(EQEP_QPOSCTL_PCSPW_M |\n                                       EQEP_QPOSCTL_PCLOAD |\n                                       EQEP_QPOSCTL_PCSHDW)) | regValue;\n\n    //\n    // Set position compare sync-output mode.\n    //\n    regValue = config & (uint16_t)(EQEP_QDECCTL_SOEN | EQEP_QDECCTL_SPSEL);\n\n    HWREGH(base + EQEP_O_QDECCTL) = (HWREGH(base + EQEP_O_QDECCTL) &\n                                     ~(EQEP_QDECCTL_SOEN |\n                                       EQEP_QDECCTL_SPSEL)) | regValue;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t regValue; // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); ASSERT(cycles <= (EQEP_QPOSCTL_PCSPW_M + 1U)); // // Set the compare match value // HWREG(base + EQEP_O_QPOSCMP) = compareValue; // // Set the shadow register settings and pulse width. // regValue = (config & (uint16_t)(EQEP_QPOSCTL_PCSHDW | EQEP_QPOSCTL_PCLOAD)) | (cycles - 1U); HWREGH(base + EQEP_O_QPOSCTL) = (HWREGH(base + EQEP_O_QPOSCTL) & ~(EQEP_QPOSCTL_PCSPW_M | EQEP_QPOSCTL_PCLOAD | EQEP_QPOSCTL_PCSHDW)) | regValue; // // Set position compare sync-output mode. // regValue = config & (uint16_t)(EQEP_QDECCTL_SOEN | EQEP_QDECCTL_SPSEL); HWREGH(base + EQEP_O_QDECCTL) = (HWREGH(base + EQEP_O_QDECCTL) & ~(EQEP_QDECCTL_SOEN | EQEP_QDECCTL_SPSEL)) | regValue; }",
+      "registersUsed": [
+        "QPOSCMP",
+        "QDECCTL",
+        "QPOSCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QPOSCMP",
+        "QDECCTL",
+        "QPOSCTL"
+      ]
+    },
+    {
+      "file": "eqep.c",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setInputPolarity",
+      "functionArgs": [
+        "base",
+        "invertQEPA",
+        "invertQEPB",
+        "invertIndex",
+        "invertStrobe"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "bool",
+        "bool",
+        "bool",
+        "bool"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Configure QEPA signal\n    //\n    if(invertQEPA)\n    {\n        HWREGH(base + EQEP_O_QDECCTL) |= EQEP_QDECCTL_QAP;\n    }\n    else\n    {\n        HWREGH(base + EQEP_O_QDECCTL) &= ~EQEP_QDECCTL_QAP;\n    }\n\n    //\n    // Configure QEPB signal\n    //\n    if(invertQEPB)\n    {\n        HWREGH(base + EQEP_O_QDECCTL) |= EQEP_QDECCTL_QBP;\n    }\n    else\n    {\n        HWREGH(base + EQEP_O_QDECCTL) &= ~EQEP_QDECCTL_QBP;\n    }\n\n    //\n    // Configure index signal\n    //\n    if(invertIndex)\n    {\n        HWREGH(base + EQEP_O_QDECCTL) |= EQEP_QDECCTL_QIP;\n    }\n    else\n    {\n        HWREGH(base + EQEP_O_QDECCTL) &= ~EQEP_QDECCTL_QIP;\n    }\n\n    //\n    // Configure strobe signal\n    //\n    if(invertStrobe)\n    {\n        HWREGH(base + EQEP_O_QDECCTL) |= EQEP_QDECCTL_QSP;\n    }\n    else\n    {\n        HWREGH(base + EQEP_O_QDECCTL) &= ~EQEP_QDECCTL_QSP;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Configure QEPA signal // if(invertQEPA) { HWREGH(base + EQEP_O_QDECCTL) |= EQEP_QDECCTL_QAP; } else { HWREGH(base + EQEP_O_QDECCTL) &= ~EQEP_QDECCTL_QAP; } // // Configure QEPB signal // if(invertQEPB) { HWREGH(base + EQEP_O_QDECCTL) |= EQEP_QDECCTL_QBP; } else { HWREGH(base + EQEP_O_QDECCTL) &= ~EQEP_QDECCTL_QBP; } // // Configure index signal // if(invertIndex) { HWREGH(base + EQEP_O_QDECCTL) |= EQEP_QDECCTL_QIP; } else { HWREGH(base + EQEP_O_QDECCTL) &= ~EQEP_QDECCTL_QIP; } // // Configure strobe signal // if(invertStrobe) { HWREGH(base + EQEP_O_QDECCTL) |= EQEP_QDECCTL_QSP; } else { HWREGH(base + EQEP_O_QDECCTL) &= ~EQEP_QDECCTL_QSP; } }",
+      "registersUsed": [
+        "QDECCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QDECCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == EQEP1_BASE) ||\n           (base == EQEP2_BASE) ||\n           (base == EQEP3_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == EQEP1_BASE) || (base == EQEP2_BASE) || (base == EQEP3_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_enableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Enable the eQEP module.\n    //\n    HWREGH(base + EQEP_O_QEPCTL) |= EQEP_QEPCTL_QPEN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Enable the eQEP module. // HWREGH(base + EQEP_O_QEPCTL) |= EQEP_QEPCTL_QPEN; }",
+      "registersUsed": [
+        "QEPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_disableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Disable the eQEP module.\n    //\n    HWREGH(base + EQEP_O_QEPCTL) &= ~(EQEP_QEPCTL_QPEN);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Disable the eQEP module. // HWREGH(base + EQEP_O_QEPCTL) &= ~(EQEP_QEPCTL_QPEN); }",
+      "registersUsed": [
+        "QEPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setDecoderConfig",
+      "functionArgs": [
+        "base",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Write the new decoder configuration to the hardware.\n    //\n    HWREGH(base + EQEP_O_QDECCTL) = (HWREGH(base + EQEP_O_QDECCTL) &\n                                     ~(EQEP_QDECCTL_SWAP |\n                                       EQEP_QDECCTL_XCR |\n                                       EQEP_QDECCTL_QSRC_M |\n                                       EQEP_QDECCTL_IGATE)) | config;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Write the new decoder configuration to the hardware. // HWREGH(base + EQEP_O_QDECCTL) = (HWREGH(base + EQEP_O_QDECCTL) & ~(EQEP_QDECCTL_SWAP | EQEP_QDECCTL_XCR | EQEP_QDECCTL_QSRC_M | EQEP_QDECCTL_IGATE)) | config; }",
+      "registersUsed": [
+        "QDECCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QDECCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setPositionCounterConfig",
+      "functionArgs": [
+        "base",
+        "mode",
+        "maxPosition"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EQEP_PositionResetMode",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Write the position counter reset configuration to the hardware.\n    //\n    HWREGH(base + EQEP_O_QEPCTL) = (HWREGH(base + EQEP_O_QEPCTL) &\n                                    ~EQEP_QEPCTL_PCRM_M) | (uint16_t)mode;\n\n    //\n    // Set the maximum position.\n    //\n    HWREG(base + EQEP_O_QPOSMAX) = maxPosition;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Write the position counter reset configuration to the hardware. // HWREGH(base + EQEP_O_QEPCTL) = (HWREGH(base + EQEP_O_QEPCTL) & ~EQEP_QEPCTL_PCRM_M) | (uint16_t)mode; // // Set the maximum position. // HWREG(base + EQEP_O_QPOSMAX) = maxPosition; }",
+      "registersUsed": [
+        "QPOSMAX",
+        "QEPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QPOSMAX",
+        "QEPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getPosition",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Return the current position counter.\n    //\n    return(HWREG(base + EQEP_O_QPOSCNT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Return the current position counter. // return(HWREG(base + EQEP_O_QPOSCNT)); }",
+      "registersUsed": [
+        "QPOSCNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "QPOSCNT"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setPosition",
+      "functionArgs": [
+        "base",
+        "position"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Set the position counter.\n    //\n    HWREG(base + EQEP_O_QPOSCNT) = position;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Set the position counter. // HWREG(base + EQEP_O_QPOSCNT) = position; }",
+      "registersUsed": [
+        "QPOSCNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "QPOSCNT"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getDirection",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline int16_t",
+      "functionContent": "{\n    int16_t direction;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Return the direction of rotation.\n    //\n    if((HWREGH(base + EQEP_O_QEPSTS) & EQEP_QEPSTS_QDF) != 0U)\n    {\n        direction = 1;\n    }\n    else\n    {\n        direction = -1;\n    }\n\n    return(direction);\n}\n",
+      "functionContentWithoutFormatting": "{ int16_t direction; // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Return the direction of rotation. // if((HWREGH(base + EQEP_O_QEPSTS) & EQEP_QEPSTS_QDF) != 0U) { direction = 1; } else { direction = -1; } return(direction); }",
+      "registersUsed": [
+        "QEPSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPSTS"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Enable the specified interrupts.\n    //\n    HWREGH(base + EQEP_O_QEINT) |= intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Enable the specified interrupts. // HWREGH(base + EQEP_O_QEINT) |= intFlags; }",
+      "registersUsed": [
+        "QEINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEINT"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Disable the specified interrupts.\n    //\n    HWREGH(base + EQEP_O_QEINT) &= ~(intFlags);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Disable the specified interrupts. // HWREGH(base + EQEP_O_QEINT) &= ~(intFlags); }",
+      "registersUsed": [
+        "QEINT"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEINT"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    return(HWREGH(base + EQEP_O_QFLG));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); return(HWREGH(base + EQEP_O_QFLG)); }",
+      "registersUsed": [
+        "QFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "QFLG"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_clearInterruptStatus",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Clear the requested interrupt sources.\n    //\n    HWREGH(base + EQEP_O_QCLR) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Clear the requested interrupt sources. // HWREGH(base + EQEP_O_QCLR) = intFlags; }",
+      "registersUsed": [
+        "QCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "QCLR"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_forceInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Force the specified interrupts.\n    //\n    HWREGH(base + EQEP_O_QFRC) |= intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Force the specified interrupts. // HWREGH(base + EQEP_O_QFRC) |= intFlags; }",
+      "registersUsed": [
+        "QFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "QFRC"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getError",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Return the error indicator.\n    //\n    return((HWREGH(base + EQEP_O_QFLG) & EQEP_QFLG_PHE) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Return the error indicator. // return((HWREGH(base + EQEP_O_QFLG) & EQEP_QFLG_PHE) != 0U); }",
+      "registersUsed": [
+        "QFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "QFLG"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Return the status register.\n    //\n    return(HWREGH(base + EQEP_O_QEPSTS) & 0x00FFU);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Return the status register. // return(HWREGH(base + EQEP_O_QEPSTS) & 0x00FFU); }",
+      "registersUsed": [
+        "QEPSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPSTS"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_clearStatus",
+      "functionArgs": [
+        "base",
+        "statusFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Clear the requested interrupt sources.\n    //\n    HWREGH(base + EQEP_O_QEPSTS) = statusFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Clear the requested interrupt sources. // HWREGH(base + EQEP_O_QEPSTS) = statusFlags; }",
+      "registersUsed": [
+        "QEPSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPSTS"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setCaptureConfig",
+      "functionArgs": [
+        "base",
+        "capPrescale",
+        "evntPrescale"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EQEP_CAPCLKPrescale",
+        "EQEP_UPEVNTPrescale"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Write new prescaler configurations to the appropriate registers.\n    //\n    HWREGH(base + EQEP_O_QCAPCTL) =\n                            (HWREGH(base + EQEP_O_QCAPCTL) &\n                             ~(EQEP_QCAPCTL_UPPS_M | EQEP_QCAPCTL_CCPS_M)) |\n                            ((uint16_t)evntPrescale | (uint16_t)capPrescale);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Write new prescaler configurations to the appropriate registers. // HWREGH(base + EQEP_O_QCAPCTL) = (HWREGH(base + EQEP_O_QCAPCTL) & ~(EQEP_QCAPCTL_UPPS_M | EQEP_QCAPCTL_CCPS_M)) | ((uint16_t)evntPrescale | (uint16_t)capPrescale); }",
+      "registersUsed": [
+        "QCAPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QCAPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_enableCapture",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Enable edge capture.\n    //\n    HWREGH(base + EQEP_O_QCAPCTL) |= EQEP_QCAPCTL_CEN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Enable edge capture. // HWREGH(base + EQEP_O_QCAPCTL) |= EQEP_QCAPCTL_CEN; }",
+      "registersUsed": [
+        "QCAPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QCAPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_disableCapture",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Disable edge capture.\n    //\n    HWREGH(base + EQEP_O_QCAPCTL) &= ~(EQEP_QCAPCTL_CEN);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Disable edge capture. // HWREGH(base + EQEP_O_QCAPCTL) &= ~(EQEP_QCAPCTL_CEN); }",
+      "registersUsed": [
+        "QCAPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QCAPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getCapturePeriod",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Return the capture period.\n    //\n    return(HWREGH(base + EQEP_O_QCPRD));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Return the capture period. // return(HWREGH(base + EQEP_O_QCPRD)); }",
+      "registersUsed": [
+        "QCPRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "QCPRD"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getCaptureTimer",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Return the capture timer value.\n    //\n    return(HWREGH(base + EQEP_O_QCTMR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Return the capture timer value. // return(HWREGH(base + EQEP_O_QCTMR)); }",
+      "registersUsed": [
+        "QCTMR"
+      ],
+      "registersUsedMatchingBifield": [
+        "QCTMR"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_enableCompare",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Enable position compare.\n    //\n    HWREGH(base + EQEP_O_QPOSCTL) |= EQEP_QPOSCTL_PCE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Enable position compare. // HWREGH(base + EQEP_O_QPOSCTL) |= EQEP_QPOSCTL_PCE; }",
+      "registersUsed": [
+        "QPOSCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QPOSCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_disableCompare",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Disable position compare.\n    //\n    HWREGH(base + EQEP_O_QPOSCTL) &= ~(EQEP_QPOSCTL_PCE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Disable position compare. // HWREGH(base + EQEP_O_QPOSCTL) &= ~(EQEP_QPOSCTL_PCE); }",
+      "registersUsed": [
+        "QPOSCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QPOSCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setComparePulseWidth",
+      "functionArgs": [
+        "base",
+        "cycles"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n    ASSERT(cycles <= (EQEP_QPOSCTL_PCSPW_M + 1U));\n\n    //\n    // Set the pulse width.\n    //\n    HWREGH(base + EQEP_O_QPOSCTL) = (HWREGH(base + EQEP_O_QPOSCTL) &\n                                     ~(uint16_t)EQEP_QPOSCTL_PCSPW_M) |\n                                    (cycles - 1U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); ASSERT(cycles <= (EQEP_QPOSCTL_PCSPW_M + 1U)); // // Set the pulse width. // HWREGH(base + EQEP_O_QPOSCTL) = (HWREGH(base + EQEP_O_QPOSCTL) & ~(uint16_t)EQEP_QPOSCTL_PCSPW_M) | (cycles - 1U); }",
+      "registersUsed": [
+        "QPOSCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QPOSCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_loadUnitTimer",
+      "functionArgs": [
+        "base",
+        "period"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Set the period of the unit timer.\n    //\n    HWREG(base + EQEP_O_QUPRD) = period;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Set the period of the unit timer. // HWREG(base + EQEP_O_QUPRD) = period; }",
+      "registersUsed": [
+        "QUPRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "QUPRD"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_enableUnitTimer",
+      "functionArgs": [
+        "base",
+        "period"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Set the period of the unit timer.\n    //\n    HWREG(base + EQEP_O_QUPRD) = period;\n\n    //\n    // Enable peripheral unit timer.\n    //\n    HWREGH(base + EQEP_O_QEPCTL) |= EQEP_QEPCTL_UTE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Set the period of the unit timer. // HWREG(base + EQEP_O_QUPRD) = period; // // Enable peripheral unit timer. // HWREGH(base + EQEP_O_QEPCTL) |= EQEP_QEPCTL_UTE; }",
+      "registersUsed": [
+        "QUPRD",
+        "QEPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QUPRD",
+        "QEPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_disableUnitTimer",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Disable peripheral unit timer.\n    //\n    HWREGH(base + EQEP_O_QEPCTL) &= ~(EQEP_QEPCTL_UTE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Disable peripheral unit timer. // HWREGH(base + EQEP_O_QEPCTL) &= ~(EQEP_QEPCTL_UTE); }",
+      "registersUsed": [
+        "QEPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_enableWatchdog",
+      "functionArgs": [
+        "base",
+        "period"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Set the timeout count for the eQEP peripheral watchdog timer.\n    //\n    HWREGH(base + EQEP_O_QWDPRD) = period;\n\n    //\n    // Enable peripheral watchdog.\n    //\n    HWREGH(base + EQEP_O_QEPCTL) |= EQEP_QEPCTL_WDE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Set the timeout count for the eQEP peripheral watchdog timer. // HWREGH(base + EQEP_O_QWDPRD) = period; // // Enable peripheral watchdog. // HWREGH(base + EQEP_O_QEPCTL) |= EQEP_QEPCTL_WDE; }",
+      "registersUsed": [
+        "QWDPRD",
+        "QEPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QWDPRD",
+        "QEPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_disableWatchdog",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Disable peripheral watchdog.\n    //\n    HWREGH(base + EQEP_O_QEPCTL) &= ~(EQEP_QEPCTL_WDE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Disable peripheral watchdog. // HWREGH(base + EQEP_O_QEPCTL) &= ~(EQEP_QEPCTL_WDE); }",
+      "registersUsed": [
+        "QEPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setWatchdogTimerValue",
+      "functionArgs": [
+        "base",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Write the value to the watchdog timer register.\n    //\n    HWREGH(base + EQEP_O_QWDTMR) = value;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Write the value to the watchdog timer register. // HWREGH(base + EQEP_O_QWDTMR) = value; }",
+      "registersUsed": [
+        "QWDTMR"
+      ],
+      "registersUsedMatchingBifield": [
+        "QWDTMR"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getWatchdogTimerValue",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Read the value from the watchdog timer register.\n    //\n    return(HWREGH(base + EQEP_O_QWDTMR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Read the value from the watchdog timer register. // return(HWREGH(base + EQEP_O_QWDTMR)); }",
+      "registersUsed": [
+        "QWDTMR"
+      ],
+      "registersUsedMatchingBifield": [
+        "QWDTMR"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setPositionInitMode",
+      "functionArgs": [
+        "base",
+        "initMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Set the init mode in the QEP Control register.\n    //\n    HWREGH(base + EQEP_O_QEPCTL) = (HWREGH(base + EQEP_O_QEPCTL) &\n                                    ~(EQEP_QEPCTL_IEI_M | EQEP_QEPCTL_SEI_M)) |\n                                   initMode;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Set the init mode in the QEP Control register. // HWREGH(base + EQEP_O_QEPCTL) = (HWREGH(base + EQEP_O_QEPCTL) & ~(EQEP_QEPCTL_IEI_M | EQEP_QEPCTL_SEI_M)) | initMode; }",
+      "registersUsed": [
+        "QEPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setSWPositionInit",
+      "functionArgs": [
+        "base",
+        "initialize"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Set or clear the software initialization bit.\n    //\n    if(initialize)\n    {\n        HWREGH(base + EQEP_O_QEPCTL) |= EQEP_QEPCTL_SWI;\n    }\n    else\n    {\n        HWREGH(base + EQEP_O_QEPCTL) &= ~EQEP_QEPCTL_SWI;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Set or clear the software initialization bit. // if(initialize) { HWREGH(base + EQEP_O_QEPCTL) |= EQEP_QEPCTL_SWI; } else { HWREGH(base + EQEP_O_QEPCTL) &= ~EQEP_QEPCTL_SWI; } }",
+      "registersUsed": [
+        "QEPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setInitialPosition",
+      "functionArgs": [
+        "base",
+        "position"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Write position to position counter init register\n    //\n    HWREG(base + EQEP_O_QPOSINIT) = position;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Write position to position counter init register // HWREG(base + EQEP_O_QPOSINIT) = position; }",
+      "registersUsed": [
+        "QPOSINIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "QPOSINIT"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setLatchMode",
+      "functionArgs": [
+        "base",
+        "latchMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Set the latch mode in the QEP Control register.\n    //\n    HWREGH(base + EQEP_O_QEPCTL) = (HWREGH(base + EQEP_O_QEPCTL) &\n                                    ~(EQEP_QEPCTL_QCLM | EQEP_QEPCTL_IEL_M |\n                                      EQEP_QEPCTL_SEL)) | latchMode;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Set the latch mode in the QEP Control register. // HWREGH(base + EQEP_O_QEPCTL) = (HWREGH(base + EQEP_O_QEPCTL) & ~(EQEP_QEPCTL_QCLM | EQEP_QEPCTL_IEL_M | EQEP_QEPCTL_SEL)) | latchMode; }",
+      "registersUsed": [
+        "QEPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getIndexPositionLatch",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Return the current position counter.\n    //\n    return(HWREG(base + EQEP_O_QPOSILAT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Return the current position counter. // return(HWREG(base + EQEP_O_QPOSILAT)); }",
+      "registersUsed": [
+        "QPOSILAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "QPOSILAT"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getStrobePositionLatch",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Return the current position counter.\n    //\n    return(HWREG(base + EQEP_O_QPOSSLAT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Return the current position counter. // return(HWREG(base + EQEP_O_QPOSSLAT)); }",
+      "registersUsed": [
+        "QPOSSLAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "QPOSSLAT"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getPositionLatch",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Return the current position counter.\n    //\n    return(HWREG(base + EQEP_O_QPOSLAT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Return the current position counter. // return(HWREG(base + EQEP_O_QPOSLAT)); }",
+      "registersUsed": [
+        "QPOSLAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "QPOSLAT"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getCaptureTimerLatch",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Return the current position counter.\n    //\n    return(HWREGH(base + EQEP_O_QCTMRLAT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Return the current position counter. // return(HWREGH(base + EQEP_O_QCTMRLAT)); }",
+      "registersUsed": [
+        "QCTMR",
+        "QCTMRLAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "QCTMR",
+        "QCTMRLAT"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_getCapturePeriodLatch",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Return the current position counter.\n    //\n    return(HWREGH(base + EQEP_O_QCPRDLAT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Return the current position counter. // return(HWREGH(base + EQEP_O_QCPRDLAT)); }",
+      "registersUsed": [
+        "QCPRD",
+        "QCPRDLAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "QCPRD",
+        "QCPRDLAT"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setQMAModuleMode",
+      "functionArgs": [
+        "base",
+        "qmaMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EQEP_QMAMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Write the QMA module mode into the appropriate register.\n    //\n    HWREGH(base + EQEP_O_QMACTRL) =\n        (HWREGH(base + EQEP_O_QMACTRL) & ~EQEP_QMACTRL_MODE_M) |\n        (uint16_t)qmaMode;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Write the QMA module mode into the appropriate register. // HWREGH(base + EQEP_O_QMACTRL) = (HWREGH(base + EQEP_O_QMACTRL) & ~EQEP_QMACTRL_MODE_M) | (uint16_t)qmaMode; }",
+      "registersUsed": [
+        "QMACTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QMACTRL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setStrobeSource",
+      "functionArgs": [
+        "base",
+        "strobeSrc"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EQEP_StrobeSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Write the strobe source selection into the appropriate register.\n    //\n    HWREGH(base + EQEP_O_QEPSTROBESEL) =\n        (HWREGH(base + EQEP_O_QEPSTROBESEL) & ~EQEP_QEPSTROBESEL_STROBESEL_M) |\n        (uint16_t)strobeSrc;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Write the strobe source selection into the appropriate register. // HWREGH(base + EQEP_O_QEPSTROBESEL) = (HWREGH(base + EQEP_O_QEPSTROBESEL) & ~EQEP_QEPSTROBESEL_STROBESEL_M) | (uint16_t)strobeSrc; }",
+      "registersUsed": [
+        "QEPSTROBESEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPSTROBESEL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_enableDirectionChangeDuringIndex",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    //Sets the index direction enhancement bit\n    //\n    HWREGH(base + EQEP_O_QDECCTL) |= EQEP_QDECCTL_QIDIRE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // //Sets the index direction enhancement bit // HWREGH(base + EQEP_O_QDECCTL) |= EQEP_QDECCTL_QIDIRE; }",
+      "registersUsed": [
+        "QDECCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QDECCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_disableDirectionChangeDuringIndex",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    //Clears the index direction enhancement bit\n    //\n    HWREGH(base + EQEP_O_QDECCTL) &= ~(EQEP_QDECCTL_QIDIRE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // //Clears the index direction enhancement bit // HWREGH(base + EQEP_O_QDECCTL) &= ~(EQEP_QDECCTL_QIDIRE); }",
+      "registersUsed": [
+        "QDECCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QDECCTL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_selectSource",
+      "functionArgs": [
+        "base",
+        ""
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EQEP_SourceSelectsourceConfig"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Selecting sources for eQEP signals\n    //\n    HWREG(base + EQEP_O_QEPSRCSEL) =\n           (HWREG(base + EQEP_O_QEPSRCSEL) & ~(EQEP_QEPSRCSEL_QEPASEL_M |\n             EQEP_QEPSRCSEL_QEPBSEL_M | EQEP_QEPSRCSEL_QEPISEL_M)) |\n           ((uint32_t)((uint32_t)(sourceConfig.sourceA) <<\n                                   EQEP_QEPSRCSEL_QEPASEL_S) |\n            (uint32_t)((uint32_t)(sourceConfig.sourceB) <<\n                                   EQEP_QEPSRCSEL_QEPBSEL_S) |\n            (uint32_t)((uint32_t)(sourceConfig.sourceIndex) <<\n                                    EQEP_QEPSRCSEL_QEPISEL_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Selecting sources for eQEP signals // HWREG(base + EQEP_O_QEPSRCSEL) = (HWREG(base + EQEP_O_QEPSRCSEL) & ~(EQEP_QEPSRCSEL_QEPASEL_M | EQEP_QEPSRCSEL_QEPBSEL_M | EQEP_QEPSRCSEL_QEPISEL_M)) | ((uint32_t)((uint32_t)(sourceConfig.sourceA) << EQEP_QEPSRCSEL_QEPASEL_S) | (uint32_t)((uint32_t)(sourceConfig.sourceB) << EQEP_QEPSRCSEL_QEPBSEL_S) | (uint32_t)((uint32_t)(sourceConfig.sourceIndex) << EQEP_QEPSRCSEL_QEPISEL_S)); }",
+      "registersUsed": [
+        "QEPSRCSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPSRCSEL"
+      ]
+    },
+    {
+      "file": "eqep.h",
+      "peripheral": "eqep",
+      "functionName": "EQEP_setEmulationMode",
+      "functionArgs": [
+        "base",
+        "emuMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "EQEP_EmulationMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(EQEP_isBaseValid(base));\n\n    //\n    // Write the emulation mode to the FREE_SOFT bits.\n    //\n    HWREGH(base + EQEP_O_QEPCTL) =\n        (HWREGH(base + EQEP_O_QEPCTL) & ~EQEP_QEPCTL_FREE_SOFT_M) |\n        ((uint16_t)emuMode << EQEP_QEPCTL_FREE_SOFT_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(EQEP_isBaseValid(base)); // // Write the emulation mode to the FREE_SOFT bits. // HWREGH(base + EQEP_O_QEPCTL) = (HWREGH(base + EQEP_O_QEPCTL) & ~EQEP_QEPCTL_FREE_SOFT_M) | ((uint16_t)emuMode << EQEP_QEPCTL_FREE_SOFT_S); }",
+      "registersUsed": [
+        "QEPCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "QEPCTL"
+      ]
+    }
+  ]
+}

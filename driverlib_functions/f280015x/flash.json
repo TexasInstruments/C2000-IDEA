@@ -1,0 +1,321 @@
+{
+  "name": "flash",
+  "functions": [
+    {
+      "file": "flash.c",
+      "peripheral": "flash",
+      "functionName": "Flash_initModule",
+      "functionArgs": [
+        "ctrlBase",
+        "eccBase",
+        "waitstates"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n    ASSERT(Flash_isECCBaseValid(eccBase));\n    ASSERT(waitstates <= 0xFU);\n\n\n    //\n    // Disable cache and prefetch mechanism before changing wait states\n    //\n    Flash_disableCache(ctrlBase);\n    Flash_disablePrefetch(ctrlBase);\n\n    //\n    // Set waitstates according to frequency.\n    //\n    Flash_setWaitstates(ctrlBase, waitstates);\n\n    //\n    // Commit Flash Trims\n    //\n\n    //\n    // Configure TRIMCTL.ENABLE to be valid\n    //\n    Flash_writeTrims(FLASH_O_TRIMCTL, FLASH_TRIMCTL_ENABLE_M, \n               FLASH_TRIMCTL_ENABLE_S, 1);\n\n    //\n    // Configure TRIMLOCKOTHER and TRIMLOCKREAD in TRIMLOCK register\n    //\n    Flash_writeTrims(FLASH_O_TRIMLOCK, FLASH_TRIMLOCK_TRIMLOCKREAD_TRIMLOCKOTHER_M, \n               FLASH_TRIMLOCK_TRIMLOCKREAD_TRIMLOCKOTHER_S, 3);\n\n    //\n    // Configure TRIMCOMMITREAD and TRIMCOMMITOTHER in TRIMCOMMIT register\n    //\n    Flash_writeTrims(FLASH_O_TRIMCOMMIT, \n               FLASH_TRIMCOMMIT_TRIMCOMMITREAD_TRIMCOMMITOTHER_M, \n               FLASH_TRIMCOMMIT_TRIMCOMMITREAD_TRIMCOMMITOTHER_S, 3);\n\n\n    //\n    // Enable cache and prefetch mechanism to improve performance of code\n    // executed from flash.\n    //\n    Flash_enableCache(ctrlBase);\n    Flash_enablePrefetch(ctrlBase);\n\n    //\n    // At reset, ECC is enabled.  If it is disabled by application software and\n    // if application again wants to enable ECC.\n    //\n    Flash_enableECC(eccBase);\n\n    //\n    // Force a pipeline flush to ensure that the write to the last register\n    // configured occurs before returning.\n    //\n\n    FLASH_DELAY_CONFIG;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); ASSERT(Flash_isECCBaseValid(eccBase)); ASSERT(waitstates <= 0xFU); // // Disable cache and prefetch mechanism before changing wait states // Flash_disableCache(ctrlBase); Flash_disablePrefetch(ctrlBase); // // Set waitstates according to frequency. // Flash_setWaitstates(ctrlBase, waitstates); // // Commit Flash Trims // // // Configure TRIMCTL.ENABLE to be valid // Flash_writeTrims(FLASH_O_TRIMCTL, FLASH_TRIMCTL_ENABLE_M, FLASH_TRIMCTL_ENABLE_S, 1); // // Configure TRIMLOCKOTHER and TRIMLOCKREAD in TRIMLOCK register // Flash_writeTrims(FLASH_O_TRIMLOCK, FLASH_TRIMLOCK_TRIMLOCKREAD_TRIMLOCKOTHER_M, FLASH_TRIMLOCK_TRIMLOCKREAD_TRIMLOCKOTHER_S, 3); // // Configure TRIMCOMMITREAD and TRIMCOMMITOTHER in TRIMCOMMIT register // Flash_writeTrims(FLASH_O_TRIMCOMMIT, FLASH_TRIMCOMMIT_TRIMCOMMITREAD_TRIMCOMMITOTHER_M, FLASH_TRIMCOMMIT_TRIMCOMMITREAD_TRIMCOMMITOTHER_S, 3); // // Enable cache and prefetch mechanism to improve performance of code // executed from flash. // Flash_enableCache(ctrlBase); Flash_enablePrefetch(ctrlBase); // // At reset, ECC is enabled. If it is disabled by application software and // if application again wants to enable ECC. // Flash_enableECC(eccBase); // // Force a pipeline flush to ensure that the write to the last register // configured occurs before returning. // FLASH_DELAY_CONFIG; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_isCtrlBaseValid",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((ctrlBase == FLASH0CTRL_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((ctrlBase == FLASH0CTRL_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_isECCBaseValid",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((eccBase == FLASH0ECC_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((eccBase == FLASH0ECC_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setWaitstates",
+      "functionArgs": [
+        "ctrlBase",
+        "waitstates"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    //\n    // waitstates is 4 bits wide.\n    //\n    ASSERT(waitstates <= 0xFU);\n\n    EALLOW;\n    //\n    // Write flash read wait-state amount to appropriate register.\n    //\n    HWREG(ctrlBase + FLASH_O_FRDCNTL) =\n        (HWREG(ctrlBase + FLASH_O_FRDCNTL) &\n         ~(uint32_t)FLASH_FRDCNTL_RWAIT_M) |\n         ((uint32_t)waitstates << FLASH_FRDCNTL_RWAIT_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); // // waitstates is 4 bits wide. // ASSERT(waitstates <= 0xFU); EALLOW; // // Write flash read wait-state amount to appropriate register. // HWREG(ctrlBase + FLASH_O_FRDCNTL) = (HWREG(ctrlBase + FLASH_O_FRDCNTL) & ~(uint32_t)FLASH_FRDCNTL_RWAIT_M) | ((uint32_t)waitstates << FLASH_FRDCNTL_RWAIT_S); EDIS; }",
+      "registersUsed": [
+        "FRDCNTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRDCNTL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_enablePrefetch",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    EALLOW;\n\n    //\n    // Set the prefetch enable bit.\n    //\n    HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) |=\n            FLASH_FRD_INTF_CTRL_PREFETCH_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); EALLOW; // // Set the prefetch enable bit. // HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) |= FLASH_FRD_INTF_CTRL_PREFETCH_EN; EDIS; }",
+      "registersUsed": [
+        "FRD_INTF_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRD_INTF_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_disablePrefetch",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    EALLOW;\n\n    //\n    // Clear the prefetch enable bit.\n    //\n    HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) &=\n            ~(uint32_t)FLASH_FRD_INTF_CTRL_PREFETCH_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); EALLOW; // // Clear the prefetch enable bit. // HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) &= ~(uint32_t)FLASH_FRD_INTF_CTRL_PREFETCH_EN; EDIS; }",
+      "registersUsed": [
+        "FRD_INTF_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRD_INTF_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_enableCache",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    EALLOW;\n\n    //\n    // Set the data cache enable bit.\n    //\n    HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) |=\n            FLASH_FRD_INTF_CTRL_DATA_CACHE_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); EALLOW; // // Set the data cache enable bit. // HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) |= FLASH_FRD_INTF_CTRL_DATA_CACHE_EN; EDIS; }",
+      "registersUsed": [
+        "FRD_INTF_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRD_INTF_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_disableCache",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    EALLOW;\n\n    //\n    // Clear the data cache enable bit.\n    //\n    HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) &=\n            ~(uint32_t)FLASH_FRD_INTF_CTRL_DATA_CACHE_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); EALLOW; // // Clear the data cache enable bit. // HWREG(ctrlBase + FLASH_O_FRD_INTF_CTRL) &= ~(uint32_t)FLASH_FRD_INTF_CTRL_DATA_CACHE_EN; EDIS; }",
+      "registersUsed": [
+        "FRD_INTF_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRD_INTF_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setFLWEPROT",
+      "functionArgs": [
+        "ctrlBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isCtrlBaseValid(ctrlBase));\n\n    EALLOW;\n\n    //\n    // Set the FLWEPROT value from the FLPROT register.\n    //\n    HWREG(ctrlBase + FLASH_O_FLPROT) &= ~(uint32_t)FLASH_FLPROT_FLWEPROT;\n    HWREG(ctrlBase + FLASH_O_FLPROT) |= (uint32_t)FLASH_FLPROT_FLWEPROT;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isCtrlBaseValid(ctrlBase)); EALLOW; // // Set the FLWEPROT value from the FLPROT register. // HWREG(ctrlBase + FLASH_O_FLPROT) &= ~(uint32_t)FLASH_FLPROT_FLWEPROT; HWREG(ctrlBase + FLASH_O_FLPROT) |= (uint32_t)FLASH_FLPROT_FLWEPROT; EDIS; }",
+      "registersUsed": [
+        "FLPROT"
+      ],
+      "registersUsedMatchingBifield": [
+        "FLPROT"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_enableECC",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef __cplusplus #pragma CODE_SECTION(\".TI.ramfunc\"); #endif static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n\n    //\n    // Write the key value 0xA to ECC_ENABLE register.\n    //\n    HWREG(eccBase + FLASH_O_ECC_ENABLE) =\n        (HWREG(eccBase + FLASH_O_ECC_ENABLE) &\n         ~(uint32_t)FLASH_ECC_ENABLE_ENABLE_M) | 0xAU;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; // // Write the key value 0xA to ECC_ENABLE register. // HWREG(eccBase + FLASH_O_ECC_ENABLE) = (HWREG(eccBase + FLASH_O_ECC_ENABLE) & ~(uint32_t)FLASH_ECC_ENABLE_ENABLE_M) | 0xAU; EDIS; }",
+      "registersUsed": [
+        "ECC_ENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "ECC_ENABLE"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_disableECC",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    EALLOW;\n\n    //\n    // Clear ECC enable field with the one's complement of the key.\n    //\n    HWREG(eccBase + FLASH_O_ECC_ENABLE) =\n        (HWREG(eccBase + FLASH_O_ECC_ENABLE) &\n         ~(uint32_t)FLASH_ECC_ENABLE_ENABLE_M) | 0x5U;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); EALLOW; // // Clear ECC enable field with the one's complement of the key. // HWREG(eccBase + FLASH_O_ECC_ENABLE) = (HWREG(eccBase + FLASH_O_ECC_ENABLE) & ~(uint32_t)FLASH_ECC_ENABLE_ENABLE_M) | 0x5U; EDIS; }",
+      "registersUsed": [
+        "ECC_ENABLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "ECC_ENABLE"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_enableSingleBitECCTestMode",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Set the ECC test mode bit.\n    //\n    EALLOW;\n    HWREG(eccBase + FLASH_O_FECC_CTRL) |=\n    FLASH_SINGLE_BIT_ECC_TEST_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Set the ECC test mode bit. // EALLOW; HWREG(eccBase + FLASH_O_FECC_CTRL) |= FLASH_SINGLE_BIT_ECC_TEST_EN; EDIS; }",
+      "registersUsed": [
+        "FECC_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_enableDoubleBitECCTestMode",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Set the ECC test mode bit.\n    //\n    EALLOW;\n    HWREG(eccBase + FLASH_O_FECC_CTRL) |=\n    FLASH_DOUBLE_BIT_ECC_TEST_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Set the ECC test mode bit. // EALLOW; HWREG(eccBase + FLASH_O_FECC_CTRL) |= FLASH_DOUBLE_BIT_ECC_TEST_EN; EDIS; }",
+      "registersUsed": [
+        "FECC_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_disableSingleBitECCTestMode",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Clear the ECC test mode bit.\n    //\n    EALLOW;\n    HWREG(eccBase + FLASH_O_FECC_CTRL) &=\n    ~(uint32_t)FLASH_SINGLE_BIT_ECC_TEST_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Clear the ECC test mode bit. // EALLOW; HWREG(eccBase + FLASH_O_FECC_CTRL) &= ~(uint32_t)FLASH_SINGLE_BIT_ECC_TEST_EN; EDIS; }",
+      "registersUsed": [
+        "FECC_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_disableDoubleBitECCTestMode",
+      "functionArgs": [
+        "eccBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(Flash_isECCBaseValid(eccBase));\n\n    //\n    // Clear the ECC test mode bit.\n    //\n    EALLOW;\n    HWREG(eccBase + FLASH_O_FECC_CTRL) &=\n    ~(uint32_t)FLASH_DOUBLE_BIT_ECC_TEST_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(Flash_isECCBaseValid(eccBase)); // // Clear the ECC test mode bit. // EALLOW; HWREG(eccBase + FLASH_O_FECC_CTRL) &= ~(uint32_t)FLASH_DOUBLE_BIT_ECC_TEST_EN; EDIS; }",
+      "registersUsed": [
+        "FECC_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FECC_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_writeTrims",
+      "functionArgs": [
+        "reg_offset",
+        "mask",
+        "shift",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    EALLOW;\n    //\n    // Set the requested bits to the value.\n    //\n    HWREG_BP(FLASHCONFIG_BASE + reg_offset) &= ~(uint32_t)mask;\n\n\tHWREG_BP(FLASHCONFIG_BASE + reg_offset) |= ((uint32_t)value << shift);\n\n    EDIS;\n} \n",
+      "functionContentWithoutFormatting": "{ EALLOW; // // Set the requested bits to the value. // HWREG_BP(FLASHCONFIG_BASE + reg_offset) &= ~(uint32_t)mask; HWREG_BP(FLASHCONFIG_BASE + reg_offset) |= ((uint32_t)value << shift); EDIS; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    }
+  ]
+}

@@ -1,0 +1,1047 @@
+{
+  "name": "uart",
+  "functions": [
+    {
+      "file": "uart.c",
+      "peripheral": "uart",
+      "functionName": "UART_setConfig",
+      "functionArgs": [
+        "base",
+        "uartClk",
+        "baud",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t fbrDiv, baudrt;\n\n    baudrt = baud;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n    ASSERT(baudrt != 0U);\n    ASSERT(uartClk >= (baudrt * UART_CLK_DIVIDER));\n\n    //\n    // Stop the UART.\n    //\n    UART_disableModule(base);\n\n    //\n    // Is the required baud rate greater than the maximum rate supported\n    // without the use of high speed mode?\n    //\n    if((baudrt * 16U) > uartClk)\n    {\n        //\n        // Enable high speed mode.\n        //\n        HWREG(base + UART_O_CTL) |= UART_CTL_HSE;\n\n        //\n        // Half the supplied baud rate to compensate for enabling high speed\n        // mode.  This allows the following code to be common to both cases.\n        //\n        baudrt /= 2U;\n    }\n    else\n    {\n        //\n        // Disable high speed mode.\n        //\n        HWREG(base + UART_O_CTL) &= ~(UART_CTL_HSE);\n    }\n\n    //\n    // Compute the fractional baud rate divider.\n    //\n    fbrDiv = (((uartClk * 8U) / baudrt) + 1U) / 2U;\n\n    //\n    // Set the baud rate.\n    //\n    HWREGH(base + UART_O_IBRD) = (uint16_t)(fbrDiv / 64U);\n    HWREGB(base + UART_O_FBRD) = (uint8_t)(fbrDiv % 64U);\n\n    //\n    // Set parity, data length, and number of stop bits.\n    //\n    HWREGB(base + UART_O_LCRH) = (uint8_t)config;\n\n    //\n    // Start the UART.\n    //\n    UART_enableModule(base);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t fbrDiv, baudrt; baudrt = baud; // // Check the arguments. // ASSERT(UART_isBaseValid(base)); ASSERT(baudrt != 0U); ASSERT(uartClk >= (baudrt * UART_CLK_DIVIDER)); // // Stop the UART. // UART_disableModule(base); // // Is the required baud rate greater than the maximum rate supported // without the use of high speed mode? // if((baudrt * 16U) > uartClk) { // // Enable high speed mode. // HWREG(base + UART_O_CTL) |= UART_CTL_HSE; // // Half the supplied baud rate to compensate for enabling high speed // mode. This allows the following code to be common to both cases. // baudrt /= 2U; } else { // // Disable high speed mode. // HWREG(base + UART_O_CTL) &= ~(UART_CTL_HSE); } // // Compute the fractional baud rate divider. // fbrDiv = (((uartClk * 8U) / baudrt) + 1U) / 2U; // // Set the baud rate. // HWREGH(base + UART_O_IBRD) = (uint16_t)(fbrDiv / 64U); HWREGB(base + UART_O_FBRD) = (uint8_t)(fbrDiv % 64U); // // Set parity, data length, and number of stop bits. // HWREGB(base + UART_O_LCRH) = (uint8_t)config; // // Start the UART. // UART_enableModule(base); }",
+      "registersUsed": [
+        "IBRD",
+        "FBRD",
+        "LCRH",
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "IBRD",
+        "FBRD",
+        "LCRH",
+        "CTL"
+      ]
+    },
+    {
+      "file": "uart.c",
+      "peripheral": "uart",
+      "functionName": "UART_getConfig",
+      "functionArgs": [
+        "base",
+        "uartClk",
+        "*baud",
+        "*config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t integr, frac;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Compute the baud rate.\n    //\n    integr = HWREG(base + UART_O_IBRD);\n    frac = HWREG(base + UART_O_FBRD);\n    *baud = (uartClk * 4U) / ((64U * integr) + frac);\n\n    //\n    // See if high speed mode enabled.\n    //\n    if((HWREG(base + UART_O_CTL) & UART_CTL_HSE) == UART_CTL_HSE)\n    {\n        //\n        // High speed mode is enabled so the actual baud rate is actually\n        // double what was just calculated.\n        //\n        *baud *= 2U;\n    }\n\n    //\n    // Get the parity, data length, and number of stop bits.\n    //\n    *config = (HWREG(base + UART_O_LCRH) &\n              (UART_LCRH_SPS | UART_LCRH_WLEN_M | UART_LCRH_STP2 |\n               UART_LCRH_EPS | UART_LCRH_PEN));\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t integr, frac; // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Compute the baud rate. // integr = HWREG(base + UART_O_IBRD); frac = HWREG(base + UART_O_FBRD); *baud = (uartClk * 4U) / ((64U * integr) + frac); // // See if high speed mode enabled. // if((HWREG(base + UART_O_CTL) & UART_CTL_HSE) == UART_CTL_HSE) { // // High speed mode is enabled so the actual baud rate is actually // double what was just calculated. // *baud *= 2U; } // // Get the parity, data length, and number of stop bits. // *config = (HWREG(base + UART_O_LCRH) & (UART_LCRH_SPS | UART_LCRH_WLEN_M | UART_LCRH_STP2 | UART_LCRH_EPS | UART_LCRH_PEN)); }",
+      "registersUsed": [
+        "IBRD",
+        "FBRD",
+        "LCRH",
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "IBRD",
+        "FBRD",
+        "LCRH",
+        "CTL"
+      ]
+    },
+    {
+      "file": "uart.c",
+      "peripheral": "uart",
+      "functionName": "UART_writeCharNonBlocking",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint8_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    bool ret;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // See if there is space in the transmit FIFO.\n    //\n    if((HWREG(base + UART_O_FR) & UART_FR_TXFF) == 0U)\n    {\n        //\n        // Write this character to the transmit FIFO.\n        //\n        HWREGB(base + UART_O_DR) = data;\n\n        //\n        // Success.\n        //\n        ret = true;\n    }\n    else\n    {\n        //\n        // There is no space in the transmit FIFO, so return a failure.\n        //\n        ret = false;\n    }\n\n    return(ret);\n}\n",
+      "functionContentWithoutFormatting": "{ bool ret; // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // See if there is space in the transmit FIFO. // if((HWREG(base + UART_O_FR) & UART_FR_TXFF) == 0U) { // // Write this character to the transmit FIFO. // HWREGB(base + UART_O_DR) = data; // // Success. // ret = true; } else { // // There is no space in the transmit FIFO, so return a failure. // ret = false; } return(ret); }",
+      "registersUsed": [
+        "DR",
+        "FR"
+      ],
+      "registersUsedMatchingBifield": [
+        "DR",
+        "FR"
+      ]
+    },
+    {
+      "file": "uart.c",
+      "peripheral": "uart",
+      "functionName": "UART_writeCharArray",
+      "functionArgs": [
+        "base",
+        "array",
+        "length"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint8_t*const",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    uint16_t i;\n\n    //\n    // Loop to write (blocking) 'length' number of characters\n    //\n    for(i = 0U; i < length; i++)\n    {\n        //\n        // Wait until space is available.\n        //\n        while((HWREG(base + UART_O_FR) & UART_FR_TXFF) == UART_FR_TXFF)\n        {\n            ;\n        }\n\n        //\n        // Send the char.\n        //\n        HWREGB(base + UART_O_DR) = array[i];\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); uint16_t i; // // Loop to write (blocking) 'length' number of characters // for(i = 0U; i < length; i++) { // // Wait until space is available. // while((HWREG(base + UART_O_FR) & UART_FR_TXFF) == UART_FR_TXFF) { ; } // // Send the char. // HWREGB(base + UART_O_DR) = array[i]; } }",
+      "registersUsed": [
+        "DR",
+        "FR"
+      ],
+      "registersUsedMatchingBifield": [
+        "DR",
+        "FR"
+      ]
+    },
+    {
+      "file": "uart.c",
+      "peripheral": "uart",
+      "functionName": "UART_readCharArray",
+      "functionArgs": [
+        "base",
+        "array",
+        "length"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "int32_t*const",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    uint16_t i;\n\n    //\n    // Loop to read (Blocking) 'length' number of characters\n    //\n    for(i = 0U; i < length; i++)\n    {\n        //\n        // Wait until a char is available.\n        //\n        while((HWREG(base + UART_O_FR) & UART_FR_RXFE) == UART_FR_RXFE)\n        {\n            ;\n        }\n\n        //\n        // Read the char.\n        //\n        array[i] = (int32_t)(HWREG(base + UART_O_DR));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); uint16_t i; // // Loop to read (Blocking) 'length' number of characters // for(i = 0U; i < length; i++) { // // Wait until a char is available. // while((HWREG(base + UART_O_FR) & UART_FR_RXFE) == UART_FR_RXFE) { ; } // // Read the char. // array[i] = (int32_t)(HWREG(base + UART_O_DR)); } }",
+      "registersUsed": [
+        "DR",
+        "FR"
+      ],
+      "registersUsedMatchingBifield": [
+        "DR",
+        "FR"
+      ]
+    },
+    {
+      "file": "uart.c",
+      "peripheral": "uart",
+      "functionName": "UART_send9BitAddress",
+      "functionArgs": [
+        "base",
+        "addr"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint8_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t lcrh;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Wait until the FIFO is empty and the UART is not busy.\n    //\n    while((HWREG(base + UART_O_FR) & (UART_FR_TXFE | UART_FR_BUSY)) !=\n          UART_FR_TXFE)\n    {\n        ;\n    }\n\n    //\n    // Force the address/data bit to 1 to indicate this is an address byte.\n    //\n    lcrh = HWREG(base + UART_O_LCRH);\n    HWREG(base + UART_O_LCRH) = ((lcrh & ~UART_LCRH_EPS) |\n                                 UART_LCRH_SPS | UART_LCRH_PEN);\n\n    //\n    // Send the address.\n    //\n    HWREGB(base + UART_O_DR) = addr;\n\n    //\n    // Wait until the address has been sent.\n    //\n    while((HWREG(base + UART_O_FR) & (UART_FR_TXFE | UART_FR_BUSY)) !=\n          UART_FR_TXFE)\n    {\n        ;\n    }\n\n    //\n    // Restore the address/data setting.\n    //\n    HWREGB(base + UART_O_LCRH) = (uint8_t)lcrh;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t lcrh; // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Wait until the FIFO is empty and the UART is not busy. // while((HWREG(base + UART_O_FR) & (UART_FR_TXFE | UART_FR_BUSY)) != UART_FR_TXFE) { ; } // // Force the address/data bit to 1 to indicate this is an address byte. // lcrh = HWREG(base + UART_O_LCRH); HWREG(base + UART_O_LCRH) = ((lcrh & ~UART_LCRH_EPS) | UART_LCRH_SPS | UART_LCRH_PEN); // // Send the address. // HWREGB(base + UART_O_DR) = addr; // // Wait until the address has been sent. // while((HWREG(base + UART_O_FR) & (UART_FR_TXFE | UART_FR_BUSY)) != UART_FR_TXFE) { ; } // // Restore the address/data setting. // HWREGB(base + UART_O_LCRH) = (uint8_t)lcrh; }",
+      "registersUsed": [
+        "DR",
+        "FR",
+        "LCRH"
+      ],
+      "registersUsedMatchingBifield": [
+        "DR",
+        "FR",
+        "LCRH"
+      ]
+    },
+    {
+      "file": "uart.c",
+      "peripheral": "uart",
+      "functionName": "UART_stop9BitDataMode",
+      "functionArgs": [
+        "base",
+        "lcrh"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Wait until the FIFO is empty and the UART is not busy.\n    //\n    while((HWREG(base + UART_O_FR) & (UART_FR_TXFE | UART_FR_BUSY)) !=\n          UART_FR_TXFE)\n    {\n    }\n\n    //\n    // Restore the address/data setting to enter normal transmission mode.\n    //\n    HWREGB(base + UART_O_LCRH) = (uint8_t)lcrh;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Wait until the FIFO is empty and the UART is not busy. // while((HWREG(base + UART_O_FR) & (UART_FR_TXFE | UART_FR_BUSY)) != UART_FR_TXFE) { } // // Restore the address/data setting to enter normal transmission mode. // HWREGB(base + UART_O_LCRH) = (uint8_t)lcrh; }",
+      "registersUsed": [
+        "FR",
+        "LCRH"
+      ],
+      "registersUsedMatchingBifield": [
+        "FR",
+        "LCRH"
+      ]
+    },
+    {
+      "file": "uart.c",
+      "peripheral": "uart",
+      "functionName": "UART_configure9BitDataMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    uint32_t lcrh;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Wait until the FIFO is empty and the UART is not busy.\n    //\n    while((HWREG(base + UART_O_FR) & (UART_FR_TXFE | UART_FR_BUSY)) !=\n          UART_FR_TXFE)\n    {\n    }\n\n    //\n    // Force the address/data bit to 0 to indicate this is an data byte.\n    //\n    lcrh = HWREG(base + UART_O_LCRH);\n    HWREG(base + UART_O_LCRH) = (lcrh | UART_LCRH_EPS |\n                                 UART_LCRH_SPS | UART_LCRH_PEN);\n\n    //\n    // Needed to restore the address/data setting after the full\n    // 9-bit data transmission.\n    //\n    return(lcrh);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t lcrh; // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Wait until the FIFO is empty and the UART is not busy. // while((HWREG(base + UART_O_FR) & (UART_FR_TXFE | UART_FR_BUSY)) != UART_FR_TXFE) { } // // Force the address/data bit to 0 to indicate this is an data byte. // lcrh = HWREG(base + UART_O_LCRH); HWREG(base + UART_O_LCRH) = (lcrh | UART_LCRH_EPS | UART_LCRH_SPS | UART_LCRH_PEN); // // Needed to restore the address/data setting after the full // 9-bit data transmission. // return(lcrh); }",
+      "registersUsed": [
+        "FR",
+        "LCRH"
+      ],
+      "registersUsedMatchingBifield": [
+        "FR",
+        "LCRH"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           ((base & BASE_ADDR_MASK) == UARTA_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == UARTB_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == UARTC_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == UARTD_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == UARTE_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == UARTF_BASE_FRAME(0U))\n          );\n\n}\n",
+      "functionContentWithoutFormatting": "{ return( ((base & BASE_ADDR_MASK) == UARTA_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == UARTB_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == UARTC_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == UARTD_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == UARTE_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == UARTF_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_setParityMode",
+      "functionArgs": [
+        "base",
+        "parity"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n    ASSERT((parity == UART_CONFIG_PAR_NONE) ||\n           (parity == UART_CONFIG_PAR_EVEN) ||\n           (parity == UART_CONFIG_PAR_ODD) ||\n           (parity == UART_CONFIG_PAR_ONE) ||\n           (parity == UART_CONFIG_PAR_ZERO));\n\n    //\n    // Set the parity mode.\n    //\n    HWREG(base + UART_O_LCRH) = ((HWREG(base + UART_O_LCRH) &\n                                ~(UART_LCRH_SPS | UART_LCRH_EPS |\n                                UART_LCRH_PEN)) | parity);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); ASSERT((parity == UART_CONFIG_PAR_NONE) || (parity == UART_CONFIG_PAR_EVEN) || (parity == UART_CONFIG_PAR_ODD) || (parity == UART_CONFIG_PAR_ONE) || (parity == UART_CONFIG_PAR_ZERO)); // // Set the parity mode. // HWREG(base + UART_O_LCRH) = ((HWREG(base + UART_O_LCRH) & ~(UART_LCRH_SPS | UART_LCRH_EPS | UART_LCRH_PEN)) | parity); }",
+      "registersUsed": [
+        "LCRH"
+      ],
+      "registersUsedMatchingBifield": [
+        "LCRH"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_getParityMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Return the current parity setting.\n    //\n    return(HWREG(base + UART_O_LCRH) & (UART_LCRH_SPS |\n                                        UART_LCRH_EPS |\n                                        UART_LCRH_PEN));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Return the current parity setting. // return(HWREG(base + UART_O_LCRH) & (UART_LCRH_SPS | UART_LCRH_EPS | UART_LCRH_PEN)); }",
+      "registersUsed": [
+        "LCRH"
+      ],
+      "registersUsedMatchingBifield": [
+        "LCRH"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_setFIFOLevel",
+      "functionArgs": [
+        "base",
+        "txLevel",
+        "rxLevel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n    ASSERT((txLevel == UART_FIFO_TX1_8) ||\n           (txLevel == UART_FIFO_TX2_8) ||\n           (txLevel == UART_FIFO_TX4_8) ||\n           (txLevel == UART_FIFO_TX6_8) ||\n           (txLevel == UART_FIFO_TX7_8));\n    ASSERT((rxLevel == UART_FIFO_RX1_8) ||\n           (rxLevel == UART_FIFO_RX2_8) ||\n           (rxLevel == UART_FIFO_RX4_8) ||\n           (rxLevel == UART_FIFO_RX6_8) ||\n           (rxLevel == UART_FIFO_RX7_8));\n\n    //\n    // Set the FIFO interrupt levels.\n    //\n    HWREGB(base + UART_O_IFLS) = (uint8_t)(txLevel | rxLevel);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); ASSERT((txLevel == UART_FIFO_TX1_8) || (txLevel == UART_FIFO_TX2_8) || (txLevel == UART_FIFO_TX4_8) || (txLevel == UART_FIFO_TX6_8) || (txLevel == UART_FIFO_TX7_8)); ASSERT((rxLevel == UART_FIFO_RX1_8) || (rxLevel == UART_FIFO_RX2_8) || (rxLevel == UART_FIFO_RX4_8) || (rxLevel == UART_FIFO_RX6_8) || (rxLevel == UART_FIFO_RX7_8)); // // Set the FIFO interrupt levels. // HWREGB(base + UART_O_IFLS) = (uint8_t)(txLevel | rxLevel); }",
+      "registersUsed": [
+        "IFLS"
+      ],
+      "registersUsedMatchingBifield": [
+        "IFLS"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_getFIFOLevel",
+      "functionArgs": [
+        "base",
+        "*txLevel",
+        "*rxLevel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t temp;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Read the FIFO level register.\n    //\n    temp = HWREG(base + UART_O_IFLS);\n\n    //\n    // Extract the transmit and receive FIFO levels.\n    //\n    *txLevel = temp & UART_IFLS_TXIFLSEL_M;\n    *rxLevel = temp & UART_IFLS_RXIFLSEL_M;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t temp; // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Read the FIFO level register. // temp = HWREG(base + UART_O_IFLS); // // Extract the transmit and receive FIFO levels. // *txLevel = temp & UART_IFLS_TXIFLSEL_M; *rxLevel = temp & UART_IFLS_RXIFLSEL_M; }",
+      "registersUsed": [
+        "IFLS"
+      ],
+      "registersUsedMatchingBifield": [
+        "IFLS"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_enableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Enable the FIFO.\n    //\n    HWREG(base + UART_O_LCRH) |= UART_LCRH_FEN;\n\n    //\n    // Enable RX, TX, and the UART.\n    //\n    HWREG(base + UART_O_CTL) |= (UART_CTL_UARTEN | UART_CTL_TXE |\n                                 UART_CTL_RXE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Enable the FIFO. // HWREG(base + UART_O_LCRH) |= UART_LCRH_FEN; // // Enable RX, TX, and the UART. // HWREG(base + UART_O_CTL) |= (UART_CTL_UARTEN | UART_CTL_TXE | UART_CTL_RXE); }",
+      "registersUsed": [
+        "LCRH",
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "LCRH",
+        "CTL"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_enableModuleNonFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Enable RX, TX, and the UART.\n    //\n    HWREG(base + UART_O_CTL) |= (UART_CTL_UARTEN | UART_CTL_TXE |\n                                 UART_CTL_RXE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Enable RX, TX, and the UART. // HWREG(base + UART_O_CTL) |= (UART_CTL_UARTEN | UART_CTL_TXE | UART_CTL_RXE); }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTL"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_disableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Wait for end of TX.\n    //\n    while((HWREG(base + UART_O_FR) & UART_FR_BUSY) == UART_FR_BUSY)\n    {\n        ;\n    }\n\n    //\n    // Disable the FIFO.\n    //\n    HWREG(base + UART_O_LCRH) &= ~(UART_LCRH_FEN);\n\n    //\n    // Disable the UART.\n    //\n    HWREG(base + UART_O_CTL) &= ~(UART_CTL_UARTEN | UART_CTL_TXE |\n                                  UART_CTL_RXE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Wait for end of TX. // while((HWREG(base + UART_O_FR) & UART_FR_BUSY) == UART_FR_BUSY) { ; } // // Disable the FIFO. // HWREG(base + UART_O_LCRH) &= ~(UART_LCRH_FEN); // // Disable the UART. // HWREG(base + UART_O_CTL) &= ~(UART_CTL_UARTEN | UART_CTL_TXE | UART_CTL_RXE); }",
+      "registersUsed": [
+        "FR",
+        "LCRH",
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FR",
+        "LCRH",
+        "CTL"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_disableModuleNonFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Wait for end of TX.\n    //\n    while((HWREG(base + UART_O_FR) & UART_FR_BUSY) == UART_FR_BUSY)\n    {\n        ;\n    }\n\n    //\n    // Disable the UART.\n    //\n    HWREG(base + UART_O_CTL) &= ~(UART_CTL_UARTEN | UART_CTL_TXE |\n                                  UART_CTL_RXE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Wait for end of TX. // while((HWREG(base + UART_O_FR) & UART_FR_BUSY) == UART_FR_BUSY) { ; } // // Disable the UART. // HWREG(base + UART_O_CTL) &= ~(UART_CTL_UARTEN | UART_CTL_TXE | UART_CTL_RXE); }",
+      "registersUsed": [
+        "FR",
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FR",
+        "CTL"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_enableFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Enable the FIFO.\n    //\n    HWREG(base + UART_O_LCRH) |= UART_LCRH_FEN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Enable the FIFO. // HWREG(base + UART_O_LCRH) |= UART_LCRH_FEN; }",
+      "registersUsed": [
+        "LCRH"
+      ],
+      "registersUsedMatchingBifield": [
+        "LCRH"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_disableFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Disable the FIFO.\n    //\n    HWREG(base + UART_O_LCRH) &= ~(UART_LCRH_FEN);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Disable the FIFO. // HWREG(base + UART_O_LCRH) &= ~(UART_LCRH_FEN); }",
+      "registersUsed": [
+        "LCRH"
+      ],
+      "registersUsedMatchingBifield": [
+        "LCRH"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_isFIFOEnabled",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Returns if the FIFO is enabled or disabled.\n    //\n    return(((HWREG(base + UART_O_LCRH) & UART_LCRH_FEN) == UART_LCRH_FEN) ?\n            true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Returns if the FIFO is enabled or disabled. // return(((HWREG(base + UART_O_LCRH) & UART_LCRH_FEN) == UART_LCRH_FEN) ? true : false); }",
+      "registersUsed": [
+        "LCRH"
+      ],
+      "registersUsedMatchingBifield": [
+        "LCRH"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_enableSIR",
+      "functionArgs": [
+        "base",
+        "bLowPower"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UART_SirLPMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Enable SIR and SIRLP (if appropriate).\n    //\n    if(bLowPower)\n    {\n        HWREG(base + UART_O_CTL) |= (UART_CTL_SIREN | UART_CTL_SIRLP);\n    }\n    else\n    {\n        HWREG(base + UART_O_CTL) = ((HWREG(base + UART_O_CTL) &\n                                    ~(UART_CTL_SIREN | UART_CTL_SIRLP)) |\n                                    (UART_CTL_SIREN));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Enable SIR and SIRLP (if appropriate). // if(bLowPower) { HWREG(base + UART_O_CTL) |= (UART_CTL_SIREN | UART_CTL_SIRLP); } else { HWREG(base + UART_O_CTL) = ((HWREG(base + UART_O_CTL) & ~(UART_CTL_SIREN | UART_CTL_SIRLP)) | (UART_CTL_SIREN)); } }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTL"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_disableSIR",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Disable SIR and SIRLP (if appropriate).\n    //\n    HWREG(base + UART_O_CTL) &= ~(UART_CTL_SIREN | UART_CTL_SIRLP);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Disable SIR and SIRLP (if appropriate). // HWREG(base + UART_O_CTL) &= ~(UART_CTL_SIREN | UART_CTL_SIRLP); }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTL"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_setTxIntMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n    ASSERT((mode == UART_TXINT_MODE_EOT) ||\n           (mode == UART_TXINT_MODE_FIFO));\n\n    //\n    // Set or clear the EOT bit of the UART control register as appropriate.\n    //\n    HWREG(base + UART_O_CTL) = ((HWREG(base + UART_O_CTL) &\n                               ~(UART_TXINT_MODE_EOT)) | mode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); ASSERT((mode == UART_TXINT_MODE_EOT) || (mode == UART_TXINT_MODE_FIFO)); // // Set or clear the EOT bit of the UART control register as appropriate. // HWREG(base + UART_O_CTL) = ((HWREG(base + UART_O_CTL) & ~(UART_TXINT_MODE_EOT)) | mode); }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTL"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_getTxIntMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Return the current transmit interrupt mode.\n    //\n    return((uint32_t)(HWREG(base + UART_O_CTL) & (UART_TXINT_MODE_EOT)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Return the current transmit interrupt mode. // return((uint32_t)(HWREG(base + UART_O_CTL) & (UART_TXINT_MODE_EOT))); }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTL"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_isDataAvailable",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Return the availability of characters.\n    //\n    return(((HWREG(base + UART_O_FR) & UART_FR_RXFE) == UART_FR_RXFE) ?\n            false : true);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Return the availability of characters. // return(((HWREG(base + UART_O_FR) & UART_FR_RXFE) == UART_FR_RXFE) ? false : true); }",
+      "registersUsed": [
+        "FR"
+      ],
+      "registersUsedMatchingBifield": [
+        "FR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_isSpaceAvailable",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Return the availability of space.\n    //\n    return(((HWREG(base + UART_O_FR) & UART_FR_TXFF) == UART_FR_TXFF) ?\n            false : true);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Return the availability of space. // return(((HWREG(base + UART_O_FR) & UART_FR_TXFF) == UART_FR_TXFF) ? false : true); }",
+      "registersUsed": [
+        "FR"
+      ],
+      "registersUsedMatchingBifield": [
+        "FR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_readCharNonBlocking",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline int32_t",
+      "functionContent": "{\n    int32_t ret;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // See if there are any characters in the receive FIFO.\n    //\n    if(((HWREG(base + UART_O_FR) & UART_FR_RXFE)) == 0U)\n    {\n        //\n        // Read and return the next character.\n        //\n        ret = (int32_t)HWREG(base + UART_O_DR);\n    }\n    else\n    {\n        //\n        // There are no characters, so return a failure.\n        //\n        ret = -1;\n    }\n    return(ret);\n}\n",
+      "functionContentWithoutFormatting": "{ int32_t ret; // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // See if there are any characters in the receive FIFO. // if(((HWREG(base + UART_O_FR) & UART_FR_RXFE)) == 0U) { // // Read and return the next character. // ret = (int32_t)HWREG(base + UART_O_DR); } else { // // There are no characters, so return a failure. // ret = -1; } return(ret); }",
+      "registersUsed": [
+        "DR",
+        "FR"
+      ],
+      "registersUsedMatchingBifield": [
+        "DR",
+        "FR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_readChar",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline int32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Wait until a char is available.\n    //\n    while((HWREG(base + UART_O_FR) & UART_FR_RXFE) == UART_FR_RXFE)\n    {\n        ;\n    }\n\n    //\n    // Now get the char.\n    //\n    return((int32_t)HWREG(base + UART_O_DR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Wait until a char is available. // while((HWREG(base + UART_O_FR) & UART_FR_RXFE) == UART_FR_RXFE) { ; } // // Now get the char. // return((int32_t)HWREG(base + UART_O_DR)); }",
+      "registersUsed": [
+        "DR",
+        "FR"
+      ],
+      "registersUsedMatchingBifield": [
+        "DR",
+        "FR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_writeChar",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint8_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Wait until space is available.\n    //\n    while((HWREG(base + UART_O_FR) & UART_FR_TXFF) == UART_FR_TXFF)\n    {\n        ;\n    }\n\n    //\n    // Send the char.\n    //\n    HWREGB(base + UART_O_DR) = data;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Wait until space is available. // while((HWREG(base + UART_O_FR) & UART_FR_TXFF) == UART_FR_TXFF) { ; } // // Send the char. // HWREGB(base + UART_O_DR) = data; }",
+      "registersUsed": [
+        "DR",
+        "FR"
+      ],
+      "registersUsedMatchingBifield": [
+        "DR",
+        "FR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_setBreakConfig",
+      "functionArgs": [
+        "base",
+        "breakState"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Set the break condition as requested.\n    //\n    HWREG(base + UART_O_LCRH) = (breakState ?\n                                (HWREG(base + UART_O_LCRH) | UART_LCRH_BRK) :\n                                (HWREG(base + UART_O_LCRH) & ~(UART_LCRH_BRK)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Set the break condition as requested. // HWREG(base + UART_O_LCRH) = (breakState ? (HWREG(base + UART_O_LCRH) | UART_LCRH_BRK) : (HWREG(base + UART_O_LCRH) & ~(UART_LCRH_BRK))); }",
+      "registersUsed": [
+        "LCRH"
+      ],
+      "registersUsedMatchingBifield": [
+        "LCRH"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_isBusy",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the argument.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Determine if the UART is busy.\n    //\n    return(((HWREG(base + UART_O_FR) & UART_FR_BUSY) == UART_FR_BUSY) ?\n            true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the argument. // ASSERT(UART_isBaseValid(base)); // // Determine if the UART is busy. // return(((HWREG(base + UART_O_FR) & UART_FR_BUSY) == UART_FR_BUSY) ? true : false); }",
+      "registersUsed": [
+        "FR"
+      ],
+      "registersUsedMatchingBifield": [
+        "FR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_clearGlobalInterruptFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Clear UART global interrupt flags.\n    //\n    HWREGB(base + UART_O_GLB_INT_CLR) = 0x1;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Clear UART global interrupt flags. // HWREGB(base + UART_O_GLB_INT_CLR) = 0x1; }",
+      "registersUsed": [
+        "GLB_INT_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLB_INT_CLR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_getGlobalInterruptFlagStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Return the global interrupt flag status.\n    //\n    return((bool)(HWREGB(base + UART_O_GLB_INT_FLG)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Return the global interrupt flag status. // return((bool)(HWREGB(base + UART_O_GLB_INT_FLG))); }",
+      "registersUsed": [
+        "GLB_INT_FLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLB_INT_FLG"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Enable the specified interrupts.\n    //\n    HWREG(base + UART_O_IM) |= intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Enable the specified interrupts. // HWREG(base + UART_O_IM) |= intFlags; }",
+      "registersUsed": [
+        "IM"
+      ],
+      "registersUsedMatchingBifield": [
+        "IM"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Disable the specified interrupts.\n    //\n    HWREG(base + UART_O_IM) &= ~(intFlags);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Disable the specified interrupts. // HWREG(base + UART_O_IM) &= ~(intFlags); }",
+      "registersUsed": [
+        "IM"
+      ],
+      "registersUsedMatchingBifield": [
+        "IM"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_getInterruptStatus",
+      "functionArgs": [
+        "base",
+        "masked"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UART_IntType"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    uint32_t ret;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Return either the interrupt status or the raw interrupt status as\n    // requested.\n    //\n    if(masked)\n    {\n        ret = HWREG(base + UART_O_MIS);\n    }\n    else\n    {\n        ret = HWREG(base + UART_O_RIS);\n    }\n\n    return(ret);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ret; // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Return either the interrupt status or the raw interrupt status as // requested. // if(masked) { ret = HWREG(base + UART_O_MIS); } else { ret = HWREG(base + UART_O_RIS); } return(ret); }",
+      "registersUsed": [
+        "RIS",
+        "MIS"
+      ],
+      "registersUsedMatchingBifield": [
+        "RIS",
+        "MIS"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_clearInterruptStatus",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Clear the requested interrupt sources.\n    //\n    HWREG(base + UART_O_ICR) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Clear the requested interrupt sources. // HWREG(base + UART_O_ICR) = intFlags; }",
+      "registersUsed": [
+        "ICR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ICR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_enableDMA",
+      "functionArgs": [
+        "base",
+        "dmaFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Set the requested bits in the UART DMA control register.\n    //\n    HWREG(base + UART_O_DMACTL) |= dmaFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Set the requested bits in the UART DMA control register. // HWREG(base + UART_O_DMACTL) |= dmaFlags; }",
+      "registersUsed": [
+        "DMACTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMACTL"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_disableDMA",
+      "functionArgs": [
+        "base",
+        "dmaFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Clear the requested bits in the UART DMA control register.\n    //\n    HWREG(base + UART_O_DMACTL) &= ~dmaFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Clear the requested bits in the UART DMA control register. // HWREG(base + UART_O_DMACTL) &= ~dmaFlags; }",
+      "registersUsed": [
+        "DMACTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMACTL"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_getRxError",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Return the current value of the receive status register.\n    //\n    return(HWREG(base + UART_O_RSR) & UART_RSR_ALL_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Return the current value of the receive status register. // return(HWREG(base + UART_O_RSR) & UART_RSR_ALL_M); }",
+      "registersUsed": [
+        "RSR"
+      ],
+      "registersUsedMatchingBifield": [
+        "RSR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_clearRxError",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Any write to the Error Clear Register clears all bits which are\n    // currently set.\n    //\n    HWREGB(base + UART_O_ECR) = (uint8_t)(~(UART_RSR_ALL_M));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Any write to the Error Clear Register clears all bits which are // currently set. // HWREGB(base + UART_O_ECR) = (uint8_t)(~(UART_RSR_ALL_M)); }",
+      "registersUsed": [
+        "ECR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ECR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_enable9Bit",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Enable 9-bit mode.\n    //\n    HWREGB(base + UART_O_9BITADDR + 1U) = 0x80;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Enable 9-bit mode. // HWREGB(base + UART_O_9BITADDR + 1U) = 0x80; }",
+      "registersUsed": [
+        "9BITADDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "9BITADDR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_disable9Bit",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Disable 9-bit mode.\n    //\n    HWREGB(base + UART_O_9BITADDR + 1U) = 0x0;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Disable 9-bit mode. // HWREGB(base + UART_O_9BITADDR + 1U) = 0x0; }",
+      "registersUsed": [
+        "9BITADDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "9BITADDR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_set9BitAddress",
+      "functionArgs": [
+        "base",
+        "addr",
+        "mask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint8_t",
+        "uint8_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Set the address and mask.\n    //\n    HWREGB(base + UART_O_9BITADDR) = addr;\n    HWREGB(base + UART_O_9BITAMASK) = mask;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Set the address and mask. // HWREGB(base + UART_O_9BITADDR) = addr; HWREGB(base + UART_O_9BITAMASK) = mask; }",
+      "registersUsed": [
+        "9BITADDR",
+        "9BITAMASK"
+      ],
+      "registersUsedMatchingBifield": [
+        "9BITADDR",
+        "9BITAMASK"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_setIrDALPDivisor",
+      "functionArgs": [
+        "base",
+        "uartClk"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t lpDiv;\n\n    //\n    // Compute the IrDA Low Power divisor.\n    //\n    lpDiv = uartClk / UART_CLK_IRLPBAUD16;\n\n    //\n    // Set the IrDA Low Power divisor.\n    //\n    HWREGB(base + UART_O_ILPR) = (uint8_t)lpDiv;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t lpDiv; // // Compute the IrDA Low Power divisor. // lpDiv = uartClk / UART_CLK_IRLPBAUD16; // // Set the IrDA Low Power divisor. // HWREGB(base + UART_O_ILPR) = (uint8_t)lpDiv; }",
+      "registersUsed": [
+        "ILPR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ILPR"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_enableLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Set the loopback enable bit of the register.\n    //\n    HWREG(base + UART_O_CTL) |= UART_CTL_LBE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Set the loopback enable bit of the register. // HWREG(base + UART_O_CTL) |= UART_CTL_LBE; }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTL"
+      ]
+    },
+    {
+      "file": "uart.h",
+      "peripheral": "uart",
+      "functionName": "UART_disableLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UART_isBaseValid(base));\n\n    //\n    // Clear the loopback enable bit of the register.\n    //\n    HWREG(base + UART_O_CTL) &= ~UART_CTL_LBE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UART_isBaseValid(base)); // // Clear the loopback enable bit of the register. // HWREG(base + UART_O_CTL) &= ~UART_CTL_LBE; }",
+      "registersUsed": [
+        "CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTL"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1999 @@
+{
+  "name": "adc",
+  "functions": [
+    {
+      "file": "adc.c",
+      "peripheral": "adc",
+      "functionName": "ADC_setINLTrim",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t i;\n    uint32_t * inlTrimAddress;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    if(TI_OTP_DEV_PRG_KEY == TI_OTP_DEV_KEY)\n    {\n        switch(base)\n        {\n            case ADCA_BASE:\n                inlTrimAddress = ADC_getINLTrimOTPLoc(0U);\n                break;\n            default:\n                //\n                // Invalid base address!\n                //\n                inlTrimAddress = ADC_getINLTrimOTPLoc(0U);\n                break;\n        }\n\n        //\n        // Update INL trim values to ADC trim registers\n        //\n        EALLOW;\n        for(i = 0U; i < 2U; i++)\n        {\n            HWREG(base + ADC_O_INLTRIM1 + (i * 2U)) = (*inlTrimAddress++);\n        }\n\n        //\n        // Apply linearity trim workaround for 12-bit resolution\n        //\n            HWREG(base + ADC_O_INLTRIM1) &= 0xFFFF0000U;\n            HWREG(base + ADC_O_INLTRIM2) &= 0xFFFF0000U;\n\n        EDIS;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; uint32_t * inlTrimAddress; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); if(TI_OTP_DEV_PRG_KEY == TI_OTP_DEV_KEY) { switch(base) { case ADCA_BASE: inlTrimAddress = ADC_getINLTrimOTPLoc(0U); break; default: // // Invalid base address! // inlTrimAddress = ADC_getINLTrimOTPLoc(0U); break; } // // Update INL trim values to ADC trim registers // EALLOW; for(i = 0U; i < 2U; i++) { HWREG(base + ADC_O_INLTRIM1 + (i * 2U)) = (*inlTrimAddress++); } // // Apply linearity trim workaround for 12-bit resolution // HWREG(base + ADC_O_INLTRIM1) &= 0xFFFF0000U; HWREG(base + ADC_O_INLTRIM2) &= 0xFFFF0000U; EDIS; } }",
+      "registersUsed": [
+        "INLTRIM1",
+        "INLTRIM2"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCINLTRIM1",
+        "ADCINLTRIM2"
+      ]
+    },
+    {
+      "file": "adc.c",
+      "peripheral": "adc",
+      "functionName": "ADC_setOffsetTrim",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t offsetIndex = 0U, offsetTrim = 0U;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the offset index for the ADC base\n    //\n    switch(base)\n    {\n        case ADCA_BASE:\n            offsetIndex = (uint16_t)(0U);\n            break;\n        default:\n            //\n            // Invalid base address!\n            //\n            offsetIndex = (uint16_t)(0U);\n            break;\n    }\n\n    if(TI_OTP_DEV_PRG_KEY == TI_OTP_DEV_KEY)\n    {\n        offsetTrim = (*(uint16_t *)(ADC_getOffsetTrimOTPLoc(offsetIndex)));\n        offsetTrim = (offsetTrim & ADC_OFFTRIM_OFFTRIM_M);\n    }\n    else\n    {\n        offsetTrim = 0U;\n    }\n\n    //\n    // Configure the offset trim, offset trim is not updated here in case of\n    // untrimmed devices.\n    //\n    if(offsetTrim > 0x0U)\n    {\n        EALLOW;\n        HWREG(base + ADC_O_OFFTRIM) = (uint32_t)offsetTrim;\n        EDIS;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t offsetIndex = 0U, offsetTrim = 0U; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the offset index for the ADC base // switch(base) { case ADCA_BASE: offsetIndex = (uint16_t)(0U); break; default: // // Invalid base address! // offsetIndex = (uint16_t)(0U); break; } if(TI_OTP_DEV_PRG_KEY == TI_OTP_DEV_KEY) { offsetTrim = (*(uint16_t *)(ADC_getOffsetTrimOTPLoc(offsetIndex))); offsetTrim = (offsetTrim & ADC_OFFTRIM_OFFTRIM_M); } else { offsetTrim = 0U; } // // Configure the offset trim, offset trim is not updated here in case of // untrimmed devices. // if(offsetTrim > 0x0U) { EALLOW; HWREG(base + ADC_O_OFFTRIM) = (uint32_t)offsetTrim; EDIS; } }",
+      "registersUsed": [
+        "OFFTRIM"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCOFFTRIM"
+      ]
+    },
+    {
+      "file": "adc.c",
+      "peripheral": "adc",
+      "functionName": "ADC_setVREF",
+      "functionArgs": [
+        "base",
+        "refMode",
+        "refVoltage"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_ReferenceMode",
+        "ADC_ReferenceVoltage"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    EALLOW;\n    //\n    // Configure the reference mode (internal or external).\n    //\n    if(refMode == ADC_REFERENCE_INTERNAL)\n    {\n        HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_REFCONFIGA) &=\n             ~(ASYSCTL_REFCONFIGA_ANAREFSEL);\n    }\n\n\n    else\n    {\n        HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_REFCONFIGA) |=\n            ASYSCTL_REFCONFIGA_ANAREFSEL;\n    }\n\n    //\n    // Configure the reference voltage (3.3V or 2.5V).\n    //\n    if(refVoltage == ADC_REFERENCE_3_3V)\n    {\n        HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) &=\n            ~(ASYSCTL_ANAREFCTL_ANAREF2P5SEL);\n    }\n    else\n    {\n        HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) |=\n            ASYSCTL_ANAREFCTL_ANAREF2P5SEL;\n\n    }\n    EDIS;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); EALLOW; // // Configure the reference mode (internal or external). // if(refMode == ADC_REFERENCE_INTERNAL) { HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_REFCONFIGA) &= ~(ASYSCTL_REFCONFIGA_ANAREFSEL); } else { HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_REFCONFIGA) |= ASYSCTL_REFCONFIGA_ANAREFSEL; } // // Configure the reference voltage (3.3V or 2.5V). // if(refVoltage == ADC_REFERENCE_3_3V) { HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) &= ~(ASYSCTL_ANAREFCTL_ANAREF2P5SEL); } else { HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) |= ASYSCTL_ANAREFCTL_ANAREF2P5SEL; } EDIS; }",
+      "registersUsed": [
+        "REFCONFIGA",
+        "ANAREFCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "REFCONFIGA",
+        "ANAREFCTL"
+      ]
+    },
+    {
+      "file": "adc.c",
+      "peripheral": "adc",
+      "functionName": "ADC_setPPBTripLimits",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "tripHiLimit",
+        "tripLoLimit"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "int32_t",
+        "int32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t ppbHiOffset;\n    uint32_t ppbLoOffset;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the offset to the appropriate trip limit registers.\n    //\n    ppbHiOffset = (ADC_PPBxTRIPHI_STEP * (uint32_t)ppbNumber) +\n                  ADC_O_PPB1TRIPHI;\n    ppbLoOffset = (ADC_PPBxTRIPLO_STEP * (uint32_t)ppbNumber) +\n                  ADC_O_PPB1TRIPLO;\n\n    EALLOW;\n\n    //\n    // Set the trip high limit.\n    //\n    HWREG(base + ppbHiOffset) =\n        (HWREG(base + ppbHiOffset) & ~ADC_PPBTRIP_MASK) |\n        ((uint32_t)tripHiLimit & ADC_PPBTRIP_MASK);\n\n    //\n    // Set the trip low limit.\n    //\n    HWREG(base + ppbLoOffset) =\n        (HWREG(base + ppbLoOffset) & ~ADC_PPBTRIP_MASK) |\n        ((uint32_t)tripLoLimit & ADC_PPBTRIP_MASK);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ppbHiOffset; uint32_t ppbLoOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the offset to the appropriate trip limit registers. // ppbHiOffset = (ADC_PPBxTRIPHI_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1TRIPHI; ppbLoOffset = (ADC_PPBxTRIPLO_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1TRIPLO; EALLOW; // // Set the trip high limit. // HWREG(base + ppbHiOffset) = (HWREG(base + ppbHiOffset) & ~ADC_PPBTRIP_MASK) | ((uint32_t)tripHiLimit & ADC_PPBTRIP_MASK); // // Set the trip low limit. // HWREG(base + ppbLoOffset) = (HWREG(base + ppbLoOffset) & ~ADC_PPBTRIP_MASK) | ((uint32_t)tripLoLimit & ADC_PPBTRIP_MASK); EDIS; }",
+      "registersUsed": [
+        "PPB1TRIPHI",
+        "PPB2TRIPHI",
+        "PPB3TRIPHI",
+        "PPB1TRIPLO",
+        "PPB2TRIPLO",
+        "PPB3TRIPLO"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1TRIPHI",
+        "ADCPPB2TRIPHI",
+        "ADCPPB3TRIPHI",
+        "ADCPPB1TRIPLO",
+        "ADCPPB2TRIPLO",
+        "ADCPPB3TRIPLO"
+      ]
+    },
+    {
+      "file": "adc.c",
+      "peripheral": "adc",
+      "functionName": "ADC_configureRepeater",
+      "functionArgs": [
+        "base",
+        "repInstance",
+        "*config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "ADC_RepeaterConfig"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t regOffset;\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT(repInstance <= 2U);\n    ASSERT(config->repCount <= 127U);\n\n    regOffset = base + repInstance;\n    EALLOW;\n    //\n    // Configure repeater mode, trigger and syncin source.\n    //\n    HWREG(regOffset + ADC_O_REP1CTL) = (HWREG(regOffset + ADC_O_REP1CTL) &\n                    ~((uint32_t)REPCTL_MASK))  | \n                    (((uint32_t)config->repTrigger << ADC_REP1CTL_TRIGGER_S) |\n                    ((uint32_t)config->repSyncin << ADC_REP1CTL_SYNCINSEL_S));\n\n    //\n    // Configure repeater count.\n    //\n    HWREG(regOffset + ADC_O_REP1N) = (HWREG(regOffset + ADC_O_REP1N) &\n                                    ~(ADC_REP1N_NSEL_M)) | config->repCount;\n\n    //\n    // Configure repeater spread.\n    //\n    HWREG(regOffset + ADC_O_REP1SPREAD) =\n                                      (HWREG(regOffset + ADC_O_REP1SPREAD) &\n                                      ~(ADC_REP1SPREAD_SPREAD_M)) |\n                                      config->repSpread;\n    EDIS;\n\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT(repInstance <= 2U); ASSERT(config->repCount <= 127U); regOffset = base + repInstance; EALLOW; // // Configure repeater mode, trigger and syncin source. // HWREG(regOffset + ADC_O_REP1CTL) = (HWREG(regOffset + ADC_O_REP1CTL) & ~((uint32_t)REPCTL_MASK)) | (((uint32_t)config->repTrigger << ADC_REP1CTL_TRIGGER_S) | ((uint32_t)config->repSyncin << ADC_REP1CTL_SYNCINSEL_S)); // // Configure repeater count. // HWREG(regOffset + ADC_O_REP1N) = (HWREG(regOffset + ADC_O_REP1N) & ~(ADC_REP1N_NSEL_M)) | config->repCount; // // Configure repeater spread. // HWREG(regOffset + ADC_O_REP1SPREAD) = (HWREG(regOffset + ADC_O_REP1SPREAD) & ~(ADC_REP1SPREAD_SPREAD_M)) | config->repSpread; EDIS; }",
+      "registersUsed": [
+        "REP1CTL",
+        "REP1N",
+        "REP1SPREAD"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCREP1CTL",
+        "ADCREP1N",
+        "ADCREP1SPREAD"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == ADCA_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == ADCA_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setPrescaler",
+      "functionArgs": [
+        "base",
+        "clkPrescale"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_ClkPrescale"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Set the configuration of the ADC module prescaler.\n    //\n    EALLOW;\n    HWREG(base + ADC_O_CTL2) = (HWREG(base + ADC_O_CTL2) &\n                                 ~ADC_CTL2_PRESCALE_M) | (uint32_t)clkPrescale;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Set the configuration of the ADC module prescaler. // EALLOW; HWREG(base + ADC_O_CTL2) = (HWREG(base + ADC_O_CTL2) & ~ADC_CTL2_PRESCALE_M) | (uint32_t)clkPrescale; EDIS; }",
+      "registersUsed": [
+        "CTL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCCTL2"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setupSOC",
+      "functionArgs": [
+        "base",
+        "socNumber",
+        "trigger",
+        "channel",
+        "sampleWindow"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_SOCNumber",
+        "ADC_Trigger",
+        "ADC_Channel",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t ctlRegAddr, mask;\n    uint32_t ACQPS;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    mask = (ADC_SOC0CTL_CHSEL_M | ADC_SOC0CTL_TRIGSEL_M | ADC_SOC0CTL_ACQPS_M);\n\n    if (sampleWindow > 448UL){\n        ACQPS = (3UL << 6UL) | (((sampleWindow - 448UL) >> 4UL) - 1UL);\n    }\n    else if (sampleWindow > 192UL){\n        ACQPS = (2UL << 6UL) | (((sampleWindow - 192UL) >> 2UL) - 1UL);\n\n    }\n    else if (sampleWindow > 64UL){\n        ACQPS = (1UL << 6UL) | (((sampleWindow - 64UL) >> 1UL) - 1UL);\n\n    }\n    else{\n        ACQPS = sampleWindow - 1UL;\n    }\n    //\n    // Calculate address for the SOC control register.\n    //\n    ctlRegAddr = base + ADC_SOCxCTL_OFFSET_BASE + ((uint32_t)socNumber * 2U);\n\n    //\n    // Set the configuration of the specified SOC.\n    //\n    EALLOW;\n\n    HWREG(ctlRegAddr) = (HWREG(ctlRegAddr) & ~(mask)) |\n                        ((uint32_t)channel << ADC_SOC0CTL_CHSEL_S) |\n                        ((uint32_t)trigger << ADC_SOC0CTL_TRIGSEL_S) |\n                        ACQPS;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ctlRegAddr, mask; uint32_t ACQPS; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); mask = (ADC_SOC0CTL_CHSEL_M | ADC_SOC0CTL_TRIGSEL_M | ADC_SOC0CTL_ACQPS_M); if (sampleWindow > 448UL){ ACQPS = (3UL << 6UL) | (((sampleWindow - 448UL) >> 4UL) - 1UL); } else if (sampleWindow > 192UL){ ACQPS = (2UL << 6UL) | (((sampleWindow - 192UL) >> 2UL) - 1UL); } else if (sampleWindow > 64UL){ ACQPS = (1UL << 6UL) | (((sampleWindow - 64UL) >> 1UL) - 1UL); } else{ ACQPS = sampleWindow - 1UL; } // // Calculate address for the SOC control register. // ctlRegAddr = base + ADC_SOCxCTL_OFFSET_BASE + ((uint32_t)socNumber * 2U); // // Set the configuration of the specified SOC. // EALLOW; HWREG(ctlRegAddr) = (HWREG(ctlRegAddr) & ~(mask)) | ((uint32_t)channel << ADC_SOC0CTL_CHSEL_S) | ((uint32_t)trigger << ADC_SOC0CTL_TRIGSEL_S) | ACQPS; EDIS; }",
+      "registersUsed": [
+        "SOC0CTL",
+        "SOC1CTL",
+        "SOC2CTL",
+        "SOC3CTL",
+        "SOC4CTL",
+        "SOC5CTL",
+        "SOC6CTL",
+        "SOC7CTL",
+        "SOC8CTL",
+        "SOC9CTL",
+        "SOC10CTL",
+        "SOC11CTL",
+        "SOC12CTL",
+        "SOC13CTL",
+        "SOC14CTL",
+        "SOC15CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCSOC0CTL",
+        "ADCSOC1CTL",
+        "ADCSOC2CTL",
+        "ADCSOC3CTL",
+        "ADCSOC4CTL",
+        "ADCSOC5CTL",
+        "ADCSOC6CTL",
+        "ADCSOC7CTL",
+        "ADCSOC8CTL",
+        "ADCSOC9CTL",
+        "ADCSOC10CTL",
+        "ADCSOC11CTL",
+        "ADCSOC12CTL",
+        "ADCSOC13CTL",
+        "ADCSOC14CTL",
+        "ADCSOC15CTL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_enableSampleCAPReset",
+      "functionArgs": [
+        "base",
+        "socNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_SOCNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t ctlRegAddr;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Calculate address for the SOC control register.\n    //\n    ctlRegAddr = base + ADC_SOCxCTL_OFFSET_BASE + ((uint32_t)socNumber * 2UL);\n\n    //\n    // Enable the sample capacitor reset after each conversion.\n    //\n    EALLOW;\n    HWREG(ctlRegAddr) &= ~((uint32_t)ADC_SOC0CTL_SAMPCAPRESETDISABLE);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ctlRegAddr; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Calculate address for the SOC control register. // ctlRegAddr = base + ADC_SOCxCTL_OFFSET_BASE + ((uint32_t)socNumber * 2UL); // // Enable the sample capacitor reset after each conversion. // EALLOW; HWREG(ctlRegAddr) &= ~((uint32_t)ADC_SOC0CTL_SAMPCAPRESETDISABLE); EDIS; }",
+      "registersUsed": [
+        "SOC0CTL",
+        "SOC1CTL",
+        "SOC2CTL",
+        "SOC3CTL",
+        "SOC4CTL",
+        "SOC5CTL",
+        "SOC6CTL",
+        "SOC7CTL",
+        "SOC8CTL",
+        "SOC9CTL",
+        "SOC10CTL",
+        "SOC11CTL",
+        "SOC12CTL",
+        "SOC13CTL",
+        "SOC14CTL",
+        "SOC15CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCSOC0CTL",
+        "ADCSOC1CTL",
+        "ADCSOC2CTL",
+        "ADCSOC3CTL",
+        "ADCSOC4CTL",
+        "ADCSOC5CTL",
+        "ADCSOC6CTL",
+        "ADCSOC7CTL",
+        "ADCSOC8CTL",
+        "ADCSOC9CTL",
+        "ADCSOC10CTL",
+        "ADCSOC11CTL",
+        "ADCSOC12CTL",
+        "ADCSOC13CTL",
+        "ADCSOC14CTL",
+        "ADCSOC15CTL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_disableSampleCAPReset",
+      "functionArgs": [
+        "base",
+        "socNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_SOCNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t ctlRegAddr;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Calculate address for the SOC control register.\n    //\n    ctlRegAddr = base + ADC_SOCxCTL_OFFSET_BASE + ((uint32_t)socNumber * 2UL);\n\n    //\n    // Disable the sample capacitor reset after each conversion.\n    //\n    EALLOW;\n    HWREG(ctlRegAddr) |= ((uint32_t)ADC_SOC0CTL_SAMPCAPRESETDISABLE);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ctlRegAddr; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Calculate address for the SOC control register. // ctlRegAddr = base + ADC_SOCxCTL_OFFSET_BASE + ((uint32_t)socNumber * 2UL); // // Disable the sample capacitor reset after each conversion. // EALLOW; HWREG(ctlRegAddr) |= ((uint32_t)ADC_SOC0CTL_SAMPCAPRESETDISABLE); EDIS; }",
+      "registersUsed": [
+        "SOC0CTL",
+        "SOC1CTL",
+        "SOC2CTL",
+        "SOC3CTL",
+        "SOC4CTL",
+        "SOC5CTL",
+        "SOC6CTL",
+        "SOC7CTL",
+        "SOC8CTL",
+        "SOC9CTL",
+        "SOC10CTL",
+        "SOC11CTL",
+        "SOC12CTL",
+        "SOC13CTL",
+        "SOC14CTL",
+        "SOC15CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCSOC0CTL",
+        "ADCSOC1CTL",
+        "ADCSOC2CTL",
+        "ADCSOC3CTL",
+        "ADCSOC4CTL",
+        "ADCSOC5CTL",
+        "ADCSOC6CTL",
+        "ADCSOC7CTL",
+        "ADCSOC8CTL",
+        "ADCSOC9CTL",
+        "ADCSOC10CTL",
+        "ADCSOC11CTL",
+        "ADCSOC12CTL",
+        "ADCSOC13CTL",
+        "ADCSOC14CTL",
+        "ADCSOC15CTL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_selectSampleCAPResetValue",
+      "functionArgs": [
+        "base",
+        "socNumber",
+        "capResetVal"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_SOCNumber",
+        "ADC_SampleCAPResetValue"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t ctlRegAddr;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Calculate address for the SOC control register.\n    //\n    ctlRegAddr = base + ADC_SOCxCTL_OFFSET_BASE + ((uint32_t)socNumber * 2U);\n\n    //\n    // Set the sample capacitor to reset to VREFLO.\n    //\n    EALLOW;\n    HWREG(ctlRegAddr) = (HWREG(ctlRegAddr) &\n                        ~(ADC_SOC0CTL_SAMPCAPRESETSEL)) | (uint32_t)capResetVal;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ctlRegAddr; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Calculate address for the SOC control register. // ctlRegAddr = base + ADC_SOCxCTL_OFFSET_BASE + ((uint32_t)socNumber * 2U); // // Set the sample capacitor to reset to VREFLO. // EALLOW; HWREG(ctlRegAddr) = (HWREG(ctlRegAddr) & ~(ADC_SOC0CTL_SAMPCAPRESETSEL)) | (uint32_t)capResetVal; EDIS; }",
+      "registersUsed": [
+        "SOC0CTL",
+        "SOC1CTL",
+        "SOC2CTL",
+        "SOC3CTL",
+        "SOC4CTL",
+        "SOC5CTL",
+        "SOC6CTL",
+        "SOC7CTL",
+        "SOC8CTL",
+        "SOC9CTL",
+        "SOC10CTL",
+        "SOC11CTL",
+        "SOC12CTL",
+        "SOC13CTL",
+        "SOC14CTL",
+        "SOC15CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCSOC0CTL",
+        "ADCSOC1CTL",
+        "ADCSOC2CTL",
+        "ADCSOC3CTL",
+        "ADCSOC4CTL",
+        "ADCSOC5CTL",
+        "ADCSOC6CTL",
+        "ADCSOC7CTL",
+        "ADCSOC8CTL",
+        "ADCSOC9CTL",
+        "ADCSOC10CTL",
+        "ADCSOC11CTL",
+        "ADCSOC12CTL",
+        "ADCSOC13CTL",
+        "ADCSOC14CTL",
+        "ADCSOC15CTL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_forceRepeaterTrigger",
+      "functionArgs": [
+        "base",
+        "repInstance"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n  uint32_t regOffset;\n  //\n  // Check the arguments.\n  //\n  ASSERT(ADC_isBaseValid(base));\n\n  regOffset = base + repInstance;\n  EALLOW;\n  //\n  // Triggers the selected repeater instance\n  //\n  HWREG(regOffset + ADC_O_REP1FRC) |= ADC_REP1FRC_SWFRC;\n  EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); regOffset = base + repInstance; EALLOW; // // Triggers the selected repeater instance // HWREG(regOffset + ADC_O_REP1FRC) |= ADC_REP1FRC_SWFRC; EDIS; }",
+      "registersUsed": [
+        "REP1FRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCREP1FRC"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_getRepeaterStatus",
+      "functionArgs": [
+        "base",
+        "repInstance"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Return the status of repeater.\n    //\n    return(HWREG(base + ADC_O_REP1CTL) & ADC_REPSTATUS_MASK);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Return the status of repeater. // return(HWREG(base + ADC_O_REP1CTL) & ADC_REPSTATUS_MASK); }",
+      "registersUsed": [
+        "REP1CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCREP1CTL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setInterruptSOCTrigger",
+      "functionArgs": [
+        "base",
+        "socNumber",
+        "trigger"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_SOCNumber",
+        "ADC_IntSOCTrigger"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t shiftVal;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Each SOC has a 2-bit field in this register.\n    //\n    shiftVal = (uint16_t)socNumber << 1U;\n\n    //\n    // Set the configuration of the specified SOC. Not that we're treating\n    // ADCINTSOCSEL1 and ADCINTSOCSEL2 as one 32-bit register here.\n    //\n    EALLOW;\n    HWREG(base + ADC_O_INTSOCSEL1) = (HWREG(base + ADC_O_INTSOCSEL1) &\n                                      ~((uint32_t)ADC_INTSOCSEL1_SOC0_M <<\n                                        shiftVal)) |\n                                     ((uint32_t)trigger << shiftVal);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t shiftVal; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Each SOC has a 2-bit field in this register. // shiftVal = (uint16_t)socNumber << 1U; // // Set the configuration of the specified SOC. Not that we're treating // ADCINTSOCSEL1 and ADCINTSOCSEL2 as one 32-bit register here. // EALLOW; HWREG(base + ADC_O_INTSOCSEL1) = (HWREG(base + ADC_O_INTSOCSEL1) & ~((uint32_t)ADC_INTSOCSEL1_SOC0_M << shiftVal)) | ((uint32_t)trigger << shiftVal); EDIS; }",
+      "registersUsed": [
+        "INTSOCSEL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCINTSOCSEL1"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setInterruptPulseMode",
+      "functionArgs": [
+        "base",
+        "pulseMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PulseMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Set the position of the pulse.\n    //\n    EALLOW;\n    HWREG(base + ADC_O_CTL1) = (HWREG(base + ADC_O_CTL1) &\n                                ~ADC_CTL1_INTPULSEPOS) | (uint16_t)pulseMode;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Set the position of the pulse. // EALLOW; HWREG(base + ADC_O_CTL1) = (HWREG(base + ADC_O_CTL1) & ~ADC_CTL1_INTPULSEPOS) | (uint16_t)pulseMode; EDIS; }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCCTL1"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setInterruptCycleOffset",
+      "functionArgs": [
+        "base",
+        "cycleOffset"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Set the position of the pulse.\n    //\n    EALLOW;\n    HWREG(base + ADC_O_INTCYCLE) = cycleOffset;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Set the position of the pulse. // EALLOW; HWREG(base + ADC_O_INTCYCLE) = cycleOffset; EDIS; }",
+      "registersUsed": [
+        "INTCYCLE"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCINTCYCLE"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_getIntResultStatus",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the specified ADC interrupt result ready status.\n    //\n    return((HWREG(base + ADC_O_INTFLG) &\n                 (1UL << ((uint32_t)adcIntNum + 8UL))) != 0UL);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the specified ADC interrupt result ready status. // return((HWREG(base + ADC_O_INTFLG) & (1UL << ((uint32_t)adcIntNum + 8UL))) != 0UL); }",
+      "registersUsed": [
+        "INTFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCINTFLG"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_enableConverter",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Set the bit that powers up the analog circuitry.\n    //\n    EALLOW;\n    HWREG(base + ADC_O_CTL1) |= ADC_CTL1_ADCPWDNZ;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Set the bit that powers up the analog circuitry. // EALLOW; HWREG(base + ADC_O_CTL1) |= ADC_CTL1_ADCPWDNZ; EDIS; }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCCTL1"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_disableConverter",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Clear the bit that powers down the analog circuitry.\n    //\n    EALLOW;\n    HWREG(base + ADC_O_CTL1) &= ~ADC_CTL1_ADCPWDNZ;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Clear the bit that powers down the analog circuitry. // EALLOW; HWREG(base + ADC_O_CTL1) &= ~ADC_CTL1_ADCPWDNZ; EDIS; }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCCTL1"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_forceSOC",
+      "functionArgs": [
+        "base",
+        "socNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_SOCNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Write to the register that will force a 1 to the corresponding SOC flag\n    //\n    HWREG(base + ADC_O_SOCFRC1) = (1UL << (uint32_t)socNumber);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Write to the register that will force a 1 to the corresponding SOC flag // HWREG(base + ADC_O_SOCFRC1) = (1UL << (uint32_t)socNumber); }",
+      "registersUsed": [
+        "SOCFRC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCSOCFRC1"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_forceMultipleSOC",
+      "functionArgs": [
+        "base",
+        "socMask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Write to the register that will force a 1 to desired SOCs\n    //\n    HWREG(base + ADC_O_SOCFRC1) = socMask;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Write to the register that will force a 1 to desired SOCs // HWREG(base + ADC_O_SOCFRC1) = socMask; }",
+      "registersUsed": [
+        "SOCFRC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCSOCFRC1"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_getDMARAWIntStatus",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the specified Raw DMA interrupt status.\n    //\n    return((HWREG(base + ADC_O_RAWINTFLG) &\n                 (1UL << ((uint32_t)adcIntNum + 16UL))) != 0UL);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the specified Raw DMA interrupt status. // return((HWREG(base + ADC_O_RAWINTFLG) & (1UL << ((uint32_t)adcIntNum + 16UL))) != 0UL); }",
+      "registersUsed": [
+        "RAWINTFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCRAWINTFLG"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_getRAWInterruptStatus",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the specified raw ADC interrupt status.\n    //\n    return((HWREG(base + ADC_O_RAWINTFLG) &\n                                        (1UL << (uint32_t)adcIntNum)) != 0UL);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the specified raw ADC interrupt status. // return((HWREG(base + ADC_O_RAWINTFLG) & (1UL << (uint32_t)adcIntNum)) != 0UL); }",
+      "registersUsed": [
+        "RAWINTFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCRAWINTFLG"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_getDMAInterruptStatus",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    //\n    // Get the specified ADC DMA interrupt status.\n    //\n    return((HWREG(base + ADC_O_INTFLG) &\n                 (1UL << ((uint32_t)adcIntNum + 16UL))) != 0UL);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the specified ADC DMA interrupt status. // return((HWREG(base + ADC_O_INTFLG) & (1UL << ((uint32_t)adcIntNum + 16UL))) != 0UL); }",
+      "registersUsed": [
+        "INTFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCINTFLG"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_clearDMAInterruptStatus",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Clear the specified DMA interrupt.\n    //\n    HWREG(base + ADC_O_INTFLGCLR) =\n                    (uint32_t)ADC_INTFLGCLR_ADCDMAINT1 << (uint32_t)adcIntNum;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Clear the specified DMA interrupt. // HWREG(base + ADC_O_INTFLGCLR) = (uint32_t)ADC_INTFLGCLR_ADCDMAINT1 << (uint32_t)adcIntNum; }",
+      "registersUsed": [
+        "INTFLG",
+        "INTFLGCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCINTFLG",
+        "ADCINTFLGCLR"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_getDMAInterruptOverflowStatus",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the specified ADC DMA interrupt overflow status.\n    //\n    return((HWREG(base + ADC_O_INTOVF) &\n                (1UL << (uint32_t)adcIntNum + 16UL)) != 0UL);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the specified ADC DMA interrupt overflow status. // return((HWREG(base + ADC_O_INTOVF) & (1UL << (uint32_t)adcIntNum + 16UL)) != 0UL); }",
+      "registersUsed": [
+        "INTOVF"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCINTOVF"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_clearDMAInterruptOverflowStatus",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Clear the specified DMA interrupt overflow bit.\n    //\n    HWREG(base + ADC_O_INTOVFCLR) =\n                (uint32_t)ADC_INTOVFCLR_ADCDMAINT1OVF << (uint32_t)adcIntNum;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Clear the specified DMA interrupt overflow bit. // HWREG(base + ADC_O_INTOVFCLR) = (uint32_t)ADC_INTOVFCLR_ADCDMAINT1OVF << (uint32_t)adcIntNum; }",
+      "registersUsed": [
+        "INTOVF",
+        "INTOVFCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCINTOVF",
+        "ADCINTOVFCLR"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_getInterruptStatus",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    //\n    // Get the specified ADC interrupt status.\n    //\n    return((HWREG(base + ADC_O_INTFLG) & (1UL << (uint32_t)adcIntNum)) != 0UL);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the specified ADC interrupt status. // return((HWREG(base + ADC_O_INTFLG) & (1UL << (uint32_t)adcIntNum)) != 0UL); }",
+      "registersUsed": [
+        "INTFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCINTFLG"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_clearInterruptStatus",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Clear the specified interrupt.\n    //\n    HWREG(base + ADC_O_INTFLGCLR) = 1UL << (uint32_t)adcIntNum;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Clear the specified interrupt. // HWREG(base + ADC_O_INTFLGCLR) = 1UL << (uint32_t)adcIntNum; }",
+      "registersUsed": [
+        "INTFLG",
+        "INTFLGCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCINTFLG",
+        "ADCINTFLGCLR"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_getInterruptOverflowStatus",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the specified ADC interrupt status.\n    //\n    return((HWREG(base + ADC_O_INTOVF) & (1UL << (uint32_t)adcIntNum)) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the specified ADC interrupt status. // return((HWREG(base + ADC_O_INTOVF) & (1UL << (uint32_t)adcIntNum)) != 0U); }",
+      "registersUsed": [
+        "INTOVF"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCINTOVF"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_clearInterruptOverflowStatus",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Clear the specified interrupt overflow bit.\n    //\n    HWREG(base + ADC_O_INTOVFCLR) = 1UL << (uint32_t)adcIntNum;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Clear the specified interrupt overflow bit. // HWREG(base + ADC_O_INTOVFCLR) = 1UL << (uint32_t)adcIntNum; }",
+      "registersUsed": [
+        "INTOVF",
+        "INTOVFCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCINTOVF",
+        "ADCINTOVFCLR"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_readResult",
+      "functionArgs": [
+        "resultBase",
+        "socNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_SOCNumber"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(\n           (resultBase == ADCARESULT_BASE)\n          );\n    //\n    // Return the ADC result for the selected SOC.\n    //\n    return(HWREGH(resultBase + (uint32_t)ADC_RESULTx_OFFSET_BASE +\n                  (uint32_t)socNumber));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT( (resultBase == ADCARESULT_BASE) ); // // Return the ADC result for the selected SOC. // return(HWREGH(resultBase + (uint32_t)ADC_RESULTx_OFFSET_BASE + (uint32_t)socNumber)); }",
+      "registersUsed": [
+        "RESULT0",
+        "RESULT1",
+        "RESULT2",
+        "RESULT3",
+        "RESULT4",
+        "RESULT5",
+        "RESULT6",
+        "RESULT7",
+        "RESULT8",
+        "RESULT9",
+        "RESULT10",
+        "RESULT11",
+        "RESULT12",
+        "RESULT13",
+        "RESULT14",
+        "RESULT15"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCRESULT0",
+        "ADCRESULT1",
+        "ADCRESULT2",
+        "ADCRESULT3",
+        "ADCRESULT4",
+        "ADCRESULT5",
+        "ADCRESULT6",
+        "ADCRESULT7",
+        "ADCRESULT8",
+        "ADCRESULT9",
+        "ADCRESULT10",
+        "ADCRESULT11",
+        "ADCRESULT12",
+        "ADCRESULT13",
+        "ADCRESULT14",
+        "ADCRESULT15"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_isBusy",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Determine if the ADC is busy.\n    //\n    return((HWREG(base + ADC_O_CTL1) & ADC_CTL1_ADCBSY) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Determine if the ADC is busy. // return((HWREG(base + ADC_O_CTL1) & ADC_CTL1_ADCBSY) != 0U); }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCCTL1"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setSOCPriority",
+      "functionArgs": [
+        "base",
+        "priMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PriorityMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    EALLOW;\n\n    HWREG(base + ADC_O_SOCPRICTL) = (HWREG(base + ADC_O_SOCPRICTL) &\n                                      ~ADC_SOCPRICTL_SOCPRIORITY_M) |\n                                     (uint32_t)priMode;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); EALLOW; HWREG(base + ADC_O_SOCPRICTL) = (HWREG(base + ADC_O_SOCPRICTL) & ~ADC_SOCPRICTL_SOCPRIORITY_M) | (uint32_t)priMode; EDIS; }",
+      "registersUsed": [
+        "SOCPRICTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCSOCPRICTL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_configOSDetectMode",
+      "functionArgs": [
+        "base",
+        "modeVal"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_OSDetectMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(base == ANALOGSUBSYS_BASE);\n\n    //\n    // Configure open/shorts detection circuit mode.\n    //\n    EALLOW;\n    HWREGH(base + ASYSCTL_O_ADCOSDETECT) =\n                        ((HWREGH(base + ASYSCTL_O_ADCOSDETECT) &\n                        (~ASYSCTL_ADCOSDETECT_DETECTCFG_M)) |\n                        ((uint16_t)modeVal << ASYSCTL_ADCOSDETECT_DETECTCFG_S));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(base == ANALOGSUBSYS_BASE); // // Configure open/shorts detection circuit mode. // EALLOW; HWREGH(base + ASYSCTL_O_ADCOSDETECT) = ((HWREGH(base + ASYSCTL_O_ADCOSDETECT) & (~ASYSCTL_ADCOSDETECT_DETECTCFG_M)) | ((uint16_t)modeVal << ASYSCTL_ADCOSDETECT_DETECTCFG_S)); EDIS; }",
+      "registersUsed": [
+        "ADCOSDETECT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCOSDETECT"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_enableOSDetectMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(base == ANALOGSUBSYS_BASE);\n\n    //\n    // Enable open/shorts detection circuit.\n    //\n\n    EALLOW;\n    HWREGH(base + ASYSCTL_O_ADCOSDETECT) |= ASYSCTL_ADCOSDETECT_OSDETECT_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(base == ANALOGSUBSYS_BASE); // // Enable open/shorts detection circuit. // EALLOW; HWREGH(base + ASYSCTL_O_ADCOSDETECT) |= ASYSCTL_ADCOSDETECT_OSDETECT_EN; EDIS; }",
+      "registersUsed": [
+        "ADCOSDETECT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCOSDETECT"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_disableOSDetectMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(base == ANALOGSUBSYS_BASE);\n\n    //\n    // Disable open/shorts detection circuit.\n    //\n\n    EALLOW;\n    HWREGH(base + ASYSCTL_O_ADCOSDETECT) &= ~ASYSCTL_ADCOSDETECT_OSDETECT_EN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(base == ANALOGSUBSYS_BASE); // // Disable open/shorts detection circuit. // EALLOW; HWREGH(base + ASYSCTL_O_ADCOSDETECT) &= ~ASYSCTL_ADCOSDETECT_OSDETECT_EN; EDIS; }",
+      "registersUsed": [
+        "ADCOSDETECT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCOSDETECT"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setupPPB",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "socNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "ADC_SOCNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t ppbOffset;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the offset to the appropriate PPB configuration register.\n    //\n    ppbOffset = (ADC_PPBxCONFIG_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1CONFIG;\n\n    //\n    // Write the configuration to the register.\n    //\n    EALLOW;\n    HWREG(base + ppbOffset) = (HWREG(base + ppbOffset) &\n                                ~ADC_PPB1CONFIG_CONFIG_M) |\n                               ((uint32_t)socNumber & ADC_PPB1CONFIG_CONFIG_M);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ppbOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the offset to the appropriate PPB configuration register. // ppbOffset = (ADC_PPBxCONFIG_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1CONFIG; // // Write the configuration to the register. // EALLOW; HWREG(base + ppbOffset) = (HWREG(base + ppbOffset) & ~ADC_PPB1CONFIG_CONFIG_M) | ((uint32_t)socNumber & ADC_PPB1CONFIG_CONFIG_M); EDIS; }",
+      "registersUsed": [
+        "PPB1CONFIG",
+        "PPB2CONFIG",
+        "PPB3CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1CONFIG",
+        "ADCPPB2CONFIG",
+        "ADCPPB3CONFIG"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_enablePPBEvent",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "evtFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT((evtFlags & ~0xFU) == 0U);\n\n    //\n    // Enable the specified event.\n    //\n    EALLOW;\n    HWREG(base + ADC_O_EVTSEL) |= evtFlags << ((uint32_t)ppbNumber * 4UL);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT((evtFlags & ~0xFU) == 0U); // // Enable the specified event. // EALLOW; HWREG(base + ADC_O_EVTSEL) |= evtFlags << ((uint32_t)ppbNumber * 4UL); EDIS; }",
+      "registersUsed": [
+        "EVTSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCEVTSEL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_disablePPBEvent",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "evtFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT((evtFlags & ~0xFU) == 0U);\n\n    //\n    // Disable the specified event.\n    //\n    EALLOW;\n    HWREG(base + ADC_O_EVTSEL) &= ~(evtFlags << ((uint32_t)ppbNumber * 4UL));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT((evtFlags & ~0xFU) == 0U); // // Disable the specified event. // EALLOW; HWREG(base + ADC_O_EVTSEL) &= ~(evtFlags << ((uint32_t)ppbNumber * 4UL)); EDIS; }",
+      "registersUsed": [
+        "EVTSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCEVTSEL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_enablePPBEventInterrupt",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT((intFlags & ~0xFU) == 0U);\n\n    //\n    // Enable the specified event interrupts.\n    //\n    EALLOW;\n    HWREG(base + ADC_O_EVTINTSEL) |= intFlags << ((uint32_t)ppbNumber * 4UL);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT((intFlags & ~0xFU) == 0U); // // Enable the specified event interrupts. // EALLOW; HWREG(base + ADC_O_EVTINTSEL) |= intFlags << ((uint32_t)ppbNumber * 4UL); EDIS; }",
+      "registersUsed": [
+        "EVTINTSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCEVTINTSEL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_disablePPBEventInterrupt",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT((intFlags & ~0xFU) == 0U);\n\n    //\n    // Disable the specified event interrupts.\n    //\n    EALLOW;\n    HWREG(base + ADC_O_EVTINTSEL) &= ~(intFlags <<\n                                        ((uint32_t)ppbNumber * 4UL));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT((intFlags & ~0xFU) == 0U); // // Disable the specified event interrupts. // EALLOW; HWREG(base + ADC_O_EVTINTSEL) &= ~(intFlags << ((uint32_t)ppbNumber * 4UL)); EDIS; }",
+      "registersUsed": [
+        "EVTINTSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCEVTINTSEL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_getPPBEventStatus",
+      "functionArgs": [
+        "base",
+        "ppbNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the event status for the specified post-processing block.\n    //\n    return((HWREG(base + ADC_O_EVTSTAT) >> ((uint32_t)ppbNumber * 4U)) &\n           0xFU);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the event status for the specified post-processing block. // return((HWREG(base + ADC_O_EVTSTAT) >> ((uint32_t)ppbNumber * 4U)) & 0xFU); }",
+      "registersUsed": [
+        "EVTSTAT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCEVTSTAT"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_clearPPBEventStatus",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "evtFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT((evtFlags & ~0xFU) == 0U);\n\n    //\n    // Clear the specified event interrupts.\n    //\n    HWREG(base + ADC_O_EVTCLR) |= evtFlags << ((uint32_t)ppbNumber * 4UL);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT((evtFlags & ~0xFU) == 0U); // // Clear the specified event interrupts. // HWREG(base + ADC_O_EVTCLR) |= evtFlags << ((uint32_t)ppbNumber * 4UL); }",
+      "registersUsed": [
+        "EVTCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCEVTCLR"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_enablePPBEventCBCClear",
+      "functionArgs": [
+        "base",
+        "ppbNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t ppbOffset;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the offset to the appropriate PPB configuration register.\n    //\n    ppbOffset = (ADC_PPBxCONFIG_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1CONFIG;\n\n    //\n    // Set automatic cycle-by-cycle flag clear bit\n    //\n    EALLOW;\n    HWREG(base + ppbOffset)  |= ADC_PPB1CONFIG_CBCEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ppbOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the offset to the appropriate PPB configuration register. // ppbOffset = (ADC_PPBxCONFIG_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1CONFIG; // // Set automatic cycle-by-cycle flag clear bit // EALLOW; HWREG(base + ppbOffset) |= ADC_PPB1CONFIG_CBCEN; EDIS; }",
+      "registersUsed": [
+        "PPB1CONFIG",
+        "PPB2CONFIG",
+        "PPB3CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1CONFIG",
+        "ADCPPB2CONFIG",
+        "ADCPPB3CONFIG"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_disablePPBEventCBCClear",
+      "functionArgs": [
+        "base",
+        "ppbNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t ppbOffset;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the offset to the appropriate PPB configuration register.\n    //\n    ppbOffset = (ADC_PPBxCONFIG_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1CONFIG;\n\n    //\n    // Clear automatic cycle-by-cycle flag clear bit\n    //\n    EALLOW;\n    HWREG(base + ppbOffset)  &= ~ADC_PPB1CONFIG_CBCEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ppbOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the offset to the appropriate PPB configuration register. // ppbOffset = (ADC_PPBxCONFIG_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1CONFIG; // // Clear automatic cycle-by-cycle flag clear bit // EALLOW; HWREG(base + ppbOffset) &= ~ADC_PPB1CONFIG_CBCEN; EDIS; }",
+      "registersUsed": [
+        "PPB1CONFIG",
+        "PPB2CONFIG",
+        "PPB3CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1CONFIG",
+        "ADCPPB2CONFIG",
+        "ADCPPB3CONFIG"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setPPBCountLimit",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "limit"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT(limit <= ADC_PPB1LIMIT_LIMIT_M);\n\n    //\n    // Get the offset to the appropriate PPB configuration register.\n    //\n    EALLOW;\n    HWREG(base + ADC_O_PPB1LIMIT) =\n                (HWREG(base + ADC_O_PPB1LIMIT) & ~(ADC_PPB1LIMIT_LIMIT_M)) |\n                (limit << ADC_PPB1LIMIT_LIMIT_S);\n    EDIS;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT(limit <= ADC_PPB1LIMIT_LIMIT_M); // // Get the offset to the appropriate PPB configuration register. // EALLOW; HWREG(base + ADC_O_PPB1LIMIT) = (HWREG(base + ADC_O_PPB1LIMIT) & ~(ADC_PPB1LIMIT_LIMIT_M)) | (limit << ADC_PPB1LIMIT_LIMIT_S); EDIS; }",
+      "registersUsed": [
+        "PPB1LIMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1LIMIT"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_getPPBCountLimit",
+      "functionArgs": [
+        "base",
+        "ppbNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    uint32_t limit;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the offset to the appropriate PPB configuration register.\n    //\n\n    limit = (HWREG(base + ADC_O_PPB1LIMIT) & ~(ADC_PPB1LIMIT_LIMIT_M)) >>\n            ADC_PPB1LIMIT_LIMIT_S;\n    return(limit);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t limit; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the offset to the appropriate PPB configuration register. // limit = (HWREG(base + ADC_O_PPB1LIMIT) & ~(ADC_PPB1LIMIT_LIMIT_M)) >> ADC_PPB1LIMIT_LIMIT_S; return(limit); }",
+      "registersUsed": [
+        "PPB1LIMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1LIMIT"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_readPPBPCount",
+      "functionArgs": [
+        "base",
+        "ppbNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Returns the partial count of the selected PPB.\n    //\n    return((uint32_t)HWREG(base + (uint32_t)ADC_PPBxPCOUNT_OFFSET_BASE +\n            ((uint32_t)ppbNumber * 26UL)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Returns the partial count of the selected PPB. // return((uint32_t)HWREG(base + (uint32_t)ADC_PPBxPCOUNT_OFFSET_BASE + ((uint32_t)ppbNumber * 26UL))); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_readPPBPSum",
+      "functionArgs": [
+        "base",
+        "ppbNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber"
+      ],
+      "returnType": "static inline int32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Returns the partial sum result of selected PPB.\n    //\n    return((int32_t)HWREG(base + (uint32_t)ADC_PPBxPSUM_OFFSET_BASE +\n           ((uint32_t)ppbNumber * 26UL)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Returns the partial sum result of selected PPB. // return((int32_t)HWREG(base + (uint32_t)ADC_PPBxPSUM_OFFSET_BASE + ((uint32_t)ppbNumber * 26UL))); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setPPBShiftValue",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "shiftVal"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT(shiftVal <= 7U);\n\n    //\n    // Get the offset to the appropriate PPB configuration register.\n    //\n    //\n    // Configure shift value for the PPB.\n    //\n    HWREG(base + ADC_O_PPB1CONFIG2) =\n                (HWREG(base + ADC_O_PPB1CONFIG2) & ~(ADC_PPB1CONFIG2_SHIFT_M)) |\n                (shiftVal << ADC_PPB1CONFIG2_SHIFT_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT(shiftVal <= 7U); // // Get the offset to the appropriate PPB configuration register. // // // Configure shift value for the PPB. // HWREG(base + ADC_O_PPB1CONFIG2) = (HWREG(base + ADC_O_PPB1CONFIG2) & ~(ADC_PPB1CONFIG2_SHIFT_M)) | (shiftVal << ADC_PPB1CONFIG2_SHIFT_S); }",
+      "registersUsed": [
+        "PPB1CONFIG",
+        "PPB2CONFIG",
+        "PPB3CONFIG",
+        "PPB1CONFIG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1CONFIG",
+        "ADCPPB2CONFIG",
+        "ADCPPB3CONFIG",
+        "ADCPPB1CONFIG2"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_selectPPBSyncInput",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "syncInput"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT(syncInput <= 7U);\n\n    HWREG(base + ADC_O_PPB1CONFIG2) =\n            (HWREG(base + ADC_O_PPB1CONFIG2) & ~(ADC_PPB1CONFIG2_SYNCINSEL_M)) |\n            (syncInput << ADC_PPB1CONFIG2_SYNCINSEL_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT(syncInput <= 7U); HWREG(base + ADC_O_PPB1CONFIG2) = (HWREG(base + ADC_O_PPB1CONFIG2) & ~(ADC_PPB1CONFIG2_SYNCINSEL_M)) | (syncInput << ADC_PPB1CONFIG2_SYNCINSEL_S); }",
+      "registersUsed": [
+        "PPB1CONFIG",
+        "PPB2CONFIG",
+        "PPB3CONFIG",
+        "PPB1CONFIG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1CONFIG",
+        "ADCPPB2CONFIG",
+        "ADCPPB3CONFIG",
+        "ADCPPB1CONFIG2"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_forcePPBSync",
+      "functionArgs": [
+        "base",
+        "ppbNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    HWREG(base + ADC_O_PPB1CONFIG2) |= ADC_PPB1CONFIG2_SWSYNC;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); HWREG(base + ADC_O_PPB1CONFIG2) |= ADC_PPB1CONFIG2_SWSYNC; }",
+      "registersUsed": [
+        "PPB1CONFIG",
+        "PPB2CONFIG",
+        "PPB3CONFIG",
+        "PPB1CONFIG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1CONFIG",
+        "ADCPPB2CONFIG",
+        "ADCPPB3CONFIG",
+        "ADCPPB1CONFIG2"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_selectPPBOSINTSource",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "osIntSrc"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT(osIntSrc <= 1U);\n\n    HWREG(base + ADC_O_PPB1CONFIG2) =\n               (HWREG(base + ADC_O_PPB1CONFIG2) & ~(ADC_PPB1CONFIG2_OSINTSEL)) |\n               (osIntSrc << 12UL);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT(osIntSrc <= 1U); HWREG(base + ADC_O_PPB1CONFIG2) = (HWREG(base + ADC_O_PPB1CONFIG2) & ~(ADC_PPB1CONFIG2_OSINTSEL)) | (osIntSrc << 12UL); }",
+      "registersUsed": [
+        "PPB1CONFIG",
+        "PPB2CONFIG",
+        "PPB3CONFIG",
+        "PPB1CONFIG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1CONFIG",
+        "ADCPPB2CONFIG",
+        "ADCPPB3CONFIG",
+        "ADCPPB1CONFIG2"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_selectPPBCompareSource",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "compSrc"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT(compSrc <= 1U);\n\n    HWREG(base + ADC_O_PPB1CONFIG2) =\n            (HWREG(base + ADC_O_PPB1CONFIG2) & ~(ADC_PPB1CONFIG2_COMPSEL)) |\n            (compSrc << 15UL);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT(compSrc <= 1U); HWREG(base + ADC_O_PPB1CONFIG2) = (HWREG(base + ADC_O_PPB1CONFIG2) & ~(ADC_PPB1CONFIG2_COMPSEL)) | (compSrc << 15UL); }",
+      "registersUsed": [
+        "PPB1CONFIG",
+        "PPB2CONFIG",
+        "PPB3CONFIG",
+        "PPB1CONFIG2"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1CONFIG",
+        "ADCPPB2CONFIG",
+        "ADCPPB3CONFIG",
+        "ADCPPB1CONFIG2"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_readPPBSum",
+      "functionArgs": [
+        "resultBase",
+        "ppbNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber"
+      ],
+      "returnType": "static inline int32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(\n           (resultBase == ADCARESULT_BASE)\n          );\n    //\n    // Return the result of selected PPB.\n    //\n    return((int32_t)HWREG(resultBase + (uint32_t)ADC_PPBxSUM_OFFSET_BASE +\n           ((uint32_t)ppbNumber * 4UL)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT( (resultBase == ADCARESULT_BASE) ); // // Return the result of selected PPB. // return((int32_t)HWREG(resultBase + (uint32_t)ADC_PPBxSUM_OFFSET_BASE + ((uint32_t)ppbNumber * 4UL))); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_readPPBCount",
+      "functionArgs": [
+        "resultBase",
+        "ppbNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(\n           (resultBase == ADCARESULT_BASE)\n          );\n    //\n    // Return the final count of selected PPB.\n    //\n    return((uint32_t)HWREG(resultBase + (uint32_t)ADC_PPBxCOUNT_OFFSET_BASE +\n           ((uint32_t)ppbNumber * 4UL)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT( (resultBase == ADCARESULT_BASE) ); // // Return the final count of selected PPB. // return((uint32_t)HWREG(resultBase + (uint32_t)ADC_PPBxCOUNT_OFFSET_BASE + ((uint32_t)ppbNumber * 4UL))); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_readPPBResult",
+      "functionArgs": [
+        "resultBase",
+        "ppbNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber"
+      ],
+      "returnType": "static inline int32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(\n           (resultBase == ADCARESULT_BASE)\n          );\n    //\n    // Return the result of selected PPB.\n    //\n    return((int32_t)HWREG(resultBase + (uint32_t)ADC_PPBxRESULT_OFFSET_BASE +\n           ((uint32_t)ppbNumber * 2UL)));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT( (resultBase == ADCARESULT_BASE) ); // // Return the result of selected PPB. // return((int32_t)HWREG(resultBase + (uint32_t)ADC_PPBxRESULT_OFFSET_BASE + ((uint32_t)ppbNumber * 2UL))); }",
+      "registersUsed": [
+        "PPB1RESULT",
+        "PPB2RESULT",
+        "PPB3RESULT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1RESULT",
+        "ADCPPB2RESULT",
+        "ADCPPB3RESULT"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setPPBCalibrationOffset",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "offset"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "int16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t ppbOffset;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the offset to the appropriate offset register.\n    //\n    ppbOffset = (ADC_PPBxOFFCAL_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1OFFCAL;\n\n    //\n    // Write the offset amount.\n    //\n    EALLOW;\n    HWREG(base + ppbOffset) = (HWREG(base + ppbOffset) &\n                                ~ADC_PPB1OFFCAL_OFFCAL_M) |\n                               ((uint32_t)offset & ADC_PPB1OFFCAL_OFFCAL_M);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ppbOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the offset to the appropriate offset register. // ppbOffset = (ADC_PPBxOFFCAL_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1OFFCAL; // // Write the offset amount. // EALLOW; HWREG(base + ppbOffset) = (HWREG(base + ppbOffset) & ~ADC_PPB1OFFCAL_OFFCAL_M) | ((uint32_t)offset & ADC_PPB1OFFCAL_OFFCAL_M); EDIS; }",
+      "registersUsed": [
+        "PPB1OFFCAL",
+        "PPB2OFFCAL",
+        "PPB3OFFCAL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1OFFCAL",
+        "ADCPPB2OFFCAL",
+        "ADCPPB3OFFCAL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setPPBReferenceOffset",
+      "functionArgs": [
+        "base",
+        "ppbNumber",
+        "offset"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t ppbOffset;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the offset to the appropriate offset register.\n    //\n    ppbOffset = (ADC_PPBxOFFREF_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1OFFREF;\n\n    //\n    // Write the offset amount.\n    //\n    HWREG(base + ppbOffset) = offset;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ppbOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the offset to the appropriate offset register. // ppbOffset = (ADC_PPBxOFFREF_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1OFFREF; // // Write the offset amount. // HWREG(base + ppbOffset) = offset; }",
+      "registersUsed": [
+        "PPB1OFFREF",
+        "PPB2OFFREF",
+        "PPB3OFFREF"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1OFFREF",
+        "ADCPPB2OFFREF",
+        "ADCPPB3OFFREF"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_enablePPBTwosComplement",
+      "functionArgs": [
+        "base",
+        "ppbNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t ppbOffset;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the offset to the appropriate PPB configuration register.\n    //\n    ppbOffset = (ADC_PPBxCONFIG_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1CONFIG;\n\n    //\n    // Enable PPB two's complement.\n    //\n    EALLOW;\n    HWREG(base + ppbOffset) |= ADC_PPB1CONFIG_TWOSCOMPEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ppbOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the offset to the appropriate PPB configuration register. // ppbOffset = (ADC_PPBxCONFIG_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1CONFIG; // // Enable PPB two's complement. // EALLOW; HWREG(base + ppbOffset) |= ADC_PPB1CONFIG_TWOSCOMPEN; EDIS; }",
+      "registersUsed": [
+        "PPB1CONFIG",
+        "PPB2CONFIG",
+        "PPB3CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1CONFIG",
+        "ADCPPB2CONFIG",
+        "ADCPPB3CONFIG"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_disablePPBTwosComplement",
+      "functionArgs": [
+        "base",
+        "ppbNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_PPBNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t ppbOffset;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Get the offset to the appropriate PPB configuration register.\n    //\n    ppbOffset = (ADC_PPBxCONFIG_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1CONFIG;\n\n    //\n    // Disable PPB two's complement.\n    //\n    EALLOW;\n    HWREG(base + ppbOffset) &= ~ADC_PPB1CONFIG_TWOSCOMPEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t ppbOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Get the offset to the appropriate PPB configuration register. // ppbOffset = (ADC_PPBxCONFIG_STEP * (uint32_t)ppbNumber) + ADC_O_PPB1CONFIG; // // Disable PPB two's complement. // EALLOW; HWREG(base + ppbOffset) &= ~ADC_PPB1CONFIG_TWOSCOMPEN; EDIS; }",
+      "registersUsed": [
+        "PPB1CONFIG",
+        "PPB2CONFIG",
+        "PPB3CONFIG"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCPPB1CONFIG",
+        "ADCPPB2CONFIG",
+        "ADCPPB3CONFIG"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t intRegAddr;\n    uint32_t shiftVal;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Each INTSEL register manages two interrupts. If the interrupt number is\n    // even, we'll be accessing the upper byte and will need to shift.\n    //\n    intRegAddr = base + ADC_INTSEL_OFFSET_BASE;\n    shiftVal = (uint32_t)adcIntNum << 3UL;\n\n    //\n    // Enable the specified ADC interrupt.\n    //\n    EALLOW;\n\n    HWREG(intRegAddr) |= ADC_INTSEL_INT1E << shiftVal;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t intRegAddr; uint32_t shiftVal; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Each INTSEL register manages two interrupts. If the interrupt number is // even, we'll be accessing the upper byte and will need to shift. // intRegAddr = base + ADC_INTSEL_OFFSET_BASE; shiftVal = (uint32_t)adcIntNum << 3UL; // // Enable the specified ADC interrupt. // EALLOW; HWREG(intRegAddr) |= ADC_INTSEL_INT1E << shiftVal; EDIS; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t intRegAddr;\n    uint32_t shiftVal;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Each INTSEL register manages two interrupts. If the interrupt number is\n    // even, we'll be accessing the upper byte and will need to shift.\n    //\n    intRegAddr = base + ADC_INTSEL_OFFSET_BASE;\n    shiftVal = (uint32_t)adcIntNum << 3UL;\n\n    //\n    // Disable the specified ADC interrupt.\n    //\n    EALLOW;\n\n    HWREG(intRegAddr) &= ~(ADC_INTSEL_INT1E << shiftVal);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t intRegAddr; uint32_t shiftVal; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Each INTSEL register manages two interrupts. If the interrupt number is // even, we'll be accessing the upper byte and will need to shift. // intRegAddr = base + ADC_INTSEL_OFFSET_BASE; shiftVal = (uint32_t)adcIntNum << 3UL; // // Disable the specified ADC interrupt. // EALLOW; HWREG(intRegAddr) &= ~(ADC_INTSEL_INT1E << shiftVal); EDIS; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setInterruptSource",
+      "functionArgs": [
+        "base",
+        "adcIntNum",
+        "intTrigger"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t intRegAddr;\n    uint32_t shiftVal;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT(intTrigger < 33U);\n\n    //\n    // Each INTSEL register manages two interrupts. If the interrupt number is\n    // even, we'll be accessing the upper byte and will need to shift.\n    //\n    intRegAddr = base + ADC_INTSEL_OFFSET_BASE;\n    shiftVal = (uint32_t)adcIntNum << 3U;\n\n    //\n    // Set the specified ADC interrupt source.\n    //\n    EALLOW;\n\n    HWREG(intRegAddr) =\n        (HWREG(intRegAddr) & ~(ADC_INTSEL_INT1SEL_M << shiftVal)) |\n        ((uint32_t)intTrigger << shiftVal);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t intRegAddr; uint32_t shiftVal; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT(intTrigger < 33U); // // Each INTSEL register manages two interrupts. If the interrupt number is // even, we'll be accessing the upper byte and will need to shift. // intRegAddr = base + ADC_INTSEL_OFFSET_BASE; shiftVal = (uint32_t)adcIntNum << 3U; // // Set the specified ADC interrupt source. // EALLOW; HWREG(intRegAddr) = (HWREG(intRegAddr) & ~(ADC_INTSEL_INT1SEL_M << shiftVal)) | ((uint32_t)intTrigger << shiftVal); EDIS; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_enableContinuousMode",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t intRegAddr;\n    uint32_t shiftVal;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Each INTSEL register manages two interrupts. If the interrupt number is\n    // even, we'll be accessing the upper byte and will need to shift.\n    //\n    intRegAddr = base + ADC_INTSEL_OFFSET_BASE;\n    shiftVal = (uint32_t)adcIntNum << 3UL;\n\n    //\n    // Enable continuous mode for the specified ADC interrupt.\n    //\n    EALLOW;\n\n    HWREG(intRegAddr) |= ADC_INTSEL_INT1CONT << shiftVal;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t intRegAddr; uint32_t shiftVal; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Each INTSEL register manages two interrupts. If the interrupt number is // even, we'll be accessing the upper byte and will need to shift. // intRegAddr = base + ADC_INTSEL_OFFSET_BASE; shiftVal = (uint32_t)adcIntNum << 3UL; // // Enable continuous mode for the specified ADC interrupt. // EALLOW; HWREG(intRegAddr) |= ADC_INTSEL_INT1CONT << shiftVal; EDIS; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_disableContinuousMode",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t intRegAddr;\n    uint32_t shiftVal;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    //\n    // Each INTSEL register manages two interrupts. If the interrupt number is\n    // even, we'll be accessing the upper byte and will need to shift.\n    //\n    intRegAddr = base + ADC_INTSEL_OFFSET_BASE;\n    shiftVal = (uint32_t)adcIntNum << 3UL;\n\n    //\n    // Disable continuous mode for the specified ADC interrupt.\n    //\n    EALLOW;\n\n    HWREG(intRegAddr) &= ~(ADC_INTSEL_INT1CONT << shiftVal);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t intRegAddr; uint32_t shiftVal; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); // // Each INTSEL register manages two interrupts. If the interrupt number is // even, we'll be accessing the upper byte and will need to shift. // intRegAddr = base + ADC_INTSEL_OFFSET_BASE; shiftVal = (uint32_t)adcIntNum << 3UL; // // Disable continuous mode for the specified ADC interrupt. // EALLOW; HWREG(intRegAddr) &= ~(ADC_INTSEL_INT1CONT << shiftVal); EDIS; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_enableDMAInterrupt",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t shiftVal;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    shiftVal = (uint32_t)adcIntNum << 3UL;\n\n    //\n    // Enable the ADC interrupt for DMA.\n    //\n    EALLOW;\n\n    HWREG(base + ADC_O_DMAINTSEL) |= ADC_DMAINTSEL_DMAINT1E << shiftVal;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t shiftVal; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); shiftVal = (uint32_t)adcIntNum << 3UL; // // Enable the ADC interrupt for DMA. // EALLOW; HWREG(base + ADC_O_DMAINTSEL) |= ADC_DMAINTSEL_DMAINT1E << shiftVal; EDIS; }",
+      "registersUsed": [
+        "DMAINTSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCDMAINTSEL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_disableDMAInterrupt",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t shiftVal;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    shiftVal = (uint32_t)adcIntNum << 3UL;\n\n    //\n    // Disable the ADC interrupt for DMA.\n    //\n    EALLOW;\n\n    HWREG(base + ADC_O_DMAINTSEL) &= ~(ADC_DMAINTSEL_DMAINT1E << shiftVal);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t shiftVal; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); shiftVal = (uint32_t)adcIntNum << 3UL; // // Disable the ADC interrupt for DMA. // EALLOW; HWREG(base + ADC_O_DMAINTSEL) &= ~(ADC_DMAINTSEL_DMAINT1E << shiftVal); EDIS; }",
+      "registersUsed": [
+        "DMAINTSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCDMAINTSEL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_setDMAInterruptSource",
+      "functionArgs": [
+        "base",
+        "adcIntNum",
+        "intTrigger"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t shiftVal;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT(intTrigger < 33U);\n\n    shiftVal = (uint32_t)adcIntNum << 3UL;\n\n    //\n    // Set the specified ADC interrupt source for DMA.\n    //\n    EALLOW;\n\n    HWREG(base + ADC_O_DMAINTSEL) = (HWREG(base + ADC_O_DMAINTSEL) &\n                                    ~(ADC_DMAINTSEL_DMAINT1SEL_M << shiftVal)) |\n                                    ((uint32_t)intTrigger << shiftVal);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t shiftVal; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT(intTrigger < 33U); shiftVal = (uint32_t)adcIntNum << 3UL; // // Set the specified ADC interrupt source for DMA. // EALLOW; HWREG(base + ADC_O_DMAINTSEL) = (HWREG(base + ADC_O_DMAINTSEL) & ~(ADC_DMAINTSEL_DMAINT1SEL_M << shiftVal)) | ((uint32_t)intTrigger << shiftVal); EDIS; }",
+      "registersUsed": [
+        "DMAINTSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCDMAINTSEL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_enableDMAContinuousMode",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t shiftVal;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    shiftVal = (uint32_t)adcIntNum << 3UL;\n\n    //\n    // Enable continuous mode for the specified ADC interrupt for DMA.\n    //\n    EALLOW;\n\n    HWREG(base + ADC_O_DMAINTSEL) |= ADC_DMAINTSEL_DMAINT1CONT << shiftVal;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t shiftVal; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); shiftVal = (uint32_t)adcIntNum << 3UL; // // Enable continuous mode for the specified ADC interrupt for DMA. // EALLOW; HWREG(base + ADC_O_DMAINTSEL) |= ADC_DMAINTSEL_DMAINT1CONT << shiftVal; EDIS; }",
+      "registersUsed": [
+        "DMAINTSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCDMAINTSEL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_disableDMAContinuousMode",
+      "functionArgs": [
+        "base",
+        "adcIntNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "ADC_IntNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t shiftVal;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    shiftVal = (uint32_t)adcIntNum << 3UL;\n\n    //\n    // Disable continuous mode for the specified ADC interrupt for DMA.\n    //\n    EALLOW;\n\n    HWREG(base + ADC_O_DMAINTSEL) &= ~(ADC_DMAINTSEL_DMAINT1CONT << shiftVal);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t shiftVal; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); shiftVal = (uint32_t)adcIntNum << 3UL; // // Disable continuous mode for the specified ADC interrupt for DMA. // EALLOW; HWREG(base + ADC_O_DMAINTSEL) &= ~(ADC_DMAINTSEL_DMAINT1CONT << shiftVal); EDIS; }",
+      "registersUsed": [
+        "DMAINTSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCDMAINTSEL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_getTemperatureC",
+      "functionArgs": [
+        "tempResult",
+        "refMode",
+        "vref"
+      ],
+      "functionArgsTypes": [
+        "uint16_t",
+        "ADC_ReferenceMode",
+        "float32_t"
+      ],
+      "returnType": "static inline int16_t",
+      "functionContent": "{\n    float32_t temp;\n\n    //\n    // Read temp sensor slope and offset locations from OTP and convert\n    //\n    temp = (float32_t)tempResult * (vref / 2.5F);\n    if(refMode == ADC_REFERENCE_INTERNAL)\n    {\n        return((int16_t)((((int32_t)temp - ADC_INT_REF_TSOFFSET) * 4096) /\n                         ADC_INT_REF_TSSLOPE));\n    }\n    else\n    {\n        return((int16_t)((((int32_t)temp - ADC_EXT_REF_TSOFFSET) * 4096) /\n                         ADC_EXT_REF_TSSLOPE));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ float32_t temp; // // Read temp sensor slope and offset locations from OTP and convert // temp = (float32_t)tempResult * (vref / 2.5F); if(refMode == ADC_REFERENCE_INTERNAL) { return((int16_t)((((int32_t)temp - ADC_INT_REF_TSOFFSET) * 4096) / ADC_INT_REF_TSSLOPE)); } else { return((int16_t)((((int32_t)temp - ADC_EXT_REF_TSOFFSET) * 4096) / ADC_EXT_REF_TSSLOPE)); } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_getTemperatureK",
+      "functionArgs": [
+        "tempResult",
+        "refMode",
+        "vref"
+      ],
+      "functionArgsTypes": [
+        "uint16_t",
+        "ADC_ReferenceMode",
+        "float32_t"
+      ],
+      "returnType": "static inline int16_t",
+      "functionContent": "{\n    float32_t temp;\n\n    //\n    // Read temp sensor slope and offset locations from OTP and convert\n    //\n    temp = (float32_t)tempResult * (vref / 2.5F);\n    if(refMode == ADC_REFERENCE_INTERNAL)\n    {\n        return((int16_t)(((((int32_t)temp - ADC_INT_REF_TSOFFSET) * 4096) /\n                         ADC_INT_REF_TSSLOPE) + 273));\n    }\n    else\n    {\n        return((int16_t)(((((int32_t)temp - ADC_EXT_REF_TSOFFSET) * 4096) /\n                         ADC_EXT_REF_TSSLOPE) + 273));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ float32_t temp; // // Read temp sensor slope and offset locations from OTP and convert // temp = (float32_t)tempResult * (vref / 2.5F); if(refMode == ADC_REFERENCE_INTERNAL) { return((int16_t)(((((int32_t)temp - ADC_INT_REF_TSOFFSET) * 4096) / ADC_INT_REF_TSSLOPE) + 273)); } else { return((int16_t)(((((int32_t)temp - ADC_EXT_REF_TSOFFSET) * 4096) / ADC_EXT_REF_TSSLOPE) + 273)); } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_triggerRepeaterModuleBusy",
+      "functionArgs": [
+        "base",
+        "repInstance"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    uint32_t regOffset;\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    regOffset = base + repInstance;\n\n    //\n    // get the specified repeater trigger active mode status.\n    //\n    return((HWREG(regOffset + ADC_O_REP1CTL) &\n                (1U << ADC_REP1CTL_MODULEBUSY_S)) ? true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); regOffset = base + repInstance; // // get the specified repeater trigger active mode status. // return((HWREG(regOffset + ADC_O_REP1CTL) & (1U << ADC_REP1CTL_MODULEBUSY_S)) ? true : false); }",
+      "registersUsed": [
+        "REP1CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCREP1CTL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_triggerRepeaterSelect",
+      "functionArgs": [
+        "base",
+        "repInstance",
+        "trigger"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "ADC_Trigger"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regOffset;\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    regOffset = base + repInstance;\n\n    //\n    // Set the specified repeater trigger source to modify.\n    //\n    EALLOW;\n    HWREG(regOffset + ADC_O_REP1CTL) = (HWREG(regOffset + ADC_O_REP1CTL) &\n                        ~((uint32_t)ADC_REP1CTL_TRIGGER_M)) |\n                        ((uint32_t)trigger << ADC_REP1CTL_TRIGGER_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); regOffset = base + repInstance; // // Set the specified repeater trigger source to modify. // EALLOW; HWREG(regOffset + ADC_O_REP1CTL) = (HWREG(regOffset + ADC_O_REP1CTL) & ~((uint32_t)ADC_REP1CTL_TRIGGER_M)) | ((uint32_t)trigger << ADC_REP1CTL_TRIGGER_S); EDIS; }",
+      "registersUsed": [
+        "REP1CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCREP1CTL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_triggerRepeaterSyncIn",
+      "functionArgs": [
+        "base",
+        "repInstance",
+        "syncInput"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "ADC_SyncInput"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regOffset;\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    regOffset = base + repInstance;\n\n    //\n    // Set the specified trigger sync input.\n    //\n    EALLOW;\n    HWREG(regOffset + ADC_O_REP1CTL) = (HWREG(regOffset + ADC_O_REP1CTL) &\n                        ~((uint32_t)ADC_REP1CTL_SYNCINSEL_M)) |\n                        ((uint32_t)syncInput << ADC_REP1CTL_SYNCINSEL_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); regOffset = base + repInstance; // // Set the specified trigger sync input. // EALLOW; HWREG(regOffset + ADC_O_REP1CTL) = (HWREG(regOffset + ADC_O_REP1CTL) & ~((uint32_t)ADC_REP1CTL_SYNCINSEL_M)) | ((uint32_t)syncInput << ADC_REP1CTL_SYNCINSEL_S); EDIS; }",
+      "registersUsed": [
+        "REP1CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCREP1CTL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_forceRepeaterTriggerSync",
+      "functionArgs": [
+        "base",
+        "repInstance"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regOffset;\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    regOffset = base + repInstance;\n\n    //\n    // Force software sync for the trigger repeater block.\n    //\n    EALLOW;\n    HWREG(regOffset + ADC_O_REP1CTL) |= ADC_REP1CTL_SWSYNC;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); regOffset = base + repInstance; // // Force software sync for the trigger repeater block. // EALLOW; HWREG(regOffset + ADC_O_REP1CTL) |= ADC_REP1CTL_SWSYNC; EDIS; }",
+      "registersUsed": [
+        "REP1CTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCREP1CTL"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_triggerRepeaterCount",
+      "functionArgs": [
+        "base",
+        "repInstance",
+        "repCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regOffset;\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n    ASSERT(repCount <= 3U);\n\n    regOffset = base + repInstance;\n\n    //\n    // Configure repeater count.\n    //\n    EALLOW;\n    HWREG(regOffset + ADC_O_REP1N) = (HWREG(regOffset + ADC_O_REP1N) &\n                                      ~(ADC_REP1N_NSEL_M)) | repCount;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); ASSERT(repCount <= 3U); regOffset = base + repInstance; // // Configure repeater count. // EALLOW; HWREG(regOffset + ADC_O_REP1N) = (HWREG(regOffset + ADC_O_REP1N) & ~(ADC_REP1N_NSEL_M)) | repCount; EDIS; }",
+      "registersUsed": [
+        "REP1N"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCREP1N"
+      ]
+    },
+    {
+      "file": "adc.h",
+      "peripheral": "adc",
+      "functionName": "ADC_triggerRepeaterSpread",
+      "functionArgs": [
+        "base",
+        "repInstance",
+        "repSpread"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t regOffset;\n    //\n    // Check the arguments.\n    //\n    ASSERT(ADC_isBaseValid(base));\n\n    regOffset = base + repInstance;\n\n    //\n    // Configure repeater spread.\n    //\n    EALLOW;\n    HWREG(regOffset + ADC_O_REP1SPREAD) =\n                                      (HWREG(regOffset + ADC_O_REP1SPREAD) &\n                                      ~(ADC_REP1SPREAD_SPREAD_M)) | repSpread;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t regOffset; // // Check the arguments. // ASSERT(ADC_isBaseValid(base)); regOffset = base + repInstance; // // Configure repeater spread. // EALLOW; HWREG(regOffset + ADC_O_REP1SPREAD) = (HWREG(regOffset + ADC_O_REP1SPREAD) & ~(ADC_REP1SPREAD_SPREAD_M)) | repSpread; EDIS; }",
+      "registersUsed": [
+        "REP1SPREAD"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCREP1SPREAD"
+      ]
+    }
+  ]
+}

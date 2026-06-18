@@ -1,0 +1,1223 @@
+{
+  "name": "rtdma",
+  "functions": [
+    {
+      "file": "rtdma.c",
+      "peripheral": "rtdma",
+      "functionName": "voidDMA_configAddresses",
+      "functionArgs": [
+        "base",
+        "*destAddr",
+        "*srcAddr"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constvoid",
+        "constvoid"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Set up SOURCE address.\n    //\n    HWREG(base + RTDMA_O_SRC_BEG_ADDR_SHADOW) = (uint32_t)(uintptr_t)srcAddr;\n    HWREG(base + RTDMA_O_SRC_ADDR_SHADOW)     = (uint32_t)(uintptr_t)srcAddr;\n\n    //\n    // Set up DESTINATION address.\n    //\n    HWREG(base + RTDMA_O_DST_BEG_ADDR_SHADOW) = (uint32_t)(uintptr_t)destAddr;\n    HWREG(base + RTDMA_O_DST_ADDR_SHADOW)     = (uint32_t)(uintptr_t)destAddr;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Set up SOURCE address. // HWREG(base + RTDMA_O_SRC_BEG_ADDR_SHADOW) = (uint32_t)(uintptr_t)srcAddr; HWREG(base + RTDMA_O_SRC_ADDR_SHADOW) = (uint32_t)(uintptr_t)srcAddr; // // Set up DESTINATION address. // HWREG(base + RTDMA_O_DST_BEG_ADDR_SHADOW) = (uint32_t)(uintptr_t)destAddr; HWREG(base + RTDMA_O_DST_ADDR_SHADOW) = (uint32_t)(uintptr_t)destAddr; }",
+      "registersUsed": [
+        "SRC_BEG_ADDR_SHADOW",
+        "SRC_ADDR_SHADOW",
+        "DST_BEG_ADDR_SHADOW",
+        "DST_ADDR_SHADOW"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRC_BEG_ADDR_SHADOW",
+        "SRC_ADDR_SHADOW",
+        "DST_BEG_ADDR_SHADOW",
+        "DST_ADDR_SHADOW"
+      ]
+    },
+    {
+      "file": "rtdma.c",
+      "peripheral": "rtdma",
+      "functionName": "voidDMA_configBurst",
+      "functionArgs": [
+        "base",
+        "size",
+        "srcStep",
+        "destStep"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "int16_t",
+        "int16_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n    ASSERT((size >= 1U) && (size <= 256U));\n\n    //\n    // Set up BURST registers.\n    //\n    HWREGH(base + RTDMA_O_BURST_SIZE)     = size - 1U;\n    HWREGH(base + RTDMA_O_SRC_BURST_STEP) = srcStep;\n    HWREGH(base + RTDMA_O_DST_BURST_STEP) = destStep;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); ASSERT((size >= 1U) && (size <= 256U)); // // Set up BURST registers. // HWREGH(base + RTDMA_O_BURST_SIZE) = size - 1U; HWREGH(base + RTDMA_O_SRC_BURST_STEP) = srcStep; HWREGH(base + RTDMA_O_DST_BURST_STEP) = destStep; }",
+      "registersUsed": [
+        "BURST_SIZE",
+        "SRC_BURST_STEP",
+        "DST_BURST_STEP"
+      ],
+      "registersUsedMatchingBifield": [
+        "BURST_SIZE",
+        "SRC_BURST_STEP",
+        "DST_BURST_STEP"
+      ]
+    },
+    {
+      "file": "rtdma.c",
+      "peripheral": "rtdma",
+      "functionName": "voidDMA_configTransfer",
+      "functionArgs": [
+        "base",
+        "transferSize",
+        "srcStep",
+        "destStep"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "int16_t",
+        "int16_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n    ASSERT(transferSize <= 0x10000U);\n\n    //\n    // Set up TRANSFER registers.\n    //\n    HWREGH(base + RTDMA_O_TRANSFER_SIZE)     = (uint16_t)(transferSize - 1U);\n    HWREGH(base + RTDMA_O_SRC_TRANSFER_STEP) = srcStep;\n    HWREGH(base + RTDMA_O_DST_TRANSFER_STEP) = destStep;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); ASSERT(transferSize <= 0x10000U); // // Set up TRANSFER registers. // HWREGH(base + RTDMA_O_TRANSFER_SIZE) = (uint16_t)(transferSize - 1U); HWREGH(base + RTDMA_O_SRC_TRANSFER_STEP) = srcStep; HWREGH(base + RTDMA_O_DST_TRANSFER_STEP) = destStep; }",
+      "registersUsed": [
+        "TRANSFER_SIZE",
+        "SRC_TRANSFER_STEP",
+        "DST_TRANSFER_STEP"
+      ],
+      "registersUsedMatchingBifield": [
+        "TRANSFER_SIZE",
+        "SRC_TRANSFER_STEP",
+        "DST_TRANSFER_STEP"
+      ]
+    },
+    {
+      "file": "rtdma.c",
+      "peripheral": "rtdma",
+      "functionName": "voidDMA_configWrap",
+      "functionArgs": [
+        "base",
+        "srcWrapSize",
+        "srcStep",
+        "destWrapSize",
+        "destStep"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "int16_t",
+        "uint32_t",
+        "int16_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n    ASSERT((srcWrapSize <= 0x10000U) || (destWrapSize <= 0x10000U));\n\n    //\n    // Set up WRAP registers.\n    //\n    HWREGH(base + RTDMA_O_SRC_WRAP_SIZE) = (uint16_t)(srcWrapSize - 1U);\n    HWREGH(base + RTDMA_O_SRC_WRAP_STEP) = srcStep;\n\n    HWREGH(base + RTDMA_O_DST_WRAP_SIZE) = (uint16_t)(destWrapSize - 1U);\n    HWREGH(base + RTDMA_O_DST_WRAP_STEP) = destStep;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); ASSERT((srcWrapSize <= 0x10000U) || (destWrapSize <= 0x10000U)); // // Set up WRAP registers. // HWREGH(base + RTDMA_O_SRC_WRAP_SIZE) = (uint16_t)(srcWrapSize - 1U); HWREGH(base + RTDMA_O_SRC_WRAP_STEP) = srcStep; HWREGH(base + RTDMA_O_DST_WRAP_SIZE) = (uint16_t)(destWrapSize - 1U); HWREGH(base + RTDMA_O_DST_WRAP_STEP) = destStep; }",
+      "registersUsed": [
+        "SRC_WRAP_SIZE",
+        "SRC_WRAP_STEP",
+        "DST_WRAP_SIZE",
+        "DST_WRAP_STEP"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRC_WRAP_SIZE",
+        "SRC_WRAP_STEP",
+        "DST_WRAP_SIZE",
+        "DST_WRAP_STEP"
+      ]
+    },
+    {
+      "file": "rtdma.c",
+      "peripheral": "rtdma",
+      "functionName": "voidDMA_configMode",
+      "functionArgs": [
+        "base",
+        "trigger",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DMA_Trigger",
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Configure the peripheral trigger source of the channel and other\n    // configurations to the mode register.\n    //\n    HWREG(base + RTDMA_O_MODE) = (HWREG(base + RTDMA_O_MODE) &\n                                ( ~(RTDMA_MODE_PERINTSEL_M |\n                                    RTDMA_MODE_DATASIZE_M |\n                                    RTDMA_MODE_WRT_DATASIZE_M |\n                                    RTDMA_MODE_CONTINUOUS |\n                                    RTDMA_MODE_ONESHOT))) |\n                                    (uint32_t) trigger | config;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Configure the peripheral trigger source of the channel and other // configurations to the mode register. // HWREG(base + RTDMA_O_MODE) = (HWREG(base + RTDMA_O_MODE) & ( ~(RTDMA_MODE_PERINTSEL_M | RTDMA_MODE_DATASIZE_M | RTDMA_MODE_WRT_DATASIZE_M | RTDMA_MODE_CONTINUOUS | RTDMA_MODE_ONESHOT))) | (uint32_t) trigger | config; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "rtdma.c",
+      "peripheral": "rtdma",
+      "functionName": "voidDMA_configChannel",
+      "functionArgs": [
+        "base",
+        "*configParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constDMA_ConfigParams"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Configure DMA Channel\n    //\n    DMA_configAddresses(base, (const void *)configParams->destAddr,\n                        (const void *)configParams->srcAddr);\n\n    //\n    // Configure the size of each burst and the address step size\n    //\n    DMA_configBurst(base, configParams->burstSize, configParams->srcBurstStep,\n                    configParams->destBurstStep);\n\n    //\n    // Configure the transfer size and the address step that is\n    // made after each burst.\n    //\n    DMA_configTransfer(base, configParams->transferSize,\n                       configParams->srcTransferStep,\n                       configParams->destTransferStep);\n\n    //\n    // Configure the DMA channel's wrap settings\n    //\n    DMA_configWrap(base, configParams->srcWrapSize, configParams->srcWrapStep,\n                   configParams->destWrapSize, configParams->destWrapStep);\n\n    //\n    // Configure the DMA channel's trigger and mode\n    //\n    DMA_configMode(base, configParams->transferTrigger,\n                   configParams->transferMode | configParams->reinitMode |\n                   configParams->configSize | configParams->wrtDatasize);\n\n    //\n    // Enable the selected peripheral trigger to start a DMA transfer\n    //\n    DMA_enableTrigger(base);\n\n    //\n    // Configure interrupt\n    //\n    if(configParams->enableInterrupt)\n    {\n        //\n        // Set the channel interrupt mode\n        //\n        DMA_setInterruptMode(base, configParams->interruptMode);\n\n        //\n        // Enable the indicated DMA channel interrupt source\n        //\n        DMA_enableInterrupt(base);\n    }\n    else\n    {\n        //\n        // Disable the indicated DMA channel interrupt source\n        //\n        DMA_disableInterrupt(base);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Configure DMA Channel // DMA_configAddresses(base, (const void *)configParams->destAddr, (const void *)configParams->srcAddr); // // Configure the size of each burst and the address step size // DMA_configBurst(base, configParams->burstSize, configParams->srcBurstStep, configParams->destBurstStep); // // Configure the transfer size and the address step that is // made after each burst. // DMA_configTransfer(base, configParams->transferSize, configParams->srcTransferStep, configParams->destTransferStep); // // Configure the DMA channel's wrap settings // DMA_configWrap(base, configParams->srcWrapSize, configParams->srcWrapStep, configParams->destWrapSize, configParams->destWrapStep); // // Configure the DMA channel's trigger and mode // DMA_configMode(base, configParams->transferTrigger, configParams->transferMode | configParams->reinitMode | configParams->configSize | configParams->wrtDatasize); // // Enable the selected peripheral trigger to start a DMA transfer // DMA_enableTrigger(base); // // Configure interrupt // if(configParams->enableInterrupt) { // // Set the channel interrupt mode // DMA_setInterruptMode(base, configParams->interruptMode); // // Enable the indicated DMA channel interrupt source // DMA_enableInterrupt(base); } else { // // Disable the indicated DMA channel interrupt source // DMA_disableInterrupt(base); } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "rtdma.c",
+      "peripheral": "rtdma",
+      "functionName": "voidDMA_configMPURegion",
+      "functionArgs": [
+        "base",
+        "MPURegion",
+        "*configParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DMA_MPURegion",
+        "constDMA_MPUConfigParams"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_MPU_isBaseValid(base));\n    //\n    // Check the 4KB granularity\n    //\n    ASSERT(((configParams->startAddr & 0xFFFU) == 0U) &&\n           ((configParams->endAddr   & 0xFFFU) == 0xFFFU));\n\n    //\n    // Configure the start and end addresses of the MPU region\n    //\n    HWREG(base + RTDMA_O_MPUR_START((uint32_t)MPURegion)) =\n                                                configParams->startAddr;\n    HWREG(base + RTDMA_O_MPUR_END((uint32_t)MPURegion))  =\n                                                configParams->endAddr;\n\n    //\n    // Configure specific channel accesses for the MPU region\n    //\n    HWREGH(base + RTDMA_O_MPUR_CHMASK((uint32_t)MPURegion)) =\n                                                configParams->channelMask;\n\n    //\n    // Configure the type of accesses allowed in the MPU region\n    //\n    HWREGB(base + RTDMA_O_MPUR_ACCESS((uint32_t)MPURegion)) =\n                                    (uint8_t)configParams->accessPermission;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_MPU_isBaseValid(base)); // // Check the 4KB granularity // ASSERT(((configParams->startAddr & 0xFFFU) == 0U) && ((configParams->endAddr & 0xFFFU) == 0xFFFU)); // // Configure the start and end addresses of the MPU region // HWREG(base + RTDMA_O_MPUR_START((uint32_t)MPURegion)) = configParams->startAddr; HWREG(base + RTDMA_O_MPUR_END((uint32_t)MPURegion)) = configParams->endAddr; // // Configure specific channel accesses for the MPU region // HWREGH(base + RTDMA_O_MPUR_CHMASK((uint32_t)MPURegion)) = configParams->channelMask; // // Configure the type of accesses allowed in the MPU region // HWREGB(base + RTDMA_O_MPUR_ACCESS((uint32_t)MPURegion)) = (uint8_t)configParams->accessPermission; }",
+      "registersUsed": [
+        "MPUR_CHMASK(i)",
+        "MPUR_START(i)",
+        "MPUR_END(i)",
+        "MPUR_ACCESS(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_CHMASK(i)",
+        "MPUR_START(i)",
+        "MPUR_END(i)",
+        "MPUR_ACCESS(i)"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "#ifdefDEBUGstaticinlineboolDMA_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check if the base address of the 2 RTDMA instance is valid\n    //\n    return(\n           (base == RTDMA1_BASE) ||\n           (base == RTDMA2_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base address of the 2 RTDMA instance is valid // return( (base == RTDMA1_BASE) || (base == RTDMA2_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "#ifdefDEBUGstaticinlineboolDMA_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check if the base address of the MPU registers is valid\n    //\n    return(\n           (base == RTDMA1_MPU_BASE) ||\n           (base == RTDMA2_MPU_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base address of the MPU registers is valid // return( (base == RTDMA1_MPU_BASE) || (base == RTDMA2_MPU_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "#ifdefDEBUGstaticinlineboolDMA_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check if the base address of the DMA channel control registers is valid\n    //\n    return(\n           ((base & BASE_ADDR_MASK) == RTDMA1CH1_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA1CH2_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA1CH3_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA1CH4_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA1CH5_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA1CH6_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA1CH7_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA1CH8_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA1CH9_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA1CH10_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA2CH1_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA2CH2_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA2CH3_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA2CH4_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA2CH5_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA2CH6_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA2CH7_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA2CH8_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA2CH9_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == RTDMA2CH10_BASE_FRAME(0U))\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check if the base address of the DMA channel control registers is valid // return( ((base & BASE_ADDR_MASK) == RTDMA1CH1_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA1CH2_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA1CH3_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA1CH4_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA1CH5_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA1CH6_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA1CH7_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA1CH8_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA1CH9_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA1CH10_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA2CH1_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA2CH2_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA2CH3_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA2CH4_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA2CH5_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA2CH6_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA2CH7_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA2CH8_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA2CH9_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == RTDMA2CH10_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Set the hard reset bit. One NOP is required after HARDRESET.\n    //\n    HWREGB(base + RTDMA_O_DMACTRL) = RTDMA_DMACTRL_HARDRESET;\n    NOP;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_isBaseValid(base)); // // Set the hard reset bit. One NOP is required after HARDRESET. // HWREGB(base + RTDMA_O_DMACTRL) = RTDMA_DMACTRL_HARDRESET; NOP; }",
+      "registersUsed": [
+        "DMACTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMACTRL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_triggerSoftReset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Set the soft reset bit. One NOP is required after SOFTRESET\n    //\n    HWREGB(base + RTDMA_O_CONTROL) = RTDMA_CONTROL_SOFTRESET;    // HWREGH\n    NOP;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_CH_isBaseValid(base)); // // Set the soft reset bit. One NOP is required after SOFTRESET // HWREGB(base + RTDMA_O_CONTROL) = RTDMA_CONTROL_SOFTRESET; // HWREGH NOP; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DMA_EmulationMode"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Set Emulation mode\n    //\n    if(mode == DMA_EMULATION_STOP)\n    {\n        HWREGH(base + RTDMA_O_DEBUGCTRL) &= ~(uint16_t)RTDMA_DEBUGCTRL_FREE;\n    }\n    else\n    {\n        HWREGH(base + RTDMA_O_DEBUGCTRL) |= (uint16_t)RTDMA_DEBUGCTRL_FREE;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_isBaseValid(base)); // // Set Emulation mode // if(mode == DMA_EMULATION_STOP) { HWREGH(base + RTDMA_O_DEBUGCTRL) &= ~(uint16_t)RTDMA_DEBUGCTRL_FREE; } else { HWREGH(base + RTDMA_O_DEBUGCTRL) |= (uint16_t)RTDMA_DEBUGCTRL_FREE; } }",
+      "registersUsed": [
+        "DEBUGCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DEBUGCTRL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base",
+        "priorityMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DMA_PriorityMode"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Set Priority mode\n    //\n    if(priorityMode == DMA_PRIORITY_SOFTWARE_CONFIG)\n    {\n        HWREG(base + RTDMA_O_DMACTRL) |= RTDMA_DMACTRL_PRIORITYSEL;\n    }\n    else\n    {\n        HWREG(base + RTDMA_O_DMACTRL) &= ~RTDMA_DMACTRL_PRIORITYSEL;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_isBaseValid(base)); // // Set Priority mode // if(priorityMode == DMA_PRIORITY_SOFTWARE_CONFIG) { HWREG(base + RTDMA_O_DMACTRL) |= RTDMA_DMACTRL_PRIORITYSEL; } else { HWREG(base + RTDMA_O_DMACTRL) &= ~RTDMA_DMACTRL_PRIORITYSEL; } }",
+      "registersUsed": [
+        "DMACTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMACTRL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base",
+        "channel",
+        "chPriority"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DMA_Channel",
+        "DMA_ChannelPriority"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_isBaseValid(base));\n    if((uint8_t)channel < 9U)\n    {\n        HWREG(base + RTDMA_O_SWPRI1) =  (HWREG(base + RTDMA_O_SWPRI1) &\n                    ~(0xFU << (4U * ((uint32_t)channel - 1U)))) |\n                    ((uint32_t)chPriority << (4U * ((uint32_t)channel - 1U)));\n    }\n    else\n    {\n        HWREG(base + RTDMA_O_SWPRI2) =  (HWREG(base + RTDMA_O_SWPRI2) &\n                    ~(0xFU << (4U * ((uint32_t)channel - 9U)))) |\n                    ((uint32_t)chPriority << (4U * ((uint32_t)channel - 9U)));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_isBaseValid(base)); if((uint8_t)channel < 9U) { HWREG(base + RTDMA_O_SWPRI1) = (HWREG(base + RTDMA_O_SWPRI1) & ~(0xFU << (4U * ((uint32_t)channel - 1U)))) | ((uint32_t)chPriority << (4U * ((uint32_t)channel - 1U))); } else { HWREG(base + RTDMA_O_SWPRI2) = (HWREG(base + RTDMA_O_SWPRI2) & ~(0xFU << (4U * ((uint32_t)channel - 9U)))) | ((uint32_t)chPriority << (4U * ((uint32_t)channel - 9U))); } }",
+      "registersUsed": [
+        "SWPRI1",
+        "SWPRI2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SWPRI1",
+        "SWPRI2"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Set the Priority reset bit\n    //\n    HWREGB(base + RTDMA_O_DMACTRL) = RTDMA_DMACTRL_PRIORITYRESET;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_isBaseValid(base)); // // Set the Priority reset bit // HWREGB(base + RTDMA_O_DMACTRL) = RTDMA_DMACTRL_PRIORITYRESET; }",
+      "registersUsed": [
+        "DMACTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMACTRL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_enableTrigger",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Set the peripheral interrupt trigger enable bit.\n    //\n    HWREGH(base + RTDMA_O_MODE) |= RTDMA_MODE_PERINTE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Set the peripheral interrupt trigger enable bit. // HWREGH(base + RTDMA_O_MODE) |= RTDMA_MODE_PERINTE; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_disableTrigger",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Clear the peripheral interrupt trigger enable bit.\n    //\n    HWREGH(base + RTDMA_O_MODE) &= (uint16_t)~RTDMA_MODE_PERINTE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Clear the peripheral interrupt trigger enable bit. // HWREGH(base + RTDMA_O_MODE) &= (uint16_t)~RTDMA_MODE_PERINTE; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_forceTrigger",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Set the peripheral interrupt trigger force bit.\n    //\n    HWREGB(base + RTDMA_O_CONTROL) = RTDMA_CONTROL_PERINTFRC;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Set the peripheral interrupt trigger force bit. // HWREGB(base + RTDMA_O_CONTROL) = RTDMA_CONTROL_PERINTFRC; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_clearTriggerFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Write a one to the clear bit to clear the peripheral trigger flag.\n    //\n    HWREGB(base + RTDMA_O_CONTROL) = RTDMA_CONTROL_PERINTCLR;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Write a one to the clear bit to clear the peripheral trigger flag. // HWREGB(base + RTDMA_O_CONTROL) = RTDMA_CONTROL_PERINTCLR; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlineboolDMA_getTransferStatusFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Read the Transfer Status Flag and return appropriately.\n    //\n    return((HWREGH(base + RTDMA_O_CONTROL) & RTDMA_CONTROL_TRANSFERSTS) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Read the Transfer Status Flag and return appropriately. // return((HWREGH(base + RTDMA_O_CONTROL) & RTDMA_CONTROL_TRANSFERSTS) != 0U); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlineboolDMA_getBurstStatusFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Read the Burst Status Flag and return appropriately.\n    //\n    return((HWREGH(base + RTDMA_O_CONTROL) & RTDMA_CONTROL_BURSTSTS) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Read the Burst Status Flag and return appropriately. // return((HWREGH(base + RTDMA_O_CONTROL) & RTDMA_CONTROL_BURSTSTS) != 0U); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlineboolDMA_getRunStatusFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Read the Run Status Flag and return appropriately.\n    //\n    return((HWREGH(base + RTDMA_O_CONTROL) & RTDMA_CONTROL_RUNSTS) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Read the Run Status Flag and return appropriately. // return((HWREGH(base + RTDMA_O_CONTROL) & RTDMA_CONTROL_RUNSTS) != 0U); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlineboolDMA_getOverflowFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Read the Overflow Flag and return appropriately.\n    //\n    return((HWREGH(base + RTDMA_O_CONTROL) & RTDMA_CONTROL_OVRFLG) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Read the Overflow Flag and return appropriately. // return((HWREGH(base + RTDMA_O_CONTROL) & RTDMA_CONTROL_OVRFLG) != 0U); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlineboolDMA_getTriggerFlagStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Read the peripheral trigger flag and return appropriately.\n    //\n    return((HWREGH(base + RTDMA_O_CONTROL) & RTDMA_CONTROL_PERINTFLG) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Read the peripheral trigger flag and return appropriately. // return((HWREGH(base + RTDMA_O_CONTROL) & RTDMA_CONTROL_PERINTFLG) != 0U); }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_startChannel",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Set the run bit.\n    //\n    HWREGB(base + RTDMA_O_CONTROL) = RTDMA_CONTROL_RUN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Set the run bit. // HWREGB(base + RTDMA_O_CONTROL) = RTDMA_CONTROL_RUN; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_stopChannel",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Set the halt bit.\n    //\n    HWREGB(base + RTDMA_O_CONTROL) = RTDMA_CONTROL_HALT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Set the halt bit. // HWREGB(base + RTDMA_O_CONTROL) = RTDMA_CONTROL_HALT; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_setInterruptMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DMA_InterruptMode"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Write the selected interrupt generation mode to the register.\n    //\n    if(mode == DMA_INT_AT_END)\n    {\n        HWREG(base + RTDMA_O_MODE) |= RTDMA_MODE_CHINTMODE;\n    }\n    else\n    {\n        HWREG(base + RTDMA_O_MODE) &= ~RTDMA_MODE_CHINTMODE;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Write the selected interrupt generation mode to the register. // if(mode == DMA_INT_AT_END) { HWREG(base + RTDMA_O_MODE) |= RTDMA_MODE_CHINTMODE; } else { HWREG(base + RTDMA_O_MODE) &= ~RTDMA_MODE_CHINTMODE; } }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_enableInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Enable the specified DMA channel interrupt.\n    //\n    HWREG(base + RTDMA_O_MODE) |= RTDMA_MODE_CHINTE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Enable the specified DMA channel interrupt. // HWREG(base + RTDMA_O_MODE) |= RTDMA_MODE_CHINTE; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_disableInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Disable the specified DMA channel interrupt.\n    //\n    HWREG(base + RTDMA_O_MODE) &= ~RTDMA_MODE_CHINTE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Disable the specified DMA channel interrupt. // HWREG(base + RTDMA_O_MODE) &= ~RTDMA_MODE_CHINTE; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Lock DMA configuration\n    //\n    HWREGB(base + RTDMA_O_DMACFG_LOCK) = RTDMA_DMACFG_LOCK_LOCK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_isBaseValid(base)); // // Lock DMA configuration // HWREGB(base + RTDMA_O_DMACFG_LOCK) = RTDMA_DMACFG_LOCK_LOCK; }",
+      "registersUsed": [
+        "DMACFG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMACFG_LOCK"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Unlock DMA configuration, if not committed\n    //\n    HWREGB(base + RTDMA_O_DMACFG_LOCK) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_isBaseValid(base)); // // Unlock DMA configuration, if not committed // HWREGB(base + RTDMA_O_DMACFG_LOCK) = 0U; }",
+      "registersUsed": [
+        "DMACFG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMACFG_LOCK"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_isBaseValid(base));\n\n    //\n    // Commit the lock on the DMA configuration registers\n    //\n    HWREGB(base + RTDMA_O_DMACFG_COMMIT) = RTDMA_DMACFG_COMMIT_COMMIT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_isBaseValid(base)); // // Commit the lock on the DMA configuration registers // HWREGB(base + RTDMA_O_DMACFG_COMMIT) = RTDMA_DMACFG_COMMIT_COMMIT; }",
+      "registersUsed": [
+        "DMACFG_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMACFG_COMMIT"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_enableOverrunInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Enable the specified DMA channel interrupt.\n    //\n    HWREGH(base + RTDMA_O_MODE) |= (uint16_t)RTDMA_MODE_OVRINTE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Enable the specified DMA channel interrupt. // HWREGH(base + RTDMA_O_MODE) |= (uint16_t)RTDMA_MODE_OVRINTE; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_disableOverrunInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Disable the specified DMA channel interrupt.\n    //\n    HWREGH(base + RTDMA_O_MODE) &= ~(uint16_t)RTDMA_MODE_OVRINTE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Disable the specified DMA channel interrupt. // HWREGH(base + RTDMA_O_MODE) &= ~(uint16_t)RTDMA_MODE_OVRINTE; }",
+      "registersUsed": [
+        "MODE"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODE"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_clearErrorFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Write to the error clear bit\n    //\n    HWREGB(base + RTDMA_O_CONTROL) = RTDMA_CONTROL_ERRCLR;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_CH_isBaseValid(base)); // // Write to the error clear bit // HWREGB(base + RTDMA_O_CONTROL) = RTDMA_CONTROL_ERRCLR; }",
+      "registersUsed": [
+        "CONTROL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONTROL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_configSourceAddress",
+      "functionArgs": [
+        "base",
+        "*srcAddr"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constvoid"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Set up SOURCE address.\n    //\n    HWREG(base + RTDMA_O_SRC_BEG_ADDR_SHADOW) = (uint32_t)(uintptr_t)srcAddr;\n    HWREG(base + RTDMA_O_SRC_ADDR_SHADOW)     = (uint32_t)(uintptr_t)srcAddr;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Set up SOURCE address. // HWREG(base + RTDMA_O_SRC_BEG_ADDR_SHADOW) = (uint32_t)(uintptr_t)srcAddr; HWREG(base + RTDMA_O_SRC_ADDR_SHADOW) = (uint32_t)(uintptr_t)srcAddr; }",
+      "registersUsed": [
+        "SRC_BEG_ADDR_SHADOW",
+        "SRC_ADDR_SHADOW"
+      ],
+      "registersUsedMatchingBifield": [
+        "SRC_BEG_ADDR_SHADOW",
+        "SRC_ADDR_SHADOW"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_configDestAddress",
+      "functionArgs": [
+        "base",
+        "*destAddr"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constvoid"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Set up DESTINATION address.\n    //\n    HWREG(base + RTDMA_O_DST_BEG_ADDR_SHADOW) = (uint32_t)(uintptr_t)destAddr;\n    HWREG(base + RTDMA_O_DST_ADDR_SHADOW)     = (uint32_t)(uintptr_t)destAddr;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Set up DESTINATION address. // HWREG(base + RTDMA_O_DST_BEG_ADDR_SHADOW) = (uint32_t)(uintptr_t)destAddr; HWREG(base + RTDMA_O_DST_ADDR_SHADOW) = (uint32_t)(uintptr_t)destAddr; }",
+      "registersUsed": [
+        "DST_BEG_ADDR_SHADOW",
+        "DST_ADDR_SHADOW"
+      ],
+      "registersUsedMatchingBifield": [
+        "DST_BEG_ADDR_SHADOW",
+        "DST_ADDR_SHADOW"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_setBurstSignalingMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DMA_BurstSignalingMode"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Configure the Burst mode operation\n    //\n    HWREGB(base + RTDMA_O_BURST_INTF_CTRL) = (uint8_t)mode;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_CH_isBaseValid(base)); // // Configure the Burst mode operation // HWREGB(base + RTDMA_O_BURST_INTF_CTRL) = (uint8_t)mode; }",
+      "registersUsed": [
+        "BURST_INTF_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "BURST_INTF_CTRL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_lockAllChannelConfig",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    uint8_t i;\n    uint32_t base_ch;\n\n    for (i = 0U; i < (uint8_t)DMA_TOTAL_CH; i++)\n    {\n        base_ch = base + (0x1000U * i);\n\n        //\n        // Lock the DMA channel configuration.\n        //\n        HWREGB(base_ch + RTDMA_O_CHCFG_LOCK) = RTDMA_CHCFG_LOCK_LOCK;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_CH_isBaseValid(base)); uint8_t i; uint32_t base_ch; for (i = 0U; i < (uint8_t)DMA_TOTAL_CH; i++) { base_ch = base + (0x1000U * i); // // Lock the DMA channel configuration. // HWREGB(base_ch + RTDMA_O_CHCFG_LOCK) = RTDMA_CHCFG_LOCK_LOCK; } }",
+      "registersUsed": [
+        "CHCFG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHCFG_LOCK"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_unlockAllChannelConfig",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT((base == RTDMA1CH1_BASE) || (base == RTDMA2CH1_BASE));\n\n    uint8_t i;\n    uint32_t base_ch;\n\n    for (i = 0U; i < (uint8_t)DMA_TOTAL_CH; i++)\n    {\n        base_ch = base + (0x1000U * i);\n        ASSERT(DMA_CH_isBaseValid(base_ch));\n\n        //\n        // Unlock the DMA channel configuration.\n        //\n        HWREGB(base_ch + RTDMA_O_CHCFG_LOCK) = 0U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT((base == RTDMA1CH1_BASE) || (base == RTDMA2CH1_BASE)); uint8_t i; uint32_t base_ch; for (i = 0U; i < (uint8_t)DMA_TOTAL_CH; i++) { base_ch = base + (0x1000U * i); ASSERT(DMA_CH_isBaseValid(base_ch)); // // Unlock the DMA channel configuration. // HWREGB(base_ch + RTDMA_O_CHCFG_LOCK) = 0U; } }",
+      "registersUsed": [
+        "CHCFG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHCFG_LOCK"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_commitAllChannelConfig",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    uint32_t i;\n    uint32_t base_ch;\n\n    for (i = 0U; i < (uint8_t)DMA_TOTAL_CH; i++)\n    {\n        base_ch = base + (0x1000U * i);\n        ASSERT(DMA_CH_isBaseValid(base_ch));\n\n        //\n        // Commit the DMA channel configuration.\n        //\n        HWREGB(base_ch + RTDMA_O_CHCFG_COMMIT) = RTDMA_CHCFG_COMMIT_COMMIT;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_CH_isBaseValid(base)); uint32_t i; uint32_t base_ch; for (i = 0U; i < (uint8_t)DMA_TOTAL_CH; i++) { base_ch = base + (0x1000U * i); ASSERT(DMA_CH_isBaseValid(base_ch)); // // Commit the DMA channel configuration. // HWREGB(base_ch + RTDMA_O_CHCFG_COMMIT) = RTDMA_CHCFG_COMMIT_COMMIT; } }",
+      "registersUsed": [
+        "CHCFG_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHCFG_COMMIT"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_lockChannelConfig",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Lock the DMA channel configuration.\n    //\n    HWREGB(base + RTDMA_O_CHCFG_LOCK) = RTDMA_CHCFG_LOCK_LOCK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_CH_isBaseValid(base)); // // Lock the DMA channel configuration. // HWREGB(base + RTDMA_O_CHCFG_LOCK) = RTDMA_CHCFG_LOCK_LOCK; }",
+      "registersUsed": [
+        "CHCFG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHCFG_LOCK"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_unlockChannelConfig",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Unlock DMA channel configuration\n    //\n    HWREGB(base + RTDMA_O_CHCFG_LOCK) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_CH_isBaseValid(base)); // // Unlock DMA channel configuration // HWREGB(base + RTDMA_O_CHCFG_LOCK) = 0U; }",
+      "registersUsed": [
+        "CHCFG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHCFG_LOCK"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "staticinlinevoidDMA_commitChannelConfig",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_CH_isBaseValid(base));\n\n    //\n    // Commit the lock on the DMA channel configuration registers\n    //\n    HWREGB(base + RTDMA_O_CHCFG_COMMIT) = RTDMA_CHCFG_COMMIT_COMMIT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_CH_isBaseValid(base)); // // Commit the lock on the DMA channel configuration registers // HWREGB(base + RTDMA_O_CHCFG_COMMIT) = RTDMA_CHCFG_COMMIT_COMMIT; }",
+      "registersUsed": [
+        "CHCFG_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHCFG_COMMIT"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_MPU_isBaseValid(base));\n\n    //\n    // Set the MPU function enable bit.\n    //\n    HWREGB(base + RTDMA_O_MPUCTRL) |= RTDMA_MPUCTRL_MPUEN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_MPU_isBaseValid(base)); // // Set the MPU function enable bit. // HWREGB(base + RTDMA_O_MPUCTRL) |= RTDMA_MPUCTRL_MPUEN; }",
+      "registersUsed": [
+        "MPUCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUCTRL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_MPU_isBaseValid(base));\n\n    //\n    // Set the MPU function enable bit.\n    //\n    HWREGB(base + RTDMA_O_MPUCTRL) &= (uint8_t)(~RTDMA_MPUCTRL_MPUEN);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_MPU_isBaseValid(base)); // // Set the MPU function enable bit. // HWREGB(base + RTDMA_O_MPUCTRL) &= (uint8_t)(~RTDMA_MPUCTRL_MPUEN); }",
+      "registersUsed": [
+        "MPUCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUCTRL"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_MPU_isBaseValid(base));\n\n    //\n    // Lock the MPU region configuration.\n    //\n    HWREGB(base + RTDMA_O_MPUCFG_LOCK) = RTDMA_MPUCFG_LOCK_LOCK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_MPU_isBaseValid(base)); // // Lock the MPU region configuration. // HWREGB(base + RTDMA_O_MPUCFG_LOCK) = RTDMA_MPUCFG_LOCK_LOCK; }",
+      "registersUsed": [
+        "MPUCFG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUCFG_LOCK"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_MPU_isBaseValid(base));\n\n    //\n    // Unlock the MPU configuration\n    //\n    HWREGB(base + RTDMA_O_MPUCFG_LOCK) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_MPU_isBaseValid(base)); // // Unlock the MPU configuration // HWREGB(base + RTDMA_O_MPUCFG_LOCK) = 0U; }",
+      "registersUsed": [
+        "MPUCFG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUCFG_LOCK"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_MPU_isBaseValid(base));\n\n    //\n    // Commit the lock on the MPU configuration.\n    //\n    HWREGB(base + RTDMA_O_MPUCFG_COMMIT) = RTDMA_MPUCFG_COMMIT_COMMIT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_MPU_isBaseValid(base)); // // Commit the lock on the MPU configuration. // HWREGB(base + RTDMA_O_MPUCFG_COMMIT) = RTDMA_MPUCFG_COMMIT_COMMIT; }",
+      "registersUsed": [
+        "MPUCFG_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUCFG_COMMIT"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_MPU_isBaseValid(base));\n\n    uint8_t i;\n\n    for (i = 0U; i < (uint8_t)DMA_TOTAL_MPU; i++)\n    {\n        //\n        // Lock the MPU configuration\n        //\n        HWREGB(base + RTDMA_O_MPUR_LOCK(i)) = 1U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_MPU_isBaseValid(base)); uint8_t i; for (i = 0U; i < (uint8_t)DMA_TOTAL_MPU; i++) { // // Lock the MPU configuration // HWREGB(base + RTDMA_O_MPUR_LOCK(i)) = 1U; } }",
+      "registersUsed": [
+        "MPUR_LOCK(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_LOCK(i)"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_MPU_isBaseValid(base));\n    uint8_t i;\n\n    for (i = 0U; i < (uint8_t)DMA_TOTAL_MPU; i++)\n    {\n\n        //\n        // Unlock the MPU configuration\n        //\n        HWREGB(base + RTDMA_O_MPUR_LOCK(i)) = 0U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_MPU_isBaseValid(base)); uint8_t i; for (i = 0U; i < (uint8_t)DMA_TOTAL_MPU; i++) { // // Unlock the MPU configuration // HWREGB(base + RTDMA_O_MPUR_LOCK(i)) = 0U; } }",
+      "registersUsed": [
+        "MPUR_LOCK(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_LOCK(i)"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(DMA_MPU_isBaseValid(base));\n\n    uint8_t i;\n\n    for (i = 0U; i < (uint8_t)DMA_TOTAL_MPU; i++)\n    {\n        //\n        // Commit the lock on the MPU registers.\n        //\n        HWREGB(base + RTDMA_O_MPUR_COMMIT(i)) = 1U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(DMA_MPU_isBaseValid(base)); uint8_t i; for (i = 0U; i < (uint8_t)DMA_TOTAL_MPU; i++) { // // Commit the lock on the MPU registers. // HWREGB(base + RTDMA_O_MPUR_COMMIT(i)) = 1U; } }",
+      "registersUsed": [
+        "MPUR_COMMIT(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_COMMIT(i)"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base",
+        "MPURegion"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DMA_MPURegion"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_MPU_isBaseValid(base));\n\n    //\n    // Lock the MPU region registers.\n    //\n    HWREGB(base + RTDMA_O_MPUR_LOCK((uint32_t)MPURegion)) = 1U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_MPU_isBaseValid(base)); // // Lock the MPU region registers. // HWREGB(base + RTDMA_O_MPUR_LOCK((uint32_t)MPURegion)) = 1U; }",
+      "registersUsed": [
+        "MPUR_LOCK(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_LOCK(i)"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base",
+        "MPURegion"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DMA_MPURegion"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_MPU_isBaseValid(base));\n\n    //\n    // Unlock the MPU region registers.\n    //\n    HWREGB(base + RTDMA_O_MPUR_LOCK((uint32_t)MPURegion)) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_MPU_isBaseValid(base)); // // Unlock the MPU region registers. // HWREGB(base + RTDMA_O_MPUR_LOCK((uint32_t)MPURegion)) = 0U; }",
+      "registersUsed": [
+        "MPUR_LOCK(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_LOCK(i)"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base",
+        "MPURegion"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DMA_MPURegion"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DMA_MPU_isBaseValid(base));\n\n    //\n    // Commit the lock on MPU registers.\n    //\n    HWREGB(base + RTDMA_O_MPUR_COMMIT((uint32_t)MPURegion)) = 1U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DMA_MPU_isBaseValid(base)); // // Commit the lock on MPU registers. // HWREGB(base + RTDMA_O_MPUR_COMMIT((uint32_t)MPURegion)) = 1U; }",
+      "registersUsed": [
+        "MPUR_COMMIT(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_COMMIT(i)"
+      ]
+    },
+    {
+      "file": "rtdma.h",
+      "peripheral": "rtdma",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Commit the DMA configuration.\n    //\n    HWREGB(RTDMA1_BASE + RTDMA_O_DMACFG_COMMIT) = 0x1U;\n    HWREGB(RTDMA2_BASE + RTDMA_O_DMACFG_COMMIT) = 0x1U;\n\n    uint8_t i;\n    uint32_t base;\n\n    for (i = 0U; i < (uint8_t)DMA_TOTAL_CH; i++)\n    {\n        base = RTDMA1CH1_BASE + (0x1000U * i);\n        ASSERT(DMA_CH_isBaseValid(base));\n        //\n        // Commit the RTDMA1 channel configuration.\n        //\n        HWREGB(base + RTDMA_O_CHCFG_COMMIT) = 0x1U;\n    }\n\n    for (i = 0U; i < (uint8_t)DMA_TOTAL_CH; i++)\n    {\n        base = RTDMA2CH1_BASE + (0x1000U * i);\n        ASSERT(DMA_CH_isBaseValid(base));\n        //\n        // Commit the RTDMA2 channel configuration.\n        //\n        HWREGB(base + RTDMA_O_CHCFG_COMMIT) = 0x1U;\n    }\n\n    //\n    // Commit the MPU configuration.\n    //\n    HWREGB(RTDMA1_MPU_BASE + RTDMA_O_MPUCFG_COMMIT) = 0x1U;\n    HWREGB(RTDMA2_MPU_BASE + RTDMA_O_MPUCFG_COMMIT) = 0x1U;\n\n    for (i = 0U; i < (uint8_t)DMA_TOTAL_MPU; i++)\n    {\n        //\n        // Commit the RTDMA1 MPU regions configuration.\n        //\n        HWREGB(RTDMA1_MPU_BASE + RTDMA_O_MPUR_COMMIT(i)) = 0x1U;\n    }\n\n    for (i = 0U; i < (uint8_t)DMA_TOTAL_MPU; i++)\n    {\n        //\n        // Commit the RTDMA2 MPU regions configuration.\n        //\n        HWREGB(RTDMA2_MPU_BASE + RTDMA_O_MPUR_COMMIT(i)) = 0x1U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Commit the DMA configuration. // HWREGB(RTDMA1_BASE + RTDMA_O_DMACFG_COMMIT) = 0x1U; HWREGB(RTDMA2_BASE + RTDMA_O_DMACFG_COMMIT) = 0x1U; uint8_t i; uint32_t base; for (i = 0U; i < (uint8_t)DMA_TOTAL_CH; i++) { base = RTDMA1CH1_BASE + (0x1000U * i); ASSERT(DMA_CH_isBaseValid(base)); // // Commit the RTDMA1 channel configuration. // HWREGB(base + RTDMA_O_CHCFG_COMMIT) = 0x1U; } for (i = 0U; i < (uint8_t)DMA_TOTAL_CH; i++) { base = RTDMA2CH1_BASE + (0x1000U * i); ASSERT(DMA_CH_isBaseValid(base)); // // Commit the RTDMA2 channel configuration. // HWREGB(base + RTDMA_O_CHCFG_COMMIT) = 0x1U; } // // Commit the MPU configuration. // HWREGB(RTDMA1_MPU_BASE + RTDMA_O_MPUCFG_COMMIT) = 0x1U; HWREGB(RTDMA2_MPU_BASE + RTDMA_O_MPUCFG_COMMIT) = 0x1U; for (i = 0U; i < (uint8_t)DMA_TOTAL_MPU; i++) { // // Commit the RTDMA1 MPU regions configuration. // HWREGB(RTDMA1_MPU_BASE + RTDMA_O_MPUR_COMMIT(i)) = 0x1U; } for (i = 0U; i < (uint8_t)DMA_TOTAL_MPU; i++) { // // Commit the RTDMA2 MPU regions configuration. // HWREGB(RTDMA2_MPU_BASE + RTDMA_O_MPUR_COMMIT(i)) = 0x1U; } }",
+      "registersUsed": [
+        "DMACFG_COMMIT",
+        "MPUR_COMMIT(i)",
+        "MPUCFG_COMMIT",
+        "CHCFG_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "DMACFG_COMMIT",
+        "MPUR_COMMIT(i)",
+        "MPUCFG_COMMIT",
+        "CHCFG_COMMIT"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,441 @@
+{
+  "name": "clockconfig",
+  "functions": [
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREGH(DEVCFG_BASE + SYSCTL_O_MCDCR) &= (uint16_t)(~(SYSCTL_MCDCR_MCLKOFF));\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(DEVCFG_BASE + SYSCTL_O_MCDCR) &= (uint16_t)(~(SYSCTL_MCDCR_MCLKOFF)); }",
+      "registersUsed": [
+        "MCDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCDCR"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREGH(DEVCFG_BASE + SYSCTL_O_MCDCR) |= SYSCTL_MCDCR_MCLKOFF;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(DEVCFG_BASE + SYSCTL_O_MCDCR) |= SYSCTL_MCDCR_MCLKOFF; }",
+      "registersUsed": [
+        "MCDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCDCR"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    //  Check the status bit to determine failure\n    //\n    return((HWREGH(DEVCFG_BASE + SYSCTL_O_MCDCR) & SYSCTL_MCDCR_MCLKSTS) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the status bit to determine failure // return((HWREGH(DEVCFG_BASE + SYSCTL_O_MCDCR) & SYSCTL_MCDCR_MCLKSTS) != 0U); }",
+      "registersUsed": [
+        "MCDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCDCR"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREGH(DEVCFG_BASE + SYSCTL_O_MCDCR) |= SYSCTL_MCDCR_MCLKCLR;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(DEVCFG_BASE + SYSCTL_O_MCDCR) |= SYSCTL_MCDCR_MCLKCLR; }",
+      "registersUsed": [
+        "MCDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCDCR"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREGH(DEVCFG_BASE + SYSCTL_O_MCDCR) &= (uint16_t)(~(SYSCTL_MCDCR_OSCOFF));\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(DEVCFG_BASE + SYSCTL_O_MCDCR) &= (uint16_t)(~(SYSCTL_MCDCR_OSCOFF)); }",
+      "registersUsed": [
+        "MCDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCDCR"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREGH(DEVCFG_BASE + SYSCTL_O_MCDCR) |= SYSCTL_MCDCR_OSCOFF;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(DEVCFG_BASE + SYSCTL_O_MCDCR) |= SYSCTL_MCDCR_OSCOFF; }",
+      "registersUsed": [
+        "MCDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCDCR"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "clksrc",
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_XClkSource",
+        "SysCtl_XClkDivider"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Configure the clock divider\n    //\n    HWREG(DEVCFG_BASE + SYSCTL_O_XCLKOUTDIVSEL) = (uint32_t)divider;\n\n    SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_XCLKOUTDIVSEL);\n\n    //\n    // Configure the clock source\n    //\n    HWREG(DEVCFG_BASE + SYSCTL_O_CLKSRCCTL3) =\n            (HWREG(DEVCFG_BASE + SYSCTL_O_CLKSRCCTL3) &\n             ~SYSCTL_CLKSRCCTL3_XCLKOUTSEL_M) |\n            ((uint32_t)clksrc << SYSCTL_CLKSRCCTL3_XCLKOUTSEL_S);\n\n    SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_CLKSRCCTL3);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Configure the clock divider // HWREG(DEVCFG_BASE + SYSCTL_O_XCLKOUTDIVSEL) = (uint32_t)divider; SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_XCLKOUTDIVSEL); // // Configure the clock source // HWREG(DEVCFG_BASE + SYSCTL_O_CLKSRCCTL3) = (HWREG(DEVCFG_BASE + SYSCTL_O_CLKSRCCTL3) & ~SYSCTL_CLKSRCCTL3_XCLKOUTSEL_M) | ((uint32_t)clksrc << SYSCTL_CLKSRCCTL3_XCLKOUTSEL_S); SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_CLKSRCCTL3); }",
+      "registersUsed": [
+        "CLKSRCCTL3",
+        "XCLKOUTDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKSRCCTL3",
+        "XCLKOUTDIVSEL"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "staticinlinevoidSysCtl_delay69Cycles",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    __asm__ volatile (\" NOP #8\");\n    __asm__ volatile (\" NOP #8\");\n    __asm__ volatile (\" NOP #8\");\n    __asm__ volatile (\" NOP #8\");\n    __asm__ volatile (\" NOP #8\");\n    __asm__ volatile (\" NOP #8\");\n    __asm__ volatile (\" NOP #8\");\n    __asm__ volatile (\" NOP #8\");\n    __asm__ volatile (\" NOP #5\");\n}\n",
+      "functionContentWithoutFormatting": "{ __asm__ volatile (\" NOP #8\"); __asm__ volatile (\" NOP #8\"); __asm__ volatile (\" NOP #8\"); __asm__ volatile (\" NOP #8\"); __asm__ volatile (\" NOP #8\"); __asm__ volatile (\" NOP #8\"); __asm__ volatile (\" NOP #8\"); __asm__ volatile (\" NOP #8\"); __asm__ volatile (\" NOP #5\"); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "mcanInst",
+        "clksrc",
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_MCANInstance",
+        "SysCtl_MCANClkSource",
+        "SysCtl_MCANClkDivider"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    uint8_t bitpos;\n\n    //\n    // Configure the clock divider\n    //\n    bitpos = 5U * (uint8_t)mcanInst;\n    HWREG(DEVCFG_BASE + SYSCTL_O_MCANCLKDIVSEL) =\n            (HWREG(DEVCFG_BASE + SYSCTL_O_MCANCLKDIVSEL) &\n             ~(SYSCTL_MCANCLKDIVSEL_MCANACLKDIV_M << bitpos)) |\n            ((uint32_t)divider << bitpos);\n\n    //\n    //  Provide delay of 3 X (Fsysclk/Fintosc1) + 9 = 69 SYSCLK cycles\n    //\n    SysCtl_delay69Cycles();\n\n    //\n    // Configure the clock source\n    //\n    bitpos = SYSCTL_CLKSRCCTL2_MCANABCLKSEL_S + 2U * (uint8_t)mcanInst;\n    HWREG(DEVCFG_BASE + SYSCTL_O_CLKSRCCTL2) =\n            (HWREG(DEVCFG_BASE + SYSCTL_O_CLKSRCCTL2) & ~(0x3U << bitpos)) |\n            ((uint16_t)clksrc << bitpos);\n\n    SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_CLKSRCCTL2);\n}\n",
+      "functionContentWithoutFormatting": "{ uint8_t bitpos; // // Configure the clock divider // bitpos = 5U * (uint8_t)mcanInst; HWREG(DEVCFG_BASE + SYSCTL_O_MCANCLKDIVSEL) = (HWREG(DEVCFG_BASE + SYSCTL_O_MCANCLKDIVSEL) & ~(SYSCTL_MCANCLKDIVSEL_MCANACLKDIV_M << bitpos)) | ((uint32_t)divider << bitpos); // // Provide delay of 3 X (Fsysclk/Fintosc1) + 9 = 69 SYSCLK cycles // SysCtl_delay69Cycles(); // // Configure the clock source // bitpos = SYSCTL_CLKSRCCTL2_MCANABCLKSEL_S + 2U * (uint8_t)mcanInst; HWREG(DEVCFG_BASE + SYSCTL_O_CLKSRCCTL2) = (HWREG(DEVCFG_BASE + SYSCTL_O_CLKSRCCTL2) & ~(0x3U << bitpos)) | ((uint16_t)clksrc << bitpos); SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_CLKSRCCTL2); }",
+      "registersUsed": [
+        "CLKSRCCTL2",
+        "MCANCLKDIVSEL",
+        "MCANC"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKSRCCTL2",
+        "MCANCLKDIVSEL",
+        "MCANC"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "source",
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_Cputimer2ClkSource",
+        "SysCtl_Cputimer2ClkDivider"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = (uint16_t)(\n        ((uint16_t)(HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) &\n            ~(SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_M |\n              SYSCTL_TMR2CLKCTL_TMR2CLKPRESCALE_M))) |\n        ((uint16_t)divider << SYSCTL_TMR2CLKCTL_TMR2CLKPRESCALE_S) |\n        ((uint16_t)source << SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_S));\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) = (uint16_t)( ((uint16_t)(HWREGH(CPUSYS_BASE + SYSCTL_O_TMR2CLKCTL) & ~(SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_M | SYSCTL_TMR2CLKCTL_TMR2CLKPRESCALE_M))) | ((uint16_t)divider << SYSCTL_TMR2CLKCTL_TMR2CLKPRESCALE_S) | ((uint16_t)source << SYSCTL_TMR2CLKCTL_TMR2CLKSRCSEL_S)); }",
+      "registersUsed": [
+        "TMR2CLKCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TMR2CLKCTL"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_EPWMClkDivider"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREGH(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) = (uint16_t)(\n        (HWREGH(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) &\n         ~SYSCTL_PERCLKDIVSEL_EPWMCLKDIV_M) | (uint16_t)divider);\n\n    SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_PERCLKDIVSEL);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) = (uint16_t)( (HWREGH(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) & ~SYSCTL_PERCLKDIVSEL_EPWMCLKDIV_M) | (uint16_t)divider); SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_PERCLKDIVSEL); }",
+      "registersUsed": [
+        "PERCLKDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCLKDIVSEL"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_EMIFClkDivider"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREG(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) =\n            (HWREG(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) &\n                ~SYSCTL_PERCLKDIVSEL_EMIF1CLKDIV_M) |\n            ((uint32_t)divider << SYSCTL_PERCLKDIVSEL_EMIF1CLKDIV_S);\n\n    SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_PERCLKDIVSEL);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) = (HWREG(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) & ~SYSCTL_PERCLKDIVSEL_EMIF1CLKDIV_M) | ((uint32_t)divider << SYSCTL_PERCLKDIVSEL_EMIF1CLKDIV_S); SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_PERCLKDIVSEL); }",
+      "registersUsed": [
+        "PERCLKDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCLKDIVSEL"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_LINClkDivider"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREG(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) =\n            (HWREG(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) &\n                ~SYSCTL_PERCLKDIVSEL_LINACLKDIV_M) |\n            ((uint32_t)divider << SYSCTL_PERCLKDIVSEL_LINACLKDIV_S);\n\n    SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_PERCLKDIVSEL);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) = (HWREG(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) & ~SYSCTL_PERCLKDIVSEL_LINACLKDIV_M) | ((uint32_t)divider << SYSCTL_PERCLKDIVSEL_LINACLKDIV_S); SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_PERCLKDIVSEL); }",
+      "registersUsed": [
+        "PERCLKDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCLKDIVSEL"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_LINClkDivider"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREG(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) =\n            (HWREG(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) &\n                ~SYSCTL_PERCLKDIVSEL_LINBCLKDIV_M) |\n            ((uint32_t)divider << SYSCTL_PERCLKDIVSEL_LINBCLKDIV_S);\n\n    SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_PERCLKDIVSEL);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) = (HWREG(DEVCFG_BASE + SYSCTL_O_PERCLKDIVSEL) & ~SYSCTL_PERCLKDIVSEL_LINBCLKDIV_M) | ((uint32_t)divider << SYSCTL_PERCLKDIVSEL_LINBCLKDIV_S); SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_PERCLKDIVSEL); }",
+      "registersUsed": [
+        "PERCLKDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCLKDIVSEL"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "divider",
+        "phyEnable"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_ECatClkDivider",
+        "SysCtl_ECatPhyClk"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREGH(DEVCFG_BASE + SYSCTL_O_ETHERCATCLKCTL) = (uint16_t)(\n            ((uint16_t)(HWREGH(DEVCFG_BASE + SYSCTL_O_ETHERCATCLKCTL) &\n                ~(SYSCTL_ETHERCATCLKCTL_PHYCLKEN    |\n                  SYSCTL_ETHERCATCLKCTL_ECATDIV_M))) |\n            ((uint16_t)divider << SYSCTL_ETHERCATCLKCTL_ECATDIV_S) |\n            (uint16_t)phyEnable);\n\n    SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_ETHERCATCLKCTL);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(DEVCFG_BASE + SYSCTL_O_ETHERCATCLKCTL) = (uint16_t)( ((uint16_t)(HWREGH(DEVCFG_BASE + SYSCTL_O_ETHERCATCLKCTL) & ~(SYSCTL_ETHERCATCLKCTL_PHYCLKEN | SYSCTL_ETHERCATCLKCTL_ECATDIV_M))) | ((uint16_t)divider << SYSCTL_ETHERCATCLKCTL_ECATDIV_S) | (uint16_t)phyEnable); SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_ETHERCATCLKCTL); }",
+      "registersUsed": [
+        "ETHERCATCLKCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ETHERCATCLKCTL"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "divider",
+        "tdivider",
+        "clkMode"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_CLBClkDivider",
+        "SysCtl_CLBTClkDivider",
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREG(DEVCFG_BASE + SYSCTL_O_CLBCLKCTL) =\n        ((uint32_t)divider << 0U) | ((uint32_t)tdivider << 4U) | clkMode;\n\n    SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_CLKSRCCTL2);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(DEVCFG_BASE + SYSCTL_O_CLBCLKCTL) = ((uint32_t)divider << 0U) | ((uint32_t)tdivider << 4U) | clkMode; SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_CLKSRCCTL2); }",
+      "registersUsed": [
+        "CLBCLKCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLBCLKCTL"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_HSMClkDivider"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREG(DEVCFG_BASE + SYSCTL_O_HSMCLKDIVSEL) =\n            (HWREG(DEVCFG_BASE + SYSCTL_O_HSMCLKDIVSEL) &\n                ~SYSCTL_HSMCLKDIVSEL_HSMCLKDIV_M) |\n            ((uint32_t)divider << SYSCTL_HSMCLKDIVSEL_HSMCLKDIV_S);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(DEVCFG_BASE + SYSCTL_O_HSMCLKDIVSEL) = (HWREG(DEVCFG_BASE + SYSCTL_O_HSMCLKDIVSEL) & ~SYSCTL_HSMCLKDIVSEL_HSMCLKDIV_M) | ((uint32_t)divider << SYSCTL_HSMCLKDIVSEL_HSMCLKDIV_S); }",
+      "registersUsed": [
+        "HSMCLKDIVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "HSMCLKDIVSEL"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    return(HWREGH(DEVCFG_BASE + SYSCTL_O_X1CNT) & SYSCTL_X1CNT_X1CNT_M);\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREGH(DEVCFG_BASE + SYSCTL_O_X1CNT) & SYSCTL_X1CNT_X1CNT_M); }",
+      "registersUsed": [
+        "X1CNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "X1CNT"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREG(DEVCFG_BASE + SYSCTL_O_X1CNT) |= SYSCTL_X1CNT_CLR;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(DEVCFG_BASE + SYSCTL_O_X1CNT) |= SYSCTL_X1CNT_CLR; }",
+      "registersUsed": [
+        "X1CNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "X1CNT"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREGH(DEVCFG_BASE + SYSCTL_O_XTALCR) &= (uint16_t)(~SYSCTL_XTALCR_OSCOFF);\n    SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_XTALCR);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(DEVCFG_BASE + SYSCTL_O_XTALCR) &= (uint16_t)(~SYSCTL_XTALCR_OSCOFF); SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_XTALCR); }",
+      "registersUsed": [
+        "XTALCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "XTALCR"
+      ]
+    },
+    {
+      "file": "clockconfig.h",
+      "peripheral": "clockconfig",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREGH(DEVCFG_BASE + SYSCTL_O_XTALCR) |= SYSCTL_XTALCR_OSCOFF;\n    SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_XTALCR);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(DEVCFG_BASE + SYSCTL_O_XTALCR) |= SYSCTL_XTALCR_OSCOFF; SysCtl_pollSyncBusy(SYSCTL_SYNCBUSY_XTALCR); }",
+      "registersUsed": [
+        "XTALCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "XTALCR"
+      ]
+    }
+  ]
+}

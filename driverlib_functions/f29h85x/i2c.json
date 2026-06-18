@@ -1,0 +1,967 @@
+{
+  "name": "i2c",
+  "functions": [
+    {
+      "file": "i2c.c",
+      "peripheral": "i2c",
+      "functionName": "I2C_initController",
+      "functionArgs": [
+        "base",
+        "sysclkHz",
+        "bitRate",
+        "dutyCycle"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "I2C_DutyCycle"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t modPrescale;\n    uint32_t divider;\n    uint32_t dValue;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n    ASSERT((10000000U / bitRate) >  10U);\n\n    //\n    // Set the prescaler for the module clock.\n    //\n    modPrescale = (sysclkHz / 10000000U) - 1U;\n    HWREGH(base + I2C_O_PSC) = (uint16_t)(I2C_PSC_IPSC_M & modPrescale);\n\n    switch(modPrescale)\n    {\n        case 0U:\n            dValue = 7U;\n            break;\n\n        case 1U:\n            dValue = 6U;\n            break;\n\n        default:\n            dValue = 5U;\n            break;\n    }\n\n    //\n    // Set the divider for the time low\n    //\n    divider = (10000000U / bitRate) - (2U * dValue);\n\n    if(dutyCycle == I2C_DUTYCYCLE_50)\n    {\n        HWREGH(base + I2C_O_CLKH) = (uint16_t)(divider / 2U);\n    }\n    else\n    {\n        HWREGH(base + I2C_O_CLKH) = (uint16_t)(divider / 3U);\n    }\n\n    HWREGH(base + I2C_O_CLKL) = divider - HWREGH(base + I2C_O_CLKH);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t modPrescale; uint32_t divider; uint32_t dValue; // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); ASSERT((10000000U / bitRate) > 10U); // // Set the prescaler for the module clock. // modPrescale = (sysclkHz / 10000000U) - 1U; HWREGH(base + I2C_O_PSC) = (uint16_t)(I2C_PSC_IPSC_M & modPrescale); switch(modPrescale) { case 0U: dValue = 7U; break; case 1U: dValue = 6U; break; default: dValue = 5U; break; } // // Set the divider for the time low // divider = (10000000U / bitRate) - (2U * dValue); if(dutyCycle == I2C_DUTYCYCLE_50) { HWREGH(base + I2C_O_CLKH) = (uint16_t)(divider / 2U); } else { HWREGH(base + I2C_O_CLKH) = (uint16_t)(divider / 3U); } HWREGH(base + I2C_O_CLKL) = divider - HWREGH(base + I2C_O_CLKH); }",
+      "registersUsed": [
+        "CLKL",
+        "CLKH",
+        "PSC"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKL",
+        "CLKH",
+        "PSC"
+      ]
+    },
+    {
+      "file": "i2c.c",
+      "peripheral": "i2c",
+      "functionName": "I2C_initControllerModuleFrequency",
+      "functionArgs": [
+        "base",
+        "sysclkHz",
+        "bitRate",
+        "dutyCycle",
+        "moduleFrequency"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "I2C_DutyCycle",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t modPrescale;\n    uint32_t divider;\n    uint32_t dValue;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n    ASSERT((moduleFrequency / bitRate) >  10U);\n\n    //\n    // Set the prescaler for the module clock.\n    //\n    modPrescale = (sysclkHz / moduleFrequency) - 1U;\n    HWREGH(base + I2C_O_PSC) = I2C_PSC_IPSC_M & modPrescale;\n\n    switch(modPrescale)\n    {\n        case 0U:\n            dValue = 7U;\n            break;\n\n        case 1U:\n            dValue = 6U;\n            break;\n\n        default:\n            dValue = 5U;\n            break;\n    }\n\n    //\n    // Set the divider for the time low\n    //\n    divider = (moduleFrequency / bitRate) - (2U * dValue);\n\n    if(dutyCycle == I2C_DUTYCYCLE_50)\n    {\n        HWREGH(base + I2C_O_CLKH) = divider / 2U;\n    }\n    else\n    {\n        HWREGH(base + I2C_O_CLKH) = divider / 3U;\n    }\n\n    HWREGH(base + I2C_O_CLKL) = divider - HWREGH(base + I2C_O_CLKH);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t modPrescale; uint32_t divider; uint32_t dValue; // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); ASSERT((moduleFrequency / bitRate) > 10U); // // Set the prescaler for the module clock. // modPrescale = (sysclkHz / moduleFrequency) - 1U; HWREGH(base + I2C_O_PSC) = I2C_PSC_IPSC_M & modPrescale; switch(modPrescale) { case 0U: dValue = 7U; break; case 1U: dValue = 6U; break; default: dValue = 5U; break; } // // Set the divider for the time low // divider = (moduleFrequency / bitRate) - (2U * dValue); if(dutyCycle == I2C_DUTYCYCLE_50) { HWREGH(base + I2C_O_CLKH) = divider / 2U; } else { HWREGH(base + I2C_O_CLKH) = divider / 3U; } HWREGH(base + I2C_O_CLKL) = divider - HWREGH(base + I2C_O_CLKH); }",
+      "registersUsed": [
+        "CLKL",
+        "CLKH",
+        "PSC"
+      ],
+      "registersUsedMatchingBifield": [
+        "CLKL",
+        "CLKH",
+        "PSC"
+      ]
+    },
+    {
+      "file": "i2c.c",
+      "peripheral": "i2c",
+      "functionName": "I2C_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Enable the desired basic interrupts\n    //\n    HWREGH(base + I2C_O_IER) |= (uint16_t)(intFlags & 0xFFFFU);\n\n    //\n    // Enabling addressed-as-target interrupt separately because its bit is\n    // different between the IER and STR registers.\n    //\n    if((intFlags & I2C_INT_ADDR_TARGET) != 0U)\n    {\n        HWREGH(base + I2C_O_IER) |= I2C_IER_AAT;\n    }\n\n    //\n    // Enable desired FIFO interrupts.\n    //\n    if((intFlags & I2C_INT_TXFF) != 0U)\n    {\n        HWREGH(base + I2C_O_FFTX) |= I2C_FFTX_TXFFIENA;\n    }\n\n    if((intFlags & I2C_INT_RXFF) != 0U)\n    {\n        HWREGH(base + I2C_O_FFRX) |= I2C_FFRX_RXFFIENA;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Enable the desired basic interrupts // HWREGH(base + I2C_O_IER) |= (uint16_t)(intFlags & 0xFFFFU); // // Enabling addressed-as-target interrupt separately because its bit is // different between the IER and STR registers. // if((intFlags & I2C_INT_ADDR_TARGET) != 0U) { HWREGH(base + I2C_O_IER) |= I2C_IER_AAT; } // // Enable desired FIFO interrupts. // if((intFlags & I2C_INT_TXFF) != 0U) { HWREGH(base + I2C_O_FFTX) |= I2C_FFTX_TXFFIENA; } if((intFlags & I2C_INT_RXFF) != 0U) { HWREGH(base + I2C_O_FFRX) |= I2C_FFRX_RXFFIENA; } }",
+      "registersUsed": [
+        "IER",
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "IER",
+        "FFTX",
+        "FFRX"
+      ]
+    },
+    {
+      "file": "i2c.c",
+      "peripheral": "i2c",
+      "functionName": "I2C_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Disable the desired basic interrupts.\n    //\n    HWREGH(base + I2C_O_IER) &= (uint16_t)~(intFlags & 0xFFFFU);\n\n    //\n    // Disabling addressed-as-target interrupt separately because its bit is\n    // different between the IER and STR registers.\n    //\n    if((intFlags & I2C_INT_ADDR_TARGET) != 0U)\n    {\n        HWREGH(base + I2C_O_IER) &= (uint16_t)~I2C_IER_AAT;\n    }\n\n    //\n    // Disable the desired FIFO interrupts.\n    //\n    if((intFlags & I2C_INT_TXFF) != 0U)\n    {\n        HWREGH(base + I2C_O_FFTX) &= (uint16_t)~(I2C_FFTX_TXFFIENA);\n    }\n\n    if((intFlags & I2C_INT_RXFF) != 0U)\n    {\n        HWREGH(base + I2C_O_FFRX) &= (uint16_t)~(I2C_FFRX_RXFFIENA);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Disable the desired basic interrupts. // HWREGH(base + I2C_O_IER) &= (uint16_t)~(intFlags & 0xFFFFU); // // Disabling addressed-as-target interrupt separately because its bit is // different between the IER and STR registers. // if((intFlags & I2C_INT_ADDR_TARGET) != 0U) { HWREGH(base + I2C_O_IER) &= (uint16_t)~I2C_IER_AAT; } // // Disable the desired FIFO interrupts. // if((intFlags & I2C_INT_TXFF) != 0U) { HWREGH(base + I2C_O_FFTX) &= (uint16_t)~(I2C_FFTX_TXFFIENA); } if((intFlags & I2C_INT_RXFF) != 0U) { HWREGH(base + I2C_O_FFRX) &= (uint16_t)~(I2C_FFRX_RXFFIENA); } }",
+      "registersUsed": [
+        "IER",
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "IER",
+        "FFTX",
+        "FFRX"
+      ]
+    },
+    {
+      "file": "i2c.c",
+      "peripheral": "i2c",
+      "functionName": "I2C_getInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    uint32_t temp;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Return only the status bits associated with interrupts.\n    //\n    temp = (uint32_t)((uint32_t)HWREGH(base + I2C_O_STR) & I2C_STR_INTMASK);\n\n    //\n    // Read FIFO interrupt flags.\n    //\n    if((HWREGH(base + I2C_O_FFTX) & I2C_FFTX_TXFFINT) != 0U)\n    {\n        temp |= I2C_INT_TXFF;\n    }\n\n    if((HWREGH(base + I2C_O_FFRX) & I2C_FFRX_RXFFINT) != 0U)\n    {\n        temp |= I2C_INT_RXFF;\n    }\n\n    return(temp);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t temp; // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Return only the status bits associated with interrupts. // temp = (uint32_t)((uint32_t)HWREGH(base + I2C_O_STR) & I2C_STR_INTMASK); // // Read FIFO interrupt flags. // if((HWREGH(base + I2C_O_FFTX) & I2C_FFTX_TXFFINT) != 0U) { temp |= I2C_INT_TXFF; } if((HWREGH(base + I2C_O_FFRX) & I2C_FFRX_RXFFINT) != 0U) { temp |= I2C_INT_RXFF; } return(temp); }",
+      "registersUsed": [
+        "STR",
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "STR",
+        "FFTX",
+        "FFRX"
+      ]
+    },
+    {
+      "file": "i2c.c",
+      "peripheral": "i2c",
+      "functionName": "I2C_clearInterruptStatus",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Clear the interrupt flags that are located in STR.\n    //\n    HWREGH(base + I2C_O_STR) = ((uint16_t)intFlags & I2C_STR_INTMASK);\n\n    //\n    // Clear the FIFO interrupt flags if needed.\n    //\n    if((intFlags & I2C_INT_TXFF) != 0U)\n    {\n        HWREGH(base + I2C_O_FFTX) |= I2C_FFTX_TXFFINTCLR;\n    }\n\n    if((intFlags & I2C_INT_RXFF) != 0U)\n    {\n        HWREGH(base + I2C_O_FFRX) |= I2C_FFRX_RXFFINTCLR;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Clear the interrupt flags that are located in STR. // HWREGH(base + I2C_O_STR) = ((uint16_t)intFlags & I2C_STR_INTMASK); // // Clear the FIFO interrupt flags if needed. // if((intFlags & I2C_INT_TXFF) != 0U) { HWREGH(base + I2C_O_FFTX) |= I2C_FFTX_TXFFINTCLR; } if((intFlags & I2C_INT_RXFF) != 0U) { HWREGH(base + I2C_O_FFRX) |= I2C_FFRX_RXFFINTCLR; } }",
+      "registersUsed": [
+        "STR",
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "STR",
+        "FFTX",
+        "FFRX"
+      ]
+    },
+    {
+      "file": "i2c.c",
+      "peripheral": "i2c",
+      "functionName": "I2C_configureModuleFrequency",
+      "functionArgs": [
+        "base",
+        "sysclkHz"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t modPrescale;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Set the prescaler for the module clock.\n    //\n    modPrescale = (sysclkHz / 10000000U) - 1U;\n    HWREGH(base + I2C_O_PSC) = (uint16_t)(I2C_PSC_IPSC_M & modPrescale);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t modPrescale; // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Set the prescaler for the module clock. // modPrescale = (sysclkHz / 10000000U) - 1U; HWREGH(base + I2C_O_PSC) = (uint16_t)(I2C_PSC_IPSC_M & modPrescale); }",
+      "registersUsed": [
+        "PSC"
+      ],
+      "registersUsedMatchingBifield": [
+        "PSC"
+      ]
+    },
+    {
+      "file": "i2c.c",
+      "peripheral": "i2c",
+      "functionName": "I2C_configureModuleClockFrequency",
+      "functionArgs": [
+        "base",
+        "sysclkHz",
+        "moduleFrequency"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t modPrescale;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Set the prescaler for the module clock.\n    //\n    modPrescale = (sysclkHz / moduleFrequency) - 1U;\n    HWREGH(base + I2C_O_PSC) = I2C_PSC_IPSC_M & modPrescale;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t modPrescale; // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Set the prescaler for the module clock. // modPrescale = (sysclkHz / moduleFrequency) - 1U; HWREGH(base + I2C_O_PSC) = I2C_PSC_IPSC_M & modPrescale; }",
+      "registersUsed": [
+        "PSC"
+      ],
+      "registersUsedMatchingBifield": [
+        "PSC"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           ((base & BASE_ADDR_MASK) == I2CA_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == I2CB_BASE_FRAME(0U))\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( ((base & BASE_ADDR_MASK) == I2CA_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == I2CB_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_enableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    HWREGH(base + I2C_O_MDR) |= I2C_MDR_IRS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); HWREGH(base + I2C_O_MDR) |= I2C_MDR_IRS; }",
+      "registersUsed": [
+        "MDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_disableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    HWREGH(base + I2C_O_MDR) &= (uint16_t)~(I2C_MDR_IRS);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); HWREGH(base + I2C_O_MDR) &= (uint16_t)~(I2C_MDR_IRS); }",
+      "registersUsed": [
+        "MDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_enableFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Enable the FIFO.\n    //\n    HWREGH(base + I2C_O_FFTX) |= I2C_FFTX_I2CFFEN | I2C_FFTX_TXFFRST;\n    HWREGH(base + I2C_O_FFRX) |= I2C_FFRX_RXFFRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Enable the FIFO. // HWREGH(base + I2C_O_FFTX) |= I2C_FFTX_I2CFFEN | I2C_FFTX_TXFFRST; HWREGH(base + I2C_O_FFRX) |= I2C_FFRX_RXFFRST; }",
+      "registersUsed": [
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "FFTX",
+        "FFRX"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_disableFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Disable the FIFO.\n    //\n    HWREGH(base + I2C_O_FFTX) &= (uint16_t)~(I2C_FFTX_I2CFFEN | I2C_FFTX_TXFFRST);\n    HWREGH(base + I2C_O_FFRX) &= (uint16_t)(~I2C_FFRX_RXFFRST);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Disable the FIFO. // HWREGH(base + I2C_O_FFTX) &= (uint16_t)~(I2C_FFTX_I2CFFEN | I2C_FFTX_TXFFRST); HWREGH(base + I2C_O_FFRX) &= (uint16_t)(~I2C_FFRX_RXFFRST); }",
+      "registersUsed": [
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "FFTX",
+        "FFRX"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_setFIFOInterruptLevel",
+      "functionArgs": [
+        "base",
+        "txLevel",
+        "rxLevel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "I2C_TxFIFOLevel",
+        "I2C_RxFIFOLevel"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Set the FIFO interrupt levels.\n    //\n    HWREGH(base + I2C_O_FFTX) = (uint16_t)((HWREGH(base + I2C_O_FFTX) &\n                                 (~I2C_FFTX_TXFFIL_M)) | (uint16_t)txLevel);\n    HWREGH(base + I2C_O_FFRX) = (uint16_t)((HWREGH(base + I2C_O_FFRX) &\n                                 (~I2C_FFRX_RXFFIL_M)) | (uint16_t)rxLevel);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Set the FIFO interrupt levels. // HWREGH(base + I2C_O_FFTX) = (uint16_t)((HWREGH(base + I2C_O_FFTX) & (~I2C_FFTX_TXFFIL_M)) | (uint16_t)txLevel); HWREGH(base + I2C_O_FFRX) = (uint16_t)((HWREGH(base + I2C_O_FFRX) & (~I2C_FFRX_RXFFIL_M)) | (uint16_t)rxLevel); }",
+      "registersUsed": [
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "FFTX",
+        "FFRX"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_getFIFOInterruptLevel",
+      "functionArgs": [
+        "base",
+        "*txLevel",
+        "*rxLevel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "I2C_TxFIFOLevel",
+        "I2C_RxFIFOLevel"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Extract the transmit and receive FIFO levels.\n    //\n    *txLevel = (I2C_TxFIFOLevel)(HWREGH(base + I2C_O_FFTX) &\n                                 I2C_FFTX_TXFFIL_M);\n    *rxLevel = (I2C_RxFIFOLevel)(HWREGH(base + I2C_O_FFRX) &\n                                 I2C_FFRX_RXFFIL_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Extract the transmit and receive FIFO levels. // *txLevel = (I2C_TxFIFOLevel)(HWREGH(base + I2C_O_FFTX) & I2C_FFTX_TXFFIL_M); *rxLevel = (I2C_RxFIFOLevel)(HWREGH(base + I2C_O_FFRX) & I2C_FFRX_RXFFIL_M); }",
+      "registersUsed": [
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "FFTX",
+        "FFRX"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_getTxFIFOStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline I2C_TxFIFOLevel",
+      "functionContent": "{\n    uint16_t level;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Get the current FIFO status\n    //\n    level = ((HWREGH(base + I2C_O_FFTX) & I2C_FFTX_TXFFST_M) >>\n              I2C_FFTX_TXFFST_S);\n\n    return((I2C_TxFIFOLevel)level);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t level; // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Get the current FIFO status // level = ((HWREGH(base + I2C_O_FFTX) & I2C_FFTX_TXFFST_M) >> I2C_FFTX_TXFFST_S); return((I2C_TxFIFOLevel)level); }",
+      "registersUsed": [
+        "FFTX"
+      ],
+      "registersUsedMatchingBifield": [
+        "FFTX"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_getRxFIFOStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline I2C_RxFIFOLevel",
+      "functionContent": "{\n    uint16_t level;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Get the current FIFO status\n    //\n    level = ((HWREGH(base + I2C_O_FFRX) & I2C_FFRX_RXFFST_M) >>\n              I2C_FFRX_RXFFST_S);\n\n    return((I2C_RxFIFOLevel)level);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t level; // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Get the current FIFO status // level = ((HWREGH(base + I2C_O_FFRX) & I2C_FFRX_RXFFST_M) >> I2C_FFRX_RXFFST_S); return((I2C_RxFIFOLevel)level); }",
+      "registersUsed": [
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "FFRX"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_getPreScaler",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Return the contents of the Prescaler register.\n    //\n    return(HWREGH(base + I2C_O_PSC));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Return the contents of the Prescaler register. // return(HWREGH(base + I2C_O_PSC)); }",
+      "registersUsed": [
+        "PSC"
+      ],
+      "registersUsedMatchingBifield": [
+        "PSC"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_setTargetAddress",
+      "functionArgs": [
+        "base",
+        "targetAddr"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n    ASSERT(targetAddr <= I2C_TAR_TAR_M);\n\n    HWREGH(base + I2C_O_TAR) = targetAddr;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); ASSERT(targetAddr <= I2C_TAR_TAR_M); HWREGH(base + I2C_O_TAR) = targetAddr; }",
+      "registersUsed": [
+        "TAR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TAR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_setOwnAddress",
+      "functionArgs": [
+        "base",
+        "Addr"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n    ASSERT(Addr <= I2C_OAR_OAR_M);\n\n    HWREGH(base + I2C_O_OAR) = Addr;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); ASSERT(Addr <= I2C_OAR_OAR_M); HWREGH(base + I2C_O_OAR) = Addr; }",
+      "registersUsed": [
+        "OAR"
+      ],
+      "registersUsedMatchingBifield": [
+        "OAR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_isBusBusy",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    return((HWREGH(base + I2C_O_STR) & I2C_STR_BB) == I2C_STR_BB);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); return((HWREGH(base + I2C_O_STR) & I2C_STR_BB) == I2C_STR_BB); }",
+      "registersUsed": [
+        "STR"
+      ],
+      "registersUsedMatchingBifield": [
+        "STR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_getStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Return contents of the status register\n    //\n    return(HWREGH(base + I2C_O_STR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Return contents of the status register // return(HWREGH(base + I2C_O_STR)); }",
+      "registersUsed": [
+        "STR"
+      ],
+      "registersUsedMatchingBifield": [
+        "STR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_clearStatus",
+      "functionArgs": [
+        "base",
+        "stsFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Write to the status registers to clear them.\n    //\n    HWREGH(base + I2C_O_STR) = stsFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write to the status registers to clear them. // HWREGH(base + I2C_O_STR) = stsFlags; }",
+      "registersUsed": [
+        "STR"
+      ],
+      "registersUsedMatchingBifield": [
+        "STR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_setConfig",
+      "functionArgs": [
+        "base",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Write the selected options to the mode register.\n    //\n    HWREGH(base + I2C_O_MDR) = (uint16_t)((HWREGH(base + I2C_O_MDR) &\n                                ~(I2C_MDR_CNT | I2C_MDR_TRX | I2C_MDR_RM |\n                                  I2C_MDR_STB | I2C_MDR_FDF)) | config);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write the selected options to the mode register. // HWREGH(base + I2C_O_MDR) = (uint16_t)((HWREGH(base + I2C_O_MDR) & ~(I2C_MDR_CNT | I2C_MDR_TRX | I2C_MDR_RM | I2C_MDR_STB | I2C_MDR_FDF)) | config); }",
+      "registersUsed": [
+        "MDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_setBitCount",
+      "functionArgs": [
+        "base",
+        "size"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "I2C_BitCount"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Write the selected options to the mode register.\n    //\n    HWREGH(base + I2C_O_MDR) = (uint16_t)((HWREGH(base + I2C_O_MDR) & ~I2C_MDR_BC_M) |\n                               (uint16_t)size);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write the selected options to the mode register. // HWREGH(base + I2C_O_MDR) = (uint16_t)((HWREGH(base + I2C_O_MDR) & ~I2C_MDR_BC_M) | (uint16_t)size); }",
+      "registersUsed": [
+        "MDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_sendStartCondition",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Set the START condition bit.\n    //\n    HWREGH(base + I2C_O_MDR) |= I2C_MDR_STT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Set the START condition bit. // HWREGH(base + I2C_O_MDR) |= I2C_MDR_STT; }",
+      "registersUsed": [
+        "MDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_sendStopCondition",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Set the STOP condition bit.\n    //\n    HWREGH(base + I2C_O_MDR) |= I2C_MDR_STP;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Set the STOP condition bit. // HWREGH(base + I2C_O_MDR) |= I2C_MDR_STP; }",
+      "registersUsed": [
+        "MDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_sendNACK",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Set the NACK mode bit.\n    //\n    HWREGH(base + I2C_O_MDR) |= I2C_MDR_NACKMOD;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Set the NACK mode bit. // HWREGH(base + I2C_O_MDR) |= I2C_MDR_NACKMOD; }",
+      "registersUsed": [
+        "MDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_getData",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint8_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Return the contents of the receive register.\n    //\n    return(uint8_t)(HWREGH(base + I2C_O_DRR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Return the contents of the receive register. // return(uint8_t)(HWREGH(base + I2C_O_DRR)); }",
+      "registersUsed": [
+        "DRR"
+      ],
+      "registersUsedMatchingBifield": [
+        "DRR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_putData",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint8_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Place the data into the transmit register.\n    //\n    HWREGH(base + I2C_O_DXR) = (uint16_t) data;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Place the data into the transmit register. // HWREGH(base + I2C_O_DXR) = (uint16_t) data; }",
+      "registersUsed": [
+        "DXR"
+      ],
+      "registersUsedMatchingBifield": [
+        "DXR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_getStopConditionStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Check the stop condition bit and return appropriately.\n    //\n    return((HWREGH(base + I2C_O_MDR) & I2C_MDR_STP) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Check the stop condition bit and return appropriately. // return((HWREGH(base + I2C_O_MDR) & I2C_MDR_STP) != 0U); }",
+      "registersUsed": [
+        "MDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_setDataCount",
+      "functionArgs": [
+        "base",
+        "count"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Write the count value to the appropriate register.\n    //\n    HWREGH(base + I2C_O_CNT) = count;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write the count value to the appropriate register. // HWREGH(base + I2C_O_CNT) = count; }",
+      "registersUsed": [
+        "CNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "CNT"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_setAddressMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "I2C_AddressMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Write the appropriate value to the address expansion bit.\n    //\n    HWREGH(base + I2C_O_MDR) = (uint16_t)((HWREGH(base + I2C_O_MDR) & ~I2C_MDR_XA) |\n                               (uint16_t)mode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write the appropriate value to the address expansion bit. // HWREGH(base + I2C_O_MDR) = (uint16_t)((HWREGH(base + I2C_O_MDR) & ~I2C_MDR_XA) | (uint16_t)mode); }",
+      "registersUsed": [
+        "MDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_setEmulationMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "I2C_EmulationMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Write the desired emulation mode to the register.\n    //\n    HWREGH(base + I2C_O_MDR) = (uint16_t)((HWREGH(base + I2C_O_MDR) & ~I2C_MDR_FREE) |\n                               (uint16_t)mode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write the desired emulation mode to the register. // HWREGH(base + I2C_O_MDR) = (uint16_t)((HWREGH(base + I2C_O_MDR) & ~I2C_MDR_FREE) | (uint16_t)mode); }",
+      "registersUsed": [
+        "MDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_enableLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Set the bit that enables loopback mode.\n    //\n    HWREGH(base + I2C_O_MDR) |= I2C_MDR_DLB;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Set the bit that enables loopback mode. // HWREGH(base + I2C_O_MDR) |= I2C_MDR_DLB; }",
+      "registersUsed": [
+        "MDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_disableLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Clear the bit that enables loopback mode.\n    //\n    HWREGH(base + I2C_O_MDR) &= (uint16_t)(~I2C_MDR_DLB);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Clear the bit that enables loopback mode. // HWREGH(base + I2C_O_MDR) &= (uint16_t)(~I2C_MDR_DLB); }",
+      "registersUsed": [
+        "MDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_getInterruptSource",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline I2C_InterruptSource",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Return the interrupt source value\n    //\n    return((I2C_InterruptSource)(HWREGH(base + I2C_O_ISRC) &\n                                 I2C_ISRC_INTCODE_M));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Return the interrupt source value // return((I2C_InterruptSource)(HWREGH(base + I2C_O_ISRC) & I2C_ISRC_INTCODE_M)); }",
+      "registersUsed": [
+        "ISRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "ISRC"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_setExtendedMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "I2C_ExtendedMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Write the appropriate value to the compatibility mode register.\n    //\n    HWREGH(base + I2C_O_EMDR) =\n            (uint16_t)((HWREGH(base + I2C_O_EMDR) & ~(I2C_EMDR_BC | I2C_EMDR_FCM)) |\n            (uint16_t)mode);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write the appropriate value to the compatibility mode register. // HWREGH(base + I2C_O_EMDR) = (uint16_t)((HWREGH(base + I2C_O_EMDR) & ~(I2C_EMDR_BC | I2C_EMDR_FCM)) | (uint16_t)mode); }",
+      "registersUsed": [
+        "EMDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "EMDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_enableExtendedAutomaticClkStretchingMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Write the key (0xA) in the SCLKEY field\n    // of the I2CEMDR mode register.\n    //\n    HWREGH(base + I2C_O_EMDR) =\n        (uint16_t)((HWREGH(base + I2C_O_EMDR) & ~I2C_EMDR_SCLKEY_M ) |\n        (I2C_EMDR_SCLKEY_ENABLE << I2C_EMDR_SCLKEY_S));\n\n   //\n   // Write '1' in the ECS bit of the I2CEMDR mode register.\n   //\n   HWREGH(base + I2C_O_EMDR) |= I2C_EMDR_ECS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write the key (0xA) in the SCLKEY field // of the I2CEMDR mode register. // HWREGH(base + I2C_O_EMDR) = (uint16_t)((HWREGH(base + I2C_O_EMDR) & ~I2C_EMDR_SCLKEY_M ) | (I2C_EMDR_SCLKEY_ENABLE << I2C_EMDR_SCLKEY_S)); // // Write '1' in the ECS bit of the I2CEMDR mode register. // HWREGH(base + I2C_O_EMDR) |= I2C_EMDR_ECS; }",
+      "registersUsed": [
+        "EMDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "EMDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_disableExtendedAutomaticClkStretchingMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Write the key (0x5) in the SCLKEY field\n    // of the I2CEMDR mode register.\n    //\n    HWREGH(base + I2C_O_EMDR) =\n            (HWREGH(base + I2C_O_EMDR) & ~I2C_EMDR_SCLKEY_M ) |\n            (I2C_EMDR_SCLKEY_DISABLE << I2C_EMDR_SCLKEY_S);\n\n   //\n   // Write '0' in the ECS bit of the I2CEMDR mode register.\n   //\n   HWREGH(base + I2C_O_EMDR) &= (uint16_t)~(I2C_EMDR_ECS);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write the key (0x5) in the SCLKEY field // of the I2CEMDR mode register. // HWREGH(base + I2C_O_EMDR) = (HWREGH(base + I2C_O_EMDR) & ~I2C_EMDR_SCLKEY_M ) | (I2C_EMDR_SCLKEY_DISABLE << I2C_EMDR_SCLKEY_S); // // Write '0' in the ECS bit of the I2CEMDR mode register. // HWREGH(base + I2C_O_EMDR) &= (uint16_t)~(I2C_EMDR_ECS); }",
+      "registersUsed": [
+        "EMDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "EMDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_enableManualClkStretchingMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Write the key (0xA) in the SCLKEY field\n    // of the I2CEMDR mode register.\n    //\n    HWREGH(base + I2C_O_EMDR) =\n            (HWREGH(base + I2C_O_EMDR) & ~I2C_EMDR_SCLKEY_M ) |\n            (I2C_EMDR_SCLKEY_ENABLE << I2C_EMDR_SCLKEY_S);\n\n   //\n   // Write '1' in the MCS bit of the I2CEMDR mode register.\n   //\n   HWREGH(base + I2C_O_EMDR) |= I2C_EMDR_MCS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write the key (0xA) in the SCLKEY field // of the I2CEMDR mode register. // HWREGH(base + I2C_O_EMDR) = (HWREGH(base + I2C_O_EMDR) & ~I2C_EMDR_SCLKEY_M ) | (I2C_EMDR_SCLKEY_ENABLE << I2C_EMDR_SCLKEY_S); // // Write '1' in the MCS bit of the I2CEMDR mode register. // HWREGH(base + I2C_O_EMDR) |= I2C_EMDR_MCS; }",
+      "registersUsed": [
+        "EMDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "EMDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_disableManualClkStretchingMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n    //\n    // Write the key (0x5) in the SCLKEY field\n    // of the I2CEMDR mode register.\n    //\n    HWREGH(base + I2C_O_EMDR) =\n            (HWREGH(base + I2C_O_EMDR) & ~I2C_EMDR_SCLKEY_M ) |\n            (I2C_EMDR_SCLKEY_DISABLE << I2C_EMDR_SCLKEY_S);\n\n   //\n   // Write '0' in the ECS bit of the I2CEMDR mode register.\n   //\n   HWREGH(base + I2C_O_EMDR) &= (uint16_t)~(I2C_EMDR_MCS);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write the key (0x5) in the SCLKEY field // of the I2CEMDR mode register. // HWREGH(base + I2C_O_EMDR) = (HWREGH(base + I2C_O_EMDR) & ~I2C_EMDR_SCLKEY_M ) | (I2C_EMDR_SCLKEY_DISABLE << I2C_EMDR_SCLKEY_S); // // Write '0' in the ECS bit of the I2CEMDR mode register. // HWREGH(base + I2C_O_EMDR) &= (uint16_t)~(I2C_EMDR_MCS); }",
+      "registersUsed": [
+        "EMDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "EMDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_enableNACKCompatibilityMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n   //\n   // Write '1' in the NACK_CM bit of the I2CEMDR mode register.\n   //\n   HWREGH(base + I2C_O_EMDR) |= I2C_EMDR_NACK_CM;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write '1' in the NACK_CM bit of the I2CEMDR mode register. // HWREGH(base + I2C_O_EMDR) |= I2C_EMDR_NACK_CM; }",
+      "registersUsed": [
+        "EMDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "EMDR"
+      ]
+    },
+    {
+      "file": "i2c.h",
+      "peripheral": "i2c",
+      "functionName": "I2C_disableNACKCompatibilityMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(I2C_isBaseValid(base));\n\n   //\n   // Write '0' in the NACK_CM bit of the I2CEMDR mode register.\n   //\n   HWREGH(base + I2C_O_EMDR) &= (uint16_t)~(I2C_EMDR_NACK_CM);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(I2C_isBaseValid(base)); // // Write '0' in the NACK_CM bit of the I2CEMDR mode register. // HWREGH(base + I2C_O_EMDR) &= (uint16_t)~(I2C_EMDR_NACK_CM); }",
+      "registersUsed": [
+        "EMDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "EMDR"
+      ]
+    }
+  ]
+}

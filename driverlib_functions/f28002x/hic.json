@@ -1,0 +1,711 @@
+{
+  "name": "hic",
+  "functions": [
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_getRevision",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(HWREG(HIC_BASE + HIC_O_REV));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(HIC_BASE + HIC_O_REV)); }",
+      "registersUsed": [
+        "REV"
+      ],
+      "registersUsedMatchingBifield": [
+        "REV"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_enableHostInterface",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n    HWREG(HIC_BASE + HIC_O_GCR) = HIC_HOST_INTERFACE_ENABLE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREG(HIC_BASE + HIC_O_GCR) = HIC_HOST_INTERFACE_ENABLE; EDIS; }",
+      "registersUsed": [
+        "GCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "GCR"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_enableLock",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n    HWREG(HIC_BASE + HIC_O_LOCK) = (HIC_LOCK_LOCK |\n                                 ((uint32_t)HIC_LOCK_WRITE_ENABLE_KEY <<\n                                  HIC_LOCK_WRITE_ENABLE_KEY_S));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREG(HIC_BASE + HIC_O_LOCK) = (HIC_LOCK_LOCK | ((uint32_t)HIC_LOCK_WRITE_ENABLE_KEY << HIC_LOCK_WRITE_ENABLE_KEY_S)); EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_disableLock",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    EALLOW;\n    HWREG(HIC_BASE + HIC_O_LOCK) = (HIC_LOCK_UNLOCK |\n                                 ((uint32_t)HIC_LOCK_WRITE_ENABLE_KEY <<\n                                  HIC_LOCK_WRITE_ENABLE_KEY_S));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREG(HIC_BASE + HIC_O_LOCK) = (HIC_LOCK_UNLOCK | ((uint32_t)HIC_LOCK_WRITE_ENABLE_KEY << HIC_LOCK_WRITE_ENABLE_KEY_S)); EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_setConfig",
+      "functionArgs": [
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    EALLOW;\n    HWREG(HIC_BASE + HIC_O_MODECR) = flags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREG(HIC_BASE + HIC_O_MODECR) = flags; EDIS; }",
+      "registersUsed": [
+        "MODECR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODECR"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_getConfig",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n\n    return(HWREG(HIC_BASE + HIC_O_MODECR));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(HIC_BASE + HIC_O_MODECR)); }",
+      "registersUsed": [
+        "MODECR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MODECR"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_setPinPolarity",
+      "functionArgs": [
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    EALLOW;\n    HWREG(HIC_BASE + HIC_O_PINPOLCR) = flags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ EALLOW; HWREG(HIC_BASE + HIC_O_PINPOLCR) = flags; EDIS; }",
+      "registersUsed": [
+        "PINPOLCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PINPOLCR"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_getPinPolarity",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n\n    return(HWREG(HIC_BASE + HIC_O_PINPOLCR));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(HIC_BASE + HIC_O_PINPOLCR)); }",
+      "registersUsed": [
+        "PINPOLCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PINPOLCR"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_selectBaseAddress",
+      "functionArgs": [
+        "selectIndex"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    //Check the arguments.\n    //\n    ASSERT(selectIndex < HIC_NUM_BASE_ADDRESS);\n\n    HWREG(HIC_BASE + HIC_O_BASESEL) = selectIndex;\n}\n",
+      "functionContentWithoutFormatting": "{ // //Check the arguments. // ASSERT(selectIndex < HIC_NUM_BASE_ADDRESS); HWREG(HIC_BASE + HIC_O_BASESEL) = selectIndex; }",
+      "registersUsed": [
+        "BASESEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "BASESEL"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_getSelectedBaseAddressIndex",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    return(HWREGH(HIC_BASE + HIC_O_BASESEL));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREGH(HIC_BASE + HIC_O_BASESEL)); }",
+      "registersUsed": [
+        "BASESEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "BASESEL"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_configureHostAccessMode",
+      "functionArgs": [
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    //Needs a key to be written for the write to go through\n    //\n    HWREG(HIC_BASE + HIC_O_HOSTCR) = (config |\n                                    HIC_HOSTCR_WRITE_ENABLE_KEY <<\n                                    HIC_HOSTCR_HKEY_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // //Needs a key to be written for the write to go through // HWREG(HIC_BASE + HIC_O_HOSTCR) = (config | HIC_HOSTCR_WRITE_ENABLE_KEY << HIC_HOSTCR_HKEY_S); }",
+      "registersUsed": [
+        "HOSTCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "HOSTCR"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_getHostAccessMode",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n\n    //\n    //Returns the lower 16 bits that contains the configuration\n    //\n    return(HWREGH(HIC_BASE + HIC_O_HOSTCR));\n}\n",
+      "functionContentWithoutFormatting": "{ // //Returns the lower 16 bits that contains the configuration // return(HWREGH(HIC_BASE + HIC_O_HOSTCR)); }",
+      "registersUsed": [
+        "HOSTCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "HOSTCR"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_getErrorAddress",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(HWREG(HIC_BASE + HIC_O_ERRADDR));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(HIC_BASE + HIC_O_ERRADDR)); }",
+      "registersUsed": [
+        "ERRADDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ERRADDR"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_getH2DToken",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n\n    return(HWREG(HIC_BASE + HIC_O_H2DTOKEN));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(HIC_BASE + HIC_O_H2DTOKEN)); }",
+      "registersUsed": [
+        "H2DTOKEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "H2DTOKEN"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_setD2HToken",
+      "functionArgs": [
+        "token"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    HWREG(HIC_BASE + HIC_O_D2HTOKEN) = token;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(HIC_BASE + HIC_O_D2HTOKEN) = token; }",
+      "registersUsed": [
+        "D2HTOKEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "D2HTOKEN"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_getD2HToken",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(HWREG(HIC_BASE + HIC_O_D2HTOKEN));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(HIC_BASE + HIC_O_D2HTOKEN)); }",
+      "registersUsed": [
+        "D2HTOKEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "D2HTOKEN"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_setBaseAddress",
+      "functionArgs": [
+        "index",
+        "baseAddress"
+      ],
+      "functionArgsTypes": [
+        "uint16_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    //Check the arguments.\n    //\n    ASSERT(index < HIC_NUM_BASE_ADDRESS);\n\n    EALLOW;\n    HWREG(HIC_BASE + HIC_O_DBADDR0 + (index * 2)) = baseAddress;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // //Check the arguments. // ASSERT(index < HIC_NUM_BASE_ADDRESS); EALLOW; HWREG(HIC_BASE + HIC_O_DBADDR0 + (index * 2)) = baseAddress; EDIS; }",
+      "registersUsed": [
+        "DBADDR0"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBADDR0"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_getBaseAddress",
+      "functionArgs": [
+        "index"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    //Check the arguments.\n    //\n    ASSERT(index < HIC_NUM_BASE_ADDRESS);\n\n    return(HIC_BASE + HIC_O_DBADDR0 + (index * 2));\n}\n",
+      "functionContentWithoutFormatting": "{ // //Check the arguments. // ASSERT(index < HIC_NUM_BASE_ADDRESS); return(HIC_BASE + HIC_O_DBADDR0 + (index * 2)); }",
+      "registersUsed": [
+        "DBADDR0"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBADDR0"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_enableH2DInterrupt",
+      "functionArgs": [
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    HWREG(HIC_BASE + HIC_O_H2DINTEN) |= flags;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(HIC_BASE + HIC_O_H2DINTEN) |= flags; }",
+      "registersUsed": [
+        "H2DINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "H2DINTEN"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_disableH2DInterrupt",
+      "functionArgs": [
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    HWREG(HIC_BASE + HIC_O_H2DINTEN) &= ~flags;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(HIC_BASE + HIC_O_H2DINTEN) &= ~flags; }",
+      "registersUsed": [
+        "H2DINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "H2DINTEN"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_getH2DInterruptStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n\n    return(HWREG(HIC_BASE + HIC_O_H2DINTFLG));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(HIC_BASE + HIC_O_H2DINTFLG)); }",
+      "registersUsed": [
+        "H2DINTFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "H2DINTFLG"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_clearH2DInterrupt",
+      "functionArgs": [
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    HWREG(HIC_BASE + HIC_O_H2DINTCLR) = flags;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(HIC_BASE + HIC_O_H2DINTCLR) = flags; }",
+      "registersUsed": [
+        "H2DINTCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "H2DINTCLR"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_forceH2DInterrupt",
+      "functionArgs": [
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    HWREG(HIC_BASE + HIC_O_H2DINTFRC) = flags;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(HIC_BASE + HIC_O_H2DINTFRC) = flags; }",
+      "registersUsed": [
+        "H2DINTFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "H2DINTFRC"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_enableD2HInterrupt",
+      "functionArgs": [
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    HWREG(HIC_BASE + HIC_O_D2HINTEN) |= flags;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(HIC_BASE + HIC_O_D2HINTEN) |= flags; }",
+      "registersUsed": [
+        "D2HINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "D2HINTEN"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_disableD2HInterrupt",
+      "functionArgs": [
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    HWREG(HIC_BASE + HIC_O_D2HINTEN) &= ~flags;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(HIC_BASE + HIC_O_D2HINTEN) &= ~flags; }",
+      "registersUsed": [
+        "D2HINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "D2HINTEN"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_getD2HInterruptStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n\n    return(HWREG(HIC_BASE + HIC_O_D2HINTFLG));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(HIC_BASE + HIC_O_D2HINTFLG)); }",
+      "registersUsed": [
+        "D2HINTFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "D2HINTFLG"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_clearD2HInterrupt",
+      "functionArgs": [
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    HWREG(HIC_BASE + HIC_O_D2HINTCLR) = flags;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(HIC_BASE + HIC_O_D2HINTCLR) = flags; }",
+      "registersUsed": [
+        "D2HINTCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "D2HINTCLR"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_forceD2HInterrupt",
+      "functionArgs": [
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    HWREG(HIC_BASE + HIC_O_D2HINTFRC) = flags;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(HIC_BASE + HIC_O_D2HINTFRC) = flags; }",
+      "registersUsed": [
+        "D2HINTFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "D2HINTFRC"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_getAccessViolationAddress",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n\n    return(HWREG(HIC_BASE + HIC_O_ACCVIOADDR));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(HIC_BASE + HIC_O_ACCVIOADDR)); }",
+      "registersUsed": [
+        "ACCVIOADDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ACCVIOADDR"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_readH2DBuffer",
+      "functionArgs": [
+        "offset"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    //Check the arguments.\n    //\n    ASSERT(offset < HIC_NUM_BUFFER_REGS);\n\n    return(HWREG(HIC_BASE + HIC_O_H2D_BUF0 + (offset * 2)));\n}\n",
+      "functionContentWithoutFormatting": "{ // //Check the arguments. // ASSERT(offset < HIC_NUM_BUFFER_REGS); return(HWREG(HIC_BASE + HIC_O_H2D_BUF0 + (offset * 2))); }",
+      "registersUsed": [
+        "H2D_BUF0"
+      ],
+      "registersUsedMatchingBifield": [
+        "H2D_BUF0"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_writeH2DBuffer",
+      "functionArgs": [
+        "offset",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint16_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    //Check the arguments.\n    //\n    ASSERT(offset < HIC_NUM_BUFFER_REGS);\n\n    HWREG(HIC_BASE + HIC_O_H2D_BUF0 + (offset * 2)) = data;\n}\n",
+      "functionContentWithoutFormatting": "{ // //Check the arguments. // ASSERT(offset < HIC_NUM_BUFFER_REGS); HWREG(HIC_BASE + HIC_O_H2D_BUF0 + (offset * 2)) = data; }",
+      "registersUsed": [
+        "H2D_BUF0"
+      ],
+      "registersUsedMatchingBifield": [
+        "H2D_BUF0"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_clearH2DBuffer",
+      "functionArgs": [
+        "offset"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    //Check the arguments.\n    //\n    ASSERT(offset < HIC_NUM_BUFFER_REGS);\n\n    HWREG(HIC_BASE + HIC_O_H2D_BUF0 + (offset * 2)) = 0;\n}\n",
+      "functionContentWithoutFormatting": "{ // //Check the arguments. // ASSERT(offset < HIC_NUM_BUFFER_REGS); HWREG(HIC_BASE + HIC_O_H2D_BUF0 + (offset * 2)) = 0; }",
+      "registersUsed": [
+        "H2D_BUF0"
+      ],
+      "registersUsedMatchingBifield": [
+        "H2D_BUF0"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_readD2HBuffer",
+      "functionArgs": [
+        "offset"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    //Check the arguments.\n    //\n    ASSERT(offset < HIC_NUM_BUFFER_REGS);\n\n    return(HWREG(HIC_BASE + HIC_O_D2H_BUF0 + (offset * 2)));\n}\n",
+      "functionContentWithoutFormatting": "{ // //Check the arguments. // ASSERT(offset < HIC_NUM_BUFFER_REGS); return(HWREG(HIC_BASE + HIC_O_D2H_BUF0 + (offset * 2))); }",
+      "registersUsed": [
+        "D2H_BUF0"
+      ],
+      "registersUsedMatchingBifield": [
+        "D2H_BUF0"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_writeD2HBuffer",
+      "functionArgs": [
+        "offset",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint16_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    //Check the arguments.\n    //\n    ASSERT(offset < HIC_NUM_BUFFER_REGS);\n\n    HWREG(HIC_BASE + HIC_O_D2H_BUF0 + (offset * 2)) = data;\n}\n",
+      "functionContentWithoutFormatting": "{ // //Check the arguments. // ASSERT(offset < HIC_NUM_BUFFER_REGS); HWREG(HIC_BASE + HIC_O_D2H_BUF0 + (offset * 2)) = data; }",
+      "registersUsed": [
+        "D2H_BUF0"
+      ],
+      "registersUsedMatchingBifield": [
+        "D2H_BUF0"
+      ]
+    },
+    {
+      "file": "hic.h",
+      "peripheral": "hic",
+      "functionName": "HIC_clearD2HBuffer",
+      "functionArgs": [
+        "offset"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    //Check the arguments.\n    //\n    ASSERT(offset < HIC_NUM_BUFFER_REGS);\n\n    HWREG(HIC_BASE + HIC_O_D2H_BUF0 + (offset * 2)) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // //Check the arguments. // ASSERT(offset < HIC_NUM_BUFFER_REGS); HWREG(HIC_BASE + HIC_O_D2H_BUF0 + (offset * 2)) = 0U; }",
+      "registersUsed": [
+        "D2H_BUF0"
+      ],
+      "registersUsedMatchingBifield": [
+        "D2H_BUF0"
+      ]
+    }
+  ]
+}

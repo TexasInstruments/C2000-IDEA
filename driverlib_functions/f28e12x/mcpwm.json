@@ -1,0 +1,2121 @@
+{
+  "name": "mcpwm",
+  "functions": [
+    {
+      "file": "mcpwm.c",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setEmulationMode",
+      "functionArgs": [
+        "base",
+        "emulationMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_EmulationMode"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Write to FREE_SOFT bits\n    //\n    HWREG(base + MCPWM_O_TBCTL) =\n           ((HWREGH(base + MCPWM_O_TBCTL) & (~MCPWM_TBCTL_FREE_SOFT_M)) |\n            ((uint32_t)emulationMode << MCPWM_TBCTL_FREE_SOFT_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(MCPWM_isBaseValid(base)); // // Write to FREE_SOFT bits // HWREG(base + MCPWM_O_TBCTL) = ((HWREGH(base + MCPWM_O_TBCTL) & (~MCPWM_TBCTL_FREE_SOFT_M)) | ((uint32_t)emulationMode << MCPWM_TBCTL_FREE_SOFT_S)); }",
+      "registersUsed": [
+        "TBCTL",
+        "TBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTL",
+        "TBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.c",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_configureSignal",
+      "functionArgs": [
+        "base",
+        "*signalParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constMCPWM_SignalParams"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    float32_t tbClkInHz = 0.0F;\n    uint16_t tbPrdVal = 0U;\n    uint16_t cmp1AVal = 0U, cmp1BVal = 0U;\n    uint16_t cmp2AVal = 0U, cmp2BVal = 0U;\n    uint16_t cmp3AVal = 0U, cmp3BVal = 0U;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Valid values in the function for TBCTR Mode are UP, DOWN\n    // and UP-DOWN count.\n    //\n    ASSERT((uint16_t)signalParams->tbCtrMode < 2U);\n\n    //\n    // Configure Time Base counter Clock\n    //\n    MCPWM_setClockPrescaler(base, signalParams->tbClkDiv);\n\n    //\n    // Configure Time Base Counter Mode\n    //\n    MCPWM_setTimeBaseCounterMode(base, signalParams->tbCtrMode);\n\n    //\n    // Calculate TBCLK, TBPRD and CMPx values to be configured for\n    // achieving desired signal\n    //\n    tbClkInHz = ((float32_t)signalParams->sysClkInHz /\n                 (float32_t)(1U << ((uint16_t)signalParams->tbClkDiv)));\n\n    if(signalParams->tbCtrMode == MCPWM_COUNTER_MODE_UP)\n    {\n        tbPrdVal = (uint16_t)((tbClkInHz / signalParams->freqInHz) - 1.0f);\n        cmp1AVal = (uint16_t)(signalParams->dutyVal1A *\n                             (float32_t)(tbPrdVal + 1U));\n        cmp1BVal = (uint16_t)(signalParams->dutyVal1B *\n                             (float32_t)(tbPrdVal + 1U));\n\n        cmp2AVal = (uint16_t)(signalParams->dutyVal2A *\n                             (float32_t)(tbPrdVal + 1U));\n        cmp2BVal = (uint16_t)(signalParams->dutyVal2B *\n                             (float32_t)(tbPrdVal + 1U));\n                     \n        cmp3AVal = (uint16_t)(signalParams->dutyVal3A *\n                             (float32_t)(tbPrdVal + 1U));\n        cmp3BVal = (uint16_t)(signalParams->dutyVal3B *\n                             (float32_t)(tbPrdVal + 1U));\n    }\n    else\n    {\n        tbPrdVal = (uint16_t)(tbClkInHz / (2.0f * signalParams->freqInHz));\n        cmp1AVal = (uint16_t)(((float32_t)tbPrdVal -\n                             ((signalParams->dutyVal1A *\n                              (float32_t)tbPrdVal))) + 0.5f);\n        cmp1BVal = (uint16_t)(((float32_t)tbPrdVal -\n                             ((signalParams->dutyVal1B *\n                              (float32_t)tbPrdVal))) + 0.5f);\n        cmp2AVal = (uint16_t)(((float32_t)tbPrdVal -\n                             ((signalParams->dutyVal2A *\n                              (float32_t)tbPrdVal))) + 0.5f);\n        cmp2BVal = (uint16_t)(((float32_t)tbPrdVal -\n                             ((signalParams->dutyVal2B *\n                              (float32_t)tbPrdVal))) + 0.5f);\n        cmp3AVal = (uint16_t)(((float32_t)tbPrdVal -\n                             ((signalParams->dutyVal3A *\n                              (float32_t)tbPrdVal))) + 0.5f);\n        cmp3BVal = (uint16_t)(((float32_t)tbPrdVal -\n                             ((signalParams->dutyVal3B *\n                              (float32_t)tbPrdVal))) + 0.5f);\n\n    }\n\n    //\n    // Configure TBPRD value\n    //\n    MCPWM_setTimeBasePeriodShadow(base, tbPrdVal);\n\n    //\n    // Default Configurations.\n    //\n    MCPWM_disablePhaseShiftLoad(base);\n    MCPWM_setPhaseShift(base, 0U);\n    MCPWM_setTimeBaseCounter(base, 0U);\n\n    //\n    // Setup shadow register load on ZERO\n    //\n    MCPWM_setCounterCompareShadowLoadMode(base,\n                                         MCPWM_COUNTER_COMPARE_1A,\n                                         MCPWM_COMP_LOAD_ON_CNTR_ZERO);\n    MCPWM_setCounterCompareShadowLoadMode(base,\n                                         MCPWM_COUNTER_COMPARE_1B,\n                                         MCPWM_COMP_LOAD_ON_CNTR_ZERO);\n    MCPWM_setCounterCompareShadowLoadMode(base,\n                                         MCPWM_COUNTER_COMPARE_2A,\n                                         MCPWM_COMP_LOAD_ON_CNTR_ZERO);\n    MCPWM_setCounterCompareShadowLoadMode(base,\n                                         MCPWM_COUNTER_COMPARE_2B,\n                                         MCPWM_COMP_LOAD_ON_CNTR_ZERO);\n    MCPWM_setCounterCompareShadowLoadMode(base,\n                                         MCPWM_COUNTER_COMPARE_3A,\n                                         MCPWM_COMP_LOAD_ON_CNTR_ZERO);\n    MCPWM_setCounterCompareShadowLoadMode(base,\n                                         MCPWM_COUNTER_COMPARE_3B,\n                                         MCPWM_COMP_LOAD_ON_CNTR_ZERO);\n    //\n    // Set Compare values\n    //\n    MCPWM_setCounterCompareShadowValue(base, MCPWM_COUNTER_COMPARE_1A,\n                                cmp1AVal);\n    MCPWM_setCounterCompareShadowValue(base, MCPWM_COUNTER_COMPARE_1B,\n                                cmp1BVal);\n    MCPWM_setCounterCompareShadowValue(base, MCPWM_COUNTER_COMPARE_2A,\n                                cmp2AVal);\n    MCPWM_setCounterCompareShadowValue(base, MCPWM_COUNTER_COMPARE_2B,\n                                cmp2BVal);\n    MCPWM_setCounterCompareShadowValue(base, MCPWM_COUNTER_COMPARE_3A,\n                                cmp3AVal);\n    MCPWM_setCounterCompareShadowValue(base, MCPWM_COUNTER_COMPARE_3B,\n                                cmp3BVal);\n\n    //\n    // Set actions for mcpwmxA & mcpwmxB\n    //\n    if(signalParams->tbCtrMode == MCPWM_COUNTER_MODE_UP)\n    {\n        //\n        // Set on Zero, clear on CMPA \n        //\n        MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_1A,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPA);\n        MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_2A,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPA);\n        MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_3A,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPA);\n\n        if(signalParams->invertSignal1B == (bool) true)\n        {\n            //\n            // Clear PWMxB on Zero and set on CMPB \n            //\n            MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_1B,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB);\n            \n        }\n        else\n        {\n            //\n            // Set PWMxB on Zero and clear on CMPB \n            //\n            MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_1B,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB);\n        }\n        if(signalParams->invertSignal2B == (bool) true)\n        {\n            //\n            // Clear PWMxB on Zero and set on CMPB \n            //\n            MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_2B,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB);\n            \n        }\n        else\n        {\n            //\n            // Set PWMxB on Zero and clear on CMPB \n            //\n            MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_2B,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB);\n        }\n        if(signalParams->invertSignal3B == (bool) true)\n        {\n            //\n            // Clear PWMxB on Zero and set on CMPB \n            //\n            MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_3B,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB);\n            \n        }\n        else\n        {\n            //\n            // Set PWMxB on Zero and clear on CMPB \n            //\n            MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_3B,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB);\n        }\n    }\n    else\n    {\n        //\n        // Clear PWMxA on Zero set on CMPA up, and clear on CMPA down\n        //\n        MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_1A,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | \n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPA | \n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_DOWN_CMPA);\n        MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_2A,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | \n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPA | \n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_DOWN_CMPA);\n        MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_3A,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | \n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPA | \n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_DOWN_CMPA);\n\n        if(signalParams->invertSignal1B == (bool) true)\n        {\n            //\n            // Set PWMxB on Zero, clear on CMPA up and Set on CMPB down\n            //\n            MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_1B,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | \n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB |\n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB);\n        }\n        else\n        {\n            //\n            // clear PWMxB on Zero, Set on CMPA up and clear on CMPB down\n            //\n            MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_1B,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | \n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB |\n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB);\n        }\n        if(signalParams->invertSignal2B == (bool) true)\n        {\n            //\n            // Set PWMxB on Zero, clear on CMPA up and Set on CMPB down\n            //\n            MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_2B,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | \n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB |\n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB);\n        }\n        else\n        {\n            //\n            // clear PWMxB on Zero, Set on CMPA up and clear on CMPB down\n            //\n            MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_2B,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | \n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB |\n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB);\n        }\n        if(signalParams->invertSignal3B == (bool) true)\n        {\n            //\n            // Set PWMxB on Zero, clear on CMPA up and Set on CMPB down\n            //\n            MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_3B,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | \n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB |\n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB);\n        }\n        else\n        {\n            //\n            // clear PWMxB on Zero, Set on CMPA up and clear on CMPB down\n            //\n            MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_3B,\n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | \n                                 (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB |\n                                 (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB);\n        }\n\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ float32_t tbClkInHz = 0.0F; uint16_t tbPrdVal = 0U; uint16_t cmp1AVal = 0U, cmp1BVal = 0U; uint16_t cmp2AVal = 0U, cmp2BVal = 0U; uint16_t cmp3AVal = 0U, cmp3BVal = 0U; // // Check the arguments. // ASSERT(MCPWM_isBaseValid(base)); // // Valid values in the function for TBCTR Mode are UP, DOWN // and UP-DOWN count. // ASSERT((uint16_t)signalParams->tbCtrMode < 2U); // // Configure Time Base counter Clock // MCPWM_setClockPrescaler(base, signalParams->tbClkDiv); // // Configure Time Base Counter Mode // MCPWM_setTimeBaseCounterMode(base, signalParams->tbCtrMode); // // Calculate TBCLK, TBPRD and CMPx values to be configured for // achieving desired signal // tbClkInHz = ((float32_t)signalParams->sysClkInHz / (float32_t)(1U << ((uint16_t)signalParams->tbClkDiv))); if(signalParams->tbCtrMode == MCPWM_COUNTER_MODE_UP) { tbPrdVal = (uint16_t)((tbClkInHz / signalParams->freqInHz) - 1.0f); cmp1AVal = (uint16_t)(signalParams->dutyVal1A * (float32_t)(tbPrdVal + 1U)); cmp1BVal = (uint16_t)(signalParams->dutyVal1B * (float32_t)(tbPrdVal + 1U)); cmp2AVal = (uint16_t)(signalParams->dutyVal2A * (float32_t)(tbPrdVal + 1U)); cmp2BVal = (uint16_t)(signalParams->dutyVal2B * (float32_t)(tbPrdVal + 1U)); cmp3AVal = (uint16_t)(signalParams->dutyVal3A * (float32_t)(tbPrdVal + 1U)); cmp3BVal = (uint16_t)(signalParams->dutyVal3B * (float32_t)(tbPrdVal + 1U)); } else { tbPrdVal = (uint16_t)(tbClkInHz / (2.0f * signalParams->freqInHz)); cmp1AVal = (uint16_t)(((float32_t)tbPrdVal - ((signalParams->dutyVal1A * (float32_t)tbPrdVal))) + 0.5f); cmp1BVal = (uint16_t)(((float32_t)tbPrdVal - ((signalParams->dutyVal1B * (float32_t)tbPrdVal))) + 0.5f); cmp2AVal = (uint16_t)(((float32_t)tbPrdVal - ((signalParams->dutyVal2A * (float32_t)tbPrdVal))) + 0.5f); cmp2BVal = (uint16_t)(((float32_t)tbPrdVal - ((signalParams->dutyVal2B * (float32_t)tbPrdVal))) + 0.5f); cmp3AVal = (uint16_t)(((float32_t)tbPrdVal - ((signalParams->dutyVal3A * (float32_t)tbPrdVal))) + 0.5f); cmp3BVal = (uint16_t)(((float32_t)tbPrdVal - ((signalParams->dutyVal3B * (float32_t)tbPrdVal))) + 0.5f); } // // Configure TBPRD value // MCPWM_setTimeBasePeriodShadow(base, tbPrdVal); // // Default Configurations. // MCPWM_disablePhaseShiftLoad(base); MCPWM_setPhaseShift(base, 0U); MCPWM_setTimeBaseCounter(base, 0U); // // Setup shadow register load on ZERO // MCPWM_setCounterCompareShadowLoadMode(base, MCPWM_COUNTER_COMPARE_1A, MCPWM_COMP_LOAD_ON_CNTR_ZERO); MCPWM_setCounterCompareShadowLoadMode(base, MCPWM_COUNTER_COMPARE_1B, MCPWM_COMP_LOAD_ON_CNTR_ZERO); MCPWM_setCounterCompareShadowLoadMode(base, MCPWM_COUNTER_COMPARE_2A, MCPWM_COMP_LOAD_ON_CNTR_ZERO); MCPWM_setCounterCompareShadowLoadMode(base, MCPWM_COUNTER_COMPARE_2B, MCPWM_COMP_LOAD_ON_CNTR_ZERO); MCPWM_setCounterCompareShadowLoadMode(base, MCPWM_COUNTER_COMPARE_3A, MCPWM_COMP_LOAD_ON_CNTR_ZERO); MCPWM_setCounterCompareShadowLoadMode(base, MCPWM_COUNTER_COMPARE_3B, MCPWM_COMP_LOAD_ON_CNTR_ZERO); // // Set Compare values // MCPWM_setCounterCompareShadowValue(base, MCPWM_COUNTER_COMPARE_1A, cmp1AVal); MCPWM_setCounterCompareShadowValue(base, MCPWM_COUNTER_COMPARE_1B, cmp1BVal); MCPWM_setCounterCompareShadowValue(base, MCPWM_COUNTER_COMPARE_2A, cmp2AVal); MCPWM_setCounterCompareShadowValue(base, MCPWM_COUNTER_COMPARE_2B, cmp2BVal); MCPWM_setCounterCompareShadowValue(base, MCPWM_COUNTER_COMPARE_3A, cmp3AVal); MCPWM_setCounterCompareShadowValue(base, MCPWM_COUNTER_COMPARE_3B, cmp3BVal); // // Set actions for mcpwmxA & mcpwmxB // if(signalParams->tbCtrMode == MCPWM_COUNTER_MODE_UP) { // // Set on Zero, clear on CMPA // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_1A, (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPA); MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_2A, (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPA); MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_3A, (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPA); if(signalParams->invertSignal1B == (bool) true) { // // Clear PWMxB on Zero and set on CMPB // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_1B, (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB); } else { // // Set PWMxB on Zero and clear on CMPB // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_1B, (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB); } if(signalParams->invertSignal2B == (bool) true) { // // Clear PWMxB on Zero and set on CMPB // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_2B, (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB); } else { // // Set PWMxB on Zero and clear on CMPB // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_2B, (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB); } if(signalParams->invertSignal3B == (bool) true) { // // Clear PWMxB on Zero and set on CMPB // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_3B, (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB); } else { // // Set PWMxB on Zero and clear on CMPB // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_3B, (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB); } } else { // // Clear PWMxA on Zero set on CMPA up, and clear on CMPA down // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_1A, (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPA | (uint16_t)MCPWM_AQ_OUTPUT_LOW_DOWN_CMPA); MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_2A, (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPA | (uint16_t)MCPWM_AQ_OUTPUT_LOW_DOWN_CMPA); MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_3A, (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPA | (uint16_t)MCPWM_AQ_OUTPUT_LOW_DOWN_CMPA); if(signalParams->invertSignal1B == (bool) true) { // // Set PWMxB on Zero, clear on CMPA up and Set on CMPB down // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_1B, (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB); } else { // // clear PWMxB on Zero, Set on CMPA up and clear on CMPB down // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_1B, (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB); } if(signalParams->invertSignal2B == (bool) true) { // // Set PWMxB on Zero, clear on CMPA up and Set on CMPB down // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_2B, (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB); } else { // // clear PWMxB on Zero, Set on CMPA up and clear on CMPB down // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_2B, (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB); } if(signalParams->invertSignal3B == (bool) true) { // // Set PWMxB on Zero, clear on CMPA up and Set on CMPB down // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_3B, (uint16_t)MCPWM_AQ_OUTPUT_HIGH_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB); } else { // // clear PWMxB on Zero, Set on CMPA up and clear on CMPB down // MCPWM_setActionQualifierActionCompleteShadow(base, MCPWM_AQ_OUTPUT_3B, (uint16_t)MCPWM_AQ_OUTPUT_LOW_ZERO | (uint16_t)MCPWM_AQ_OUTPUT_HIGH_UP_CMPB | (uint16_t)MCPWM_AQ_OUTPUT_LOW_UP_CMPB); } } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == PWM1_BASE) ||\n           (base == PWM3_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == PWM1_BASE) || (base == PWM3_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getRevision",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Get the revision value.\n    //\n    return(HWREG(base + MCPWM_O_REVISION));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(MCPWM_isBaseValid(base)); // // Get the revision value. // return(HWREG(base + MCPWM_O_REVISION)); }",
+      "registersUsed": [
+        "REVISION",
+        "REVISION"
+      ],
+      "registersUsedMatchingBifield": [
+        "REVISION",
+        "REVISION"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setPhaseShift",
+      "functionArgs": [
+        "base",
+        "phaseCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Write to TBPHS bit\n    //\n    HWREG(base + MCPWM_O_TBPHS) =\n                   ((HWREG(base + MCPWM_O_TBPHS) &\n                    ~((uint32_t)MCPWM_TBPHS_TBPHS_M)) |\n                    ((uint32_t)phaseCount << MCPWM_TBPHS_TBPHS_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Write to TBPHS bit // HWREG(base + MCPWM_O_TBPHS) = ((HWREG(base + MCPWM_O_TBPHS) & ~((uint32_t)MCPWM_TBPHS_TBPHS_M)) | ((uint32_t)phaseCount << MCPWM_TBPHS_TBPHS_S)); }",
+      "registersUsed": [
+        "TBPHS",
+        "TBPHS"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBPHS",
+        "TBPHS"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setTimeBaseCounter",
+      "functionArgs": [
+        "base",
+        "count"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Write to TBCTR register\n    //\n    HWREG(base + MCPWM_O_TBCTR) = count;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Write to TBCTR register // HWREG(base + MCPWM_O_TBCTR) = count; }",
+      "registersUsed": [
+        "TBCTR",
+        "TBCTR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTR",
+        "TBCTR"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getTimeBaseCounterValue",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Returns TBCTR value\n    //\n    return((uint16_t)HWREG(base + MCPWM_O_TBCTR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Returns TBCTR value // return((uint16_t)HWREG(base + MCPWM_O_TBCTR)); }",
+      "registersUsed": [
+        "TBCTR",
+        "TBCTR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTR",
+        "TBCTR"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setTimeBaseCounterMode",
+      "functionArgs": [
+        "base",
+        "counterMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_TimeBaseCountMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Write to CTRMODE bit\n    //\n    HWREG(base + MCPWM_O_TBCTL) =\n            ((HWREG(base + MCPWM_O_TBCTL) & ~(MCPWM_TBCTL_CTRMODE_M)) |\n             ((uint32_t)counterMode));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Write to CTRMODE bit // HWREG(base + MCPWM_O_TBCTL) = ((HWREG(base + MCPWM_O_TBCTL) & ~(MCPWM_TBCTL_CTRMODE_M)) | ((uint32_t)counterMode)); }",
+      "registersUsed": [
+        "TBCTL",
+        "TBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTL",
+        "TBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getTimeBaseCounterDirection",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Return CTRDIR bit\n    //\n    return(HWREG(base + MCPWM_O_TBSTS) & MCPWM_TBSTS_CTRDIR);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Return CTRDIR bit // return(HWREG(base + MCPWM_O_TBSTS) & MCPWM_TBSTS_CTRDIR); }",
+      "registersUsed": [
+        "TBSTS",
+        "TBSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBSTS",
+        "TBSTS"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setClockPrescaler",
+      "functionArgs": [
+        "base",
+        "prescaler"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ClockDivider"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Write to CLKDIV bit\n    //\n    HWREG(base + MCPWM_O_TBCTL) =\n                ((HWREG(base + MCPWM_O_TBCTL)  &\n                ~MCPWM_TBCTL_CLKDIV_M) |\n                ((uint16_t)prescaler << MCPWM_TBCTL_CLKDIV_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Write to CLKDIV bit // HWREG(base + MCPWM_O_TBCTL) = ((HWREG(base + MCPWM_O_TBCTL) & ~MCPWM_TBCTL_CLKDIV_M) | ((uint16_t)prescaler << MCPWM_TBCTL_CLKDIV_S)); }",
+      "registersUsed": [
+        "TBCTL",
+        "TBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTL",
+        "TBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setPeriodLoadMode",
+      "functionArgs": [
+        "base",
+        "loadMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_PeriodLoadMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    if(loadMode == MCPWM_PERIOD_SHADOW_LOAD_ENABLE)\n    {\n        //\n        // Clear PRDLD\n        //\n        HWREG(base + MCPWM_O_TBCTL) &= ~MCPWM_TBCTL_PRDLD;\n    }\n    else\n    {\n        //\n        // Set PRDLD\n        //\n        HWREG(base + MCPWM_O_TBCTL) |= MCPWM_TBCTL_PRDLD;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); if(loadMode == MCPWM_PERIOD_SHADOW_LOAD_ENABLE) { // // Clear PRDLD // HWREG(base + MCPWM_O_TBCTL) &= ~MCPWM_TBCTL_PRDLD; } else { // // Set PRDLD // HWREG(base + MCPWM_O_TBCTL) |= MCPWM_TBCTL_PRDLD; } }",
+      "registersUsed": [
+        "TBCTL",
+        "TBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTL",
+        "TBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_enablePhaseShiftLoad",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set PHSEN bit\n    //\n    HWREG(base + MCPWM_O_TBCTL) |= MCPWM_TBCTL_PHSEN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set PHSEN bit // HWREG(base + MCPWM_O_TBCTL) |= MCPWM_TBCTL_PHSEN; }",
+      "registersUsed": [
+        "TBCTL",
+        "TBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTL",
+        "TBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_disablePhaseShiftLoad",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Clear PHSEN bit\n    //\n    HWREG(base + MCPWM_O_TBCTL) &= ~((uint32_t)MCPWM_TBCTL_PHSEN);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Clear PHSEN bit // HWREG(base + MCPWM_O_TBCTL) &= ~((uint32_t)MCPWM_TBCTL_PHSEN); }",
+      "registersUsed": [
+        "TBCTL",
+        "TBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTL",
+        "TBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setCountModeAfterSync",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_SyncCountMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    if(mode == MCPWM_COUNT_MODE_UP_AFTER_SYNC)\n    {\n        //\n        // Set PHSDIR bit\n        //\n        HWREG(base + MCPWM_O_TBCTL) |= MCPWM_TBCTL_PHSDIR;\n    }\n    else\n    {\n        //\n        // Clear PHSDIR bit\n        //\n        HWREG(base + MCPWM_O_TBCTL) &= ~MCPWM_TBCTL_PHSDIR;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); if(mode == MCPWM_COUNT_MODE_UP_AFTER_SYNC) { // // Set PHSDIR bit // HWREG(base + MCPWM_O_TBCTL) |= MCPWM_TBCTL_PHSDIR; } else { // // Clear PHSDIR bit // HWREG(base + MCPWM_O_TBCTL) &= ~MCPWM_TBCTL_PHSDIR; } }",
+      "registersUsed": [
+        "TBCTL",
+        "TBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTL",
+        "TBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_forceSyncPulse",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set SWFSYNC bit\n    //\n    HWREG(base + MCPWM_O_TBCTL) |= MCPWM_TBCTL_SWSYNC;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set SWFSYNC bit // HWREG(base + MCPWM_O_TBCTL) |= MCPWM_TBCTL_SWSYNC; }",
+      "registersUsed": [
+        "TBCTL",
+        "TBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTL",
+        "TBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setSyncOutPulseMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_SyncOutPulseMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // No extended mode support\n    //\n    if(mode < MCPWM_SYNC_OUT_PULSE_DISABLED)\n    {\n        //\n        // Write to SYNCOSEL bits\n        //\n        HWREG(base + MCPWM_O_TBCTL) =\n                ((HWREG(base + MCPWM_O_TBCTL) & ~(MCPWM_TBCTL_SYNCOSEL_M)) |\n                 ((uint32_t)mode << MCPWM_TBCTL_SYNCOSEL_S));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // No extended mode support // if(mode < MCPWM_SYNC_OUT_PULSE_DISABLED) { // // Write to SYNCOSEL bits // HWREG(base + MCPWM_O_TBCTL) = ((HWREG(base + MCPWM_O_TBCTL) & ~(MCPWM_TBCTL_SYNCOSEL_M)) | ((uint32_t)mode << MCPWM_TBCTL_SYNCOSEL_S)); } }",
+      "registersUsed": [
+        "TBCTL",
+        "TBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTL",
+        "TBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setSyncPulseSource",
+      "functionArgs": [
+        "base",
+        "syncPulseSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_SyncPulseSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set the SYNCPERSEL source\n    //\n    HWREG(base + MCPWM_O_TBCTL) =\n                ((HWREG(base + MCPWM_O_TBCTL) & ~(MCPWM_TBCTL_SYNCPERSEL_M)) |\n                 ((uint32_t)syncPulseSource << MCPWM_TBCTL_SYNCPERSEL_S));\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set the SYNCPERSEL source // HWREG(base + MCPWM_O_TBCTL) = ((HWREG(base + MCPWM_O_TBCTL) & ~(MCPWM_TBCTL_SYNCPERSEL_M)) | ((uint32_t)syncPulseSource << MCPWM_TBCTL_SYNCPERSEL_S)); }",
+      "registersUsed": [
+        "TBCTL",
+        "TBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTL",
+        "TBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setSyncInPulseSource",
+      "functionArgs": [
+        "base",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_SyncInPulseSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set MCPWM Sync-In Source Mode.\n    //\n    HWREG(base + MCPWM_O_TBCTL) =\n            (HWREG(base + MCPWM_O_TBCTL) & (~MCPWM_TBCTL_SYNCISEL_M)) |\n            (((uint32_t)source << MCPWM_TBCTL_SYNCISEL_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set MCPWM Sync-In Source Mode. // HWREG(base + MCPWM_O_TBCTL) = (HWREG(base + MCPWM_O_TBCTL) & (~MCPWM_TBCTL_SYNCISEL_M)) | (((uint32_t)source << MCPWM_TBCTL_SYNCISEL_S)); }",
+      "registersUsed": [
+        "TBCTL",
+        "TBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBCTL",
+        "TBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getSyncStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Return TRUE if SYNCI bit is set, FALSE otherwise\n    //\n    return(((HWREG(base + MCPWM_O_TBSTS) & MCPWM_TBSTS_SYNCI) ==\n            MCPWM_TBSTS_SYNCI) ? TRUE : FALSE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Return TRUE if SYNCI bit is set, FALSE otherwise // return(((HWREG(base + MCPWM_O_TBSTS) & MCPWM_TBSTS_SYNCI) == MCPWM_TBSTS_SYNCI) ? TRUE : FALSE); }",
+      "registersUsed": [
+        "TBSTS",
+        "TBSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBSTS",
+        "TBSTS"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_clearSyncStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set SYNCI bit\n    //\n    HWREGH(base + MCPWM_O_TBSTSCLR) = MCPWM_TBSTS_SYNCI;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set SYNCI bit // HWREGH(base + MCPWM_O_TBSTSCLR) = MCPWM_TBSTS_SYNCI; }",
+      "registersUsed": [
+        "TBSTS",
+        "TBSTSCLR",
+        "TBSTS",
+        "TBSTSCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBSTS",
+        "TBSTSCLR",
+        "TBSTS",
+        "TBSTSCLR"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setTimeBasePeriodActive",
+      "functionArgs": [
+        "base",
+        "periodCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Write to TBPRD bit\n    //\n    HWREG(base + MCPWM_O_TBPRD) = periodCount;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Write to TBPRD bit // HWREG(base + MCPWM_O_TBPRD) = periodCount; }",
+      "registersUsed": [
+        "TBPRD",
+        "TBPRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBPRD",
+        "TBPRD"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setTimeBasePeriodShadow",
+      "functionArgs": [
+        "base",
+        "periodCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Write to TBPRD bit\n    //\n    HWREG(base + MCPWM_O_TBPRDS) = periodCount;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Write to TBPRD bit // HWREG(base + MCPWM_O_TBPRDS) = periodCount; }",
+      "registersUsed": [
+        "TBPRD",
+        "TBPRDS",
+        "TBPRD",
+        "TBPRDS"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBPRD",
+        "TBPRDS",
+        "TBPRD",
+        "TBPRDS"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getTimeBasePeriodActive",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Read from TBPRD bit\n    //\n    return( (uint16_t) HWREG(base + MCPWM_O_TBPRD) & MCPWM_TBPRD_TBPRD_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Read from TBPRD bit // return( (uint16_t) HWREG(base + MCPWM_O_TBPRD) & MCPWM_TBPRD_TBPRD_M); }",
+      "registersUsed": [
+        "TBPRD",
+        "TBPRD"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBPRD",
+        "TBPRD"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getTimeBasePeriodShadow",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Read from TBPRD bit\n    //\n    return( (uint16_t) HWREG(base + MCPWM_O_TBPRDS) & MCPWM_TBPRDS_TBPRDS_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Read from TBPRD bit // return( (uint16_t) HWREG(base + MCPWM_O_TBPRDS) & MCPWM_TBPRDS_TBPRDS_M); }",
+      "registersUsed": [
+        "TBPRD",
+        "TBPRDS",
+        "TBPRD",
+        "TBPRDS"
+      ],
+      "registersUsedMatchingBifield": [
+        "TBPRD",
+        "TBPRDS",
+        "TBPRD",
+        "TBPRDS"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setCounterCompareActiveValue",
+      "functionArgs": [
+        "base",
+        "compModule",
+        "compCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_CounterCompareModule",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Write to the counter compare registers.\n    //\n    switch (compModule)\n    {\n    case MCPWM_COUNTER_COMPARE_1A:\n        HWREGH(base + MCPWM_O_PWM1_CMPA) = compCount; \n        break;\n    case MCPWM_COUNTER_COMPARE_1B:\n        HWREGH(base + MCPWM_O_PWM1_CMPB) = compCount; \n        break;\n    case MCPWM_COUNTER_COMPARE_2A:\n        HWREGH(base + MCPWM_O_PWM2_CMPA) = compCount; \n        break;\n    case MCPWM_COUNTER_COMPARE_2B:\n        HWREGH(base + MCPWM_O_PWM2_CMPB) = compCount; \n        break;\n    case MCPWM_COUNTER_COMPARE_3A:\n        HWREGH(base + MCPWM_O_PWM3_CMPA) = compCount; \n        break;\n    case MCPWM_COUNTER_COMPARE_3B:\n        HWREGH(base + MCPWM_O_PWM3_CMPB) = compCount; \n        break;\n    case MCPWM_COUNTER_COMPARE_C:\n        HWREGH(base + MCPWM_O_CMPC) = compCount; \n        break;\n    default:\n        HWREGH(base + MCPWM_O_CMPD) = compCount; \n        break;    \n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Write to the counter compare registers. // switch (compModule) { case MCPWM_COUNTER_COMPARE_1A: HWREGH(base + MCPWM_O_PWM1_CMPA) = compCount; break; case MCPWM_COUNTER_COMPARE_1B: HWREGH(base + MCPWM_O_PWM1_CMPB) = compCount; break; case MCPWM_COUNTER_COMPARE_2A: HWREGH(base + MCPWM_O_PWM2_CMPA) = compCount; break; case MCPWM_COUNTER_COMPARE_2B: HWREGH(base + MCPWM_O_PWM2_CMPB) = compCount; break; case MCPWM_COUNTER_COMPARE_3A: HWREGH(base + MCPWM_O_PWM3_CMPA) = compCount; break; case MCPWM_COUNTER_COMPARE_3B: HWREGH(base + MCPWM_O_PWM3_CMPB) = compCount; break; case MCPWM_COUNTER_COMPARE_C: HWREGH(base + MCPWM_O_CMPC) = compCount; break; default: HWREGH(base + MCPWM_O_CMPD) = compCount; break; } }",
+      "registersUsed": [
+        "CMPC",
+        "CMPD",
+        "PWM1_CMPA",
+        "PWM1_CMPB",
+        "PWM2_CMPA",
+        "PWM2_CMPB",
+        "PWM3_CMPA",
+        "PWM3_CMPB",
+        "CMPC",
+        "CMPD",
+        "PWM1_CMPA",
+        "PWM1_CMPB"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPC",
+        "CMPD",
+        "PWM1_CMPA",
+        "PWM1_CMPB",
+        "PWM2_CMPA",
+        "PWM2_CMPB",
+        "PWM3_CMPA",
+        "PWM3_CMPB",
+        "CMPC",
+        "CMPD",
+        "PWM1_CMPA",
+        "PWM1_CMPB"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getCounterCompareActiveValue",
+      "functionArgs": [
+        "base",
+        "compModule"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_CounterCompareModule"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    uint16_t retValue = 0;\n\n    //\n    // Write to the counter compare registers.\n    //\n    switch (compModule)\n    {\n    case MCPWM_COUNTER_COMPARE_1A:\n        retValue = (HWREGH(base + MCPWM_O_PWM1_CMPA)); \n        break;\n    case MCPWM_COUNTER_COMPARE_1B:\n        retValue = (HWREGH(base + MCPWM_O_PWM1_CMPB)); \n        break;\n    case MCPWM_COUNTER_COMPARE_2A:\n        retValue = (HWREGH(base + MCPWM_O_PWM2_CMPA)); \n        break;\n    case MCPWM_COUNTER_COMPARE_2B:\n        retValue = (HWREGH(base + MCPWM_O_PWM2_CMPB)); \n        break;\n    case MCPWM_COUNTER_COMPARE_3A:\n        retValue = (HWREGH(base + MCPWM_O_PWM3_CMPA)); \n        break;\n    case MCPWM_COUNTER_COMPARE_3B:\n        retValue = (HWREGH(base + MCPWM_O_PWM3_CMPB)); \n        break;\n    case MCPWM_COUNTER_COMPARE_C:\n        retValue = (HWREGH(base + MCPWM_O_CMPC)); \n        break;\n    default:\n        retValue = (HWREGH(base + MCPWM_O_CMPD)); \n        break;\n    }\n        return retValue;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); uint16_t retValue = 0; // // Write to the counter compare registers. // switch (compModule) { case MCPWM_COUNTER_COMPARE_1A: retValue = (HWREGH(base + MCPWM_O_PWM1_CMPA)); break; case MCPWM_COUNTER_COMPARE_1B: retValue = (HWREGH(base + MCPWM_O_PWM1_CMPB)); break; case MCPWM_COUNTER_COMPARE_2A: retValue = (HWREGH(base + MCPWM_O_PWM2_CMPA)); break; case MCPWM_COUNTER_COMPARE_2B: retValue = (HWREGH(base + MCPWM_O_PWM2_CMPB)); break; case MCPWM_COUNTER_COMPARE_3A: retValue = (HWREGH(base + MCPWM_O_PWM3_CMPA)); break; case MCPWM_COUNTER_COMPARE_3B: retValue = (HWREGH(base + MCPWM_O_PWM3_CMPB)); break; case MCPWM_COUNTER_COMPARE_C: retValue = (HWREGH(base + MCPWM_O_CMPC)); break; default: retValue = (HWREGH(base + MCPWM_O_CMPD)); break; } return retValue; }",
+      "registersUsed": [
+        "CMPC",
+        "CMPD",
+        "PWM1_CMPA",
+        "PWM1_CMPB",
+        "PWM2_CMPA",
+        "PWM2_CMPB",
+        "PWM3_CMPA",
+        "PWM3_CMPB",
+        "CMPC",
+        "CMPD",
+        "PWM1_CMPA",
+        "PWM1_CMPB"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPC",
+        "CMPD",
+        "PWM1_CMPA",
+        "PWM1_CMPB",
+        "PWM2_CMPA",
+        "PWM2_CMPB",
+        "PWM3_CMPA",
+        "PWM3_CMPB",
+        "CMPC",
+        "CMPD",
+        "PWM1_CMPA",
+        "PWM1_CMPB"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setCounterCompareShadowValue",
+      "functionArgs": [
+        "base",
+        "compModule",
+        "compCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_CounterCompareModule",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Write to the counter compare registers.\n    //\n    switch (compModule)\n    {\n    case MCPWM_COUNTER_COMPARE_1A:\n        HWREGH(base + MCPWM_O_PWM1_CMPAS) = compCount; \n        break;\n    case MCPWM_COUNTER_COMPARE_1B:\n        HWREGH(base + MCPWM_O_PWM1_CMPBS) = compCount; \n        break;\n    case MCPWM_COUNTER_COMPARE_2A:\n        HWREGH(base + MCPWM_O_PWM2_CMPAS) = compCount; \n        break;\n    case MCPWM_COUNTER_COMPARE_2B:\n        HWREGH(base + MCPWM_O_PWM2_CMPBS) = compCount; \n        break;\n    case MCPWM_COUNTER_COMPARE_3A:\n        HWREGH(base + MCPWM_O_PWM3_CMPAS) = compCount; \n        break;\n    case MCPWM_COUNTER_COMPARE_3B:\n        HWREGH(base + MCPWM_O_PWM3_CMPBS) = compCount; \n        break;\n    case MCPWM_COUNTER_COMPARE_C:\n        HWREGH(base + MCPWM_O_CMPCS) = compCount; \n        break;\n    default:\n        HWREGH(base + MCPWM_O_CMPDS) = compCount; \n        break;    \n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Write to the counter compare registers. // switch (compModule) { case MCPWM_COUNTER_COMPARE_1A: HWREGH(base + MCPWM_O_PWM1_CMPAS) = compCount; break; case MCPWM_COUNTER_COMPARE_1B: HWREGH(base + MCPWM_O_PWM1_CMPBS) = compCount; break; case MCPWM_COUNTER_COMPARE_2A: HWREGH(base + MCPWM_O_PWM2_CMPAS) = compCount; break; case MCPWM_COUNTER_COMPARE_2B: HWREGH(base + MCPWM_O_PWM2_CMPBS) = compCount; break; case MCPWM_COUNTER_COMPARE_3A: HWREGH(base + MCPWM_O_PWM3_CMPAS) = compCount; break; case MCPWM_COUNTER_COMPARE_3B: HWREGH(base + MCPWM_O_PWM3_CMPBS) = compCount; break; case MCPWM_COUNTER_COMPARE_C: HWREGH(base + MCPWM_O_CMPCS) = compCount; break; default: HWREGH(base + MCPWM_O_CMPDS) = compCount; break; } }",
+      "registersUsed": [
+        "CMPC",
+        "CMPD",
+        "CMPCS",
+        "CMPDS",
+        "PWM1_CMPA",
+        "PWM1_CMPAS",
+        "PWM1_CMPB",
+        "PWM1_CMPBS",
+        "PWM2_CMPA",
+        "PWM2_CMPAS",
+        "PWM2_CMPB",
+        "PWM2_CMPBS",
+        "PWM3_CMPA",
+        "PWM3_CMPAS",
+        "PWM3_CMPB",
+        "PWM3_CMPBS",
+        "CMPC",
+        "CMPD",
+        "CMPCS",
+        "CMPDS",
+        "PWM1_CMPA",
+        "PWM1_CMPAS",
+        "PWM1_CMPB",
+        "PWM1_CMPBS"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPC",
+        "CMPD",
+        "CMPCS",
+        "CMPDS",
+        "PWM1_CMPA",
+        "PWM1_CMPAS",
+        "PWM1_CMPB",
+        "PWM1_CMPBS",
+        "PWM2_CMPA",
+        "PWM2_CMPAS",
+        "PWM2_CMPB",
+        "PWM2_CMPBS",
+        "PWM3_CMPA",
+        "PWM3_CMPAS",
+        "PWM3_CMPB",
+        "PWM3_CMPBS",
+        "CMPC",
+        "CMPD",
+        "CMPCS",
+        "CMPDS",
+        "PWM1_CMPA",
+        "PWM1_CMPAS",
+        "PWM1_CMPB",
+        "PWM1_CMPBS"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getCounterCompareShadowValue",
+      "functionArgs": [
+        "base",
+        "compModule"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_CounterCompareModule"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    uint16_t retValue =0;\n    //\n    // Write to the counter compare registers.\n    //\n    switch (compModule)\n    {\n    case MCPWM_COUNTER_COMPARE_1A:\n        retValue =  (HWREGH(base + MCPWM_O_PWM1_CMPAS)); \n        break;\n    case MCPWM_COUNTER_COMPARE_1B:\n        retValue =  (HWREGH(base + MCPWM_O_PWM1_CMPBS)); \n        break;\n    case MCPWM_COUNTER_COMPARE_2A:\n        retValue =  (HWREGH(base + MCPWM_O_PWM2_CMPAS)); \n        break;\n    case MCPWM_COUNTER_COMPARE_2B:\n        retValue =  (HWREGH(base + MCPWM_O_PWM2_CMPBS)); \n        break;\n    case MCPWM_COUNTER_COMPARE_3A:\n        retValue =  (HWREGH(base + MCPWM_O_PWM3_CMPAS)); \n        break;\n    case MCPWM_COUNTER_COMPARE_3B:\n        retValue =  (HWREGH(base + MCPWM_O_PWM3_CMPBS)); \n        break;\n    case MCPWM_COUNTER_COMPARE_C:\n        retValue =  (HWREGH(base + MCPWM_O_CMPCS)); \n        break;\n    default:\n        retValue =  (HWREGH(base + MCPWM_O_CMPDS)); \n        break;    \n    }\n\n    return retValue;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); uint16_t retValue =0; // // Write to the counter compare registers. // switch (compModule) { case MCPWM_COUNTER_COMPARE_1A: retValue = (HWREGH(base + MCPWM_O_PWM1_CMPAS)); break; case MCPWM_COUNTER_COMPARE_1B: retValue = (HWREGH(base + MCPWM_O_PWM1_CMPBS)); break; case MCPWM_COUNTER_COMPARE_2A: retValue = (HWREGH(base + MCPWM_O_PWM2_CMPAS)); break; case MCPWM_COUNTER_COMPARE_2B: retValue = (HWREGH(base + MCPWM_O_PWM2_CMPBS)); break; case MCPWM_COUNTER_COMPARE_3A: retValue = (HWREGH(base + MCPWM_O_PWM3_CMPAS)); break; case MCPWM_COUNTER_COMPARE_3B: retValue = (HWREGH(base + MCPWM_O_PWM3_CMPBS)); break; case MCPWM_COUNTER_COMPARE_C: retValue = (HWREGH(base + MCPWM_O_CMPCS)); break; default: retValue = (HWREGH(base + MCPWM_O_CMPDS)); break; } return retValue; }",
+      "registersUsed": [
+        "CMPC",
+        "CMPD",
+        "CMPCS",
+        "CMPDS",
+        "PWM1_CMPA",
+        "PWM1_CMPAS",
+        "PWM1_CMPB",
+        "PWM1_CMPBS",
+        "PWM2_CMPA",
+        "PWM2_CMPAS",
+        "PWM2_CMPB",
+        "PWM2_CMPBS",
+        "PWM3_CMPA",
+        "PWM3_CMPAS",
+        "PWM3_CMPB",
+        "PWM3_CMPBS",
+        "CMPC",
+        "CMPD",
+        "CMPCS",
+        "CMPDS",
+        "PWM1_CMPA",
+        "PWM1_CMPAS",
+        "PWM1_CMPB",
+        "PWM1_CMPBS"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPC",
+        "CMPD",
+        "CMPCS",
+        "CMPDS",
+        "PWM1_CMPA",
+        "PWM1_CMPAS",
+        "PWM1_CMPB",
+        "PWM1_CMPBS",
+        "PWM2_CMPA",
+        "PWM2_CMPAS",
+        "PWM2_CMPB",
+        "PWM2_CMPBS",
+        "PWM3_CMPA",
+        "PWM3_CMPAS",
+        "PWM3_CMPB",
+        "PWM3_CMPBS",
+        "CMPC",
+        "CMPD",
+        "CMPCS",
+        "CMPDS",
+        "PWM1_CMPA",
+        "PWM1_CMPAS",
+        "PWM1_CMPB",
+        "PWM1_CMPBS"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setCounterCompareShadowLoadMode",
+      "functionArgs": [
+        "base",
+        "compModule",
+        "loadMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_CounterCompareModule",
+        "MCPWM_CounterCompareLoadMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set the Shadow Load Mode \n    //\n    switch (compModule)\n    {\n    case MCPWM_COUNTER_COMPARE_1A:\n        HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & \n                                        ~MCPWM_CMPCTL_PWM1_LOADAMODE_M) |   // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_CMPCTL_PWM1_LOADAMODE_S)); // update the configuration\n        break;\n    case MCPWM_COUNTER_COMPARE_1B:\n        HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & \n                                        ~MCPWM_CMPCTL_PWM1_LOADBMODE_M) |   // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_CMPCTL_PWM1_LOADBMODE_S)); // update the configuration\n        break;\n    case MCPWM_COUNTER_COMPARE_2A:\n        HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & \n                                        ~MCPWM_CMPCTL_PWM2_LOADAMODE_M) |   // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_CMPCTL_PWM2_LOADAMODE_S)); // update the configuration\n        break;\n    case MCPWM_COUNTER_COMPARE_2B:\n        HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & \n                                        ~MCPWM_CMPCTL_PWM2_LOADBMODE_M) |   // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_CMPCTL_PWM2_LOADBMODE_S)); // update the configuration\n        break;\n    case MCPWM_COUNTER_COMPARE_3A:\n        HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & \n                                        ~MCPWM_CMPCTL_PWM3_LOADAMODE_M) |   // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_CMPCTL_PWM3_LOADAMODE_S)); // update the configuration\n        break;\n    case MCPWM_COUNTER_COMPARE_3B:\n        HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & \n                                        ~MCPWM_CMPCTL_PWM3_LOADBMODE_M) |   // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_CMPCTL_PWM3_LOADBMODE_S)); // update the configuration\n        break;\n    case MCPWM_COUNTER_COMPARE_C:\n        HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & \n                                        ~MCPWM_CMPCTL_LOADCMODE_M) |    // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_CMPCTL_LOADCMODE_S)); // update the configuration\n        break;\n    default:\n        HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & \n                                        ~MCPWM_CMPCTL_LOADDMODE_M) |    // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_CMPCTL_LOADDMODE_S)); // update the configuration\n        break;    \n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set the Shadow Load Mode // switch (compModule) { case MCPWM_COUNTER_COMPARE_1A: HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & ~MCPWM_CMPCTL_PWM1_LOADAMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_CMPCTL_PWM1_LOADAMODE_S)); // update the configuration break; case MCPWM_COUNTER_COMPARE_1B: HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & ~MCPWM_CMPCTL_PWM1_LOADBMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_CMPCTL_PWM1_LOADBMODE_S)); // update the configuration break; case MCPWM_COUNTER_COMPARE_2A: HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & ~MCPWM_CMPCTL_PWM2_LOADAMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_CMPCTL_PWM2_LOADAMODE_S)); // update the configuration break; case MCPWM_COUNTER_COMPARE_2B: HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & ~MCPWM_CMPCTL_PWM2_LOADBMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_CMPCTL_PWM2_LOADBMODE_S)); // update the configuration break; case MCPWM_COUNTER_COMPARE_3A: HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & ~MCPWM_CMPCTL_PWM3_LOADAMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_CMPCTL_PWM3_LOADAMODE_S)); // update the configuration break; case MCPWM_COUNTER_COMPARE_3B: HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & ~MCPWM_CMPCTL_PWM3_LOADBMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_CMPCTL_PWM3_LOADBMODE_S)); // update the configuration break; case MCPWM_COUNTER_COMPARE_C: HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & ~MCPWM_CMPCTL_LOADCMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_CMPCTL_LOADCMODE_S)); // update the configuration break; default: HWREG(base + MCPWM_O_CMPCTL) = ((HWREG(base + MCPWM_O_CMPCTL) & ~MCPWM_CMPCTL_LOADDMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_CMPCTL_LOADDMODE_S)); // update the configuration break; } }",
+      "registersUsed": [
+        "CMPCTL",
+        "CMPC",
+        "CMPCTL",
+        "CMPC"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPCTL",
+        "CMPC",
+        "CMPCTL",
+        "CMPC"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setActionQualifierSWAction",
+      "functionArgs": [
+        "base",
+        "mcpwmOutput",
+        "output"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ActionQualifierOutputModule",
+        "MCPWM_ActionQualifierSWForceOutput"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    switch (mcpwmOutput)\n    {\n    case MCPWM_AQ_OUTPUT_1A :\n        HWREG(base + MCPWM_O_PWM1_AQSFRC) = ((HWREG(base + MCPWM_O_PWM1_AQSFRC) & \n                                ~MCPWM_PWM1_AQSFRC_PWMA_M) | \n                                ((uint32_t)output << MCPWM_PWM1_AQSFRC_PWMA_S));\n        break;\n    case MCPWM_AQ_OUTPUT_1B :\n        HWREG(base + MCPWM_O_PWM1_AQSFRC) = ((HWREG(base + MCPWM_O_PWM1_AQSFRC) & \n                                ~MCPWM_PWM1_AQSFRC_PWMB_M) | \n                                ((uint32_t)output << MCPWM_PWM1_AQSFRC_PWMB_S));\n        break;\n    case MCPWM_AQ_OUTPUT_2A :\n        HWREG(base + MCPWM_O_PWM2_AQSFRC) = ((HWREG(base + MCPWM_O_PWM2_AQSFRC) & \n                                ~MCPWM_PWM2_AQSFRC_PWMA_M) | \n                                ((uint32_t)output << MCPWM_PWM2_AQSFRC_PWMA_S));\n        break;\n    case MCPWM_AQ_OUTPUT_2B :\n        HWREG(base + MCPWM_O_PWM2_AQSFRC) = ((HWREG(base + MCPWM_O_PWM2_AQSFRC) & \n                                ~MCPWM_PWM2_AQSFRC_PWMB_M) | \n                                ((uint32_t)output << MCPWM_PWM2_AQSFRC_PWMB_S));\n        break;\n    case MCPWM_AQ_OUTPUT_3A :\n        HWREG(base + MCPWM_O_PWM3_AQSFRC) = ((HWREG(base + MCPWM_O_PWM3_AQSFRC) & \n                                ~MCPWM_PWM3_AQSFRC_PWMA_M) | \n                                ((uint32_t)output << MCPWM_PWM3_AQSFRC_PWMA_S));\n        break;\n    default : // MCPWM_AQ_OUTPUT_3B\n        HWREG(base + MCPWM_O_PWM3_AQSFRC) = ((HWREG(base + MCPWM_O_PWM3_AQSFRC) & \n                                ~MCPWM_PWM3_AQSFRC_PWMB_M) | \n                                ((uint32_t)output << MCPWM_PWM3_AQSFRC_PWMB_S));\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); switch (mcpwmOutput) { case MCPWM_AQ_OUTPUT_1A : HWREG(base + MCPWM_O_PWM1_AQSFRC) = ((HWREG(base + MCPWM_O_PWM1_AQSFRC) & ~MCPWM_PWM1_AQSFRC_PWMA_M) | ((uint32_t)output << MCPWM_PWM1_AQSFRC_PWMA_S)); break; case MCPWM_AQ_OUTPUT_1B : HWREG(base + MCPWM_O_PWM1_AQSFRC) = ((HWREG(base + MCPWM_O_PWM1_AQSFRC) & ~MCPWM_PWM1_AQSFRC_PWMB_M) | ((uint32_t)output << MCPWM_PWM1_AQSFRC_PWMB_S)); break; case MCPWM_AQ_OUTPUT_2A : HWREG(base + MCPWM_O_PWM2_AQSFRC) = ((HWREG(base + MCPWM_O_PWM2_AQSFRC) & ~MCPWM_PWM2_AQSFRC_PWMA_M) | ((uint32_t)output << MCPWM_PWM2_AQSFRC_PWMA_S)); break; case MCPWM_AQ_OUTPUT_2B : HWREG(base + MCPWM_O_PWM2_AQSFRC) = ((HWREG(base + MCPWM_O_PWM2_AQSFRC) & ~MCPWM_PWM2_AQSFRC_PWMB_M) | ((uint32_t)output << MCPWM_PWM2_AQSFRC_PWMB_S)); break; case MCPWM_AQ_OUTPUT_3A : HWREG(base + MCPWM_O_PWM3_AQSFRC) = ((HWREG(base + MCPWM_O_PWM3_AQSFRC) & ~MCPWM_PWM3_AQSFRC_PWMA_M) | ((uint32_t)output << MCPWM_PWM3_AQSFRC_PWMA_S)); break; default : // MCPWM_AQ_OUTPUT_3B HWREG(base + MCPWM_O_PWM3_AQSFRC) = ((HWREG(base + MCPWM_O_PWM3_AQSFRC) & ~MCPWM_PWM3_AQSFRC_PWMB_M) | ((uint32_t)output << MCPWM_PWM3_AQSFRC_PWMB_S)); break; } }",
+      "registersUsed": [
+        "PWM1_AQSFRC",
+        "PWM2_AQSFRC",
+        "PWM3_AQSFRC",
+        "PWM1_AQSFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "PWM1_AQSFRC",
+        "PWM2_AQSFRC",
+        "PWM3_AQSFRC",
+        "PWM1_AQSFRC"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_forceActionQualifierSWAction",
+      "functionArgs": [
+        "base",
+        "mcpwmOutput"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ActionQualifierOutputModule"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Initiate a software forced event\n    //\n    switch (mcpwmOutput)\n    {\n    case MCPWM_AQ_OUTPUT_1A :\n        HWREG(base + MCPWM_O_PWM1_AQOTSFRC) = MCPWM_PWM1_AQOTSFRC_PWMA;\n        break;\n    case MCPWM_AQ_OUTPUT_1B :\n        HWREG(base + MCPWM_O_PWM1_AQOTSFRC) = MCPWM_PWM1_AQOTSFRC_PWMB;\n        break;\n    case MCPWM_AQ_OUTPUT_2A :\n        HWREG(base + MCPWM_O_PWM2_AQOTSFRC) = MCPWM_PWM2_AQOTSFRC_PWMA;\n        break;\n    case MCPWM_AQ_OUTPUT_2B :\n        HWREG(base + MCPWM_O_PWM2_AQOTSFRC) = MCPWM_PWM2_AQOTSFRC_PWMB;\n        break;\n    case MCPWM_AQ_OUTPUT_3A :\n        HWREG(base + MCPWM_O_PWM3_AQOTSFRC) = MCPWM_PWM3_AQOTSFRC_PWMA;\n        break;\n    default : // MCPWM_AQ_OUTPUT_3B\n        HWREG(base + MCPWM_O_PWM3_AQOTSFRC) = MCPWM_PWM3_AQOTSFRC_PWMB;\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Initiate a software forced event // switch (mcpwmOutput) { case MCPWM_AQ_OUTPUT_1A : HWREG(base + MCPWM_O_PWM1_AQOTSFRC) = MCPWM_PWM1_AQOTSFRC_PWMA; break; case MCPWM_AQ_OUTPUT_1B : HWREG(base + MCPWM_O_PWM1_AQOTSFRC) = MCPWM_PWM1_AQOTSFRC_PWMB; break; case MCPWM_AQ_OUTPUT_2A : HWREG(base + MCPWM_O_PWM2_AQOTSFRC) = MCPWM_PWM2_AQOTSFRC_PWMA; break; case MCPWM_AQ_OUTPUT_2B : HWREG(base + MCPWM_O_PWM2_AQOTSFRC) = MCPWM_PWM2_AQOTSFRC_PWMB; break; case MCPWM_AQ_OUTPUT_3A : HWREG(base + MCPWM_O_PWM3_AQOTSFRC) = MCPWM_PWM3_AQOTSFRC_PWMA; break; default : // MCPWM_AQ_OUTPUT_3B HWREG(base + MCPWM_O_PWM3_AQOTSFRC) = MCPWM_PWM3_AQOTSFRC_PWMB; break; } }",
+      "registersUsed": [
+        "PWM1_AQOTSFRC",
+        "PWM2_AQOTSFRC",
+        "PWM3_AQOTSFRC",
+        "PWM1_AQOTSFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "PWM1_AQOTSFRC",
+        "PWM2_AQOTSFRC",
+        "PWM3_AQOTSFRC",
+        "PWM1_AQOTSFRC"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setActionQualifierShadowLoadMode",
+      "functionArgs": [
+        "base",
+        "aqModule",
+        "loadMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ActionQualifierModule",
+        "MCPWM_ActionQualifierLoadMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set the appropriate sync and load mode bits and also enable shadow\n    // load mode. Shadow to active load can also be frozen.\n    //\n    //\n    // Set the Shadow Load Mode \n    //\n    switch (aqModule)\n    {\n    case MCPWM_ACTION_QUALIFIER_1A:\n        HWREG(base + MCPWM_O_AQCTL) = ((HWREG(base + MCPWM_O_AQCTL) & \n                                        ~MCPWM_AQCTL_PWM1_LDAQBMODE_M) |   // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_AQCTL_PWM1_LDAQAMODE_S)); // update the configuration\n        break;\n    case MCPWM_ACTION_QUALIFIER_1B:\n        HWREG(base + MCPWM_O_AQCTL) = ((HWREG(base + MCPWM_O_AQCTL) & \n                                        ~MCPWM_AQCTL_PWM1_LDAQBMODE_M) |   // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_AQCTL_PWM1_LDAQBMODE_S)); // update the configuration\n        break;\n    case MCPWM_ACTION_QUALIFIER_2A:\n        HWREG(base + MCPWM_O_AQCTL) = ((HWREG(base + MCPWM_O_AQCTL) & \n                                        ~MCPWM_AQCTL_PWM2_LDAQAMODE_M) |   // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_AQCTL_PWM2_LDAQAMODE_S)); // update the configuration\n        break;\n    case MCPWM_ACTION_QUALIFIER_2B:\n        HWREG(base + MCPWM_O_AQCTL) = ((HWREG(base + MCPWM_O_AQCTL) & \n                                        ~MCPWM_AQCTL_PWM2_LDAQBMODE_M) |   // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_AQCTL_PWM2_LDAQBMODE_S)); // update the configuration\n        break;\n    case MCPWM_ACTION_QUALIFIER_3A:\n        HWREG(base + MCPWM_O_AQCTL) = ((HWREG(base + MCPWM_O_AQCTL) & \n                                        ~MCPWM_AQCTL_PWM3_LDAQAMODE_M) |   // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_AQCTL_PWM3_LDAQAMODE_S)); // update the configuration\n        break;\n    default :  // MCPWM_ACTION_QUALIFIER_3B:\n        HWREG(base + MCPWM_O_AQCTL) = ((HWREG(base + MCPWM_O_AQCTL) & \n                                        ~MCPWM_AQCTL_PWM3_LDAQBMODE_M) |   // clear the current configurations\n                                        ((uint32_t)loadMode << MCPWM_AQCTL_PWM3_LDAQBMODE_S)); // update the configuration\n        break;  \n    }\n    \n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set the appropriate sync and load mode bits and also enable shadow // load mode. Shadow to active load can also be frozen. // // // Set the Shadow Load Mode // switch (aqModule) { case MCPWM_ACTION_QUALIFIER_1A: HWREG(base + MCPWM_O_AQCTL) = ((HWREG(base + MCPWM_O_AQCTL) & ~MCPWM_AQCTL_PWM1_LDAQBMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_AQCTL_PWM1_LDAQAMODE_S)); // update the configuration break; case MCPWM_ACTION_QUALIFIER_1B: HWREG(base + MCPWM_O_AQCTL) = ((HWREG(base + MCPWM_O_AQCTL) & ~MCPWM_AQCTL_PWM1_LDAQBMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_AQCTL_PWM1_LDAQBMODE_S)); // update the configuration break; case MCPWM_ACTION_QUALIFIER_2A: HWREG(base + MCPWM_O_AQCTL) = ((HWREG(base + MCPWM_O_AQCTL) & ~MCPWM_AQCTL_PWM2_LDAQAMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_AQCTL_PWM2_LDAQAMODE_S)); // update the configuration break; case MCPWM_ACTION_QUALIFIER_2B: HWREG(base + MCPWM_O_AQCTL) = ((HWREG(base + MCPWM_O_AQCTL) & ~MCPWM_AQCTL_PWM2_LDAQBMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_AQCTL_PWM2_LDAQBMODE_S)); // update the configuration break; case MCPWM_ACTION_QUALIFIER_3A: HWREG(base + MCPWM_O_AQCTL) = ((HWREG(base + MCPWM_O_AQCTL) & ~MCPWM_AQCTL_PWM3_LDAQAMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_AQCTL_PWM3_LDAQAMODE_S)); // update the configuration break; default : // MCPWM_ACTION_QUALIFIER_3B: HWREG(base + MCPWM_O_AQCTL) = ((HWREG(base + MCPWM_O_AQCTL) & ~MCPWM_AQCTL_PWM3_LDAQBMODE_M) | // clear the current configurations ((uint32_t)loadMode << MCPWM_AQCTL_PWM3_LDAQBMODE_S)); // update the configuration break; } }",
+      "registersUsed": [
+        "AQCTL",
+        "AQCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "AQCTL",
+        "AQCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setActionQualifierActionActive",
+      "functionArgs": [
+        "base",
+        "mcpwmOutput",
+        "output",
+        "event"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ActionQualifierOutputModule",
+        "MCPWM_ActionQualifierOutput",
+        "MCPWM_ActionQualifierOutputEvent"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    uint32_t mask = ((uint32_t)0x3U << (uint32_t)event);\n    uint32_t value = ((uint32_t)output <<  (uint32_t)event);\n\n    //\n    // Write to the PWMx_AQCTLy register for the actions on counter equals zero,\n    // period, CMPA UP/DOWN, CMPB UP/DOWN\n    //\n    switch (mcpwmOutput)\n    {\n    case MCPWM_AQ_OUTPUT_1A :\n        HWREG(base + MCPWM_O_PWM1_AQCTLA) = (HWREG(base + MCPWM_O_PWM1_AQCTLA) & ~mask) | value;\n        break;\n    case MCPWM_AQ_OUTPUT_1B :\n        HWREG(base + MCPWM_O_PWM1_AQCTLB) = (HWREG(base + MCPWM_O_PWM1_AQCTLB) & ~mask) | value;\n        break;\n    case MCPWM_AQ_OUTPUT_2A :\n        HWREG(base + MCPWM_O_PWM2_AQCTLA) = (HWREG(base + MCPWM_O_PWM2_AQCTLA) & ~mask) | value;\n        break;\n    case MCPWM_AQ_OUTPUT_2B :\n        HWREG(base + MCPWM_O_PWM2_AQCTLB) = (HWREG(base + MCPWM_O_PWM2_AQCTLB) & ~mask) | value;\n        break;\n    case MCPWM_AQ_OUTPUT_3A :\n        HWREG(base + MCPWM_O_PWM3_AQCTLA) = (HWREG(base + MCPWM_O_PWM3_AQCTLA) & ~mask) | value;\n        break;\n    default : // MCPWM_AQ_OUTPUT_3B\n        HWREG(base + MCPWM_O_PWM3_AQCTLB) = (HWREG(base + MCPWM_O_PWM3_AQCTLB) & ~mask) | value;\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); uint32_t mask = ((uint32_t)0x3U << (uint32_t)event); uint32_t value = ((uint32_t)output << (uint32_t)event); // // Write to the PWMx_AQCTLy register for the actions on counter equals zero, // period, CMPA UP/DOWN, CMPB UP/DOWN // switch (mcpwmOutput) { case MCPWM_AQ_OUTPUT_1A : HWREG(base + MCPWM_O_PWM1_AQCTLA) = (HWREG(base + MCPWM_O_PWM1_AQCTLA) & ~mask) | value; break; case MCPWM_AQ_OUTPUT_1B : HWREG(base + MCPWM_O_PWM1_AQCTLB) = (HWREG(base + MCPWM_O_PWM1_AQCTLB) & ~mask) | value; break; case MCPWM_AQ_OUTPUT_2A : HWREG(base + MCPWM_O_PWM2_AQCTLA) = (HWREG(base + MCPWM_O_PWM2_AQCTLA) & ~mask) | value; break; case MCPWM_AQ_OUTPUT_2B : HWREG(base + MCPWM_O_PWM2_AQCTLB) = (HWREG(base + MCPWM_O_PWM2_AQCTLB) & ~mask) | value; break; case MCPWM_AQ_OUTPUT_3A : HWREG(base + MCPWM_O_PWM3_AQCTLA) = (HWREG(base + MCPWM_O_PWM3_AQCTLA) & ~mask) | value; break; default : // MCPWM_AQ_OUTPUT_3B HWREG(base + MCPWM_O_PWM3_AQCTLB) = (HWREG(base + MCPWM_O_PWM3_AQCTLB) & ~mask) | value; break; } }",
+      "registersUsed": [
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLB",
+        "PWM2_AQCTLA",
+        "PWM2_AQCTLB",
+        "PWM3_AQCTLA",
+        "PWM3_AQCTLB",
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLB"
+      ],
+      "registersUsedMatchingBifield": [
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLB",
+        "PWM2_AQCTLA",
+        "PWM2_AQCTLB",
+        "PWM3_AQCTLA",
+        "PWM3_AQCTLB",
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLB"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setActionQualifierActionShadow",
+      "functionArgs": [
+        "base",
+        "mcpwmOutput",
+        "output",
+        "event"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ActionQualifierOutputModule",
+        "MCPWM_ActionQualifierOutput",
+        "MCPWM_ActionQualifierOutputEvent"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    uint32_t mask = ((uint32_t)0x3U << (uint32_t)event);\n    uint32_t value = ((uint32_t)output <<  (uint32_t)event);\n    \n    //\n    // Write to the PWMx_AQCTLy register for the actions on counter equals zero,\n    // period, CMPA UP/DOWN, CMPB UP/DOWN\n    //\n    switch (mcpwmOutput)\n    {\n    case MCPWM_AQ_OUTPUT_1A :\n        HWREG(base + MCPWM_O_PWM1_AQCTLAS) = (HWREG(base + MCPWM_O_PWM1_AQCTLAS) &  ~mask) | value;\n        break;\n    case MCPWM_AQ_OUTPUT_1B :\n        HWREG(base + MCPWM_O_PWM1_AQCTLBS) = (HWREG(base + MCPWM_O_PWM1_AQCTLBS) &  ~mask) | value;\n        break;\n    case MCPWM_AQ_OUTPUT_2A :\n        HWREG(base + MCPWM_O_PWM2_AQCTLAS) = (HWREG(base + MCPWM_O_PWM2_AQCTLAS) &  ~mask) | value;\n        break;\n    case MCPWM_AQ_OUTPUT_2B :\n        HWREG(base + MCPWM_O_PWM2_AQCTLBS) = (HWREG(base + MCPWM_O_PWM2_AQCTLBS) &  ~mask) | value;\n        break;\n    case MCPWM_AQ_OUTPUT_3A :\n        HWREG(base + MCPWM_O_PWM3_AQCTLAS) = (HWREG(base + MCPWM_O_PWM3_AQCTLAS) &  ~mask) | value;\n        break;\n    default : // MCPWM_AQ_OUTPUT_3B\n        HWREG(base + MCPWM_O_PWM3_AQCTLBS) = (HWREG(base + MCPWM_O_PWM3_AQCTLBS) &  ~mask) | value;\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); uint32_t mask = ((uint32_t)0x3U << (uint32_t)event); uint32_t value = ((uint32_t)output << (uint32_t)event); // // Write to the PWMx_AQCTLy register for the actions on counter equals zero, // period, CMPA UP/DOWN, CMPB UP/DOWN // switch (mcpwmOutput) { case MCPWM_AQ_OUTPUT_1A : HWREG(base + MCPWM_O_PWM1_AQCTLAS) = (HWREG(base + MCPWM_O_PWM1_AQCTLAS) & ~mask) | value; break; case MCPWM_AQ_OUTPUT_1B : HWREG(base + MCPWM_O_PWM1_AQCTLBS) = (HWREG(base + MCPWM_O_PWM1_AQCTLBS) & ~mask) | value; break; case MCPWM_AQ_OUTPUT_2A : HWREG(base + MCPWM_O_PWM2_AQCTLAS) = (HWREG(base + MCPWM_O_PWM2_AQCTLAS) & ~mask) | value; break; case MCPWM_AQ_OUTPUT_2B : HWREG(base + MCPWM_O_PWM2_AQCTLBS) = (HWREG(base + MCPWM_O_PWM2_AQCTLBS) & ~mask) | value; break; case MCPWM_AQ_OUTPUT_3A : HWREG(base + MCPWM_O_PWM3_AQCTLAS) = (HWREG(base + MCPWM_O_PWM3_AQCTLAS) & ~mask) | value; break; default : // MCPWM_AQ_OUTPUT_3B HWREG(base + MCPWM_O_PWM3_AQCTLBS) = (HWREG(base + MCPWM_O_PWM3_AQCTLBS) & ~mask) | value; break; } }",
+      "registersUsed": [
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLAS",
+        "PWM1_AQCTLB",
+        "PWM1_AQCTLBS",
+        "PWM2_AQCTLA",
+        "PWM2_AQCTLAS",
+        "PWM2_AQCTLB",
+        "PWM2_AQCTLBS",
+        "PWM3_AQCTLA",
+        "PWM3_AQCTLAS",
+        "PWM3_AQCTLB",
+        "PWM3_AQCTLBS",
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLAS",
+        "PWM1_AQCTLB",
+        "PWM1_AQCTLBS"
+      ],
+      "registersUsedMatchingBifield": [
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLAS",
+        "PWM1_AQCTLB",
+        "PWM1_AQCTLBS",
+        "PWM2_AQCTLA",
+        "PWM2_AQCTLAS",
+        "PWM2_AQCTLB",
+        "PWM2_AQCTLBS",
+        "PWM3_AQCTLA",
+        "PWM3_AQCTLAS",
+        "PWM3_AQCTLB",
+        "PWM3_AQCTLBS",
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLAS",
+        "PWM1_AQCTLB",
+        "PWM1_AQCTLBS"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setActionQualifierActionCompleteActive",
+      "functionArgs": [
+        "base",
+        "mcpwmOutput",
+        "action"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ActionQualifierOutputModule",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    ASSERT(action <= (MCPWM_PWM1_AQCTLA_ZRO_M | \\\n                        MCPWM_PWM1_AQCTLA_PRD_M | \\\n                        MCPWM_PWM1_AQCTLA_CAU_M | \\\n                        MCPWM_PWM1_AQCTLA_CAD_M | \\\n                        MCPWM_PWM1_AQCTLA_CBU_M | \\\n                        MCPWM_PWM1_AQCTLA_CBD_M ));\n\n    //\n    // Write to ZRO, PRD, CAU, CAD, CBU or CBD bits of AQCTLA register\n    //\n    switch (mcpwmOutput)\n    {\n    case MCPWM_AQ_OUTPUT_1A :\n        HWREG(base + MCPWM_O_PWM1_AQCTLA) = (uint32_t) action;\n        break;\n    case MCPWM_AQ_OUTPUT_1B :\n        HWREG(base + MCPWM_O_PWM1_AQCTLB) = (uint32_t) action;\n        break;\n    case MCPWM_AQ_OUTPUT_2A :\n        HWREG(base + MCPWM_O_PWM2_AQCTLA) = (uint32_t) action;\n        break;\n    case MCPWM_AQ_OUTPUT_2B :\n        HWREG(base + MCPWM_O_PWM2_AQCTLB) = (uint32_t) action;\n        break;\n    case MCPWM_AQ_OUTPUT_3A :\n        HWREG(base + MCPWM_O_PWM3_AQCTLA) = (uint32_t) action;\n        break;\n    default : // MCPWM_AQ_OUTPUT_3B\n        HWREG(base + MCPWM_O_PWM3_AQCTLB) = (uint32_t) action;\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); ASSERT(action <= (MCPWM_PWM1_AQCTLA_ZRO_M | \\ MCPWM_PWM1_AQCTLA_PRD_M | \\ MCPWM_PWM1_AQCTLA_CAU_M | \\ MCPWM_PWM1_AQCTLA_CAD_M | \\ MCPWM_PWM1_AQCTLA_CBU_M | \\ MCPWM_PWM1_AQCTLA_CBD_M )); // // Write to ZRO, PRD, CAU, CAD, CBU or CBD bits of AQCTLA register // switch (mcpwmOutput) { case MCPWM_AQ_OUTPUT_1A : HWREG(base + MCPWM_O_PWM1_AQCTLA) = (uint32_t) action; break; case MCPWM_AQ_OUTPUT_1B : HWREG(base + MCPWM_O_PWM1_AQCTLB) = (uint32_t) action; break; case MCPWM_AQ_OUTPUT_2A : HWREG(base + MCPWM_O_PWM2_AQCTLA) = (uint32_t) action; break; case MCPWM_AQ_OUTPUT_2B : HWREG(base + MCPWM_O_PWM2_AQCTLB) = (uint32_t) action; break; case MCPWM_AQ_OUTPUT_3A : HWREG(base + MCPWM_O_PWM3_AQCTLA) = (uint32_t) action; break; default : // MCPWM_AQ_OUTPUT_3B HWREG(base + MCPWM_O_PWM3_AQCTLB) = (uint32_t) action; break; } }",
+      "registersUsed": [
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLB",
+        "PWM2_AQCTLA",
+        "PWM2_AQCTLB",
+        "PWM3_AQCTLA",
+        "PWM3_AQCTLB",
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLB"
+      ],
+      "registersUsedMatchingBifield": [
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLB",
+        "PWM2_AQCTLA",
+        "PWM2_AQCTLB",
+        "PWM3_AQCTLA",
+        "PWM3_AQCTLB",
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLB"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setActionQualifierActionCompleteShadow",
+      "functionArgs": [
+        "base",
+        "mcpwmOutput",
+        "action"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ActionQualifierOutputModule",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    ASSERT(action <= (MCPWM_PWM1_AQCTLAS_ZRO_M | \\\n        MCPWM_PWM1_AQCTLAS_PRD_M | \\\n        MCPWM_PWM1_AQCTLAS_CAU_M | \\\n        MCPWM_PWM1_AQCTLAS_CAD_M | \\\n        MCPWM_PWM1_AQCTLAS_CBU_M | \\\n        MCPWM_PWM1_AQCTLAS_CBD_M ));\n    //\n    // Write to ZRO, PRD, CAU, CAD, CBU or CBD bits of AQCTLA register\n    //\n    switch (mcpwmOutput)\n    {\n    case MCPWM_AQ_OUTPUT_1A :\n        HWREG(base + MCPWM_O_PWM1_AQCTLAS) = action;\n        break;\n    case MCPWM_AQ_OUTPUT_1B :\n        HWREG(base + MCPWM_O_PWM1_AQCTLBS) = action;\n        break;\n    case MCPWM_AQ_OUTPUT_2A :\n        HWREG(base + MCPWM_O_PWM2_AQCTLAS) = action;\n        break;\n    case MCPWM_AQ_OUTPUT_2B :\n        HWREG(base + MCPWM_O_PWM2_AQCTLBS) = action;\n        break;\n    case MCPWM_AQ_OUTPUT_3A :\n        HWREG(base + MCPWM_O_PWM3_AQCTLAS) = action;\n        break;\n    default : // MCPWM_AQ_OUTPUT_3B\n        HWREG(base + MCPWM_O_PWM3_AQCTLBS) = action;\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); ASSERT(action <= (MCPWM_PWM1_AQCTLAS_ZRO_M | \\ MCPWM_PWM1_AQCTLAS_PRD_M | \\ MCPWM_PWM1_AQCTLAS_CAU_M | \\ MCPWM_PWM1_AQCTLAS_CAD_M | \\ MCPWM_PWM1_AQCTLAS_CBU_M | \\ MCPWM_PWM1_AQCTLAS_CBD_M )); // // Write to ZRO, PRD, CAU, CAD, CBU or CBD bits of AQCTLA register // switch (mcpwmOutput) { case MCPWM_AQ_OUTPUT_1A : HWREG(base + MCPWM_O_PWM1_AQCTLAS) = action; break; case MCPWM_AQ_OUTPUT_1B : HWREG(base + MCPWM_O_PWM1_AQCTLBS) = action; break; case MCPWM_AQ_OUTPUT_2A : HWREG(base + MCPWM_O_PWM2_AQCTLAS) = action; break; case MCPWM_AQ_OUTPUT_2B : HWREG(base + MCPWM_O_PWM2_AQCTLBS) = action; break; case MCPWM_AQ_OUTPUT_3A : HWREG(base + MCPWM_O_PWM3_AQCTLAS) = action; break; default : // MCPWM_AQ_OUTPUT_3B HWREG(base + MCPWM_O_PWM3_AQCTLBS) = action; break; } }",
+      "registersUsed": [
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLAS",
+        "PWM1_AQCTLB",
+        "PWM1_AQCTLBS",
+        "PWM2_AQCTLA",
+        "PWM2_AQCTLAS",
+        "PWM2_AQCTLB",
+        "PWM2_AQCTLBS",
+        "PWM3_AQCTLA",
+        "PWM3_AQCTLAS",
+        "PWM3_AQCTLB",
+        "PWM3_AQCTLBS",
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLAS",
+        "PWM1_AQCTLB",
+        "PWM1_AQCTLBS"
+      ],
+      "registersUsedMatchingBifield": [
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLAS",
+        "PWM1_AQCTLB",
+        "PWM1_AQCTLBS",
+        "PWM2_AQCTLA",
+        "PWM2_AQCTLAS",
+        "PWM2_AQCTLB",
+        "PWM2_AQCTLBS",
+        "PWM3_AQCTLA",
+        "PWM3_AQCTLAS",
+        "PWM3_AQCTLB",
+        "PWM3_AQCTLBS",
+        "PWM1_AQCTLA",
+        "PWM1_AQCTLAS",
+        "PWM1_AQCTLB",
+        "PWM1_AQCTLBS"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_enableGlobalLoad",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Shadow to active load is controlled globally\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_GLDCTL) |= MCPWM_GLDCTL_GLD;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Shadow to active load is controlled globally // EALLOW; HWREG(base + MCPWM_O_GLDCTL) |= MCPWM_GLDCTL_GLD; EDIS; }",
+      "registersUsed": [
+        "GLDCTL",
+        "GLDCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLDCTL",
+        "GLDCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_disableGlobalLoad",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Shadow to active load is controlled individually\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_GLDCTL) &= ~MCPWM_GLDCTL_GLD;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Shadow to active load is controlled individually // EALLOW; HWREG(base + MCPWM_O_GLDCTL) &= ~MCPWM_GLDCTL_GLD; EDIS; }",
+      "registersUsed": [
+        "GLDCTL",
+        "GLDCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLDCTL",
+        "GLDCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setGlobalLoadTrigger",
+      "functionArgs": [
+        "base",
+        "loadTrigger"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_GlobalLoadTrigger"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set the Global shadow to active load pulse\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_GLDCTL) =\n               ((HWREG(base + MCPWM_O_GLDCTL) & ~MCPWM_GLDCTL_GLDMODE_M) |\n                ((uint32_t)loadTrigger << MCPWM_GLDCTL_GLDMODE_S));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set the Global shadow to active load pulse // EALLOW; HWREG(base + MCPWM_O_GLDCTL) = ((HWREG(base + MCPWM_O_GLDCTL) & ~MCPWM_GLDCTL_GLDMODE_M) | ((uint32_t)loadTrigger << MCPWM_GLDCTL_GLDMODE_S)); EDIS; }",
+      "registersUsed": [
+        "GLDCTL",
+        "GLDCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLDCTL",
+        "GLDCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_enableGlobalLoadOneShotMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Enable global continuous shadow to active load\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_GLDCTL) |= MCPWM_GLDCTL_OSHTMODE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Enable global continuous shadow to active load // EALLOW; HWREG(base + MCPWM_O_GLDCTL) |= MCPWM_GLDCTL_OSHTMODE; EDIS; }",
+      "registersUsed": [
+        "GLDCTL",
+        "GLDCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLDCTL",
+        "GLDCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_disableGlobalLoadOneShotMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Enable global continuous shadow to active load\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_GLDCTL) &= ~MCPWM_GLDCTL_OSHTMODE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Enable global continuous shadow to active load // EALLOW; HWREG(base + MCPWM_O_GLDCTL) &= ~MCPWM_GLDCTL_OSHTMODE; EDIS; }",
+      "registersUsed": [
+        "GLDCTL",
+        "GLDCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLDCTL",
+        "GLDCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setGlobalLoadOneShotLatch",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set a one shot Global shadow load pulse.\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_GLDOSHTCTL) |= MCPWM_GLDOSHTCTL_OSHTLD;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set a one shot Global shadow load pulse. // EALLOW; HWREG(base + MCPWM_O_GLDOSHTCTL) |= MCPWM_GLDOSHTCTL_OSHTLD; EDIS; }",
+      "registersUsed": [
+        "GLDOSHTCTL",
+        "GLDOSHTCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLDOSHTCTL",
+        "GLDOSHTCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_clearGlobalLoadOneShotLatch",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set a one shot Global shadow load pulse.\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_GLDOSHTCTL) &= ~MCPWM_GLDOSHTCTL_OSHTLD;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set a one shot Global shadow load pulse. // EALLOW; HWREG(base + MCPWM_O_GLDOSHTCTL) &= ~MCPWM_GLDOSHTCTL_OSHTLD; EDIS; }",
+      "registersUsed": [
+        "GLDOSHTCTL",
+        "GLDOSHTCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLDOSHTCTL",
+        "GLDOSHTCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getGlobalLoadOneShotLatchStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{   \n    bool status;\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set a one shot Global shadow load pulse.\n    //\n    EALLOW;\n    status = ((HWREG(base + MCPWM_O_GLDOSHTSTS) & MCPWM_GLDOSHTSTS_OSHTLATCH) == MCPWM_GLDOSHTSTS_OSHTLATCH);\n    EDIS;\n\n    return (status);\n}\n",
+      "functionContentWithoutFormatting": "{ bool status; // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set a one shot Global shadow load pulse. // EALLOW; status = ((HWREG(base + MCPWM_O_GLDOSHTSTS) & MCPWM_GLDOSHTSTS_OSHTLATCH) == MCPWM_GLDOSHTSTS_OSHTLATCH); EDIS; return (status); }",
+      "registersUsed": [
+        "GLDOSHTSTS",
+        "GLDOSHTSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLDOSHTSTS",
+        "GLDOSHTSTS"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_forceGlobalLoadOneShotEvent",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Force a Software Global shadow load pulse\n    //\n    EALLOW;\n    HWREGH(base + MCPWM_O_GLDOSHTCTL) |= MCPWM_GLDOSHTCTL_GFRCLD;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Force a Software Global shadow load pulse // EALLOW; HWREGH(base + MCPWM_O_GLDOSHTCTL) |= MCPWM_GLDOSHTCTL_GFRCLD; EDIS; }",
+      "registersUsed": [
+        "GLDOSHTCTL",
+        "GLDOSHTCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLDOSHTCTL",
+        "GLDOSHTCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setDeadBandOutputSwapMode",
+      "functionArgs": [
+        "base",
+        "output",
+        "enableSwapMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_DeadBandOutput",
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t mask;\n\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    mask = (uint32_t)1U << ((uint32_t)output + MCPWM_DBCTL_OUTSWAP_S);\n\n    if(enableSwapMode)\n    {\n        //\n        // Set the appropriate outswap bit to swap output\n        //\n        HWREG(base + MCPWM_O_DBCTL) = (HWREG(base + MCPWM_O_DBCTL) | mask);\n    }\n    else\n    {\n        //\n        // Clear the appropriate outswap bit to disable output swap\n        //\n        HWREG(base + MCPWM_O_DBCTL) = (HWREG(base + MCPWM_O_DBCTL) & ~mask);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t mask; // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); mask = (uint32_t)1U << ((uint32_t)output + MCPWM_DBCTL_OUTSWAP_S); if(enableSwapMode) { // // Set the appropriate outswap bit to swap output // HWREG(base + MCPWM_O_DBCTL) = (HWREG(base + MCPWM_O_DBCTL) | mask); } else { // // Clear the appropriate outswap bit to disable output swap // HWREG(base + MCPWM_O_DBCTL) = (HWREG(base + MCPWM_O_DBCTL) & ~mask); } }",
+      "registersUsed": [
+        "DBCTL",
+        "DBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBCTL",
+        "DBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setDeadBandDelayMode",
+      "functionArgs": [
+        "base",
+        "delayMode",
+        "enableDelayMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_DeadBandDelayMode",
+        "bool"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t mask;\n\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    mask = (uint32_t)1U << ((uint32_t)delayMode + MCPWM_DBCTL_OUT_MODE_S);\n\n    if(enableDelayMode)\n    {\n         //\n         // Set the appropriate outmode bit to enable Dead Band delay\n         //\n         HWREG(base + MCPWM_O_DBCTL) = (HWREG(base + MCPWM_O_DBCTL) | mask);\n    }\n    else\n    {\n        //\n        // Clear the appropriate outswap bit to disable output swap\n        //\n        HWREG(base + MCPWM_O_DBCTL) = (HWREG(base + MCPWM_O_DBCTL) & ~ mask);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t mask; // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); mask = (uint32_t)1U << ((uint32_t)delayMode + MCPWM_DBCTL_OUT_MODE_S); if(enableDelayMode) { // // Set the appropriate outmode bit to enable Dead Band delay // HWREG(base + MCPWM_O_DBCTL) = (HWREG(base + MCPWM_O_DBCTL) | mask); } else { // // Clear the appropriate outswap bit to disable output swap // HWREG(base + MCPWM_O_DBCTL) = (HWREG(base + MCPWM_O_DBCTL) & ~ mask); } }",
+      "registersUsed": [
+        "DBCTL",
+        "DBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBCTL",
+        "DBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setDeadBandDelayPolarity",
+      "functionArgs": [
+        "base",
+        "delayMode",
+        "polarity"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_DeadBandDelayMode",
+        "MCPWM_DeadBandPolarity"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t shift;\n\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    shift = (((uint16_t)delayMode ^ 0x1U) + MCPWM_DBCTL_POLSEL_S);\n\n    //\n    // Set the appropriate polsel bits for dead band polarity\n    //\n    HWREG(base + MCPWM_O_DBCTL) =\n                       ((HWREG(base + MCPWM_O_DBCTL) & ~(1U << shift)) |\n                        ((uint32_t)polarity << shift));\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t shift; // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); shift = (((uint16_t)delayMode ^ 0x1U) + MCPWM_DBCTL_POLSEL_S); // // Set the appropriate polsel bits for dead band polarity // HWREG(base + MCPWM_O_DBCTL) = ((HWREG(base + MCPWM_O_DBCTL) & ~(1U << shift)) | ((uint32_t)polarity << shift)); }",
+      "registersUsed": [
+        "DBCTL",
+        "DBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBCTL",
+        "DBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setRisingEdgeDeadBandDelayInput",
+      "functionArgs": [
+        "base",
+        "input"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT((input == MCPWM_DB_INPUT_MCPWMA) ||\n           (input == MCPWM_DB_INPUT_MCPWMB));\n\n    //\n    // Set the Rising Edge Delay input\n    //\n    HWREG(base + MCPWM_O_DBCTL) =\n            ((HWREG(base + MCPWM_O_DBCTL) & ~(1U << (MCPWM_DBCTL_IN_MODE_S))) |\n             (input << MCPWM_DBCTL_IN_MODE_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); ASSERT((input == MCPWM_DB_INPUT_MCPWMA) || (input == MCPWM_DB_INPUT_MCPWMB)); // // Set the Rising Edge Delay input // HWREG(base + MCPWM_O_DBCTL) = ((HWREG(base + MCPWM_O_DBCTL) & ~(1U << (MCPWM_DBCTL_IN_MODE_S))) | (input << MCPWM_DBCTL_IN_MODE_S)); }",
+      "registersUsed": [
+        "DBCTL",
+        "DBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBCTL",
+        "DBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setFallingEdgeDeadBandDelayInput",
+      "functionArgs": [
+        "base",
+        "input"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT((input == MCPWM_DB_INPUT_MCPWMA) ||\n           (input == MCPWM_DB_INPUT_MCPWMB) ||\n           (input == MCPWM_DB_INPUT_DB_RED));\n\n    if(input == MCPWM_DB_INPUT_DB_RED)\n    {\n        //\n        // Set the Falling Edge Delay input\n        //\n        HWREG(base + MCPWM_O_DBCTL) |= MCPWM_DBCTL_DEDB_MODE;\n    }\n    else\n    {\n        //\n        // Set the Falling Edge Delay input\n        //\n        HWREG(base + MCPWM_O_DBCTL) &= ~MCPWM_DBCTL_DEDB_MODE;\n\n        //\n        // Set the Rising Edge Delay input\n        //\n        HWREG(base + MCPWM_O_DBCTL) =\n            ((HWREG(base + MCPWM_O_DBCTL) & ~(1U << (MCPWM_DBCTL_IN_MODE_S + 1U))) |\n            (input << (MCPWM_DBCTL_IN_MODE_S + 1U)));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); ASSERT((input == MCPWM_DB_INPUT_MCPWMA) || (input == MCPWM_DB_INPUT_MCPWMB) || (input == MCPWM_DB_INPUT_DB_RED)); if(input == MCPWM_DB_INPUT_DB_RED) { // // Set the Falling Edge Delay input // HWREG(base + MCPWM_O_DBCTL) |= MCPWM_DBCTL_DEDB_MODE; } else { // // Set the Falling Edge Delay input // HWREG(base + MCPWM_O_DBCTL) &= ~MCPWM_DBCTL_DEDB_MODE; // // Set the Rising Edge Delay input // HWREG(base + MCPWM_O_DBCTL) = ((HWREG(base + MCPWM_O_DBCTL) & ~(1U << (MCPWM_DBCTL_IN_MODE_S + 1U))) | (input << (MCPWM_DBCTL_IN_MODE_S + 1U))); } }",
+      "registersUsed": [
+        "DBCTL",
+        "DBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBCTL",
+        "DBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setRisingEdgeDelayCountShadowLoadMode",
+      "functionArgs": [
+        "base",
+        "loadMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_RisingEdgeDelayLoadMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Enable the shadow mode. Set-up the load mode\n    //\n    HWREG(base + MCPWM_O_DBCTL) = ((HWREG(base + MCPWM_O_DBCTL) & \n                            ~MCPWM_DBCTL_LOADREDMODE_M) |\n                            ((uint32_t) loadMode << MCPWM_DBCTL_LOADREDMODE_S));\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Enable the shadow mode. Set-up the load mode // HWREG(base + MCPWM_O_DBCTL) = ((HWREG(base + MCPWM_O_DBCTL) & ~MCPWM_DBCTL_LOADREDMODE_M) | ((uint32_t) loadMode << MCPWM_DBCTL_LOADREDMODE_S)); }",
+      "registersUsed": [
+        "DBCTL",
+        "DBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBCTL",
+        "DBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setFallingEdgeDelayCountShadowLoadMode",
+      "functionArgs": [
+        "base",
+        "loadMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_FallingEdgeDelayLoadMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Enable the shadow mode. Setup the load mode.\n    //\n    HWREG(base + MCPWM_O_DBCTL) = ((HWREG(base + MCPWM_O_DBCTL) & \n                            ~MCPWM_DBCTL_LOADFEDMODE_M) |\n                            ((uint32_t) loadMode << MCPWM_DBCTL_LOADFEDMODE_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Enable the shadow mode. Setup the load mode. // HWREG(base + MCPWM_O_DBCTL) = ((HWREG(base + MCPWM_O_DBCTL) & ~MCPWM_DBCTL_LOADFEDMODE_M) | ((uint32_t) loadMode << MCPWM_DBCTL_LOADFEDMODE_S)); }",
+      "registersUsed": [
+        "DBCTL",
+        "DBCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBCTL",
+        "DBCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setRisingEdgeDelayCountActive",
+      "functionArgs": [
+        "base",
+        "redCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT(redCount <= MCPWM_DBRED_DBRED_M);\n\n    //\n    // Set the RED (Rising Edge Delay) count\n    //\n    HWREG(base + MCPWM_O_DBRED) = redCount;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); ASSERT(redCount <= MCPWM_DBRED_DBRED_M); // // Set the RED (Rising Edge Delay) count // HWREG(base + MCPWM_O_DBRED) = redCount; }",
+      "registersUsed": [
+        "DBRED",
+        "DBRED"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBRED",
+        "DBRED"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setRisingEdgeDelayCountShadow",
+      "functionArgs": [
+        "base",
+        "redCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT(redCount <= MCPWM_DBREDS_DBREDS_M);\n\n    //\n    // Set the RED (Rising Edge Delay) count\n    //\n    HWREG(base + MCPWM_O_DBREDS) = redCount;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); ASSERT(redCount <= MCPWM_DBREDS_DBREDS_M); // // Set the RED (Rising Edge Delay) count // HWREG(base + MCPWM_O_DBREDS) = redCount; }",
+      "registersUsed": [
+        "DBRED",
+        "DBREDS",
+        "DBRED",
+        "DBREDS"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBRED",
+        "DBREDS",
+        "DBRED",
+        "DBREDS"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setFallingEdgeDelayCountActive",
+      "functionArgs": [
+        "base",
+        "fedCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT(fedCount < MCPWM_DBFED_DBFED_M);\n\n    //\n    // Set the RED (Rising Edge Delay) count\n    //\n    HWREG(base + MCPWM_O_DBFED) = fedCount;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); ASSERT(fedCount < MCPWM_DBFED_DBFED_M); // // Set the RED (Rising Edge Delay) count // HWREG(base + MCPWM_O_DBFED) = fedCount; }",
+      "registersUsed": [
+        "DBFED",
+        "DBFED"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBFED",
+        "DBFED"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setFallingEdgeDelayCountShadow",
+      "functionArgs": [
+        "base",
+        "fedCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT(fedCount < MCPWM_DBFEDS_DBFEDS_M);\n\n    //\n    // Set the RED (Rising Edge Delay) count\n    //\n    HWREG(base + MCPWM_O_DBFEDS) = fedCount;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); ASSERT(fedCount < MCPWM_DBFEDS_DBFEDS_M); // // Set the RED (Rising Edge Delay) count // HWREG(base + MCPWM_O_DBFEDS) = fedCount; }",
+      "registersUsed": [
+        "DBFED",
+        "DBFEDS",
+        "DBFED",
+        "DBFEDS"
+      ],
+      "registersUsedMatchingBifield": [
+        "DBFED",
+        "DBFEDS",
+        "DBFED",
+        "DBFEDS"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_enableTripZoneSignals",
+      "functionArgs": [
+        "base",
+        "tzSignal"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set the trip zone bits\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_TZSEL) |= tzSignal;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set the trip zone bits // EALLOW; HWREG(base + MCPWM_O_TZSEL) |= tzSignal; EDIS; }",
+      "registersUsed": [
+        "TZSEL",
+        "TZSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TZSEL",
+        "TZSEL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_disableTripZoneSignals",
+      "functionArgs": [
+        "base",
+        "tzSignal"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set the trip zone bits\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_TZSEL) &= ~((uint32_t)tzSignal);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set the trip zone bits // EALLOW; HWREG(base + MCPWM_O_TZSEL) &= ~((uint32_t)tzSignal); EDIS; }",
+      "registersUsed": [
+        "TZSEL",
+        "TZSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TZSEL",
+        "TZSEL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setTripZoneAction",
+      "functionArgs": [
+        "base",
+        "tzEvent",
+        "tzAction"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_TripZoneEvent",
+        "MCPWM_TripZoneAction"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{   \n    uint32_t mask = (tzEvent == MCPWM_TZ_ACTION_EVENT_TZA) ? MCPWM_TZCTL_TZA_M : MCPWM_TZCTL_TZB_M;\n    uint32_t shift = (tzEvent == MCPWM_TZ_ACTION_EVENT_TZA) ? MCPWM_TZCTL_TZA_S : MCPWM_TZCTL_TZB_S;\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Set the Action for Trip Zone events\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_TZCTL) = (HWREG(base + MCPWM_O_TZCTL) & \n                                    ~mask) | \n                                    ((uint32_t)tzAction << shift);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t mask = (tzEvent == MCPWM_TZ_ACTION_EVENT_TZA) ? MCPWM_TZCTL_TZA_M : MCPWM_TZCTL_TZB_M; uint32_t shift = (tzEvent == MCPWM_TZ_ACTION_EVENT_TZA) ? MCPWM_TZCTL_TZA_S : MCPWM_TZCTL_TZB_S; // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Set the Action for Trip Zone events // EALLOW; HWREG(base + MCPWM_O_TZCTL) = (HWREG(base + MCPWM_O_TZCTL) & ~mask) | ((uint32_t)tzAction << shift); EDIS; }",
+      "registersUsed": [
+        "TZCTL",
+        "TZCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TZCTL",
+        "TZCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_selectTripZoneCBCEvent",
+      "functionArgs": [
+        "base",
+        "clearEvent"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_TripZoneCBCMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Select the Cycle by Cycle Clear mode\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_TZCTL) = ((HWREG(base + MCPWM_O_TZCTL) & \n                                ~MCPWM_TZCTL_CBCPULSE_M) | \n                                ((uint32_t)clearEvent << MCPWM_TZCTL_CBCPULSE_S));\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Select the Cycle by Cycle Clear mode // EALLOW; HWREG(base + MCPWM_O_TZCTL) = ((HWREG(base + MCPWM_O_TZCTL) & ~MCPWM_TZCTL_CBCPULSE_M) | ((uint32_t)clearEvent << MCPWM_TZCTL_CBCPULSE_S)); EDIS; }",
+      "registersUsed": [
+        "TZCTL",
+        "TZCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TZCTL",
+        "TZCTL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getTripZoneFlagStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    uint32_t mask = MCPWM_TZSEL_CBC1 |\n                    MCPWM_TZSEL_CBC2 |\n                    MCPWM_TZSEL_CBC3 |\n                    MCPWM_TZSEL_CBC4 |\n                    MCPWM_TZSEL_CBC5 |\n                    MCPWM_TZSEL_CBC6 |\n                    MCPWM_TZSEL_CBC7 |\n                    MCPWM_TZSEL_CBC8 |\n                    MCPWM_TZSEL_OST1 |\n                    MCPWM_TZSEL_OST2 |\n                    MCPWM_TZSEL_OST3 |\n                    MCPWM_TZSEL_OST4 |\n                    MCPWM_TZSEL_OST5 |\n                    MCPWM_TZSEL_OST6 |\n                    MCPWM_TZSEL_OST7 |\n                    MCPWM_TZSEL_OST8;\n\n    //\n    // Return the Trip zone flag status for One Shot and Cycle by Cycle flags\n    //\n    return(HWREG(base + MCPWM_O_TZCBCOSTFLAG) & mask);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); uint32_t mask = MCPWM_TZSEL_CBC1 | MCPWM_TZSEL_CBC2 | MCPWM_TZSEL_CBC3 | MCPWM_TZSEL_CBC4 | MCPWM_TZSEL_CBC5 | MCPWM_TZSEL_CBC6 | MCPWM_TZSEL_CBC7 | MCPWM_TZSEL_CBC8 | MCPWM_TZSEL_OST1 | MCPWM_TZSEL_OST2 | MCPWM_TZSEL_OST3 | MCPWM_TZSEL_OST4 | MCPWM_TZSEL_OST5 | MCPWM_TZSEL_OST6 | MCPWM_TZSEL_OST7 | MCPWM_TZSEL_OST8; // // Return the Trip zone flag status for One Shot and Cycle by Cycle flags // return(HWREG(base + MCPWM_O_TZCBCOSTFLAG) & mask); }",
+      "registersUsed": [
+        "TZCBCOSTFLAG",
+        "TZCBCOSTFLAG"
+      ],
+      "registersUsedMatchingBifield": [
+        "TZCBCOSTFLAG",
+        "TZCBCOSTFLAG"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_clearTripZoneFlagStatus",
+      "functionArgs": [
+        "base",
+        "tzFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT((tzFlags & ~MCPWM_TZ_FLAG_ALL) == 0U);\n\n    //\n    // Clear the Cycle By Cycle Trip zone flag\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_TZCBCOSTCLR) |= tzFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); ASSERT((tzFlags & ~MCPWM_TZ_FLAG_ALL) == 0U); // // Clear the Cycle By Cycle Trip zone flag // EALLOW; HWREG(base + MCPWM_O_TZCBCOSTCLR) |= tzFlags; EDIS; }",
+      "registersUsed": [
+        "TZCBCOSTCLR",
+        "TZCBCOSTCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "TZCBCOSTCLR",
+        "TZCBCOSTCLR"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_enableADCTrigger",
+      "functionArgs": [
+        "base",
+        "adcSOCType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ADCStartOfConversionType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Enable an SOC\n    //\n    switch (adcSOCType)\n    {\n    case MCPWM_SOC_A:\n        HWREG(base + MCPWM_O_SOCEN) |= MCPWM_SOCEN_SOCA_ENABLE;\n        break;\n    case MCPWM_SOC_B:\n        HWREG(base + MCPWM_O_SOCEN) |= MCPWM_SOCEN_SOCB_ENABLE;\n        break;\n    case MCPWM_SOC_C:\n        HWREG(base + MCPWM_O_SOCEN) |= MCPWM_SOCEN_SOCC_ENABLE;\n        break;\n    default:    // MCPWM_SOC_D\n        HWREG(base + MCPWM_O_SOCEN) |= MCPWM_SOCEN_SOCD_ENABLE;\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Enable an SOC // switch (adcSOCType) { case MCPWM_SOC_A: HWREG(base + MCPWM_O_SOCEN) |= MCPWM_SOCEN_SOCA_ENABLE; break; case MCPWM_SOC_B: HWREG(base + MCPWM_O_SOCEN) |= MCPWM_SOCEN_SOCB_ENABLE; break; case MCPWM_SOC_C: HWREG(base + MCPWM_O_SOCEN) |= MCPWM_SOCEN_SOCC_ENABLE; break; default: // MCPWM_SOC_D HWREG(base + MCPWM_O_SOCEN) |= MCPWM_SOCEN_SOCD_ENABLE; break; } }",
+      "registersUsed": [
+        "SOCEN",
+        "SOCEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "SOCEN",
+        "SOCEN"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_disableADCTrigger",
+      "functionArgs": [
+        "base",
+        "adcSOCType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ADCStartOfConversionType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Enable an SOC\n    //\n    switch (adcSOCType)\n    {\n    case MCPWM_SOC_A:\n        HWREG(base + MCPWM_O_SOCEN) &= ~((uint32_t)MCPWM_SOCEN_SOCA_ENABLE);\n        break;\n    case MCPWM_SOC_B:\n        HWREG(base + MCPWM_O_SOCEN) &= ~((uint32_t)MCPWM_SOCEN_SOCB_ENABLE);\n        break;\n    case MCPWM_SOC_C:\n        HWREG(base + MCPWM_O_SOCEN) &= ~((uint32_t)MCPWM_SOCEN_SOCC_ENABLE);\n        break;\n    default:    // MCPWM_SOC_D\n        HWREG(base + MCPWM_O_SOCEN) &= ~((uint32_t)MCPWM_SOCEN_SOCD_ENABLE);\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Enable an SOC // switch (adcSOCType) { case MCPWM_SOC_A: HWREG(base + MCPWM_O_SOCEN) &= ~((uint32_t)MCPWM_SOCEN_SOCA_ENABLE); break; case MCPWM_SOC_B: HWREG(base + MCPWM_O_SOCEN) &= ~((uint32_t)MCPWM_SOCEN_SOCB_ENABLE); break; case MCPWM_SOC_C: HWREG(base + MCPWM_O_SOCEN) &= ~((uint32_t)MCPWM_SOCEN_SOCC_ENABLE); break; default: // MCPWM_SOC_D HWREG(base + MCPWM_O_SOCEN) &= ~((uint32_t)MCPWM_SOCEN_SOCD_ENABLE); break; } }",
+      "registersUsed": [
+        "SOCEN",
+        "SOCEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "SOCEN",
+        "SOCEN"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setADCTriggerSource",
+      "functionArgs": [
+        "base",
+        "adcSOCType",
+        "socSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ADCStartOfConversionType",
+        "MCPWM_ADCStartOfConversionSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Enable an SOC\n    //\n    switch (adcSOCType)\n    {\n    case MCPWM_SOC_A:\n        HWREG(base + MCPWM_O_SOCSEL) = (HWREG(base + MCPWM_O_SOCSEL) & \n                            ~MCPWM_SOCSEL_SOCA_SEL_M) | ((uint32_t) socSource << MCPWM_SOCSEL_SOCA_SEL_S);\n        break;\n    case MCPWM_SOC_B:\n        HWREG(base + MCPWM_O_SOCSEL) = (HWREG(base + MCPWM_O_SOCSEL) & \n                            ~MCPWM_SOCSEL_SOCB_SEL_M) | ((uint32_t) socSource << MCPWM_SOCSEL_SOCB_SEL_S);\n        break;\n    case MCPWM_SOC_C:\n        HWREG(base + MCPWM_O_SOCSEL) = (HWREG(base + MCPWM_O_SOCSEL) & \n                            ~MCPWM_SOCSEL_SOCC_SEL_M) | ((uint32_t) socSource << MCPWM_SOCSEL_SOCC_SEL_S);\n        break;\n    default:    // MCPWM_SOC_D\n        HWREG(base + MCPWM_O_SOCSEL) = (HWREG(base + MCPWM_O_SOCSEL) & \n                            ~MCPWM_SOCSEL_SOCD_SEL_M) | ((uint32_t) socSource << MCPWM_SOCSEL_SOCD_SEL_S);\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Enable an SOC // switch (adcSOCType) { case MCPWM_SOC_A: HWREG(base + MCPWM_O_SOCSEL) = (HWREG(base + MCPWM_O_SOCSEL) & ~MCPWM_SOCSEL_SOCA_SEL_M) | ((uint32_t) socSource << MCPWM_SOCSEL_SOCA_SEL_S); break; case MCPWM_SOC_B: HWREG(base + MCPWM_O_SOCSEL) = (HWREG(base + MCPWM_O_SOCSEL) & ~MCPWM_SOCSEL_SOCB_SEL_M) | ((uint32_t) socSource << MCPWM_SOCSEL_SOCB_SEL_S); break; case MCPWM_SOC_C: HWREG(base + MCPWM_O_SOCSEL) = (HWREG(base + MCPWM_O_SOCSEL) & ~MCPWM_SOCSEL_SOCC_SEL_M) | ((uint32_t) socSource << MCPWM_SOCSEL_SOCC_SEL_S); break; default: // MCPWM_SOC_D HWREG(base + MCPWM_O_SOCSEL) = (HWREG(base + MCPWM_O_SOCSEL) & ~MCPWM_SOCSEL_SOCD_SEL_M) | ((uint32_t) socSource << MCPWM_SOCSEL_SOCD_SEL_S); break; } }",
+      "registersUsed": [
+        "SOCSEL",
+        "SOCSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SOCSEL",
+        "SOCSEL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setADCTriggerEventPrescale",
+      "functionArgs": [
+        "base",
+        "adcSOCType",
+        "preScaleCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ADCStartOfConversionType",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT(preScaleCount < 8U);\n\n    //\n    // Enable advanced feature of SOC every up to 7 events\n    //\n    switch (adcSOCType)\n    {\n    case MCPWM_SOC_A:\n        HWREG(base + MCPWM_O_SOCPERIOD) = (HWREG(base + MCPWM_O_SOCPERIOD) & \n                            ~MCPWM_SOCPERIOD_SOCA_PERIOD_M) | ((uint32_t) preScaleCount << MCPWM_SOCPERIOD_SOCA_PERIOD_S);\n        break;\n    case MCPWM_SOC_B:\n        HWREG(base + MCPWM_O_SOCPERIOD) = (HWREG(base + MCPWM_O_SOCPERIOD) & \n                            ~MCPWM_SOCPERIOD_SOCB_PERIOD_M) | ((uint32_t) preScaleCount << MCPWM_SOCPERIOD_SOCB_PERIOD_S);\n        break;\n    case MCPWM_SOC_C:\n        HWREG(base + MCPWM_O_SOCPERIOD) = (HWREG(base + MCPWM_O_SOCPERIOD) & \n                            ~MCPWM_SOCPERIOD_SOCC_PERIOD_M) | ((uint32_t) preScaleCount << MCPWM_SOCPERIOD_SOCC_PERIOD_S);\n        break;\n    default:    // MCPWM_SOC_D\n        HWREG(base + MCPWM_O_SOCPERIOD) = (HWREG(base + MCPWM_O_SOCPERIOD) & \n                            ~MCPWM_SOCPERIOD_SOCD_PERIOD_M) | ((uint32_t) preScaleCount << MCPWM_SOCPERIOD_SOCD_PERIOD_S);\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); ASSERT(preScaleCount < 8U); // // Enable advanced feature of SOC every up to 7 events // switch (adcSOCType) { case MCPWM_SOC_A: HWREG(base + MCPWM_O_SOCPERIOD) = (HWREG(base + MCPWM_O_SOCPERIOD) & ~MCPWM_SOCPERIOD_SOCA_PERIOD_M) | ((uint32_t) preScaleCount << MCPWM_SOCPERIOD_SOCA_PERIOD_S); break; case MCPWM_SOC_B: HWREG(base + MCPWM_O_SOCPERIOD) = (HWREG(base + MCPWM_O_SOCPERIOD) & ~MCPWM_SOCPERIOD_SOCB_PERIOD_M) | ((uint32_t) preScaleCount << MCPWM_SOCPERIOD_SOCB_PERIOD_S); break; case MCPWM_SOC_C: HWREG(base + MCPWM_O_SOCPERIOD) = (HWREG(base + MCPWM_O_SOCPERIOD) & ~MCPWM_SOCPERIOD_SOCC_PERIOD_M) | ((uint32_t) preScaleCount << MCPWM_SOCPERIOD_SOCC_PERIOD_S); break; default: // MCPWM_SOC_D HWREG(base + MCPWM_O_SOCPERIOD) = (HWREG(base + MCPWM_O_SOCPERIOD) & ~MCPWM_SOCPERIOD_SOCD_PERIOD_M) | ((uint32_t) preScaleCount << MCPWM_SOCPERIOD_SOCD_PERIOD_S); break; } }",
+      "registersUsed": [
+        "SOCPERIOD",
+        "SOCPERIOD"
+      ],
+      "registersUsedMatchingBifield": [
+        "SOCPERIOD",
+        "SOCPERIOD"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getADCTriggerEventCount",
+      "functionArgs": [
+        "base",
+        "adcSOCType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ADCStartOfConversionType"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    uint16_t retValue = 0;\n    //\n    // Return the SOC event count\n    //\n    switch (adcSOCType)\n    {\n    case MCPWM_SOC_A:\n        retValue = (uint16_t)((HWREG(base + MCPWM_O_SOCCNT) & MCPWM_SOCCNT_SOCA_CNT_M) >> MCPWM_SOCCNT_SOCA_CNT_S);\n        break;\n    case MCPWM_SOC_B:\n        retValue = (uint16_t)((HWREG(base + MCPWM_O_SOCCNT) & MCPWM_SOCCNT_SOCB_CNT_M) >> MCPWM_SOCCNT_SOCB_CNT_S);\n        break;\n    case MCPWM_SOC_C:\n        retValue = (uint16_t)((HWREG(base + MCPWM_O_SOCCNT) & MCPWM_SOCCNT_SOCC_CNT_M) >> MCPWM_SOCCNT_SOCC_CNT_S);\n        break;\n    default:    // MCPWM_SOC_D\n        retValue = (uint16_t)((HWREG(base + MCPWM_O_SOCCNT) & MCPWM_SOCCNT_SOCD_CNT_M) >> MCPWM_SOCCNT_SOCD_CNT_S);\n        break;\n    }\n\n    return retValue;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); uint16_t retValue = 0; // // Return the SOC event count // switch (adcSOCType) { case MCPWM_SOC_A: retValue = (uint16_t)((HWREG(base + MCPWM_O_SOCCNT) & MCPWM_SOCCNT_SOCA_CNT_M) >> MCPWM_SOCCNT_SOCA_CNT_S); break; case MCPWM_SOC_B: retValue = (uint16_t)((HWREG(base + MCPWM_O_SOCCNT) & MCPWM_SOCCNT_SOCB_CNT_M) >> MCPWM_SOCCNT_SOCB_CNT_S); break; case MCPWM_SOC_C: retValue = (uint16_t)((HWREG(base + MCPWM_O_SOCCNT) & MCPWM_SOCCNT_SOCC_CNT_M) >> MCPWM_SOCCNT_SOCC_CNT_S); break; default: // MCPWM_SOC_D retValue = (uint16_t)((HWREG(base + MCPWM_O_SOCCNT) & MCPWM_SOCCNT_SOCD_CNT_M) >> MCPWM_SOCCNT_SOCD_CNT_S); break; } return retValue; }",
+      "registersUsed": [
+        "SOCCNT",
+        "SOCCNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SOCCNT",
+        "SOCCNT"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getADCTriggerFlagStatus",
+      "functionArgs": [
+        "base",
+        "adcSOCType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ADCStartOfConversionType"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    bool retValue = FALSE;\n    //\n    // Return the SOC A/B/C/D status\n    //\n    switch (adcSOCType)\n    {\n    case MCPWM_SOC_A:\n        retValue = (((HWREG(base + MCPWM_O_SOCFLAG) & MCPWM_SOCFLAG_SOCA) == MCPWM_SOCFLAG_SOCA) ? TRUE : FALSE);\n        break;\n    case MCPWM_SOC_B:\n        retValue = (((HWREG(base + MCPWM_O_SOCFLAG) & MCPWM_SOCFLAG_SOCB) == MCPWM_SOCFLAG_SOCB) ? TRUE : FALSE);\n        break;\n    case MCPWM_SOC_C:\n        retValue = (((HWREG(base + MCPWM_O_SOCFLAG) & MCPWM_SOCFLAG_SOCC) == MCPWM_SOCFLAG_SOCC) ? TRUE : FALSE);\n        break;\n    default:    // MCPWM_SOC_D\n        retValue = (((HWREG(base + MCPWM_O_SOCFLAG) & MCPWM_SOCFLAG_SOCD) == MCPWM_SOCFLAG_SOCD) ? TRUE : FALSE);\n        break;\n    }\n\n    return retValue;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); bool retValue = FALSE; // // Return the SOC A/B/C/D status // switch (adcSOCType) { case MCPWM_SOC_A: retValue = (((HWREG(base + MCPWM_O_SOCFLAG) & MCPWM_SOCFLAG_SOCA) == MCPWM_SOCFLAG_SOCA) ? TRUE : FALSE); break; case MCPWM_SOC_B: retValue = (((HWREG(base + MCPWM_O_SOCFLAG) & MCPWM_SOCFLAG_SOCB) == MCPWM_SOCFLAG_SOCB) ? TRUE : FALSE); break; case MCPWM_SOC_C: retValue = (((HWREG(base + MCPWM_O_SOCFLAG) & MCPWM_SOCFLAG_SOCC) == MCPWM_SOCFLAG_SOCC) ? TRUE : FALSE); break; default: // MCPWM_SOC_D retValue = (((HWREG(base + MCPWM_O_SOCFLAG) & MCPWM_SOCFLAG_SOCD) == MCPWM_SOCFLAG_SOCD) ? TRUE : FALSE); break; } return retValue; }",
+      "registersUsed": [
+        "SOCFLAG",
+        "SOCFLAG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SOCFLAG",
+        "SOCFLAG"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_clearADCTriggerFlag",
+      "functionArgs": [
+        "base",
+        "adcSOCType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_ADCStartOfConversionType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Clear SOC A/B/C/D bit of ETCLR register\n    //\n   switch (adcSOCType)\n    {\n    case MCPWM_SOC_A:\n        HWREG(base + MCPWM_O_SOCCLR) |= MCPWM_SOCCLR_SOCA;\n        break;\n    case MCPWM_SOC_B:\n        HWREG(base + MCPWM_O_SOCCLR) |= MCPWM_SOCCLR_SOCB;\n        break;\n    case MCPWM_SOC_C:\n        HWREG(base + MCPWM_O_SOCCLR) |= MCPWM_SOCCLR_SOCC;\n        break;\n    default:    // MCPWM_SOC_D\n        HWREG(base + MCPWM_O_SOCCLR) |= MCPWM_SOCCLR_SOCD;\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Clear SOC A/B/C/D bit of ETCLR register // switch (adcSOCType) { case MCPWM_SOC_A: HWREG(base + MCPWM_O_SOCCLR) |= MCPWM_SOCCLR_SOCA; break; case MCPWM_SOC_B: HWREG(base + MCPWM_O_SOCCLR) |= MCPWM_SOCCLR_SOCB; break; case MCPWM_SOC_C: HWREG(base + MCPWM_O_SOCCLR) |= MCPWM_SOCCLR_SOCC; break; default: // MCPWM_SOC_D HWREG(base + MCPWM_O_SOCCLR) |= MCPWM_SOCCLR_SOCD; break; } }",
+      "registersUsed": [
+        "SOCCLR",
+        "SOCCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SOCCLR",
+        "SOCCLR"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setEventTriggerSource",
+      "functionArgs": [
+        "base",
+        "evtTrigType",
+        "evtTrigSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_EventTriggerType",
+        "MCPWM_EventTriggerSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Enable an event trigger source\n    //\n    switch (evtTrigType)\n    {\n    case MCPWM_ET_1:\n        HWREG(base + MCPWM_O_ETSEL) = (HWREG(base + MCPWM_O_ETSEL) & \n                            ~MCPWM_ETSEL_ET1_SEL_M) | ((uint32_t) evtTrigSource << MCPWM_ETSEL_ET1_SEL_S);\n        break;\n    default:    // MCPWM_ET_2\n        HWREG(base + MCPWM_O_ETSEL) = (HWREG(base + MCPWM_O_ETSEL) & \n                            ~MCPWM_ETSEL_ET2_SEL_M) | ((uint32_t) evtTrigSource << MCPWM_ETSEL_ET2_SEL_S);\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); // // Enable an event trigger source // switch (evtTrigType) { case MCPWM_ET_1: HWREG(base + MCPWM_O_ETSEL) = (HWREG(base + MCPWM_O_ETSEL) & ~MCPWM_ETSEL_ET1_SEL_M) | ((uint32_t) evtTrigSource << MCPWM_ETSEL_ET1_SEL_S); break; default: // MCPWM_ET_2 HWREG(base + MCPWM_O_ETSEL) = (HWREG(base + MCPWM_O_ETSEL) & ~MCPWM_ETSEL_ET2_SEL_M) | ((uint32_t) evtTrigSource << MCPWM_ETSEL_ET2_SEL_S); break; } }",
+      "registersUsed": [
+        "ETSEL",
+        "ETSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ETSEL",
+        "ETSEL"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_setEventTriggerEventPrescale",
+      "functionArgs": [
+        "base",
+        "evtTrigType",
+        "preScaleCount"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_EventTriggerType",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT(preScaleCount < 8U);\n\n    //\n    // Enable advanced feature of Event trigger event every up to 7 events\n    //\n    switch (evtTrigType)\n    {\n    case MCPWM_ET_1:\n        HWREG(base + MCPWM_O_ETPERIOD) = (HWREG(base + MCPWM_O_ETPERIOD) & \n                            ~MCPWM_ETPERIOD_ET1_PERIOD_M) | ((uint32_t) preScaleCount << MCPWM_ETPERIOD_ET1_PERIOD_S);\n        break;\n    default:    // MCPWM_ET_2\n        HWREG(base + MCPWM_O_ETPERIOD) = (HWREG(base + MCPWM_O_ETPERIOD) & \n                            ~MCPWM_ETPERIOD_ET2_PERIOD_M) | ((uint32_t) preScaleCount << MCPWM_ETPERIOD_ET2_PERIOD_S);\n        break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); ASSERT(preScaleCount < 8U); // // Enable advanced feature of Event trigger event every up to 7 events // switch (evtTrigType) { case MCPWM_ET_1: HWREG(base + MCPWM_O_ETPERIOD) = (HWREG(base + MCPWM_O_ETPERIOD) & ~MCPWM_ETPERIOD_ET1_PERIOD_M) | ((uint32_t) preScaleCount << MCPWM_ETPERIOD_ET1_PERIOD_S); break; default: // MCPWM_ET_2 HWREG(base + MCPWM_O_ETPERIOD) = (HWREG(base + MCPWM_O_ETPERIOD) & ~MCPWM_ETPERIOD_ET2_PERIOD_M) | ((uint32_t) preScaleCount << MCPWM_ETPERIOD_ET2_PERIOD_S); break; } }",
+      "registersUsed": [
+        "ETPERIOD",
+        "ETPERIOD"
+      ],
+      "registersUsedMatchingBifield": [
+        "ETPERIOD",
+        "ETPERIOD"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getEventTriggerEventCount",
+      "functionArgs": [
+        "base",
+        "evtTrigType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MCPWM_EventTriggerType"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n\n    //\n    // Check the arguments\n    //\n    ASSERT(MCPWM_isBaseValid(base));\n    uint16_t retValue = 0;\n    //\n    // Return the Event Trigger event count\n    //\n    switch (evtTrigType)\n    {\n    case MCPWM_ET_1:\n        retValue = (uint16_t)((HWREG(base + MCPWM_O_ETCNT) & MCPWM_ETCNT_ET1_CNT_M) >> MCPWM_ETCNT_ET1_CNT_S);\n        break;\n    default:    // MCPWM_ET_2\n        retValue = (uint16_t)((HWREG(base + MCPWM_O_ETCNT) & MCPWM_ETCNT_ET2_CNT_M) >> MCPWM_ETCNT_ET2_CNT_S);\n        break;\n    }\n\n    return retValue;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments // ASSERT(MCPWM_isBaseValid(base)); uint16_t retValue = 0; // // Return the Event Trigger event count // switch (evtTrigType) { case MCPWM_ET_1: retValue = (uint16_t)((HWREG(base + MCPWM_O_ETCNT) & MCPWM_ETCNT_ET1_CNT_M) >> MCPWM_ETCNT_ET1_CNT_S); break; default: // MCPWM_ET_2 retValue = (uint16_t)((HWREG(base + MCPWM_O_ETCNT) & MCPWM_ETCNT_ET2_CNT_M) >> MCPWM_ETCNT_ET2_CNT_S); break; } return retValue; }",
+      "registersUsed": [
+        "ETCNT",
+        "ETCNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "ETCNT",
+        "ETCNT"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT((intFlags & ~(MCPWM_INT_SOURCE_ALL)) == 0U);\n\n    //\n    // Set bits in ECEINT register\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_INTEN) |= intFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(MCPWM_isBaseValid(base)); ASSERT((intFlags & ~(MCPWM_INT_SOURCE_ALL)) == 0U); // // Set bits in ECEINT register // EALLOW; HWREG(base + MCPWM_O_INTEN) |= intFlags; EDIS; }",
+      "registersUsed": [
+        "INTEN",
+        "INTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTEN",
+        "INTEN"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT((intFlags & ~(MCPWM_INT_SOURCE_ALL)) == 0U);\n\n    //\n    // Clear bits in ECEINT register\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_INTEN) &= ~intFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(MCPWM_isBaseValid(base)); ASSERT((intFlags & ~(MCPWM_INT_SOURCE_ALL)) == 0U); // // Clear bits in ECEINT register // EALLOW; HWREG(base + MCPWM_O_INTEN) &= ~intFlags; EDIS; }",
+      "registersUsed": [
+        "INTEN",
+        "INTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTEN",
+        "INTEN"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getInterruptSource",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Return contents of ECFLG register\n    //\n    return(HWREG(base + MCPWM_O_INTFLAG) & MCPWM_INT_SOURCE_ALL);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(MCPWM_isBaseValid(base)); // // Return contents of ECFLG register // return(HWREG(base + MCPWM_O_INTFLAG) & MCPWM_INT_SOURCE_ALL); }",
+      "registersUsed": [
+        "INTFLAG",
+        "INTFLAG"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTFLAG",
+        "INTFLAG"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_getGlobalInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Return contents of Global interrupt bit\n    //\n    return((HWREG(base + MCPWM_O_INTFLAG) & MCPWM_INTFLAG_INT) == MCPWM_INTFLAG_INT);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(MCPWM_isBaseValid(base)); // // Return contents of Global interrupt bit // return((HWREG(base + MCPWM_O_INTFLAG) & MCPWM_INTFLAG_INT) == MCPWM_INTFLAG_INT); }",
+      "registersUsed": [
+        "INTFLAG",
+        "INTFLAG"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTFLAG",
+        "INTFLAG"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_clearInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT((intFlags & ~(MCPWM_INT_SOURCE_ALL)) == 0U);\n\n    //\n    // Write to ECCLR register\n    //\n    EALLOW;\n    HWREGH(base + MCPWM_O_INTCLR) = intFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(MCPWM_isBaseValid(base)); ASSERT((intFlags & ~(MCPWM_INT_SOURCE_ALL)) == 0U); // // Write to ECCLR register // EALLOW; HWREGH(base + MCPWM_O_INTCLR) = intFlags; EDIS; }",
+      "registersUsed": [
+        "INTCLR",
+        "INTCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTCLR",
+        "INTCLR"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_clearGlobalInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(MCPWM_isBaseValid(base));\n\n    //\n    // Write to INT bit\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_INTCLR) = MCPWM_INTFLAG_INT;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(MCPWM_isBaseValid(base)); // // Write to INT bit // EALLOW; HWREG(base + MCPWM_O_INTCLR) = MCPWM_INTFLAG_INT; EDIS; }",
+      "registersUsed": [
+        "INTCLR",
+        "INTCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTCLR",
+        "INTCLR"
+      ]
+    },
+    {
+      "file": "mcpwm.h",
+      "peripheral": "mcpwm",
+      "functionName": "MCPWM_forceInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(MCPWM_isBaseValid(base));\n    ASSERT((intFlags & ~(MCPWM_INT_SOURCE_ALL)) == 0U);\n\n\n    //\n    // Write to ECFRC register\n    //\n    EALLOW;\n    HWREG(base + MCPWM_O_INTFRC) = intFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(MCPWM_isBaseValid(base)); ASSERT((intFlags & ~(MCPWM_INT_SOURCE_ALL)) == 0U); // // Write to ECFRC register // EALLOW; HWREG(base + MCPWM_O_INTFRC) = intFlags; EDIS; }",
+      "registersUsed": [
+        "INTFRC",
+        "INTFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTFRC",
+        "INTFRC"
+      ]
+    }
+  ]
+}

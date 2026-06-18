@@ -1,0 +1,287 @@
+{
+  "name": "watchdog",
+  "functions": [
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlinevoidSysCtl_setWatchdogMode",
+      "functionArgs": [
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_WDMode"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Either set or clear the WDENINT bit to that will determine whether the\n    // watchdog will generate a reset signal or an interrupt signal. Take care\n    // not to write a 1 to WDOVERRIDE.\n    //\n    if(mode == SYSCTL_WD_MODE_INTERRUPT)\n    {\n        HWREGH(WD_BASE + SYSCTL_O_SCSR) =\n                (uint16_t)((HWREGH(WD_BASE + SYSCTL_O_SCSR) & ~SYSCTL_SCSR_WDOVERRIDE) |\n                SYSCTL_SCSR_WDENINT);\n    }\n    else\n    {\n        HWREGH(WD_BASE + SYSCTL_O_SCSR) &= (uint16_t)(~(SYSCTL_SCSR_WDENINT |\n                                             SYSCTL_SCSR_WDOVERRIDE));\n    }\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Either set or clear the WDENINT bit to that will determine whether the // watchdog will generate a reset signal or an interrupt signal. Take care // not to write a 1 to WDOVERRIDE. // if(mode == SYSCTL_WD_MODE_INTERRUPT) { HWREGH(WD_BASE + SYSCTL_O_SCSR) = (uint16_t)((HWREGH(WD_BASE + SYSCTL_O_SCSR) & ~SYSCTL_SCSR_WDOVERRIDE) | SYSCTL_SCSR_WDENINT); } else { HWREGH(WD_BASE + SYSCTL_O_SCSR) &= (uint16_t)(~(SYSCTL_SCSR_WDENINT | SYSCTL_SCSR_WDOVERRIDE)); } }",
+      "registersUsed": [
+        "SCSR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCSR"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlineboolSysCtl_isWatchdogInterruptActive",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // If the status bit is cleared, the WDINTn signal is active.\n    //\n    return((HWREGH(WD_BASE + SYSCTL_O_SCSR) & SYSCTL_SCSR_WDINTS) == 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // If the status bit is cleared, the WDINTn signal is active. // return((HWREGH(WD_BASE + SYSCTL_O_SCSR) & SYSCTL_SCSR_WDINTS) == 0U); }",
+      "registersUsed": [
+        "SCSR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCSR"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlinevoidSysCtl_disableWatchdog",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Set the disable bit.\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDCR) |= SYSCTL_WD_CHKBITS | SYSCTL_WDCR_WDDIS;\n\n    //\n    //  Poll until WD sync busy is cleared\n    //\n    SysCtl_pollSyncBusyWd(SYSCTL_SYNCBUSYWD_WDCR);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the disable bit. // HWREGH(WD_BASE + SYSCTL_O_WDCR) |= SYSCTL_WD_CHKBITS | SYSCTL_WDCR_WDDIS; // // Poll until WD sync busy is cleared // SysCtl_pollSyncBusyWd(SYSCTL_SYNCBUSYWD_WDCR); }",
+      "registersUsed": [
+        "WDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDCR"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlinevoidSysCtl_enableWatchdog",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Clear the disable bit.\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDCR) = (uint16_t)((HWREGH(WD_BASE + SYSCTL_O_WDCR) &\n                                       ~SYSCTL_WDCR_WDDIS) | SYSCTL_WD_CHKBITS);\n\n    //\n    //  Poll until WD sync busy is cleared\n    //\n    SysCtl_pollSyncBusyWd(SYSCTL_SYNCBUSYWD_WDCR);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the disable bit. // HWREGH(WD_BASE + SYSCTL_O_WDCR) = (uint16_t)((HWREGH(WD_BASE + SYSCTL_O_WDCR) & ~SYSCTL_WDCR_WDDIS) | SYSCTL_WD_CHKBITS); // // Poll until WD sync busy is cleared // SysCtl_pollSyncBusyWd(SYSCTL_SYNCBUSYWD_WDCR); }",
+      "registersUsed": [
+        "WDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDCR"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlinevoidSysCtl_serviceWatchdog",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Enable the counter to be reset and then reset it.\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_ENRSTKEY;\n    HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_RSTKEY;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Enable the counter to be reset and then reset it. // HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_ENRSTKEY; HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_RSTKEY; }",
+      "registersUsed": [
+        "WDKEY"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDKEY"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlinevoidSysCtl_enableWatchdogReset",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Enable the counter to be reset\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_ENRSTKEY;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Enable the counter to be reset // HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_ENRSTKEY; }",
+      "registersUsed": [
+        "WDKEY"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDKEY"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlinevoidSysCtl_resetWatchdog",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Reset the watchdog counter\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_RSTKEY;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Reset the watchdog counter // HWREGH(WD_BASE + SYSCTL_O_WDKEY) = SYSCTL_WD_RSTKEY; }",
+      "registersUsed": [
+        "WDKEY"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDKEY"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlinevoidSysCtl_setWatchdogPredivider",
+      "functionArgs": [
+        "predivider"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_WDPredivider"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    uint16_t regVal;\n\n    regVal = (uint16_t)predivider | SYSCTL_WD_CHKBITS;\n\n    //\n    // Write the predivider to the appropriate register.\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDCR) = (uint16_t)((HWREGH(WD_BASE + SYSCTL_O_WDCR) &\n                                       ~(SYSCTL_WDCR_WDPRECLKDIV_M)) | regVal);\n\n    //\n    //  Poll until WD sync busy is cleared\n    //\n    SysCtl_pollSyncBusyWd(SYSCTL_SYNCBUSYWD_WDCR);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t regVal; regVal = (uint16_t)predivider | SYSCTL_WD_CHKBITS; // // Write the predivider to the appropriate register. // HWREGH(WD_BASE + SYSCTL_O_WDCR) = (uint16_t)((HWREGH(WD_BASE + SYSCTL_O_WDCR) & ~(SYSCTL_WDCR_WDPRECLKDIV_M)) | regVal); // // Poll until WD sync busy is cleared // SysCtl_pollSyncBusyWd(SYSCTL_SYNCBUSYWD_WDCR); }",
+      "registersUsed": [
+        "WDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDCR"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlinevoidSysCtl_setWatchdogPrescaler",
+      "functionArgs": [
+        "prescaler"
+      ],
+      "functionArgsTypes": [
+        "SysCtl_WDPrescaler"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    uint16_t regVal;\n\n    regVal = (uint16_t)prescaler | (uint16_t)SYSCTL_WD_CHKBITS;\n\n    //\n    // Write the prescaler to the appropriate register.\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDCR) = (uint16_t)((HWREGH(WD_BASE + SYSCTL_O_WDCR) &\n                                       ~(SYSCTL_WDCR_WDPS_M)) | regVal);\n\n    //\n    //  Poll until WD sync busy is cleared\n    //\n    SysCtl_pollSyncBusyWd(SYSCTL_SYNCBUSYWD_WDCR);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t regVal; regVal = (uint16_t)prescaler | (uint16_t)SYSCTL_WD_CHKBITS; // // Write the prescaler to the appropriate register. // HWREGH(WD_BASE + SYSCTL_O_WDCR) = (uint16_t)((HWREGH(WD_BASE + SYSCTL_O_WDCR) & ~(SYSCTL_WDCR_WDPS_M)) | regVal); // // Poll until WD sync busy is cleared // SysCtl_pollSyncBusyWd(SYSCTL_SYNCBUSYWD_WDCR); }",
+      "registersUsed": [
+        "WDCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDCR"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlineuint16_tSysCtl_getWatchdogCounterValue",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Read and return the value of the watchdog counter.\n    //\n    return(HWREGH(WD_BASE + SYSCTL_O_WDCNTR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return the value of the watchdog counter. // return(HWREGH(WD_BASE + SYSCTL_O_WDCNTR)); }",
+      "registersUsed": [
+        "WDCNTR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDCNTR"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlineboolSysCtl_getWatchdogResetStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Read and return the status of the watchdog reset status flag.\n    //\n    return((HWREGH(CPUSYS_BASE + SYSCTL_O_RESC) & SYSCTL_RESC_WDRSN) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return the status of the watchdog reset status flag. // return((HWREGH(CPUSYS_BASE + SYSCTL_O_RESC) & SYSCTL_RESC_WDRSN) != 0U); }",
+      "registersUsed": [
+        "RESC"
+      ],
+      "registersUsedMatchingBifield": [
+        "RESC"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlinevoidSysCtl_clearWatchdogResetStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Clear the watchdog reset status flag.\n    //\n    HWREGH(CPUSYS_BASE + SYSCTL_O_RESCCLR) = SYSCTL_RESCCLR_WDRSN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the watchdog reset status flag. // HWREGH(CPUSYS_BASE + SYSCTL_O_RESCCLR) = SYSCTL_RESCCLR_WDRSN; }",
+      "registersUsed": [
+        "RESCCLR",
+        "RESC"
+      ],
+      "registersUsedMatchingBifield": [
+        "RESCCLR",
+        "RESC"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlinevoidSysCtl_setWatchdogWindowValue",
+      "functionArgs": [
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Clear the windowed value\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDWCR) &= (uint16_t)(~SYSCTL_WDWCR_MIN_M);\n\n    //\n    // Set the windowed value\n    //\n    HWREGH(WD_BASE + SYSCTL_O_WDWCR) |= (value & SYSCTL_WDWCR_MIN_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the windowed value // HWREGH(WD_BASE + SYSCTL_O_WDWCR) &= (uint16_t)(~SYSCTL_WDWCR_MIN_M); // // Set the windowed value // HWREGH(WD_BASE + SYSCTL_O_WDWCR) |= (value & SYSCTL_WDWCR_MIN_M); }",
+      "registersUsed": [
+        "WDWCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "WDWCR"
+      ]
+    },
+    {
+      "file": "watchdog.h",
+      "peripheral": "watchdog",
+      "functionName": "staticinlinevoidSysCtl_clearWatchdogOverride",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "",
+      "functionContent": "{\n    HWREGH(WD_BASE + SYSCTL_O_SCSR) |= SYSCTL_SCSR_WDOVERRIDE;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(WD_BASE + SYSCTL_O_SCSR) |= SYSCTL_SCSR_WDOVERRIDE; }",
+      "registersUsed": [
+        "SCSR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCSR"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,837 @@
+{
+  "name": "pmbus",
+  "functions": [
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_getInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    uint32_t intStatus;\n\n    //\n    // Create a bit mask of all the interrupt sources\n    //\n    const uint32_t bitmask = (\n          PMBUS_PMBSTS_DATA_READY          |\n          PMBUS_PMBSTS_DATA_REQUEST        |\n          PMBUS_PMBSTS_EOM                 |\n          PMBUS_PMBSTS_CLK_LOW_TIMEOUT     |\n          PMBUS_PMBSTS_CLK_HIGH_DETECTED   |\n          PMBUS_PMBSTS_TARGET_ADDR_READY   |\n          PMBUS_PMBSTS_BUS_FREE            |\n          PMBUS_PMBSTS_LOST_ARB            |\n          PMBUS_PMBSTS_ALERT_EDGE          |\n          PMBUS_PMBSTS_CONTROL_EDGE\n          );\n\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    intStatus = HWREG(base + PMBUS_O_PMBSTS) & 0x0003FFFFU;\n\n    //\n    // Mask off bits that are not an interrupt source and return\n    //\n    return(intStatus & bitmask);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t intStatus; // // Create a bit mask of all the interrupt sources // const uint32_t bitmask = ( PMBUS_PMBSTS_DATA_READY | PMBUS_PMBSTS_DATA_REQUEST | PMBUS_PMBSTS_EOM | PMBUS_PMBSTS_CLK_LOW_TIMEOUT | PMBUS_PMBSTS_CLK_HIGH_DETECTED | PMBUS_PMBSTS_TARGET_ADDR_READY | PMBUS_PMBSTS_BUS_FREE | PMBUS_PMBSTS_LOST_ARB | PMBUS_PMBSTS_ALERT_EDGE | PMBUS_PMBSTS_CONTROL_EDGE ); // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); intStatus = HWREG(base + PMBUS_O_PMBSTS) & 0x0003FFFFU; // // Mask off bits that are not an interrupt source and return // return(intStatus & bitmask); }",
+      "registersUsed": [
+        "PMBSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBSTS"
+      ]
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_initTargetMode",
+      "functionArgs": [
+        "base",
+        "address",
+        "mask"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Locals\n    //\n    uint32_t interruptState;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    ASSERT(address <= 0x7FU);\n    ASSERT(mask <= 0x7FU);\n\n\n    //\n    // Save off the interrupt state and disable them\n    //\n    interruptState = HWREG(base + PMBUS_O_PMBINTM);\n    HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL;\n\n    //\n    // PMBUS comes out of rest with target mode enabled. Disable controller mode,\n    // if set, and enable controller mode\n    //\n    HWREG(base + PMBUS_O_PMBCTRL) &= ~(uint32_t)PMBUS_ENABLE_CONTROLLER_MODE;\n    HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_ENABLE_TARGET_MODE;\n\n    //\n    // Zero out the target address and mask first\n    //\n    HWREG(base + PMBUS_O_PMBTCR) &= (~(uint32_t)PMBUS_PMBTCR_TARGET_ADDR_M &\n                                    ~(uint32_t)PMBUS_PMBTCR_TARGET_MASK_M);\n\n\n    //\n    // Write the address and mask to PMBTCR\n    //\n    HWREG(base + PMBUS_O_PMBTCR) |= ((((uint32_t)address <<\n                                                PMBUS_PMBTCR_TARGET_ADDR_S) &\n                                                PMBUS_PMBTCR_TARGET_ADDR_M) |\n                                             (((uint32_t)mask <<\n                                                PMBUS_PMBTCR_TARGET_MASK_S) &\n                                                PMBUS_PMBTCR_TARGET_MASK_M));\n\n    //\n    // Restore the interrupt status\n    //\n    HWREG(base + PMBUS_O_PMBINTM) = interruptState;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Locals // uint32_t interruptState; // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); ASSERT(address <= 0x7FU); ASSERT(mask <= 0x7FU); // // Save off the interrupt state and disable them // interruptState = HWREG(base + PMBUS_O_PMBINTM); HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL; // // PMBUS comes out of rest with target mode enabled. Disable controller mode, // if set, and enable controller mode // HWREG(base + PMBUS_O_PMBCTRL) &= ~(uint32_t)PMBUS_ENABLE_CONTROLLER_MODE; HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_ENABLE_TARGET_MODE; // // Zero out the target address and mask first // HWREG(base + PMBUS_O_PMBTCR) &= (~(uint32_t)PMBUS_PMBTCR_TARGET_ADDR_M & ~(uint32_t)PMBUS_PMBTCR_TARGET_MASK_M); // // Write the address and mask to PMBTCR // HWREG(base + PMBUS_O_PMBTCR) |= ((((uint32_t)address << PMBUS_PMBTCR_TARGET_ADDR_S) & PMBUS_PMBTCR_TARGET_ADDR_M) | (((uint32_t)mask << PMBUS_PMBTCR_TARGET_MASK_S) & PMBUS_PMBTCR_TARGET_MASK_M)); // // Restore the interrupt status // HWREG(base + PMBUS_O_PMBINTM) = interruptState; }",
+      "registersUsed": [
+        "PMBINTM",
+        "PMBTCR",
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBINTM",
+        "PMBTCR",
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_configTarget",
+      "functionArgs": [
+        "base",
+        "configWord"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Locals\n    //\n    uint32_t interruptState;\n\n    //\n    // Form a bit mask of the bit fields configWord changes\n    //\n    const uint32_t bitmask = (PMBUS_PMBTCR_MAN_TARGET_ACK | PMBUS_PMBTCR_PEC_ENA |\n               PMBUS_PMBTCR_MAN_CMD | PMBUS_PMBTCR_RX_BYTE_ACK_CNT_M);\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n\n    //\n    // Save off the interrupt state and disable them\n    //\n    interruptState = HWREG(base + PMBUS_O_PMBINTM);\n    HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL;\n\n    //\n    // Zero out the bit fields that are changed by configWord, preserve the\n    // rest that is, address and mask\n    //\n    HWREG(base + PMBUS_O_PMBTCR) &= ~bitmask;\n\n    //\n    // Write the user configured bit fields (passed in configWord)\n    // do not alter address and mask\n    //\n    HWREG(base + PMBUS_O_PMBTCR) |= (configWord & bitmask);\n\n    //\n    // Restore the interrupt status\n    //\n    HWREG(base + PMBUS_O_PMBINTM) = interruptState;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Locals // uint32_t interruptState; // // Form a bit mask of the bit fields configWord changes // const uint32_t bitmask = (PMBUS_PMBTCR_MAN_TARGET_ACK | PMBUS_PMBTCR_PEC_ENA | PMBUS_PMBTCR_MAN_CMD | PMBUS_PMBTCR_RX_BYTE_ACK_CNT_M); // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); // // Save off the interrupt state and disable them // interruptState = HWREG(base + PMBUS_O_PMBINTM); HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL; // // Zero out the bit fields that are changed by configWord, preserve the // rest that is, address and mask // HWREG(base + PMBUS_O_PMBTCR) &= ~bitmask; // // Write the user configured bit fields (passed in configWord) // do not alter address and mask // HWREG(base + PMBUS_O_PMBTCR) |= (configWord & bitmask); // // Restore the interrupt status // HWREG(base + PMBUS_O_PMBINTM) = interruptState; }",
+      "registersUsed": [
+        "PMBINTM",
+        "PMBTCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBINTM",
+        "PMBTCR"
+      ]
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_putTargetData",
+      "functionArgs": [
+        "base",
+        "*buffer",
+        "nBytes",
+        "txPEC"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t",
+        "bool"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Locals\n    //\n    uint16_t i = 0U;\n    uint32_t tx_data = 0U;\n    uint32_t command;\n    uint16_t *pBuffer = buffer;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    ASSERT((nBytes > 0U) && (nBytes <= 4U));\n    ASSERT((txPEC == (bool)true) || (txPEC == (bool)false));\n\n    //\n    // Read the existing Target configuration, mask out the TX count\n    //\n    command = HWREG(base + PMBUS_O_PMBTCR);\n    command &= ~PMBUS_PMBTCR_TX_COUNT_M;\n\n    //\n    // Update the transmit count and place the data into the transmit register.\n    //\n    command |= (((uint32_t)nBytes << PMBUS_PMBTCR_TX_COUNT_S) &\n                                     PMBUS_PMBTCR_TX_COUNT_M);\n    if(txPEC == (bool)true)\n    {\n        command |= PMBUS_PMBTCR_TX_PEC;\n    }\n    else\n    {\n        command &= ~(uint32_t)PMBUS_PMBTCR_TX_PEC;\n    }\n\n    //\n    // Write to the Target Config register\n    //\n    HWREG(base + PMBUS_O_PMBTCR) = command;\n\n    //\n    // Construct the transmit long word\n    //\n    while(i < nBytes)\n    {\n        tx_data |= (((uint32_t)*pBuffer & 0x000000FFU) <<\n                     ((uint32_t)i << 0x3U));\n        i++;\n        pBuffer++;\n    }\n\n    HWREG(base + PMBUS_O_PMBTXBUF) =  tx_data;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Locals // uint16_t i = 0U; uint32_t tx_data = 0U; uint32_t command; uint16_t *pBuffer = buffer; // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); ASSERT((nBytes > 0U) && (nBytes <= 4U)); ASSERT((txPEC == (bool)true) || (txPEC == (bool)false)); // // Read the existing Target configuration, mask out the TX count // command = HWREG(base + PMBUS_O_PMBTCR); command &= ~PMBUS_PMBTCR_TX_COUNT_M; // // Update the transmit count and place the data into the transmit register. // command |= (((uint32_t)nBytes << PMBUS_PMBTCR_TX_COUNT_S) & PMBUS_PMBTCR_TX_COUNT_M); if(txPEC == (bool)true) { command |= PMBUS_PMBTCR_TX_PEC; } else { command &= ~(uint32_t)PMBUS_PMBTCR_TX_PEC; } // // Write to the Target Config register // HWREG(base + PMBUS_O_PMBTCR) = command; // // Construct the transmit long word // while(i < nBytes) { tx_data |= (((uint32_t)*pBuffer & 0x000000FFU) << ((uint32_t)i << 0x3U)); i++; pBuffer++; } HWREG(base + PMBUS_O_PMBTXBUF) = tx_data; }",
+      "registersUsed": [
+        "PMBTXBUF",
+        "PMBTCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBTXBUF",
+        "PMBTCR"
+      ]
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_ackAddress",
+      "functionArgs": [
+        "base",
+        "address",
+        "status",
+        "*buffer"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    ASSERT(address <= 0x7FU);\n\n    //\n    // Check if manual target acknowledge mode is enabled\n    //\n    ASSERT((HWREG(base + PMBUS_O_PMBTCR) & PMBUS_PMBTCR_MAN_TARGET_ACK) != 0U);\n\n    if((status & (uint32_t)PMBUS_PMBSTS_TARGET_ADDR_READY) != 0U)\n    {\n        //\n        // Read the receive buffer\n        //\n        (void)PMBus_getTargetData(base, &buffer[0], status);\n\n        //\n        // Compare the low byte, the address, to the arguments\n        //\n        if((buffer[0] & 0x7FU) == address)\n        {\n            //\n            // Acknowledge\n            //\n            HWREG(base + PMBUS_O_PMBACK) |= PMBUS_PMBACK_ACK;\n        }\n        else\n        {\n            //\n            // NACK\n            //\n            HWREG(base + PMBUS_O_PMBACK) &= ~(uint32_t)PMBUS_PMBACK_ACK;\n        }\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); ASSERT(address <= 0x7FU); // // Check if manual target acknowledge mode is enabled // ASSERT((HWREG(base + PMBUS_O_PMBTCR) & PMBUS_PMBTCR_MAN_TARGET_ACK) != 0U); if((status & (uint32_t)PMBUS_PMBSTS_TARGET_ADDR_READY) != 0U) { // // Read the receive buffer // (void)PMBus_getTargetData(base, &buffer[0], status); // // Compare the low byte, the address, to the arguments // if((buffer[0] & 0x7FU) == address) { // // Acknowledge // HWREG(base + PMBUS_O_PMBACK) |= PMBUS_PMBACK_ACK; } else { // // NACK // HWREG(base + PMBUS_O_PMBACK) &= ~(uint32_t)PMBUS_PMBACK_ACK; } } }",
+      "registersUsed": [
+        "PMBACK",
+        "PMBTCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBACK",
+        "PMBTCR"
+      ]
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_ackCommand",
+      "functionArgs": [
+        "base",
+        "command",
+        "status",
+        "*buffer"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    ASSERT(command <= 0xFFU);\n\n    //\n    // Check if manual target acknowledge mode is enabled\n    //\n    ASSERT((HWREG(base + PMBUS_O_PMBTCR) & PMBUS_PMBTCR_MAN_CMD) == 0U);\n\n    if((status & (uint32_t)PMBUS_PMBSTS_DATA_REQUEST) != 0U)\n    {\n        //\n        // Read the receive buffer\n        //\n        (void)PMBus_getTargetData(base, &buffer[0], status);\n\n        //\n        // Compare the low byte, the address, to the arguments\n        //\n        if((buffer[0] & 0xFFU) == command)\n        {\n            //\n            // Acknowledge\n            //\n            HWREG(base + PMBUS_O_PMBACK) |= PMBUS_PMBACK_ACK;\n        }\n        else\n        {\n            //\n            // NACK\n            //\n            HWREG(base + PMBUS_O_PMBACK) &= ~(uint32_t)PMBUS_PMBACK_ACK;\n        }\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); ASSERT(command <= 0xFFU); // // Check if manual target acknowledge mode is enabled // ASSERT((HWREG(base + PMBUS_O_PMBTCR) & PMBUS_PMBTCR_MAN_CMD) == 0U); if((status & (uint32_t)PMBUS_PMBSTS_DATA_REQUEST) != 0U) { // // Read the receive buffer // (void)PMBus_getTargetData(base, &buffer[0], status); // // Compare the low byte, the address, to the arguments // if((buffer[0] & 0xFFU) == command) { // // Acknowledge // HWREG(base + PMBUS_O_PMBACK) |= PMBUS_PMBACK_ACK; } else { // // NACK // HWREG(base + PMBUS_O_PMBACK) &= ~(uint32_t)PMBUS_PMBACK_ACK; } } }",
+      "registersUsed": [
+        "PMBACK",
+        "PMBTCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBACK",
+        "PMBTCR"
+      ]
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_initControllerMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Locals\n    //\n    uint32_t interruptState;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n\n    //\n    // Save off the interrupt state and disable them\n    //\n    interruptState = HWREG(base + PMBUS_O_PMBINTM);\n    HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL;\n\n    //\n    // PMBUS comes out of rest with target mode enabled. Disable target mode\n    // enable controller mode\n    //\n    HWREG(base + PMBUS_O_PMBCTRL) &= ~(uint32_t)PMBUS_ENABLE_TARGET_MODE;\n    HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_ENABLE_CONTROLLER_MODE;\n\n    //\n    // Restore the interrupt status\n    //\n    HWREG(base + PMBUS_O_PMBINTM) = interruptState;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Locals // uint32_t interruptState; // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); // // Save off the interrupt state and disable them // interruptState = HWREG(base + PMBUS_O_PMBINTM); HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL; // // PMBUS comes out of rest with target mode enabled. Disable target mode // enable controller mode // HWREG(base + PMBUS_O_PMBCTRL) &= ~(uint32_t)PMBUS_ENABLE_TARGET_MODE; HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_ENABLE_CONTROLLER_MODE; // // Restore the interrupt status // HWREG(base + PMBUS_O_PMBINTM) = interruptState; }",
+      "registersUsed": [
+        "PMBINTM",
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBINTM",
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_generateCRCTable",
+      "functionArgs": [
+        "*crcTable"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    register uint16_t i;\n    register uint16_t j;\n    register uint16_t crc8_accum;\n\n    for(i = 0U; i < 256U; i++)\n    {\n        crc8_accum = i;\n        for(j = 0U; j < 8U; j++)\n        {\n            if((crc8_accum & 0x80U) != 0U)\n            {\n                crc8_accum = ((crc8_accum << 1U) & 0xffU) ^ (uint16_t)0x07U;\n            }\n            else\n            {\n                crc8_accum = (crc8_accum << 1U) & 0xffU;\n            }\n        }\n        crcTable[i] = crc8_accum;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ register uint16_t i; register uint16_t j; register uint16_t crc8_accum; for(i = 0U; i < 256U; i++) { crc8_accum = i; for(j = 0U; j < 8U; j++) { if((crc8_accum & 0x80U) != 0U) { crc8_accum = ((crc8_accum << 1U) & 0xffU) ^ (uint16_t)0x07U; } else { crc8_accum = (crc8_accum << 1U) & 0xffU; } } crcTable[i] = crc8_accum; } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_verifyPEC",
+      "functionArgs": [
+        "base",
+        "*buffer",
+        "*crcTable",
+        "byteCount",
+        "pec"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "constuint16_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    register uint16_t i;\n    register uint16_t parity = 0U;\n    register uint16_t tableIndex;\n    register uint16_t accumulator;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    ASSERT(byteCount > 0U);\n    ASSERT(pec < 0xFFU);\n\n    //\n    // PEC is always calculated first with the address + R/W bit\n    //\n    tableIndex  = HWREG(base + PMBUS_O_PMBHTA);\n\n    accumulator = crcTable[tableIndex];\n\n    //\n    // The assumption is the message bytes are packed into 16-bit words\n    // and the calculation starts from the low byte\n    // The memory arrangement is as follows (ignore the addresses\n    // Address|__LB__|__HB__|\n    // 0x0000 |__D0__|__D1__|\n    // 0x0001 |__D2__|__D3__|\n    // 0x0002 |__D4__|__D5__|\n    // 0x0003 |__D6__|__D7__|\n    // 0x0004 |__D8__|__D9__|\n    // ...\n    //\n    uint8_t *buf = (uint8_t *)buffer;\n    for(i = 0U; i < byteCount; i++)\n    {\n        //\n        // Select the bytes positioned at even index in the buffer\n        // hence the int16_t buffer is casted to uint8_t and the parity\n        // is incremented by 2U\n        //\n\n        tableIndex = accumulator ^ (uint16_t)(buf[parity]);\n        accumulator = crcTable[tableIndex];\n        parity += 2U;\n    }\n\n    //\n    // Compare the result with the PEC\n    //\n    return(accumulator == pec);\n}\n",
+      "functionContentWithoutFormatting": "{ register uint16_t i; register uint16_t parity = 0U; register uint16_t tableIndex; register uint16_t accumulator; // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); ASSERT(byteCount > 0U); ASSERT(pec < 0xFFU); // // PEC is always calculated first with the address + R/W bit // tableIndex = HWREG(base + PMBUS_O_PMBHTA); accumulator = crcTable[tableIndex]; // // The assumption is the message bytes are packed into 16-bit words // and the calculation starts from the low byte // The memory arrangement is as follows (ignore the addresses // Address|__LB__|__HB__| // 0x0000 |__D0__|__D1__| // 0x0001 |__D2__|__D3__| // 0x0002 |__D4__|__D5__| // 0x0003 |__D6__|__D7__| // 0x0004 |__D8__|__D9__| // ... // uint8_t *buf = (uint8_t *)buffer; for(i = 0U; i < byteCount; i++) { // // Select the bytes positioned at even index in the buffer // hence the int16_t buffer is casted to uint8_t and the parity // is incremented by 2U // tableIndex = accumulator ^ (uint16_t)(buf[parity]); accumulator = crcTable[tableIndex]; parity += 2U; } // // Compare the result with the PEC // return(accumulator == pec); }",
+      "registersUsed": [
+        "PMBHTA"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBHTA"
+      ]
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_getData",
+      "functionArgs": [
+        "base",
+        "*buffer",
+        "status"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint32_t"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n\n    //\n    // Locals\n    //\n    uint32_t temp, i;\n    uint16_t num_rx_bytes;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    //\n    // Get the contents of the Receive buffer.\n    //\n    num_rx_bytes = (uint16_t)((status & PMBUS_PMBSTS_RD_BYTE_COUNT_M) >>\n                                        PMBUS_PMBSTS_RD_BYTE_COUNT_S);\n\n    if(num_rx_bytes != 0U)\n    {\n        temp = HWREG(base + PMBUS_O_PMBRXBUF);\n        for(i = 0U; i < num_rx_bytes; i++)\n        {\n            buffer[i] = (uint16_t)(temp & 0x000000FFU);\n            temp      = temp >> 8U;\n        }\n    }\n\n    return(num_rx_bytes);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Locals // uint32_t temp, i; uint16_t num_rx_bytes; // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); // // Get the contents of the Receive buffer. // num_rx_bytes = (uint16_t)((status & PMBUS_PMBSTS_RD_BYTE_COUNT_M) >> PMBUS_PMBSTS_RD_BYTE_COUNT_S); if(num_rx_bytes != 0U) { temp = HWREG(base + PMBUS_O_PMBRXBUF); for(i = 0U; i < num_rx_bytes; i++) { buffer[i] = (uint16_t)(temp & 0x000000FFU); temp = temp >> 8U; } } return(num_rx_bytes); }",
+      "registersUsed": [
+        "PMBRXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBRXBUF"
+      ]
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_putControllerData",
+      "functionArgs": [
+        "base",
+        "*buffer",
+        "nBytes"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Locals\n    //\n    uint16_t i = 0U;\n    uint32_t tx_data = 0U;\n    uint16_t *pBuffer = buffer;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    ASSERT((nBytes > 0U) && (nBytes <= 4U));\n\n    while(i < nBytes)\n    {\n        tx_data |= (((uint32_t)*pBuffer & 0x000000FFU) <<\n                       ((uint32_t)i << 3U));\n        pBuffer++;\n        i++;\n    }\n\n    //\n    // Write to the transmit register\n    //\n    HWREG(base + PMBUS_O_PMBTXBUF) = tx_data;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Locals // uint16_t i = 0U; uint32_t tx_data = 0U; uint16_t *pBuffer = buffer; // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); ASSERT((nBytes > 0U) && (nBytes <= 4U)); while(i < nBytes) { tx_data |= (((uint32_t)*pBuffer & 0x000000FFU) << ((uint32_t)i << 3U)); pBuffer++; i++; } // // Write to the transmit register // HWREG(base + PMBUS_O_PMBTXBUF) = tx_data; }",
+      "registersUsed": [
+        "PMBTXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBTXBUF"
+      ]
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_configModuleClock",
+      "functionArgs": [
+        "base",
+        "moduleFrequency",
+        "sysFrequency"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    //\n    // Locals\n    //\n    uint32_t interruptState, clockDivider, calcModuleFreq;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    ASSERT((moduleFrequency >= PMBUS_MODULE_FREQ_MIN) &&\n           (moduleFrequency <= PMBUS_MODULE_FREQ_MAX));\n    ASSERT((sysFrequency >= PMBUS_SYS_FREQ_MIN) &&\n           (sysFrequency <= PMBUS_SYS_FREQ_MAX));\n\n\n    //\n    // Save off the interrupt state and disable them\n    //\n    interruptState = HWREG(base + PMBUS_O_PMBINTM);\n    HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL;\n\n    //\n    // Calculate the clock divider. If the ratio of sysFrequency to\n    // moduleFrequency is larger than 32, the divider is set to its maximum\n    // possible value\n    //\n    clockDivider = (sysFrequency / moduleFrequency) - 1U;\n    if(clockDivider > 31U)\n    {\n        clockDivider = 31U;\n    }\n\n    //\n    // Write to the PMBCTRL register\n    //\n    HWREG(base + PMBUS_O_PMBCTRL) |=\n                                  ((clockDivider << PMBUS_PMBCTRL_CLKDIV_S)\n                                                   & PMBUS_PMBCTRL_CLKDIV_M);\n\n    //\n    // Calculate the actual bus frequency\n    //\n    calcModuleFreq = sysFrequency / (clockDivider + 1U);\n\n    //\n    // Restore the interrupt status\n    //\n    HWREG(base + PMBUS_O_PMBINTM) = interruptState;\n    return(calcModuleFreq);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Locals // uint32_t interruptState, clockDivider, calcModuleFreq; // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); ASSERT((moduleFrequency >= PMBUS_MODULE_FREQ_MIN) && (moduleFrequency <= PMBUS_MODULE_FREQ_MAX)); ASSERT((sysFrequency >= PMBUS_SYS_FREQ_MIN) && (sysFrequency <= PMBUS_SYS_FREQ_MAX)); // // Save off the interrupt state and disable them // interruptState = HWREG(base + PMBUS_O_PMBINTM); HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL; // // Calculate the clock divider. If the ratio of sysFrequency to // moduleFrequency is larger than 32, the divider is set to its maximum // possible value // clockDivider = (sysFrequency / moduleFrequency) - 1U; if(clockDivider > 31U) { clockDivider = 31U; } // // Write to the PMBCTRL register // HWREG(base + PMBUS_O_PMBCTRL) |= ((clockDivider << PMBUS_PMBCTRL_CLKDIV_S) & PMBUS_PMBCTRL_CLKDIV_M); // // Calculate the actual bus frequency // calcModuleFreq = sysFrequency / (clockDivider + 1U); // // Restore the interrupt status // HWREG(base + PMBUS_O_PMBINTM) = interruptState; return(calcModuleFreq); }",
+      "registersUsed": [
+        "PMBINTM",
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBINTM",
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_configModuleClockMode",
+      "functionArgs": [
+        "base",
+        "moduleFrequency",
+        "sysFrequency",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "PMBus_ClockMode"
+      ],
+      "returnType": "uint32_t PMBus_configModuleClock(uint32_t base, uint32_t moduleFrequency,                uint32_t sysFrequency) {     //     // Locals     //     uint32_t interruptState, clockDivider, calcModuleFreq;      //     // Check the arguments.     //     ASSERT(PMBus_isBaseValid(base));     ASSERT((moduleFrequency >= PMBUS_MODULE_FREQ_MIN) &&            (moduleFrequency <= PMBUS_MODULE_FREQ_MAX));     ASSERT((sysFrequency >= PMBUS_SYS_FREQ_MIN) &&            (sysFrequency <= PMBUS_SYS_FREQ_MAX));       //     // Save off the interrupt state and disable them     //     interruptState = HWREG(base + PMBUS_O_PMBINTM);     HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL;      //     // Calculate the clock divider. If the ratio of sysFrequency to     // moduleFrequency is larger than 32, the divider is set to its maximum     // possible value     //     clockDivider = (sysFrequency / moduleFrequency) - 1U;     if(clockDivider > 31U)     {         clockDivider = 31U;     }      //     // Write to the PMBCTRL register     //     HWREG(base + PMBUS_O_PMBCTRL) |=                                   ((clockDivider << PMBUS_PMBCTRL_CLKDIV_S)                                                    & PMBUS_PMBCTRL_CLKDIV_M);      //     // Calculate the actual bus frequency     //     calcModuleFreq = sysFrequency / (clockDivider + 1U);      //     // Restore the interrupt status     //     HWREG(base + PMBUS_O_PMBINTM) = interruptState;     return(calcModuleFreq); }  uint32_t",
+      "functionContent": "{\n    //\n    // Locals\n    //\n    uint32_t interruptState, clockDivider, calcModuleFreq;\n    const uint32_t fastPlusLow = 20000000U;\n    const uint32_t fsmClkLimit = 10000000U;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    ASSERT((moduleFrequency >= PMBUS_MODULE_FREQ_MIN) &&\n           (moduleFrequency <= PMBUS_MODULE_FREQ_MAX));\n    ASSERT((sysFrequency >= PMBUS_SYS_FREQ_MIN) &&\n           (sysFrequency <= PMBUS_SYS_FREQ_MAX));\n\n    if(mode == PMBUS_CLOCKMODE_FAST_PLUS)\n    {\n        ASSERT((moduleFrequency >= fastPlusLow));\n    }\n    if((mode == PMBUS_CLOCKMODE_STANDARD) || (mode == PMBUS_CLOCKMODE_FAST))\n    {\n        ASSERT((moduleFrequency <= fsmClkLimit));\n    }\n\n    //\n    // Save off the interrupt state and disable them\n    //\n    interruptState = HWREG(base + PMBUS_O_PMBINTM);\n    HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL;\n\n    //\n    // Calculate the clock divider. If the ratio of sysFrequency to\n    // moduleFrequency is larger than 32, the divider is set to its maximum\n    // possible value\n    //\n    clockDivider = (sysFrequency / moduleFrequency) - 1U;\n    if(clockDivider > 31U)\n    {\n        clockDivider = 31U;\n    }\n\n    //\n    // Write to the PMBCTRL register\n    //\n    HWREG(base + PMBUS_O_PMBCTRL) |=\n                                  ((clockDivider << PMBUS_PMBCTRL_CLKDIV_S)\n                                                   & PMBUS_PMBCTRL_CLKDIV_M);\n\n    //\n    // Calculate the actual bus frequency\n    //\n    calcModuleFreq = sysFrequency / (clockDivider + 1U);\n\n    //\n    // Restore the interrupt status\n    //\n    HWREG(base + PMBUS_O_PMBINTM) = interruptState;\n    return(calcModuleFreq);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Locals // uint32_t interruptState, clockDivider, calcModuleFreq; const uint32_t fastPlusLow = 20000000U; const uint32_t fsmClkLimit = 10000000U; // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); ASSERT((moduleFrequency >= PMBUS_MODULE_FREQ_MIN) && (moduleFrequency <= PMBUS_MODULE_FREQ_MAX)); ASSERT((sysFrequency >= PMBUS_SYS_FREQ_MIN) && (sysFrequency <= PMBUS_SYS_FREQ_MAX)); if(mode == PMBUS_CLOCKMODE_FAST_PLUS) { ASSERT((moduleFrequency >= fastPlusLow)); } if((mode == PMBUS_CLOCKMODE_STANDARD) || (mode == PMBUS_CLOCKMODE_FAST)) { ASSERT((moduleFrequency <= fsmClkLimit)); } // // Save off the interrupt state and disable them // interruptState = HWREG(base + PMBUS_O_PMBINTM); HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL; // // Calculate the clock divider. If the ratio of sysFrequency to // moduleFrequency is larger than 32, the divider is set to its maximum // possible value // clockDivider = (sysFrequency / moduleFrequency) - 1U; if(clockDivider > 31U) { clockDivider = 31U; } // // Write to the PMBCTRL register // HWREG(base + PMBUS_O_PMBCTRL) |= ((clockDivider << PMBUS_PMBCTRL_CLKDIV_S) & PMBUS_PMBCTRL_CLKDIV_M); // // Calculate the actual bus frequency // calcModuleFreq = sysFrequency / (clockDivider + 1U); // // Restore the interrupt status // HWREG(base + PMBUS_O_PMBINTM) = interruptState; return(calcModuleFreq); }",
+      "registersUsed": [
+        "PMBINTM",
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBINTM",
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.c",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_configBusClock",
+      "functionArgs": [
+        "base",
+        "mode",
+        "moduleFrequency"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "PMBus_ClockMode",
+        "uint32_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    //\n    // Locals\n    //\n    uint32_t interruptState, clockHighLimit, clockFreq;\n    uint32_t clockLowTimeout, clockHighTimeout, timePeriod;\n    uint32_t busIdle, setupTime;\n    const uint32_t bitmask = PMBUS_PMBCTRL_FAST_MODE;\n    bool status = false;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    ASSERT((moduleFrequency >= PMBUS_MODULE_FREQ_MIN) &&\n           (moduleFrequency <= PMBUS_MODULE_FREQ_MAX));\n\n\n    //\n    // Save off the interrupt state and disable them\n    //\n    interruptState = HWREG(base + PMBUS_O_PMBINTM);\n    HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL;\n\n    //\n    // Calculate the period for the module clock in ns\n    //\n    timePeriod = (uint32_t)1000000000U / moduleFrequency;\n\n    //\n    // Disable FAST mode\n    //\n    HWREG(base + PMBUS_O_PMBCTRL) &= ~bitmask;\n\n    //\n    // Set status to true\n    //\n    status = true;\n\n    switch(mode)\n    {\n        //\n        // Standard Mode\n        // Parameter                Timing Value in ns\n        // CLK_LOW_LIMIT                   5000\n        // CLK_HIGH_LIMIT                  5000\n        // CLK_FREQ                        10000\n        // START_LIMIT                     4700\n        // busIdle                         50000\n        // CLK_HIGH_TIMEOUT_LIMIT          50000\n        // CLK_LOW_TIMEOUT_LIMIT           35000000\n        // DATA_ACK_SETUP                  250\n        //\n        case PMBUS_CLOCKMODE_STANDARD:\n            clockHighLimit    = (5000U / timePeriod) - 3U;\n            clockFreq         = (10000U / timePeriod) - 4U;\n            clockLowTimeout   = (35000000U / timePeriod) - 1U;\n            clockHighTimeout  = (50000U / timePeriod) - 1U;\n            busIdle           = (50000U / timePeriod) - 1U;\n            setupTime         = (4700U / timePeriod);\n        break;\n\n        //\n        // Fast Mode\n        // Parameter                Timing Value in ns\n        // CLK_LOW_LIMIT                   1250\n        // CLK_HIGH_LIMIT                  1250\n        // CLK_FREQ                        2500\n        // START_LIMIT                     600\n        // busIdle                         12500\n        // CLK_HIGH_TIMEOUT_LIMIT          50000\n        // CLK_LOW_TIMEOUT_LIMIT           35000000\n        // DATA_ACK_SETUP                  100\n        //\n        case PMBUS_CLOCKMODE_FAST:\n            clockHighLimit    = (1250U / timePeriod) - 3U;\n            clockFreq         = (2500U / timePeriod) - 4U;\n            clockLowTimeout   = (35000000U / timePeriod) - 1U;\n            clockHighTimeout  = (50000U / timePeriod) - 1U;\n            busIdle           = (12500U / timePeriod) - 1U;\n            setupTime         = (600U / timePeriod);\n            HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_PMBCTRL_FAST_MODE;\n        break;\n\n        //\n        // Fast Mode Plus\n        // Parameter                Timing Value in ns\n        // CLK_LOW_LIMIT                   500\n        // CLK_HIGH_LIMIT                  500\n        // CLK_FREQ                        1000\n        // START_LIMIT                     300\n        // busIdle                         5000\n        // CLK_HIGH_TIMEOUT_LIMIT          50000\n        // CLK_LOW_TIMEOUT_LIMIT           35000000\n        // DATA_ACK_SETUP                  100\n        //\n        case PMBUS_CLOCKMODE_FAST_PLUS:\n            clockHighLimit = (500U / timePeriod) - 3U;\n            clockFreq = (1000U / timePeriod) - 4U;\n            clockLowTimeout = (35000000U / timePeriod) - 1U;\n            clockHighTimeout = (50000U / timePeriod) - 1U;\n            busIdle = (5000U / timePeriod) - 1U;\n            setupTime = (300U / timePeriod); // setupTime is Start Setup Time = START_LIMIT\n            HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_PMBCTRL_FAST_MODE_PLUS;\n            break;\n\n        default:\n            clockHighLimit = 0U;\n            clockFreq = 0U;\n            clockLowTimeout = 0U;\n            clockHighTimeout = 0U;\n            busIdle = 0U;\n            setupTime = 0U;\n            status = false;\n        break;\n    }\n\n    //\n    // Write the above values to their respective registers\n    // Override the timing control\n    //\n    HWREG(base + PMBUS_O_PMBTIMCTL) |= PMBUS_PMBTIMCTL_TIM_OVERRIDE;\n    if(status)\n    {\n        HWREG(base + PMBUS_O_PMBTIMCLK) =\n                    (((clockHighLimit << PMBUS_PMBTIMCLK_CLK_HIGH_LIMIT_S) &\n                                         PMBUS_PMBTIMCLK_CLK_HIGH_LIMIT_M) |\n                     ((clockFreq      << PMBUS_PMBTIMCLK_CLK_FREQ_S) &\n                                         PMBUS_PMBTIMCLK_CLK_FREQ_M));\n        HWREG(base + PMBUS_O_PMBTIMLOWTIMOUT) =\n                 ((clockLowTimeout << PMBUS_PMBTIMLOWTIMOUT_CLKLOWTIMOUT_S) &\n                                      PMBUS_PMBTIMLOWTIMOUT_CLKLOWTIMOUT_M);\n        HWREG(base + PMBUS_O_PMBTIMHIGHTIMOUT) =\n              ((clockHighTimeout << PMBUS_PMBTIMHIGHTIMOUT_CLKHIGHTIMOUT_S) &\n                                    PMBUS_PMBTIMHIGHTIMOUT_CLKHIGHTIMOUT_M);\n        HWREG(base + PMBUS_O_PMBTIMBIDLE) =\n                                  ((busIdle << PMBUS_PMBTIMBIDLE_BUSIDLE_S) &\n                                               PMBUS_PMBTIMBIDLE_BUSIDLE_M);\n        HWREG(base + PMBUS_O_PMBTIMSTSETUP) =\n                              ((setupTime << PMBUS_PMBTIMSTSETUP_TSU_STA_S) &\n                                             PMBUS_PMBTIMSTSETUP_TSU_STA_M);\n    }\n\n    //\n    // Restore the interrupt status\n    //\n    HWREG(base + PMBUS_O_PMBINTM) = interruptState;\n    return(status);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Locals // uint32_t interruptState, clockHighLimit, clockFreq; uint32_t clockLowTimeout, clockHighTimeout, timePeriod; uint32_t busIdle, setupTime; const uint32_t bitmask = PMBUS_PMBCTRL_FAST_MODE; bool status = false; // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); ASSERT((moduleFrequency >= PMBUS_MODULE_FREQ_MIN) && (moduleFrequency <= PMBUS_MODULE_FREQ_MAX)); // // Save off the interrupt state and disable them // interruptState = HWREG(base + PMBUS_O_PMBINTM); HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL; // // Calculate the period for the module clock in ns // timePeriod = (uint32_t)1000000000U / moduleFrequency; // // Disable FAST mode // HWREG(base + PMBUS_O_PMBCTRL) &= ~bitmask; // // Set status to true // status = true; switch(mode) { // // Standard Mode // Parameter Timing Value in ns // CLK_LOW_LIMIT 5000 // CLK_HIGH_LIMIT 5000 // CLK_FREQ 10000 // START_LIMIT 4700 // busIdle 50000 // CLK_HIGH_TIMEOUT_LIMIT 50000 // CLK_LOW_TIMEOUT_LIMIT 35000000 // DATA_ACK_SETUP 250 // case PMBUS_CLOCKMODE_STANDARD: clockHighLimit = (5000U / timePeriod) - 3U; clockFreq = (10000U / timePeriod) - 4U; clockLowTimeout = (35000000U / timePeriod) - 1U; clockHighTimeout = (50000U / timePeriod) - 1U; busIdle = (50000U / timePeriod) - 1U; setupTime = (4700U / timePeriod); break; // // Fast Mode // Parameter Timing Value in ns // CLK_LOW_LIMIT 1250 // CLK_HIGH_LIMIT 1250 // CLK_FREQ 2500 // START_LIMIT 600 // busIdle 12500 // CLK_HIGH_TIMEOUT_LIMIT 50000 // CLK_LOW_TIMEOUT_LIMIT 35000000 // DATA_ACK_SETUP 100 // case PMBUS_CLOCKMODE_FAST: clockHighLimit = (1250U / timePeriod) - 3U; clockFreq = (2500U / timePeriod) - 4U; clockLowTimeout = (35000000U / timePeriod) - 1U; clockHighTimeout = (50000U / timePeriod) - 1U; busIdle = (12500U / timePeriod) - 1U; setupTime = (600U / timePeriod); HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_PMBCTRL_FAST_MODE; break; // // Fast Mode Plus // Parameter Timing Value in ns // CLK_LOW_LIMIT 500 // CLK_HIGH_LIMIT 500 // CLK_FREQ 1000 // START_LIMIT 300 // busIdle 5000 // CLK_HIGH_TIMEOUT_LIMIT 50000 // CLK_LOW_TIMEOUT_LIMIT 35000000 // DATA_ACK_SETUP 100 // case PMBUS_CLOCKMODE_FAST_PLUS: clockHighLimit = (500U / timePeriod) - 3U; clockFreq = (1000U / timePeriod) - 4U; clockLowTimeout = (35000000U / timePeriod) - 1U; clockHighTimeout = (50000U / timePeriod) - 1U; busIdle = (5000U / timePeriod) - 1U; setupTime = (300U / timePeriod); // setupTime is Start Setup Time = START_LIMIT HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_PMBCTRL_FAST_MODE_PLUS; break; default: clockHighLimit = 0U; clockFreq = 0U; clockLowTimeout = 0U; clockHighTimeout = 0U; busIdle = 0U; setupTime = 0U; status = false; break; } // // Write the above values to their respective registers // Override the timing control // HWREG(base + PMBUS_O_PMBTIMCTL) |= PMBUS_PMBTIMCTL_TIM_OVERRIDE; if(status) { HWREG(base + PMBUS_O_PMBTIMCLK) = (((clockHighLimit << PMBUS_PMBTIMCLK_CLK_HIGH_LIMIT_S) & PMBUS_PMBTIMCLK_CLK_HIGH_LIMIT_M) | ((clockFreq << PMBUS_PMBTIMCLK_CLK_FREQ_S) & PMBUS_PMBTIMCLK_CLK_FREQ_M)); HWREG(base + PMBUS_O_PMBTIMLOWTIMOUT) = ((clockLowTimeout << PMBUS_PMBTIMLOWTIMOUT_CLKLOWTIMOUT_S) & PMBUS_PMBTIMLOWTIMOUT_CLKLOWTIMOUT_M); HWREG(base + PMBUS_O_PMBTIMHIGHTIMOUT) = ((clockHighTimeout << PMBUS_PMBTIMHIGHTIMOUT_CLKHIGHTIMOUT_S) & PMBUS_PMBTIMHIGHTIMOUT_CLKHIGHTIMOUT_M); HWREG(base + PMBUS_O_PMBTIMBIDLE) = ((busIdle << PMBUS_PMBTIMBIDLE_BUSIDLE_S) & PMBUS_PMBTIMBIDLE_BUSIDLE_M); HWREG(base + PMBUS_O_PMBTIMSTSETUP) = ((setupTime << PMBUS_PMBTIMSTSETUP_TSU_STA_S) & PMBUS_PMBTIMSTSETUP_TSU_STA_M); } // // Restore the interrupt status // HWREG(base + PMBUS_O_PMBINTM) = interruptState; return(status); }",
+      "registersUsed": [
+        "PMBINTM",
+        "PMBCTRL",
+        "PMBTIMCTL",
+        "PMBTIMCLK",
+        "PMBTIMSTSETUP",
+        "PMBTIMBIDLE",
+        "PMBTIMLOWTIMOUT",
+        "PMBTIMHIGHTIMOUT"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBINTM",
+        "PMBCTRL",
+        "PMBTIMCTL",
+        "PMBTIMCLK",
+        "PMBTIMSTSETUP",
+        "PMBTIMBIDLE",
+        "PMBTIMLOWTIMOUT",
+        "PMBTIMHIGHTIMOUT"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           ((base & BASE_ADDR_MASK) == PMBUSA_BASE_FRAME(0U))\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( ((base & BASE_ADDR_MASK) == PMBUSA_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_disableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_RESET;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_RESET; }",
+      "registersUsed": [
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_enableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    HWREG(base + PMBUS_O_PMBCTRL) &= ~(uint32_t)PMBUS_RESET;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); HWREG(base + PMBUS_O_PMBCTRL) &= ~(uint32_t)PMBUS_RESET; }",
+      "registersUsed": [
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    //\n    // Enable the desired basic interrupts, that is, clear their mask bits\n    // in PMBINTM\n    //\n    HWREG(base + PMBUS_O_PMBINTM) &= ~(intFlags & 0x03FFU);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); // // Enable the desired basic interrupts, that is, clear their mask bits // in PMBINTM // HWREG(base + PMBUS_O_PMBINTM) &= ~(intFlags & 0x03FFU); }",
+      "registersUsed": [
+        "PMBINTM"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBINTM"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    //\n    // Disable the desired interrupts\n    //\n    HWREG(base + PMBUS_O_PMBINTM) |= (intFlags & 0x03FFU);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); // // Disable the desired interrupts // HWREG(base + PMBUS_O_PMBINTM) |= (intFlags & 0x03FFU); }",
+      "registersUsed": [
+        "PMBINTM"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBINTM"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_isBusBusy",
+      "functionArgs": [
+        "status"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return(((status & PMBUS_PMBSTS_BUS_FREE) == 0U) ? true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ return(((status & PMBUS_PMBSTS_BUS_FREE) == 0U) ? true : false); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_isPECValid",
+      "functionArgs": [
+        "status"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return(((status & PMBUS_PMBSTS_PEC_VALID) != 0U) ? true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ return(((status & PMBUS_PMBSTS_PEC_VALID) != 0U) ? true : false); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_enableI2CMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Locals\n    //\n    uint32_t interruptState;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    //\n    // Save off the interrupt state and disable them\n    //\n    interruptState = HWREG(base + PMBUS_O_PMBINTM);\n    HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL;\n\n    //\n    // Set module to I2C mode\n    //\n    HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_PMBCTRL_I2CMODE;\n\n    //\n    // Restore the interrupt status\n    //\n    HWREG(base + PMBUS_O_PMBINTM) = interruptState;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Locals // uint32_t interruptState; // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); // // Save off the interrupt state and disable them // interruptState = HWREG(base + PMBUS_O_PMBINTM); HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL; // // Set module to I2C mode // HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_PMBCTRL_I2CMODE; // // Restore the interrupt status // HWREG(base + PMBUS_O_PMBINTM) = interruptState; }",
+      "registersUsed": [
+        "PMBINTM",
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBINTM",
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_disableI2CMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Locals\n    //\n    uint32_t interruptState;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    //\n    // Save off the interrupt state and disable them\n    //\n    interruptState = HWREG(base + PMBUS_O_PMBINTM);\n    HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL;\n\n    //\n    // Set module to PMBUS mode\n    //\n    HWREG(base + PMBUS_O_PMBCTRL) &= ~(uint32_t)PMBUS_PMBCTRL_I2CMODE;\n\n    //\n    // Restore the interrupt status\n    //\n    HWREG(base + PMBUS_O_PMBINTM) = interruptState;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Locals // uint32_t interruptState; // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); // // Save off the interrupt state and disable them // interruptState = HWREG(base + PMBUS_O_PMBINTM); HWREG(base + PMBUS_O_PMBINTM) = PMBUS_INT_ALL; // // Set module to PMBUS mode // HWREG(base + PMBUS_O_PMBCTRL) &= ~(uint32_t)PMBUS_PMBCTRL_I2CMODE; // // Restore the interrupt status // HWREG(base + PMBUS_O_PMBINTM) = interruptState; }",
+      "registersUsed": [
+        "PMBINTM",
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBINTM",
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_getStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    return(HWREG(base + PMBUS_O_PMBSTS));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); return(HWREG(base + PMBUS_O_PMBSTS)); }",
+      "registersUsed": [
+        "PMBSTS"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBSTS"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_ackTransaction",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    //\n    // Acknowledge\n    //\n    HWREG(base + PMBUS_O_PMBACK) |= PMBUS_PMBACK_ACK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); // // Acknowledge // HWREG(base + PMBUS_O_PMBACK) |= PMBUS_PMBACK_ACK; }",
+      "registersUsed": [
+        "PMBACK"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBACK"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_nackTransaction",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    //\n    // NACK\n    //\n    HWREG(base + PMBUS_O_PMBACK) &= ~(uint32_t)PMBUS_PMBACK_ACK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); // // NACK // HWREG(base + PMBUS_O_PMBACK) &= ~(uint32_t)PMBUS_PMBACK_ACK; }",
+      "registersUsed": [
+        "PMBACK"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBACK"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_assertAlertLine",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    //\n    //Pull the alert line low\n    //\n    HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_PMBCTRL_ALERT_EN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); // //Pull the alert line low // HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_PMBCTRL_ALERT_EN; }",
+      "registersUsed": [
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_deassertAlertLine",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    //\n    //Pull the alert line low\n    //\n    HWREG(base + PMBUS_O_PMBCTRL) &= ~(uint32_t)PMBUS_PMBCTRL_ALERT_EN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); // //Pull the alert line low // HWREG(base + PMBUS_O_PMBCTRL) &= ~(uint32_t)PMBUS_PMBCTRL_ALERT_EN; }",
+      "registersUsed": [
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_configController",
+      "functionArgs": [
+        "base",
+        "targetAddress",
+        "byteCount",
+        "configWord"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Locals\n    // Form a bit mask of the bit fields configWord changes\n    //\n    const uint32_t bitmask = (PMBUS_PMBCCR_RW | PMBUS_PMBCCR_CMD_ENA |\n               PMBUS_PMBCCR_EXT_CMD | PMBUS_PMBCCR_PEC_ENA |\n               PMBUS_PMBCCR_GRP_CMD | PMBUS_PMBCCR_PRC_CALL);\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    ASSERT(targetAddress <= 0x7FU);\n    ASSERT(byteCount <= 0xFFU);\n\n\n    //\n    // Write the user configured bit fields (passed in configWord) as well\n    // as target address and message byte counts. Writing to PMBMC triggers\n    // activity on the bus, once the bus is free (PMBSTS.BUS_FREE = 1)\n    //\n    HWREG(base + PMBUS_O_PMBCCR) = ((configWord & bitmask) |\n                    (((uint32_t)targetAddress << PMBUS_PMBCCR_TARGET_ADDR_S) &\n                                                PMBUS_PMBCCR_TARGET_ADDR_M) |\n                    (((uint32_t)byteCount    << PMBUS_PMBCCR_BYTE_COUNT_S) &\n                                                PMBUS_PMBCCR_BYTE_COUNT_M));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Locals // Form a bit mask of the bit fields configWord changes // const uint32_t bitmask = (PMBUS_PMBCCR_RW | PMBUS_PMBCCR_CMD_ENA | PMBUS_PMBCCR_EXT_CMD | PMBUS_PMBCCR_PEC_ENA | PMBUS_PMBCCR_GRP_CMD | PMBUS_PMBCCR_PRC_CALL); // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); ASSERT(targetAddress <= 0x7FU); ASSERT(byteCount <= 0xFFU); // // Write the user configured bit fields (passed in configWord) as well // as target address and message byte counts. Writing to PMBMC triggers // activity on the bus, once the bus is free (PMBSTS.BUS_FREE = 1) // HWREG(base + PMBUS_O_PMBCCR) = ((configWord & bitmask) | (((uint32_t)targetAddress << PMBUS_PMBCCR_TARGET_ADDR_S) & PMBUS_PMBCCR_TARGET_ADDR_M) | (((uint32_t)byteCount << PMBUS_PMBCCR_BYTE_COUNT_S) & PMBUS_PMBCCR_BYTE_COUNT_M)); }",
+      "registersUsed": [
+        "PMBCCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBCCR"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_getOwnAddress",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    return((HWREG(base + PMBUS_O_PMBHTA) & 0xFEU) >> 1U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); return((HWREG(base + PMBUS_O_PMBHTA) & 0xFEU) >> 1U); }",
+      "registersUsed": [
+        "PMBHTA"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBHTA"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_setOwnAddress",
+      "functionArgs": [
+        "base",
+        "Ownaddress"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    ASSERT(Ownaddress <= 0x7FU);\n\n\n    //\n    // Write the address to the PMBSC register (bits 6:0)\n    //\n    HWREG(base + PMBUS_O_PMBTCR)|= Ownaddress;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); ASSERT(Ownaddress <= 0x7FU); // // Write the address to the PMBSC register (bits 6:0) // HWREG(base + PMBUS_O_PMBTCR)|= Ownaddress; }",
+      "registersUsed": [
+        "PMBTCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBTCR"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_setTargetAddress",
+      "functionArgs": [
+        "base",
+        "targetAddress"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n    ASSERT(targetAddress <= 0x7FU);\n\n    //\n    // Write the target address to PMBMC register\n    //\n    HWREG(base + PMBUS_O_PMBCCR) |= (((uint32_t)targetAddress << PMBUS_PMBCCR_TARGET_ADDR_S) &\n                                                PMBUS_PMBCCR_TARGET_ADDR_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); ASSERT(targetAddress <= 0x7FU); // // Write the target address to PMBMC register // HWREG(base + PMBUS_O_PMBCCR) |= (((uint32_t)targetAddress << PMBUS_PMBCCR_TARGET_ADDR_S) & PMBUS_PMBCCR_TARGET_ADDR_M); }",
+      "registersUsed": [
+        "PMBCCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBCCR"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_getCurrentAccessType",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline PMBus_accessType",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    return((PMBus_accessType)(HWREG(base + PMBUS_O_PMBHTA) & 0x01U));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); return((PMBus_accessType)(HWREG(base + PMBUS_O_PMBHTA) & 0x01U)); }",
+      "registersUsed": [
+        "PMBHTA"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBHTA"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_setCtrlIntEdge",
+      "functionArgs": [
+        "base",
+        "intEdge"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "PMBus_intEdge"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    if(intEdge == PMBUS_INTEDGE_FALLING)\n    {\n        //\n        // Clear bit\n        //\n        HWREG(base + PMBUS_O_PMBCTRL) &=\n                                    ~(uint32_t)PMBUS_PMBCTRL_CNTL_INT_EDGE;\n    }\n    else // PMBUS_INTEDGE_RISING\n    {\n        //\n        // Set bit\n        //\n        HWREG(base + PMBUS_O_PMBCTRL) |=  PMBUS_PMBCTRL_CNTL_INT_EDGE;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); if(intEdge == PMBUS_INTEDGE_FALLING) { // // Clear bit // HWREG(base + PMBUS_O_PMBCTRL) &= ~(uint32_t)PMBUS_PMBCTRL_CNTL_INT_EDGE; } else // PMBUS_INTEDGE_RISING { // // Set bit // HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_PMBCTRL_CNTL_INT_EDGE; } }",
+      "registersUsed": [
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_setClkLowTimeoutIntEdge",
+      "functionArgs": [
+        "base",
+        "intEdge"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "PMBus_intEdge"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(PMBus_isBaseValid(base));\n\n    if(intEdge == PMBUS_INTEDGE_FALLING)\n    {\n        //\n        // Set bit\n        //\n        HWREG(base + PMBUS_O_PMBCTRL) |=  PMBUS_PMBCTRL_BUS_LO_INT_EDGE;\n    }\n    else // PMBUS_INTEDGE_RISING\n    {\n        //\n        // Clear bit\n        //\n        HWREG(base + PMBUS_O_PMBCTRL) &=\n                                   ~(uint32_t)PMBUS_PMBCTRL_BUS_LO_INT_EDGE;\n    }\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(PMBus_isBaseValid(base)); if(intEdge == PMBUS_INTEDGE_FALLING) { // // Set bit // HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_PMBCTRL_BUS_LO_INT_EDGE; } else // PMBUS_INTEDGE_RISING { // // Clear bit // HWREG(base + PMBUS_O_PMBCTRL) &= ~(uint32_t)PMBUS_PMBCTRL_BUS_LO_INT_EDGE; } }",
+      "registersUsed": [
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_enableZeroHoldTime",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(PMBus_isBaseValid(base));\n\n    HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_PMBCTRL_ZH_EN;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(PMBus_isBaseValid(base)); HWREG(base + PMBUS_O_PMBCTRL) |= PMBUS_PMBCTRL_ZH_EN; }",
+      "registersUsed": [
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBCTRL"
+      ]
+    },
+    {
+      "file": "pmbus.h",
+      "peripheral": "pmbus",
+      "functionName": "PMBus_disableZeroHoldTime",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(PMBus_isBaseValid(base));\n\n    HWREG(base + PMBUS_O_PMBCTRL) = HWREG(base + PMBUS_O_PMBCTRL) & (~PMBUS_PMBCTRL_ZH_EN);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(PMBus_isBaseValid(base)); HWREG(base + PMBUS_O_PMBCTRL) = HWREG(base + PMBUS_O_PMBCTRL) & (~PMBUS_PMBCTRL_ZH_EN); }",
+      "registersUsed": [
+        "PMBCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PMBCTRL"
+      ]
+    }
+  ]
+}

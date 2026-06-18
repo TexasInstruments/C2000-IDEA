@@ -1,0 +1,721 @@
+{
+  "name": "memcfg",
+  "functions": [
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_lockConfig",
+      "functionArgs": [
+        "memSections"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D)   ||\n           ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS)  ||\n           (memSections == MEMCFG_SECT_ALL));\n\n    //\n    // Set the bit that blocks writes to the sections' configuration registers.\n    //\n    EALLOW;\n\n    switch(memSections & MEMCFG_SECT_TYPE_MASK)\n    {\n        case MEMCFG_SECT_TYPE_D:\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXLOCK)  |= MEMCFG_SECT_NUM_MASK &\n                                                     memSections;\n            break;\n\n        case MEMCFG_SECT_TYPE_LS:\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXLOCK) |= MEMCFG_SECT_NUM_MASK &\n                                                     memSections;\n            break;\n\n        case MEMCFG_SECT_TYPE_MASK:\n            //\n            // Lock configuration for all sections.\n            //\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXLOCK)   |= MEMCFG_SECT_NUM_MASK &\n                                                      MEMCFG_SECT_DX_ALL;\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXLOCK)  |= MEMCFG_SECT_NUM_MASK &\n                                                      MEMCFG_SECT_LSX_ALL;\n            break;\n\n        default:\n            //\n            // Do nothing. Invalid memSections. Make sure you aren't OR-ing\n            // values for two different types of memory sections.\n            //\n            break;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D) || ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS) || (memSections == MEMCFG_SECT_ALL)); // // Set the bit that blocks writes to the sections' configuration registers. // EALLOW; switch(memSections & MEMCFG_SECT_TYPE_MASK) { case MEMCFG_SECT_TYPE_D: HWREG(MEMCFG_BASE + MEMCFG_O_DXLOCK) |= MEMCFG_SECT_NUM_MASK & memSections; break; case MEMCFG_SECT_TYPE_LS: HWREG(MEMCFG_BASE + MEMCFG_O_LSXLOCK) |= MEMCFG_SECT_NUM_MASK & memSections; break; case MEMCFG_SECT_TYPE_MASK: // // Lock configuration for all sections. // HWREG(MEMCFG_BASE + MEMCFG_O_DXLOCK) |= MEMCFG_SECT_NUM_MASK & MEMCFG_SECT_DX_ALL; HWREG(MEMCFG_BASE + MEMCFG_O_LSXLOCK) |= MEMCFG_SECT_NUM_MASK & MEMCFG_SECT_LSX_ALL; break; default: // // Do nothing. Invalid memSections. Make sure you aren't OR-ing // values for two different types of memory sections. // break; } EDIS; }",
+      "registersUsed": [
+        "DXLOCK",
+        "LSXLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "DXLOCK",
+        "LSXLOCK"
+      ]
+    },
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_unlockConfig",
+      "functionArgs": [
+        "memSections"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D)   ||\n           ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS)  ||\n           (memSections == MEMCFG_SECT_ALL));\n\n    //\n    // Clear the bit that blocks writes to the sections' configuration\n    // registers.\n    //\n    EALLOW;\n\n    switch(memSections & MEMCFG_SECT_TYPE_MASK)\n    {\n        case MEMCFG_SECT_TYPE_D:\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXLOCK)  &= ~(MEMCFG_SECT_NUM_MASK &\n                                                       memSections);\n            break;\n\n        case MEMCFG_SECT_TYPE_LS:\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXLOCK) &= ~(MEMCFG_SECT_NUM_MASK &\n                                                       memSections);\n            break;\n\n\n        case MEMCFG_SECT_TYPE_MASK:\n            //\n            // Unlock configuration for all sections.\n            //\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXLOCK) &=\n                ~((uint32_t)(MEMCFG_SECT_NUM_MASK & MEMCFG_SECT_DX_ALL));\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXLOCK) &=\n                ~((uint32_t)(MEMCFG_SECT_NUM_MASK & MEMCFG_SECT_LSX_ALL));\n            break;\n\n        default:\n            //\n            // Do nothing. Invalid memSections. Make sure you aren't OR-ing\n            // values for two different types of memory sections.\n            //\n            break;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D) || ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS) || (memSections == MEMCFG_SECT_ALL)); // // Clear the bit that blocks writes to the sections' configuration // registers. // EALLOW; switch(memSections & MEMCFG_SECT_TYPE_MASK) { case MEMCFG_SECT_TYPE_D: HWREG(MEMCFG_BASE + MEMCFG_O_DXLOCK) &= ~(MEMCFG_SECT_NUM_MASK & memSections); break; case MEMCFG_SECT_TYPE_LS: HWREG(MEMCFG_BASE + MEMCFG_O_LSXLOCK) &= ~(MEMCFG_SECT_NUM_MASK & memSections); break; case MEMCFG_SECT_TYPE_MASK: // // Unlock configuration for all sections. // HWREG(MEMCFG_BASE + MEMCFG_O_DXLOCK) &= ~((uint32_t)(MEMCFG_SECT_NUM_MASK & MEMCFG_SECT_DX_ALL)); HWREG(MEMCFG_BASE + MEMCFG_O_LSXLOCK) &= ~((uint32_t)(MEMCFG_SECT_NUM_MASK & MEMCFG_SECT_LSX_ALL)); break; default: // // Do nothing. Invalid memSections. Make sure you aren't OR-ing // values for two different types of memory sections. // break; } EDIS; }",
+      "registersUsed": [
+        "DXLOCK",
+        "LSXLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "DXLOCK",
+        "LSXLOCK"
+      ]
+    },
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_commitConfig",
+      "functionArgs": [
+        "memSections"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D)   ||\n           ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS)  ||\n           (memSections == MEMCFG_SECT_ALL));\n\n    //\n    // Set the bit that permanently blocks writes to the sections'\n    // configuration registers.\n    //\n    EALLOW;\n\n    switch(memSections & MEMCFG_SECT_TYPE_MASK)\n    {\n        case MEMCFG_SECT_TYPE_D:\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXCOMMIT)  |= MEMCFG_SECT_NUM_MASK &\n                                                       memSections;\n            break;\n\n        case MEMCFG_SECT_TYPE_LS:\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXCOMMIT) |= MEMCFG_SECT_NUM_MASK &\n                                                       memSections;\n            break;\n\n\n        case MEMCFG_SECT_TYPE_MASK:\n            //\n            // Commit configuration for all sections.\n            //\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXCOMMIT)   |= MEMCFG_SECT_NUM_MASK &\n                                                        MEMCFG_SECT_DX_ALL;\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXCOMMIT)  |= MEMCFG_SECT_NUM_MASK &\n                                                        MEMCFG_SECT_LSX_ALL;\n            break;\n\n        default:\n            //\n            // Do nothing. Invalid memSections. Make sure you aren't OR-ing\n            // values for two different types of RAM.\n            //\n            break;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D) || ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS) || (memSections == MEMCFG_SECT_ALL)); // // Set the bit that permanently blocks writes to the sections' // configuration registers. // EALLOW; switch(memSections & MEMCFG_SECT_TYPE_MASK) { case MEMCFG_SECT_TYPE_D: HWREG(MEMCFG_BASE + MEMCFG_O_DXCOMMIT) |= MEMCFG_SECT_NUM_MASK & memSections; break; case MEMCFG_SECT_TYPE_LS: HWREG(MEMCFG_BASE + MEMCFG_O_LSXCOMMIT) |= MEMCFG_SECT_NUM_MASK & memSections; break; case MEMCFG_SECT_TYPE_MASK: // // Commit configuration for all sections. // HWREG(MEMCFG_BASE + MEMCFG_O_DXCOMMIT) |= MEMCFG_SECT_NUM_MASK & MEMCFG_SECT_DX_ALL; HWREG(MEMCFG_BASE + MEMCFG_O_LSXCOMMIT) |= MEMCFG_SECT_NUM_MASK & MEMCFG_SECT_LSX_ALL; break; default: // // Do nothing. Invalid memSections. Make sure you aren't OR-ing // values for two different types of RAM. // break; } EDIS; }",
+      "registersUsed": [
+        "DXCOMMIT",
+        "LSXCOMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "DXCOMMIT",
+        "LSXCOMMIT"
+      ]
+    },
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_setProtection",
+      "functionArgs": [
+        "memSection",
+        "protectMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t shiftVal = 0U;\n    uint32_t maskVal;\n    uint32_t regVal;\n    uint32_t sectionNum;\n    uint32_t regOffset;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(((memSection & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS)   ||\n           ((memSection & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D));\n\n    //\n    // Calculate how far the protect mode value needs to be shifted. Each\n    // section number is represented by a bit in the lower word of memSection\n    // and 8 bits in the corresponding ACCPROT register.\n    //\n    sectionNum = memSection & MEMCFG_SECT_NUM_MASK;\n\n    while(sectionNum != 1U)\n    {\n        sectionNum = sectionNum >> 1U;\n        shiftVal += 8U;\n    }\n\n    //\n    // Calculate register offset. Also, make sure the shift value is no greater\n    // than 31.\n    //\n    regOffset = (shiftVal & ~(0x1FU)) >> 4U;\n    shiftVal &= 0x0001FU;\n    maskVal = (uint32_t)MEMCFG_XACCPROTX_M << shiftVal;\n    regVal = protectMode << shiftVal;\n\n    //\n    // Write the access protection mode into the appropriate field\n    //\n    EALLOW;\n\n    switch(memSection & MEMCFG_SECT_TYPE_MASK)\n    {\n        case MEMCFG_SECT_TYPE_D:\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXACCPROT0 + regOffset) &= ~maskVal;\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXACCPROT0 + regOffset) |= regVal;\n            break;\n\n        case MEMCFG_SECT_TYPE_LS:\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXACCPROT0 + regOffset) &= ~maskVal;\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXACCPROT0 + regOffset) |= regVal;\n            break;\n\n\n        default:\n            //\n            // Do nothing. Invalid memSection.\n            //\n            break;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t shiftVal = 0U; uint32_t maskVal; uint32_t regVal; uint32_t sectionNum; uint32_t regOffset; // // Check the arguments. // ASSERT(((memSection & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS) || ((memSection & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D)); // // Calculate how far the protect mode value needs to be shifted. Each // section number is represented by a bit in the lower word of memSection // and 8 bits in the corresponding ACCPROT register. // sectionNum = memSection & MEMCFG_SECT_NUM_MASK; while(sectionNum != 1U) { sectionNum = sectionNum >> 1U; shiftVal += 8U; } // // Calculate register offset. Also, make sure the shift value is no greater // than 31. // regOffset = (shiftVal & ~(0x1FU)) >> 4U; shiftVal &= 0x0001FU; maskVal = (uint32_t)MEMCFG_XACCPROTX_M << shiftVal; regVal = protectMode << shiftVal; // // Write the access protection mode into the appropriate field // EALLOW; switch(memSection & MEMCFG_SECT_TYPE_MASK) { case MEMCFG_SECT_TYPE_D: HWREG(MEMCFG_BASE + MEMCFG_O_DXACCPROT0 + regOffset) &= ~maskVal; HWREG(MEMCFG_BASE + MEMCFG_O_DXACCPROT0 + regOffset) |= regVal; break; case MEMCFG_SECT_TYPE_LS: HWREG(MEMCFG_BASE + MEMCFG_O_LSXACCPROT0 + regOffset) &= ~maskVal; HWREG(MEMCFG_BASE + MEMCFG_O_LSXACCPROT0 + regOffset) |= regVal; break; default: // // Do nothing. Invalid memSection. // break; } EDIS; }",
+      "registersUsed": [
+        "DXACCPROT0",
+        "LSXACCPROT0"
+      ],
+      "registersUsedMatchingBifield": [
+        "DXACCPROT0",
+        "LSXACCPROT0"
+      ]
+    },
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_lockTestConfig",
+      "functionArgs": [
+        "memSections"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D)   ||\n           ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS)  ||\n           ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_ROM) ||\n           (memSections == MEMCFG_SECT_ALL));\n\n    //\n    // Set the bit that blocks writes to the sections' configuration registers.\n    //\n    EALLOW;\n\n    switch(memSections & MEMCFG_SECT_TYPE_MASK)\n    {\n        case MEMCFG_SECT_TYPE_D:\n             HWREG(MEMCFG_BASE + MEMCFG_O_DXRAMTEST_LOCK)   |=\n                  (MEMCFG_TESTLOCK_KEY | (MEMCFG_SECT_NUM_MASK & memSections));\n            break;\n\n        case MEMCFG_SECT_TYPE_LS:\n             HWREG(MEMCFG_BASE + MEMCFG_O_LSXRAMTEST_LOCK)   |=\n                  (MEMCFG_TESTLOCK_KEY | (MEMCFG_SECT_NUM_MASK & memSections));\n            break;\n\n        case MEMCFG_SECT_TYPE_ROM:\n            HWREG(MEMCFG_BASE + MEMCFG_O_ROM_LOCK)           |=\n                  (MEMCFG_TESTLOCK_KEY | (MEMCFG_SECT_NUM_MASK & memSections));\n            break;\n\n\n        case MEMCFG_SECT_TYPE_MASK:\n            //\n            // Lock configuration for all sections.\n            //\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXRAMTEST_LOCK)     |=\n                  (MEMCFG_TESTLOCK_KEY | (MEMCFG_SECT_NUM_MASK & memSections));\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXRAMTEST_LOCK)    |=\n                  (MEMCFG_TESTLOCK_KEY | (MEMCFG_SECT_NUM_MASK & memSections));\n            HWREG(MEMCFG_BASE + MEMCFG_O_ROM_LOCK)           |=\n                  (MEMCFG_TESTLOCK_KEY | (MEMCFG_SECT_NUM_MASK & memSections));\n            break;\n\n        default:\n            //\n            // Do nothing. Invalid ramSections. Make sure you aren't OR-ing\n            // values for two different types of memory sections.\n            //\n            break;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D) || ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS) || ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_ROM) || (memSections == MEMCFG_SECT_ALL)); // // Set the bit that blocks writes to the sections' configuration registers. // EALLOW; switch(memSections & MEMCFG_SECT_TYPE_MASK) { case MEMCFG_SECT_TYPE_D: HWREG(MEMCFG_BASE + MEMCFG_O_DXRAMTEST_LOCK) |= (MEMCFG_TESTLOCK_KEY | (MEMCFG_SECT_NUM_MASK & memSections)); break; case MEMCFG_SECT_TYPE_LS: HWREG(MEMCFG_BASE + MEMCFG_O_LSXRAMTEST_LOCK) |= (MEMCFG_TESTLOCK_KEY | (MEMCFG_SECT_NUM_MASK & memSections)); break; case MEMCFG_SECT_TYPE_ROM: HWREG(MEMCFG_BASE + MEMCFG_O_ROM_LOCK) |= (MEMCFG_TESTLOCK_KEY | (MEMCFG_SECT_NUM_MASK & memSections)); break; case MEMCFG_SECT_TYPE_MASK: // // Lock configuration for all sections. // HWREG(MEMCFG_BASE + MEMCFG_O_DXRAMTEST_LOCK) |= (MEMCFG_TESTLOCK_KEY | (MEMCFG_SECT_NUM_MASK & memSections)); HWREG(MEMCFG_BASE + MEMCFG_O_LSXRAMTEST_LOCK) |= (MEMCFG_TESTLOCK_KEY | (MEMCFG_SECT_NUM_MASK & memSections)); HWREG(MEMCFG_BASE + MEMCFG_O_ROM_LOCK) |= (MEMCFG_TESTLOCK_KEY | (MEMCFG_SECT_NUM_MASK & memSections)); break; default: // // Do nothing. Invalid ramSections. Make sure you aren't OR-ing // values for two different types of memory sections. // break; } EDIS; }",
+      "registersUsed": [
+        "DXRAMTEST_LOCK",
+        "LSXRAMTEST_LOCK",
+        "ROM_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "DXRAMTEST_LOCK",
+        "LSXRAMTEST_LOCK",
+        "ROM_LOCK"
+      ]
+    },
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_unlockTestConfig",
+      "functionArgs": [
+        "memSections"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D)   ||\n           ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS)  ||\n           ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_ROM) ||\n           (memSections == MEMCFG_SECT_ALL));\n\n\n    //\n    // Clear the bit that blocks writes to the sections' configuration\n    // registers.\n    //\n    EALLOW;\n\n    switch(memSections & MEMCFG_SECT_TYPE_MASK)\n    {\n        case MEMCFG_SECT_TYPE_D:\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXRAMTEST_LOCK) =\n                               MEMCFG_TESTLOCK_KEY |\n                               (HWREG(MEMCFG_BASE + MEMCFG_O_DXRAMTEST_LOCK) &\n                                ~(MEMCFG_SECT_NUM_MASK & memSections));\n            break;\n\n        case MEMCFG_SECT_TYPE_LS:\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXRAMTEST_LOCK) =\n                               MEMCFG_TESTLOCK_KEY |\n                               (HWREG(MEMCFG_BASE + MEMCFG_O_LSXRAMTEST_LOCK) &\n                                ~(MEMCFG_SECT_NUM_MASK & memSections));\n            break;\n\n        case MEMCFG_SECT_TYPE_ROM:\n            HWREG(MEMCFG_BASE + MEMCFG_O_ROM_LOCK) = (MEMCFG_TESTLOCK_KEY |\n                                  (HWREG(MEMCFG_BASE + MEMCFG_O_ROM_LOCK) &\n                                   ~(MEMCFG_SECT_NUM_MASK & memSections)));\n            break;\n\n\n        case MEMCFG_SECT_TYPE_MASK:\n            //\n            // Unlock configuration for all sections.\n            //\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXRAMTEST_LOCK)   =\n                 HWREG(MEMCFG_BASE + MEMCFG_O_DXRAMTEST_LOCK)   |\n                 (MEMCFG_TESTLOCK_KEY | ~(MEMCFG_SECT_NUM_MASK & memSections));\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXRAMTEST_LOCK)  =\n                 HWREG(MEMCFG_BASE + MEMCFG_O_LSXRAMTEST_LOCK)  |\n                 (MEMCFG_TESTLOCK_KEY | ~(MEMCFG_SECT_NUM_MASK & memSections));\n            HWREG(MEMCFG_BASE + MEMCFG_O_ROM_LOCK)   =\n                 HWREG(MEMCFG_BASE + MEMCFG_O_ROM_LOCK)   |\n                 (MEMCFG_TESTLOCK_KEY | ~(MEMCFG_SECT_NUM_MASK & memSections));\n            break;\n\n        default:\n            //\n            // Do nothing. Invalid memSections. Make sure you aren't OR-ing\n            // values for two different types of RAM.\n            //\n            break;\n    }\n\n    EDIS;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D) || ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS) || ((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_ROM) || (memSections == MEMCFG_SECT_ALL)); // // Clear the bit that blocks writes to the sections' configuration // registers. // EALLOW; switch(memSections & MEMCFG_SECT_TYPE_MASK) { case MEMCFG_SECT_TYPE_D: HWREG(MEMCFG_BASE + MEMCFG_O_DXRAMTEST_LOCK) = MEMCFG_TESTLOCK_KEY | (HWREG(MEMCFG_BASE + MEMCFG_O_DXRAMTEST_LOCK) & ~(MEMCFG_SECT_NUM_MASK & memSections)); break; case MEMCFG_SECT_TYPE_LS: HWREG(MEMCFG_BASE + MEMCFG_O_LSXRAMTEST_LOCK) = MEMCFG_TESTLOCK_KEY | (HWREG(MEMCFG_BASE + MEMCFG_O_LSXRAMTEST_LOCK) & ~(MEMCFG_SECT_NUM_MASK & memSections)); break; case MEMCFG_SECT_TYPE_ROM: HWREG(MEMCFG_BASE + MEMCFG_O_ROM_LOCK) = (MEMCFG_TESTLOCK_KEY | (HWREG(MEMCFG_BASE + MEMCFG_O_ROM_LOCK) & ~(MEMCFG_SECT_NUM_MASK & memSections))); break; case MEMCFG_SECT_TYPE_MASK: // // Unlock configuration for all sections. // HWREG(MEMCFG_BASE + MEMCFG_O_DXRAMTEST_LOCK) = HWREG(MEMCFG_BASE + MEMCFG_O_DXRAMTEST_LOCK) | (MEMCFG_TESTLOCK_KEY | ~(MEMCFG_SECT_NUM_MASK & memSections)); HWREG(MEMCFG_BASE + MEMCFG_O_LSXRAMTEST_LOCK) = HWREG(MEMCFG_BASE + MEMCFG_O_LSXRAMTEST_LOCK) | (MEMCFG_TESTLOCK_KEY | ~(MEMCFG_SECT_NUM_MASK & memSections)); HWREG(MEMCFG_BASE + MEMCFG_O_ROM_LOCK) = HWREG(MEMCFG_BASE + MEMCFG_O_ROM_LOCK) | (MEMCFG_TESTLOCK_KEY | ~(MEMCFG_SECT_NUM_MASK & memSections)); break; default: // // Do nothing. Invalid memSections. Make sure you aren't OR-ing // values for two different types of RAM. // break; } EDIS; }",
+      "registersUsed": [
+        "DXRAMTEST_LOCK",
+        "LSXRAMTEST_LOCK",
+        "ROM_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "DXRAMTEST_LOCK",
+        "LSXRAMTEST_LOCK",
+        "ROM_LOCK"
+      ]
+    },
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_setTestMode",
+      "functionArgs": [
+        "memSection",
+        "testMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "MemCfg_TestMode"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t shiftVal = 0U;\n    uint32_t maskVal;\n    uint32_t regVal;\n    uint32_t sectionNum;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(((memSection & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D)    ||\n           ((memSection & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS)   ||\n           ((memSection & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_ROM));\n\n    //\n    // Calculate how far the protect mode value needs to be shifted. Each\n    // section number is represented by a bit in the lower word of memSection\n    // and 2 bits in the corresponding TEST register.\n    //\n    sectionNum = memSection & MEMCFG_SECT_NUM_MASK;\n\n    while(sectionNum != 1U)\n    {\n        sectionNum = sectionNum >> 1U;\n        shiftVal += 2U;\n    }\n\n    maskVal = (uint32_t)MEMCFG_XTEST_M << shiftVal;\n    regVal = (uint32_t)testMode << shiftVal;\n\n    //\n    // Write the test mode into the appropriate field\n    //\n    EALLOW;\n\n    switch(memSection & MEMCFG_SECT_TYPE_MASK)\n    {\n        case MEMCFG_SECT_TYPE_D:\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXTEST) &= ~maskVal;\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXTEST) |= regVal;\n            break;\n\n        case MEMCFG_SECT_TYPE_LS:\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXTEST) &= ~maskVal;\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXTEST) |= regVal;\n            break;\n\n        case MEMCFG_SECT_TYPE_ROM:\n            HWREG(MEMCFG_BASE + MEMCFG_O_ROM_TEST) &= ~maskVal;\n            HWREG(MEMCFG_BASE + MEMCFG_O_ROM_TEST) |= regVal;\n            break;\n\n        default:\n            //\n            // Do nothing. Invalid memSection.\n            //\n            break;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t shiftVal = 0U; uint32_t maskVal; uint32_t regVal; uint32_t sectionNum; // // Check the arguments. // ASSERT(((memSection & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D) || ((memSection & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS) || ((memSection & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_ROM)); // // Calculate how far the protect mode value needs to be shifted. Each // section number is represented by a bit in the lower word of memSection // and 2 bits in the corresponding TEST register. // sectionNum = memSection & MEMCFG_SECT_NUM_MASK; while(sectionNum != 1U) { sectionNum = sectionNum >> 1U; shiftVal += 2U; } maskVal = (uint32_t)MEMCFG_XTEST_M << shiftVal; regVal = (uint32_t)testMode << shiftVal; // // Write the test mode into the appropriate field // EALLOW; switch(memSection & MEMCFG_SECT_TYPE_MASK) { case MEMCFG_SECT_TYPE_D: HWREG(MEMCFG_BASE + MEMCFG_O_DXTEST) &= ~maskVal; HWREG(MEMCFG_BASE + MEMCFG_O_DXTEST) |= regVal; break; case MEMCFG_SECT_TYPE_LS: HWREG(MEMCFG_BASE + MEMCFG_O_LSXTEST) &= ~maskVal; HWREG(MEMCFG_BASE + MEMCFG_O_LSXTEST) |= regVal; break; case MEMCFG_SECT_TYPE_ROM: HWREG(MEMCFG_BASE + MEMCFG_O_ROM_TEST) &= ~maskVal; HWREG(MEMCFG_BASE + MEMCFG_O_ROM_TEST) |= regVal; break; default: // // Do nothing. Invalid memSection. // break; } EDIS; }",
+      "registersUsed": [
+        "DXTEST",
+        "LSXTEST",
+        "ROM_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "DXTEST",
+        "LSXTEST",
+        "ROM_TEST"
+      ]
+    },
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_initSections",
+      "functionArgs": [
+        "ramSections"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(((ramSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D)   ||\n           ((ramSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS)  ||\n           (ramSections == MEMCFG_SECT_ALL));\n\n    //\n    // Set the bit in the various initialization registers that starts\n    // initialization.\n    //\n    EALLOW;\n\n    switch(ramSections & MEMCFG_SECT_TYPE_MASK)\n    {\n        case MEMCFG_SECT_TYPE_D:\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXINIT)   |= MEMCFG_SECT_NUM_MASK &\n                                                      ramSections;\n            break;\n\n        case MEMCFG_SECT_TYPE_LS:\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXINIT)  |= MEMCFG_SECT_NUM_MASK &\n                                                      ramSections;\n            break;\n\n\n        case MEMCFG_SECT_TYPE_MASK:\n            //\n            // Initialize all sections.\n            //\n            HWREG(MEMCFG_BASE + MEMCFG_O_DXINIT)   |= MEMCFG_SECT_NUM_MASK &\n                                                      MEMCFG_SECT_DX_ALL;\n            HWREG(MEMCFG_BASE + MEMCFG_O_LSXINIT)  |= MEMCFG_SECT_NUM_MASK &\n                                                      MEMCFG_SECT_LSX_ALL;\n            break;\n\n        default:\n            //\n            // Do nothing. Invalid ramSections. Make sure you aren't OR-ing\n            // values for two different types of RAM.\n            //\n            break;\n    }\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(((ramSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D) || ((ramSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS) || (ramSections == MEMCFG_SECT_ALL)); // // Set the bit in the various initialization registers that starts // initialization. // EALLOW; switch(ramSections & MEMCFG_SECT_TYPE_MASK) { case MEMCFG_SECT_TYPE_D: HWREG(MEMCFG_BASE + MEMCFG_O_DXINIT) |= MEMCFG_SECT_NUM_MASK & ramSections; break; case MEMCFG_SECT_TYPE_LS: HWREG(MEMCFG_BASE + MEMCFG_O_LSXINIT) |= MEMCFG_SECT_NUM_MASK & ramSections; break; case MEMCFG_SECT_TYPE_MASK: // // Initialize all sections. // HWREG(MEMCFG_BASE + MEMCFG_O_DXINIT) |= MEMCFG_SECT_NUM_MASK & MEMCFG_SECT_DX_ALL; HWREG(MEMCFG_BASE + MEMCFG_O_LSXINIT) |= MEMCFG_SECT_NUM_MASK & MEMCFG_SECT_LSX_ALL; break; default: // // Do nothing. Invalid ramSections. Make sure you aren't OR-ing // values for two different types of RAM. // break; } EDIS; }",
+      "registersUsed": [
+        "DXINIT",
+        "LSXINIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "DXINIT",
+        "LSXINIT"
+      ]
+    },
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_getInitStatus",
+      "functionArgs": [
+        "ramSections"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    uint32_t status;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(((ramSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D)   ||\n           ((ramSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS)  ||\n           (ramSections == MEMCFG_SECT_ALL));\n\n    //\n    // Read registers containing the initialization complete status.\n    //\n    switch(ramSections & MEMCFG_SECT_TYPE_MASK)\n    {\n        case MEMCFG_SECT_TYPE_D:\n            status = HWREG(MEMCFG_BASE + MEMCFG_O_DXINITDONE);\n            break;\n\n        case MEMCFG_SECT_TYPE_LS:\n            status = HWREG(MEMCFG_BASE + MEMCFG_O_LSXINITDONE);\n            break;\n\n\n        case MEMCFG_SECT_TYPE_MASK:\n            //\n            // Return the overall status.\n            //\n            if((HWREG(MEMCFG_BASE + MEMCFG_O_DXINITDONE) ==\n                (MEMCFG_SECT_DX_ALL & MEMCFG_SECT_NUM_MASK)) &&\n               (HWREG(MEMCFG_BASE + MEMCFG_O_LSXINITDONE) ==\n                (MEMCFG_SECT_LSX_ALL & MEMCFG_SECT_NUM_MASK)))\n            {\n                status = MEMCFG_SECT_NUM_MASK;\n            }\n            else\n            {\n                status = 0U;\n            }\n            break;\n\n        default:\n            //\n            // Invalid ramSections. Make sure you aren't OR-ing values for two\n            // different types of RAM.\n            //\n            status = 0U;\n            break;\n    }\n\n    return((ramSections & status) == (ramSections & MEMCFG_SECT_NUM_MASK));\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t status; // // Check the arguments. // ASSERT(((ramSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_D) || ((ramSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_LS) || (ramSections == MEMCFG_SECT_ALL)); // // Read registers containing the initialization complete status. // switch(ramSections & MEMCFG_SECT_TYPE_MASK) { case MEMCFG_SECT_TYPE_D: status = HWREG(MEMCFG_BASE + MEMCFG_O_DXINITDONE); break; case MEMCFG_SECT_TYPE_LS: status = HWREG(MEMCFG_BASE + MEMCFG_O_LSXINITDONE); break; case MEMCFG_SECT_TYPE_MASK: // // Return the overall status. // if((HWREG(MEMCFG_BASE + MEMCFG_O_DXINITDONE) == (MEMCFG_SECT_DX_ALL & MEMCFG_SECT_NUM_MASK)) && (HWREG(MEMCFG_BASE + MEMCFG_O_LSXINITDONE) == (MEMCFG_SECT_LSX_ALL & MEMCFG_SECT_NUM_MASK))) { status = MEMCFG_SECT_NUM_MASK; } else { status = 0U; } break; default: // // Invalid ramSections. Make sure you aren't OR-ing values for two // different types of RAM. // status = 0U; break; } return((ramSections & status) == (ramSections & MEMCFG_SECT_NUM_MASK)); }",
+      "registersUsed": [
+        "DXINIT",
+        "DXINITDONE",
+        "LSXINIT",
+        "LSXINITDONE"
+      ],
+      "registersUsedMatchingBifield": [
+        "DXINIT",
+        "DXINITDONE",
+        "LSXINIT",
+        "LSXINITDONE"
+      ]
+    },
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_getViolationAddress",
+      "functionArgs": [
+        "intFlag"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    uint32_t address = 0;\n\n    if(intFlag == MEMCFG_MVIOL_CPUFETCH)\n    {\n        address = HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MCPUFAVADDR);\n    }\n    else if(intFlag == MEMCFG_MVIOL_CPUWRITE)\n    {\n        address = HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MCPUWRAVADDR);\n    }\n    else\n    {\n        ASSERT((bool)false);\n    }\n    return(address);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address = 0; if(intFlag == MEMCFG_MVIOL_CPUFETCH) { address = HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MCPUFAVADDR); } else if(intFlag == MEMCFG_MVIOL_CPUWRITE) { address = HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MCPUWRAVADDR); } else { ASSERT((bool)false); } return(address); }",
+      "registersUsed": [
+        "MCPUFAVADDR",
+        "MCPUWRAVADDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MCPUFAVADDR",
+        "MCPUWRAVADDR"
+      ]
+    },
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_getCorrErrorAddress",
+      "functionArgs": [
+        "stsFlag"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    if(stsFlag != MEMCFG_CERR_CPUREAD)\n    {\n        //\n        // Currently, the only correctable error address that can be read\n        // from a register is one for a CPU read error (MEMCFG_CERR_CPUREAD).\n        // For the sake of keeping this function portable to possible future\n        // devices with other error types, it still takes a stsFlag parameter.\n        //\n        ASSERT((bool)false);\n    }\n\n    //\n    // Read and return the error address.\n    //\n    return(HWREG(MEMORYERROR_BASE + MEMCFG_O_CCPUREADDR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // if(stsFlag != MEMCFG_CERR_CPUREAD) { // // Currently, the only correctable error address that can be read // from a register is one for a CPU read error (MEMCFG_CERR_CPUREAD). // For the sake of keeping this function portable to possible future // devices with other error types, it still takes a stsFlag parameter. // ASSERT((bool)false); } // // Read and return the error address. // return(HWREG(MEMORYERROR_BASE + MEMCFG_O_CCPUREADDR)); }",
+      "registersUsed": [
+        "CCPUREADDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CCPUREADDR"
+      ]
+    },
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_getUncorrErrorAddress",
+      "functionArgs": [
+        "stsFlag"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    if(stsFlag != MEMCFG_UCERR_CPUREAD)\n    {\n        //\n        // Currently, the only correctable error address that can be read\n        // from a register is one for a CPU read error (MEMCFG_UCERR_CPUREAD).\n        // For the sake of keeping this function portable to possible future\n        // devices with other error types, it still takes a stsFlag parameter.\n        //\n        ASSERT((bool)false);\n    }\n\n    //\n    // Read and return the error address.\n    //\n    return(HWREG(MEMORYERROR_BASE + MEMCFG_O_UCCPUREADDR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // if(stsFlag != MEMCFG_UCERR_CPUREAD) { // // Currently, the only correctable error address that can be read // from a register is one for a CPU read error (MEMCFG_UCERR_CPUREAD). // For the sake of keeping this function portable to possible future // devices with other error types, it still takes a stsFlag parameter. // ASSERT((bool)false); } // // Read and return the error address. // return(HWREG(MEMORYERROR_BASE + MEMCFG_O_UCCPUREADDR)); }",
+      "registersUsed": [
+        "UCCPUREADDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "UCCPUREADDR"
+      ]
+    },
+    {
+      "file": "memcfg.c",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_forceMemError",
+      "functionArgs": [
+        "memSections"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_ROM) ||\n           (memSections == MEMCFG_SECT_ALL));\n\n    //\n    // Forces error in the selected memory.\n    //\n    switch(memSections & MEMCFG_SECT_TYPE_MASK)\n    {\n        case MEMCFG_SECT_TYPE_ROM:\n            HWREG(MEMCFG_BASE + MEMCFG_O_ROM_FORCE_ERROR)       |=\n                                          (MEMCFG_SECT_NUM_MASK & memSections);\n            break;\n\n        case MEMCFG_SECT_TYPE_MASK:\n            HWREG(MEMCFG_BASE + MEMCFG_O_ROM_FORCE_ERROR)       |=\n                                          (MEMCFG_SECT_NUM_MASK & memSections);\n            break;\n\n        default:\n            //\n            // Do nothing. Invalid memory.\n            //\n            break;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(((memSections & MEMCFG_SECT_TYPE_MASK) == MEMCFG_SECT_TYPE_ROM) || (memSections == MEMCFG_SECT_ALL)); // // Forces error in the selected memory. // switch(memSections & MEMCFG_SECT_TYPE_MASK) { case MEMCFG_SECT_TYPE_ROM: HWREG(MEMCFG_BASE + MEMCFG_O_ROM_FORCE_ERROR) |= (MEMCFG_SECT_NUM_MASK & memSections); break; case MEMCFG_SECT_TYPE_MASK: HWREG(MEMCFG_BASE + MEMCFG_O_ROM_FORCE_ERROR) |= (MEMCFG_SECT_NUM_MASK & memSections); break; default: // // Do nothing. Invalid memory. // break; } }",
+      "registersUsed": [
+        "ROM_FORCE_ERROR"
+      ],
+      "registersUsedMatchingBifield": [
+        "ROM_FORCE_ERROR"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_enableViolationInterrupt",
+      "functionArgs": [
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Enable the specified interrupts.\n    //\n    EALLOW;\n\n    HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MAVINTEN) |=\n        (intFlags & MEMCFG_MVIOL_MASK) >> MEMCFG_MVIOL_SHIFT;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Enable the specified interrupts. // EALLOW; HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MAVINTEN) |= (intFlags & MEMCFG_MVIOL_MASK) >> MEMCFG_MVIOL_SHIFT; EDIS; }",
+      "registersUsed": [
+        "MAVINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "MAVINTEN"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_disableViolationInterrupt",
+      "functionArgs": [
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Disable the specified interrupts.\n    //\n    EALLOW;\n\n    HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MAVINTEN) &=\n        ~((intFlags & MEMCFG_MVIOL_MASK) >> MEMCFG_MVIOL_SHIFT);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Disable the specified interrupts. // EALLOW; HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MAVINTEN) &= ~((intFlags & MEMCFG_MVIOL_MASK) >> MEMCFG_MVIOL_SHIFT); EDIS; }",
+      "registersUsed": [
+        "MAVINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "MAVINTEN"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_getViolationInterruptStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    uint32_t status;\n\n    //\n    // Read and return RAM access status flags.\n    //\n   status = HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MAVFLG) <<\n            MEMCFG_MVIOL_SHIFT;\n\n    return(status);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t status; // // Read and return RAM access status flags. // status = HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MAVFLG) << MEMCFG_MVIOL_SHIFT; return(status); }",
+      "registersUsed": [
+        "MAVFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "MAVFLG"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_forceViolationInterrupt",
+      "functionArgs": [
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Shift and mask the flags appropriately and write them to the\n    // corresponding SET register.\n    //\n    EALLOW;\n\n    HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MAVSET) =\n        (intFlags & MEMCFG_MVIOL_MASK) >> MEMCFG_MVIOL_SHIFT;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Shift and mask the flags appropriately and write them to the // corresponding SET register. // EALLOW; HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MAVSET) = (intFlags & MEMCFG_MVIOL_MASK) >> MEMCFG_MVIOL_SHIFT; EDIS; }",
+      "registersUsed": [
+        "MAVSET"
+      ],
+      "registersUsedMatchingBifield": [
+        "MAVSET"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_clearViolationInterruptStatus",
+      "functionArgs": [
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear the requested access violation flags.\n    //\n    EALLOW;\n\n    HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MAVCLR) |=\n        (intFlags & MEMCFG_MVIOL_MASK) >> MEMCFG_MVIOL_SHIFT;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the requested access violation flags. // EALLOW; HWREG(ACCESSPROTECTION_BASE + MEMCFG_O_MAVCLR) |= (intFlags & MEMCFG_MVIOL_MASK) >> MEMCFG_MVIOL_SHIFT; EDIS; }",
+      "registersUsed": [
+        "MAVCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MAVCLR"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_setCorrErrorThreshold",
+      "functionArgs": [
+        "threshold"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write the threshold value to the appropriate register.\n    //\n    EALLOW;\n\n    HWREG(MEMORYERROR_BASE + MEMCFG_O_CERRTHRES) = threshold;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write the threshold value to the appropriate register. // EALLOW; HWREG(MEMORYERROR_BASE + MEMCFG_O_CERRTHRES) = threshold; EDIS; }",
+      "registersUsed": [
+        "CERRTHRES"
+      ],
+      "registersUsedMatchingBifield": [
+        "CERRTHRES"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_getCorrErrorCount",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Read and return the number of errors that have occurred.\n    //\n    return(HWREG(MEMORYERROR_BASE + MEMCFG_O_CERRCNT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return the number of errors that have occurred. // return(HWREG(MEMORYERROR_BASE + MEMCFG_O_CERRCNT)); }",
+      "registersUsed": [
+        "CERRCNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "CERRCNT"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_enableCorrErrorInterrupt",
+      "functionArgs": [
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Enable the specified interrupts.\n    //\n    EALLOW;\n\n    HWREG(MEMORYERROR_BASE + MEMCFG_O_CEINTEN) |= intFlags;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Enable the specified interrupts. // EALLOW; HWREG(MEMORYERROR_BASE + MEMCFG_O_CEINTEN) |= intFlags; EDIS; }",
+      "registersUsed": [
+        "CEINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "CEINTEN"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_disableCorrErrorInterrupt",
+      "functionArgs": [
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Disable the specified interrupts.\n    //\n    EALLOW;\n\n    HWREG(MEMORYERROR_BASE + MEMCFG_O_CEINTEN) &= ~(intFlags);\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Disable the specified interrupts. // EALLOW; HWREG(MEMORYERROR_BASE + MEMCFG_O_CEINTEN) &= ~(intFlags); EDIS; }",
+      "registersUsed": [
+        "CEINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "CEINTEN"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_getCorrErrorInterruptStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Read and return correctable error interrupt flags.\n    //\n    return(HWREG(MEMORYERROR_BASE + MEMCFG_O_CEINTFLG));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return correctable error interrupt flags. // return(HWREG(MEMORYERROR_BASE + MEMCFG_O_CEINTFLG)); }",
+      "registersUsed": [
+        "CEINTFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "CEINTFLG"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_forceCorrErrorInterrupt",
+      "functionArgs": [
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write the flags to the appropriate SET register.\n    //\n    EALLOW;\n\n    HWREG(MEMORYERROR_BASE + MEMCFG_O_CEINTSET) = intFlags;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write the flags to the appropriate SET register. // EALLOW; HWREG(MEMORYERROR_BASE + MEMCFG_O_CEINTSET) = intFlags; EDIS; }",
+      "registersUsed": [
+        "CEINTSET"
+      ],
+      "registersUsedMatchingBifield": [
+        "CEINTSET"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_clearCorrErrorInterruptStatus",
+      "functionArgs": [
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear the requested flags.\n    //\n    EALLOW;\n\n    HWREG(MEMORYERROR_BASE + MEMCFG_O_CEINTCLR) |= intFlags;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the requested flags. // EALLOW; HWREG(MEMORYERROR_BASE + MEMCFG_O_CEINTCLR) |= intFlags; EDIS; }",
+      "registersUsed": [
+        "CEINTCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CEINTCLR"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_getCorrErrorStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Read and return RAM error status flags.\n    //\n    return(HWREG(MEMORYERROR_BASE + MEMCFG_O_CERRFLG));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return RAM error status flags. // return(HWREG(MEMORYERROR_BASE + MEMCFG_O_CERRFLG)); }",
+      "registersUsed": [
+        "CERRFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "CERRFLG"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_getUncorrErrorStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Read and return RAM error status flags.\n    //\n    return(HWREG(MEMORYERROR_BASE + MEMCFG_O_UCERRFLG));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Read and return RAM error status flags. // return(HWREG(MEMORYERROR_BASE + MEMCFG_O_UCERRFLG)); }",
+      "registersUsed": [
+        "UCERRFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "UCERRFLG"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_forceCorrErrorStatus",
+      "functionArgs": [
+        "stsFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write the flags to the appropriate SET register.\n    //\n    EALLOW;\n\n    HWREG(MEMORYERROR_BASE + MEMCFG_O_CERRSET) = stsFlags;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write the flags to the appropriate SET register. // EALLOW; HWREG(MEMORYERROR_BASE + MEMCFG_O_CERRSET) = stsFlags; EDIS; }",
+      "registersUsed": [
+        "CERRSET"
+      ],
+      "registersUsedMatchingBifield": [
+        "CERRSET"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_forceUncorrErrorStatus",
+      "functionArgs": [
+        "stsFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Write the flags to the appropriate SET register.\n    //\n    EALLOW;\n\n    HWREG(MEMORYERROR_BASE + MEMCFG_O_UCERRSET) = stsFlags;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write the flags to the appropriate SET register. // EALLOW; HWREG(MEMORYERROR_BASE + MEMCFG_O_UCERRSET) = stsFlags; EDIS; }",
+      "registersUsed": [
+        "UCERRSET"
+      ],
+      "registersUsedMatchingBifield": [
+        "UCERRSET"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_clearCorrErrorStatus",
+      "functionArgs": [
+        "stsFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear the requested flags.\n    //\n    EALLOW;\n\n    HWREG(MEMORYERROR_BASE + MEMCFG_O_CERRCLR) |= stsFlags;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the requested flags. // EALLOW; HWREG(MEMORYERROR_BASE + MEMCFG_O_CERRCLR) |= stsFlags; EDIS; }",
+      "registersUsed": [
+        "CERRCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CERRCLR"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_clearUncorrErrorStatus",
+      "functionArgs": [
+        "stsFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear the requested flags.\n    //\n    EALLOW;\n\n    HWREG(MEMORYERROR_BASE + MEMCFG_O_UCERRCLR) |= stsFlags;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the requested flags. // EALLOW; HWREG(MEMORYERROR_BASE + MEMCFG_O_UCERRCLR) |= stsFlags; EDIS; }",
+      "registersUsed": [
+        "UCERRCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "UCERRCLR"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_getDiagErrorStatus",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Returns diag error status.\n    //\n    return(HWREG(TESTERROR_BASE + MEMCFG_O_CPU_RAM_TEST_ERROR_STS));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Returns diag error status. // return(HWREG(TESTERROR_BASE + MEMCFG_O_CPU_RAM_TEST_ERROR_STS)); }",
+      "registersUsed": [
+        "CPU_RAM_TEST_ERROR_STS"
+      ],
+      "registersUsedMatchingBifield": [
+        "CPU_RAM_TEST_ERROR_STS"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_clearDiagErrorStatus",
+      "functionArgs": [
+        "stsFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Clear diag error status.\n    //\n    HWREG(TESTERROR_BASE + MEMCFG_O_CPU_RAM_TEST_ERROR_STS_CLR ) |= stsFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear diag error status. // HWREG(TESTERROR_BASE + MEMCFG_O_CPU_RAM_TEST_ERROR_STS_CLR ) |= stsFlags; }",
+      "registersUsed": [
+        "CPU_RAM_TEST_ERROR_STS",
+        "CPU_RAM_TEST_ERROR_STS_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CPU_RAM_TEST_ERROR_STS",
+        "CPU_RAM_TEST_ERROR_STS_CLR"
+      ]
+    },
+    {
+      "file": "memcfg.h",
+      "peripheral": "memcfg",
+      "functionName": "MemCfg_getDiagErrorAddress",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Return diag error address.\n    //\n    return(HWREG(TESTERROR_BASE + MEMCFG_O_CPU_RAM_TEST_ERROR_ADDR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Return diag error address. // return(HWREG(TESTERROR_BASE + MEMCFG_O_CPU_RAM_TEST_ERROR_ADDR)); }",
+      "registersUsed": [
+        "CPU_RAM_TEST_ERROR_ADDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CPU_RAM_TEST_ERROR_ADDR"
+      ]
+    }
+  ]
+}

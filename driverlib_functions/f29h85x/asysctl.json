@@ -1,0 +1,533 @@
+{
+  "name": "asysctl",
+  "functions": [
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_enableTemperatureSensor",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_enableTemperatureSensor\"))) static inline void",
+      "functionContent": "{\n    //\n    // Set the temperature sensor enable bit.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_TSNSCTL) |= ASYSCTL_TSNSCTL_ENABLE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the temperature sensor enable bit. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_TSNSCTL) |= ASYSCTL_TSNSCTL_ENABLE; }",
+      "registersUsed": [
+        "TSNSCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TSNSCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_disableTemperatureSensor",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_disableTemperatureSensor\"))) static inline void",
+      "functionContent": "{\n    //\n    // Clear the temperature sensor enable bit.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_TSNSCTL) &= (uint16_t)(~(ASYSCTL_TSNSCTL_ENABLE));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the temperature sensor enable bit. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_TSNSCTL) &= (uint16_t)(~(ASYSCTL_TSNSCTL_ENABLE)); }",
+      "registersUsed": [
+        "TSNSCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TSNSCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockTemperatureSensor",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_lockTemperatureSensor\"))) static inline void",
+      "functionContent": "{\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_TSNSCTL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_TSNSCTL; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_setVREF",
+      "functionArgs": [
+        "vref",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "ASysCtl_Vref",
+        "ASysCtl_VrefMode"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_setVREF\"))) static inline void",
+      "functionContent": "{\n    uint16_t mask = ~(0x101U << (uint16_t)vref);\n\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) =\n                (HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) & mask) |\n                (uint16_t)mode << (uint16_t)vref;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t mask = ~(0x101U << (uint16_t)vref); HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) = (HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_ANAREFCTL) & mask) | (uint16_t)mode << (uint16_t)vref; }",
+      "registersUsed": [
+        "ANAREFCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ANAREFCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockANAREF",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_lockANAREF\"))) static inline void",
+      "functionContent": "{\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_ANAREFCTL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_ANAREFCTL; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_enableVMONMask",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_enableVMONMask\"))) static inline void",
+      "functionContent": "{\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_VREGCTL) |= ASYSCTL_VREGCTL_ENMASK;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_VREGCTL) |= ASYSCTL_VREGCTL_ENMASK; }",
+      "registersUsed": [
+        "VREGCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "VREGCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_powerDownVREG",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_powerDownVREG\"))) static inline void",
+      "functionContent": "{\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_VREGCTL) |= ASYSCTL_VREGCTL_PWRDNVREG;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_VREGCTL) |= ASYSCTL_VREGCTL_PWRDNVREG; }",
+      "registersUsed": [
+        "VREGCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "VREGCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockVREG",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_lockVREG\"))) static inline void",
+      "functionContent": "{\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_VREGCTL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_VREGCTL; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_enableBORL",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_enableBORL\"))) static inline void",
+      "functionContent": "{\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_VMONCTL) &= (uint16_t)(~ASYSCTL_VMONCTL_BORLVMONDIS);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_VMONCTL) &= (uint16_t)(~ASYSCTL_VMONCTL_BORLVMONDIS); }",
+      "registersUsed": [
+        "VMONCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "VMONCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_disableBORL",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_disableBORL\"))) static inline void",
+      "functionContent": "{\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_VMONCTL) |= ASYSCTL_VMONCTL_BORLVMONDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_VMONCTL) |= ASYSCTL_VMONCTL_BORLVMONDIS; }",
+      "registersUsed": [
+        "VMONCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "VMONCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockVMON",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_lockVMON\"))) static inline void",
+      "functionContent": "{\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_VMONCTL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_VMONCTL; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_configCMPMux",
+      "functionArgs": [
+        "selectMux"
+      ],
+      "functionArgsTypes": [
+        "AsysCtl_CMPselect"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_configCMPMux\"))) static inline void",
+      "functionContent": "{\n    uint32_t value, offset, shift;\n    uint32_t mask = 0x000000FF;\n    uint32_t temp = (uint32_t)selectMux;\n    uint32_t bitMask;\n\n    value  = temp & mask;\n    shift  = (temp >> 8U) & mask;\n    offset = (temp >> 16U) & mask;\n\n    if(selectMux < ASYSCTL_CMP1_HN_0)\n    {\n        bitMask = (uint32_t)0x7U << shift;\n    }\n    else\n    {\n        bitMask = (uint32_t)0x1U << shift;\n    }\n\n    HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHPMXSEL + offset) =\n    (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHPMXSEL + offset) & ~bitMask) |\n    (value << shift);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t value, offset, shift; uint32_t mask = 0x000000FF; uint32_t temp = (uint32_t)selectMux; uint32_t bitMask; value = temp & mask; shift = (temp >> 8U) & mask; offset = (temp >> 16U) & mask; if(selectMux < ASYSCTL_CMP1_HN_0) { bitMask = (uint32_t)0x7U << shift; } else { bitMask = (uint32_t)0x1U << shift; } HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHPMXSEL + offset) = (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_CMPHPMXSEL + offset) & ~bitMask) | (value << shift); }",
+      "registersUsed": [
+        "CMPHPMXSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CMPHPMXSEL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockCMPHPMux",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_lockCMPHPMux\"))) static inline void",
+      "functionContent": "{\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPHPMXSEL |\n                                                  ASYSCTL_LOCK_CMPHPMXSEL1;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPHPMXSEL | ASYSCTL_LOCK_CMPHPMXSEL1; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockCMPLPMux",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_lockCMPLPMux\"))) static inline void",
+      "functionContent": "{\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPLPMXSEL |\n                                                  ASYSCTL_LOCK_CMPLPMXSEL1;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPLPMXSEL | ASYSCTL_LOCK_CMPLPMXSEL1; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockCMPHNMux",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_lockCMPHNMux\"))) static inline void",
+      "functionContent": "{\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPHNMXSEL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPHNMXSEL; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockCMPLNMux",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_lockCMPLNMux\"))) static inline void",
+      "functionContent": "{\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPLNMXSEL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_LOCK) |= ASYSCTL_LOCK_CMPLNMXSEL; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_selectInternalTestNode",
+      "functionArgs": [
+        "select"
+      ],
+      "functionArgsTypes": [
+        "ASysCtl_InternalTestNode"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_selectInternalTestNode\"))) static inline void",
+      "functionContent": "{\n    HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) =\n            (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) &\n             ~ASYSCTL_INTERNALTESTCTL_TESTSEL_M) |\n            (0xA5A5UL << ASYSCTL_INTERNALTESTCTL_KEY_S) |\n            ((uint32_t)select << ASYSCTL_INTERNALTESTCTL_TESTSEL_S);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) = (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) & ~ASYSCTL_INTERNALTESTCTL_TESTSEL_M) | (0xA5A5UL << ASYSCTL_INTERNALTESTCTL_KEY_S) | ((uint32_t)select << ASYSCTL_INTERNALTESTCTL_TESTSEL_S); }",
+      "registersUsed": [
+        "INTERNALTESTCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTERNALTESTCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_setIOBufferDrive",
+      "functionArgs": [
+        "pin",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "ASysCtl_IOBuffer",
+        "ASysCtl_IOBufferDrive"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_setIOBufferDrive\"))) static inline void",
+      "functionContent": "{\n    HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_IODRVSEL) =\n            (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_IODRVSEL) & ~(1U << (uint32_t)pin)) |\n            ((uint32_t)config << (uint32_t)pin);\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_IODRVSEL) = (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_IODRVSEL) & ~(1U << (uint32_t)pin)) | ((uint32_t)config << (uint32_t)pin); }",
+      "registersUsed": [
+        "IODRVSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "IODRVSEL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_setIOBufferMode",
+      "functionArgs": [
+        "pin",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "ASysCtl_IOBuffer",
+        "ASysCtl_IOBufferMode"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_setIOBufferMode\"))) static inline void",
+      "functionContent": "{\n\n    HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_IOMODESEL) =\n            (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_IOMODESEL) & ~(1U << (uint32_t)pin)) |\n            ((uint32_t)config << (uint32_t)pin);\n\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_IOMODESEL) = (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_IOMODESEL) & ~(1U << (uint32_t)pin)) | ((uint32_t)config << (uint32_t)pin); }",
+      "registersUsed": [
+        "IOMODESEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "IOMODESEL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_setAGPIOFilter",
+      "functionArgs": [
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_setAGPIOFilter\"))) static inline void",
+      "functionContent": "{\n    ASSERT(config <= 3U);\n\n\n    HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_AGPIOFILTER) =\n            (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_AGPIOFILTER) &\n            ~ASYSCTL_AGPIOFILTER_FILTER_M) |\n            (config << ASYSCTL_AGPIOFILTER_FILTER_S);\n\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(config <= 3U); HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_AGPIOFILTER) = (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_AGPIOFILTER) & ~ASYSCTL_AGPIOFILTER_FILTER_M) | (config << ASYSCTL_AGPIOFILTER_FILTER_S); }",
+      "registersUsed": [
+        "AGPIOFILTER"
+      ],
+      "registersUsedMatchingBifield": [
+        "AGPIOFILTER"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockAGPIOFilter",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_lockAGPIOFilter\"))) static inline void",
+      "functionContent": "{\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CONFIGLOCK) |=\n                                            ASYSCTL_CONFIGLOCK_AGPIOFILTER;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CONFIGLOCK) |= ASYSCTL_CONFIGLOCK_AGPIOFILTER; }",
+      "registersUsed": [
+        "CONFIGLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONFIGLOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "ASysCtl_lockAGPIOCtrl",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".text.link2.ASysCtl_lockAGPIOCtrl\"))) static inline void",
+      "functionContent": "{\n    //\n    // Write a 1 to the lock bit in the LOCK register.\n    //\n    HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CONFIGLOCK) |=\n                                            ASYSCTL_CONFIGLOCK_AGPIOCTRL;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Write a 1 to the lock bit in the LOCK register. // HWREGH(ANALOGSUBSYS_BASE + ASYSCTL_O_CONFIGLOCK) |= ASYSCTL_CONFIGLOCK_AGPIOCTRL; }",
+      "registersUsed": [
+        "CONFIGLOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "CONFIGLOCK"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "AsysCtl_configADCGlobalSOC",
+      "functionArgs": [
+        "adcSelect"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.AsysCtl_configADCGlobalSOC\"))) static inline void",
+      "functionContent": "{\n    HWREG(ADCGLOBAL_BASE + ASYSCTL_O_ADCSOCFRCGBSEL) = adcSelect;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ADCGLOBAL_BASE + ASYSCTL_O_ADCSOCFRCGBSEL) = adcSelect; }",
+      "registersUsed": [
+        "ADCSOCFRCGB",
+        "ADCSOCFRCGBSEL"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCSOCFRCGB",
+        "ADCSOCFRCGBSEL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "AsysCtl_forceADCGlobalSOC",
+      "functionArgs": [
+        "socSelect"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.AsysCtl_forceADCGlobalSOC\"))) static inline void",
+      "functionContent": "{\n    HWREG(ADCGLOBAL_BASE + ASYSCTL_O_ADCSOCFRCGB) = socSelect;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(ADCGLOBAL_BASE + ASYSCTL_O_ADCSOCFRCGB) = socSelect; }",
+      "registersUsed": [
+        "ADCSOCFRCGB"
+      ],
+      "registersUsedMatchingBifield": [
+        "ADCSOCFRCGB"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "AsysCtl_enableADCDACLoopback",
+      "functionArgs": [
+        "testNode"
+      ],
+      "functionArgsTypes": [
+        "ASysCtl_InternalTestNode"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.AsysCtl_enableADCDACLoopback\"))) static inline void",
+      "functionContent": "{\n    ASSERT(((uint32_t)testNode >= 5U) && ((uint32_t)testNode <= 28U));\n\n    HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) =\n            (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) &\n            ~ASYSCTL_INTERNALTESTCTL_TESTSEL_M) |\n            (0xA5A5UL << ASYSCTL_INTERNALTESTCTL_KEY_S) |\n            ((uint32_t)testNode << ASYSCTL_INTERNALTESTCTL_TESTSEL_S);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(((uint32_t)testNode >= 5U) && ((uint32_t)testNode <= 28U)); HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) = (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) & ~ASYSCTL_INTERNALTESTCTL_TESTSEL_M) | (0xA5A5UL << ASYSCTL_INTERNALTESTCTL_KEY_S) | ((uint32_t)testNode << ASYSCTL_INTERNALTESTCTL_TESTSEL_S); }",
+      "registersUsed": [
+        "INTERNALTESTCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTERNALTESTCTL"
+      ]
+    },
+    {
+      "file": "asysctl.h",
+      "peripheral": "asysctl",
+      "functionName": "AsysCtl_disableADCDACLoopback",
+      "functionArgs": [
+        "testNode"
+      ],
+      "functionArgsTypes": [
+        "ASysCtl_InternalTestNode"
+      ],
+      "returnType": "__attribute__((section(\".text.link2.AsysCtl_disableADCDACLoopback\"))) static inline void",
+      "functionContent": "{\n    ASSERT(((uint32_t)testNode >= 5U) && ((uint32_t)testNode <= 28U));\n\n    HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) =\n            (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) |\n            (0xA5A5UL << ASYSCTL_INTERNALTESTCTL_KEY_S)) &\n            ~((uint32_t)testNode << ASYSCTL_INTERNALTESTCTL_TESTSEL_S);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(((uint32_t)testNode >= 5U) && ((uint32_t)testNode <= 28U)); HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) = (HWREG(ANALOGSUBSYS_BASE + ASYSCTL_O_INTERNALTESTCTL) | (0xA5A5UL << ASYSCTL_INTERNALTESTCTL_KEY_S)) & ~((uint32_t)testNode << ASYSCTL_INTERNALTESTCTL_TESTSEL_S); }",
+      "registersUsed": [
+        "INTERNALTESTCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTERNALTESTCTL"
+      ]
+    }
+  ]
+}

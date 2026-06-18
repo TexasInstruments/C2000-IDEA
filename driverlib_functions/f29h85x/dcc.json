@@ -1,0 +1,523 @@
+{
+  "name": "dcc",
+  "functions": [
+    {
+      "file": "dcc.c",
+      "peripheral": "dcc",
+      "functionName": "DCC_verifyClockFrequency",
+      "functionArgs": [
+        "base",
+        "clock1",
+        "freq1",
+        "clock0",
+        "freq0",
+        "tolerance",
+        "freqerr",
+        "freq_sysclk"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DCC_Count1ClockSource",
+        "float32_t",
+        "DCC_Count0ClockSource",
+        "float32_t",
+        "float32_t",
+        "float32_t",
+        "float32_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    float32_t total_error;\n    float32_t window;\n    uint32_t count0;\n    uint32_t valid;\n    uint32_t count1;\n    bool     status;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // If Fclk1 > Fclk0,\n    //    Async. Error (In Clock0 cycles) = 2 + 2*(Fsysclk/Fclk0)\n    //\n    // If Fclk1 < Fclk0,\n    //    Async. Error (In Clock0 cycles) = 2*(Fclk0/Fclk1) + 2*(Fsysclk/Fclk0)\n    //\n    if(freq1 > freq0)\n    {\n        total_error = (2.0F + (2.0F * (freq_sysclk / freq0)));\n    }\n    else\n    {\n        total_error = ((2.0F * (freq0 / freq1)) +\n                       (2.0F * (freq_sysclk / freq0)));\n    }\n\n    //\n    // Digitization error = 8 Clock0 cycles\n    //\n    total_error += 8.0F;\n\n    //\n    // Window (in Cycles) = (Total Error) / (0.01 * Tolerance)\n    //\n    window = total_error / (0.01F * tolerance);\n\n    //\n    // Error due to variance in clock frequency =\n    // window * (Allowable Frequency Tolerance (in %) / 100)\n    //\n    total_error += window * (freqerr / 100.0F);\n\n    //\n    // DCC counter configuration :\n    // Counter0 = Window - Total Error\n    // Valid0 = 2 * Total Error\n    // Counter1 = Window * (Fclk1 / Fclk0)\n    //\n    count0 = (uint32_t)(window - total_error);\n    valid  = (2U * (uint32_t)total_error);\n    count1 = (uint32_t)(window * freq1 / freq0);\n\n    //\n    // Clear Error & Done Flag\n    //\n    DCC_clearErrorFlag(base);\n    DCC_clearDoneFlag(base);\n\n    //\n    // Disable DCC and the error and done signals\n    //\n    DCC_disableModule(base);\n    DCC_disableErrorSignal(base);\n    DCC_disableDoneSignal(base);\n\n    //\n    // Configure Clock Source0 and clock source1\n    //\n    DCC_setCounter0ClkSource(base, clock0);\n    DCC_setCounter1ClkSource(base, clock1);\n\n    //\n    // Configure COUNTER-0, COUNTER-1 & Valid Window\n    //\n    DCC_setCounterSeeds(base, count0, valid, count1);\n\n    //\n    // Enable Single Shot mode\n    //\n    DCC_enableSingleShotMode(base);\n\n    //\n    // Enable Error Signal and Done signal\n    //\n    DCC_enableErrorSignal(base);\n    DCC_enableDoneSignal(base);\n\n    //\n    // Enable DCC to start counting\n    //\n    DCC_enableModule(base);\n\n    //\n    // Wait until Error or Done Flag is generated\n    //\n    while(!(DCC_getSingleShotStatus(base) || DCC_getErrorStatus(base)))\n    {\n    }\n\n    //\n    // Returns true if DCC completes without error\n    //\n    if(DCC_getSingleShotStatus(base))\n    {\n        status = true;\n    }\n    else\n    {\n        status = false;\n    }\n\n    return(status);\n}\n",
+      "functionContentWithoutFormatting": "{ float32_t total_error; float32_t window; uint32_t count0; uint32_t valid; uint32_t count1; bool status; // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // If Fclk1 > Fclk0, // Async. Error (In Clock0 cycles) = 2 + 2*(Fsysclk/Fclk0) // // If Fclk1 < Fclk0, // Async. Error (In Clock0 cycles) = 2*(Fclk0/Fclk1) + 2*(Fsysclk/Fclk0) // if(freq1 > freq0) { total_error = (2.0F + (2.0F * (freq_sysclk / freq0))); } else { total_error = ((2.0F * (freq0 / freq1)) + (2.0F * (freq_sysclk / freq0))); } // // Digitization error = 8 Clock0 cycles // total_error += 8.0F; // // Window (in Cycles) = (Total Error) / (0.01 * Tolerance) // window = total_error / (0.01F * tolerance); // // Error due to variance in clock frequency = // window * (Allowable Frequency Tolerance (in %) / 100) // total_error += window * (freqerr / 100.0F); // // DCC counter configuration : // Counter0 = Window - Total Error // Valid0 = 2 * Total Error // Counter1 = Window * (Fclk1 / Fclk0) // count0 = (uint32_t)(window - total_error); valid = (2U * (uint32_t)total_error); count1 = (uint32_t)(window * freq1 / freq0); // // Clear Error & Done Flag // DCC_clearErrorFlag(base); DCC_clearDoneFlag(base); // // Disable DCC and the error and done signals // DCC_disableModule(base); DCC_disableErrorSignal(base); DCC_disableDoneSignal(base); // // Configure Clock Source0 and clock source1 // DCC_setCounter0ClkSource(base, clock0); DCC_setCounter1ClkSource(base, clock1); // // Configure COUNTER-0, COUNTER-1 & Valid Window // DCC_setCounterSeeds(base, count0, valid, count1); // // Enable Single Shot mode // DCC_enableSingleShotMode(base); // // Enable Error Signal and Done signal // DCC_enableErrorSignal(base); DCC_enableDoneSignal(base); // // Enable DCC to start counting // DCC_enableModule(base); // // Wait until Error or Done Flag is generated // while(!(DCC_getSingleShotStatus(base) || DCC_getErrorStatus(base))) { } // // Returns true if DCC completes without error // if(DCC_getSingleShotStatus(base)) { status = true; } else { status = false; } return(status); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "dcc.c",
+      "peripheral": "dcc",
+      "functionName": "DCC_measureClockFrequency",
+      "functionArgs": [
+        "base",
+        "clock1",
+        "clock0",
+        "freq0",
+        "tolerance",
+        "freqerr",
+        "freq_sysclk"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DCC_Count1ClockSource",
+        "DCC_Count0ClockSource",
+        "float32_t",
+        "float32_t",
+        "float32_t",
+        "float32_t"
+      ],
+      "returnType": "float32_t",
+      "functionContent": "{\n    float32_t total_error;\n    float32_t window;\n    uint32_t count0;\n    uint32_t valid;\n    uint32_t count1;\n    uint32_t actual_cnt1;\n    float32_t freq1;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Async. Error = 2 + 2*(Fsysclk/Fclk0)\n    // Digitization error = 8 Clock0 cycles\n    // Total DCC error = Async Error + Digitization error\n    //\n    total_error = (2.0F + (2.0F * (freq_sysclk / freq0)));\n    total_error += 8.0F;\n\n    //\n    // Window (in Cycles) = (Total Error) / (0.01 * Tolerance)\n    //\n    window = total_error / (0.01F * tolerance);\n\n    //\n    // Error due to variance in clock frequency =\n    // window * (Allowable Frequency Tolerance (in %) / 100)\n    //\n    total_error += window * (freqerr / 100.0F);\n\n    //\n    // DCC counter configuration :\n    // Counter0 = Window - Total Error\n    // Valid0 = 2 * Total Error\n    // Counter1 = Maximum counter value (0xFFFFF)\n    //\n    count0 = (uint32_t)(window - total_error);\n    valid  = 2U * (uint32_t)total_error;\n    count1 = 0xFFFFFU;\n\n    //\n    // Clear Error & Done Flag\n    //\n    DCC_clearErrorFlag(base);\n    DCC_clearDoneFlag(base);\n\n    //\n    // Disable DCC and the error and done signals\n    //\n    DCC_disableModule(base);\n    DCC_disableErrorSignal(base);\n    DCC_disableDoneSignal(base);\n\n    //\n    // Configure Clock Source0 and clock source1\n    //\n    DCC_setCounter0ClkSource(base, clock0);\n    DCC_setCounter1ClkSource(base, clock1);\n\n    //\n    // Configure COUNTER-0, COUNTER-1 & Valid Window\n    //\n    DCC_setCounterSeeds(base, count0, valid, count1);\n\n    //\n    // Enable Single Shot mode\n    //\n    DCC_enableSingleShotMode(base);\n\n    //\n    // Enable Error Signal and Done signal\n    //\n    DCC_enableErrorSignal(base);\n    DCC_enableDoneSignal(base);\n\n    //\n    // Enable DCC to start counting\n    //\n    DCC_enableModule(base);\n\n    //\n    // Wait until Error or Done Flag is generated\n    //\n    while(!(DCC_getSingleShotStatus(base) || DCC_getErrorStatus(base)))\n    {\n    }\n\n    //\n    // Calculate the difference of the current counter\n    // values with the initial fed counter values. This\n    // will give the counts corresponding to the frequency\n    // of each clock source\n    //\n    actual_cnt1 = count1 - DCC_getCounter1Value(base);\n\n    //\n    // Compute the frequency using relation F1 = (F0 * Actual C1)/Window.\n    //\n    freq1 =  (freq0 * (float32_t)actual_cnt1) /\n             ((float32_t)count0 + (float32_t)valid);\n\n    return(freq1);\n}\n",
+      "functionContentWithoutFormatting": "{ float32_t total_error; float32_t window; uint32_t count0; uint32_t valid; uint32_t count1; uint32_t actual_cnt1; float32_t freq1; // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Async. Error = 2 + 2*(Fsysclk/Fclk0) // Digitization error = 8 Clock0 cycles // Total DCC error = Async Error + Digitization error // total_error = (2.0F + (2.0F * (freq_sysclk / freq0))); total_error += 8.0F; // // Window (in Cycles) = (Total Error) / (0.01 * Tolerance) // window = total_error / (0.01F * tolerance); // // Error due to variance in clock frequency = // window * (Allowable Frequency Tolerance (in %) / 100) // total_error += window * (freqerr / 100.0F); // // DCC counter configuration : // Counter0 = Window - Total Error // Valid0 = 2 * Total Error // Counter1 = Maximum counter value (0xFFFFF) // count0 = (uint32_t)(window - total_error); valid = 2U * (uint32_t)total_error; count1 = 0xFFFFFU; // // Clear Error & Done Flag // DCC_clearErrorFlag(base); DCC_clearDoneFlag(base); // // Disable DCC and the error and done signals // DCC_disableModule(base); DCC_disableErrorSignal(base); DCC_disableDoneSignal(base); // // Configure Clock Source0 and clock source1 // DCC_setCounter0ClkSource(base, clock0); DCC_setCounter1ClkSource(base, clock1); // // Configure COUNTER-0, COUNTER-1 & Valid Window // DCC_setCounterSeeds(base, count0, valid, count1); // // Enable Single Shot mode // DCC_enableSingleShotMode(base); // // Enable Error Signal and Done signal // DCC_enableErrorSignal(base); DCC_enableDoneSignal(base); // // Enable DCC to start counting // DCC_enableModule(base); // // Wait until Error or Done Flag is generated // while(!(DCC_getSingleShotStatus(base) || DCC_getErrorStatus(base))) { } // // Calculate the difference of the current counter // values with the initial fed counter values. This // will give the counts corresponding to the frequency // of each clock source // actual_cnt1 = count1 - DCC_getCounter1Value(base); // // Compute the frequency using relation F1 = (F0 * Actual C1)/Window. // freq1 = (freq0 * (float32_t)actual_cnt1) / ((float32_t)count0 + (float32_t)valid); return(freq1); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "dcc.c",
+      "peripheral": "dcc",
+      "functionName": "DCC_continuousMonitor",
+      "functionArgs": [
+        "base",
+        "clock1",
+        "freq1",
+        "clock0",
+        "freq0",
+        "tolerance",
+        "freqerr",
+        "freq_sysclk"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DCC_Count1ClockSource",
+        "float32_t",
+        "DCC_Count0ClockSource",
+        "float32_t",
+        "float32_t",
+        "float32_t",
+        "float32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    float32_t total_error;\n    float32_t window;\n    uint32_t count0;\n    uint32_t valid;\n    uint32_t count1;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // If Fclk1 > Fclk0,\n    //   Async. Error (In Clock0 cycles) = 2 + 2*(Fsysclk/Fclk0)\n    //\n    // If Fclk1 < Fclk0,\n    //   Async. Error (In Clock0 cycles) = 2*(Fclk0/Fclk1) + 2*(Fsysclk/Fclk0)\n    //\n    if(freq1 > freq0)\n    {\n        total_error = (2.0F + (2.0F * (freq_sysclk / freq0)));\n    }\n    else\n    {\n        total_error = ((2.0F * (freq0 / freq1)) +\n                                 (2.0F * (freq_sysclk / freq0)));\n    }\n\n    //\n    // Digitization error = 8 Clock0 cycles\n    //\n    total_error += 8.0F;\n\n    //\n    // Window (in Cycles) = (Total Error) / (0.01 * Tolerance)\n    //\n    window = total_error / (0.01F * tolerance);\n\n    //\n    // Error due to variance in clock frequency =\n    // window * (Allowable Frequency Tolerance (in %) / 100)\n    //\n    total_error += window * (freqerr / 100.0F);\n\n    //\n    // DCC counter configuration :\n    // Counter0 = Window - Total     Error\n    // Valid0 = 2 * Total Error\n    // Counter1 = Window * (Fclk1 / Fclk0)\n    //\n    count0 = (uint32_t)(window - total_error);\n    valid  = (2U * (uint32_t)total_error);\n    count1 = (uint32_t)(window * freq1 / freq0);\n\n    //\n    // Clear Error & Done Flag\n    //\n    DCC_clearErrorFlag(base);\n    DCC_clearDoneFlag(base);\n\n    //\n    // Disable DCC and the error and done signals\n    //\n    DCC_disableModule(base);\n    DCC_disableErrorSignal(base);\n    DCC_disableDoneSignal(base);\n\n    //\n    // Configure Clock Source0 and clock source1\n    //\n    DCC_setCounter0ClkSource(base, clock0);\n    DCC_setCounter1ClkSource(base, clock1);\n\n    //\n    // Configure COUNTER-0, COUNTER-1 & Valid Window\n    //\n    DCC_setCounterSeeds(base, count0, valid, count1);\n\n    //\n    // Enable Continuous mode\n    //\n    DCC_disableSingleShotMode(base);\n\n    //\n    // Enable Error Signal\n    //\n    DCC_enableErrorSignal(base);\n\n    //\n    // Enable DCC to start counting\n    //\n    DCC_enableModule(base);\n}\n",
+      "functionContentWithoutFormatting": "{ float32_t total_error; float32_t window; uint32_t count0; uint32_t valid; uint32_t count1; // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // If Fclk1 > Fclk0, // Async. Error (In Clock0 cycles) = 2 + 2*(Fsysclk/Fclk0) // // If Fclk1 < Fclk0, // Async. Error (In Clock0 cycles) = 2*(Fclk0/Fclk1) + 2*(Fsysclk/Fclk0) // if(freq1 > freq0) { total_error = (2.0F + (2.0F * (freq_sysclk / freq0))); } else { total_error = ((2.0F * (freq0 / freq1)) + (2.0F * (freq_sysclk / freq0))); } // // Digitization error = 8 Clock0 cycles // total_error += 8.0F; // // Window (in Cycles) = (Total Error) / (0.01 * Tolerance) // window = total_error / (0.01F * tolerance); // // Error due to variance in clock frequency = // window * (Allowable Frequency Tolerance (in %) / 100) // total_error += window * (freqerr / 100.0F); // // DCC counter configuration : // Counter0 = Window - Total Error // Valid0 = 2 * Total Error // Counter1 = Window * (Fclk1 / Fclk0) // count0 = (uint32_t)(window - total_error); valid = (2U * (uint32_t)total_error); count1 = (uint32_t)(window * freq1 / freq0); // // Clear Error & Done Flag // DCC_clearErrorFlag(base); DCC_clearDoneFlag(base); // // Disable DCC and the error and done signals // DCC_disableModule(base); DCC_disableErrorSignal(base); DCC_disableDoneSignal(base); // // Configure Clock Source0 and clock source1 // DCC_setCounter0ClkSource(base, clock0); DCC_setCounter1ClkSource(base, clock1); // // Configure COUNTER-0, COUNTER-1 & Valid Window // DCC_setCounterSeeds(base, count0, valid, count1); // // Enable Continuous mode // DCC_disableSingleShotMode(base); // // Enable Error Signal // DCC_enableErrorSignal(base); // // Enable DCC to start counting // DCC_enableModule(base); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           ((base & BASE_ADDR_MASK) == DCC1_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == DCC2_BASE_FRAME(0U)) ||\n           ((base & BASE_ADDR_MASK) == DCC3_BASE_FRAME(0U))\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( ((base & BASE_ADDR_MASK) == DCC1_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == DCC2_BASE_FRAME(0U)) || ((base & BASE_ADDR_MASK) == DCC3_BASE_FRAME(0U)) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_enableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Set DCC enable bit field.\n    //\n    HWREGH(base + DCC_O_GCTRL) = (uint16_t)(\n                (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_DCCENA_M)) |\n                ((uint16_t)DCC_ENABLE_VALUE << DCC_GCTRL_DCCENA_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Set DCC enable bit field. // HWREGH(base + DCC_O_GCTRL) = (uint16_t)( (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_DCCENA_M)) | ((uint16_t)DCC_ENABLE_VALUE << DCC_GCTRL_DCCENA_S)); }",
+      "registersUsed": [
+        "GCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCGCTRL"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_disableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Reset DCC enable bit field.\n    //\n    HWREGH(base + DCC_O_GCTRL) = (uint16_t)(\n                (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_DCCENA_M)) |\n                ((uint16_t)DCC_DISABLE_VALUE << DCC_GCTRL_DCCENA_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Reset DCC enable bit field. // HWREGH(base + DCC_O_GCTRL) = (uint16_t)( (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_DCCENA_M)) | ((uint16_t)DCC_DISABLE_VALUE << DCC_GCTRL_DCCENA_S)); }",
+      "registersUsed": [
+        "GCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCGCTRL"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_enableErrorSignal",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Enable the error signal\n    //\n    HWREGH(base + DCC_O_GCTRL) = (uint16_t)(\n                (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_ERRENA_M)) |\n                ((uint16_t)DCC_ENABLE_VALUE << DCC_GCTRL_ERRENA_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Enable the error signal // HWREGH(base + DCC_O_GCTRL) = (uint16_t)( (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_ERRENA_M)) | ((uint16_t)DCC_ENABLE_VALUE << DCC_GCTRL_ERRENA_S)); }",
+      "registersUsed": [
+        "GCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCGCTRL"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_enableDoneSignal",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Enable the done interrupt signal\n    //\n    HWREGH(base + DCC_O_GCTRL) = (uint16_t)(\n                (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_DONEENA_M)) |\n                ((uint16_t)DCC_ENABLE_VALUE << DCC_GCTRL_DONEENA_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Enable the done interrupt signal // HWREGH(base + DCC_O_GCTRL) = (uint16_t)( (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_DONEENA_M)) | ((uint16_t)DCC_ENABLE_VALUE << DCC_GCTRL_DONEENA_S)); }",
+      "registersUsed": [
+        "GCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCGCTRL"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_disableErrorSignal",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Disable the error signal\n    //\n    HWREGH(base + DCC_O_GCTRL) = (uint16_t)(\n                (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_ERRENA_M)) |\n                ((uint16_t)DCC_DISABLE_VALUE << DCC_GCTRL_ERRENA_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Disable the error signal // HWREGH(base + DCC_O_GCTRL) = (uint16_t)( (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_ERRENA_M)) | ((uint16_t)DCC_DISABLE_VALUE << DCC_GCTRL_ERRENA_S)); }",
+      "registersUsed": [
+        "GCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCGCTRL"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_disableDoneSignal",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Disable the done interrupt signal\n    //\n    HWREGH(base + DCC_O_GCTRL) = (uint16_t)(\n                (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_DONEENA_M)) |\n                ((uint16_t)DCC_DISABLE_VALUE << DCC_GCTRL_DONEENA_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Disable the done interrupt signal // HWREGH(base + DCC_O_GCTRL) = (uint16_t)( (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_DONEENA_M)) | ((uint16_t)DCC_DISABLE_VALUE << DCC_GCTRL_DONEENA_S)); }",
+      "registersUsed": [
+        "GCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCGCTRL"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_enableSingleShotMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Enable Single-Shot mode\n    //\n    HWREGH(base + DCC_O_GCTRL) = (uint16_t)(\n                (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_SINGLESHOT_M)) |\n                ((uint16_t)DCC_ENABLE_VALUE << DCC_GCTRL_SINGLESHOT_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Enable Single-Shot mode // HWREGH(base + DCC_O_GCTRL) = (uint16_t)( (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_SINGLESHOT_M)) | ((uint16_t)DCC_ENABLE_VALUE << DCC_GCTRL_SINGLESHOT_S)); }",
+      "registersUsed": [
+        "GCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCGCTRL"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_disableSingleShotMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Disable Single-Shot mode\n    //\n    HWREGH(base + DCC_O_GCTRL) = (uint16_t)(\n                (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_SINGLESHOT_M)) |\n                ((uint16_t)DCC_DISABLE_VALUE << DCC_GCTRL_SINGLESHOT_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Disable Single-Shot mode // HWREGH(base + DCC_O_GCTRL) = (uint16_t)( (HWREGH(base + DCC_O_GCTRL) & ~(DCC_GCTRL_SINGLESHOT_M)) | ((uint16_t)DCC_DISABLE_VALUE << DCC_GCTRL_SINGLESHOT_S)); }",
+      "registersUsed": [
+        "GCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCGCTRL"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_getErrorStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Get the error flag\n    //\n    return((HWREGB(base + DCC_O_STATUS) & DCC_STATUS_ERR) == DCC_STATUS_ERR);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Get the error flag // return((HWREGB(base + DCC_O_STATUS) & DCC_STATUS_ERR) == DCC_STATUS_ERR); }",
+      "registersUsed": [
+        "STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCSTATUS"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_getSingleShotStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Read the done flag\n    //\n    return((HWREGB(base + DCC_O_STATUS) & DCC_STATUS_DONE) == DCC_STATUS_DONE);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Read the done flag // return((HWREGB(base + DCC_O_STATUS) & DCC_STATUS_DONE) == DCC_STATUS_DONE); }",
+      "registersUsed": [
+        "STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCSTATUS"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_clearErrorFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Clear error status flag\n    //\n    HWREGB(base + DCC_O_STATUS) |= DCC_STATUS_ERR;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Clear error status flag // HWREGB(base + DCC_O_STATUS) |= DCC_STATUS_ERR; }",
+      "registersUsed": [
+        "STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCSTATUS"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_clearDoneFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Clear done status flag\n    //\n    HWREGB(base + DCC_O_STATUS) |= DCC_STATUS_DONE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Clear done status flag // HWREGB(base + DCC_O_STATUS) |= DCC_STATUS_DONE; }",
+      "registersUsed": [
+        "STATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCSTATUS"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_getCounter0Value",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Get the current counter 0 value\n    //\n    return(HWREG(base + DCC_O_CNT0));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Get the current counter 0 value // return(HWREG(base + DCC_O_CNT0)); }",
+      "registersUsed": [
+        "CNT0"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCCNT0"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_getValidCounter0Value",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Get the current valid duration counter value\n    //\n    return(HWREGH(base + DCC_O_VALID0));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Get the current valid duration counter value // return(HWREGH(base + DCC_O_VALID0)); }",
+      "registersUsed": [
+        "VALID0"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCVALID0"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_getCounter1Value",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    // Get the current counter 1 value\n    //\n    return(HWREG(base + DCC_O_CNT1));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Get the current counter 1 value // return(HWREG(base + DCC_O_CNT1)); }",
+      "registersUsed": [
+        "CNT1"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCCNT1"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_setCounter1ClkSource",
+      "functionArgs": [
+        "base",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DCC_Count1ClockSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    //  Set the specified clock source\n    //  DCC Clk source is of 5bits DCCCLKSRC1[4:0]\n    //\n    HWREGH(base + DCC_O_CLKSRC1) = (HWREGH(base + DCC_O_CLKSRC1) &\n                                   (DCC_CLKSRC1_CLKSRC1_M << 6U)) |\n                                   (((uint16_t)DCC_ENABLE_VALUE <<\n                                   DCC_CLKSRC1_KEY_S) | (uint16_t)source);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Set the specified clock source // DCC Clk source is of 5bits DCCCLKSRC1[4:0] // HWREGH(base + DCC_O_CLKSRC1) = (HWREGH(base + DCC_O_CLKSRC1) & (DCC_CLKSRC1_CLKSRC1_M << 6U)) | (((uint16_t)DCC_ENABLE_VALUE << DCC_CLKSRC1_KEY_S) | (uint16_t)source); }",
+      "registersUsed": [
+        "CLKSRC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCCLKSRC1"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_setCounter0ClkSource",
+      "functionArgs": [
+        "base",
+        "source"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "DCC_Count0ClockSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    //  Set the specified clock source\n    //  DCC Clk source is of 4bits DCCCLKSRC0[3:0]\n    //\n    HWREGH(base + DCC_O_CLKSRC0) = (HWREGH(base + DCC_O_CLKSRC0) &\n                                   (DCC_REG_BYTE_MASK << 5U)) |\n                                   (((uint16_t)DCC_ENABLE_VALUE <<\n                                   DCC_CLKSRC0_KEY_S) | (uint16_t)source);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Set the specified clock source // DCC Clk source is of 4bits DCCCLKSRC0[3:0] // HWREGH(base + DCC_O_CLKSRC0) = (HWREGH(base + DCC_O_CLKSRC0) & (DCC_REG_BYTE_MASK << 5U)) | (((uint16_t)DCC_ENABLE_VALUE << DCC_CLKSRC0_KEY_S) | (uint16_t)source); }",
+      "registersUsed": [
+        "CLKSRC0"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCCLKSRC0"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_getCounter1ClkSource",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    //  Get the specified clock source\n    //\n    return(HWREGH(base + DCC_O_CLKSRC1) & DCC_CLKSRC1_CLKSRC1_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Get the specified clock source // return(HWREGH(base + DCC_O_CLKSRC1) & DCC_CLKSRC1_CLKSRC1_M); }",
+      "registersUsed": [
+        "CLKSRC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCCLKSRC1"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_getCounter0ClkSource",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n\n    //\n    //  Get the specified clock source\n    //\n    return(HWREGH(base + DCC_O_CLKSRC0) & DCC_CLKSRC0_CLKSRC0_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); // // Get the specified clock source // return(HWREGH(base + DCC_O_CLKSRC0) & DCC_CLKSRC0_CLKSRC0_M); }",
+      "registersUsed": [
+        "CLKSRC0"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCCLKSRC0"
+      ]
+    },
+    {
+      "file": "dcc.h",
+      "peripheral": "dcc",
+      "functionName": "DCC_setCounterSeeds",
+      "functionArgs": [
+        "base",
+        "counter0",
+        "validCounter0",
+        "counter1"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(DCC_isBaseValid(base));\n    ASSERT(validCounter0 >= DCC_VALIDSEED_MIN);\n    ASSERT(counter0 >= DCC_COUNTSEED_MIN);\n    ASSERT(counter1 >= DCC_COUNTSEED_MIN);\n    ASSERT(validCounter0 <= DCC_VALIDSEED_MAX);\n    ASSERT(counter0 <= DCC_COUNTSEED_MAX);\n    ASSERT(counter1 <= DCC_COUNTSEED_MAX);\n\n    //\n    // Set Counter 0 Seed\n    //\n    HWREG(base + DCC_O_CNTSEED0) = counter0;\n\n    //\n    // Set Valid Duration Counter 0 Seed\n    //\n    HWREG(base + DCC_O_VALIDSEED0) = validCounter0;\n\n    //\n    // Set Counter 1 Seed\n    //\n    HWREG(base + DCC_O_CNTSEED1) = counter1;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(DCC_isBaseValid(base)); ASSERT(validCounter0 >= DCC_VALIDSEED_MIN); ASSERT(counter0 >= DCC_COUNTSEED_MIN); ASSERT(counter1 >= DCC_COUNTSEED_MIN); ASSERT(validCounter0 <= DCC_VALIDSEED_MAX); ASSERT(counter0 <= DCC_COUNTSEED_MAX); ASSERT(counter1 <= DCC_COUNTSEED_MAX); // // Set Counter 0 Seed // HWREG(base + DCC_O_CNTSEED0) = counter0; // // Set Valid Duration Counter 0 Seed // HWREG(base + DCC_O_VALIDSEED0) = validCounter0; // // Set Counter 1 Seed // HWREG(base + DCC_O_CNTSEED1) = counter1; }",
+      "registersUsed": [
+        "CNTSEED0",
+        "VALIDSEED0",
+        "CNTSEED1"
+      ],
+      "registersUsedMatchingBifield": [
+        "DCCCNTSEED0",
+        "DCCVALIDSEED0",
+        "DCCCNTSEED1"
+      ]
+    }
+  ]
+}

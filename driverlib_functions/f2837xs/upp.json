@@ -1,0 +1,917 @@
+{
+  "name": "upp",
+  "functions": [
+    {
+      "file": "upp.c",
+      "peripheral": "upp",
+      "functionName": "UPP_setDMAReadThreshold",
+      "functionArgs": [
+        "base",
+        "channel",
+        "size"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_DMAChannel",
+        "UPP_ThresholdSize"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n    if(channel == UPP_DMA_CHANNEL_I)\n    {\n        //\n        // Set DMA read threshold for channel I.\n        //\n        HWREGH(base + UPP_O_THCFG) = (HWREGH(base + UPP_O_THCFG)       &\n                                      ~(uint16_t)UPP_THCFG_RDSIZEI_M)  |\n                                     (uint16_t)size;\n    }\n    else\n    {\n        //\n        // Set DMA read threshold for channel Q.\n        //\n        HWREGH(base + UPP_O_THCFG) = (HWREGH(base + UPP_O_THCFG)        &\n                                      ~(uint16_t)UPP_THCFG_RDSIZEQ_M)   |\n                                     ((uint16_t)size << UPP_THCFG_RDSIZEQ_S);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); if(channel == UPP_DMA_CHANNEL_I) { // // Set DMA read threshold for channel I. // HWREGH(base + UPP_O_THCFG) = (HWREGH(base + UPP_O_THCFG) & ~(uint16_t)UPP_THCFG_RDSIZEI_M) | (uint16_t)size; } else { // // Set DMA read threshold for channel Q. // HWREGH(base + UPP_O_THCFG) = (HWREGH(base + UPP_O_THCFG) & ~(uint16_t)UPP_THCFG_RDSIZEQ_M) | ((uint16_t)size << UPP_THCFG_RDSIZEQ_S); } }",
+      "registersUsed": [
+        "THCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "THCFG"
+      ]
+    },
+    {
+      "file": "upp.c",
+      "peripheral": "upp",
+      "functionName": "UPP_setDMADescriptor",
+      "functionArgs": [
+        "base",
+        "channel",
+        "desc"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_DMAChannel",
+        "constUPP_DMADescriptor*const"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n    if(channel == UPP_DMA_CHANNEL_I)\n    {\n        //\n        // Sets DMA descriptors for channel I.\n        //\n        HWREG(base + UPP_O_CHIDESC0)  = desc->addr;\n        HWREG(base + UPP_O_CHIDESC1)  = ((uint32_t)desc->byteCount   |\n                                        (((uint32_t)desc->lineCount) <<\n                                         UPP_CHIDESC1_LCNT_S));\n        HWREGH(base + UPP_O_CHIDESC2) = desc->lineOffset;\n    }\n    else\n    {\n        //\n        // Sets DMA descriptors for channel Q.\n        //\n        HWREG(base + UPP_O_CHQDESC0)  = desc->addr;\n        HWREG(base + UPP_O_CHQDESC1)  = ((uint32_t)desc->byteCount   |\n                                        (((uint32_t)desc->lineCount) <<\n                                         UPP_CHQDESC1_LCNT_S));\n        HWREGH(base + UPP_O_CHQDESC2) = desc->lineOffset;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); if(channel == UPP_DMA_CHANNEL_I) { // // Sets DMA descriptors for channel I. // HWREG(base + UPP_O_CHIDESC0) = desc->addr; HWREG(base + UPP_O_CHIDESC1) = ((uint32_t)desc->byteCount | (((uint32_t)desc->lineCount) << UPP_CHIDESC1_LCNT_S)); HWREGH(base + UPP_O_CHIDESC2) = desc->lineOffset; } else { // // Sets DMA descriptors for channel Q. // HWREG(base + UPP_O_CHQDESC0) = desc->addr; HWREG(base + UPP_O_CHQDESC1) = ((uint32_t)desc->byteCount | (((uint32_t)desc->lineCount) << UPP_CHQDESC1_LCNT_S)); HWREGH(base + UPP_O_CHQDESC2) = desc->lineOffset; } }",
+      "registersUsed": [
+        "CHIDESC0",
+        "CHIDESC1",
+        "CHIDESC2",
+        "CHQDESC0",
+        "CHQDESC1",
+        "CHQDESC2"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHIDESC0",
+        "CHIDESC1",
+        "CHIDESC2",
+        "CHQDESC0",
+        "CHQDESC1",
+        "CHQDESC2"
+      ]
+    },
+    {
+      "file": "upp.c",
+      "peripheral": "upp",
+      "functionName": "UPP_getDMAChannelStatus",
+      "functionArgs": [
+        "base",
+        "channel",
+        "status"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_DMAChannel",
+        "UPP_DMAChannelStatus*const"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t cntStatus;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n    if(channel == UPP_DMA_CHANNEL_I)\n    {\n        //\n        // Return the current status for channel I.\n        //\n        cntStatus            = HWREG(base + UPP_O_CHIST1);\n        status->curAddr      = HWREG(base + UPP_O_CHIST0);\n        status->curByteCount = (uint16_t)(cntStatus & UPP_CHIDESC1_BCNT_M);\n        status->curLineCount = (uint16_t)(cntStatus >> UPP_CHIDESC1_LCNT_S);\n    }\n    else\n    {\n        //\n        // Return the current status for channel Q.\n        //\n        cntStatus            = HWREG(base + UPP_O_CHQST1);\n        status->curAddr      = HWREG(base + UPP_O_CHQST0);\n        status->curByteCount = (uint16_t)(cntStatus & UPP_CHQDESC1_BCNT_M);\n        status->curLineCount = (uint16_t)(cntStatus >> UPP_CHQDESC1_LCNT_S);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t cntStatus; // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); if(channel == UPP_DMA_CHANNEL_I) { // // Return the current status for channel I. // cntStatus = HWREG(base + UPP_O_CHIST1); status->curAddr = HWREG(base + UPP_O_CHIST0); status->curByteCount = (uint16_t)(cntStatus & UPP_CHIDESC1_BCNT_M); status->curLineCount = (uint16_t)(cntStatus >> UPP_CHIDESC1_LCNT_S); } else { // // Return the current status for channel Q. // cntStatus = HWREG(base + UPP_O_CHQST1); status->curAddr = HWREG(base + UPP_O_CHQST0); status->curByteCount = (uint16_t)(cntStatus & UPP_CHQDESC1_BCNT_M); status->curLineCount = (uint16_t)(cntStatus >> UPP_CHQDESC1_LCNT_S); } }",
+      "registersUsed": [
+        "CHIST0",
+        "CHIST1",
+        "CHQST0",
+        "CHQST1"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHIST0",
+        "CHIST1",
+        "CHQST0",
+        "CHQST1"
+      ]
+    },
+    {
+      "file": "upp.c",
+      "peripheral": "upp",
+      "functionName": "UPP_isDescriptorPending",
+      "functionArgs": [
+        "base",
+        "channel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_DMAChannel"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    bool status;\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n    if(channel == UPP_DMA_CHANNEL_I)\n    {\n        //\n        // Return the pend status for channel I descriptor.\n        //\n        status = ((HWREGH(base + UPP_O_CHIST2) &\n                  (uint16_t)UPP_CHIST2_PEND)  == UPP_CHIST2_PEND);\n    }\n    else\n    {\n        //\n        // Return the pend status for channel Q descriptor.\n        //\n        status = ((HWREGH(base + UPP_O_CHQST2) &\n                  (uint16_t)UPP_CHQST2_PEND)  == UPP_CHQST2_PEND);\n    }\n    return(status);\n}\n",
+      "functionContentWithoutFormatting": "{ bool status; // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); if(channel == UPP_DMA_CHANNEL_I) { // // Return the pend status for channel I descriptor. // status = ((HWREGH(base + UPP_O_CHIST2) & (uint16_t)UPP_CHIST2_PEND) == UPP_CHIST2_PEND); } else { // // Return the pend status for channel Q descriptor. // status = ((HWREGH(base + UPP_O_CHQST2) & (uint16_t)UPP_CHQST2_PEND) == UPP_CHQST2_PEND); } return(status); }",
+      "registersUsed": [
+        "CHIST2",
+        "CHQST2"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHIST2",
+        "CHQST2"
+      ]
+    },
+    {
+      "file": "upp.c",
+      "peripheral": "upp",
+      "functionName": "UPP_isDescriptorActive",
+      "functionArgs": [
+        "base",
+        "channel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_DMAChannel"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    bool status;\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n    if(channel == UPP_DMA_CHANNEL_I)\n    {\n        //\n        // Returns active status for channel I descriptor.\n        //\n        status = ((HWREGH(base + UPP_O_CHIST2) &\n                  (uint16_t)UPP_CHIST2_ACT)   == UPP_CHIST2_ACT);\n    }\n    else\n    {\n        //\n        // Returns active status for channel Q descriptor.\n        //\n        status = ((HWREGH(base + UPP_O_CHQST2) &\n                  (uint16_t)UPP_CHQST2_ACT)   == UPP_CHQST2_ACT);\n    }\n    return(status);\n}\n",
+      "functionContentWithoutFormatting": "{ bool status; // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); if(channel == UPP_DMA_CHANNEL_I) { // // Returns active status for channel I descriptor. // status = ((HWREGH(base + UPP_O_CHIST2) & (uint16_t)UPP_CHIST2_ACT) == UPP_CHIST2_ACT); } else { // // Returns active status for channel Q descriptor. // status = ((HWREGH(base + UPP_O_CHQST2) & (uint16_t)UPP_CHQST2_ACT) == UPP_CHQST2_ACT); } return(status); }",
+      "registersUsed": [
+        "CHIST2",
+        "CHQST2"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHIST2",
+        "CHQST2"
+      ]
+    },
+    {
+      "file": "upp.c",
+      "peripheral": "upp",
+      "functionName": "UPP_getDMAFIFOWatermark",
+      "functionArgs": [
+        "base",
+        "channel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_DMAChannel"
+      ],
+      "returnType": "uint16_t",
+      "functionContent": "{\n    uint16_t status;\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n    if(channel == UPP_DMA_CHANNEL_I)\n    {\n        //\n        // Return the watermark for FIFO block count for DMA Channel I.\n        //\n        status = ((HWREGH(base + UPP_O_CHIST2) &\n                  (uint16_t)UPP_CHIST2_WM_M)  >> UPP_CHIST2_WM_S);\n    }\n    else\n    {\n        //\n        // Return the watermark for FIFO block count for DMA Channel I.\n        //\n        status = ((HWREGH(base + UPP_O_CHQST2) &\n                  (uint16_t)UPP_CHQST2_WM_M)  >> UPP_CHQST2_WM_S);\n    }\n    return(status);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t status; // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); if(channel == UPP_DMA_CHANNEL_I) { // // Return the watermark for FIFO block count for DMA Channel I. // status = ((HWREGH(base + UPP_O_CHIST2) & (uint16_t)UPP_CHIST2_WM_M) >> UPP_CHIST2_WM_S); } else { // // Return the watermark for FIFO block count for DMA Channel I. // status = ((HWREGH(base + UPP_O_CHQST2) & (uint16_t)UPP_CHQST2_WM_M) >> UPP_CHQST2_WM_S); } return(status); }",
+      "registersUsed": [
+        "CHIST2",
+        "CHQST2"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHIST2",
+        "CHQST2"
+      ]
+    },
+    {
+      "file": "upp.c",
+      "peripheral": "upp",
+      "functionName": "UPP_readRxMsgRAM",
+      "functionArgs": [
+        "rxBase",
+        "array[]",
+        "length",
+        "offset"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t i;\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isRxBaseValid(rxBase));\n    ASSERT((length + offset) < UPP_RX_MSGRAM_MAX_SIZE);\n\n    for(i = 0U; i < length; i++)\n    {\n        //\n        // Read one 16-bit word.\n        //\n        array[i] = HWREGH(rxBase + offset + i);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; // // Check the arguments. // ASSERT(UPP_isRxBaseValid(rxBase)); ASSERT((length + offset) < UPP_RX_MSGRAM_MAX_SIZE); for(i = 0U; i < length; i++) { // // Read one 16-bit word. // array[i] = HWREGH(rxBase + offset + i); } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "upp.c",
+      "peripheral": "upp",
+      "functionName": "UPP_writeTxMsgRAM",
+      "functionArgs": [
+        "txBase",
+        "array[]",
+        "length",
+        "offset"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constuint16_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t i;\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isTxBaseValid(txBase));\n    ASSERT((length + offset) < UPP_TX_MSGRAM_MAX_SIZE);\n\n    for(i = 0U; i < length; i++)\n    {\n        //\n        // Write one 16-bit word.\n        //\n        HWREGH(txBase + offset + i) = array[i];\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; // // Check the arguments. // ASSERT(UPP_isTxBaseValid(txBase)); ASSERT((length + offset) < UPP_TX_MSGRAM_MAX_SIZE); for(i = 0U; i < length; i++) { // // Write one 16-bit word. // HWREGH(txBase + offset + i) = array[i]; } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((base == UPP_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((base == UPP_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_isRxBaseValid",
+      "functionArgs": [
+        "rxBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((rxBase == UPP_RX_MSG_RAM_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((rxBase == UPP_RX_MSG_RAM_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_isTxBaseValid",
+      "functionArgs": [
+        "txBase"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return((txBase == UPP_TX_MSG_RAM_BASE));\n}\n",
+      "functionContentWithoutFormatting": "{ return((txBase == UPP_TX_MSG_RAM_BASE)); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_isDMAActive",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Return the uPP internal DMA status.\n    //\n    return((HWREGH(base + UPP_O_PERCTL) & UPP_PERCTL_DMAST) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Return the uPP internal DMA status. // return((HWREGH(base + UPP_O_PERCTL) & UPP_PERCTL_DMAST) != 0U); }",
+      "registersUsed": [
+        "PERCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_performSoftReset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Issue uPP software reset.\n    //\n    HWREGH(base + UPP_O_PERCTL) |= UPP_PERCTL_SOFTRST;\n\n    //\n    // Wait for few device clock cycles(~32).\n    //\n    UPP_32_CYCLE_NOP;\n\n    //\n    // Release uPP software reset.\n    //\n    HWREGH(base + UPP_O_PERCTL) &= ~(uint16_t)UPP_PERCTL_SOFTRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Issue uPP software reset. // HWREGH(base + UPP_O_PERCTL) |= UPP_PERCTL_SOFTRST; // // Wait for few device clock cycles(~32). // UPP_32_CYCLE_NOP; // // Release uPP software reset. // HWREGH(base + UPP_O_PERCTL) &= ~(uint16_t)UPP_PERCTL_SOFTRST; }",
+      "registersUsed": [
+        "PERCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_enableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Enable the uPP module.\n    //\n    HWREGH(base + UPP_O_PERCTL) |= UPP_PERCTL_PEREN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Enable the uPP module. // HWREGH(base + UPP_O_PERCTL) |= UPP_PERCTL_PEREN; }",
+      "registersUsed": [
+        "PERCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_disableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Disable the uPP module.\n    //\n    HWREGH(base + UPP_O_PERCTL) &= ~(uint16_t)UPP_PERCTL_PEREN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Disable the uPP module. // HWREGH(base + UPP_O_PERCTL) &= ~(uint16_t)UPP_PERCTL_PEREN; }",
+      "registersUsed": [
+        "PERCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_enableEmulationMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Enable uPP real time emulation.\n    //\n    HWREGH(base + UPP_O_PERCTL) |= UPP_PERCTL_RTEMU;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Enable uPP real time emulation. // HWREGH(base + UPP_O_PERCTL) |= UPP_PERCTL_RTEMU; }",
+      "registersUsed": [
+        "PERCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_disableEmulationMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Disable uPP real time emulation.\n    //\n    HWREGH(base + UPP_O_PERCTL) &= ~(uint16_t)UPP_PERCTL_RTEMU;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Disable uPP real time emulation. // HWREGH(base + UPP_O_PERCTL) &= ~(uint16_t)UPP_PERCTL_RTEMU; }",
+      "registersUsed": [
+        "PERCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setEmulationMode",
+      "functionArgs": [
+        "base",
+        "emuMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_EmulationMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Set the uPP emulation mode.\n    //\n    HWREGH(base + UPP_O_PERCTL) = (HWREGH(base + UPP_O_PERCTL) &\n                                   ~UPP_SOFT_FREE_M) | (uint16_t)emuMode;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Set the uPP emulation mode. // HWREGH(base + UPP_O_PERCTL) = (HWREGH(base + UPP_O_PERCTL) & ~UPP_SOFT_FREE_M) | (uint16_t)emuMode; }",
+      "registersUsed": [
+        "PERCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "PERCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setOperationMode",
+      "functionArgs": [
+        "base",
+        "opMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_OperationMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Set the operation mode for uPP.\n    //\n    HWREGH(base + UPP_O_CHCTL) = (HWREGH(base + UPP_O_CHCTL)   &\n                                  ~(uint16_t)UPP_CHCTL_MODE_M) |\n                                 (uint16_t)opMode;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Set the operation mode for uPP. // HWREGH(base + UPP_O_CHCTL) = (HWREGH(base + UPP_O_CHCTL) & ~(uint16_t)UPP_CHCTL_MODE_M) | (uint16_t)opMode; }",
+      "registersUsed": [
+        "CHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setDataRate",
+      "functionArgs": [
+        "base",
+        "dataRate"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_DataRate"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Set the uPP data rate.\n    //\n    HWREG(base + UPP_O_CHCTL) = (HWREG(base + UPP_O_CHCTL) &\n                                 ~(uint32_t)UPP_CHCTL_DRA) |\n                                (uint32_t)dataRate;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Set the uPP data rate. // HWREG(base + UPP_O_CHCTL) = (HWREG(base + UPP_O_CHCTL) & ~(uint32_t)UPP_CHCTL_DRA) | (uint32_t)dataRate; }",
+      "registersUsed": [
+        "CHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setTxSDRInterleaveMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_TxSDRInterleaveMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Set SDR interleave mode for uPP operating in Tx mode.\n    //\n    HWREGH(base + UPP_O_CHCTL) = (HWREGH(base + UPP_O_CHCTL)     &\n                                  ~(uint16_t)UPP_CHCTL_SDRTXILA) |\n                                 (uint16_t)mode;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Set SDR interleave mode for uPP operating in Tx mode. // HWREGH(base + UPP_O_CHCTL) = (HWREGH(base + UPP_O_CHCTL) & ~(uint16_t)UPP_CHCTL_SDRTXILA) | (uint16_t)mode; }",
+      "registersUsed": [
+        "CHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setDDRDemuxMode",
+      "functionArgs": [
+        "base",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_DDRDemuxMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Set DDR demultiplexing mode for uPP module.\n    //\n    HWREGH(base + UPP_O_CHCTL) = (HWREGH(base + UPP_O_CHCTL)   &\n                                  ~(uint16_t)UPP_CHCTL_DEMUXA) |\n                                 (uint16_t)mode;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Set DDR demultiplexing mode for uPP module. // HWREGH(base + UPP_O_CHCTL) = (HWREGH(base + UPP_O_CHCTL) & ~(uint16_t)UPP_CHCTL_DEMUXA) | (uint16_t)mode; }",
+      "registersUsed": [
+        "CHCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "CHCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setControlSignalPolarity",
+      "functionArgs": [
+        "base",
+        "waitPola",
+        "enablePola",
+        "startPola"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_SignalPolarity",
+        "UPP_SignalPolarity",
+        "UPP_SignalPolarity"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Set uPP control signal polarity.\n    //\n    HWREGH(base + UPP_O_IFCFG) = (HWREGH(base + UPP_O_IFCFG)     &\n                                  ~UPP_SIGNAL_POLARITY_M)        |\n                                 (((uint16_t)waitPola   << 0x2U) |\n                                  ((uint16_t)enablePola << 0x1U) |\n                                  (uint16_t)startPola);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Set uPP control signal polarity. // HWREGH(base + UPP_O_IFCFG) = (HWREGH(base + UPP_O_IFCFG) & ~UPP_SIGNAL_POLARITY_M) | (((uint16_t)waitPola << 0x2U) | ((uint16_t)enablePola << 0x1U) | (uint16_t)startPola); }",
+      "registersUsed": [
+        "IFCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "IFCFG"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setTxControlSignalMode",
+      "functionArgs": [
+        "base",
+        "waitMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_SignalMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Enable/Disable Tx uPP optional control signals.\n    //\n    HWREGH(base + UPP_O_IFCFG) = (HWREGH(base + UPP_O_IFCFG)         &\n                                  ~(uint16_t)UPP_TX_SIGNAL_MODE_M)   |\n                                 ((uint16_t)waitMode << 0x5U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Enable/Disable Tx uPP optional control signals. // HWREGH(base + UPP_O_IFCFG) = (HWREGH(base + UPP_O_IFCFG) & ~(uint16_t)UPP_TX_SIGNAL_MODE_M) | ((uint16_t)waitMode << 0x5U); }",
+      "registersUsed": [
+        "IFCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "IFCFG"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setRxControlSignalMode",
+      "functionArgs": [
+        "base",
+        "enableMode",
+        "startMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_SignalMode",
+        "UPP_SignalMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Enable/Disable Rx uPP optional control signals.\n    //\n    HWREGH(base + UPP_O_IFCFG) = (HWREGH(base + UPP_O_IFCFG)      &\n                                  ~UPP_RX_SIGNAL_MODE_M)          |\n                                 (((uint16_t)enableMode << 0x4U)  |\n                                  ((uint16_t)startMode  << 0x3U));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Enable/Disable Rx uPP optional control signals. // HWREGH(base + UPP_O_IFCFG) = (HWREGH(base + UPP_O_IFCFG) & ~UPP_RX_SIGNAL_MODE_M) | (((uint16_t)enableMode << 0x4U) | ((uint16_t)startMode << 0x3U)); }",
+      "registersUsed": [
+        "IFCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "IFCFG"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setTxClockDivider",
+      "functionArgs": [
+        "base",
+        "divider"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n    ASSERT(divider <= 0xFU);\n\n    //\n    // Set the clock divider for uPP Tx mode.\n    //\n    HWREGH(base + UPP_O_IFCFG) = (HWREGH(base + UPP_O_IFCFG)      &\n                                  ~(uint16_t)UPP_IFCFG_CLKDIVA_M) |\n                                 (divider << UPP_IFCFG_CLKDIVA_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); ASSERT(divider <= 0xFU); // // Set the clock divider for uPP Tx mode. // HWREGH(base + UPP_O_IFCFG) = (HWREGH(base + UPP_O_IFCFG) & ~(uint16_t)UPP_IFCFG_CLKDIVA_M) | (divider << UPP_IFCFG_CLKDIVA_S); }",
+      "registersUsed": [
+        "IFCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "IFCFG"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setClockPolarity",
+      "functionArgs": [
+        "base",
+        "clkPolarity"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_ClockPolarity"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Set uPP clock polarity.\n    //\n    HWREGH(base + UPP_O_IFCFG) = (HWREGH(base + UPP_O_IFCFG)    &\n                                  ~(uint16_t)UPP_IFCFG_CLKINVA) |\n                                 (uint16_t)clkPolarity;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Set uPP clock polarity. // HWREGH(base + UPP_O_IFCFG) = (HWREGH(base + UPP_O_IFCFG) & ~(uint16_t)UPP_IFCFG_CLKINVA) | (uint16_t)clkPolarity; }",
+      "registersUsed": [
+        "IFCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "IFCFG"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_configTxIdleDataMode",
+      "functionArgs": [
+        "base",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_TxIdleDataMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Configure Tx uPP idle data mode.\n    //\n    HWREGH(base + UPP_O_IFCFG) = (HWREGH(base + UPP_O_IFCFG)    &\n                                  ~(uint16_t)UPP_IFCFG_TRISENA) |\n                                 (uint16_t)config;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Configure Tx uPP idle data mode. // HWREGH(base + UPP_O_IFCFG) = (HWREGH(base + UPP_O_IFCFG) & ~(uint16_t)UPP_IFCFG_TRISENA) | (uint16_t)config; }",
+      "registersUsed": [
+        "IFCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "IFCFG"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setTxIdleValue",
+      "functionArgs": [
+        "base",
+        "idleVal"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n    ASSERT(idleVal <= UPP_IFIVAL_VALA_M);\n\n    //\n    // Set Tx uPP idle data line value.\n    //\n    HWREGH(base + UPP_O_IFIVAL) = (HWREGH(base + UPP_O_IFIVAL)   &\n                                   ~(uint16_t)UPP_IFIVAL_VALA_M) | idleVal;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); ASSERT(idleVal <= UPP_IFIVAL_VALA_M); // // Set Tx uPP idle data line value. // HWREGH(base + UPP_O_IFIVAL) = (HWREGH(base + UPP_O_IFIVAL) & ~(uint16_t)UPP_IFIVAL_VALA_M) | idleVal; }",
+      "registersUsed": [
+        "IFIVAL"
+      ],
+      "registersUsedMatchingBifield": [
+        "IFIVAL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setTxThreshold",
+      "functionArgs": [
+        "base",
+        "size"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_ThresholdSize"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Set uPP I/O transmit threshold.\n    //\n    HWREG(base + UPP_O_THCFG) = (HWREG(base + UPP_O_THCFG)       &\n                                 ~(uint32_t)UPP_THCFG_TXSIZEA_M) |\n                                ((uint32_t)size << UPP_THCFG_TXSIZEA_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Set uPP I/O transmit threshold. // HWREG(base + UPP_O_THCFG) = (HWREG(base + UPP_O_THCFG) & ~(uint32_t)UPP_THCFG_TXSIZEA_M) | ((uint32_t)size << UPP_THCFG_TXSIZEA_S); }",
+      "registersUsed": [
+        "THCFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "THCFG"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Enable uPP interrupts.\n    //\n    HWREGH(base + UPP_O_INTENSET) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Enable uPP interrupts. // HWREGH(base + UPP_O_INTENSET) = intFlags; }",
+      "registersUsed": [
+        "INTENSET"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTENSET"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Disable uPP Interrupts.\n    //\n    HWREGH(base + UPP_O_INTENCLR) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Disable uPP Interrupts. // HWREGH(base + UPP_O_INTENCLR) = intFlags; }",
+      "registersUsed": [
+        "INTENCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTENCLR"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_getInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Return uPP interrupt status.\n    //\n    return(HWREGH(base + UPP_O_ENINTST) & UPP_INT_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Return uPP interrupt status. // return(HWREGH(base + UPP_O_ENINTST) & UPP_INT_M); }",
+      "registersUsed": [
+        "ENINTST"
+      ],
+      "registersUsedMatchingBifield": [
+        "ENINTST"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_getRawInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Return uPP raw interrupt status.\n    //\n    return(HWREGH(base + UPP_O_RAWINTST) & UPP_INT_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Return uPP raw interrupt status. // return(HWREGH(base + UPP_O_RAWINTST) & UPP_INT_M); }",
+      "registersUsed": [
+        "RAWINTST"
+      ],
+      "registersUsedMatchingBifield": [
+        "RAWINTST"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_clearInterruptStatus",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Clear uPP interrupt status.\n    //\n    HWREGH(base + UPP_O_ENINTST) = intFlags;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Clear uPP interrupt status. // HWREGH(base + UPP_O_ENINTST) = intFlags; }",
+      "registersUsed": [
+        "ENINTST"
+      ],
+      "registersUsedMatchingBifield": [
+        "ENINTST"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_enableGlobalInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Enable uPP global interrupt.\n    //\n    HWREGH(base + UPP_O_GINTEN) |= UPP_GINTEN_GINTEN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Enable uPP global interrupt. // HWREGH(base + UPP_O_GINTEN) |= UPP_GINTEN_GINTEN; }",
+      "registersUsed": [
+        "GINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "GINTEN"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_disableGlobalInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Disable uPP global interrupt.\n    //\n    HWREGH(base + UPP_O_GINTEN) &= ~(uint16_t)UPP_GINTEN_GINTEN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Disable uPP global interrupt. // HWREGH(base + UPP_O_GINTEN) &= ~(uint16_t)UPP_GINTEN_GINTEN; }",
+      "registersUsed": [
+        "GINTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "GINTEN"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_isInterruptGenerated",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Returns uPP global interrupt status.\n    //\n    return((HWREGH(base + UPP_O_GINTFLG)   &\n            (uint16_t)UPP_GINTFLG_GINTFLG) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Returns uPP global interrupt status. // return((HWREGH(base + UPP_O_GINTFLG) & (uint16_t)UPP_GINTFLG_GINTFLG) != 0U); }",
+      "registersUsed": [
+        "GINTFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "GINTFLG"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_clearGlobalInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Clear uPP global interrupt status.\n    //\n    HWREGH(base + UPP_O_GINTCLR) = UPP_GINTCLR_GINTCLR;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Clear uPP global interrupt status. // HWREGH(base + UPP_O_GINTCLR) = UPP_GINTCLR_GINTCLR; }",
+      "registersUsed": [
+        "GINTCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "GINTCLR"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_enableInputDelay",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Enable uPP input delay.\n    //\n    HWREGH(base + UPP_O_DLYCTL) &= ~(uint16_t)UPP_DLYCTL_DLYDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Enable uPP input delay. // HWREGH(base + UPP_O_DLYCTL) &= ~(uint16_t)UPP_DLYCTL_DLYDIS; }",
+      "registersUsed": [
+        "DLYCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DLYCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_disableInputDelay",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Disable uPP input delay.\n    //\n    HWREGH(base + UPP_O_DLYCTL) |= UPP_DLYCTL_DLYDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Disable uPP input delay. // HWREGH(base + UPP_O_DLYCTL) |= UPP_DLYCTL_DLYDIS; }",
+      "registersUsed": [
+        "DLYCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DLYCTL"
+      ]
+    },
+    {
+      "file": "upp.h",
+      "peripheral": "upp",
+      "functionName": "UPP_setInputDelay",
+      "functionArgs": [
+        "base",
+        "delay"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "UPP_InputDelay"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(UPP_isBaseValid(base));\n\n    //\n    // Set uPP input delay.\n    //\n    HWREGH(base + UPP_O_DLYCTL) = (HWREGH(base + UPP_O_DLYCTL)     &\n                                   ~(uint16_t)UPP_DLYCTL_DLYCTL_M) |\n                                  (uint16_t)delay;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(UPP_isBaseValid(base)); // // Set uPP input delay. // HWREGH(base + UPP_O_DLYCTL) = (HWREGH(base + UPP_O_DLYCTL) & ~(uint16_t)UPP_DLYCTL_DLYCTL_M) | (uint16_t)delay; }",
+      "registersUsed": [
+        "DLYCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "DLYCTL"
+      ]
+    }
+  ]
+}

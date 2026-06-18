@@ -1,0 +1,279 @@
+{
+  "name": "flash",
+  "functions": [
+    {
+      "file": "flash.c",
+      "peripheral": "flash",
+      "functionName": "Flash_initModule",
+      "functionArgs": [
+        "waitstates"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "__attribute__((section(\".TI.ramfunc.link2\"))) void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(waitstates <= 0xFU);\n    ASSERT(waitstates >= 0x1U);\n\n\n    //\n    // Disable data cache, code cache, prefetch, and data preread before changing wait states\n    //\n    Flash_configFRI(FLASH_FRI1, FLASH_DATAPREREAD_DISABLE | FLASH_CODECACHE_DISABLE | FLASH_DATACACHE_DISABLE | FLASH_PREFETCH_DISABLE);\n    Flash_configFRI(FLASH_FRI2, FLASH_DATAPREREAD_DISABLE | FLASH_CODECACHE_DISABLE | FLASH_DATACACHE_DISABLE | FLASH_PREFETCH_DISABLE);\n    Flash_configFRI(FLASH_FRI3, FLASH_DATAPREREAD_DISABLE | FLASH_CODECACHE_DISABLE | FLASH_DATACACHE_DISABLE | FLASH_PREFETCH_DISABLE);\n    Flash_configFRI(FLASH_FRI4, FLASH_DATAPREREAD_DISABLE | FLASH_CODECACHE_DISABLE | FLASH_DATACACHE_DISABLE | FLASH_PREFETCH_DISABLE);\n\n    //\n    // Set waitstates according to frequency.\n    //\n    Flash_setWaitstates(waitstates);\n\n    //\n    // Configure TRIMCOMMITREAD and TRIMCOMMITOTHER in TRIMCOMMIT register\n    //\n    Flash_writeTrims(ASYSCTL_O_FLASHTRIMCOMMIT, ASYSCTL_FLASHTRIMCOMMIT_FLC0TRIMCOMMITREAD,\n                     0, ASYSCTL_FLASHTRIMCOMMIT_FLC0TRIMCOMMITREAD);\n    Flash_writeTrims(ASYSCTL_O_FLASHTRIMCOMMIT, ASYSCTL_FLASHTRIMCOMMIT_FLC0TRIMCOMMITOTHER,\n                     0, ASYSCTL_FLASHTRIMCOMMIT_FLC0TRIMCOMMITOTHER);\n\n    Flash_writeTrims(ASYSCTL_O_FLASHTRIMCOMMIT, ASYSCTL_FLASHTRIMCOMMIT_FLC1TRIMCOMMITREAD,\n                     0, ASYSCTL_FLASHTRIMCOMMIT_FLC1TRIMCOMMITREAD);\n    Flash_writeTrims(ASYSCTL_O_FLASHTRIMCOMMIT, ASYSCTL_FLASHTRIMCOMMIT_FLC1TRIMCOMMITOTHER,\n                     0, ASYSCTL_FLASHTRIMCOMMIT_FLC1TRIMCOMMITOTHER);\n\n    Flash_writeTrims(ASYSCTL_O_FLASHTRIMCOMMIT, ASYSCTL_FLASHTRIMCOMMIT_FLC2TRIMCOMMITREAD,\n                     0, ASYSCTL_FLASHTRIMCOMMIT_FLC2TRIMCOMMITREAD);\n    Flash_writeTrims(ASYSCTL_O_FLASHTRIMCOMMIT, ASYSCTL_FLASHTRIMCOMMIT_FLC2TRIMCOMMITOTHER,\n                     0, ASYSCTL_FLASHTRIMCOMMIT_FLC2TRIMCOMMITOTHER);\n\n    //\n    // Enable data cache, code cache, and prefetch to improve performance of code\n    // executed from flash. Data Preread is not enabled as it should only be used in \n    // very specific cases where data is sequentially accessed.\n    //\n    Flash_configFRI(FLASH_FRI1, FLASH_CODECACHE_ENABLE | FLASH_DATACACHE_ENABLE | FLASH_PREFETCH_ENABLE);\n    Flash_configFRI(FLASH_FRI2, FLASH_CODECACHE_ENABLE | FLASH_DATACACHE_ENABLE | FLASH_PREFETCH_ENABLE);\n    Flash_configFRI(FLASH_FRI3, FLASH_CODECACHE_ENABLE | FLASH_DATACACHE_ENABLE | FLASH_PREFETCH_ENABLE);\n    Flash_configFRI(FLASH_FRI4, FLASH_CODECACHE_ENABLE | FLASH_DATACACHE_ENABLE | FLASH_PREFETCH_ENABLE);\n\n    //\n    // Force a pipeline flush to ensure that the write to the last register\n    // configured occurs before returning.\n    //\n\n    FLASH_DELAY_CONFIG;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(waitstates <= 0xFU); ASSERT(waitstates >= 0x1U); // // Disable data cache, code cache, prefetch, and data preread before changing wait states // Flash_configFRI(FLASH_FRI1, FLASH_DATAPREREAD_DISABLE | FLASH_CODECACHE_DISABLE | FLASH_DATACACHE_DISABLE | FLASH_PREFETCH_DISABLE); Flash_configFRI(FLASH_FRI2, FLASH_DATAPREREAD_DISABLE | FLASH_CODECACHE_DISABLE | FLASH_DATACACHE_DISABLE | FLASH_PREFETCH_DISABLE); Flash_configFRI(FLASH_FRI3, FLASH_DATAPREREAD_DISABLE | FLASH_CODECACHE_DISABLE | FLASH_DATACACHE_DISABLE | FLASH_PREFETCH_DISABLE); Flash_configFRI(FLASH_FRI4, FLASH_DATAPREREAD_DISABLE | FLASH_CODECACHE_DISABLE | FLASH_DATACACHE_DISABLE | FLASH_PREFETCH_DISABLE); // // Set waitstates according to frequency. // Flash_setWaitstates(waitstates); // // Configure TRIMCOMMITREAD and TRIMCOMMITOTHER in TRIMCOMMIT register // Flash_writeTrims(ASYSCTL_O_FLASHTRIMCOMMIT, ASYSCTL_FLASHTRIMCOMMIT_FLC0TRIMCOMMITREAD, 0, ASYSCTL_FLASHTRIMCOMMIT_FLC0TRIMCOMMITREAD); Flash_writeTrims(ASYSCTL_O_FLASHTRIMCOMMIT, ASYSCTL_FLASHTRIMCOMMIT_FLC0TRIMCOMMITOTHER, 0, ASYSCTL_FLASHTRIMCOMMIT_FLC0TRIMCOMMITOTHER); Flash_writeTrims(ASYSCTL_O_FLASHTRIMCOMMIT, ASYSCTL_FLASHTRIMCOMMIT_FLC1TRIMCOMMITREAD, 0, ASYSCTL_FLASHTRIMCOMMIT_FLC1TRIMCOMMITREAD); Flash_writeTrims(ASYSCTL_O_FLASHTRIMCOMMIT, ASYSCTL_FLASHTRIMCOMMIT_FLC1TRIMCOMMITOTHER, 0, ASYSCTL_FLASHTRIMCOMMIT_FLC1TRIMCOMMITOTHER); Flash_writeTrims(ASYSCTL_O_FLASHTRIMCOMMIT, ASYSCTL_FLASHTRIMCOMMIT_FLC2TRIMCOMMITREAD, 0, ASYSCTL_FLASHTRIMCOMMIT_FLC2TRIMCOMMITREAD); Flash_writeTrims(ASYSCTL_O_FLASHTRIMCOMMIT, ASYSCTL_FLASHTRIMCOMMIT_FLC2TRIMCOMMITOTHER, 0, ASYSCTL_FLASHTRIMCOMMIT_FLC2TRIMCOMMITOTHER); // // Enable data cache, code cache, and prefetch to improve performance of code // executed from flash. Data Preread is not enabled as it should only be used in // very specific cases where data is sequentially accessed. // Flash_configFRI(FLASH_FRI1, FLASH_CODECACHE_ENABLE | FLASH_DATACACHE_ENABLE | FLASH_PREFETCH_ENABLE); Flash_configFRI(FLASH_FRI2, FLASH_CODECACHE_ENABLE | FLASH_DATACACHE_ENABLE | FLASH_PREFETCH_ENABLE); Flash_configFRI(FLASH_FRI3, FLASH_CODECACHE_ENABLE | FLASH_DATACACHE_ENABLE | FLASH_PREFETCH_ENABLE); Flash_configFRI(FLASH_FRI4, FLASH_CODECACHE_ENABLE | FLASH_DATACACHE_ENABLE | FLASH_PREFETCH_ENABLE); // // Force a pipeline flush to ensure that the write to the last register // configured occurs before returning. // FLASH_DELAY_CONFIG; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_setWaitstates",
+      "functionArgs": [
+        "waitstates"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "__attribute__((section(\".TI.ramfunc.link2\"))) static inline void",
+      "functionContent": "{\n\n    //\n    // waitstates is 4 bits wide.\n    //\n    ASSERT(waitstates <= 0xFU);\n    ASSERT(waitstates >= 0x1U);\n\n    //\n    // Write flash read wait-state amount to appropriate register.\n    //\n    HWREG(FRI1_BASE + FRI_O_FRDCNTL) =\n        (HWREG(FRI1_BASE + FRI_O_FRDCNTL) &\n         ~(uint32_t)FRI_FRDCNTL_RWAIT_M) |\n         ((uint32_t)waitstates << FRI_FRDCNTL_RWAIT_S);\n}\n",
+      "functionContentWithoutFormatting": "{ // // waitstates is 4 bits wide. // ASSERT(waitstates <= 0xFU); ASSERT(waitstates >= 0x1U); // // Write flash read wait-state amount to appropriate register. // HWREG(FRI1_BASE + FRI_O_FRDCNTL) = (HWREG(FRI1_BASE + FRI_O_FRDCNTL) & ~(uint32_t)FRI_FRDCNTL_RWAIT_M) | ((uint32_t)waitstates << FRI_FRDCNTL_RWAIT_S); }",
+      "registersUsed": [
+        "FRDCNTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRDCNTL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_lockWaitstates",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".TI.ramfunc.link2\"))) static inline void",
+      "functionContent": "{\n\n    //\n    // Set the FRI FRDCNTL Lock bit\n    //\n    HWREG(FRI1_BASE + FRI_O_FRDCNTL_LOCK) |= FRI_FRDCNTL_LOCK_LOCK;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the FRI FRDCNTL Lock bit // HWREG(FRI1_BASE + FRI_O_FRDCNTL_LOCK) |= FRI_FRDCNTL_LOCK_LOCK; }",
+      "registersUsed": [
+        "FRDCNTL",
+        "FRDCNTL_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRDCNTL",
+        "FRDCNTL_LOCK"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_commitWaitstates",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".TI.ramfunc.link2\"))) static inline void",
+      "functionContent": "{\n\n    //\n    // Set the FRI FRDCNTL Lock bit\n    //\n    HWREG(FRI1_BASE + FRI_O_FRDCNTL_COMMIT) |= FRI_FRDCNTL_COMMIT_COMMIT;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the FRI FRDCNTL Lock bit // HWREG(FRI1_BASE + FRI_O_FRDCNTL_COMMIT) |= FRI_FRDCNTL_COMMIT_COMMIT; }",
+      "registersUsed": [
+        "FRDCNTL",
+        "FRDCNTL_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "FRDCNTL",
+        "FRDCNTL_COMMIT"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_configFRI",
+      "functionArgs": [
+        "friID",
+        "configFlags"
+      ],
+      "functionArgsTypes": [
+        "Flash_FRI",
+        "uint32_t"
+      ],
+      "returnType": "__attribute__((section(\".TI.ramfunc.link2\"))) static inline void",
+      "functionContent": "{\n\n    //\n    // Set the FRI options.\n    //\n    HWREG(FRI1_BASE + FRI_O_1_INTF_CTRL + ((uint32_t)friID * FRI_REG_STEP)) = configFlags;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the FRI options. // HWREG(FRI1_BASE + FRI_O_1_INTF_CTRL + ((uint32_t)friID * FRI_REG_STEP)) = configFlags; }",
+      "registersUsed": [
+        "1_INTF_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "1_INTF_CTRL"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_lockFRI",
+      "functionArgs": [
+        "friID"
+      ],
+      "functionArgsTypes": [
+        "Flash_FRI"
+      ],
+      "returnType": "__attribute__((section(\".TI.ramfunc.link2\"))) static inline void",
+      "functionContent": "{\n\n    //\n    // Set the FRI lock bit.\n    //\n    HWREG(FRI1_BASE + FRI_O_1_INTF_CTRL_LOCK + ((uint32_t)friID * FRI_REG_STEP)) |= FLASH_INTF_CTRL_LOCK;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the FRI lock bit. // HWREG(FRI1_BASE + FRI_O_1_INTF_CTRL_LOCK + ((uint32_t)friID * FRI_REG_STEP)) |= FLASH_INTF_CTRL_LOCK; }",
+      "registersUsed": [
+        "1_INTF_CTRL",
+        "1_INTF_CTRL_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "1_INTF_CTRL",
+        "1_INTF_CTRL_LOCK"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_commitFRI",
+      "functionArgs": [
+        "friID"
+      ],
+      "functionArgsTypes": [
+        "Flash_FRI"
+      ],
+      "returnType": "__attribute__((section(\".TI.ramfunc.link2\"))) static inline void",
+      "functionContent": "{\n\n    //\n    // Set the FRI lock bit.\n    //\n    HWREG(FRI1_BASE + FRI_O_1_INTF_CTRL_COMMIT + ((uint32_t)friID * FRI_REG_STEP)) |= FLASH_INTF_CTRL_COMMIT;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the FRI lock bit. // HWREG(FRI1_BASE + FRI_O_1_INTF_CTRL_COMMIT + ((uint32_t)friID * FRI_REG_STEP)) |= FLASH_INTF_CTRL_COMMIT; }",
+      "registersUsed": [
+        "1_INTF_CTRL",
+        "1_INTF_CTRL_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "1_INTF_CTRL",
+        "1_INTF_CTRL_COMMIT"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_clearFRI",
+      "functionArgs": [
+        "friID",
+        "clearFlags"
+      ],
+      "functionArgsTypes": [
+        "Flash_FRI",
+        "uint32_t"
+      ],
+      "returnType": "__attribute__((section(\".TI.ramfunc.link2\"))) static inline void",
+      "functionContent": "{\n\n    //\n    // Set the FRI INTF CLR bits\n    //\n    HWREG(FRI1_BASE + FRI_O_1_INTF_CLR + ((uint32_t)friID * FRI_REG_STEP)) = clearFlags;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the FRI INTF CLR bits // HWREG(FRI1_BASE + FRI_O_1_INTF_CLR + ((uint32_t)friID * FRI_REG_STEP)) = clearFlags; }",
+      "registersUsed": [
+        "1_INTF_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "1_INTF_CLR"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_enableParityTest",
+      "functionArgs": [
+        "testEnable"
+      ],
+      "functionArgsTypes": [
+        "uint16_t"
+      ],
+      "returnType": "__attribute__((section(\".TI.ramfunc.link2\"))) static inline void",
+      "functionContent": "{\n\n    //\n    // testEnable is 4 bits wide.\n    //\n    ASSERT(testEnable <= 0xFU);\n\n    //\n    // Set the test enable field\n    //\n    HWREG(FRI1_BASE + FRI_O_PARITY_TEST) =\n        (HWREG(FRI1_BASE + FRI_O_PARITY_TEST) &\n         ~(uint32_t)FRI_PARITY_TEST_TESTEN_M) |\n         ((uint32_t)testEnable);\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // testEnable is 4 bits wide. // ASSERT(testEnable <= 0xFU); // // Set the test enable field // HWREG(FRI1_BASE + FRI_O_PARITY_TEST) = (HWREG(FRI1_BASE + FRI_O_PARITY_TEST) & ~(uint32_t)FRI_PARITY_TEST_TESTEN_M) | ((uint32_t)testEnable); }",
+      "registersUsed": [
+        "PARITY_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "PARITY_TEST"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_disableParityTest",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".TI.ramfunc.link2\"))) static inline void",
+      "functionContent": "{\n\n    //\n    // Clear the test enable field\n    //\n    HWREG(FRI1_BASE + FRI_O_PARITY_TEST) &= ~(uint32_t)FRI_PARITY_TEST_TESTEN_M;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Clear the test enable field // HWREG(FRI1_BASE + FRI_O_PARITY_TEST) &= ~(uint32_t)FRI_PARITY_TEST_TESTEN_M; }",
+      "registersUsed": [
+        "PARITY_TEST"
+      ],
+      "registersUsedMatchingBifield": [
+        "PARITY_TEST"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_lockParityTest",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".TI.ramfunc.link2\"))) static inline void",
+      "functionContent": "{\n\n    //\n    // Set the PARITY TEST LOCK bit\n    //\n    HWREG(FRI1_BASE + FRI_O_PARITY_TEST_LOCK) |= FRI_PARITY_TEST_LOCK_LOCK;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the PARITY TEST LOCK bit // HWREG(FRI1_BASE + FRI_O_PARITY_TEST_LOCK) |= FRI_PARITY_TEST_LOCK_LOCK; }",
+      "registersUsed": [
+        "PARITY_TEST",
+        "PARITY_TEST_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "PARITY_TEST",
+        "PARITY_TEST_LOCK"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_commitParityTest",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "__attribute__((section(\".TI.ramfunc.link2\"))) static inline void",
+      "functionContent": "{\n\n    //\n    // Set the PARITY TEST COMMIT bit\n    //\n    HWREG(FRI1_BASE + FRI_O_PARITY_TEST_COMMIT) |= FRI_PARITY_TEST_COMMIT_COMMIT;\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the PARITY TEST COMMIT bit // HWREG(FRI1_BASE + FRI_O_PARITY_TEST_COMMIT) |= FRI_PARITY_TEST_COMMIT_COMMIT; }",
+      "registersUsed": [
+        "PARITY_TEST",
+        "PARITY_TEST_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "PARITY_TEST",
+        "PARITY_TEST_COMMIT"
+      ]
+    },
+    {
+      "file": "flash.h",
+      "peripheral": "flash",
+      "functionName": "Flash_writeTrims",
+      "functionArgs": [
+        "reg_offset",
+        "mask",
+        "shift",
+        "value"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Set the requested bits to the value.\n    //\n    HWREG(ANALOGSUBSYS_BASE + reg_offset) &= ~(uint32_t)mask;\n\n    HWREG(ANALOGSUBSYS_BASE + reg_offset) |= ((uint32_t)value << shift);\n\n}\n",
+      "functionContentWithoutFormatting": "{ // // Set the requested bits to the value. // HWREG(ANALOGSUBSYS_BASE + reg_offset) &= ~(uint32_t)mask; HWREG(ANALOGSUBSYS_BASE + reg_offset) |= ((uint32_t)value << shift); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    }
+  ]
+}

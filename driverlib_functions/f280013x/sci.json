@@ -1,0 +1,1071 @@
+{
+  "name": "sci",
+  "functions": [
+    {
+      "file": "sci.c",
+      "peripheral": "sci",
+      "functionName": "SCI_setConfig",
+      "functionArgs": [
+        "base",
+        "lspclkHz",
+        "baud",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t divider;\n\n    //\n    // Check the arguments.\n    // Is the required baud rate greater than the maximum rate supported?\n    //\n    ASSERT(SCI_isBaseValid(base));\n    ASSERT(baud != 0U);\n    ASSERT((baud * 16U) <= lspclkHz);\n\n    //\n    // Stop the SCI.\n    //\n    SCI_disableModule(base);\n\n    //\n    // Compute the baud rate divider.\n    //\n    divider = ((lspclkHz  / (baud * 8U)) - 1U);\n\n    //\n    // Set the baud rate.\n    //\n    HWREGH(base + SCI_O_HBAUD) = (divider & 0xFF00U) >> 8U;\n    HWREGH(base + SCI_O_LBAUD) = divider & 0x00FFU;\n\n    //\n    // Set parity, data length, and number of stop bits.\n    //\n    HWREGH(base + SCI_O_CCR) = ((HWREGH(base + SCI_O_CCR) &\n                                 ~(SCI_CONFIG_PAR_MASK |\n                                   SCI_CONFIG_STOP_MASK |\n                                   SCI_CONFIG_WLEN_MASK)) | config);\n\n    //\n    // Start the SCI.\n    //\n    SCI_enableModule(base);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t divider; // // Check the arguments. // Is the required baud rate greater than the maximum rate supported? // ASSERT(SCI_isBaseValid(base)); ASSERT(baud != 0U); ASSERT((baud * 16U) <= lspclkHz); // // Stop the SCI. // SCI_disableModule(base); // // Compute the baud rate divider. // divider = ((lspclkHz / (baud * 8U)) - 1U); // // Set the baud rate. // HWREGH(base + SCI_O_HBAUD) = (divider & 0xFF00U) >> 8U; HWREGH(base + SCI_O_LBAUD) = divider & 0x00FFU; // // Set parity, data length, and number of stop bits. // HWREGH(base + SCI_O_CCR) = ((HWREGH(base + SCI_O_CCR) & ~(SCI_CONFIG_PAR_MASK | SCI_CONFIG_STOP_MASK | SCI_CONFIG_WLEN_MASK)) | config); // // Start the SCI. // SCI_enableModule(base); }",
+      "registersUsed": [
+        "CCR",
+        "HBAUD",
+        "LBAUD"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICCR",
+        "SCIHBAUD",
+        "SCILBAUD"
+      ]
+    },
+    {
+      "file": "sci.c",
+      "peripheral": "sci",
+      "functionName": "SCI_writeCharArray",
+      "functionArgs": [
+        "base",
+        "array",
+        "length"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "constuint16_t*const",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    uint16_t i;\n    //\n    // Check if FIFO enhancement is enabled.\n    //\n    if(SCI_isFIFOEnabled(base))\n    {\n        //\n        // FIFO is enabled.\n        // For loop to write (Blocking) 'length' number of characters\n        //\n        for(i = 0U; i < length; i++)\n        {\n            //\n            // Wait until space is available in the transmit FIFO.\n            //\n            while(SCI_getTxFIFOStatus(base) == SCI_FIFO_TX16)\n            {\n            }\n\n            //\n            // Send a char.\n            //\n            HWREGH(base + SCI_O_TXBUF) = array[i];\n        }\n    }\n    else\n    {\n        //\n        // FIFO is not enabled.\n        // For loop to write (Blocking) 'length' number of characters\n        //\n        for(i = 0U; i < length; i++)\n        {\n            //\n            // Wait until space is available in the transmit buffer.\n            //\n            while(!SCI_isSpaceAvailableNonFIFO(base))\n            {\n            }\n\n            //\n            // Send a char.\n            //\n            HWREGH(base + SCI_O_TXBUF) = array[i];\n        }\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); uint16_t i; // // Check if FIFO enhancement is enabled. // if(SCI_isFIFOEnabled(base)) { // // FIFO is enabled. // For loop to write (Blocking) 'length' number of characters // for(i = 0U; i < length; i++) { // // Wait until space is available in the transmit FIFO. // while(SCI_getTxFIFOStatus(base) == SCI_FIFO_TX16) { } // // Send a char. // HWREGH(base + SCI_O_TXBUF) = array[i]; } } else { // // FIFO is not enabled. // For loop to write (Blocking) 'length' number of characters // for(i = 0U; i < length; i++) { // // Wait until space is available in the transmit buffer. // while(!SCI_isSpaceAvailableNonFIFO(base)) { } // // Send a char. // HWREGH(base + SCI_O_TXBUF) = array[i]; } } }",
+      "registersUsed": [
+        "TXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCITXBUF"
+      ]
+    },
+    {
+      "file": "sci.c",
+      "peripheral": "sci",
+      "functionName": "SCI_readCharArray",
+      "functionArgs": [
+        "base",
+        "array",
+        "length"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t*const",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    uint16_t i;\n    //\n    // Check if FIFO enhancement is enabled.\n    //\n    if(SCI_isFIFOEnabled(base))\n    {\n        //\n        // FIFO is enabled.\n        // For loop to read (Blocking) 'length' number of characters\n        //\n        for(i = 0U; i < length; i++)\n        {\n            //\n            // Wait until a character is available in the receive FIFO.\n            //\n            while(SCI_getRxFIFOStatus(base) == SCI_FIFO_RX0)\n            {\n            }\n\n            //\n            // Return the character from the receive buffer.\n            //\n            array[i] = (uint16_t)\n                       (HWREGH(base + SCI_O_RXBUF) & SCI_RXBUF_SAR_M);\n        }\n    }\n    else\n    {\n        //\n        // FIFO is not enabled.\n        // For loop to read (Blocking) 'length' number of characters\n        //\n        for(i = 0U; i < length; i++)\n        {\n            //\n            // Wait until a character is available in the receive buffer.\n            //\n            while(!SCI_isDataAvailableNonFIFO(base))\n            {\n            }\n\n            //\n            // Return the character from the receive buffer.\n            //\n            array[i] = (uint16_t)\n                       (HWREGH(base + SCI_O_RXBUF) & SCI_RXBUF_SAR_M);\n        }\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); uint16_t i; // // Check if FIFO enhancement is enabled. // if(SCI_isFIFOEnabled(base)) { // // FIFO is enabled. // For loop to read (Blocking) 'length' number of characters // for(i = 0U; i < length; i++) { // // Wait until a character is available in the receive FIFO. // while(SCI_getRxFIFOStatus(base) == SCI_FIFO_RX0) { } // // Return the character from the receive buffer. // array[i] = (uint16_t) (HWREGH(base + SCI_O_RXBUF) & SCI_RXBUF_SAR_M); } } else { // // FIFO is not enabled. // For loop to read (Blocking) 'length' number of characters // for(i = 0U; i < length; i++) { // // Wait until a character is available in the receive buffer. // while(!SCI_isDataAvailableNonFIFO(base)) { } // // Return the character from the receive buffer. // array[i] = (uint16_t) (HWREGH(base + SCI_O_RXBUF) & SCI_RXBUF_SAR_M); } } }",
+      "registersUsed": [
+        "RXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIRXBUF"
+      ]
+    },
+    {
+      "file": "sci.c",
+      "peripheral": "sci",
+      "functionName": "SCI_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Enable the specified interrupts.\n    //\n    if((intFlags & SCI_INT_RXERR) == SCI_INT_RXERR)\n    {\n        HWREGH(base + SCI_O_CTL1) |= SCI_CTL1_RXERRINTENA;\n    }\n    if((intFlags & SCI_INT_RXRDY_BRKDT) == SCI_INT_RXRDY_BRKDT)\n    {\n        HWREGH(base + SCI_O_CTL2) |= SCI_CTL2_RXBKINTENA;\n    }\n    if((intFlags & SCI_INT_TXRDY) == SCI_INT_TXRDY)\n    {\n        HWREGH(base + SCI_O_CTL2) |= SCI_CTL2_TXINTENA;\n    }\n    if((intFlags & SCI_INT_TXFF) == SCI_INT_TXFF)\n    {\n        HWREGH(base + SCI_O_FFTX) |= SCI_FFTX_TXFFIENA;\n    }\n    if((intFlags & SCI_INT_RXFF) == SCI_INT_RXFF)\n    {\n        HWREGH(base + SCI_O_FFRX) |= SCI_FFRX_RXFFIENA;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Enable the specified interrupts. // if((intFlags & SCI_INT_RXERR) == SCI_INT_RXERR) { HWREGH(base + SCI_O_CTL1) |= SCI_CTL1_RXERRINTENA; } if((intFlags & SCI_INT_RXRDY_BRKDT) == SCI_INT_RXRDY_BRKDT) { HWREGH(base + SCI_O_CTL2) |= SCI_CTL2_RXBKINTENA; } if((intFlags & SCI_INT_TXRDY) == SCI_INT_TXRDY) { HWREGH(base + SCI_O_CTL2) |= SCI_CTL2_TXINTENA; } if((intFlags & SCI_INT_TXFF) == SCI_INT_TXFF) { HWREGH(base + SCI_O_FFTX) |= SCI_FFTX_TXFFIENA; } if((intFlags & SCI_INT_RXFF) == SCI_INT_RXFF) { HWREGH(base + SCI_O_FFRX) |= SCI_FFRX_RXFFIENA; } }",
+      "registersUsed": [
+        "CTL1",
+        "CTL2",
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL1",
+        "SCICTL2",
+        "SCIFFTX",
+        "SCIFFRX"
+      ]
+    },
+    {
+      "file": "sci.c",
+      "peripheral": "sci",
+      "functionName": "SCI_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Disable the specified interrupts.\n    //\n    if((intFlags & SCI_INT_RXERR) == SCI_INT_RXERR)\n    {\n        HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_RXERRINTENA;\n    }\n    if((intFlags & SCI_INT_RXRDY_BRKDT) == SCI_INT_RXRDY_BRKDT)\n    {\n        HWREGH(base + SCI_O_CTL2) &= ~SCI_CTL2_RXBKINTENA;\n    }\n    if((intFlags & SCI_INT_TXRDY) == SCI_INT_TXRDY)\n    {\n        HWREGH(base + SCI_O_CTL2) &= ~SCI_CTL2_TXINTENA;\n    }\n    if((intFlags & SCI_INT_TXFF) == SCI_INT_TXFF)\n    {\n        HWREGH(base + SCI_O_FFTX) &= ~SCI_FFTX_TXFFIENA;\n    }\n    if((intFlags & SCI_INT_RXFF) == SCI_INT_RXFF)\n    {\n        HWREGH(base + SCI_O_FFRX) &= ~SCI_FFRX_RXFFIENA;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Disable the specified interrupts. // if((intFlags & SCI_INT_RXERR) == SCI_INT_RXERR) { HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_RXERRINTENA; } if((intFlags & SCI_INT_RXRDY_BRKDT) == SCI_INT_RXRDY_BRKDT) { HWREGH(base + SCI_O_CTL2) &= ~SCI_CTL2_RXBKINTENA; } if((intFlags & SCI_INT_TXRDY) == SCI_INT_TXRDY) { HWREGH(base + SCI_O_CTL2) &= ~SCI_CTL2_TXINTENA; } if((intFlags & SCI_INT_TXFF) == SCI_INT_TXFF) { HWREGH(base + SCI_O_FFTX) &= ~SCI_FFTX_TXFFIENA; } if((intFlags & SCI_INT_RXFF) == SCI_INT_RXFF) { HWREGH(base + SCI_O_FFRX) &= ~SCI_FFRX_RXFFIENA; } }",
+      "registersUsed": [
+        "CTL1",
+        "CTL2",
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL1",
+        "SCICTL2",
+        "SCIFFTX",
+        "SCIFFRX"
+      ]
+    },
+    {
+      "file": "sci.c",
+      "peripheral": "sci",
+      "functionName": "SCI_getInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "uint32_t",
+      "functionContent": "{\n    uint32_t interruptStatus = 0;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Return the interrupt status.\n    //\n    if((HWREGH(base + SCI_O_CTL2) & SCI_CTL2_TXRDY) == SCI_CTL2_TXRDY)\n    {\n        interruptStatus |= SCI_INT_TXRDY;\n    }\n    if((HWREGH(base + SCI_O_RXST) & SCI_RXST_RXERROR) == SCI_RXST_RXERROR)\n    {\n        interruptStatus |= SCI_INT_RXERR;\n    }\n    if(((HWREGH(base + SCI_O_RXST) & SCI_RXST_RXRDY) == SCI_RXST_RXRDY)  ||\n       ((HWREGH(base + SCI_O_RXST) & SCI_RXST_BRKDT) ==  SCI_RXST_BRKDT))\n    {\n        interruptStatus |= SCI_INT_RXRDY_BRKDT;\n    }\n    if((HWREGH(base + SCI_O_FFTX) & SCI_FFTX_TXFFINT) == SCI_FFTX_TXFFINT)\n    {\n        interruptStatus |= SCI_INT_TXFF;\n    }\n    if((HWREGH(base + SCI_O_FFRX) & SCI_FFRX_RXFFINT) == SCI_FFRX_RXFFINT)\n    {\n        interruptStatus |= SCI_INT_RXFF;\n    }\n    if((HWREGH(base + SCI_O_RXST) & SCI_RXST_FE) == SCI_RXST_FE)\n    {\n        interruptStatus |= SCI_INT_FE;\n    }\n    if((HWREGH(base + SCI_O_RXST) & SCI_RXST_OE) == SCI_RXST_OE)\n    {\n        interruptStatus |= SCI_INT_OE;\n    }\n    if((HWREGH(base + SCI_O_RXST) & SCI_RXST_PE) == SCI_RXST_PE)\n    {\n        interruptStatus |= SCI_INT_PE;\n    }\n\n    return(interruptStatus);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t interruptStatus = 0; // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Return the interrupt status. // if((HWREGH(base + SCI_O_CTL2) & SCI_CTL2_TXRDY) == SCI_CTL2_TXRDY) { interruptStatus |= SCI_INT_TXRDY; } if((HWREGH(base + SCI_O_RXST) & SCI_RXST_RXERROR) == SCI_RXST_RXERROR) { interruptStatus |= SCI_INT_RXERR; } if(((HWREGH(base + SCI_O_RXST) & SCI_RXST_RXRDY) == SCI_RXST_RXRDY) || ((HWREGH(base + SCI_O_RXST) & SCI_RXST_BRKDT) == SCI_RXST_BRKDT)) { interruptStatus |= SCI_INT_RXRDY_BRKDT; } if((HWREGH(base + SCI_O_FFTX) & SCI_FFTX_TXFFINT) == SCI_FFTX_TXFFINT) { interruptStatus |= SCI_INT_TXFF; } if((HWREGH(base + SCI_O_FFRX) & SCI_FFRX_RXFFINT) == SCI_FFRX_RXFFINT) { interruptStatus |= SCI_INT_RXFF; } if((HWREGH(base + SCI_O_RXST) & SCI_RXST_FE) == SCI_RXST_FE) { interruptStatus |= SCI_INT_FE; } if((HWREGH(base + SCI_O_RXST) & SCI_RXST_OE) == SCI_RXST_OE) { interruptStatus |= SCI_INT_OE; } if((HWREGH(base + SCI_O_RXST) & SCI_RXST_PE) == SCI_RXST_PE) { interruptStatus |= SCI_INT_PE; } return(interruptStatus); }",
+      "registersUsed": [
+        "CTL2",
+        "RXST",
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL2",
+        "SCIRXST",
+        "SCIFFTX",
+        "SCIFFRX"
+      ]
+    },
+    {
+      "file": "sci.c",
+      "peripheral": "sci",
+      "functionName": "SCI_clearInterruptStatus",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Clear the requested interrupt sources.\n    //\n    if(((intFlags & SCI_INT_RXERR) == SCI_INT_RXERR) ||\n       ((intFlags & SCI_INT_RXRDY_BRKDT) == SCI_INT_RXRDY_BRKDT) ||\n       ((intFlags & SCI_INT_FE) == SCI_INT_FE) ||\n       ((intFlags & SCI_INT_OE) == SCI_INT_OE) ||\n       ((intFlags & SCI_INT_PE) == SCI_INT_PE))\n    {\n        SCI_performSoftwareReset(base);\n    }\n    if((intFlags & SCI_INT_TXFF) == SCI_INT_TXFF)\n    {\n        HWREGH(base + SCI_O_FFTX) |= SCI_FFTX_TXFFINTCLR;\n    }\n    if((intFlags & SCI_INT_RXFF) == SCI_INT_RXFF)\n    {\n         HWREGH(base + SCI_O_FFRX) |= SCI_FFRX_RXFFINTCLR;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Clear the requested interrupt sources. // if(((intFlags & SCI_INT_RXERR) == SCI_INT_RXERR) || ((intFlags & SCI_INT_RXRDY_BRKDT) == SCI_INT_RXRDY_BRKDT) || ((intFlags & SCI_INT_FE) == SCI_INT_FE) || ((intFlags & SCI_INT_OE) == SCI_INT_OE) || ((intFlags & SCI_INT_PE) == SCI_INT_PE)) { SCI_performSoftwareReset(base); } if((intFlags & SCI_INT_TXFF) == SCI_INT_TXFF) { HWREGH(base + SCI_O_FFTX) |= SCI_FFTX_TXFFINTCLR; } if((intFlags & SCI_INT_RXFF) == SCI_INT_RXFF) { HWREGH(base + SCI_O_FFRX) |= SCI_FFRX_RXFFINTCLR; } }",
+      "registersUsed": [
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFTX",
+        "SCIFFRX"
+      ]
+    },
+    {
+      "file": "sci.c",
+      "peripheral": "sci",
+      "functionName": "SCI_setBaud",
+      "functionArgs": [
+        "base",
+        "lspclkHz",
+        "baud"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t divider;\n\n    //\n    // Compute the baud rate divider {ROUND TO NEAREST INTEGER}\n    //\n    divider = ((float)((float)lspclkHz / ((float)baud * 8.0F)) - 1.0F) + 0.5F;\n\n    //\n    // Set the baud rate.\n    //\n    HWREGH(base + SCI_O_HBAUD) = (divider & 0xFF00U) >> 8U;\n    HWREGH(base + SCI_O_LBAUD) = divider & 0x00FFU;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t divider; // // Compute the baud rate divider {ROUND TO NEAREST INTEGER} // divider = ((float)((float)lspclkHz / ((float)baud * 8.0F)) - 1.0F) + 0.5F; // // Set the baud rate. // HWREGH(base + SCI_O_HBAUD) = (divider & 0xFF00U) >> 8U; HWREGH(base + SCI_O_LBAUD) = divider & 0x00FFU; }",
+      "registersUsed": [
+        "HBAUD",
+        "LBAUD"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIHBAUD",
+        "SCILBAUD"
+      ]
+    },
+    {
+      "file": "sci.c",
+      "peripheral": "sci",
+      "functionName": "SCI_setWakeFlag",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Set the TX wake flag bit to indicate\n    // that the next frame is an address frame.\n    //\n    HWREGH(base + SCI_O_CTL1) |= SCI_CTL1_TXWAKE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Set the TX wake flag bit to indicate // that the next frame is an address frame. // HWREGH(base + SCI_O_CTL1) |= SCI_CTL1_TXWAKE; }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL1"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == SCIA_BASE) ||\n           (base == SCIB_BASE) ||\n           (base == SCIC_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == SCIA_BASE) || (base == SCIB_BASE) || (base == SCIC_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_setParityMode",
+      "functionArgs": [
+        "base",
+        "parity"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SCI_ParityType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Set the parity mode.\n    //\n    HWREGH(base + SCI_O_CCR) = ((HWREGH(base + SCI_O_CCR) &\n                                 ~(SCI_CONFIG_PAR_MASK)) | (uint16_t)parity);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Set the parity mode. // HWREGH(base + SCI_O_CCR) = ((HWREGH(base + SCI_O_CCR) & ~(SCI_CONFIG_PAR_MASK)) | (uint16_t)parity); }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICCR"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_getParityMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline SCI_ParityType",
+      "functionContent": "{\n    uint16_t parity;\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Return the current parity setting.\n    //\n    parity = (HWREGH(base + SCI_O_CCR) & (SCI_CONFIG_PAR_MASK));\n\n    return((SCI_ParityType)parity);\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t parity; // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Return the current parity setting. // parity = (HWREGH(base + SCI_O_CCR) & (SCI_CONFIG_PAR_MASK)); return((SCI_ParityType)parity); }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICCR"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_setAddrMultiProcessorMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Enable the address-bit mode protocol\n    //\n    HWREGH(base + SCI_O_CCR) |= SCI_CCR_ADDRIDLE_MODE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Enable the address-bit mode protocol // HWREGH(base + SCI_O_CCR) |= SCI_CCR_ADDRIDLE_MODE; }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICCR"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_setIdleMultiProcessorMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Disable the address-bit mode protocol\n    //\n    HWREGH(base + SCI_O_CCR) &= ~SCI_CCR_ADDRIDLE_MODE;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Disable the address-bit mode protocol // HWREGH(base + SCI_O_CCR) &= ~SCI_CCR_ADDRIDLE_MODE; }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICCR"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_lockAutobaud",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Prime the baud register\n    //\n    HWREGH(base + SCI_O_HBAUD) = 0x0U;\n    HWREGH(base + SCI_O_LBAUD) = 0x1U;\n\n    //\n    // Prepare for autobaud detection.\n    // Set the CDC bit to enable autobaud detection and clear the ABD bit.\n    //\n    HWREGH(base + SCI_O_FFCT) |= SCI_FFCT_CDC;\n    HWREGH(base + SCI_O_FFCT) |= SCI_FFCT_ABDCLR;\n\n    //\n    // Wait until we correctly read an 'A' or 'a' and lock\n    //\n    while((HWREGH(base + SCI_O_FFCT) & SCI_FFCT_ABD) != SCI_FFCT_ABD)\n    {\n    }\n\n    //\n    // After autobaud lock, clear the ABD and CDC bits\n    //\n    HWREGH(base + SCI_O_FFCT) |= SCI_FFCT_ABDCLR;\n    HWREGH(base + SCI_O_FFCT) &= ~SCI_FFCT_CDC;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Prime the baud register // HWREGH(base + SCI_O_HBAUD) = 0x0U; HWREGH(base + SCI_O_LBAUD) = 0x1U; // // Prepare for autobaud detection. // Set the CDC bit to enable autobaud detection and clear the ABD bit. // HWREGH(base + SCI_O_FFCT) |= SCI_FFCT_CDC; HWREGH(base + SCI_O_FFCT) |= SCI_FFCT_ABDCLR; // // Wait until we correctly read an 'A' or 'a' and lock // while((HWREGH(base + SCI_O_FFCT) & SCI_FFCT_ABD) != SCI_FFCT_ABD) { } // // After autobaud lock, clear the ABD and CDC bits // HWREGH(base + SCI_O_FFCT) |= SCI_FFCT_ABDCLR; HWREGH(base + SCI_O_FFCT) &= ~SCI_FFCT_CDC; }",
+      "registersUsed": [
+        "HBAUD",
+        "LBAUD",
+        "FFCT"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIHBAUD",
+        "SCILBAUD",
+        "SCIFFCT"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_setFIFOInterruptLevel",
+      "functionArgs": [
+        "base",
+        "txLevel",
+        "rxLevel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SCI_TxFIFOLevel",
+        "SCI_RxFIFOLevel"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Set the FIFO interrupt levels.\n    //\n    HWREGH(base + SCI_O_FFTX) = (HWREGH(base + SCI_O_FFTX) &\n                                 (~SCI_FFTX_TXFFIL_M)) | (uint16_t)txLevel;\n    HWREGH(base + SCI_O_FFRX) = (HWREGH(base + SCI_O_FFRX) &\n                                 (~SCI_FFRX_RXFFIL_M)) | (uint16_t)rxLevel;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Set the FIFO interrupt levels. // HWREGH(base + SCI_O_FFTX) = (HWREGH(base + SCI_O_FFTX) & (~SCI_FFTX_TXFFIL_M)) | (uint16_t)txLevel; HWREGH(base + SCI_O_FFRX) = (HWREGH(base + SCI_O_FFRX) & (~SCI_FFRX_RXFFIL_M)) | (uint16_t)rxLevel; }",
+      "registersUsed": [
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFTX",
+        "SCIFFRX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_getFIFOInterruptLevel",
+      "functionArgs": [
+        "base",
+        "*txLevel",
+        "*rxLevel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SCI_TxFIFOLevel",
+        "SCI_RxFIFOLevel"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Extract the transmit and receive FIFO levels.\n    //\n    *txLevel = (SCI_TxFIFOLevel)(HWREGH(base + SCI_O_FFTX) &\n                                 SCI_FFTX_TXFFIL_M);\n    *rxLevel = (SCI_RxFIFOLevel)(HWREGH(base + SCI_O_FFRX) &\n                                 SCI_FFRX_RXFFIL_M);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Extract the transmit and receive FIFO levels. // *txLevel = (SCI_TxFIFOLevel)(HWREGH(base + SCI_O_FFTX) & SCI_FFTX_TXFFIL_M); *rxLevel = (SCI_RxFIFOLevel)(HWREGH(base + SCI_O_FFRX) & SCI_FFRX_RXFFIL_M); }",
+      "registersUsed": [
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFTX",
+        "SCIFFRX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_getConfig",
+      "functionArgs": [
+        "base",
+        "lspclkHz",
+        "*baud",
+        "*config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Compute the baud rate.\n    //\n    *baud = lspclkHz /\n            ((1U + (((uint32_t)HWREGH(base + SCI_O_HBAUD) << 8U) |\n               HWREGH(base + SCI_O_LBAUD))) * 8U);\n\n    //\n    // Get the parity, data length, and number of stop bits.\n    //\n    *config = (uint32_t)HWREGH(base + SCI_O_CCR) & (SCI_CONFIG_PAR_MASK |\n                                                    SCI_CONFIG_STOP_MASK |\n                                                    SCI_CONFIG_WLEN_MASK);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Compute the baud rate. // *baud = lspclkHz / ((1U + (((uint32_t)HWREGH(base + SCI_O_HBAUD) << 8U) | HWREGH(base + SCI_O_LBAUD))) * 8U); // // Get the parity, data length, and number of stop bits. // *config = (uint32_t)HWREGH(base + SCI_O_CCR) & (SCI_CONFIG_PAR_MASK | SCI_CONFIG_STOP_MASK | SCI_CONFIG_WLEN_MASK); }",
+      "registersUsed": [
+        "CCR",
+        "HBAUD",
+        "LBAUD"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICCR",
+        "SCIHBAUD",
+        "SCILBAUD"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_enableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Enable RX, TX, and the SCI.\n    //\n    HWREGH(base + SCI_O_CTL1) |= (SCI_CTL1_TXENA | SCI_CTL1_RXENA |\n                                  SCI_CTL1_SWRESET);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Enable RX, TX, and the SCI. // HWREGH(base + SCI_O_CTL1) |= (SCI_CTL1_TXENA | SCI_CTL1_RXENA | SCI_CTL1_SWRESET); }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL1"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_disableModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Disable the FIFO.\n    //\n    HWREGH(base + SCI_O_FFTX) &= ~(SCI_FFTX_SCIFFENA);\n\n    //\n    // Disable the SCI.\n    //\n    HWREGH(base + SCI_O_CTL1) &= ~(SCI_CTL1_TXENA | SCI_CTL1_RXENA);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Disable the FIFO. // HWREGH(base + SCI_O_FFTX) &= ~(SCI_FFTX_SCIFFENA); // // Disable the SCI. // HWREGH(base + SCI_O_CTL1) &= ~(SCI_CTL1_TXENA | SCI_CTL1_RXENA); }",
+      "registersUsed": [
+        "CTL1",
+        "FFTX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL1",
+        "SCIFFTX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_enableTxModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Enable TX and the SCI.\n    //\n    HWREGH(base + SCI_O_CTL1) |= (SCI_CTL1_TXENA | SCI_CTL1_SWRESET);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Enable TX and the SCI. // HWREGH(base + SCI_O_CTL1) |= (SCI_CTL1_TXENA | SCI_CTL1_SWRESET); }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL1"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_disableTxModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Disable TX.\n    //\n    HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_TXENA;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Disable TX. // HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_TXENA; }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL1"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_enableRxModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Enable RX and the SCI.\n    //\n    HWREGH(base + SCI_O_CTL1) |= (SCI_CTL1_RXENA | SCI_CTL1_SWRESET);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Enable RX and the SCI. // HWREGH(base + SCI_O_CTL1) |= (SCI_CTL1_RXENA | SCI_CTL1_SWRESET); }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL1"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_disableRxModule",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Disable RX.\n    //\n    HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_RXENA;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Disable RX. // HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_RXENA; }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL1"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_enableSleepMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Set sleep bit\n    //\n    HWREGH(base + SCI_O_CTL1) |= SCI_CTL1_SLEEP;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Set sleep bit // HWREGH(base + SCI_O_CTL1) |= SCI_CTL1_SLEEP; }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL1"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_disableSleepMode",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Clear sleep bit\n    //\n    HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_SLEEP;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Clear sleep bit // HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_SLEEP; }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL1"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_enableFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Enable the FIFO.\n    //\n    HWREGH(base + SCI_O_FFTX) |= SCI_FFTX_SCIRST;\n    HWREGH(base + SCI_O_FFTX) |= SCI_FFTX_SCIFFENA | SCI_FFTX_TXFIFORESET;\n    HWREGH(base + SCI_O_FFRX) |= SCI_FFRX_RXFIFORESET;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Enable the FIFO. // HWREGH(base + SCI_O_FFTX) |= SCI_FFTX_SCIRST; HWREGH(base + SCI_O_FFTX) |= SCI_FFTX_SCIFFENA | SCI_FFTX_TXFIFORESET; HWREGH(base + SCI_O_FFRX) |= SCI_FFRX_RXFIFORESET; }",
+      "registersUsed": [
+        "FFTX",
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFTX",
+        "SCIFFRX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_disableFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Disable the FIFO.\n    //\n    HWREGH(base + SCI_O_FFTX) &= ~SCI_FFTX_SCIFFENA;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Disable the FIFO. // HWREGH(base + SCI_O_FFTX) &= ~SCI_FFTX_SCIFFENA; }",
+      "registersUsed": [
+        "FFTX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFTX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_isFIFOEnabled",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Return true if the FIFO is enabled and false if it is disabled.\n    //\n    return(((HWREGH(base + SCI_O_FFTX) & SCI_FFTX_SCIFFENA) ==\n            SCI_FFTX_SCIFFENA) ? true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Return true if the FIFO is enabled and false if it is disabled. // return(((HWREGH(base + SCI_O_FFTX) & SCI_FFTX_SCIFFENA) == SCI_FFTX_SCIFFENA) ? true : false); }",
+      "registersUsed": [
+        "FFTX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFTX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_resetRxFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Reset the specified FIFO.\n    //\n    HWREGH(base + SCI_O_FFRX) &= ~SCI_FFRX_RXFIFORESET;\n    HWREGH(base + SCI_O_FFRX) |= SCI_FFRX_RXFIFORESET;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Reset the specified FIFO. // HWREGH(base + SCI_O_FFRX) &= ~SCI_FFRX_RXFIFORESET; HWREGH(base + SCI_O_FFRX) |= SCI_FFRX_RXFIFORESET; }",
+      "registersUsed": [
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFRX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_resetTxFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Reset the specified FIFO.\n    //\n    HWREGH(base + SCI_O_FFTX) &= ~SCI_FFTX_TXFIFORESET;\n    HWREGH(base + SCI_O_FFTX) |= SCI_FFTX_TXFIFORESET;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Reset the specified FIFO. // HWREGH(base + SCI_O_FFTX) &= ~SCI_FFTX_TXFIFORESET; HWREGH(base + SCI_O_FFTX) |= SCI_FFTX_TXFIFORESET; }",
+      "registersUsed": [
+        "FFTX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFTX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_resetChannels",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Reset the Tx and Rx Channels\n    //\n    HWREGH(base + SCI_O_FFTX) &= ~SCI_FFTX_SCIRST;\n    HWREGH(base + SCI_O_FFTX) |= SCI_FFTX_SCIRST;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Reset the Tx and Rx Channels // HWREGH(base + SCI_O_FFTX) &= ~SCI_FFTX_SCIRST; HWREGH(base + SCI_O_FFTX) |= SCI_FFTX_SCIRST; }",
+      "registersUsed": [
+        "FFTX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFTX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_isDataAvailableNonFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Return the availability of characters with FIFO disabled.\n    //\n    return(((HWREGH(base + SCI_O_RXST) & SCI_RXST_RXRDY) ==\n            SCI_RXST_RXRDY) ? true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Return the availability of characters with FIFO disabled. // return(((HWREGH(base + SCI_O_RXST) & SCI_RXST_RXRDY) == SCI_RXST_RXRDY) ? true : false); }",
+      "registersUsed": [
+        "RXST"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIRXST"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_isSpaceAvailableNonFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Return the availability of space.\n    //\n    return(((HWREGH(base + SCI_O_CTL2) & SCI_CTL2_TXRDY) ==\n            SCI_CTL2_TXRDY) ? true : false);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Return the availability of space. // return(((HWREGH(base + SCI_O_CTL2) & SCI_CTL2_TXRDY) == SCI_CTL2_TXRDY) ? true : false); }",
+      "registersUsed": [
+        "CTL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL2"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_getTxFIFOStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline SCI_TxFIFOLevel",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Get the current FIFO status\n    //\n    return((SCI_TxFIFOLevel)((HWREGH(base + SCI_O_FFTX) & SCI_FFTX_TXFFST_M) >>\n                             SCI_FFTX_TXFFST_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Get the current FIFO status // return((SCI_TxFIFOLevel)((HWREGH(base + SCI_O_FFTX) & SCI_FFTX_TXFFST_M) >> SCI_FFTX_TXFFST_S)); }",
+      "registersUsed": [
+        "FFTX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFTX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_getRxFIFOStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline SCI_RxFIFOLevel",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Get the current FIFO status\n    //\n    return((SCI_RxFIFOLevel)((HWREGH(base + SCI_O_FFRX) & SCI_FFRX_RXFFST_M) >>\n                             SCI_FFRX_RXFFST_S));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Get the current FIFO status // return((SCI_RxFIFOLevel)((HWREGH(base + SCI_O_FFRX) & SCI_FFRX_RXFFST_M) >> SCI_FFRX_RXFFST_S)); }",
+      "registersUsed": [
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFRX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_isTransmitterBusy",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the argument.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Check if FIFO enhancement is enabled.\n    //\n    if(SCI_isFIFOEnabled(base))\n    {\n        //\n        // With FIFO enhancement, determine if the SCI is busy.\n        //\n        return(((HWREGH(base + SCI_O_FFTX) & SCI_FFTX_TXFFST_M) !=\n                 0U) ? true : false);\n    }\n    else\n    {\n        //\n        // Without FIFO enhancement, determine if the SCI is busy.\n        // Check if the transmit buffer and shift register empty.\n        //\n        return(((HWREGH(base + SCI_O_CTL2) & SCI_CTL2_TXEMPTY) ==\n                SCI_CTL2_TXEMPTY) ? false : true);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the argument. // ASSERT(SCI_isBaseValid(base)); // // Check if FIFO enhancement is enabled. // if(SCI_isFIFOEnabled(base)) { // // With FIFO enhancement, determine if the SCI is busy. // return(((HWREGH(base + SCI_O_FFTX) & SCI_FFTX_TXFFST_M) != 0U) ? true : false); } else { // // Without FIFO enhancement, determine if the SCI is busy. // Check if the transmit buffer and shift register empty. // return(((HWREGH(base + SCI_O_CTL2) & SCI_CTL2_TXEMPTY) == SCI_CTL2_TXEMPTY) ? false : true); } }",
+      "registersUsed": [
+        "CTL2",
+        "FFTX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL2",
+        "SCIFFTX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_writeCharBlockingFIFO",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Wait until space is available in the transmit FIFO.\n    //\n    while(SCI_getTxFIFOStatus(base) == SCI_FIFO_TX16)\n    {\n    }\n\n    //\n    // Send a char.\n    //\n    HWREGH(base + SCI_O_TXBUF) = data;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Wait until space is available in the transmit FIFO. // while(SCI_getTxFIFOStatus(base) == SCI_FIFO_TX16) { } // // Send a char. // HWREGH(base + SCI_O_TXBUF) = data; }",
+      "registersUsed": [
+        "TXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCITXBUF"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_writeCharBlockingNonFIFO",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Wait until space is available in the transmit buffer.\n    //\n    while(!SCI_isSpaceAvailableNonFIFO(base))\n    {\n    }\n\n    //\n    // Send a char.\n    //\n    HWREGH(base + SCI_O_TXBUF) = data;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Wait until space is available in the transmit buffer. // while(!SCI_isSpaceAvailableNonFIFO(base)) { } // // Send a char. // HWREGH(base + SCI_O_TXBUF) = data; }",
+      "registersUsed": [
+        "TXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCITXBUF"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_writeCharNonBlocking",
+      "functionArgs": [
+        "base",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Send a char.\n    //\n    HWREGH(base + SCI_O_TXBUF) = data;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Send a char. // HWREGH(base + SCI_O_TXBUF) = data; }",
+      "registersUsed": [
+        "TXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCITXBUF"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_getRxStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Return the current value of the receive status register.\n    //\n    return(HWREGH(base + SCI_O_RXST));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Return the current value of the receive status register. // return(HWREGH(base + SCI_O_RXST)); }",
+      "registersUsed": [
+        "RXST"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIRXST"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_readCharBlockingFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Wait until a character is available in the receive FIFO.\n    //\n    while(SCI_getRxFIFOStatus(base) == SCI_FIFO_RX0)\n    {\n        //\n        //If there is any error return\n        //\n        if((SCI_getRxStatus(base) & SCI_RXSTATUS_ERROR) != 0U)\n        {\n            return(0U);\n        }\n    }\n\n    //\n    // Return the character from the receive buffer.\n    //\n    return((uint16_t)(HWREGH(base + SCI_O_RXBUF) & SCI_RXBUF_SAR_M));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Wait until a character is available in the receive FIFO. // while(SCI_getRxFIFOStatus(base) == SCI_FIFO_RX0) { // //If there is any error return // if((SCI_getRxStatus(base) & SCI_RXSTATUS_ERROR) != 0U) { return(0U); } } // // Return the character from the receive buffer. // return((uint16_t)(HWREGH(base + SCI_O_RXBUF) & SCI_RXBUF_SAR_M)); }",
+      "registersUsed": [
+        "RXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIRXBUF"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_readCharBlockingNonFIFO",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Wait until a character is available in the receive FIFO.\n    //\n    while(!SCI_isDataAvailableNonFIFO(base))\n    {\n    }\n\n    //\n    // Return the character from the receive buffer.\n    //\n    return((uint16_t)(HWREGH(base + SCI_O_RXBUF) & SCI_RXBUF_SAR_M));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Wait until a character is available in the receive FIFO. // while(!SCI_isDataAvailableNonFIFO(base)) { } // // Return the character from the receive buffer. // return((uint16_t)(HWREGH(base + SCI_O_RXBUF) & SCI_RXBUF_SAR_M)); }",
+      "registersUsed": [
+        "RXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIRXBUF"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_readCharNonBlocking",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Return the character from the receive buffer.\n    //\n    return((uint16_t)(HWREGH(base + SCI_O_RXBUF) & SCI_RXBUF_SAR_M));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Return the character from the receive buffer. // return((uint16_t)(HWREGH(base + SCI_O_RXBUF) & SCI_RXBUF_SAR_M)); }",
+      "registersUsed": [
+        "RXBUF"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIRXBUF"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_performSoftwareReset",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // To clear all errors a sw reset of the module is required\n    //\n    HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_SWRESET;\n    HWREGH(base + SCI_O_CTL1) |= SCI_CTL1_SWRESET;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // To clear all errors a sw reset of the module is required // HWREGH(base + SCI_O_CTL1) &= ~SCI_CTL1_SWRESET; HWREGH(base + SCI_O_CTL1) |= SCI_CTL1_SWRESET; }",
+      "registersUsed": [
+        "CTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICTL1"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_enableLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Set the loop back mode.\n    //\n    HWREGH(base + SCI_O_CCR) |= SCI_CCR_LOOPBKENA;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Set the loop back mode. // HWREGH(base + SCI_O_CCR) |= SCI_CCR_LOOPBKENA; }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICCR"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_disableLoopback",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Clear the loop back mode.\n    //\n    HWREGH(base + SCI_O_CCR) &= ~SCI_CCR_LOOPBKENA;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Clear the loop back mode. // HWREGH(base + SCI_O_CCR) &= ~SCI_CCR_LOOPBKENA; }",
+      "registersUsed": [
+        "CCR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCICCR"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_getOverflowStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Return the current FIFO overflow status\n    //\n    return((HWREGH(base + SCI_O_FFRX) & SCI_FFRX_RXFFOVF) == SCI_FFRX_RXFFOVF);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Return the current FIFO overflow status // return((HWREGH(base + SCI_O_FFRX) & SCI_FFRX_RXFFOVF) == SCI_FFRX_RXFFOVF); }",
+      "registersUsed": [
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFRX"
+      ]
+    },
+    {
+      "file": "sci.h",
+      "peripheral": "sci",
+      "functionName": "SCI_clearOverflowStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SCI_isBaseValid(base));\n\n    //\n    // Clear the current FIFO overflow status\n    //\n    HWREGH(base + SCI_O_FFRX) |= SCI_FFRX_RXFFOVRCLR;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SCI_isBaseValid(base)); // // Clear the current FIFO overflow status // HWREGH(base + SCI_O_FFRX) |= SCI_FFRX_RXFFOVRCLR; }",
+      "registersUsed": [
+        "FFRX"
+      ],
+      "registersUsedMatchingBifield": [
+        "SCIFFRX"
+      ]
+    }
+  ]
+}

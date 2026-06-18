@@ -1,0 +1,285 @@
+{
+  "name": "ipc",
+  "functions": [
+    {
+      "file": "ipc.c",
+      "peripheral": "ipc",
+      "functionName": "IPC_sendCommand",
+      "functionArgs": [
+        "ipcChannel",
+        "flags",
+        "command",
+        "addr",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    bool ret;\n\n    //\n    // Check whether the flags are not busy\n    //\n    if((HWREG(IPC_REG_FLG(ipcChannel)) & flags) == 0U)\n    {\n        ret = true;\n\n        //\n        // Update the command registers\n        //\n        HWREG(IPC_REG_SENDCOM(ipcChannel))  = command;\n        HWREG(IPC_REG_SENDDATA(ipcChannel)) = data;\n        HWREG(IPC_REG_SENDADDR(ipcChannel)) = addr;\n\n        //\n        // Set the flags to indicate the remote core\n        //\n        HWREG(IPC_REG_SET(ipcChannel)) = flags;\n    }\n    else\n    {\n        ret = false;\n    }\n\n    return(ret);\n}\n",
+      "functionContentWithoutFormatting": "{ bool ret; // // Check whether the flags are not busy // if((HWREG(IPC_REG_FLG(ipcChannel)) & flags) == 0U) { ret = true; // // Update the command registers // HWREG(IPC_REG_SENDCOM(ipcChannel)) = command; HWREG(IPC_REG_SENDDATA(ipcChannel)) = data; HWREG(IPC_REG_SENDADDR(ipcChannel)) = addr; // // Set the flags to indicate the remote core // HWREG(IPC_REG_SET(ipcChannel)) = flags; } else { ret = false; } return(ret); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.c",
+      "peripheral": "ipc",
+      "functionName": "IPC_readCommand",
+      "functionArgs": [
+        "ipcChannel",
+        "flags",
+        "*command",
+        "*addr",
+        "*data"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "bool",
+      "functionContent": "{\n    bool ret;\n\n    //\n    // Check whether the flags are not empty\n    //\n    if((HWREG(IPC_REG_STS(ipcChannel)) & flags) != 0U)\n    {\n        ret = true;\n\n        //\n        // Read the command registers\n        //\n        *command = HWREG(IPC_REG_RECVCOM(ipcChannel));\n        *addr    = HWREG(IPC_REG_RECVADDR(ipcChannel));\n        *data    = HWREG(IPC_REG_RECVDATA(ipcChannel));\n    }\n    else\n    {\n        ret = false;\n    }\n\n    return(ret);\n}\n",
+      "functionContentWithoutFormatting": "{ bool ret; // // Check whether the flags are not empty // if((HWREG(IPC_REG_STS(ipcChannel)) & flags) != 0U) { ret = true; // // Read the command registers // *command = HWREG(IPC_REG_RECVCOM(ipcChannel)); *addr = HWREG(IPC_REG_RECVADDR(ipcChannel)); *data = HWREG(IPC_REG_RECVDATA(ipcChannel)); } else { ret = false; } return(ret); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_setFlagLtoR",
+      "functionArgs": [
+        "ipcChannel",
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(IPC_REG_SET(ipcChannel)) = flags;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(IPC_REG_SET(ipcChannel)) = flags; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_clearFlagLtoR",
+      "functionArgs": [
+        "ipcChannel",
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(IPC_REG_CLR(ipcChannel)) = flags;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(IPC_REG_CLR(ipcChannel)) = flags; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_triggerInterrupt",
+      "functionArgs": [
+        "ipcChannel"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(IPC_REG_SET(ipcChannel)) = (uint32_t)IPC_FLAG0;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(IPC_REG_SET(ipcChannel)) = (uint32_t)IPC_FLAG0; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_ackFlagRtoL",
+      "functionArgs": [
+        "ipcChannel",
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(IPC_REG_ACK(ipcChannel)) = flags;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(IPC_REG_ACK(ipcChannel)) = flags; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_isFlagBusyLtoR",
+      "functionArgs": [
+        "ipcChannel",
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return((HWREG(IPC_REG_FLG(ipcChannel)) & flags) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ return((HWREG(IPC_REG_FLG(ipcChannel)) & flags) != 0U); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_isFlagBusyRtoL",
+      "functionArgs": [
+        "ipcChannel",
+        "flags"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    return((HWREG(IPC_REG_STS(ipcChannel)) & flags) != 0U);\n}\n",
+      "functionContentWithoutFormatting": "{ return((HWREG(IPC_REG_STS(ipcChannel)) & flags) != 0U); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_waitForFlag",
+      "functionArgs": [
+        "ipcChannel",
+        "flag"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    while((HWREG(IPC_REG_STS(ipcChannel)) & flag) == 0U)\n    {\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ while((HWREG(IPC_REG_STS(ipcChannel)) & flag) == 0U) { } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_waitForAck",
+      "functionArgs": [
+        "ipcChannel",
+        "flag"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    while((HWREG(IPC_REG_FLG(ipcChannel)) & flag) != 0U)\n    {\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ while((HWREG(IPC_REG_FLG(ipcChannel)) & flag) != 0U) { } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_sync",
+      "functionArgs": [
+        "ipcChannel",
+        "flag"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    IPC_setFlagLtoR(ipcChannel, flag);\n    IPC_waitForFlag(ipcChannel, flag);\n    IPC_ackFlagRtoL(ipcChannel, flag);\n    IPC_waitForAck(ipcChannel, flag);\n}\n",
+      "functionContentWithoutFormatting": "{ IPC_setFlagLtoR(ipcChannel, flag); IPC_waitForFlag(ipcChannel, flag); IPC_ackFlagRtoL(ipcChannel, flag); IPC_waitForAck(ipcChannel, flag); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_init",
+      "functionArgs": [
+        "ipcChannel"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    IPC_clearFlagLtoR(ipcChannel, IPC_FLAG_ALL);\n}\n",
+      "functionContentWithoutFormatting": "{ IPC_clearFlagLtoR(ipcChannel, IPC_FLAG_ALL); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_sendResponse",
+      "functionArgs": [
+        "ipcChannel",
+        "data"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(IPC_REG_LOCALREPLY(ipcChannel)) = data;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(IPC_REG_LOCALREPLY(ipcChannel)) = data; }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_getResponse",
+      "functionArgs": [
+        "ipcChannel"
+      ],
+      "functionArgsTypes": [
+        "IPC_Channel_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(HWREG(IPC_REG_REMOTEREPLY(ipcChannel)));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(IPC_REG_REMOTEREPLY(ipcChannel))); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "ipc.h",
+      "peripheral": "ipc",
+      "functionName": "IPC_getCounter",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline uint64_t",
+      "functionContent": "{\n    //\n    // Get the Counter High and Low values. Read to the Counter low register\n    // saves the value of Counter High register.\n    //\n    uint32_t ctrL = HWREG(IPCCOUNTER_BASE + IPC_O_COUNTERL);\n    uint32_t ctrH = HWREG(IPCCOUNTER_BASE + IPC_O_COUNTERH);\n\n    //\n    // Return the 64-bit value of the counter\n    //\n    return(((uint64_t)ctrH << 32U) | ((uint64_t)ctrL));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Get the Counter High and Low values. Read to the Counter low register // saves the value of Counter High register. // uint32_t ctrL = HWREG(IPCCOUNTER_BASE + IPC_O_COUNTERL); uint32_t ctrH = HWREG(IPCCOUNTER_BASE + IPC_O_COUNTERH); // // Return the 64-bit value of the counter // return(((uint64_t)ctrH << 32U) | ((uint64_t)ctrL)); }",
+      "registersUsed": [
+        "COUNTERL",
+        "COUNTERH"
+      ],
+      "registersUsedMatchingBifield": [
+        "COUNTERL",
+        "COUNTERH"
+      ]
+    }
+  ]
+}

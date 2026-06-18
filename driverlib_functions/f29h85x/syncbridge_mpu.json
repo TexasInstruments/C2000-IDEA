@@ -1,0 +1,275 @@
+{
+  "name": "syncbridge_mpu",
+  "functions": [
+    {
+      "file": "syncbridge_mpu.c",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "voidSYNCBRIDGEMPU_configRegion",
+      "functionArgs": [
+        "base",
+        "region",
+        "*configParams"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SYNCBRIDGEMPU_Region",
+        "constSYNCBRIDGEMPU_ConfigParams"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SYNCBRIDGEMPU_isBaseValid(base));\n    //\n    // Check the 4KB granularity.\n    //\n    ASSERT(((configParams->startAddr & 0xFFFU) == 0U) &&\n           ((configParams->endAddr   & 0xFFFU) == 0xFFFU));\n\n    //\n    // Configure the start and end addresses of the MPU region.\n    //\n    HWREG(base + SYNCBRIDGEMPU_O_MPUR_START((uint32_t)region)) =\n                                                configParams->startAddr;\n    HWREG(base + SYNCBRIDGEMPU_O_MPUR_END((uint32_t)region))   =\n                                                configParams->endAddr;\n\n    //\n    // Configure the type of accesses allowed in the MPU region.\n    //\n    HWREGB(base + SYNCBRIDGEMPU_O_MPUR_ACCESS((uint32_t)region)) =\n                                        (uint8_t)configParams->accessPermission;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SYNCBRIDGEMPU_isBaseValid(base)); // // Check the 4KB granularity. // ASSERT(((configParams->startAddr & 0xFFFU) == 0U) && ((configParams->endAddr & 0xFFFU) == 0xFFFU)); // // Configure the start and end addresses of the MPU region. // HWREG(base + SYNCBRIDGEMPU_O_MPUR_START((uint32_t)region)) = configParams->startAddr; HWREG(base + SYNCBRIDGEMPU_O_MPUR_END((uint32_t)region)) = configParams->endAddr; // // Configure the type of accesses allowed in the MPU region. // HWREGB(base + SYNCBRIDGEMPU_O_MPUR_ACCESS((uint32_t)region)) = (uint8_t)configParams->accessPermission; }",
+      "registersUsed": [
+        "MPUR_START(i)",
+        "MPUR_END(i)",
+        "MPUR_ACCESS(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_START(i)",
+        "MPUR_END(i)",
+        "MPUR_ACCESS(i)"
+      ]
+    },
+    {
+      "file": "syncbridge_mpu.h",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "#ifdefDEBUGstaticinlineboolSYNCBRIDGEMPU_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    return(base == SYNCBRIDGEMPU_BASE);\n}\n",
+      "functionContentWithoutFormatting": "{ return(base == SYNCBRIDGEMPU_BASE); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "syncbridge_mpu.h",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SYNCBRIDGEMPU_isBaseValid(base));\n\n    //\n    // Set the MPU function enable bit.\n    //\n    HWREGB(base + SYNCBRIDGEMPU_O_MPUCTRL) |= SYNCBRIDGEMPU_MPUCTRL_MPUEN;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SYNCBRIDGEMPU_isBaseValid(base)); // // Set the MPU function enable bit. // HWREGB(base + SYNCBRIDGEMPU_O_MPUCTRL) |= SYNCBRIDGEMPU_MPUCTRL_MPUEN; }",
+      "registersUsed": [
+        "MPUCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUCTRL"
+      ]
+    },
+    {
+      "file": "syncbridge_mpu.h",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SYNCBRIDGEMPU_isBaseValid(base));\n\n    //\n    // Clear the MPU function enable bit.\n    //\n    HWREGB(base + SYNCBRIDGEMPU_O_MPUCTRL) &= (uint8_t)(~SYNCBRIDGEMPU_MPUCTRL_MPUEN);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SYNCBRIDGEMPU_isBaseValid(base)); // // Clear the MPU function enable bit. // HWREGB(base + SYNCBRIDGEMPU_O_MPUCTRL) &= (uint8_t)(~SYNCBRIDGEMPU_MPUCTRL_MPUEN); }",
+      "registersUsed": [
+        "MPUCTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUCTRL"
+      ]
+    },
+    {
+      "file": "syncbridge_mpu.h",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SYNCBRIDGEMPU_isBaseValid(base));\n\n    //\n    // Lock the MPU configuration.\n    //\n    HWREGB(base + SYNCBRIDGEMPU_O_MPUCFG_LOCK) = SYNCBRIDGEMPU_MPUCFG_LOCK_LOCK;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SYNCBRIDGEMPU_isBaseValid(base)); // // Lock the MPU configuration. // HWREGB(base + SYNCBRIDGEMPU_O_MPUCFG_LOCK) = SYNCBRIDGEMPU_MPUCFG_LOCK_LOCK; }",
+      "registersUsed": [
+        "MPUCFG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUCFG_LOCK"
+      ]
+    },
+    {
+      "file": "syncbridge_mpu.h",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SYNCBRIDGEMPU_isBaseValid(base));\n\n    //\n    // Unlock the MPU configuration.\n    //\n    HWREGB(base + SYNCBRIDGEMPU_O_MPUCFG_LOCK) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SYNCBRIDGEMPU_isBaseValid(base)); // // Unlock the MPU configuration. // HWREGB(base + SYNCBRIDGEMPU_O_MPUCFG_LOCK) = 0U; }",
+      "registersUsed": [
+        "MPUCFG_LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUCFG_LOCK"
+      ]
+    },
+    {
+      "file": "syncbridge_mpu.h",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SYNCBRIDGEMPU_isBaseValid(base));\n\n    //\n    // Commit the lock on the MPU configuration.\n    //\n    HWREGB(base + SYNCBRIDGEMPU_O_MPUCFG_COMMIT) = SYNCBRIDGEMPU_MPUCFG_COMMIT_COMMIT;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SYNCBRIDGEMPU_isBaseValid(base)); // // Commit the lock on the MPU configuration. // HWREGB(base + SYNCBRIDGEMPU_O_MPUCFG_COMMIT) = SYNCBRIDGEMPU_MPUCFG_COMMIT_COMMIT; }",
+      "registersUsed": [
+        "MPUCFG_COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUCFG_COMMIT"
+      ]
+    },
+    {
+      "file": "syncbridge_mpu.h",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SYNCBRIDGEMPU_isBaseValid(base));\n\n    uint8_t i;\n\n    for (i = 0U; i < (uint8_t)SYNCBRIDGEMPU_TOTAL_MPU; i++)\n    {\n        //\n        // Lock the MPU region configuration.\n        //\n        HWREGB(base + SYNCBRIDGEMPU_O_MPUR_LOCK(i)) = 1U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SYNCBRIDGEMPU_isBaseValid(base)); uint8_t i; for (i = 0U; i < (uint8_t)SYNCBRIDGEMPU_TOTAL_MPU; i++) { // // Lock the MPU region configuration. // HWREGB(base + SYNCBRIDGEMPU_O_MPUR_LOCK(i)) = 1U; } }",
+      "registersUsed": [
+        "MPUR_LOCK(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_LOCK(i)"
+      ]
+    },
+    {
+      "file": "syncbridge_mpu.h",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SYNCBRIDGEMPU_isBaseValid(base));\n\n    uint8_t i;\n\n    for (i = 0U; i < (uint8_t)SYNCBRIDGEMPU_TOTAL_MPU; i++)\n    {\n        //\n        // Unlock the MPU region configuration.\n        //\n        HWREGB(base + SYNCBRIDGEMPU_O_MPUR_LOCK(i)) = 0U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SYNCBRIDGEMPU_isBaseValid(base)); uint8_t i; for (i = 0U; i < (uint8_t)SYNCBRIDGEMPU_TOTAL_MPU; i++) { // // Unlock the MPU region configuration. // HWREGB(base + SYNCBRIDGEMPU_O_MPUR_LOCK(i)) = 0U; } }",
+      "registersUsed": [
+        "MPUR_LOCK(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_LOCK(i)"
+      ]
+    },
+    {
+      "file": "syncbridge_mpu.h",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SYNCBRIDGEMPU_isBaseValid(base));\n\n    uint8_t i;\n\n    for (i = 0U; i < (uint8_t)SYNCBRIDGEMPU_TOTAL_MPU; i++)\n    {\n        //\n        // Commit the lock on the MPU region registers.\n        //\n        HWREGB(base + SYNCBRIDGEMPU_O_MPUR_COMMIT(i)) = 1U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SYNCBRIDGEMPU_isBaseValid(base)); uint8_t i; for (i = 0U; i < (uint8_t)SYNCBRIDGEMPU_TOTAL_MPU; i++) { // // Commit the lock on the MPU region registers. // HWREGB(base + SYNCBRIDGEMPU_O_MPUR_COMMIT(i)) = 1U; } }",
+      "registersUsed": [
+        "MPUR_COMMIT(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_COMMIT(i)"
+      ]
+    },
+    {
+      "file": "syncbridge_mpu.h",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base",
+        "region"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SYNCBRIDGEMPU_Region"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SYNCBRIDGEMPU_isBaseValid(base));\n\n    //\n    // Lock the MPU region registers.\n    //\n    HWREGB(base + SYNCBRIDGEMPU_O_MPUR_LOCK((uint32_t)region)) = 1U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SYNCBRIDGEMPU_isBaseValid(base)); // // Lock the MPU region registers. // HWREGB(base + SYNCBRIDGEMPU_O_MPUR_LOCK((uint32_t)region)) = 1U; }",
+      "registersUsed": [
+        "MPUR_LOCK(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_LOCK(i)"
+      ]
+    },
+    {
+      "file": "syncbridge_mpu.h",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base",
+        "region"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SYNCBRIDGEMPU_Region"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SYNCBRIDGEMPU_isBaseValid(base));\n\n    //\n    // Unlock the MPU region registers.\n    //\n    HWREGB(base + SYNCBRIDGEMPU_O_MPUR_LOCK((uint32_t)region)) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SYNCBRIDGEMPU_isBaseValid(base)); // // Unlock the MPU region registers. // HWREGB(base + SYNCBRIDGEMPU_O_MPUR_LOCK((uint32_t)region)) = 0U; }",
+      "registersUsed": [
+        "MPUR_LOCK(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_LOCK(i)"
+      ]
+    },
+    {
+      "file": "syncbridge_mpu.h",
+      "peripheral": "syncbridge_mpu",
+      "functionName": "__attribute__",
+      "functionArgs": [
+        "base",
+        "region"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SYNCBRIDGEMPU_Region"
+      ],
+      "returnType": "",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(SYNCBRIDGEMPU_isBaseValid(base));\n\n    //\n    // Commit the lock on MPU region registers.\n    //\n    HWREGB(base + SYNCBRIDGEMPU_O_MPUR_COMMIT((uint32_t)region)) = 1U;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(SYNCBRIDGEMPU_isBaseValid(base)); // // Commit the lock on MPU region registers. // HWREGB(base + SYNCBRIDGEMPU_O_MPUR_COMMIT((uint32_t)region)) = 1U; }",
+      "registersUsed": [
+        "MPUR_COMMIT(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "MPUR_COMMIT(i)"
+      ]
+    }
+  ]
+}

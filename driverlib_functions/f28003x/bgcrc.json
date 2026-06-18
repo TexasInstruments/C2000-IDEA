@@ -1,0 +1,561 @@
+{
+  "name": "bgcrc",
+  "functions": [
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == BGCRC_CPU_BASE) ||\n           (base == BGCRC_CLA1_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == BGCRC_CPU_BASE) || (base == BGCRC_CLA1_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_setConfig",
+      "functionArgs": [
+        "base",
+        "nmiConfig",
+        "emuCtrl"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n    ASSERT((nmiConfig == BGCRC_NMI_ENABLE) || (nmiConfig == BGCRC_NMI_DISABLE));\n    ASSERT((emuCtrl == BGCRC_EMUCTRL_FREE) || (emuCtrl == BGCRC_EMUCTRL_SOFT));\n\n    //\n    // Set emulation control and NMI configuration\n    //\n    EALLOW;\n    HWREG(base + BGCRC_O_CTRL1) = (nmiConfig << BGCRC_CTRL1_NMIDIS_S) | emuCtrl;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); ASSERT((nmiConfig == BGCRC_NMI_ENABLE) || (nmiConfig == BGCRC_NMI_DISABLE)); ASSERT((emuCtrl == BGCRC_EMUCTRL_FREE) || (emuCtrl == BGCRC_EMUCTRL_SOFT)); // // Set emulation control and NMI configuration // EALLOW; HWREG(base + BGCRC_O_CTRL1) = (nmiConfig << BGCRC_CTRL1_NMIDIS_S) | emuCtrl; EDIS; }",
+      "registersUsed": [
+        "CTRL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL1"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_enableWatchdog",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    //\n    // Enable watchdog\n    //\n    EALLOW;\n    HWREG(base + BGCRC_O_WD_CFG) = BGCRC_WD_ENABLE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); // // Enable watchdog // EALLOW; HWREG(base + BGCRC_O_WD_CFG) = BGCRC_WD_ENABLE; EDIS; }",
+      "registersUsed": [
+        "WD_CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "WD_CFG"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_disableWatchdog",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    //\n    // Disable watchdog\n    //\n    EALLOW;\n    HWREG(base + BGCRC_O_WD_CFG) = BGCRC_WD_DISABLE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); // // Disable watchdog // EALLOW; HWREG(base + BGCRC_O_WD_CFG) = BGCRC_WD_DISABLE; EDIS; }",
+      "registersUsed": [
+        "WD_CFG"
+      ],
+      "registersUsedMatchingBifield": [
+        "WD_CFG"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_setWatchdogWindow",
+      "functionArgs": [
+        "base",
+        "min",
+        "max"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n    ASSERT(max > min);\n\n    //\n    // Set the min and max values\n    //\n    EALLOW;\n    HWREG(base + BGCRC_O_WD_MIN) = min;\n    HWREG(base + BGCRC_O_WD_MAX) = max;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); ASSERT(max > min); // // Set the min and max values // EALLOW; HWREG(base + BGCRC_O_WD_MIN) = min; HWREG(base + BGCRC_O_WD_MAX) = max; EDIS; }",
+      "registersUsed": [
+        "WD_MIN",
+        "WD_MAX"
+      ],
+      "registersUsedMatchingBifield": [
+        "WD_MIN",
+        "WD_MAX"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_setRegion",
+      "functionArgs": [
+        "base",
+        "startAddr",
+        "blockSize",
+        "mode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t",
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n    ASSERT((blockSize > BGCRC_SIZE_BYTES_0) &&\n           (blockSize <= BGCRC_SIZE_KBYTES(256U)));\n    ASSERT((mode == BGCRC_SCRUB_MODE) || (mode == BGCRC_CRC_MODE));\n\n    //\n    // Set the start address and size of the block. Set the mode of operation\n    //\n\n    EALLOW;\n\n    HWREG(base + BGCRC_O_START_ADDR) = startAddr;\n    HWREG(base + BGCRC_O_CTRL2) =\n                    ((blockSize - 1U) << BGCRC_CTRL2_BLOCK_SIZE_S) |\n                    (mode << BGCRC_CTRL2_SCRUB_MODE_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); ASSERT((blockSize > BGCRC_SIZE_BYTES_0) && (blockSize <= BGCRC_SIZE_KBYTES(256U))); ASSERT((mode == BGCRC_SCRUB_MODE) || (mode == BGCRC_CRC_MODE)); // // Set the start address and size of the block. Set the mode of operation // EALLOW; HWREG(base + BGCRC_O_START_ADDR) = startAddr; HWREG(base + BGCRC_O_CTRL2) = ((blockSize - 1U) << BGCRC_CTRL2_BLOCK_SIZE_S) | (mode << BGCRC_CTRL2_SCRUB_MODE_S); EDIS; }",
+      "registersUsed": [
+        "CTRL2",
+        "START_ADDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL2",
+        "START_ADDR"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_getWatchdogCounterValue",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    return(HWREG(base + BGCRC_O_WD_CNT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); return(HWREG(base + BGCRC_O_WD_CNT)); }",
+      "registersUsed": [
+        "WD_CNT"
+      ],
+      "registersUsedMatchingBifield": [
+        "WD_CNT"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n    ASSERT((intFlags & (BGCRC_TEST_DONE | BGCRC_ALL_ERROR_FLAGS)) == intFlags);\n\n    EALLOW;\n    HWREG(base + BGCRC_O_INTEN) |= intFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); ASSERT((intFlags & (BGCRC_TEST_DONE | BGCRC_ALL_ERROR_FLAGS)) == intFlags); EALLOW; HWREG(base + BGCRC_O_INTEN) |= intFlags; EDIS; }",
+      "registersUsed": [
+        "INTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTEN"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n    ASSERT((intFlags & (BGCRC_TEST_DONE | BGCRC_ALL_ERROR_FLAGS)) == intFlags);\n\n    EALLOW;\n    HWREG(base + BGCRC_O_INTEN) &= ~intFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); ASSERT((intFlags & (BGCRC_TEST_DONE | BGCRC_ALL_ERROR_FLAGS)) == intFlags); EALLOW; HWREG(base + BGCRC_O_INTEN) &= ~intFlags; EDIS; }",
+      "registersUsed": [
+        "INTEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTEN"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_getInterruptStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(HWREG(base + BGCRC_O_INTFLG));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(base + BGCRC_O_INTFLG)); }",
+      "registersUsed": [
+        "INTFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTFLG"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_clearInterruptStatus",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n    ASSERT((intFlags & (BGCRC_GLOBAL_INT | BGCRC_TEST_DONE |\n                        BGCRC_ALL_ERROR_FLAGS)) == intFlags);\n\n    EALLOW;\n    HWREG(base + BGCRC_O_INTCLR) = intFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); ASSERT((intFlags & (BGCRC_GLOBAL_INT | BGCRC_TEST_DONE | BGCRC_ALL_ERROR_FLAGS)) == intFlags); EALLOW; HWREG(base + BGCRC_O_INTCLR) = intFlags; EDIS; }",
+      "registersUsed": [
+        "INTCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTCLR"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_forceInterrupt",
+      "functionArgs": [
+        "base",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n    ASSERT((intFlags & (BGCRC_TEST_DONE | BGCRC_ALL_ERROR_FLAGS)) == intFlags);\n\n    EALLOW;\n    HWREG(base + BGCRC_O_INTFRC) = intFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); ASSERT((intFlags & (BGCRC_TEST_DONE | BGCRC_ALL_ERROR_FLAGS)) == intFlags); EALLOW; HWREG(base + BGCRC_O_INTFRC) = intFlags; EDIS; }",
+      "registersUsed": [
+        "INTFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTFRC"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_getNMIStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    return(HWREG(base + BGCRC_O_NMIFLG));\n}\n",
+      "functionContentWithoutFormatting": "{ return(HWREG(base + BGCRC_O_NMIFLG)); }",
+      "registersUsed": [
+        "NMIFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "NMIFLG"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_clearNMIStatus",
+      "functionArgs": [
+        "base",
+        "nmiFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n    ASSERT((nmiFlags & BGCRC_ALL_ERROR_FLAGS) == nmiFlags);\n\n    EALLOW;\n    HWREG(base + BGCRC_O_NMICLR) = nmiFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); ASSERT((nmiFlags & BGCRC_ALL_ERROR_FLAGS) == nmiFlags); EALLOW; HWREG(base + BGCRC_O_NMICLR) = nmiFlags; EDIS; }",
+      "registersUsed": [
+        "NMICLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "NMICLR"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_forceNMI",
+      "functionArgs": [
+        "base",
+        "nmiFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n    ASSERT((nmiFlags & BGCRC_ALL_ERROR_FLAGS) == nmiFlags);\n\n    EALLOW;\n    HWREG(base + BGCRC_O_NMIFRC) = nmiFlags;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); ASSERT((nmiFlags & BGCRC_ALL_ERROR_FLAGS) == nmiFlags); EALLOW; HWREG(base + BGCRC_O_NMIFRC) = nmiFlags; EDIS; }",
+      "registersUsed": [
+        "NMIFRC"
+      ],
+      "registersUsedMatchingBifield": [
+        "NMIFRC"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_setGoldenCRCValue",
+      "functionArgs": [
+        "base",
+        "crcVal"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + BGCRC_O_GOLDEN) = crcVal;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); EALLOW; HWREG(base + BGCRC_O_GOLDEN) = crcVal; EDIS; }",
+      "registersUsed": [
+        "GOLDEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "GOLDEN"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_start",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + BGCRC_O_EN) = BGCRC_START_KEY;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); EALLOW; HWREG(base + BGCRC_O_EN) = BGCRC_START_KEY; EDIS; }",
+      "registersUsed": [
+        "EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "EN"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_halt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + BGCRC_O_CTRL2) =\n                (HWREG(base + BGCRC_O_CTRL2) & ~BGCRC_CTRL2_TEST_HALT_M) |\n                (BGCRC_HALT_KEY << BGCRC_CTRL2_TEST_HALT_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); EALLOW; HWREG(base + BGCRC_O_CTRL2) = (HWREG(base + BGCRC_O_CTRL2) & ~BGCRC_CTRL2_TEST_HALT_M) | (BGCRC_HALT_KEY << BGCRC_CTRL2_TEST_HALT_S); EDIS; }",
+      "registersUsed": [
+        "CTRL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL2"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_resume",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + BGCRC_O_CTRL2) &= ~BGCRC_CTRL2_TEST_HALT_M;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); EALLOW; HWREG(base + BGCRC_O_CTRL2) &= ~BGCRC_CTRL2_TEST_HALT_M; EDIS; }",
+      "registersUsed": [
+        "CTRL2"
+      ],
+      "registersUsedMatchingBifield": [
+        "CTRL2"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_getRunStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    return(HWREG(base + BGCRC_O_EN) & BGCRC_EN_RUN_STS);\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); return(HWREG(base + BGCRC_O_EN) & BGCRC_EN_RUN_STS); }",
+      "registersUsed": [
+        "EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "EN"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_setSeedValue",
+      "functionArgs": [
+        "base",
+        "seed"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + BGCRC_O_SEED) = seed;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); EALLOW; HWREG(base + BGCRC_O_SEED) = seed; EDIS; }",
+      "registersUsed": [
+        "SEED"
+      ],
+      "registersUsedMatchingBifield": [
+        "SEED"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_getResult",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    return(HWREG(base + BGCRC_O_RESULT));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); return(HWREG(base + BGCRC_O_RESULT)); }",
+      "registersUsed": [
+        "RESULT"
+      ],
+      "registersUsedMatchingBifield": [
+        "RESULT"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_getCurrentAddress",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    return(HWREG(base + BGCRC_O_CURR_ADDR));\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); return(HWREG(base + BGCRC_O_CURR_ADDR)); }",
+      "registersUsed": [
+        "CURR_ADDR"
+      ],
+      "registersUsedMatchingBifield": [
+        "CURR_ADDR"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_lockRegister",
+      "functionArgs": [
+        "base",
+        "regs"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + BGCRC_O_LOCK) |= regs;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); EALLOW; HWREG(base + BGCRC_O_LOCK) |= regs; EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_unlockRegister",
+      "functionArgs": [
+        "base",
+        "regs"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + BGCRC_O_LOCK) &= ~regs;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); EALLOW; HWREG(base + BGCRC_O_LOCK) &= ~regs; EDIS; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "bgcrc.h",
+      "peripheral": "bgcrc",
+      "functionName": "BGCRC_commitRegisterLock",
+      "functionArgs": [
+        "base",
+        "regs"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    // Check the arguments.\n    //\n    ASSERT(BGCRC_isBaseValid(base));\n\n    EALLOW;\n    HWREG(base + BGCRC_O_COMMIT) |= regs;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ // // Check the arguments. // ASSERT(BGCRC_isBaseValid(base)); EALLOW; HWREG(base + BGCRC_O_COMMIT) |= regs; EDIS; }",
+      "registersUsed": [
+        "COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMMIT"
+      ]
+    }
+  ]
+}

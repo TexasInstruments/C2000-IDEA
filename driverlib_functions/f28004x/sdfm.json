@@ -1,0 +1,1327 @@
+{
+  "name": "sdfm",
+  "functions": [
+    {
+      "file": "sdfm.c",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_configComparator",
+      "functionArgs": [
+        "base",
+        "config1",
+        "config2",
+        "config3"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint32_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    SDFM_FilterNumber filter;\n    uint16_t ratio;\n    SDFM_FilterType filterType;\n\n    filter = (SDFM_FilterNumber)(SDFM_GET_FILTER_NUMBER(config1));\n    ratio = SDFM_GET_OSR(config1);\n    filterType = (SDFM_FilterType)SDFM_GET_FILTER_TYPE(config1);\n\n    //\n    // Limit the oversampling ratio\n    //\n    if(ratio > SDFM_MAX_COMP_FILTER_OSR)\n    {\n        ratio = SDFM_MAX_COMP_FILTER_OSR;\n    }\n\n    //\n    // Set the comparator filter type\n    //\n    SDFM_setComparatorFilterType(base, filter, filterType);\n\n    //\n    // Set the comparator filter over sampling ratio\n    //\n    SDFM_setCompFilterOverSamplingRatio(base, filter, ratio);\n\n    //\n    // Set the comparator high threshold value\n    //\n    SDFM_setCompFilterHighThreshold(base, filter,\n                                    SDFM_GET_HIGH_THRESHOLD(config2));\n\n    //\n    // Set the comparator low threshold value\n    //\n    SDFM_setCompFilterLowThreshold(base, filter,\n                                   SDFM_GET_LOW_THRESHOLD(config2));\n\n\n    //\n    // If requested, enable and set the zero-cross high threshold value\n    //\n    if((config3 & SDFM_ZHIGH_ENABLE_MASK) != 0U)\n    {\n        SDFM_setCompFilterZeroCrossThreshold(base, filter,\n                                             SDFM_GET_ZHIGH_THRESHOLD(config3);\n        SDFM_enableZeroCrossEdgeDetect(base, filter);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ SDFM_FilterNumber filter; uint16_t ratio; SDFM_FilterType filterType; filter = (SDFM_FilterNumber)(SDFM_GET_FILTER_NUMBER(config1)); ratio = SDFM_GET_OSR(config1); filterType = (SDFM_FilterType)SDFM_GET_FILTER_TYPE(config1); // // Limit the oversampling ratio // if(ratio > SDFM_MAX_COMP_FILTER_OSR) { ratio = SDFM_MAX_COMP_FILTER_OSR; } // // Set the comparator filter type // SDFM_setComparatorFilterType(base, filter, filterType); // // Set the comparator filter over sampling ratio // SDFM_setCompFilterOverSamplingRatio(base, filter, ratio); // // Set the comparator high threshold value // SDFM_setCompFilterHighThreshold(base, filter, SDFM_GET_HIGH_THRESHOLD(config2)); // // Set the comparator low threshold value // SDFM_setCompFilterLowThreshold(base, filter, SDFM_GET_LOW_THRESHOLD(config2)); // // If requested, enable and set the zero-cross high threshold value // if((config3 & SDFM_ZHIGH_ENABLE_MASK) != 0U) { SDFM_setCompFilterZeroCrossThreshold(base, filter, SDFM_GET_ZHIGH_THRESHOLD(config3); SDFM_enableZeroCrossEdgeDetect(base, filter); } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "sdfm.c",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_configDataFilter",
+      "functionArgs": [
+        "base",
+        "config1",
+        "config2"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    SDFM_FilterNumber filter;\n    uint16_t ratio;\n    SDFM_FilterType filterType;\n\n    filter = (SDFM_FilterNumber)(SDFM_GET_FILTER_NUMBER(config1));\n    ratio = SDFM_GET_OSR(config1);\n    filterType = (SDFM_FilterType)SDFM_GET_FILTER_TYPE(config1);\n\n    //\n    // Limit the oversampling ratio\n    //\n    if(ratio > SDFM_MAX_DATA_FILTER_OSR)\n    {\n        ratio = SDFM_MAX_DATA_FILTER_OSR;\n    }\n\n    //\n    // Set the comparator filter type\n    //\n    SDFM_setFilterType(base, filter, filterType);\n\n    //\n    // Set the comparator filter over sampling ratio\n    //\n    SDFM_setFilterOverSamplingRatio(base, filter, ratio);\n\n    //\n    // If filter switch on\n    //\n    if((config2 & SDFM_FILTER_ENABLE) == SDFM_FILTER_ENABLE)\n    {\n        SDFM_enableFilter(base, filter);\n    }\n    else\n    {\n        SDFM_disableFilter(base, filter);\n    }\n\n    //\n    // Set output data format\n    //\n    SDFM_setOutputDataFormat(base, filter,\n                             (SDFM_OutputDataFormat)(config2 & 0x1U));\n\n    //\n    // Set the shift value if data is in 16-bit 2's complement format\n    //\n    if((config2 & 0x1U) == (uint16_t)(SDFM_DATA_FORMAT_16_BIT))\n    {\n        SDFM_setDataShiftValue(base, filter, SDFM_GET_SHIFT_VALUE(config2));\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ SDFM_FilterNumber filter; uint16_t ratio; SDFM_FilterType filterType; filter = (SDFM_FilterNumber)(SDFM_GET_FILTER_NUMBER(config1)); ratio = SDFM_GET_OSR(config1); filterType = (SDFM_FilterType)SDFM_GET_FILTER_TYPE(config1); // // Limit the oversampling ratio // if(ratio > SDFM_MAX_DATA_FILTER_OSR) { ratio = SDFM_MAX_DATA_FILTER_OSR; } // // Set the comparator filter type // SDFM_setFilterType(base, filter, filterType); // // Set the comparator filter over sampling ratio // SDFM_setFilterOverSamplingRatio(base, filter, ratio); // // If filter switch on // if((config2 & SDFM_FILTER_ENABLE) == SDFM_FILTER_ENABLE) { SDFM_enableFilter(base, filter); } else { SDFM_disableFilter(base, filter); } // // Set output data format // SDFM_setOutputDataFormat(base, filter, (SDFM_OutputDataFormat)(config2 & 0x1U)); // // Set the shift value if data is in 16-bit 2's complement format // if((config2 & 0x1U) == (uint16_t)(SDFM_DATA_FORMAT_16_BIT)) { SDFM_setDataShiftValue(base, filter, SDFM_GET_SHIFT_VALUE(config2)); } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "sdfm.c",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_configZeroCrossComparator",
+      "functionArgs": [
+        "base",
+        "config1",
+        "config2"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    SDFM_FilterNumber filter;\n    uint16_t ratio;\n    SDFM_FilterType filterType;\n\n    filter = (SDFM_FilterNumber)(SDFM_GET_FILTER_NUMBER(config1));\n    ratio = SDFM_GET_OSR(config1);\n    filterType = (SDFM_FilterType)SDFM_GET_FILTER_TYPE(config1);\n\n    //\n    // Limit the oversampling ratio\n    //\n    if(ratio > SDFM_MAX_COMP_FILTER_OSR)\n    {\n        ratio = SDFM_MAX_COMP_FILTER_OSR;\n    }\n\n    //\n    // Set the comparator filter type\n    //\n    SDFM_setComparatorFilterType(base, filter, filterType);\n\n    //\n    // Set the comparator filter over sampling ratio\n    //\n    SDFM_setCompFilterOverSamplingRatio(base, filter, ratio);\n\n    //\n    // Set the zero cross threshold value\n    //\n    SDFM_setCompFilterZeroCrossThreshold(base, filter, config2);\n}\n",
+      "functionContentWithoutFormatting": "{ SDFM_FilterNumber filter; uint16_t ratio; SDFM_FilterType filterType; filter = (SDFM_FilterNumber)(SDFM_GET_FILTER_NUMBER(config1)); ratio = SDFM_GET_OSR(config1); filterType = (SDFM_FilterType)SDFM_GET_FILTER_TYPE(config1); // // Limit the oversampling ratio // if(ratio > SDFM_MAX_COMP_FILTER_OSR) { ratio = SDFM_MAX_COMP_FILTER_OSR; } // // Set the comparator filter type // SDFM_setComparatorFilterType(base, filter, filterType); // // Set the comparator filter over sampling ratio // SDFM_setCompFilterOverSamplingRatio(base, filter, ratio); // // Set the zero cross threshold value // SDFM_setCompFilterZeroCrossThreshold(base, filter, config2); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "sdfm.c",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_configDataFilterFIFO",
+      "functionArgs": [
+        "base",
+        "config1",
+        "config2"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint16_t",
+        "uint16_t"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    SDFM_FilterNumber filter;\n    uint16_t ratio;\n    uint16_t fifoLevel;\n    SDFM_FilterType filterType;\n\n    filter = (SDFM_FilterNumber)(SDFM_GET_FILTER_NUMBER(config1));\n    fifoLevel = ((config2 >> 7U) & 0x1FU);\n    ratio = SDFM_GET_OSR(config1);\n    filterType = (SDFM_FilterType)SDFM_GET_FILTER_TYPE(config1);\n\n    //\n    // Limit the oversampling ratio\n    //\n    if(ratio > SDFM_MAX_DATA_FILTER_OSR)\n    {\n        ratio = SDFM_MAX_DATA_FILTER_OSR;\n    }\n\n    //\n    // Set the comparator filter type\n    //\n    SDFM_setFilterType(base, filter, filterType);\n\n    //\n    // Set the comparator filter over sampling ratio\n    //\n    SDFM_setFilterOverSamplingRatio(base, filter, ratio);\n\n    //\n    // If filter switch on\n    //\n    if((config2 & SDFM_FILTER_ENABLE) == SDFM_FILTER_ENABLE)\n    {\n        SDFM_enableFilter(base, filter);\n    }\n    else\n    {\n        SDFM_disableFilter(base, filter);\n    }\n\n    //\n    // Set output data format\n    //\n    SDFM_setOutputDataFormat(base, filter,\n                             (SDFM_OutputDataFormat)(config2 & 0x1U));\n\n    //\n    // Set the shift value if data is in 16bit 2's complement format\n    //\n    if((config2 & 0x1U) == (uint16_t)(SDFM_DATA_FORMAT_16_BIT))\n    {\n        SDFM_setDataShiftValue(base, filter, SDFM_GET_SHIFT_VALUE(config2));\n    }\n\n    //\n    // Set the FIFO level\n    //\n    SDFM_setFIFOInterruptLevel(base, filter, fifoLevel);\n    SDFM_enableFIFOBuffer(base, filter);\n}\n",
+      "functionContentWithoutFormatting": "{ SDFM_FilterNumber filter; uint16_t ratio; uint16_t fifoLevel; SDFM_FilterType filterType; filter = (SDFM_FilterNumber)(SDFM_GET_FILTER_NUMBER(config1)); fifoLevel = ((config2 >> 7U) & 0x1FU); ratio = SDFM_GET_OSR(config1); filterType = (SDFM_FilterType)SDFM_GET_FILTER_TYPE(config1); // // Limit the oversampling ratio // if(ratio > SDFM_MAX_DATA_FILTER_OSR) { ratio = SDFM_MAX_DATA_FILTER_OSR; } // // Set the comparator filter type // SDFM_setFilterType(base, filter, filterType); // // Set the comparator filter over sampling ratio // SDFM_setFilterOverSamplingRatio(base, filter, ratio); // // If filter switch on // if((config2 & SDFM_FILTER_ENABLE) == SDFM_FILTER_ENABLE) { SDFM_enableFilter(base, filter); } else { SDFM_disableFilter(base, filter); } // // Set output data format // SDFM_setOutputDataFormat(base, filter, (SDFM_OutputDataFormat)(config2 & 0x1U)); // // Set the shift value if data is in 16bit 2's complement format // if((config2 & 0x1U) == (uint16_t)(SDFM_DATA_FORMAT_16_BIT)) { SDFM_setDataShiftValue(base, filter, SDFM_GET_SHIFT_VALUE(config2)); } // // Set the FIFO level // SDFM_setFIFOInterruptLevel(base, filter, fifoLevel); SDFM_enableFIFOBuffer(base, filter); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_isBaseValid",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "#ifdef DEBUG static inline bool",
+      "functionContent": "{\n    return(\n           (base == SDFM1_BASE)\n          );\n}\n",
+      "functionContentWithoutFormatting": "{ return( (base == SDFM1_BASE) ); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_enableExternalReset",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Set the SDSYNCEN bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDDFPARM1 + ((uint32_t)filterNumber * 16U)) |=\n        SDFM_SDDFPARM1_SDSYNCEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Set the SDSYNCEN bit // EALLOW; HWREGH(base + SDFM_O_SDDFPARM1 + ((uint32_t)filterNumber * 16U)) |= SDFM_SDDFPARM1_SDSYNCEN; EDIS; }",
+      "registersUsed": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_disableExternalReset",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Clear the SDSYNCEN bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDDFPARM1 + ((uint32_t)filterNumber * 16U)) &=\n        ~SDFM_SDDFPARM1_SDSYNCEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Clear the SDSYNCEN bit // EALLOW; HWREGH(base + SDFM_O_SDDFPARM1 + ((uint32_t)filterNumber * 16U)) &= ~SDFM_SDDFPARM1_SDSYNCEN; EDIS; }",
+      "registersUsed": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_enableFilter",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Set the FEN bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDDFPARM1 + ((uint32_t)filterNumber * 16U)) |=\n        SDFM_SDDFPARM1_FEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Set the FEN bit // EALLOW; HWREGH(base + SDFM_O_SDDFPARM1 + ((uint32_t)filterNumber * 16U)) |= SDFM_SDDFPARM1_FEN; EDIS; }",
+      "registersUsed": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_disableFilter",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Clear the FEN bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDDFPARM1 + ((uint32_t)filterNumber * 16U)) &=\n        ~SDFM_SDDFPARM1_FEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Clear the FEN bit // EALLOW; HWREGH(base + SDFM_O_SDDFPARM1 + ((uint32_t)filterNumber * 16U)) &= ~SDFM_SDDFPARM1_FEN; EDIS; }",
+      "registersUsed": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_enableFIFOBuffer",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Set the FFEN bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDFIFOCTL1 + ((uint32_t)filterNumber * 16U)) |=\n        SDFM_SDFIFOCTL1_FFEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Set the FFEN bit // EALLOW; HWREGH(base + SDFM_O_SDFIFOCTL1 + ((uint32_t)filterNumber * 16U)) |= SDFM_SDFIFOCTL1_FFEN; EDIS; }",
+      "registersUsed": [
+        "SDFIFOCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDFIFOCTL1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_disableFIFOBuffer",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Clear the FFEN bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDFIFOCTL1 + ((uint32_t)filterNumber * 16U)) &=\n        ~SDFM_SDFIFOCTL1_FFEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Clear the FFEN bit // EALLOW; HWREGH(base + SDFM_O_SDFIFOCTL1 + ((uint32_t)filterNumber * 16U)) &= ~SDFM_SDFIFOCTL1_FFEN; EDIS; }",
+      "registersUsed": [
+        "SDFIFOCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDFIFOCTL1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_getZeroCrossTripStatus",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    return(((HWREGH(base + SDFM_O_SDSTATUS) >> (uint16_t)filterNumber) &\n            0x1U) == 1U);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); return(((HWREGH(base + SDFM_O_SDSTATUS) >> (uint16_t)filterNumber) & 0x1U) == 1U); }",
+      "registersUsed": [
+        "SDSTATUS"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDSTATUS"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_clearZeroCrossTripStatus",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Set SDCTL MIE bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDCTL) |= ((uint16_t)1U << (uint16_t)filterNumber);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Set SDCTL MIE bit // EALLOW; HWREGH(base + SDFM_O_SDCTL) |= ((uint16_t)1U << (uint16_t)filterNumber); EDIS; }",
+      "registersUsed": [
+        "SDCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCTL"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_enableComparator",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Set CEN bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDCPARM1 + ((uint32_t)filterNumber * 16U)) |=\n        SDFM_SDCPARM1_CEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Set CEN bit // EALLOW; HWREGH(base + SDFM_O_SDCPARM1 + ((uint32_t)filterNumber * 16U)) |= SDFM_SDCPARM1_CEN; EDIS; }",
+      "registersUsed": [
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_disableComparator",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Clear CEN bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDCPARM1 + ((uint32_t)filterNumber * 16U)) &=\n        ~SDFM_SDCPARM1_CEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Clear CEN bit // EALLOW; HWREGH(base + SDFM_O_SDCPARM1 + ((uint32_t)filterNumber * 16U)) &= ~SDFM_SDCPARM1_CEN; EDIS; }",
+      "registersUsed": [
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setFilterType",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "filterType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "SDFM_FilterType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n\n    address = base + SDFM_O_SDDFPARM1 + ((uint32_t)filterNumber * 16U);\n\n    //\n    // Write to SST bits\n    //\n    EALLOW;\n    HWREGH(address) = (HWREGH(address) & (~SDFM_SDDFPARM1_SST_M)) |\n                      ((uint16_t)filterType << 6U);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); address = base + SDFM_O_SDDFPARM1 + ((uint32_t)filterNumber * 16U); // // Write to SST bits // EALLOW; HWREGH(address) = (HWREGH(address) & (~SDFM_SDDFPARM1_SST_M)) | ((uint16_t)filterType << 6U); EDIS; }",
+      "registersUsed": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setFilterOverSamplingRatio",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "overSamplingRatio"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n    ASSERT(overSamplingRatio < 256U);\n\n    address = base + SDFM_O_SDDFPARM1 + ((uint32_t)filterNumber * 16U);\n\n    //\n    // Write to DOSR bits\n    //\n    EALLOW;\n    HWREGH(address) = (HWREGH(address) & (~SDFM_SDDFPARM1_DOSR_M)) |\n                      overSamplingRatio;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); ASSERT(overSamplingRatio < 256U); address = base + SDFM_O_SDDFPARM1 + ((uint32_t)filterNumber * 16U); // // Write to DOSR bits // EALLOW; HWREGH(address) = (HWREGH(address) & (~SDFM_SDDFPARM1_DOSR_M)) | overSamplingRatio; EDIS; }",
+      "registersUsed": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setupModulatorClock",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "clockMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "SDFM_ModulatorClockMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n\n    address = base + SDFM_O_SDCTLPARM1 + ((uint32_t)filterNumber * 16U);\n\n    //\n    // Write to MOD bits\n    //\n    EALLOW;\n    HWREGH(address) = (HWREGH(address) & (~SDFM_SDCTLPARM1_MOD_M)) |\n                      (uint16_t)clockMode;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); address = base + SDFM_O_SDCTLPARM1 + ((uint32_t)filterNumber * 16U); // // Write to MOD bits // EALLOW; HWREGH(address) = (HWREGH(address) & (~SDFM_SDCTLPARM1_MOD_M)) | (uint16_t)clockMode; EDIS; }",
+      "registersUsed": [
+        "SDCTL",
+        "SDCTLPARM1",
+        "SDCTLPARM2",
+        "SDCTLPARM3",
+        "SDCTLPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCTL",
+        "SDCTLPARM1",
+        "SDCTLPARM2",
+        "SDCTLPARM3",
+        "SDCTLPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setOutputDataFormat",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "dataFormat"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "SDFM_OutputDataFormat"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n\n    address = base + SDFM_O_SDDPARM1 + ((uint32_t)filterNumber * 16U);\n\n    //\n    // Write to DR bit\n    //\n    EALLOW;\n    HWREGH(address) = (HWREGH(address) & (~SDFM_SDDPARM1_DR)) |\n                      ((uint16_t)dataFormat << 10U);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); address = base + SDFM_O_SDDPARM1 + ((uint32_t)filterNumber * 16U); // // Write to DR bit // EALLOW; HWREGH(address) = (HWREGH(address) & (~SDFM_SDDPARM1_DR)) | ((uint16_t)dataFormat << 10U); EDIS; }",
+      "registersUsed": [
+        "SDDPARM1",
+        "SDDPARM2",
+        "SDDPARM3",
+        "SDDPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDDPARM1",
+        "SDDPARM2",
+        "SDDPARM3",
+        "SDDPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setDataShiftValue",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "shiftValue"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n    ASSERT(shiftValue < 32U);\n\n    address = base + SDFM_O_SDDPARM1 + ((uint32_t)filterNumber * 16U);\n\n    //\n    // Write to SH bit\n    //\n    EALLOW;\n    HWREGH(address) = (HWREGH(address) & (~SDFM_SDDPARM1_SH_M)) |\n                      (shiftValue << SDFM_SDDPARM1_SH_S);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); ASSERT(shiftValue < 32U); address = base + SDFM_O_SDDPARM1 + ((uint32_t)filterNumber * 16U); // // Write to SH bit // EALLOW; HWREGH(address) = (HWREGH(address) & (~SDFM_SDDPARM1_SH_M)) | (shiftValue << SDFM_SDDPARM1_SH_S); EDIS; }",
+      "registersUsed": [
+        "SDDPARM1",
+        "SDDPARM2",
+        "SDDPARM3",
+        "SDDPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDDPARM1",
+        "SDDPARM2",
+        "SDDPARM3",
+        "SDDPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setCompFilterHighThreshold",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "highThreshold"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n    ASSERT(highThreshold < 0x7FFFU);\n\n    address = base + SDFM_O_SDCMPH1 + ((uint32_t)filterNumber * 16U);\n\n    //\n    // Write to HLT bit\n    //\n    EALLOW;\n    HWREGH(address) = (HWREGH(address) & ~SDFM_SDCMPH1_HLT_M) | highThreshold;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); ASSERT(highThreshold < 0x7FFFU); address = base + SDFM_O_SDCMPH1 + ((uint32_t)filterNumber * 16U); // // Write to HLT bit // EALLOW; HWREGH(address) = (HWREGH(address) & ~SDFM_SDCMPH1_HLT_M) | highThreshold; EDIS; }",
+      "registersUsed": [
+        "SDCMPH1",
+        "SDCMPH2",
+        "SDCMPH3",
+        "SDCMPH4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCMPH1",
+        "SDCMPH2",
+        "SDCMPH3",
+        "SDCMPH4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setCompFilterLowThreshold",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "lowThreshold"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n    ASSERT(lowThreshold < 0x7FFFU);\n\n    address = base + SDFM_O_SDCMPL1 + ((uint32_t)filterNumber * 16U);\n\n    //\n    // Write to LLT bit\n    //\n    EALLOW;\n    HWREGH(address) = (HWREGH(address) & ~SDFM_SDCMPL1_LLT_M) | lowThreshold;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); ASSERT(lowThreshold < 0x7FFFU); address = base + SDFM_O_SDCMPL1 + ((uint32_t)filterNumber * 16U); // // Write to LLT bit // EALLOW; HWREGH(address) = (HWREGH(address) & ~SDFM_SDCMPL1_LLT_M) | lowThreshold; EDIS; }",
+      "registersUsed": [
+        "SDCMPL1",
+        "SDCMPL2",
+        "SDCMPL3",
+        "SDCMPL4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCMPL1",
+        "SDCMPL2",
+        "SDCMPL3",
+        "SDCMPL4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setCompFilterZeroCrossThreshold",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "zeroCrossThreshold"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n    ASSERT(zeroCrossThreshold < 0x7FFFU);\n\n    address = base + SDFM_O_SDCMPHZ1 + ((uint32_t)filterNumber * 16U);\n\n    //\n    // Write to ZCT bit\n    //\n    EALLOW;\n    HWREGH(address) = (HWREGH(address) & ~SDFM_SDCMPHZ1_HLTZ_M) |\n                      zeroCrossThreshold;\n\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); ASSERT(zeroCrossThreshold < 0x7FFFU); address = base + SDFM_O_SDCMPHZ1 + ((uint32_t)filterNumber * 16U); // // Write to ZCT bit // EALLOW; HWREGH(address) = (HWREGH(address) & ~SDFM_SDCMPHZ1_HLTZ_M) | zeroCrossThreshold; EDIS; }",
+      "registersUsed": [
+        "SDCMPHZ1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCMPHZ1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_enableZeroCrossEdgeDetect",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Set ZCEN bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDCPARM1 + ((uint32_t)filterNumber * 16U)) |=\n        SDFM_SDCPARM1_HZEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Set ZCEN bit // EALLOW; HWREGH(base + SDFM_O_SDCPARM1 + ((uint32_t)filterNumber * 16U)) |= SDFM_SDCPARM1_HZEN; EDIS; }",
+      "registersUsed": [
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_disableZeroCrossEdgeDetect",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Clear ZCEN bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDCPARM1 + ((uint32_t)filterNumber * 16U)) &=\n        ~SDFM_SDCPARM1_HZEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Clear ZCEN bit // EALLOW; HWREGH(base + SDFM_O_SDCPARM1 + ((uint32_t)filterNumber * 16U)) &= ~SDFM_SDCPARM1_HZEN; EDIS; }",
+      "registersUsed": [
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_enableInterrupt",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t offset;\n\n    ASSERT(SDFM_isBaseValid(base));\n\n    offset = (uint16_t)filterNumber * 16U;\n\n    EALLOW;\n\n    //\n    // Low, high threshold, Modulator failure\n    //\n    if((intFlags & (SDFM_MODULATOR_FAILURE_INTERRUPT |\n                    SDFM_LOW_LEVEL_THRESHOLD_INTERRUPT |\n                    SDFM_HIGH_LEVEL_THRESHOLD_INTERRUPT)) != 0U)\n    {\n        //\n        // Set IEL or IEH or MFIE bit of SDFM_O_SDCPARMx\n        //\n        HWREGH(base + SDFM_O_SDCPARM1 + offset) |=\n                (intFlags & (SDFM_MODULATOR_FAILURE_INTERRUPT |\n                             SDFM_LOW_LEVEL_THRESHOLD_INTERRUPT |\n                             SDFM_HIGH_LEVEL_THRESHOLD_INTERRUPT));\n    }\n\n    //\n    // Data filter acknowledge interrupt\n    //\n    if((intFlags & SDFM_DATA_FILTER_ACKNOWLEDGE_INTERRUPT) != 0U)\n    {\n        HWREGH(base + SDFM_O_SDDFPARM1 + offset) |= SDFM_SDDFPARM1_AE;\n    }\n\n    //\n    // FIFO , FIFO overflow interrupt\n    //\n    if((intFlags & (SDFM_FIFO_INTERRUPT | SDFM_FIFO_OVERFLOW_INTERRUPT)) != 0U)\n    {\n        //\n        // Set OVFIEN or FFIEN bits of SDFM_O_SDFIFOCTLx\n        //\n        HWREGH(base + SDFM_O_SDFIFOCTL1 + offset) |=\n                (intFlags & (SDFM_FIFO_INTERRUPT |\n                             SDFM_FIFO_OVERFLOW_INTERRUPT));\n    }\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t offset; ASSERT(SDFM_isBaseValid(base)); offset = (uint16_t)filterNumber * 16U; EALLOW; // // Low, high threshold, Modulator failure // if((intFlags & (SDFM_MODULATOR_FAILURE_INTERRUPT | SDFM_LOW_LEVEL_THRESHOLD_INTERRUPT | SDFM_HIGH_LEVEL_THRESHOLD_INTERRUPT)) != 0U) { // // Set IEL or IEH or MFIE bit of SDFM_O_SDCPARMx // HWREGH(base + SDFM_O_SDCPARM1 + offset) |= (intFlags & (SDFM_MODULATOR_FAILURE_INTERRUPT | SDFM_LOW_LEVEL_THRESHOLD_INTERRUPT | SDFM_HIGH_LEVEL_THRESHOLD_INTERRUPT)); } // // Data filter acknowledge interrupt // if((intFlags & SDFM_DATA_FILTER_ACKNOWLEDGE_INTERRUPT) != 0U) { HWREGH(base + SDFM_O_SDDFPARM1 + offset) |= SDFM_SDDFPARM1_AE; } // // FIFO , FIFO overflow interrupt // if((intFlags & (SDFM_FIFO_INTERRUPT | SDFM_FIFO_OVERFLOW_INTERRUPT)) != 0U) { // // Set OVFIEN or FFIEN bits of SDFM_O_SDFIFOCTLx // HWREGH(base + SDFM_O_SDFIFOCTL1 + offset) |= (intFlags & (SDFM_FIFO_INTERRUPT | SDFM_FIFO_OVERFLOW_INTERRUPT)); } EDIS; }",
+      "registersUsed": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4",
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4",
+        "SDFIFOCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4",
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4",
+        "SDFIFOCTL1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_disableInterrupt",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "intFlags"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint16_t offset;\n\n    ASSERT(SDFM_isBaseValid(base));\n\n    offset = (uint16_t)filterNumber * 16U;\n\n    EALLOW;\n\n    //\n    // Low, high threshold, modulator failure interrupts\n    //\n    if((intFlags & (SDFM_MODULATOR_FAILURE_INTERRUPT |\n                    SDFM_LOW_LEVEL_THRESHOLD_INTERRUPT |\n                    SDFM_HIGH_LEVEL_THRESHOLD_INTERRUPT)) != 0U)\n    {\n        //\n        // Set IEL or IEH or MFIE bit of SDFM_O_SDCPARMx\n        //\n        HWREGH(base + SDFM_O_SDCPARM1 + offset) &=\n            ~(intFlags & (SDFM_MODULATOR_FAILURE_INTERRUPT |\n                          SDFM_LOW_LEVEL_THRESHOLD_INTERRUPT |\n                          SDFM_HIGH_LEVEL_THRESHOLD_INTERRUPT));\n    }\n\n    //\n    // Data filter acknowledge interrupt\n    //\n    if((intFlags & SDFM_DATA_FILTER_ACKNOWLEDGE_INTERRUPT) != 0U)\n    {\n        HWREGH(base + SDFM_O_SDDFPARM1 + offset) &= ~SDFM_SDDFPARM1_AE;\n    }\n\n    //\n    // FIFO , FIFO overflow interrupt\n    //\n    if((intFlags & (SDFM_FIFO_INTERRUPT | SDFM_FIFO_OVERFLOW_INTERRUPT)) != 0U)\n    {\n         //\n         // Set OVFIEN or FFIEN bits of SDFM_O_SDFIFOCTLx\n         //\n         HWREGH(base + SDFM_O_SDFIFOCTL1 + offset) &=\n            ~(intFlags & (SDFM_FIFO_INTERRUPT | SDFM_FIFO_OVERFLOW_INTERRUPT));\n    }\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t offset; ASSERT(SDFM_isBaseValid(base)); offset = (uint16_t)filterNumber * 16U; EALLOW; // // Low, high threshold, modulator failure interrupts // if((intFlags & (SDFM_MODULATOR_FAILURE_INTERRUPT | SDFM_LOW_LEVEL_THRESHOLD_INTERRUPT | SDFM_HIGH_LEVEL_THRESHOLD_INTERRUPT)) != 0U) { // // Set IEL or IEH or MFIE bit of SDFM_O_SDCPARMx // HWREGH(base + SDFM_O_SDCPARM1 + offset) &= ~(intFlags & (SDFM_MODULATOR_FAILURE_INTERRUPT | SDFM_LOW_LEVEL_THRESHOLD_INTERRUPT | SDFM_HIGH_LEVEL_THRESHOLD_INTERRUPT)); } // // Data filter acknowledge interrupt // if((intFlags & SDFM_DATA_FILTER_ACKNOWLEDGE_INTERRUPT) != 0U) { HWREGH(base + SDFM_O_SDDFPARM1 + offset) &= ~SDFM_SDDFPARM1_AE; } // // FIFO , FIFO overflow interrupt // if((intFlags & (SDFM_FIFO_INTERRUPT | SDFM_FIFO_OVERFLOW_INTERRUPT)) != 0U) { // // Set OVFIEN or FFIEN bits of SDFM_O_SDFIFOCTLx // HWREGH(base + SDFM_O_SDFIFOCTL1 + offset) &= ~(intFlags & (SDFM_FIFO_INTERRUPT | SDFM_FIFO_OVERFLOW_INTERRUPT)); } EDIS; }",
+      "registersUsed": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4",
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4",
+        "SDFIFOCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDDFPARM1",
+        "SDDFPARM2",
+        "SDDFPARM3",
+        "SDDFPARM4",
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4",
+        "SDFIFOCTL1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setComparatorFilterType",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "filterType"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "SDFM_FilterType"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n\n    address = base + SDFM_O_SDCPARM1 + ((uint32_t)filterNumber * 16U);\n\n    //\n    // Write to CS1_CS0 bits\n    //\n    EALLOW;\n    HWREGH(address) = (HWREGH(address) & (~SDFM_SDCPARM1_CS1_CS0_M)) |\n                      ((uint16_t)filterType << 3U);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); address = base + SDFM_O_SDCPARM1 + ((uint32_t)filterNumber * 16U); // // Write to CS1_CS0 bits // EALLOW; HWREGH(address) = (HWREGH(address) & (~SDFM_SDCPARM1_CS1_CS0_M)) | ((uint16_t)filterType << 3U); EDIS; }",
+      "registersUsed": [
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setCompFilterOverSamplingRatio",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "overSamplingRatio"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n    ASSERT(overSamplingRatio < 32U);\n\n    address = base + SDFM_O_SDCPARM1 + ((uint32_t)filterNumber * 16U);\n\n    //\n    // Write to COSR bits\n    //\n    EALLOW;\n    HWREGH(address) = (HWREGH(address) & (~SDFM_SDCPARM1_COSR_M)) |\n                      overSamplingRatio;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); ASSERT(overSamplingRatio < 32U); address = base + SDFM_O_SDCPARM1 + ((uint32_t)filterNumber * 16U); // // Write to COSR bits // EALLOW; HWREGH(address) = (HWREGH(address) & (~SDFM_SDCPARM1_COSR_M)) | overSamplingRatio; EDIS; }",
+      "registersUsed": [
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCPARM1",
+        "SDCPARM2",
+        "SDCPARM3",
+        "SDCPARM4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_getFilterData",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Read SDDATA bits\n    //\n    return(HWREG(base + SDFM_O_SDDATA1 + ((uint32_t)filterNumber * 16U)));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Read SDDATA bits // return(HWREG(base + SDFM_O_SDDATA1 + ((uint32_t)filterNumber * 16U))); }",
+      "registersUsed": [
+        "SDDATA1",
+        "SDDATA2",
+        "SDDATA3",
+        "SDDATA4"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDDATA1",
+        "SDDATA2",
+        "SDDATA3",
+        "SDDATA4"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_getThresholdStatus",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline SDFM_OutputThresholdStatus",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Read SDIFLG high/low threshold bits\n    //\n    return((SDFM_OutputThresholdStatus)((HWREG(base + SDFM_O_SDIFLG) >>\n                                        (2U * (uint16_t)filterNumber)) & 0x3U));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Read SDIFLG high/low threshold bits // return((SDFM_OutputThresholdStatus)((HWREG(base + SDFM_O_SDIFLG) >> (2U * (uint16_t)filterNumber)) & 0x3U)); }",
+      "registersUsed": [
+        "SDIFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDIFLG"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_getModulatorStatus",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Read SDIFLG MF1, MF2, MF3 OR MF4 bits\n    //\n    return(((HWREG(base + SDFM_O_SDIFLG) >> ((uint16_t)filterNumber + 8U)) &\n            0x1U) != 0x1U);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Read SDIFLG MF1, MF2, MF3 OR MF4 bits // return(((HWREG(base + SDFM_O_SDIFLG) >> ((uint16_t)filterNumber + 8U)) & 0x1U) != 0x1U); }",
+      "registersUsed": [
+        "SDIFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDIFLG"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_getNewFilterDataStatus",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Read SDIFLG AF1, AF2, AF3 OR AF4 bits\n    //\n    return(((HWREG(base + SDFM_O_SDIFLG) >> ((uint16_t)filterNumber + 12U)) &\n            0x1U) == 0x1U);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Read SDIFLG AF1, AF2, AF3 OR AF4 bits // return(((HWREG(base + SDFM_O_SDIFLG) >> ((uint16_t)filterNumber + 12U)) & 0x1U) == 0x1U); }",
+      "registersUsed": [
+        "SDIFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDIFLG"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_getFIFOOverflowStatus",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Read SDIFLG SDFFOVF1, SDFFOVF2, SDFFOVF3 OR SDFFOVF4 bits\n    //\n    return(((HWREG(base + SDFM_O_SDIFLG) >> ((uint16_t)filterNumber + 16U)) &\n            0x1U) == 0x1U);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Read SDIFLG SDFFOVF1, SDFFOVF2, SDFFOVF3 OR SDFFOVF4 bits // return(((HWREG(base + SDFM_O_SDIFLG) >> ((uint16_t)filterNumber + 16U)) & 0x1U) == 0x1U); }",
+      "registersUsed": [
+        "SDIFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDIFLG"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_getFIFOISRStatus",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Read SDIFLG SDFFINT1, SDFFINT2, SDFFINT3 OR SDFFINT4 bits\n    //\n    return(((HWREG(base + SDFM_O_SDIFLG) >> ((uint16_t)filterNumber + 20U)) &\n            0x1U) == 0x1U);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Read SDIFLG SDFFINT1, SDFFINT2, SDFFINT3 OR SDFFINT4 bits // return(((HWREG(base + SDFM_O_SDIFLG) >> ((uint16_t)filterNumber + 20U)) & 0x1U) == 0x1U); }",
+      "registersUsed": [
+        "SDIFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDIFLG"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_getIsrStatus",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Read SDIFLG MIF\n    //\n    return((HWREG(base + SDFM_O_SDIFLG) >> 31U) == 0x1U);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Read SDIFLG MIF // return((HWREG(base + SDFM_O_SDIFLG) >> 31U) == 0x1U); }",
+      "registersUsed": [
+        "SDIFLG"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDIFLG"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_clearInterruptFlag",
+      "functionArgs": [
+        "base",
+        "flag"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n    ASSERT((flag & 0x80FFFFFFU) == flag);\n\n    //\n    // Write to  SDIFLGCLR register\n    //\n    HWREG(base + SDFM_O_SDIFLGCLR) |= flag;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); ASSERT((flag & 0x80FFFFFFU) == flag); // // Write to SDIFLGCLR register // HWREG(base + SDFM_O_SDIFLGCLR) |= flag; }",
+      "registersUsed": [
+        "SDIFLG",
+        "SDIFLGCLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDIFLG",
+        "SDIFLGCLR"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_enableMainInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Set SDCTL MIE bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDCTL) |= SDFM_SDCTL_MIE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Set SDCTL MIE bit // EALLOW; HWREGH(base + SDFM_O_SDCTL) |= SDFM_SDCTL_MIE; EDIS; }",
+      "registersUsed": [
+        "SDCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCTL"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_disableMainInterrupt",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Clear SDCTL MIE bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDCTL) &= ~SDFM_SDCTL_MIE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Clear SDCTL MIE bit // EALLOW; HWREGH(base + SDFM_O_SDCTL) &= ~SDFM_SDCTL_MIE; EDIS; }",
+      "registersUsed": [
+        "SDCTL"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCTL"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_enableMainFilter",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Set SDMFILEN MFE bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDMFILEN) |= SDFM_SDMFILEN_MFE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Set SDMFILEN MFE bit // EALLOW; HWREGH(base + SDFM_O_SDMFILEN) |= SDFM_SDMFILEN_MFE; EDIS; }",
+      "registersUsed": [
+        "SDMFILEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDMFILEN"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_disableMainFilter",
+      "functionArgs": [
+        "base"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Clear SDMFILEN MFE bit\n    //\n    EALLOW;\n    HWREGH(base + SDFM_O_SDMFILEN) &= ~SDFM_SDMFILEN_MFE;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Clear SDMFILEN MFE bit // EALLOW; HWREGH(base + SDFM_O_SDMFILEN) &= ~SDFM_SDMFILEN_MFE; EDIS; }",
+      "registersUsed": [
+        "SDMFILEN"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDMFILEN"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_getFIFODataCount",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Read SDFFST\n    //\n    return((HWREGH(base + SDFM_O_SDFIFOCTL1 +\n        ((uint32_t)filterNumber * 16U)) & SDFM_SDFIFOCTL1_SDFFST_M) >>\n         SDFM_SDFIFOCTL1_SDFFST_S);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Read SDFFST // return((HWREGH(base + SDFM_O_SDFIFOCTL1 + ((uint32_t)filterNumber * 16U)) & SDFM_SDFIFOCTL1_SDFFST_M) >> SDFM_SDFIFOCTL1_SDFFST_S); }",
+      "registersUsed": [
+        "SDFIFOCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDFIFOCTL1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_getComparatorSincData",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline uint16_t",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Read SDCDATA\n    //\n    return(HWREGH(base + SDFM_O_SDCDATA1 + ((uint32_t)filterNumber * 16U)));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Read SDCDATA // return(HWREGH(base + SDFM_O_SDCDATA1 + ((uint32_t)filterNumber * 16U))); }",
+      "registersUsed": [
+        "SDCDATA1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDCDATA1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_getFIFOData",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline uint32_t",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Read SDDATFIFO\n    //\n    return(HWREG(base + SDFM_O_SDDATFIFO1 + ((uint32_t)filterNumber * 16U)));\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Read SDDATFIFO // return(HWREG(base + SDFM_O_SDDATFIFO1 + ((uint32_t)filterNumber * 16U))); }",
+      "registersUsed": [
+        "SDDATFIFO1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDDATFIFO1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setFIFOInterruptLevel",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "fifoLevel"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "uint16_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n    ASSERT(fifoLevel <= 16U);\n\n    address = base + SDFM_O_SDFIFOCTL1 + ((uint32_t)filterNumber * 16U);\n\n    //\n    // Write to SDFFIL bit\n    //\n    EALLOW;\n    HWREGH(address) =\n        ((HWREGH(address) & (~SDFM_SDFIFOCTL1_SDFFIL_M)) | fifoLevel);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); ASSERT(fifoLevel <= 16U); address = base + SDFM_O_SDFIFOCTL1 + ((uint32_t)filterNumber * 16U); // // Write to SDFFIL bit // EALLOW; HWREGH(address) = ((HWREGH(address) & (~SDFM_SDFIFOCTL1_SDFFIL_M)) | fifoLevel); EDIS; }",
+      "registersUsed": [
+        "SDFIFOCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDFIFOCTL1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setDataReadyInterruptSource",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "dataReadySource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "SDFM_DataReadyInterruptSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n\n    address = base + SDFM_O_SDFIFOCTL1 + ((uint32_t)filterNumber * 16U);\n\n    //\n    // Write to DRINTSEL\n    //\n    EALLOW;\n    HWREGH(address) = (HWREGH(address) & ~SDFM_SDFIFOCTL1_DRINTSEL) |\n                      ((uint16_t)dataReadySource << 14U);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); address = base + SDFM_O_SDFIFOCTL1 + ((uint32_t)filterNumber * 16U); // // Write to DRINTSEL // EALLOW; HWREGH(address) = (HWREGH(address) & ~SDFM_SDFIFOCTL1_DRINTSEL) | ((uint16_t)dataReadySource << 14U); EDIS; }",
+      "registersUsed": [
+        "SDFIFOCTL1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDFIFOCTL1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_getWaitForSyncStatus",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline bool",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    //\n    // Read WTSYNFLG bit\n    //\n    return(((HWREGH(base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U)) &\n            SDFM_SDSYNC1_WTSYNFLG) >> 7U) == 0x1U);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); // // Read WTSYNFLG bit // return(((HWREGH(base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U)) & SDFM_SDSYNC1_WTSYNFLG) >> 7U) == 0x1U); }",
+      "registersUsed": [
+        "SDSYNC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDSYNC1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_clearWaitForSyncFlag",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Clear WTSYNCLR bit\n    //\n    HWREGH(base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U)) |=\n           SDFM_SDSYNC1_WTSYNCLR;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); EALLOW; // // Clear WTSYNCLR bit // HWREGH(base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U)) |= SDFM_SDSYNC1_WTSYNCLR; EDIS; }",
+      "registersUsed": [
+        "SDSYNC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDSYNC1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_enableWaitForSync",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Set WTSYNCEN bit\n    //\n    HWREGH(base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U)) |=\n        SDFM_SDSYNC1_WTSYNCEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); EALLOW; // // Set WTSYNCEN bit // HWREGH(base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U)) |= SDFM_SDSYNC1_WTSYNCEN; EDIS; }",
+      "registersUsed": [
+        "SDSYNC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDSYNC1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_disableWaitForSync",
+      "functionArgs": [
+        "base",
+        "filterNumber"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(SDFM_isBaseValid(base));\n\n    EALLOW;\n\n    //\n    // Clear WTSYNCEN bit\n    //\n    HWREGH(base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U)) &=\n        ~SDFM_SDSYNC1_WTSYNCEN;\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(SDFM_isBaseValid(base)); EALLOW; // // Clear WTSYNCEN bit // HWREGH(base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U)) &= ~SDFM_SDSYNC1_WTSYNCEN; EDIS; }",
+      "registersUsed": [
+        "SDSYNC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDSYNC1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setPWMSyncSource",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "syncSource"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "SDFM_PWMSyncSource"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n\n    address = base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U);\n\n    EALLOW;\n\n    //\n    // Write to SYNCSEL bits\n    //\n    HWREGH(address) =\n        (HWREGH(address) & ~SDFM_SDSYNC1_SYNCSEL_M) | (uint16_t)syncSource;\n    EDIS;\n\n    //\n    //Enable SDSYNC reset to data filter\n    //\n    SDFM_enableExternalReset(base, filterNumber);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); address = base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U); EALLOW; // // Write to SYNCSEL bits // HWREGH(address) = (HWREGH(address) & ~SDFM_SDSYNC1_SYNCSEL_M) | (uint16_t)syncSource; EDIS; // //Enable SDSYNC reset to data filter // SDFM_enableExternalReset(base, filterNumber); }",
+      "registersUsed": [
+        "SDSYNC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDSYNC1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setFIFOClearOnSyncMode",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "fifoClearSyncMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "SDFM_FIFOClearSyncMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n\n    address = base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U);\n\n    EALLOW;\n\n    //\n    // Write to FFSYNCCLREN bit\n    //\n    HWREGH(address) = (HWREGH(address) & ~SDFM_SDSYNC1_FFSYNCCLREN) |\n                      ((uint16_t)fifoClearSyncMode << 9U);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); address = base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U); EALLOW; // // Write to FFSYNCCLREN bit // HWREGH(address) = (HWREGH(address) & ~SDFM_SDSYNC1_FFSYNCCLREN) | ((uint16_t)fifoClearSyncMode << 9U); EDIS; }",
+      "registersUsed": [
+        "SDSYNC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDSYNC1"
+      ]
+    },
+    {
+      "file": "sdfm.h",
+      "peripheral": "sdfm",
+      "functionName": "SDFM_setWaitForSyncClearMode",
+      "functionArgs": [
+        "base",
+        "filterNumber",
+        "syncClearMode"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SDFM_FilterNumber",
+        "SDFM_WaitForSyncClearMode"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    uint32_t address;\n\n    ASSERT(SDFM_isBaseValid(base));\n\n    address = base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U);\n\n    EALLOW;\n\n    //\n    // Write to WTSCLREN  bit\n    //\n    HWREGH(address) = (HWREGH(address) & ~SDFM_SDSYNC1_WTSCLREN) |\n                      ((uint16_t)syncClearMode << 10U);\n    EDIS;\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t address; ASSERT(SDFM_isBaseValid(base)); address = base + SDFM_O_SDSYNC1 + ((uint32_t)filterNumber * 16U); EALLOW; // // Write to WTSCLREN bit // HWREGH(address) = (HWREGH(address) & ~SDFM_SDSYNC1_WTSCLREN) | ((uint16_t)syncClearMode << 10U); EDIS; }",
+      "registersUsed": [
+        "SDSYNC1"
+      ],
+      "registersUsedMatchingBifield": [
+        "SDSYNC1"
+      ]
+    }
+  ]
+}

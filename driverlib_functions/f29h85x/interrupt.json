@@ -1,0 +1,647 @@
+{
+  "name": "interrupt",
+  "functions": [
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_defaultHandler",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "#include \"interrupt.h\"  __attribute__((interrupt(\"INT\"))) void",
+      "functionContent": "{\n    volatile uint64_t waitCount = 0xFFFFFFFFFFFFFFFFULL;\n\n    ESTOP0;\n    while(waitCount > 0U)\n    {\n        waitCount--;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint64_t waitCount = 0xFFFFFFFFFFFFFFFFULL; ESTOP0; while(waitCount > 0U) { waitCount--; } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_clearEsmEaFlags",
+      "functionArgs": [
+        "*nmiStatus"
+      ],
+      "functionArgsTypes": [
+        "Interrupt_NmiStatus"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint32_t grp;\n\n    //\n    //  Get ESM status for all CPUs\n    //\n    for(grp = 0U;grp < ESM_NUM_GROUPS;grp++)\n    {\n        nmiStatus->cpu1EsmSts[grp]  = ESM_getGroupRawIntStatus(ESMCPU1_BASE, grp);\n    }\n\n    //\n    //  Get EA status for all sources\n    //\n    //\n    //  CPU\n    //\n    ErrorAggregator_getCpuErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_CPU1, &nmiStatus->cpu1EaSts);\n    ErrorAggregator_getCpuErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_CPU2, &nmiStatus->cpu2EaSts);\n    ErrorAggregator_getCpuErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_CPU3, &nmiStatus->cpu3EaSts);\n    //\n    //  RTDMA\n    //\n    ErrorAggregator_getRtdmaErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_RTDMA1, &nmiStatus->rtdma1EaSts);\n    ErrorAggregator_getRtdmaErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_RTDMA2, &nmiStatus->rtdma2EaSts);\n    //\n    //  SSU\n    //\n    ErrorAggregator_getSsuErrorInfo(ERRORAGGREGATOR_BASE, &nmiStatus->ssuEaSts);\n    //\n    //  Ethercat\n    //\n    ErrorAggregator_getEthercatErrorInfo(ERRORAGGREGATOR_BASE, &nmiStatus->ethercatEaSts);\n\n    //\n    //  Clear ESM status for all CPUs\n    //  -> Write 1 to status register to clear\n    //\n    for(grp = 0U;grp < ESM_NUM_GROUPS;grp++)\n    {\n        ESM_clearGroupIntStatus(ESMCPU1_BASE, grp);\n        ESM_clearGroupIntStatus(ESMCPU2_BASE, grp);\n        ESM_clearGroupIntStatus(ESMCPU3_BASE, grp);\n        ESM_clearGroupIntStatus(ESMSYSTEM_BASE, grp);\n    }\n\n    //\n    //  Clear EA status\n    //\n    //\n    //  CPU\n    //\n    ErrorAggregator_clearCpuError(ERRORAGGREGATOR_BASE, EA_SRC_CPU1);\n    ErrorAggregator_clearCpuError(ERRORAGGREGATOR_BASE, EA_SRC_CPU2);\n    ErrorAggregator_clearCpuError(ERRORAGGREGATOR_BASE, EA_SRC_CPU3);\n    //\n    //  RTDMA\n    //\n    ErrorAggregator_clearRtdmaError(ERRORAGGREGATOR_BASE, EA_SRC_RTDMA1);\n    ErrorAggregator_clearRtdmaError(ERRORAGGREGATOR_BASE, EA_SRC_RTDMA2);\n    //\n    //  SSU\n    //\n    ErrorAggregator_clearSsuError(ERRORAGGREGATOR_BASE);\n    //\n    //  Ethercat\n    //\n    ErrorAggregator_clearEthercatError(ERRORAGGREGATOR_BASE);\n}\n",
+      "functionContentWithoutFormatting": "{ uint32_t grp; // // Get ESM status for all CPUs // for(grp = 0U;grp < ESM_NUM_GROUPS;grp++) { nmiStatus->cpu1EsmSts[grp] = ESM_getGroupRawIntStatus(ESMCPU1_BASE, grp); } // // Get EA status for all sources // // // CPU // ErrorAggregator_getCpuErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_CPU1, &nmiStatus->cpu1EaSts); ErrorAggregator_getCpuErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_CPU2, &nmiStatus->cpu2EaSts); ErrorAggregator_getCpuErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_CPU3, &nmiStatus->cpu3EaSts); // // RTDMA // ErrorAggregator_getRtdmaErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_RTDMA1, &nmiStatus->rtdma1EaSts); ErrorAggregator_getRtdmaErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_RTDMA2, &nmiStatus->rtdma2EaSts); // // SSU // ErrorAggregator_getSsuErrorInfo(ERRORAGGREGATOR_BASE, &nmiStatus->ssuEaSts); // // Ethercat // ErrorAggregator_getEthercatErrorInfo(ERRORAGGREGATOR_BASE, &nmiStatus->ethercatEaSts); // // Clear ESM status for all CPUs // -> Write 1 to status register to clear // for(grp = 0U;grp < ESM_NUM_GROUPS;grp++) { ESM_clearGroupIntStatus(ESMCPU1_BASE, grp); ESM_clearGroupIntStatus(ESMCPU2_BASE, grp); ESM_clearGroupIntStatus(ESMCPU3_BASE, grp); ESM_clearGroupIntStatus(ESMSYSTEM_BASE, grp); } // // Clear EA status // // // CPU // ErrorAggregator_clearCpuError(ERRORAGGREGATOR_BASE, EA_SRC_CPU1); ErrorAggregator_clearCpuError(ERRORAGGREGATOR_BASE, EA_SRC_CPU2); ErrorAggregator_clearCpuError(ERRORAGGREGATOR_BASE, EA_SRC_CPU3); // // RTDMA // ErrorAggregator_clearRtdmaError(ERRORAGGREGATOR_BASE, EA_SRC_RTDMA1); ErrorAggregator_clearRtdmaError(ERRORAGGREGATOR_BASE, EA_SRC_RTDMA2); // // SSU // ErrorAggregator_clearSsuError(ERRORAGGREGATOR_BASE); // // Ethercat // ErrorAggregator_clearEthercatError(ERRORAGGREGATOR_BASE); }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_defaultNMIHandler",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void Interrupt_clearEsmEaFlags(Interrupt_NmiStatus *nmiStatus) {     uint32_t grp;      //     //  Get ESM status for all CPUs     //     for(grp = 0U;grp < ESM_NUM_GROUPS;grp++)     {         nmiStatus->cpu1EsmSts[grp]  = ESM_getGroupRawIntStatus(ESMCPU1_BASE, grp);     }      //     //  Get EA status for all sources     //     //     //  CPU     //     ErrorAggregator_getCpuErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_CPU1, &nmiStatus->cpu1EaSts);     ErrorAggregator_getCpuErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_CPU2, &nmiStatus->cpu2EaSts);     ErrorAggregator_getCpuErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_CPU3, &nmiStatus->cpu3EaSts);     //     //  RTDMA     //     ErrorAggregator_getRtdmaErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_RTDMA1, &nmiStatus->rtdma1EaSts);     ErrorAggregator_getRtdmaErrorInfo(ERRORAGGREGATOR_BASE, EA_SRC_RTDMA2, &nmiStatus->rtdma2EaSts);     //     //  SSU     //     ErrorAggregator_getSsuErrorInfo(ERRORAGGREGATOR_BASE, &nmiStatus->ssuEaSts);     //     //  Ethercat     //     ErrorAggregator_getEthercatErrorInfo(ERRORAGGREGATOR_BASE, &nmiStatus->ethercatEaSts);      //     //  Clear ESM status for all CPUs     //  -> Write 1 to status register to clear     //     for(grp = 0U;grp < ESM_NUM_GROUPS;grp++)     {         ESM_clearGroupIntStatus(ESMCPU1_BASE, grp);         ESM_clearGroupIntStatus(ESMCPU2_BASE, grp);         ESM_clearGroupIntStatus(ESMCPU3_BASE, grp);         ESM_clearGroupIntStatus(ESMSYSTEM_BASE, grp);     }      //     //  Clear EA status     //     //     //  CPU     //     ErrorAggregator_clearCpuError(ERRORAGGREGATOR_BASE, EA_SRC_CPU1);     ErrorAggregator_clearCpuError(ERRORAGGREGATOR_BASE, EA_SRC_CPU2);     ErrorAggregator_clearCpuError(ERRORAGGREGATOR_BASE, EA_SRC_CPU3);     //     //  RTDMA     //     ErrorAggregator_clearRtdmaError(ERRORAGGREGATOR_BASE, EA_SRC_RTDMA1);     ErrorAggregator_clearRtdmaError(ERRORAGGREGATOR_BASE, EA_SRC_RTDMA2);     //     //  SSU     //     ErrorAggregator_clearSsuError(ERRORAGGREGATOR_BASE);     //     //  Ethercat     //     ErrorAggregator_clearEthercatError(ERRORAGGREGATOR_BASE); }  __attribute__((interrupt(\"RTINT\"))) void",
+      "functionContent": "{\n    volatile uint64_t waitCount = 0xFFFFFFFFFFFFFFFFULL;\n\n    ESTOP0;  // Use Gel scripts to read ESM and Error Aggregator status\n\n    Interrupt_NmiStatus nmiStatus;\n    //\n    //  Clear ESM and EA error flags\n    //\n    Interrupt_clearEsmEaFlags(&nmiStatus);\n\n    //\n    //  Spin forever\n    //\n    while(waitCount > 0U)\n    {\n        waitCount--;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ volatile uint64_t waitCount = 0xFFFFFFFFFFFFFFFFULL; ESTOP0; // Use Gel scripts to read ESM and Error Aggregator status Interrupt_NmiStatus nmiStatus; // // Clear ESM and EA error flags // Interrupt_clearEsmEaFlags(&nmiStatus); // // Spin forever // while(waitCount > 0U) { waitCount--; } }",
+      "registersUsed": [],
+      "registersUsedMatchingBifield": []
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_initModule",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t i;\n    static uint32_t initModuleDone = 0U;\n\n    if(0U == initModuleDone)\n    {\n        //\n        // Initialize the MMR registers\n        //\n        HWREG(PIPE_BASE + PIPE_O_MMR_CLR) = 0x3U;\n\n        //\n        // Initialize the memory and wait for completion\n        //\n        HWREG(PIPE_BASE + PIPE_O_MEM_INIT) = PIPE_MEM_INIT_KEY | 0x3U;\n        while(HWREG(PIPE_BASE + PIPE_O_MEM_INIT_STS) != 0x2U)\n        {\n        }\n\n        //\n        // Set all link owner of all interrupts to LINK2 and INTSP to STACK2\n        //\n        for(i = 0; i < INTERRUPT_NO_OF_CHANNELS; i++)\n        {\n            Interrupt_setLinkOwner(i, SSU_LINK2);\n        }\n        Interrupt_setLinkOwner(INT_NMI, SSU_LINK2);\n        Interrupt_setINTSP(SSU_STACK2);\n\n        initModuleDone = 1U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; static uint32_t initModuleDone = 0U; if(0U == initModuleDone) { // // Initialize the MMR registers // HWREG(PIPE_BASE + PIPE_O_MMR_CLR) = 0x3U; // // Initialize the memory and wait for completion // HWREG(PIPE_BASE + PIPE_O_MEM_INIT) = PIPE_MEM_INIT_KEY | 0x3U; while(HWREG(PIPE_BASE + PIPE_O_MEM_INIT_STS) != 0x2U) { } // // Set all link owner of all interrupts to LINK2 and INTSP to STACK2 // for(i = 0; i < INTERRUPT_NO_OF_CHANNELS; i++) { Interrupt_setLinkOwner(i, SSU_LINK2); } Interrupt_setLinkOwner(INT_NMI, SSU_LINK2); Interrupt_setINTSP(SSU_STACK2); initModuleDone = 1U; } }",
+      "registersUsed": [
+        "MEM_INIT",
+        "MEM_INIT_STS",
+        "MMR_CLR"
+      ],
+      "registersUsedMatchingBifield": [
+        "MEM_INIT",
+        "MEM_INIT_STS",
+        "MMR_CLR"
+      ]
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_initVectorTable",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    uint16_t i;\n    static uint32_t initVectorTableDone = 0U;\n\n    if(0U == initVectorTableDone)\n    {\n        //\n        //  Program the PIPE register for NMI vector only for CPU1\n        //  For CPU2 and CPU3, CPU1 programs the SSU NMI vector and\n        //  link settings\n        //\n        if(SSU_CPU1 == SSU_getCPUID())\n        {\n            HWREG(PIPE_BASE + PIPE_O_NMI_VECT) = (uint32_t)(uintptr_t)Interrupt_defaultNMIHandler;\n        }\n\n        for(i = 0U; i < INTERRUPT_NO_OF_CHANNELS; i++)\n        {\n            HWREG(PIPE_BASE + PIPE_O_INT_VECT_ADDR(i)) =\n                                                (uint32_t)(uintptr_t)Interrupt_defaultHandler;\n        }\n\n        initVectorTableDone = 1U;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ uint16_t i; static uint32_t initVectorTableDone = 0U; if(0U == initVectorTableDone) { // // Program the PIPE register for NMI vector only for CPU1 // For CPU2 and CPU3, CPU1 programs the SSU NMI vector and // link settings // if(SSU_CPU1 == SSU_getCPUID()) { HWREG(PIPE_BASE + PIPE_O_NMI_VECT) = (uint32_t)(uintptr_t)Interrupt_defaultNMIHandler; } for(i = 0U; i < INTERRUPT_NO_OF_CHANNELS; i++) { HWREG(PIPE_BASE + PIPE_O_INT_VECT_ADDR(i)) = (uint32_t)(uintptr_t)Interrupt_defaultHandler; } initVectorTableDone = 1U; } }",
+      "registersUsed": [
+        "NMI_VECT",
+        "INT_VECT_ADDR(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "NMI_VECT",
+        "INT_VECT_ADDR(i)"
+      ]
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_configChannel",
+      "functionArgs": [
+        "intNum",
+        "config"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "Interrupt_Config"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS);\n\n    HWREG(PIPE_BASE + PIPE_O_INT_VECT_ADDR(intNum)) = (uint32_t)(uintptr_t)config.handler;\n\n    HWREG(PIPE_BASE + PIPE_O_INT_CONFIG(intNum)) =\n        ((uint32_t)config.priority << PIPE_INT_CONFIG_PRI_LEVEL_S)  |\n        ((uint32_t)config.contextID << PIPE_INT_CONFIG_CONTEXT_ID_S);\n\n    if(config.apiLinkID == SSU_API_DISABLE)\n    {\n         HWREGH(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) =\n        ((uint16_t)config.linkOwner << PIPE_INT_LINK_OWNER_OWNER_LINK_S);\n    }\n    else\n    {\n        HWREGH(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) =\n        ((uint16_t)config.linkOwner << PIPE_INT_LINK_OWNER_OWNER_LINK_S) |\n        PIPE_INT_LINK_OWNER_API_LINK_EN |\n        ((uint16_t)config.apiLinkID << PIPE_INT_LINK_OWNER_API_LINK_S);\n\n    }\n\n    HWREGB(PIPE_BASE + PIPE_O_INT_CTL_L(intNum)) = (uint8_t)config.enable;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS); HWREG(PIPE_BASE + PIPE_O_INT_VECT_ADDR(intNum)) = (uint32_t)(uintptr_t)config.handler; HWREG(PIPE_BASE + PIPE_O_INT_CONFIG(intNum)) = ((uint32_t)config.priority << PIPE_INT_CONFIG_PRI_LEVEL_S) | ((uint32_t)config.contextID << PIPE_INT_CONFIG_CONTEXT_ID_S); if(config.apiLinkID == SSU_API_DISABLE) { HWREGH(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) = ((uint16_t)config.linkOwner << PIPE_INT_LINK_OWNER_OWNER_LINK_S); } else { HWREGH(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) = ((uint16_t)config.linkOwner << PIPE_INT_LINK_OWNER_OWNER_LINK_S) | PIPE_INT_LINK_OWNER_API_LINK_EN | ((uint16_t)config.apiLinkID << PIPE_INT_LINK_OWNER_API_LINK_S); } HWREGB(PIPE_BASE + PIPE_O_INT_CTL_L(intNum)) = (uint8_t)config.enable; }",
+      "registersUsed": [
+        "INT_CTL_L(i)",
+        "INT_CONFIG(i)",
+        "INT_LINK_OWNER(i)",
+        "INT_VECT_ADDR(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_CTL_L(i)",
+        "INT_CONFIG(i)",
+        "INT_LINK_OWNER(i)",
+        "INT_VECT_ADDR(i)"
+      ]
+    },
+    {
+      "file": "interrupt.c",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_configNMI",
+      "functionArgs": [
+        "void)",
+        "linkOwner"
+      ],
+      "functionArgsTypes": [
+        "",
+        "SSU_Link"
+      ],
+      "returnType": "void",
+      "functionContent": "{\n    HWREG(PIPE_BASE + PIPE_O_NMI_VECT) = (uint32_t)(uintptr_t)handler;\n    HWREGB(PIPE_BASE + PIPE_O_NMI_LINK_OWNER) = (uint8_t)linkOwner;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(PIPE_BASE + PIPE_O_NMI_VECT) = (uint32_t)(uintptr_t)handler; HWREGB(PIPE_BASE + PIPE_O_NMI_LINK_OWNER) = (uint8_t)linkOwner; }",
+      "registersUsed": [
+        "NMI_VECT",
+        "NMI_LINK_OWNER"
+      ],
+      "registersUsedMatchingBifield": [
+        "NMI_VECT",
+        "NMI_LINK_OWNER"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_enableGlobal",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(PIPE_BASE + PIPE_O_GLOBAL_EN) = 0x3U | PIPE_GLOBAL_EN_KEY;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(PIPE_BASE + PIPE_O_GLOBAL_EN) = 0x3U | PIPE_GLOBAL_EN_KEY; }",
+      "registersUsed": [
+        "GLOBAL_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLOBAL_EN"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_disableGlobal",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(PIPE_BASE + PIPE_O_GLOBAL_EN) = PIPE_GLOBAL_EN_KEY;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(PIPE_BASE + PIPE_O_GLOBAL_EN) = PIPE_GLOBAL_EN_KEY; }",
+      "registersUsed": [
+        "GLOBAL_EN"
+      ],
+      "registersUsedMatchingBifield": [
+        "GLOBAL_EN"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_enable",
+      "functionArgs": [
+        "intNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS);\n    HWREGB(PIPE_BASE + PIPE_O_INT_CTL_L(intNum)) = PIPE_INT_CTL_L_EN;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS); HWREGB(PIPE_BASE + PIPE_O_INT_CTL_L(intNum)) = PIPE_INT_CTL_L_EN; }",
+      "registersUsed": [
+        "INT_CTL_L(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_CTL_L(i)"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_disable",
+      "functionArgs": [
+        "intNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS);\n    HWREGB(PIPE_BASE + PIPE_O_INT_CTL_L(intNum)) = 0U;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS); HWREGB(PIPE_BASE + PIPE_O_INT_CTL_L(intNum)) = 0U; }",
+      "registersUsed": [
+        "INT_CTL_L(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_CTL_L(i)"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_force",
+      "functionArgs": [
+        "intNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS);\n    HWREGB(PIPE_BASE + PIPE_O_INT_CTL_H(intNum)) = PIPE_INT_CTL_H_FLAG_FRC;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS); HWREGB(PIPE_BASE + PIPE_O_INT_CTL_H(intNum)) = PIPE_INT_CTL_H_FLAG_FRC; }",
+      "registersUsed": [
+        "INT_CTL_H(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_CTL_H(i)"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_clearFlag",
+      "functionArgs": [
+        "intNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS);\n    HWREGB(PIPE_BASE + PIPE_O_INT_CTL_H(intNum)) = PIPE_INT_CTL_H_FLAG_CLR;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS); HWREGB(PIPE_BASE + PIPE_O_INT_CTL_H(intNum)) = PIPE_INT_CTL_H_FLAG_CLR; }",
+      "registersUsed": [
+        "INT_CTL_H(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_CTL_H(i)"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_clearOverflowFlag",
+      "functionArgs": [
+        "intNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS);\n    HWREGB(PIPE_BASE + PIPE_O_INT_CTL_H(intNum)) =\n                                            PIPE_INT_CTL_H_OVERFLOW_FLAG_CLR;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS); HWREGB(PIPE_BASE + PIPE_O_INT_CTL_H(intNum)) = PIPE_INT_CTL_H_OVERFLOW_FLAG_CLR; }",
+      "registersUsed": [
+        "INT_CTL_H(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_CTL_H(i)"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_register",
+      "functionArgs": [
+        "void)"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    //  INT_NMI used as an id and has no numeric significance\n    //\n    ASSERT((intNum < INTERRUPT_NO_OF_CHANNELS) || (intNum == INT_NMI));\n\n    if(intNum == INT_NMI)\n    {\n        HWREG(PIPE_BASE + PIPE_O_NMI_VECT) = (uint32_t)(uintptr_t)handler;\n    }\n    else\n    {\n        HWREG(PIPE_BASE + PIPE_O_INT_VECT_ADDR(intNum)) = (uint32_t)(uintptr_t)handler;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // INT_NMI used as an id and has no numeric significance // ASSERT((intNum < INTERRUPT_NO_OF_CHANNELS) || (intNum == INT_NMI)); if(intNum == INT_NMI) { HWREG(PIPE_BASE + PIPE_O_NMI_VECT) = (uint32_t)(uintptr_t)handler; } else { HWREG(PIPE_BASE + PIPE_O_INT_VECT_ADDR(intNum)) = (uint32_t)(uintptr_t)handler; } }",
+      "registersUsed": [
+        "NMI_VECT",
+        "INT_VECT_ADDR(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "NMI_VECT",
+        "INT_VECT_ADDR(i)"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_unregister",
+      "functionArgs": [
+        "intNum"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    //  INT_NMI used as an id and has no numeric significance\n    //\n    ASSERT((intNum < INTERRUPT_NO_OF_CHANNELS) || (intNum == INT_NMI));\n\n    if(intNum == INT_NMI)\n    {\n        HWREG(PIPE_BASE + PIPE_O_NMI_VECT) =\n                                (uint32_t)(uintptr_t)Interrupt_defaultHandler;\n    }\n    else\n    {\n        HWREG(PIPE_BASE + PIPE_O_INT_VECT_ADDR(intNum)) =\n                                (uint32_t)(uintptr_t)Interrupt_defaultHandler;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // INT_NMI used as an id and has no numeric significance // ASSERT((intNum < INTERRUPT_NO_OF_CHANNELS) || (intNum == INT_NMI)); if(intNum == INT_NMI) { HWREG(PIPE_BASE + PIPE_O_NMI_VECT) = (uint32_t)(uintptr_t)Interrupt_defaultHandler; } else { HWREG(PIPE_BASE + PIPE_O_INT_VECT_ADDR(intNum)) = (uint32_t)(uintptr_t)Interrupt_defaultHandler; } }",
+      "registersUsed": [
+        "NMI_VECT",
+        "INT_VECT_ADDR(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "NMI_VECT",
+        "INT_VECT_ADDR(i)"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_setThreshold",
+      "functionArgs": [
+        "threshold"
+      ],
+      "functionArgsTypes": [
+        "uint8_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGB(PIPE_BASE + PIPE_O_RTINT_THRESHOLD) = threshold;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGB(PIPE_BASE + PIPE_O_RTINT_THRESHOLD) = threshold; }",
+      "registersUsed": [
+        "RTINT_THRESHOLD"
+      ],
+      "registersUsedMatchingBifield": [
+        "RTINT_THRESHOLD"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_setGroupMask",
+      "functionArgs": [
+        "groupMask"
+      ],
+      "functionArgsTypes": [
+        "uint8_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGB(PIPE_BASE + PIPE_O_INT_GRP_MASK) = groupMask;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGB(PIPE_BASE + PIPE_O_INT_GRP_MASK) = groupMask; }",
+      "registersUsed": [
+        "INT_GRP_MASK"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_GRP_MASK"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_setPriority",
+      "functionArgs": [
+        "intNum",
+        "priority"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "uint8_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS);\n\n    HWREGB(PIPE_BASE + PIPE_O_INT_CONFIG(intNum)) = priority;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS); HWREGB(PIPE_BASE + PIPE_O_INT_CONFIG(intNum)) = priority; }",
+      "registersUsed": [
+        "INT_CONFIG(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_CONFIG(i)"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_setContextID",
+      "functionArgs": [
+        "intNum",
+        "contextID"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "Interrupt_Context"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS);\n\n    HWREGB(PIPE_BASE + PIPE_O_INT_CONFIG(intNum) + 2U) = (uint8_t)contextID;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS); HWREGB(PIPE_BASE + PIPE_O_INT_CONFIG(intNum) + 2U) = (uint8_t)contextID; }",
+      "registersUsed": [
+        "INT_CONFIG(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_CONFIG(i)"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_setLinkOwner",
+      "functionArgs": [
+        "intNum",
+        "linkOwner"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SSU_Link"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    //\n    //  INT_NMI used as an id and has no numeric significance\n    //\n    ASSERT((intNum < INTERRUPT_NO_OF_CHANNELS) || (intNum == INT_NMI));\n\n    if(intNum == INT_NMI)\n    {\n        HWREGB(PIPE_BASE + PIPE_O_NMI_LINK_OWNER) = (uint8_t)linkOwner;\n    }\n    else\n    {\n        HWREGB(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) =\n            (HWREGB(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) & 0xF0U) |\n            (uint8_t)linkOwner;\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ // // INT_NMI used as an id and has no numeric significance // ASSERT((intNum < INTERRUPT_NO_OF_CHANNELS) || (intNum == INT_NMI)); if(intNum == INT_NMI) { HWREGB(PIPE_BASE + PIPE_O_NMI_LINK_OWNER) = (uint8_t)linkOwner; } else { HWREGB(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) = (HWREGB(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) & 0xF0U) | (uint8_t)linkOwner; } }",
+      "registersUsed": [
+        "NMI_LINK_OWNER",
+        "INT_LINK_OWNER(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "NMI_LINK_OWNER",
+        "INT_LINK_OWNER(i)"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_setAPILink",
+      "functionArgs": [
+        "intNum",
+        "apiLinkID"
+      ],
+      "functionArgsTypes": [
+        "uint32_t",
+        "SSU_APILink"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS);\n\n    if(apiLinkID == SSU_API_DISABLE)\n    {\n        HWREGH(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) &= 0xFU;\n    }\n    else\n    {\n        HWREGH(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) =\n            (HWREGB(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) & 0x0FU) |\n            PIPE_INT_LINK_OWNER_API_LINK_EN |\n            ((uint16_t)apiLinkID << PIPE_INT_LINK_OWNER_API_LINK_S);\n    }\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(intNum < INTERRUPT_NO_OF_CHANNELS); if(apiLinkID == SSU_API_DISABLE) { HWREGH(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) &= 0xFU; } else { HWREGH(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) = (HWREGB(PIPE_BASE + PIPE_O_INT_LINK_OWNER(intNum)) & 0x0FU) | PIPE_INT_LINK_OWNER_API_LINK_EN | ((uint16_t)apiLinkID << PIPE_INT_LINK_OWNER_API_LINK_S); } }",
+      "registersUsed": [
+        "INT_LINK_OWNER(i)"
+      ],
+      "registersUsedMatchingBifield": [
+        "INT_LINK_OWNER(i)"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_setActiveContextID",
+      "functionArgs": [
+        "contextID"
+      ],
+      "functionArgsTypes": [
+        "Interrupt_Context"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(contextID != INTERRUPT_CONTEXT_AGNOSTIC);\n    HWREG(PIPE_BASE + PIPE_O_TASK_CTRL) =\n                    (HWREG(PIPE_BASE + PIPE_O_TASK_CTRL) &\n                     ~PIPE_TASK_CTRL_ACTIVE_CONTEXT_ID_M) |\n                    (uint32_t)contextID | PIPE_TASK_CTRL_KEY;\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(contextID != INTERRUPT_CONTEXT_AGNOSTIC); HWREG(PIPE_BASE + PIPE_O_TASK_CTRL) = (HWREG(PIPE_BASE + PIPE_O_TASK_CTRL) & ~PIPE_TASK_CTRL_ACTIVE_CONTEXT_ID_M) | (uint32_t)contextID | PIPE_TASK_CTRL_KEY; }",
+      "registersUsed": [
+        "TASK_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TASK_CTRL"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_enableSupervisorIgnoreINTE",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(PIPE_BASE + PIPE_O_TASK_CTRL) =\n                    (HWREG(PIPE_BASE + PIPE_O_TASK_CTRL) |\n                     PIPE_TASK_CTRL_SUP_IGN_INTE_EN) |\n                    PIPE_TASK_CTRL_KEY;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(PIPE_BASE + PIPE_O_TASK_CTRL) = (HWREG(PIPE_BASE + PIPE_O_TASK_CTRL) | PIPE_TASK_CTRL_SUP_IGN_INTE_EN) | PIPE_TASK_CTRL_KEY; }",
+      "registersUsed": [
+        "TASK_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TASK_CTRL"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_disableSupervisorIgnoreINTE",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(PIPE_BASE + PIPE_O_TASK_CTRL) =\n                    (HWREG(PIPE_BASE + PIPE_O_TASK_CTRL) &\n                     ~PIPE_TASK_CTRL_SUP_IGN_INTE_EN) |\n                    PIPE_TASK_CTRL_KEY;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(PIPE_BASE + PIPE_O_TASK_CTRL) = (HWREG(PIPE_BASE + PIPE_O_TASK_CTRL) & ~PIPE_TASK_CTRL_SUP_IGN_INTE_EN) | PIPE_TASK_CTRL_KEY; }",
+      "registersUsed": [
+        "TASK_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "TASK_CTRL"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_setRTINTSPWarning",
+      "functionArgs": [
+        "level",
+        "priority"
+      ],
+      "functionArgsTypes": [
+        "uint8_t",
+        "uint8_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    ASSERT(level <= 15U);\n\n    HWREG(PIPE_BASE + PIPE_O_RTINT_SP_H) =\n                ((uint32_t)level << PIPE_RTINT_SP_H_WARNRTISP_S) |\n                ((uint32_t)priority << PIPE_RTINT_SP_H_WARNRTISP_PRIO_LEVEL_S);\n}\n",
+      "functionContentWithoutFormatting": "{ ASSERT(level <= 15U); HWREG(PIPE_BASE + PIPE_O_RTINT_SP_H) = ((uint32_t)level << PIPE_RTINT_SP_H_WARNRTISP_S) | ((uint32_t)priority << PIPE_RTINT_SP_H_WARNRTISP_PRIO_LEVEL_S); }",
+      "registersUsed": [
+        "RTINT_SP_H"
+      ],
+      "registersUsedMatchingBifield": [
+        "RTINT_SP_H"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_setINTSP",
+      "functionArgs": [
+        "stack"
+      ],
+      "functionArgsTypes": [
+        "SSU_Stack"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREGB(PIPE_BASE + PIPE_O_INTSP) = (uint8_t)stack;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREGB(PIPE_BASE + PIPE_O_INTSP) = (uint8_t)stack; }",
+      "registersUsed": [
+        "INTSP"
+      ],
+      "registersUsedMatchingBifield": [
+        "INTSP"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_lockBootLinkUpdates",
+      "functionArgs": [
+        "void"
+      ],
+      "functionArgsTypes": [
+        ""
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(PIPE_BASE + PIPE_O_BOOT_LINK_CTRL) =\n                PIPE_BOOT_LINK_CTRL_BOOT_LINK_LOCK |\n                PIPE_BOOT_LINK_CTRL_KEY;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(PIPE_BASE + PIPE_O_BOOT_LINK_CTRL) = PIPE_BOOT_LINK_CTRL_BOOT_LINK_LOCK | PIPE_BOOT_LINK_CTRL_KEY; }",
+      "registersUsed": [
+        "BOOT_LINK_CTRL"
+      ],
+      "registersUsedMatchingBifield": [
+        "BOOT_LINK_CTRL"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_lockRegister",
+      "functionArgs": [
+        "registers"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(PIPE_BASE + PIPE_O_LOCK) =\n                    (HWREG(PIPE_BASE + PIPE_O_LOCK) | registers) |\n                    PIPE_LOCK_KEY;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(PIPE_BASE + PIPE_O_LOCK) = (HWREG(PIPE_BASE + PIPE_O_LOCK) | registers) | PIPE_LOCK_KEY; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_unlockRegister",
+      "functionArgs": [
+        "registers"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(PIPE_BASE + PIPE_O_LOCK) =\n                    (HWREG(PIPE_BASE + PIPE_O_LOCK) & ~registers) |\n                    PIPE_LOCK_KEY;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(PIPE_BASE + PIPE_O_LOCK) = (HWREG(PIPE_BASE + PIPE_O_LOCK) & ~registers) | PIPE_LOCK_KEY; }",
+      "registersUsed": [
+        "LOCK"
+      ],
+      "registersUsedMatchingBifield": [
+        "LOCK"
+      ]
+    },
+    {
+      "file": "interrupt.h",
+      "peripheral": "interrupt",
+      "functionName": "Interrupt_commitRegister",
+      "functionArgs": [
+        "registers"
+      ],
+      "functionArgsTypes": [
+        "uint32_t"
+      ],
+      "returnType": "static inline void",
+      "functionContent": "{\n    HWREG(PIPE_BASE + PIPE_O_COMMIT) =\n                    (HWREG(PIPE_BASE + PIPE_O_COMMIT) | registers) |\n                    PIPE_COMMIT_KEY;\n}\n",
+      "functionContentWithoutFormatting": "{ HWREG(PIPE_BASE + PIPE_O_COMMIT) = (HWREG(PIPE_BASE + PIPE_O_COMMIT) | registers) | PIPE_COMMIT_KEY; }",
+      "registersUsed": [
+        "COMMIT"
+      ],
+      "registersUsedMatchingBifield": [
+        "COMMIT"
+      ]
+    }
+  ]
+}
