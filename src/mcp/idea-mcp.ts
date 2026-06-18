@@ -73,7 +73,7 @@ AVAILABLE TOOLS:
 - get_device_migration_report() — Run a migration check on a source file and get a structured report.
 
 RECOMMENDED FLOW:
-1. Call get_projects() to discover projects, their current devices, and migration targets.
+1. Call get_projects() to discover projects, their current devices, and migration targets. If the list is empty or the project you are looking for is missing, call get_projects(rescan: true) once to re-scan the workspace.
 2. Call list_migration_devices() if you need to verify or select device names.
 3. Call get_device_migration_report() with the file path, source device, and target device(s).
 4. Issues marked "Auto-fixable" have a concrete code replacement you can apply directly. Issues marked "Needs manual review" require reading the linked migration guide.
