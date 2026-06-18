@@ -415,23 +415,23 @@ export async function disableMcpCommand() {
 
 export function tiAsmMcpInit(context: vscode.ExtensionContext) {
 
-	const enableMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.enableMcp', async () => {
+	const enableMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.enableTiAsmMcp', async () => {
 		await enableMcpCommand(context);
 	});
 
-	const disableMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.disableMcp', async () => {
+	const disableMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.disableTiAsmMcp', async () => {
 		await disableMcpCommand();
 	});
 
-	const checkMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.checkMcp', () => {
+	const checkMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.checkTiAsmMcp', () => {
 		checkMcp();
 	});
 
-	const registerMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.registerMcp', async () => {
+	const registerMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.registerTiAsmMcp', async () => {
 		await registerMcp();
 	});
 
-	const mcpInstructionsCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.mcpInstructions', async () => {
+	const mcpInstructionsCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.tiAsmMcpInstructions', async () => {
 		await mcpInstructions();
 	});
 
