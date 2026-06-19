@@ -1,5 +1,8 @@
 # Device-to-Device Migration Workflow
 
+Migrate a C2000 firmware project from one C2000 device to another (e.g.
+F28003x to F29H85x, F28004x to F28P55x). Use when the user asks to migrate, port,
+or upgrade between C2000 devices.
 This workflow migrates C2000 code written for one device family to one or more target
 device families, using the IDEA MCP `get_device_migration_report` tool. All migration
 findings — changed symbols, suggested fixes, manual-review items — come from the MCP.
@@ -9,6 +12,36 @@ Never recall migration facts from memory.
 
 The user wants to move a project (or a specific source file) from one C2000 device to
 another, and needs to know what API/register symbols change and how to update them.
+
+## Dependencies
+
+Although the user can do without some of the dependencies, it is best to have all of the
+following dependencies enabled.
+**idea-mcp**: 
+- Provides list of supported migration device families
+- Detects existing projects and migration devices configured
+- Runs migration check on .c and .h files and will return a complete report for each file 
+  and the actions that must be taken.
+**ti-asm-mcp**:
+- Provides access to device Technical Reference Manual, the device regsiter defintions etc.
+- Serves as the ground truth for device configuration at the hardware level
+**ccs-project** mcp:
+- Provides the following tools used for creating the write project for the target device
+  - getProjectDescriptors — Get metadata for projects in the workspace (name, device, build config, etc.)
+  - getProjectProductReferences — Get resolved paths for products referenced by a project
+  - importProject — Import or create a CCS project
+- Provides the following tools used for changing project settings and building the project
+  for validation
+  - buildProject — Build a specified project
+  - getToolFlags — Get current compiler/linker flags (optimization, includes, defines, libraries)
+  - setToolFlags — Append or prepend build flags to a tool
+  - getToolOptions — Get available options for a tool (e.g., valid optimization levels)
+
+With these dependencies in place, new target project is created, the correct setting are configured,
+the code is migrated to the new device and the project is built throughout the migration iteratively
+to ensure compilation is successful. Any time the agent needs more information around the device or 
+one of it's peripherals, it can retrieve the technical reference manual and analyze the sdk.
+
 
 ## How to run this workflow
 

@@ -25,18 +25,18 @@ agent, then retry.
    you expect is missing, call `get_projects(rescan: true)` once to re-scan the workspace.
 2. Look up the migration task in the workflow matrix below.
 3. Open the matching reference file and follow its steps.
-4. Never invent file paths or device names — take them from `get_projects()`.
 
 ## Workflow matrix
 
-| Task                                | Reference file                              | Primary IDEA MCP tool                         |
-| ----------------------------------- | ------------------------------------------- | --------------------------------------------- |
-| Device-to-device migration          | references/device-migration.md              | get_device_migration_report                   |
-| Bitfield → driverlib conversion      | references/bitfield-to-driverlib-migration.md | get_bitfield_to_driverlib_migration_report  |
+| Task                                | Reference file                                | Primary IDEA MCP tool                         |
+| ----------------------------------- | ------------------------------------------- --| --------------------------------------------- |
+| Device-to-device migration          | references/device-migration.md                | get_device_migration_report                   |
+| Bitfield → driverlib conversion     | references/bitfield-to-driverlib-migration.md | get_bitfield_to_driverlib_migration_report    |
 
 Notes:
 - Device-to-device migration moves code from a source device family to one or more target
-  device families. It needs a source device and target device(s).
+  device families. It needs a source device and target device(s). F28x to F28 based
+  migration and F28x to F29x based migration are supported.
 - Bitfield-to-driverlib conversion modernizes legacy bitfield register-structure accesses
   into driverlib function calls for the *same* device. There is no target device.
 
