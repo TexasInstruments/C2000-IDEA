@@ -543,7 +543,7 @@ export async function registerBitfieldToDriverlibMigrationOnUri(uri: vscode.Uri,
 	let device = sourceDevice;
 	let registerToFunctionMapping = device ? getRegisterToFunctionMapping(device) : {};
 
-	let registersFoundInfo = await registerFindBitfieldRegisters(document);
+	let registersFoundInfo = await registerFindBitfieldRegisters(document, device);
 
 	for (var regFound of registersFoundInfo)
 	{
