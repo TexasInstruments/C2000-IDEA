@@ -518,20 +518,33 @@ function generateRegisterBitDetailsText(registerName: string, registerBits: any[
 }
 
 async function registerBitfieldToDriverlibMigration(){
+	if (!vscode.window.activeTextEditor) {
+		return;
+	}
+
+	let uri = vscode.window.activeTextEditor.document.uri;
+
+	// Resolve the device from the project this file belongs to, falling back to the
+	// globally-tracked current device.
+	let projectInfo = project.projectGetUriProjectInfo(uri);
+	let device = projectInfo?.migrationState.currentDevice || project.projectGetCurrentDevice();
+
+	await registerBitfieldToDriverlibMigrationOnUri(uri, device);
+}
+
+export async function registerBitfieldToDriverlibMigrationOnUri(uri: vscode.Uri, sourceDevice: string){
 	let registerDiagnostics : vscode.Diagnostic[] = [];
 	registerDiagnosticsCollection.clear();
 	registerDiagnosticMetadata.clear();
 	registerCodeActions = [];
 
-	if (!vscode.window.activeTextEditor) {
-		return;
-	}
+	let document = await vscode.workspace.openTextDocument(uri);
 
-	let device = project.projectGetCurrentDevice();
+	let device = sourceDevice;
 	let registerToFunctionMapping = device ? getRegisterToFunctionMapping(device) : {};
 
-	let registersFoundInfo = await registerFindBitfieldRegisters(vscode.window.activeTextEditor.document);
-	
+	let registersFoundInfo = await registerFindBitfieldRegisters(document);
+
 	for (var regFound of registersFoundInfo)
 	{
 		if (regFound.instWordRange)
@@ -549,8 +562,8 @@ async function registerBitfieldToDriverlibMigration(){
 				registerDiagnostics.push(diagnostic);
 
 				// Store metadata for AI agent export
-				let metaKey = `${vscode.window.activeTextEditor.document.uri.fsPath}:${range.start.line}:${range.start.character}:${regFound.registerName}`;
-				let metaLine = vscode.window.activeTextEditor.document.lineAt(range.start);
+				let metaKey = `${uri.fsPath}:${range.start.line}:${range.start.character}:${regFound.registerName}`;
+				let metaLine = document.lineAt(range.start);
 				let metaSourcePattern = metaLine.text.trim();
 				let metaDriverLibFuncs = (device && registerToFunctionMapping[regFound.registerName]) ? registerToFunctionMapping[regFound.registerName] : undefined;
 				let metaRegisterDetails = generateRegisterBitDetailsText(regFound.registerName, regFound.registerInfo.bits, regFound.bitName);
@@ -576,7 +589,7 @@ async function registerBitfieldToDriverlibMigration(){
 				codeAction.edit = new vscode.WorkspaceEdit();
 
 
-				let line = vscode.window.activeTextEditor.document.lineAt(regFound.registerWordRange.start);
+				let line = document.lineAt(regFound.registerWordRange.start);
 				let assignmentMatch = line.text.match(/[^<>=]=[^=]([^;]+);?/);
 				if (assignmentMatch && assignmentMatch.index) // Register is being assigned to (write access) - check if bitfield access is on left side of assignment
 				{
@@ -586,7 +599,7 @@ async function registerBitfieldToDriverlibMigration(){
 						// Bitfield Assignment
 						//
 						// Update metadata fixType to write
-						let metaKey = `${vscode.window.activeTextEditor.document.uri.fsPath}:${range.start.line}:${range.start.character}:${regFound.registerName}`;
+						let metaKey = `${uri.fsPath}:${range.start.line}:${range.start.character}:${regFound.registerName}`;
 						let existingMeta = registerDiagnosticMetadata.get(metaKey);
 						if (existingMeta) {
 							existingMeta.fixType = "write";
@@ -596,7 +609,7 @@ async function registerBitfieldToDriverlibMigration(){
 						let registerCompletionsFound = registerCompletions.filter(completionItem => {
 							return (completionItem.label === (regFound.module.toUpperCase() + " Write " + getDriverlibRegisterName(regFound.module, regFound.registerInfo.name) + " bit " + regFound.bitName));
 						});
-	
+
 						if (registerCompletionsFound.length > 0)
 						{
 							let registerCompletion = registerCompletionsFound[0];
@@ -608,14 +621,14 @@ async function registerBitfieldToDriverlibMigration(){
 								snippetString.value = snippetString.value.replace("$0", valueAssigned + " << " + regFound.registerBitInfo.shift);
 								snippetString.value = snippetString.value.replace(/\$\{3.+\}/, valueAssigned + " << " + regFound.registerBitInfo.shift);
 							}
-							
+
 							let snippetRange = new vscode.Range(range.start, new vscode.Position(range.end.line, assignmentMatch.index + assignmentMatch[0].length));
 							let snippetTextEdit : vscode.SnippetTextEdit = new vscode.SnippetTextEdit(snippetRange, snippetString);
-							codeAction.edit.set(vscode.window.activeTextEditor.document.uri, [snippetTextEdit]);
-	
+							codeAction.edit.set(uri, [snippetTextEdit]);
+
 							registerCodeActions.push(
 								{
-									uri: vscode.window.activeTextEditor.document.uri,
+									uri: uri,
 									codeAction: codeAction
 								}
 							);
@@ -627,7 +640,7 @@ async function registerBitfieldToDriverlibMigration(){
 
 								if (mappedFunctions.length > 0)
 								{
-									let line = vscode.window.activeTextEditor.document.lineAt(range.start);
+									let line = document.lineAt(range.start);
 									let lineEndPos = new vscode.Position(range.end.line, line.text.length);
 									let commentedCode = "// " + line.text.trim() + "\n";
 									commentedCode += generateRegisterBitCommentsText(regFound.registerName, regFound.registerInfo.bits, regFound.bitName);
@@ -643,11 +656,11 @@ async function registerBitfieldToDriverlibMigration(){
 
 										let replacement = commentedCode + "\n" + func + "(...);";
 										let textEdit = new vscode.TextEdit(new vscode.Range(range.start, lineEndPos), replacement);
-										funcCodeAction.edit.set(vscode.window.activeTextEditor.document.uri, [textEdit]);
+										funcCodeAction.edit.set(uri, [textEdit]);
 
 										registerCodeActions.push(
 											{
-												uri: vscode.window.activeTextEditor.document.uri,
+												uri: uri,
 												codeAction: funcCodeAction
 											}
 										);
@@ -659,7 +672,7 @@ async function registerBitfieldToDriverlibMigration(){
 					}
 					else {
 						// Update metadata fixType to read
-						let metaKey = `${vscode.window.activeTextEditor.document.uri.fsPath}:${range.start.line}:${range.start.character}:${regFound.registerName}`;
+						let metaKey = `${uri.fsPath}:${range.start.line}:${range.start.character}:${regFound.registerName}`;
 						let existingMeta = registerDiagnosticMetadata.get(metaKey);
 						if (existingMeta) {
 							existingMeta.fixType = "read";
@@ -668,25 +681,25 @@ async function registerBitfieldToDriverlibMigration(){
 						let registerCompletionsFound = registerCompletions.filter(completionItem => {
 							return (completionItem.label === (regFound.module.toUpperCase() + " Read " + getDriverlibRegisterName(regFound.module, regFound.registerInfo.name) + " bit " + regFound.bitName));
 						});
-	
+
 						if (registerCompletionsFound.length > 0)
 						{
 							let registerCompletion = registerCompletionsFound[0];
-							let registerSnippetString : vscode.SnippetString = registerCompletion.insertText as vscode.SnippetString;	
-							
+							let registerSnippetString : vscode.SnippetString = registerCompletion.insertText as vscode.SnippetString;
+
 							let snippetString : vscode.SnippetString = new vscode.SnippetString(registerSnippetString.value);
 
-							
+
 							if (regFound.registerBitInfo) {
 								snippetString.value = "(" + snippetString.value + " >> " + regFound.registerBitInfo.shift + ")";
 							}
 
 							let snippetTextEdit : vscode.SnippetTextEdit = new vscode.SnippetTextEdit(range, snippetString);
-							codeAction.edit.set(vscode.window.activeTextEditor.document.uri, [snippetTextEdit]);
-	
+							codeAction.edit.set(uri, [snippetTextEdit]);
+
 							registerCodeActions.push(
 								{
-									uri: vscode.window.activeTextEditor.document.uri,
+									uri: uri,
 									codeAction: codeAction
 								}
 							);
@@ -698,7 +711,7 @@ async function registerBitfieldToDriverlibMigration(){
 
 								if (mappedFunctions.length > 0)
 								{
-									let line = vscode.window.activeTextEditor.document.lineAt(range.start);
+									let line = document.lineAt(range.start);
 									let lineEndPos = new vscode.Position(range.end.line, line.text.length);
 									let commentedCode = "// " + line.text.trim() + "\n";
 									commentedCode += generateRegisterBitCommentsText(regFound.registerName, regFound.registerInfo.bits, regFound.bitName);
@@ -714,18 +727,18 @@ async function registerBitfieldToDriverlibMigration(){
 
 										let replacement = commentedCode + "\n" + func + "(...);";
 										let textEdit = new vscode.TextEdit(new vscode.Range(range.start, lineEndPos), replacement);
-										funcCodeAction.edit.set(vscode.window.activeTextEditor.document.uri, [textEdit]);
+										funcCodeAction.edit.set(uri, [textEdit]);
 
 										registerCodeActions.push(
 											{
-												uri: vscode.window.activeTextEditor.document.uri,
+												uri: uri,
 												codeAction: funcCodeAction
 											}
 										);
 									}
 								}
 							}
-						}						
+						}
 					}
 				}
 				else // No assignment - default to read access
@@ -739,11 +752,11 @@ async function registerBitfieldToDriverlibMigration(){
 						let registerCompletion = registerCompletionsFound[0];
 						let snippetString : vscode.SnippetString = registerCompletion.insertText as vscode.SnippetString;
 						let snippetTextEdit : vscode.SnippetTextEdit = new vscode.SnippetTextEdit(range, snippetString);
-						codeAction.edit.set(vscode.window.activeTextEditor.document.uri, [snippetTextEdit]);
+						codeAction.edit.set(uri, [snippetTextEdit]);
 
 						registerCodeActions.push(
 							{
-								uri: vscode.window.activeTextEditor.document.uri,
+								uri: uri,
 								codeAction: codeAction
 							}
 						);
@@ -756,7 +769,7 @@ async function registerBitfieldToDriverlibMigration(){
 
 						if (mappedFunctions.length > 0)
 						{
-							let line = vscode.window.activeTextEditor.document.lineAt(range.start);
+							let line = document.lineAt(range.start);
 							let lineEndPos = new vscode.Position(range.end.line, line.text.length);
 							let commentedCode = "// " + line.text.trim() + "\n";
 							commentedCode += generateRegisterBitCommentsText(regFound.registerName, regFound.registerInfo.bits);
@@ -772,11 +785,11 @@ async function registerBitfieldToDriverlibMigration(){
 
 								let replacement = commentedCode + "\n" + func + "(...);";
 								let textEdit = new vscode.TextEdit(new vscode.Range(range.start, lineEndPos), replacement);
-								funcCodeAction.edit.set(vscode.window.activeTextEditor.document.uri, [textEdit]);
+								funcCodeAction.edit.set(uri, [textEdit]);
 
 								registerCodeActions.push(
 									{
-										uri: vscode.window.activeTextEditor.document.uri,
+										uri: uri,
 										codeAction: funcCodeAction
 									}
 								);
@@ -799,8 +812,8 @@ async function registerBitfieldToDriverlibMigration(){
 				registerDiagnostics.push(diagnostic);
 
 				// Store metadata for AI agent export (whole-register access)
-				let wholeMetaKey = `${vscode.window.activeTextEditor.document.uri.fsPath}:${range.start.line}:${range.start.character}:${regFound.registerName}`;
-				let wholeLine = vscode.window.activeTextEditor.document.lineAt(range.start);
+				let wholeMetaKey = `${uri.fsPath}:${range.start.line}:${range.start.character}:${regFound.registerName}`;
+				let wholeLine = document.lineAt(range.start);
 				let wholeSourcePattern = wholeLine.text.trim();
 				let wholeDriverLibFuncs = (device && registerToFunctionMapping[regFound.registerName]) ? registerToFunctionMapping[regFound.registerName] : undefined;
 				let wholeRegisterDetails = generateRegisterBitDetailsText(regFound.registerName, regFound.registerInfo.bits);
@@ -833,11 +846,11 @@ async function registerBitfieldToDriverlibMigration(){
 					let registerCompletion = registerCompletionsFound[0];
 					let snippetString : vscode.SnippetString = registerCompletion.insertText as vscode.SnippetString;
 					let snippetTextEdit : vscode.SnippetTextEdit = new vscode.SnippetTextEdit(range, snippetString);
-					codeAction.edit.set(vscode.window.activeTextEditor.document.uri, [snippetTextEdit]);
+					codeAction.edit.set(uri, [snippetTextEdit]);
 
 					registerCodeActions.push(
 						{
-							uri: vscode.window.activeTextEditor.document.uri,
+							uri: uri,
 							codeAction: codeAction
 						}
 					);
@@ -850,7 +863,7 @@ async function registerBitfieldToDriverlibMigration(){
 
 					if (mappedFunctions.length > 0)
 					{
-						let line = vscode.window.activeTextEditor.document.lineAt(range.start);
+						let line = document.lineAt(range.start);
 						let lineEndPos = new vscode.Position(range.end.line, line.text.length);
 						let commentedCode = "// " + line.text.trim() + "\n";
 						commentedCode += generateRegisterBitCommentsText(regFound.registerName, regFound.registerInfo.bits);
@@ -866,11 +879,11 @@ async function registerBitfieldToDriverlibMigration(){
 
 							let replacement = commentedCode + "\n" + func + "(...);";
 							let textEdit = new vscode.TextEdit(new vscode.Range(range.start, lineEndPos), replacement);
-							funcCodeAction.edit.set(vscode.window.activeTextEditor.document.uri, [textEdit]);
+							funcCodeAction.edit.set(uri, [textEdit]);
 
 							registerCodeActions.push(
 								{
-									uri: vscode.window.activeTextEditor.document.uri,
+									uri: uri,
 									codeAction: funcCodeAction
 								}
 							);
@@ -881,7 +894,7 @@ async function registerBitfieldToDriverlibMigration(){
 		}
 	}
 
-	registerDiagnosticsCollection.set(vscode.window.activeTextEditor.document.uri, registerDiagnostics);
+	registerDiagnosticsCollection.set(uri, registerDiagnostics);
 }
 
 function registerBitfieldAgentReportMDHeader(): string {
@@ -1002,7 +1015,7 @@ If you encounter compilation errors after applying a fix from this report:
 	return header;
 }
 
-function exportRegisterBitfieldAgentReport() {
+export function exportRegisterBitfieldAgentReport(openAfter: boolean = true): string {
 	let device = project.projectGetCurrentDevice();
 	let deviceDisplay = device || "unknown";
 	
@@ -1070,8 +1083,10 @@ function exportRegisterBitfieldAgentReport() {
 	});
 
 	if (diagnosticCount === 0) {
-		vscode.window.showWarningMessage("No bitfield register migration issues found. Run the migration check first.");
-		return;
+		if (openAfter) {
+			vscode.window.showWarningMessage("No bitfield register migration issues found. Run the migration check first.");
+		}
+		return '';
 	}
 
 	// Generate markdown report
@@ -1165,14 +1180,18 @@ function exportRegisterBitfieldAgentReport() {
 	md += `**Report generated for AI agent assistance. Please review each issue and apply appropriate fixes based on the suggested patterns.**`;
 
 	// Open the report in the editor
-	vscode.workspace.openTextDocument().then((textDoc: vscode.TextDocument) => {
-		vscode.window.showTextDocument(textDoc, 2, false).then(textEditor => {
-			textEditor.edit(edit => {
-				edit.insert(new vscode.Position(0, 0), md);
+	if (openAfter) {
+		vscode.workspace.openTextDocument().then((textDoc: vscode.TextDocument) => {
+			vscode.window.showTextDocument(textDoc, 2, false).then(textEditor => {
+				textEditor.edit(edit => {
+					edit.insert(new vscode.Position(0, 0), md);
+				});
+				vscode.window.showInformationMessage(`Bitfield Migration Report opened (${diagnosticCount} issues found)`);
 			});
-			vscode.window.showInformationMessage(`Bitfield Migration Report opened (${diagnosticCount} issues found)`);
-		});
-	}, (_error: any) => {});
+		}, (_error: any) => {});
+	}
+
+	return md;
 }
 
 async function registerBitfieldVisionUpdateDecorations(testDevice?:string) {

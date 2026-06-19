@@ -65,19 +65,29 @@ export function checkMcp() {
 	}
 }
 
-const SERVER_INSTRUCTIONS = `${IDEA_MCP_PLATFORM} device-to-device migration analysis tool. Checks source files for API/register changes when migrating between ${IDEA_MCP_PLATFORM} MCU devices.
+const SERVER_INSTRUCTIONS = `${IDEA_MCP_PLATFORM} development assistant. Provides project discovery, device-to-device migration analysis, and bitfield-to-driverlib migration analysis for ${IDEA_MCP_PLATFORM} MCU projects.
 
-REQUIRED FLOW:
-1. Call list_migration_devices() to get the list of supported device families.
-2. Call get_device_migration_report() with the file path, source device, and target device(s).
-3. The tool returns a structured markdown report with every migration issue found: location, type, severity, suggested fix, and links to TI migration collateral.
-4. Issues marked "Auto-fixable" have a concrete code replacement you can apply directly. Issues marked "Needs manual review" require reading the linked migration guide.
+AVAILABLE TOOLS:
+- get_projects() — Discover projects in the workspace with their device info and paths.
+- list_migration_devices() — Get all supported device families for migration.
+- get_device_migration_report() — Run a device-to-device migration check on a source file and get a structured report.
+- get_bitfield_to_driverlib_migration_report() — Run a bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register accesses and suggests driverlib function replacements.
+
+RECOMMENDED FLOW:
+1. Call get_projects() to discover projects, their current devices, and migration targets. If the list is empty or the project you are looking for is missing, call get_projects(rescan: true) once to re-scan the workspace.
+2. For device-to-device migration:
+   a. Call list_migration_devices() if you need to verify or select device names.
+   b. Call get_device_migration_report() with the file path, source device, and target device(s).
+   c. Issues marked "Auto-fixable" have a concrete code replacement you can apply directly. Issues marked "Needs manual review" require reading the linked migration guide.
+3. For bitfield-to-driverlib migration:
+   a. Use get_projects() to get the project's currentDevice.
+   b. Call get_bitfield_to_driverlib_migration_report() with the file path and sourceDevice.
 
 RULES:
-- Always call list_migration_devices() first to discover valid device names. Do not guess device names.
 - Device names are case-insensitive (internally normalized to lowercase).
 - Not every source→target pair has migration data. If no issues are returned, either the file has no migration-relevant APIs or the device pair has no migration JSON data.
-- Running get_device_migration_report() populates VS Code diagnostics (squiggly underlines) in the editor as a side effect.`;
+- Bitfield-to-driverlib migration converts legacy bitfield register patterns to driverlib function calls for the same device — there is no target device.
+- Running either migration report populates VS Code diagnostics (squiggly underlines) in the editor as a side effect.`;
 
 function createMcpServerInstance(): McpServer {
 	const server = new McpServer(
@@ -96,6 +106,42 @@ function createMcpServerInstance(): McpServer {
 			async () => {
 				const devices = getDeviceList();
 				return { content: [{ type: 'text' as const, text: devices.join('\n') }] };
+			}
+		);
+	}
+
+	if (IDEA_MCP_HANDLERS.getProjects && IDEA_MCP_HANDLERS.getAllProjectInfos) {
+		const getProjectsFn = IDEA_MCP_HANDLERS.getProjects;
+		const getAllProjectInfos = IDEA_MCP_HANDLERS.getAllProjectInfos;
+
+		server.registerTool(
+			'get_projects',
+			{
+				description: `Discover ${IDEA_MCP_PLATFORM} projects in the current VS Code workspace. Returns each project's name, path, device variant, current device, and migration target devices. Use this to find project paths and device info before running migration checks.`,
+				inputSchema: {
+					rescan: z.boolean().optional().describe('If true, re-scan the workspace for projects before returning. If false or omitted, return cached project data (faster).'),
+				} as any,
+			},
+			async ({ rescan }: any) => {
+				if (rescan && extensionContext) {
+					await getProjectsFn(extensionContext);
+				}
+
+				const projects = getAllProjectInfos();
+
+				if (projects.length === 0) {
+					return { content: [{ type: 'text' as const, text: 'No projects found. Open a workspace with CCS projects and try with rescan: true.' }] };
+				}
+
+				const serialized = projects.map(p => ({
+					name: p.name,
+					path: p.uri?.fsPath || p.uri?.path || '',
+					deviceVariant: p.deviceVariant,
+					currentDevice: p.migrationState.currentDevice,
+					migrationDevices: p.migrationState.migrationDevices,
+				}));
+
+				return { content: [{ type: 'text' as const, text: JSON.stringify(serialized, null, 2) }] };
 			}
 		);
 	}
@@ -145,6 +191,53 @@ Device names are case-insensitive. Use names from list_migration_devices() — p
 				} catch (err) {
 					const msg = err instanceof Error ? err.message : String(err);
 					return { content: [{ type: 'text' as const, text: `Error running migration check: ${msg}` }] };
+				}
+			}
+		);
+	}
+
+	if (IDEA_MCP_HANDLERS.runBitfieldToDriverlibMigrationCheck && IDEA_MCP_HANDLERS.generateBitfieldToDriverlibMigrationReport) {
+		const runBitfieldToDriverlibCheck = IDEA_MCP_HANDLERS.runBitfieldToDriverlibMigrationCheck;
+		const genBitfieldToDriverlibReport = IDEA_MCP_HANDLERS.generateBitfieldToDriverlibMigrationReport;
+
+		server.registerTool(
+			'get_bitfield_to_driverlib_migration_report',
+			{
+				description: `Run a ${IDEA_MCP_PLATFORM} bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register structure accesses (e.g. Regs.FIELD.bit.NAME) and suggests driverlib function replacements.
+
+The report includes:
+- Summary statistics (total issues, read/write/access/whole-register counts)
+- Per-issue details: register name, bit name, module, fix type, original source pattern
+- Suggested driverlib replacement code where available
+- Register bit details (shift, mask, description) for manual fixes
+- TRM links for register documentation
+- Per-issue action checklists
+
+Pass the sourceDevice from get_projects() to identify the device family for register-to-function mapping.`,
+				inputSchema: {
+					filePath: z.string().describe('Absolute path to C/H source file to analyze for bitfield register accesses'),
+					sourceDevice: z.string().describe('Device the code was written for (e.g. "F2837xD"). Use the currentDevice from get_projects().'),
+				} as any,
+			},
+			async ({ filePath, sourceDevice }: any) => {
+				if (!fs.existsSync(filePath)) {
+					return { content: [{ type: 'text' as const, text: `Error: File not found: ${filePath}` }] };
+				}
+
+				const uri = vscode.Uri.file(filePath);
+
+				try {
+					await runBitfieldToDriverlibCheck(uri, sourceDevice);
+					const report = genBitfieldToDriverlibReport(false);
+
+					if (!report) {
+						return { content: [{ type: 'text' as const, text: 'No bitfield register migration issues found in the specified file.' }] };
+					}
+
+					return { content: [{ type: 'text' as const, text: report }] };
+				} catch (err) {
+					const msg = err instanceof Error ? err.message : String(err);
+					return { content: [{ type: 'text' as const, text: `Error running bitfield-to-driverlib migration check: ${msg}` }] };
 				}
 			}
 		);
