@@ -18,6 +18,7 @@ import {
 	IDEA_MCP_DEFAULT_PORT,
 	IDEA_MCP_HANDLERS,
 } from './idea-mcp-config';
+import { deployIdeaSkills } from '../skills/idea-skills';
 
 let httpServer: http.Server | null = null;
 let extensionContext: vscode.ExtensionContext | null = null;
@@ -364,6 +365,7 @@ export async function registerMcp() {
 	try {
 		if (tool.id === 'codex') {
 			await upsertCodexToml(path.join(wsRoot, '.codex', 'config.toml'), url);
+			await deployIdeaSkills(extensionContext!, tool.id);
 			return;
 		}
 
@@ -380,6 +382,8 @@ export async function registerMcp() {
 		} else {
 			await upsertJsonServer(path.join(wsRoot, '.vscode', 'mcp.json'), 'servers', serverEntry);
 		}
+
+		await deployIdeaSkills(extensionContext!, tool.id);
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
 		vscode.window.showErrorMessage(`Failed to register IDEA MCP: ${msg}`);
