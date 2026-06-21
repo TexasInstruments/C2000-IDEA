@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
 import * as project from './utilities/project';
 import * as info from './utilities/info';
 import * as utils from './utilities/utils';
@@ -477,6 +479,36 @@ function getRegisterToFunctionMapping(device: string)
 	} catch (e) {
 		return {};
 	}
+}
+
+interface DriverlibFunctionSignature {
+	returnType: string;
+	functionArgs: string[];
+	functionArgsTypes: string[];
+	peripheral: string;
+}
+
+export function getDriverlibFunctionSignatures(device: string): Record<string, DriverlibFunctionSignature> {
+	const sigMap: Record<string, DriverlibFunctionSignature> = {};
+	try {
+		const dir = path.join(extensionContext.extensionUri.fsPath, 'driverlib_functions', device.toLowerCase());
+		const files = fs.readdirSync(dir).filter((f: string) => f.endsWith('.json'));
+		for (const file of files) {
+			const raw = fs.readFileSync(path.join(dir, file), 'utf-8');
+			const data = JSON.parse(raw);
+			for (const func of (data.functions || [])) {
+				sigMap[func.functionName] = {
+					returnType: func.returnType,
+					functionArgs: func.functionArgs,
+					functionArgsTypes: func.functionArgsTypes,
+					peripheral: func.peripheral,
+				};
+			}
+		}
+	} catch (e) {
+		// Device folder not found or parse error — return empty
+	}
+	return sigMap;
 }
 
 function generateRegisterBitCommentsText(registerName: string, registerBits: any[], bitName?: string): string
