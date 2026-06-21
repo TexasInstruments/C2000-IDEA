@@ -1050,7 +1050,8 @@ If you encounter compilation errors after applying a fix from this report:
 export function exportRegisterBitfieldAgentReport(openAfter: boolean = true): string {
 	let device = project.projectGetCurrentDevice();
 	let deviceDisplay = device || "unknown";
-	
+	const driverlibSigMap = getDriverlibFunctionSignatures(device || '');
+
 	let diagnosticCount = 0;
 	let readCount = 0;
 	let writeCount = 0;
@@ -1185,7 +1186,13 @@ export function exportRegisterBitfieldAgentReport(openAfter: boolean = true): st
 			if (issue.meta.driverLibFunctions && issue.meta.driverLibFunctions.length > 0) {
 				md += `- **Available driverlib functions:**\n`;
 				issue.meta.driverLibFunctions.forEach(func => {
-					md += `  - \`${func}\`\n`;
+					const sig = driverlibSigMap[func];
+					if (sig) {
+						const args = sig.functionArgsTypes.map((t, i) => `${t} ${sig.functionArgs[i]}`).join(', ');
+						md += `  - \`${sig.returnType} ${func}(${args})\`\n`;
+					} else {
+						md += `  - \`${func}\`\n`;
+					}
 				});
 			}
 			// Per-issue action checklist
