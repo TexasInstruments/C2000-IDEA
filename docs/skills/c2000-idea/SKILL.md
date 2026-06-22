@@ -1,6 +1,6 @@
 ---
 name: c2000-idea
-description: Step-by-step workflows for C2000 code migration tasks using the IDEA MCP server. Use when the user asks to migrate C2000 code between devices, or to convert legacy bitfield register accesses to driverlib function calls.
+description: Step-by-step workflows for C2000 code migration tasks. Supports F28x to F28x and F28x to F29x device migration (F29x not yet implemented), and bitfield-to-driverlib conversion. Uses the IDEA MCP server as the primary tool, with CCS Project MCP, CCS SysConfig MCP, and TI ASM MCP as supporting dependencies.
 ---
 
 # C2000 IDEA Migration
@@ -35,8 +35,13 @@ agent, then retry.
 
 Notes:
 - Device-to-device migration moves code from a source device family to one or more target
-  device families. It needs a source device and target device(s). F28x to F28 based
-  migration and F28x to F29x based migration are supported.
+  device families. Two migration paths are supported:
+  - **F28x → F28x** — fully implemented
+  - **F28x → F29x** — not yet implemented
+- The primary MCP is idea-mcp. Supporting MCPs used during migration:
+  - **ccs-project MCP** — project creation, build, and settings management
+  - **ccs-sysconfig MCP** — SysConfig file analysis and migration
+  - **ti-asm-mcp** — device TRM access for register definitions and peripheral details
 - Bitfield-to-driverlib conversion modernizes legacy bitfield register-structure accesses
   into driverlib function calls for the *same* device. There is no target device.
 
