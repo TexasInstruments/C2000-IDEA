@@ -106,6 +106,19 @@ Determine which SDK the source uses from `getProjectProductReferences`. Then der
 - If the build fails, **stop and report to the user** — this is an environment/SDK issue,
   not a migration problem.
 
+#### 1.7 Rename the target project
+
+- Rename the imported project to `<sourceProjectName>_<targetDevice>`.
+- This establishes a clear naming convention and prevents collisions when migrating to
+  multiple targets.
+
+#### 1.8 Rebuild after rename
+
+- Call `buildProject` again on the renamed project.
+- This confirms the rename did not break any internal project references or path
+  dependencies.
+- If the build fails, **stop and report to the user** — this is a rename/path issue.
+
 ---
 
 ### Step 2 — Analyze and align project settings
