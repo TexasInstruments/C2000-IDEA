@@ -1153,7 +1153,7 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 										fixMsg: msg,
 										type,
 										category,
-										compatible: compatible === "true",
+										compatible: typeof compatible === "boolean" ? compatible : compatible === "true",
 										sourceDevice: currentDevice,
 										targetDevice: deviceMigrationData.migrationDevice,
 										changeType: (allRemoved.some((r: any) => r.code === code) || allRemovedDriverlibResolution.some((r: any) => r.code === code)) ? "removed" : "changed",
