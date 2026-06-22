@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
 import * as project from './utilities/project';
 import * as info from './utilities/info';
 import * as utils from './utilities/utils';
@@ -477,6 +479,36 @@ function getRegisterToFunctionMapping(device: string)
 	} catch (e) {
 		return {};
 	}
+}
+
+interface DriverlibFunctionSignature {
+	returnType: string;
+	functionArgs: string[];
+	functionArgsTypes: string[];
+	peripheral: string;
+}
+
+export function getDriverlibFunctionSignatures(device: string): Record<string, DriverlibFunctionSignature> {
+	const sigMap: Record<string, DriverlibFunctionSignature> = {};
+	try {
+		const dir = path.join(extensionContext.extensionUri.fsPath, 'driverlib_functions', device.toLowerCase());
+		const files = fs.readdirSync(dir).filter((f: string) => f.endsWith('.json'));
+		for (const file of files) {
+			const raw = fs.readFileSync(path.join(dir, file), 'utf-8');
+			const data = JSON.parse(raw);
+			for (const func of (data.functions || [])) {
+				sigMap[func.functionName] = {
+					returnType: func.returnType,
+					functionArgs: func.functionArgs,
+					functionArgsTypes: func.functionArgsTypes,
+					peripheral: func.peripheral,
+				};
+			}
+		}
+	} catch (e) {
+		// Device folder not found or parse error — return empty
+	}
+	return sigMap;
 }
 
 function generateRegisterBitCommentsText(registerName: string, registerBits: any[], bitName?: string): string
@@ -1018,7 +1050,8 @@ If you encounter compilation errors after applying a fix from this report:
 export function exportRegisterBitfieldAgentReport(openAfter: boolean = true): string {
 	let device = project.projectGetCurrentDevice();
 	let deviceDisplay = device || "unknown";
-	
+	const driverlibSigMap = getDriverlibFunctionSignatures(device || '');
+
 	let diagnosticCount = 0;
 	let readCount = 0;
 	let writeCount = 0;
@@ -1153,7 +1186,13 @@ export function exportRegisterBitfieldAgentReport(openAfter: boolean = true): st
 			if (issue.meta.driverLibFunctions && issue.meta.driverLibFunctions.length > 0) {
 				md += `- **Available driverlib functions:**\n`;
 				issue.meta.driverLibFunctions.forEach(func => {
-					md += `  - \`${func}\`\n`;
+					const sig = driverlibSigMap[func];
+					if (sig) {
+						const args = sig.functionArgsTypes.map((t, i) => `${t} ${sig.functionArgs[i]}`).join(', ');
+						md += `  - \`${sig.returnType} ${func}(${args})\`\n`;
+					} else {
+						md += `  - \`${func}\`\n`;
+					}
 				});
 			}
 			// Per-issue action checklist
