@@ -105,6 +105,7 @@ export const MIGRATION_MCPWM_RESOLUTION_DEVICE_LIST = [
 
 
 const F29H85X_REGEX = new RegExp(/T{0,1}M{0,1}S{0,1}\d{0,3}f29h85/, 'i');
+const F28E12X_REGEX = new RegExp(/T{0,1}M{0,1}S{0,1}\d{0,3}f28e12\S/, 'i');
 const F28P55X_REGEX = new RegExp(/T{0,1}M{0,1}S{0,1}\d{0,3}f28p55\S/, 'i');
 const F28P65X_REGEX = new RegExp(/T{0,1}M{0,1}S{0,1}\d{0,3}f28p65\S/, 'i');
 const F28004X_REGEX = new RegExp(/T{0,1}M{0,1}S{0,1}\d{0,3}f28004\S[mc]{0,1}/, 'i');
@@ -122,6 +123,10 @@ const GPN_TO_DEVICE_REGEX_MAP = [
 	{
 		device: "F29H85x",
 		regex: F29H85X_REGEX
+	},
+	{
+		device: "F28E12x",
+		regex: F28E12X_REGEX
 	},
 	{
 		device: "F28P55x",
