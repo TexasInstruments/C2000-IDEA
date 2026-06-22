@@ -211,14 +211,54 @@ Then check what the **target** imported project uses.
 
 ### Step 3 — Migrate source code
 
-(Details TBD — covers running `get_device_migration_report` per file, processing
-auto-fixable and manual-review issues.)
+Precondition: user application files are already copied into the target project (Step 2.7).
+
+The agent must fix **every** issue — easy or complex:
+- **Easy (auto-fixable):** apply the suggested replacement directly.
+- **Complex (manual review):** investigate deeply — read surrounding code to understand
+  intent, review function definitions, analyze which registers are touched, use
+  **ti-asm-mcp** to understand register behavior, then construct the correct fix.
+- Only if an item **truly cannot be resolved** does the agent report it to the user.
+
+#### 3.1 Phase A — Migrate `.h` files first (no build step)
+
+For each header file in the target project:
+
+1. Run `get_device_migration_report` on the file.
+2. Fix every issue one by one.
+3. Re-run the migration report to confirm each item is resolved or no longer relevant
+   (e.g., the flagged item was in a comment, not active code).
+4. Iterate until the report is clean for this file.
+
+No build step for headers — the loop terminates purely on a clean report.
+
+#### 3.2 Phase B — Migrate `.c` files (with build step)
+
+For each source file in the target project:
+
+1. Run `get_device_migration_report` on the file.
+2. Fix every issue one by one.
+3. Re-run the migration report to confirm resolution or irrelevance.
+4. Rebuild to check for compilation issues in that file.
+5. Iterate report + build until either:
+   - The file is clean and compiles successfully, OR
+   - The only remaining build errors point to *other* files (the error's file:line is not
+     the current file — defer those).
+6. Move to the next file.
+
+#### 3.3 Phase C — Final sweep
+
+After all files are migrated and the project builds:
+
+1. Re-run the migration report across **all files** once more to confirm nothing regressed.
+2. Confirm the **whole project compiles successfully**.
+3. If any issues surface, repeat the fix loop for the affected files.
 
 ---
 
-### Step 4 — Validate and report
+### Step 4 — Report back
 
-(Details TBD — iterative build, fix, report cycle.)
+(Details TBD.)
 
 ---
 
