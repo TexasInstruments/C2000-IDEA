@@ -190,9 +190,7 @@ Then check what the **target** imported project uses.
 The reference cmd files are located at:
 `<c2000ware_path>/driverlib/<target-device>/cmd/`
 
-Note: the `<target-device>` in file names may not be an exact string match to the device
-family name. For example, for `f28p551x` the files use `28p551x`. List all files in the
-cmd directory and identify the two key reference files:
+List all files in the cmd directory and identify the two key reference files:
 - The **RAM** linker cmd (e.g., `28p551x_generic_ram_lnk.cmd`)
 - The **flash** linker cmd (e.g., `28p551x_flash_ram_lnk.cmd`)
 
