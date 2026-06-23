@@ -28,10 +28,10 @@ agent, then retry.
 
 ## Workflow matrix
 
-| Task                                | Reference file                                | Primary IDEA MCP tool                         |
-| ----------------------------------- | ------------------------------------------- --| --------------------------------------------- |
-| Device-to-device migration          | references/device-migration.md                | get_device_migration_report                   |
-| Bitfield → driverlib conversion     | references/bitfield-to-driverlib-migration.md | get_bitfield_to_driverlib_migration_report    |
+| Task                                          | Reference file                                | Primary IDEA MCP tool                         |
+| --------------------------------------------- | --------------------------------------------- | --------------------------------------------- |
+| Device-to-device migration (F28x → F28x/F29x) | references/device-migration.md                | get_device_migration_report                   |
+| Bitfield → driverlib conversion               | references/bitfield-to-driverlib-migration.md | get_bitfield_to_driverlib_migration_report    |
 
 Notes:
 - Device-to-device migration moves code from a source device family to one or more target
