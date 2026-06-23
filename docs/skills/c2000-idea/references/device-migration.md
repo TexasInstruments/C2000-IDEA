@@ -173,19 +173,38 @@ Detect which path the **source** project uses:
 Then check what the **target** imported project uses.
 
 **If source = Path A and target = Path A:**
-- Proceed to reconciliation — port user customizations (custom sections, adjusted memory
-  regions) from the source cmd onto the target device's cmd file.
+- Proceed to reconciliation (see below).
 
 **If source = Path A and target = Path B:**
 - Remove the CMD module from the target project's SysConfig.
-- Add an example target linker cmd file to the project (reference path provided below).
-- Then reconcile user customizations onto it.
+- Add an example target linker cmd file to the project (see reference paths below).
+- Then proceed to reconciliation.
 
 **If source = Path B:**
 - Handled entirely by the SysConfig migration step (2.8). No separate cmd work needed.
+- When migrating the CMD module in SysConfig, the sections should match the source
+  project and the memory regions assigned to sections should match as closely as possible.
 
-**Target device example linker cmd path:**
-`<c2000ware_path>/driverlib/<target-device>/cmd/<target-device>_generic_ram_lnk.cmd`
+**Finding the target device example linker cmd files:**
+
+The reference cmd files are located at:
+`<c2000ware_path>/driverlib/<target-device>/cmd/`
+
+Note: the `<target-device>` in file names may not be an exact string match to the device
+family name. For example, for `f28p551x` the files use `28p551x`. List all files in the
+cmd directory and identify the two key reference files:
+- The **RAM** linker cmd (e.g., `28p551x_generic_ram_lnk.cmd`)
+- The **flash** linker cmd (e.g., `28p551x_flash_ram_lnk.cmd`)
+
+Read both files for context before reconciliation.
+
+**Reconciliation:**
+
+Port user customizations from the source cmd onto the target device's cmd file:
+- The sections in the target should match the source project.
+- The memory regions assigned to sections should match as closely as possible.
+- Use the target device's RAM and flash cmd files as the ground truth for valid memory
+  regions and addresses on the target device.
 
 #### 2.6 Libraries
 
