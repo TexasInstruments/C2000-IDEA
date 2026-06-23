@@ -49,7 +49,6 @@ Call `list_migration_devices()` from IDEA MCP immediately after collecting input
 - `getToolOptions` — available build tool options
 
 **ccs-sysconfig MCP** (required when project uses SysConfig):
-- `listFiles` — discover `.syscfg` files in the workspace
 - `openFile` — open a `.syscfg` file (mandatory before any config tools)
 - `getModuleInstances` — list configured module instances
 - `getInstanceConfiguration` — inspect instance settings (use `changesOnly: true` to see user customizations)
