@@ -324,7 +324,7 @@ After all files are migrated and the project builds:
 
 ### Step 4 — Report back
 
-(Details TBD.)
+> **Note:** This step will be developed at a later date.
 
 ---
 
