@@ -108,7 +108,8 @@ Determine which SDK the source uses from `getProjectProductReferences`. Then der
 
 #### 1.7 Rename the target project
 
-- Rename the imported project to `<sourceProjectName>_<targetDevice>`.
+- Call CCS MCP `renameProject` to rename the imported project to
+  `<sourceProjectName>_<targetDevice>`.
 - This establishes a clear naming convention and prevents collisions when migrating to
   multiple targets.
 
