@@ -43,6 +43,7 @@ Call `list_migration_devices()` from IDEA MCP immediately after collecting input
 - `getProjectDescriptors` — project metadata (name, device, build config)
 - `getProjectProductReferences` — resolved SDK/product paths
 - `importProject` — import a CCS project from SDK examples
+- `renameProject` — rename a CCS project
 - `buildProject` — build a project
 - `getToolFlags` / `setToolFlags` — read/write compiler/linker flags
 - `getToolOptions` — available build tool options
