@@ -5,6 +5,7 @@ export const DEVICE_LIST : string [] = [
 	"F29H85x",
 	"F28E12x",
 	"F28P55x",
+	"F28P551x",
 	"F28P65x",
 	"F28002x",
 	"F28004x",
@@ -21,6 +22,7 @@ export const BITFIELD_DEVICE_LIST : string [] = [
 	"F29H85x",
 	"F28E12x",
 	"F28P55x",
+	"F28P551x",
 	"F28P65x",
 	"F28002x",
 	"F28004x",
@@ -50,6 +52,7 @@ export const MIGRATION_RESOLUTION_DEVICE_LIST : string [] = [
 	"F29H85x",
 	"F28E12x",
 	"F28P55x",
+	"F28P551x",
 	"F28P65x",
 	"F28002x",
 	"F28004x",
@@ -67,6 +70,7 @@ export const MIGRATION_RESOLUTION_FROM_DEVICE_LIST = [
 	"F28P55x",
 	"F28E12x",
 	"F28P65x",
+	"F28P551x",
 	"F28002x",
 	"F28004x",
 	"F28003x",
@@ -85,6 +89,7 @@ export const MIGRATION_RESOLUTION_TO_DEVICE_LIST = [
 
 export const MIGRATION_EPWM_RESOLUTION_DEVICE_LIST = [
 	"F28P55x",
+	"F28P551x",
 	"F29H85x",
 	"F28P65x",
 	"F28002x",
@@ -107,6 +112,7 @@ export const MIGRATION_MCPWM_RESOLUTION_DEVICE_LIST = [
 const F29H85X_REGEX = new RegExp(/T{0,1}M{0,1}S{0,1}\d{0,3}f29h85/, 'i');
 const F28E12X_REGEX = new RegExp(/T{0,1}M{0,1}S{0,1}\d{0,3}f28e12\S/, 'i');
 const F28P55X_REGEX = new RegExp(/T{0,1}M{0,1}S{0,1}\d{0,3}f28p55\S/, 'i');
+const F28P551X_REGEX = new RegExp(/T{0,1}M{0,1}S{0,1}\d{0,3}f28p551\S/, 'i');
 const F28P65X_REGEX = new RegExp(/T{0,1}M{0,1}S{0,1}\d{0,3}f28p65\S/, 'i');
 const F28004X_REGEX = new RegExp(/T{0,1}M{0,1}S{0,1}\d{0,3}f28004\S[mc]{0,1}/, 'i');
 const F28002X_REGEX = new RegExp(/T{0,1}M{0,1}S{0,1}\d{0,3}f28002\S[c]{0,1}/, 'i');
@@ -131,6 +137,10 @@ const GPN_TO_DEVICE_REGEX_MAP = [
 	{
 		device: "F28P55x",
 		regex: F28P55X_REGEX
+	},
+	{
+		device: "F28P551x",
+		regex: F28P551X_REGEX
 	},
 	{
 		device: "F28P65x",

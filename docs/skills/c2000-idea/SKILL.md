@@ -18,6 +18,21 @@ extension over HTTP. If the IDEA MCP tools are not available in your session, te
 to enable it (Command Palette → "C2000-IDEA: Enable IDEA MCP") and register it with their
 agent, then retry.
 
+
+**Before starting any task, verify the IDEA MCP server is live:**
+
+1. Attempt `list_migration_devices()` as a probe call.
+   - If it succeeds → server is running. Proceed.
+   - If it fails or is unreachable → server is not running. **Stop here.**
+2. Tell the user: *"The IDEA MCP server is not running. Please enable it:"*
+   - **Enable:** Command Palette → `C2000-IDEA: Enable IDEA MCP`
+   - **Verify (optional, VS Code only):** Command Palette → `C2000-IDEA: Check IDEA MCP`
+     — shows a status message confirming the server URL (`http://localhost:55001/mcp`)
+   - After enabling, re-register the MCP with their agent tool, then retry the probe call.
+3. Do not proceed with any migration step until the probe call succeeds.
+
+
+
 ## How to use this skill
 
 1. Discover the workspace first. Call `get_projects()` to list the C2000 projects, their
@@ -41,9 +56,13 @@ Notes:
 - The primary MCP is idea-mcp. Supporting MCPs used during migration:
   - **ccs-project MCP** — project creation, build, and settings management
   - **ccs-sysconfig MCP** — SysConfig file analysis and migration
-  - **ti-asm-mcp** — device TRM access for register definitions and peripheral details
+  - **ti-asm-mcp** — device TRM access for register definitions , bit-field details, and
+    peripheral descriptions; query this when a report issue has no `Suggested fix` or
+    when register-level intent must be verified before constructing a replacement
 - Bitfield-to-driverlib conversion modernizes legacy bitfield register-structure accesses
-  into driverlib function calls for the *same* device. There is no target device.
+  (`PeriphRegs.REG.bit.FIELD`) into driverlib calls for the *same* device. There is no
+  target device. Run this **before** device-to-device migration when the source uses
+  bitfield patterns — it reduces noise in the device migration report.
 
 ## Extending this skill
 
