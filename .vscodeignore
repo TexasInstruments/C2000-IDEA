@@ -8,3 +8,13 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
+# Exclude submodule directories except src and trm-index
+submodules/ti-asm-mcp/**
+!submodules/ti-asm-mcp/src
+!submodules/ti-asm-mcp/trm-index
+!submodules/ti-asm-mcp/docs
+!submodules/ti-asm-mcp/src/**
+!submodules/ti-asm-mcp/trm-index/**
+!submodules/ti-asm-mcp/docs/**
+# Exclude .vsix files
+**/*.vsix
