@@ -1,4 +1,7 @@
-# Device-to-Device Migration Workflow (F28x → F28x)
+# Device-to-Device Migration Workflow (F28x → F28x/F29x)
+
+> **Note:** F28x → F29x migration is not yet implemented. This workflow currently covers
+> **F28x → F28x** migration only.
 
 Migrate a C2000 firmware project from one F28x device to another F28x device (e.g.
 F28003x → F28P55x, F28004x → F280039x). Use when the user asks to migrate, port,
