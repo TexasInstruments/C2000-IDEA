@@ -127,6 +127,7 @@ Then derive:
 
 - Call CCS MCP `renameProject` to rename the imported project to
   `<sourceProjectName>_<targetDevice>`.
+- If the sourceProjectName includes the source project device, remove the source device name
 - This establishes a clear naming convention and prevents collisions when migrating to
   multiple targets.
 
