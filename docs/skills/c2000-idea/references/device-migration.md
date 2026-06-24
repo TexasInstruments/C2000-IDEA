@@ -285,8 +285,8 @@ Precondition: user application files are already copied into the target project 
 **Before modifying any files, ask the user:**
 > "Do you want to (1) keep a shared codebase with `#ifdef` device branches so both source
 > and target devices compile from one file (this way the new files in the target project
-> have both the old source project code and newly generated migration code), or (2) a 
-> clean replacement targeting only thenew device?"
+> have both the old source project code and newly generated migration code), or (2) a
+> clean replacement targeting only the new device?"
 
 - **Approach 1 (shared `#ifdef`):** Wrap changed code in `#if`/`#elif`/`#endif` blocks.
   Remember all modifications are only made on the target device project.
@@ -360,7 +360,6 @@ For each header file in the target project:
 
 No build step for headers — the loop terminates purely on a clean report. Do not call
 `buildProject` during Phase A — it is unnecessary and slow at this stage.
-No build step for headers — the loop terminates purely on a clean report.
 
 #### 3.2 Phase B — Migrate `.c` files (with build step)
 
