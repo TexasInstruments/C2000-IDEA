@@ -722,7 +722,7 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
-    "package": "vsce package"
+    "package": "vsce package --allow-star-activation"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
