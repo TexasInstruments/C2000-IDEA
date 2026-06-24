@@ -9,12 +9,14 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 # Exclude submodule directories except src and trm-index
-submodules/ti-asm-mcp/**
-!submodules/ti-asm-mcp/src
-!submodules/ti-asm-mcp/trm-index
-!submodules/ti-asm-mcp/docs
-!submodules/ti-asm-mcp/src/**
-!submodules/ti-asm-mcp/trm-index/**
-!submodules/ti-asm-mcp/docs/**
+submodules/ti_asm_mcp/**
+!submodules/ti_asm_mcp/src
+!submodules/ti_asm_mcp/trm-index
+!submodules/ti_asm_mcp/docs
+!submodules/ti_asm_mcp/src/**
+!submodules/ti_asm_mcp/trm-index/**
+!submodules/ti_asm_mcp/docs/**
+# Exclude test files from compiled output
+out/src/test/**
 # Exclude .vsix files
 **/*.vsix
