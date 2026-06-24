@@ -16,5 +16,7 @@ submodules/ti_asm_mcp/**
 !submodules/ti_asm_mcp/src/**
 !submodules/ti_asm_mcp/trm-index/**
 !submodules/ti_asm_mcp/docs/**
+# Exclude test files from compiled output
+out/src/test/**
 # Exclude .vsix files
 **/*.vsix
