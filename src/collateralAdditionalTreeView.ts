@@ -39,6 +39,9 @@ let collateralAdditionalTreeWordChangeHandler: project.ProjectWordSelectionChang
                 {
                     //Word matches - iterate through all categories in the key, ex. Foundational Materials, Getting Started Materials etc.
                     found = true;
+                    if (!collateralFindabilityData[collateralKey] || !Array.isArray(collateralFindabilityData[collateralKey])) {
+                        continue;
+                    }
                     for (var collateralCategory of collateralFindabilityData[collateralKey])
                     {
                         //Initialize empty tree item for category
@@ -51,6 +54,9 @@ let collateralAdditionalTreeWordChangeHandler: project.ProjectWordSelectionChang
                             }
                         };
                         //Loop through all content contained in category ex. C2000 Academy - CLA, C2000 CLA C Compiler Series etc.
+                        if (!collateralCategory.content || !Array.isArray(collateralCategory.content)) {
+                            continue;
+                        }
                         for (var collateralContent of collateralCategory.content){
                             if(collateralContent.devices){
                                 let deviceFound: boolean = false;
@@ -109,8 +115,14 @@ let collateralAdditionalTreeWordChangeHandler: project.ProjectWordSelectionChang
                 for(let phrase of phrases){
                     if((word.toLowerCase().includes(phrase)) || (phrase.includes(word.toLowerCase()))){
                         //Word matches - iterate through all keys mapped to the phrase, ex. ADC, BGCRC, C28X etc.
+                        if (!collateralAdditionalMappingData[phrase] || !Array.isArray(collateralAdditionalMappingData[phrase])) {
+                            continue;
+                        }
                         for(var key of collateralAdditionalMappingData[phrase]){
                             //Iterate through all categories in the current key
+                            if (!collateralFindabilityData[key] || !Array.isArray(collateralFindabilityData[key])) {
+                                continue;
+                            }
                             for (var collateralCategory of collateralFindabilityData[key])
                             {
                                 //Initialize empty tree item for category
@@ -122,6 +134,9 @@ let collateralAdditionalTreeWordChangeHandler: project.ProjectWordSelectionChang
                                     }
                                 };
                                 //Loop through all content contained in category ex. C2000 Academy - CLA, C2000 CLA C Compiler Series etc.
+                                if (!collateralCategory.content || !Array.isArray(collateralCategory.content)) {
+                                    continue;
+                                }
                                 for (var collateralContent of collateralCategory.content){
                                     if(collateralContent.devices){
                                         let deviceFound: boolean = false;

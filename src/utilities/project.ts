@@ -332,10 +332,20 @@ export function removeProject(projectUri: vscode.Uri)
 	saveProjects(extensionContext);
 }
 
-export function addProject(projectUri: vscode.Uri)
+export async function addProject(projectUri: vscode.Uri)
 {
 	if (vscode.workspace.workspaceFolders)
 	{
+		try {
+			// Check if it's actually a directory
+			const stat = await vscode.workspace.fs.stat(projectUri);
+			if (stat.type !== vscode.FileType.Directory) {
+				return; // Skip non-directories
+			}
+		} catch (err) {
+			return; // Skip if can't stat
+		}
+
 		var folderName = path.basename(projectUri.path);
 		updateProjects(folderName, vscode.workspace.workspaceFolders[0]);
 	}
