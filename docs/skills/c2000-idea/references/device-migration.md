@@ -245,11 +245,17 @@ If the source project uses SysConfig for pin/peripheral configuration, migrate t
 1. **Copy** the source `.syscfg` file into the target project directory.
 2. **Open** the copied file via `openFile`. Read the `additionalInstructions` field in
    the result.
-3. **List migration targets** via `listMigrationTargets`. Confirm the target device and
-   package are available. If not, stop and report to the user.
-4. **Migrate** via `migrate(device, package)` to the target device.
-5. **Check errors** via `getErrorsAndWarnings`. Review all errors and warnings.
-6. **Fix issues iteratively:**
+3. **Get migration targets** — call `listMigrationTargets` to retrieve all candidate
+   device + package combinations.
+4. **Filter** — narrow the list to entries matching the target device family the user
+   originally requested for the migration.
+5. **Prompt** — present the filtered device/package options and ask the user which
+   specific device and package to use. If no entries match the target family, stop and
+   report to the user.
+6. **Migrate** via `migrate(device, package)` using the user's selected device and
+   package.
+7. **Check errors** via `getErrorsAndWarnings`. Review all errors and warnings.
+8. **Fix issues iteratively:**
    - Use `changeConfiguration` to resolve errors.
    - If a module or configurable no longer exists on the target device, use
      `getModuleDescription` and `getInstanceConfiguration` to explore available options
@@ -257,11 +263,13 @@ If the source project uses SysConfig for pin/peripheral configuration, migrate t
    - After each fix, re-run `getErrorsAndWarnings` to check progress.
    - Iterate until all errors are resolved.
    - If an issue cannot be resolved after reasonable investigation, report it to the user.
-7. **Handle CMD module (if applicable):** If the source project uses Path A (user `.cmd`
-   file, per Step 2.5), call `removeModuleInstances` to remove the CMD module from
-   SysConfig so it does not generate a conflicting linker command file.
-8. **Save** via `save` to persist the migrated configuration and regenerate all artifacts.
-9. **Close** via `closeFile`.
+9. **Handle CMD module (if applicable):** If the source project uses Path A (user `.cmd`
+   file, per Step 2.5) and the target's SysConfig still contains a CMD module, call
+   `removeModuleInstances` to remove it so it does not generate a conflicting linker
+   command file. (Step 2.5 may have already removed it before `.syscfg` migration — check
+   with `getModuleInstances` first to avoid a redundant removal.)
+10. **Save** via `save` to persist the migrated configuration and regenerate all artifacts.
+11. **Close** via `closeFile`.
 
 The generated outputs (`.c`/`.h`) are automatically correct after migration — no manual
 migration needed for SysConfig-generated files.

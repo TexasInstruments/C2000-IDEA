@@ -676,6 +676,92 @@ export async function getMigrationDriverlibResolutionJSON(context: vscode.Extens
 }
 
 
+async function migrationGetDeviceDriverlibFunctions(
+	device: string
+): Promise<Map<string, string[]>> {
+	const moduleFunctionNames = new Map<string, string[]>();
+	const deviceDir = vscode.Uri.joinPath(
+		project.extensionContext.extensionUri, 'driverlib_functions', device.toLowerCase());
+	try {
+		const entries = await vscode.workspace.fs.readDirectory(deviceDir);
+		for (const [fileName, fileType] of entries) {
+			if (fileType !== vscode.FileType.File || !fileName.endsWith('.json')) {
+				continue;
+			}
+			const fileUri = vscode.Uri.joinPath(deviceDir, fileName);
+			const rawContent = await vscode.workspace.fs.readFile(fileUri);
+			const parsed = JSON.parse(Buffer.from(rawContent).toString('utf8'));
+			const functions: any[] = parsed.functions || [];
+			if (functions.length > 0) {
+				const moduleName = fileName.replace('.json', '');
+				moduleFunctionNames.set(
+					moduleName,
+					functions.map((f: any) => f.functionName)
+				);
+			}
+		}
+	} catch {
+		// Device folder missing — return empty map
+	}
+	return moduleFunctionNames;
+}
+
+export async function migrationGetMissingModules(
+	sourceDevice: string,
+	targetDevice: string
+): Promise<{ removedModules: string[]; addedModules: string[] }> {
+	const sourceModules = await migrationGetDeviceDriverlibFunctions(sourceDevice);
+	const targetModules = await migrationGetDeviceDriverlibFunctions(targetDevice);
+
+	const removedModules = [...sourceModules.keys()]
+		.filter((mod) => !targetModules.has(mod));
+	const addedModules = [...targetModules.keys()]
+		.filter((mod) => !sourceModules.has(mod));
+
+	return { removedModules, addedModules };
+}
+
+export async function migrationGetMissingModuleFunctions(
+	sourceDevice: string,
+	targetDevice: string
+): Promise<{ removed: MigrationElement[]; added: MigrationElement[] }> {
+	const sourceModules = await migrationGetDeviceDriverlibFunctions(sourceDevice);
+	const targetModules = await migrationGetDeviceDriverlibFunctions(targetDevice);
+
+	const removed: MigrationElement[] = [];
+	for (const [moduleName, functionNames] of sourceModules) {
+		if (!targetModules.has(moduleName)) {
+			for (const functionName of functionNames) {
+				removed.push({
+					code: functionName,
+					type: 'function',
+					category: moduleName,
+					msg: "This function is not available on " + targetDevice +
+						" (" + moduleName + " peripheral is not supported)"
+				});
+			}
+		}
+	}
+
+	const added: MigrationElement[] = [];
+	for (const [moduleName, functionNames] of targetModules) {
+		if (!sourceModules.has(moduleName)) {
+			for (const functionName of functionNames) {
+				added.push({
+					code: functionName,
+					type: 'function',
+					category: moduleName,
+					msg: "This function is only available on " + targetDevice +
+						" (" + moduleName + " peripheral is not supported on " + sourceDevice + ")"
+				});
+			}
+		}
+	}
+
+	return { removed, added };
+}
+
+
 export async function functionmigrationEnhancement(code: string, trimmedLineText: string, context: vscode.ExtensionContext, currentDevice: string, migrationDevice: string): Promise<{trimmedLineEnhancedText: string, message: string}>
 {
 	let functionMapFile = "";
@@ -831,6 +917,11 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 		{
 			var jsonMigration = await getMigrationJSON(context, currentDevice, migrationDevice);
 			var jsonDriverlibResolutionMigration = await getMigrationDriverlibResolutionJSON(context, currentDevice, migrationDevice);
+
+			var missingModuleFunctions = await migrationGetMissingModuleFunctions(currentDevice, migrationDevice);
+			jsonMigration.removed = jsonMigration.removed.concat(missingModuleFunctions.removed) as [MigrationElement];
+			jsonMigration.added = jsonMigration.added.concat(missingModuleFunctions.added) as [MigrationElement];
+
 			devicesMigrationData.push({
 				migrationDevice: migrationDevice,
 				migrationData: jsonMigration,
