@@ -150,13 +150,14 @@ export function projectSetup(context: vscode.ExtensionContext)
 	if (vscode.workspace.workspaceFolders)
 	{
 		// watch the top level workspace
-		var watcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(
-			vscode.workspace.workspaceFolders[0],
-			'*'
-		)); //glob search string
-		watcher.onDidChange(workspaceTopLevelFolderWatcherChange);
-		watcher.onDidCreate(workspaceTopLevelFolderWatcherCreate);
-		watcher.onDidDelete(workspaceTopLevelFolderWatcherDelete);
+		
+		// var watcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(
+		// 	vscode.workspace.workspaceFolders[0],
+		// 	'*'
+		// )); //glob search string
+		// watcher.onDidChange(workspaceTopLevelFolderWatcherChange);
+		// watcher.onDidCreate(workspaceTopLevelFolderWatcherCreate);
+		// watcher.onDidDelete(workspaceTopLevelFolderWatcherDelete);
 	}
 
 	
@@ -259,17 +260,29 @@ async function runProjectMigrationF28toF29(context: vscode.ExtensionContext)
 	vscode.window.showInformationMessage("End of F28 to F29 CCS project migration");
 }
 
+function isTopLevelItem(uri: vscode.Uri): boolean {
+	if (!vscode.workspace.workspaceFolders) return false;
+	const workspaceRoot = vscode.workspace.workspaceFolders[0].uri.path;
+	const relativePath = path.relative(workspaceRoot, uri.path);
+	// Check if the item is directly in the workspace (no path separators)
+	return !relativePath.includes(path.sep) && !relativePath.includes('/');
+}
+
 function workspaceTopLevelFolderWatcherChange(uri: vscode.Uri)
 {
 
 }
 function workspaceTopLevelFolderWatcherCreate(uri: vscode.Uri)
 {
-	addProject(uri);
+	if (isTopLevelItem(uri)) {
+		addProject(uri);
+	}
 }
 function workspaceTopLevelFolderWatcherDelete(uri: vscode.Uri)
 {
-	removeProject(uri);
+	if (isTopLevelItem(uri)) {
+		removeProject(uri);
+	}
 }
 
 function projectUpdateCurrentDeviceStatusbar()
