@@ -176,7 +176,7 @@ let interrupts = [
 	{ intDefineName: "INT_MCANA_ECC", intGroupChannelNumber: "9.11", intGroupNumber: "9", intChannelNumber: "11", intDescription: "MCANSSA_ECC_CORR_PLS" },
 	{ intDefineName: "INT_MCANA_WAKE", intGroupChannelNumber: "9.12", intGroupNumber: "9", intChannelNumber: "12", intDescription: "MCANSSA_WAKE_AND_TS_PLS" },
 	{ intDefineName: "INT_PMBUSA", intGroupChannelNumber: "9.13", intGroupNumber: "9", intChannelNumber: "13", intDescription: "PMBUSA  Interrupt" },
-	{ intDefineName: "INT_AES_SINTREQUEST", intGroupChannelNumber: "9.14", intGroupNumber: "9", intChannelNumber: "14", intDescription: "AES Secure Interrupt request" },
+	{ intDefineName: "INT_AES_SINTREQUEST", intGroupChannelNumber: "9.14", intGroupNumber: "9", intChannelNumber: "14", intDescription: "AES Interrupt" },
 	{ intDefineName: "INT_USBA", intGroupChannelNumber: "9.15", intGroupNumber: "9", intChannelNumber: "15", intDescription: "USBA Interrupt" },
 	{ intDefineName: "INT_ADCC_EVT", intGroupChannelNumber: "10.9", intGroupNumber: "10", intChannelNumber: "9", intDescription: "ADCC Event Interrupt" },
 	{ intDefineName: "INT_ADCC2", intGroupChannelNumber: "10.10", intGroupNumber: "10", intChannelNumber: "10", intDescription: "ADCC Interrupt 2" },
@@ -197,6 +197,7 @@ let interrupts = [
 	{ intDefineName: "INT_CLA1CRC", intGroupChannelNumber: "12.14", intGroupNumber: "12", intChannelNumber: "14", intDescription: "CLA1 BGCRC" },
 	{ intDefineName: "INT_CLA_OVERFLOW", intGroupChannelNumber: "12.15", intGroupNumber: "12", intChannelNumber: "15", intDescription: "CLA Overflow Interrupt" },
 	{ intDefineName: "INT_CLA_UNDERFLOW", intGroupChannelNumber: "12.16", intGroupNumber: "12", intChannelNumber: "16", intDescription: "CLA Underflow Interrupt" },
+	{ intDefineName: "INT_FREERTOS", intGroupChannelNumber: "12.12", intGroupNumber: "12", intChannelNumber: "12", intDescription: "FreeRTOS SW interrupt" },
 ];
 module.exports = {
 	interrupts: interrupts,

@@ -69,6 +69,7 @@ let interrupts = [
 	{ intDefineName: "INT_XINT4", intGroupChannelNumber: "12.2", intGroupNumber: "12", intChannelNumber: "2", intDescription: "XINT4 Interrupt" },
 	{ intDefineName: "INT_XINT5", intGroupChannelNumber: "12.3", intGroupNumber: "12", intChannelNumber: "3", intDescription: "XINT5 Interrupt" },
 	{ intDefineName: "INT_FLSS", intGroupChannelNumber: "12.5", intGroupNumber: "12", intChannelNumber: "5", intDescription: "Interrupt from flash sub-system" },
+	{ intDefineName: "INT_FREERTOS", intGroupChannelNumber: "12.6", intGroupNumber: "12", intChannelNumber: "6", intDescription: "FreeRTOS SW interrupt" },
 ];
 module.exports = {
 	interrupts: interrupts,

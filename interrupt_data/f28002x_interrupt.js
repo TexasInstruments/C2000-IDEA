@@ -96,6 +96,7 @@ let interrupts = [
 	{ intDefineName: "INT_FLASH_CORR_ERR", intGroupChannelNumber: "12.11", intGroupNumber: "12", intChannelNumber: "11", intDescription: "Flash Correctable Error Interrupt" },
 	{ intDefineName: "INT_RAM_ACC_VIOL", intGroupChannelNumber: "12.12", intGroupNumber: "12", intChannelNumber: "12", intDescription: "RAM Access Violation Interrupt" },
 	{ intDefineName: "INT_SYS_PLL_SLIP", intGroupChannelNumber: "12.13", intGroupNumber: "12", intChannelNumber: "13", intDescription: "System PLL Interrupt" },
+	{ intDefineName: "INT_FREERTOS", intGroupChannelNumber: "12.14", intGroupNumber: "12", intChannelNumber: "14", intDescription: "FreeRTOS SW interrupt" },
 ];
 module.exports = {
 	interrupts: interrupts,

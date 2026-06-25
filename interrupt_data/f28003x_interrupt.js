@@ -133,6 +133,7 @@ let interrupts = [
 	{ intDefineName: "INT_BGCRC_CLA1", intGroupChannelNumber: "12.14", intGroupNumber: "12", intChannelNumber: "14", intDescription: "BGCRC CLA1" },
 	{ intDefineName: "INT_CLA_OVERFLOW", intGroupChannelNumber: "12.15", intGroupNumber: "12", intChannelNumber: "15", intDescription: "CLA Overflow Interrupt" },
 	{ intDefineName: "INT_CLA_UNDERFLOW", intGroupChannelNumber: "12.16", intGroupNumber: "12", intChannelNumber: "16", intDescription: "CLA Underflow Interrupt" },
+	{ intDefineName: "INT_FREERTOS", intGroupChannelNumber: "12.9", intGroupNumber: "12", intChannelNumber: "9", intDescription: "FreeRTOS SW interrupt" },
 ];
 module.exports = {
 	interrupts: interrupts,

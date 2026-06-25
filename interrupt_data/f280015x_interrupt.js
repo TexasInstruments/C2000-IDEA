@@ -79,6 +79,7 @@ let interrupts = [
 	{ intDefineName: "INT_VCU", intGroupChannelNumber: "12.6", intGroupNumber: "12", intChannelNumber: "6", intDescription: "VCU Interrupt (VCRC)" },
 	{ intDefineName: "INT_MCANA_WAKE", intGroupChannelNumber: "12.7", intGroupNumber: "12", intChannelNumber: "7", intDescription: "MCAN Sub-System wakeup Interrupt" },
 	{ intDefineName: "INT_MCANA_ECC", intGroupChannelNumber: "12.8", intGroupNumber: "12", intChannelNumber: "8", intDescription: "MCAN Sub-System ECC error Interrupt" },
+	{ intDefineName: "INT_FREERTOS", intGroupChannelNumber: "12.4", intGroupNumber: "12", intChannelNumber: "4", intDescription: "FreeRTOS SW interrupt" },
 ];
 module.exports = {
 	interrupts: interrupts,

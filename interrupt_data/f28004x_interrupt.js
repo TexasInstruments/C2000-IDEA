@@ -123,6 +123,7 @@ let interrupts = [
 	{ intDefineName: "INT_USER10", intGroupChannelNumber: "OTHER", intGroupNumber: "", intChannelNumber: "", intDescription: "User Defined Trap 10" },
 	{ intDefineName: "INT_USER11", intGroupChannelNumber: "OTHER", intGroupNumber: "", intChannelNumber: "", intDescription: "User Defined Trap 11" },
 	{ intDefineName: "INT_USER12", intGroupChannelNumber: "OTHER", intGroupNumber: "", intChannelNumber: "", intDescription: "User Defined Trap 12" },
+	{ intDefineName: "INT_FREERTOS", intGroupChannelNumber: "12.9", intGroupNumber: "12", intChannelNumber: "9", intDescription: "FreeRTOS SW interrupt" },
 ];
 module.exports = {
 	interrupts: interrupts,
