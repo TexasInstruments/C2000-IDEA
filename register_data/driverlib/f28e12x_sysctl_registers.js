@@ -109,11 +109,6 @@ let SYSCTL_REGISTERS = [
 			{ name: "WDHALTI", description: "Watchdog HALT Mode Ignore Bit", size: "1", shift: "5", mask: "0x20" },
 		]
 	},
-	{ name: "CLKSRCCTL2", description: "Clock Source Control register-2", offset: "0x4", size: "16",
-		bits: [
-			{ name: "CANABCLKSEL", description: "CANA Bit Clock Source Select Bit", size: "2", shift: "0", mask: "0x3" },
-		]
-	},
 	{ name: "CLKSRCCTL3", description: "Clock Source Control register-3", offset: "0x6", size: "16",
 		bits: [
 			{ name: "XCLKOUTSEL", description: "XCLKOUT Source Select Bit", size: "4", shift: "0", mask: "0xF" },
@@ -325,12 +320,6 @@ let SYSCTL_REGISTERS = [
 			{ name: "CMPSS2L", description: "CMPSS2L Enable for LPM Wakeup", size: "1", shift: "3", mask: "0x8" },
 			{ name: "CMPSS3H", description: "CMPSS3H Enable for LPM Wakeup", size: "1", shift: "4", mask: "0x10" },
 			{ name: "CMPSS3L", description: "CMPSS3L Enable for LPM Wakeup", size: "1", shift: "5", mask: "0x20" },
-			{ name: "CMPSS4H", description: "CMPSS4H Enable for LPM Wakeup", size: "1", shift: "6", mask: "0x40" },
-			{ name: "CMPSS4L", description: "CMPSS4L Enable for LPM Wakeup", size: "1", shift: "7", mask: "0x80" },
-			{ name: "CMPSS5H", description: "CMPSS5H Enable for LPM Wakeup", size: "1", shift: "8", mask: "0x100" },
-			{ name: "CMPSS5L", description: "CMPSS5L Enable for LPM Wakeup", size: "1", shift: "9", mask: "0x200" },
-			{ name: "CMPSS6H", description: "CMPSS6H Enable for LPM Wakeup", size: "1", shift: "10", mask: "0x400" },
-			{ name: "CMPSS6L", description: "CMPSS6L Enable for LPM Wakeup", size: "1", shift: "11", mask: "0x800" },
 		]
 	},
 	{ name: "CLKSTOPREQ", description: "Peripheral Clock Stop Request Register", offset: "0x16", size: "32",

@@ -195,11 +195,6 @@ let MEMCFG_REGISTERS = [
 			{ name: "WSDISABLE", description: "ROM Wait State Enable/Disable Control", size: "1", shift: "0", mask: "0x1" },
 		]
 	},
-	{ name: "ROMPREFETCH", description: "ROM Prefetch Configuration Register", offset: "0x0", size: "16",
-		bits: [
-			{ name: "PFENABLE", description: "ROM Prefetch Enable/Disable Control", size: "1", shift: "0", mask: "0x1" },
-		]
-	},
 	{ name: "CPU_RAM_TEST_ERROR_STS", description: "Ram Test: Error Status Register", offset: "0x0", size: "16",
 		bits: [
 			{ name: "UNC_ERROR", description: "UNC_ERROR flag", size: "1", shift: "1", mask: "0x2" },

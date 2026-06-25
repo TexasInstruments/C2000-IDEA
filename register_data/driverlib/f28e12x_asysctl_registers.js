@@ -1,12 +1,13 @@
 let ASYSCTL_REGISTERS = [
-	{ name: "EXTROSCCSR1", description: "ExtR Oscillator Status Register", offset: "0x2A", size: "16",
+	{ name: "ADCOSDETECT", description: "I2V Logic Control", offset: "0x2C", size: "16",
 		bits: [
-			{ name: "OSCSTATUS", description: "Running status of ExtR.", size: "8", shift: "24", mask: "0xFF000000" },
+			{ name: "OSDETECT_EN", description: "Enable OS Detect Logic", size: "1", shift: "4", mask: "0x10" },
+			{ name: "DETECTCFG", description: "OS Detect configuration bits", size: "3", shift: "5", mask: "0xE0" },
 		]
 	},
 	{ name: "REFCONFIGA", description: "Config register for analog reference A.", offset: "0x3A", size: "16",
 		bits: [
-			{ name: "CONFIG8", description: "Analog reference mode select", size: "1", shift: "20", mask: "0x100000" },
+			{ name: "ANAREFSEL", description: "Analog reference mode select", size: "1", shift: "20", mask: "0x100000" },
 		]
 	},
 	{ name: "INTERNALTESTCTL", description: "INTERNALTEST Node Control Register", offset: "0x56", size: "16",
@@ -84,7 +85,6 @@ let ASYSCTL_REGISTERS = [
 			{ name: "CMPLPMXSEL", description: "CMPLPMXSEL Register lock bit", size: "1", shift: "6", mask: "0x40" },
 			{ name: "CMPHNMXSEL", description: "CMPHNMXSEL Register lock bit", size: "1", shift: "7", mask: "0x80" },
 			{ name: "CMPLNMXSEL", description: "CMPLNMXSEL Register lock bit", size: "1", shift: "8", mask: "0x100" },
-			{ name: "VREGCTL", description: "VREGCTL Register lock bit", size: "1", shift: "9", mask: "0x200" },
 			{ name: "CMPSSCTL", description: "CMPSSCTL Register lock bit", size: "1", shift: "10", mask: "0x400" },
 		]
 	},
