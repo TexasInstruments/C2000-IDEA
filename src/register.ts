@@ -346,8 +346,11 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 									lastRegisterVisionResults.push(results);
 								}
 
-								//Get rsvd bit data 
-								let vulnerableBitsMask = findRsvdBits(rsvdWritableRegBits, bitfieldToDriverlibIpMappings[module] != undefined ? bitfieldToDriverlibIpMappings[module] : module, registerName);
+								//Get rsvd bit data
+								let vulnerableBitsMask = 0;
+								if (rsvdWritableRegBits) {
+									vulnerableBitsMask = findRsvdBits(rsvdWritableRegBits, bitfieldToDriverlibIpMappings[module] !== undefined ? bitfieldToDriverlibIpMappings[module] : module, registerName);
+								}
 
 								registersFoundInfo.push({
 									module: module,
@@ -431,8 +434,11 @@ async function registerFindBitfieldRegisters(document: vscode.TextDocument, devi
 									link = deviceTRMUrl + registerUrl;
 								}
 
-								//Get rsvd bit data 
-								let vulnerableBitsMask = findRsvdBits(rsvdWritableRegBits, bitfieldToDriverlibIpMappings[module] != undefined ? bitfieldToDriverlibIpMappings[module] : module, registerName);
+								//Get rsvd bit data
+								let vulnerableBitsMask = 0;
+								if (rsvdWritableRegBits) {
+									vulnerableBitsMask = findRsvdBits(rsvdWritableRegBits, bitfieldToDriverlibIpMappings[module] !== undefined ? bitfieldToDriverlibIpMappings[module] : module, registerName);
+								}
 								registersFoundInfo.push({
 									module: module,
 
@@ -1458,11 +1464,15 @@ async function getDeviceRegisterLinks(device: string)
 
 async function getDeviceRegisterRsvdWritableBits(device: string)
 {
-	var jsonRegisterRsvdName = device.toLowerCase() + "_rsvd_regs.json";
-	var jsonRegisterRsvd = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(extensionContext.extensionUri, "register_rsvd_data", jsonRegisterRsvdName));
-	const jsonRegisterRsvdContent = Buffer.from(jsonRegisterRsvd).toString('utf8');
-	var jsonRsvd : any = JSON.parse(jsonRegisterRsvdContent);
-	return jsonRsvd;
+	try {
+		var jsonRegisterRsvdName = device.toLowerCase() + "_rsvd_regs.json";
+		var jsonRegisterRsvd = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(extensionContext.extensionUri, "register_rsvd_data", jsonRegisterRsvdName));
+		const jsonRegisterRsvdContent = Buffer.from(jsonRegisterRsvd).toString('utf8');
+		var jsonRsvd : any = JSON.parse(jsonRegisterRsvdContent);
+		return jsonRsvd;
+	} catch (err) {
+		return null;
+	}
 }
 
 function findRsvdBits(deviceRsvdRegBits: any, module: string, bitfieldRegName: string)
