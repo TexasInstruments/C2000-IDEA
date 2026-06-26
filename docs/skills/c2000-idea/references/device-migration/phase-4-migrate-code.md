@@ -75,6 +75,9 @@ The agent must fix **every** issue — easy or complex:
   **ti-asm-mcp** to understand register behavior, then construct the correct fix.
 - **If a flagged item is inside a comment or `#if 0` block**, it is not active code —
   skip it and note it as a known inactive-code flag; do not modify the line.
+- **If an issue has `Change: removed`, no `Suggested fix`, and no `Migration Collateral`
+  link**, do not write a replacement from training knowledge — report the symbol to the
+  user with its file path and line number and mark it `needs human review`.
 - Only if an item **truly cannot be resolved** does the agent report it to the user.
 
 ## Reading Migration Collateral links
@@ -198,7 +201,9 @@ If `get_project_migration_report` is unavailable or fails, proceed with per-file
 
 For each header file in the target project:
 
-1. Run `get_device_migration_report` on the file.
+1. Run `get_device_migration_report` on the file. **Pass the target project's file path
+   — not the source project's path.** Verify the path starts with the target project
+   directory before calling.
 2. If the report returns **zero issues**: static analysis found no incompatibilities. This
    does not guarantee full migration — verify includes, types, and peripheral config
    logic. Proceed to the next file.
@@ -212,6 +217,10 @@ For each header file in the target project:
 
 No build step for headers — the loop terminates purely on a clean report. Do not call
 `buildProject` during Phase A — it is unnecessary and slow at this stage.
+
+**A clean Phase A report means all headers are resolved — it does not mean migration is
+complete.** Always proceed to Phase B (`.c` files) and Phase C (final sweep) before
+moving to Phase 5.
 
 ## 4.2 Phase B — Migrate `.c` files (with build step)
 

@@ -18,6 +18,8 @@ to proceed.
 - Do take file paths and device names from MCP tools — never invent them.
 - Don't copy device-specific startup/driver files from the source — use the target SDK's versions.
 - Don't modify SDK driverlib source files — only the project's own application source files.
+- Never call `setToolFlags` for a build configuration other than the one identified in the
+  build configuration guard — even if the source has equivalent settings in other configs.
 
 > **Per-target:** When migrating to multiple target devices, run Phase 2 once for each
 > target project independently.
@@ -52,6 +54,9 @@ confirm before making the change.
 - Show the user: source defines vs. target defines, and which ones you plan to apply.
 - Device-specific defines (e.g., `_F28004x`) should remain as the target device's
   define — do not overwrite.
+- **Treat any define whose name contains the source device name string** (e.g.,
+  `_F28004x_`, `_LAUNCHXL_F28004x`) as device-specific — do not copy it to the target;
+  the target project template already has the correct device guard.
 - **If the same symbol is defined with a different value** in source vs. target (e.g., a
   clock-speed constant tied to the device), flag it to the user and do not overwrite
   without explicit confirmation.
@@ -148,6 +153,11 @@ that should come from the new SDK (ignore these). Use these heuristics:
   - Call `listGeneratedArtifacts` (ccs-sysconfig MCP) to get the generated file names.
   - Use `sysConfigOutputLocation` from `getProjectDescriptors` to find the SysConfig
     output folder — ignore all files under it.
+
+**If `listGeneratedArtifacts` is unavailable**, exclude all files matching the names
+`board.c`, `board.h`, or any file with a `.syscfg.c` / `.syscfg.h` extension, and all
+files under the `sysConfigOutputLocation` folder — treat them as generated and do not
+copy them.
 
 **Before copying**, present two lists to the user:
 1. **Application files** (will be copied to the target project) — list every file path.

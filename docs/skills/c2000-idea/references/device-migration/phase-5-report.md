@@ -44,11 +44,13 @@ mark the migration status as "complete with outstanding build issues" — not fu
 **Update `c2000-migration.md`:** Record Phase 5 as COMPLETE. Add the final build status
 and any remaining action items.
 
-**Before declaring the migration finished**, verify that all deferred/manual items from
-phases 1–4 are explicitly listed in the report (item 7 above). Do not mark the migration
-as complete if any of these are unresolved without the user's awareness: SysConfig manual
-reconfiguration, custom `.lib` recompilation, unmappable linker sections, unresolved
-migration symbols.
+**Before declaring the migration finished:**
+- Scan `c2000-migration.md` for any phase logged as SKIPPED — if a phase was skipped,
+  confirm with the user that the skip was intentional and include it in the report.
+- Verify that all deferred/manual items from phases 1–4 are explicitly listed in the
+  report (item 7 above). Do not mark the migration as complete if any of these are
+  unresolved without the user's awareness: SysConfig manual reconfiguration, custom
+  `.lib` recompilation, unmappable linker sections, unresolved migration symbols.
 
 **Phase 5 complete.** The device-to-device migration workflow is finished. Ask the user
 if they have any questions about the migration results or if any items need further

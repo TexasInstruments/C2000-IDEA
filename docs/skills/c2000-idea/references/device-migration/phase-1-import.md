@@ -57,6 +57,8 @@ Then derive:
 - If Motor Control or Digital Power: `c2000ware_path = <sdk_root>/c2000ware/`
 
 **Note this path** — it is used heavily in all subsequent phases.
+- **Record the exact SDK version string** from `getProjectProductReferences` (e.g.,
+  `C2000Ware_5_04_00_00`) — do not derive or guess the version number from the path.
 - **If the SDK path cannot be resolved** (variable not expanded, path not on disk), stop
   and ask the user for the absolute path to the C2000Ware root before continuing.
 
@@ -89,6 +91,8 @@ The starter project location depends on the target device:
 
 ## 1.6 Build the imported starter project
 
+- **Before calling `buildProject`**, confirm the project name matches the newly imported
+  (or renamed) target project — not the source project. Never build the source project.
 - Call `buildProject` on the freshly imported universal driverlib example.
 - This confirms the import, toolchain, and SDK references are healthy.
 - If the build fails, **stop and report to the user** — this is an environment/SDK issue,

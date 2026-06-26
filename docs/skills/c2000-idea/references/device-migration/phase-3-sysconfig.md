@@ -42,7 +42,8 @@ Copy the source `.syscfg` file into the target project directory.
 ## 3.2 Open the copied file
 
 Open the copied file via `openFile`. Read the `additionalInstructions` field in the
-result.
+result. **If `additionalInstructions` contains device-specific guidance, it takes
+precedence over the generic steps in this phase — follow it first.**
 
 ## 3.3 Get migration targets
 
@@ -77,6 +78,9 @@ Call `getErrorsAndWarnings`. Review all errors and warnings.
   and find the best equivalent.
 - **Only use configurable values that `getModuleDescription` lists as valid** — do not
   invent values not in the allowed set.
+- **If no valid equivalent value exists for a removed configurable**, do not set a
+  placeholder — remove the configurable or leave it at the module default, and record
+  it as a deferred item in `c2000-migration.md` for user review.
 - After each fix, re-run `getErrorsAndWarnings` to check progress.
 - Iterate until all errors are resolved.
 - If an issue cannot be resolved after reasonable investigation, report it to the user.
