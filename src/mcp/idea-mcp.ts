@@ -71,15 +71,17 @@ const SERVER_INSTRUCTIONS = `${IDEA_MCP_PLATFORM} development assistant. Provide
 AVAILABLE TOOLS:
 - get_projects() — Discover projects in the workspace with their device info and paths.
 - list_migration_devices() — Get all supported device families for migration.
-- get_device_migration_report() — Run a device-to-device migration check on a source file and get a structured report.
+- get_project_migration_report() — Run a device-to-device migration check on ALL files in a project and get a complete multi-file report. Use this for project-level migration.
+- get_device_migration_report() — Run a device-to-device migration check on a single source file. Use this when you need per-file control (e.g. fixing one file at a time after a project report).
 - get_bitfield_to_driverlib_migration_report() — Run a bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register accesses and suggests driverlib function replacements.
 
 RECOMMENDED FLOW:
 1. Call get_projects() to discover projects, their current devices, and migration targets. If the list is empty or the project you are looking for is missing, call get_projects(rescan: true) once to re-scan the workspace.
-2. For device-to-device migration:
+2. For device-to-device migration (project level — preferred):
    a. Call list_migration_devices() if you need to verify or select device names.
-   b. Call get_device_migration_report() with the file path, source device, and target device(s).
+   b. Call get_project_migration_report() with the project name to analyze all files at once.
    c. Issues marked "Auto-fixable" have a concrete code replacement you can apply directly. Issues marked "Needs manual review" require reading the linked migration guide.
+   d. After fixing files, call get_device_migration_report() on individual files to verify the fixes are clean.
 3. For bitfield-to-driverlib migration:
    a. Use get_projects() to get the project's currentDevice.
    b. Call get_bitfield_to_driverlib_migration_report() with the file path and sourceDevice.
@@ -182,7 +184,7 @@ Device names are case-insensitive. Use names from list_migration_devices() — p
 
 				try {
 					await runCheck(extensionContext, uri, sourceDevice, targetDevices);
-					const report = genReport(false);
+					const report = genReport(false, uri);
 
 					if (!report) {
 						return { content: [{ type: 'text' as const, text: 'No migration issues found for the specified file and device combination.' }] };
@@ -192,6 +194,54 @@ Device names are case-insensitive. Use names from list_migration_devices() — p
 				} catch (err) {
 					const msg = err instanceof Error ? err.message : String(err);
 					return { content: [{ type: 'text' as const, text: `Error running migration check: ${msg}` }] };
+				}
+			}
+		);
+	}
+
+	if (IDEA_MCP_HANDLERS.runProjectMigrationCheck && IDEA_MCP_HANDLERS.generateProjectMigrationReport && IDEA_MCP_HANDLERS.getAllProjectInfos) {
+		const runProjectCheck = IDEA_MCP_HANDLERS.runProjectMigrationCheck;
+		const genProjectReport = IDEA_MCP_HANDLERS.generateProjectMigrationReport;
+		const getAllProjects = IDEA_MCP_HANDLERS.getAllProjectInfos;
+
+		server.registerTool(
+			'get_project_migration_report',
+			{
+				description: `Run a ${IDEA_MCP_PLATFORM} device-to-device migration check on ALL source files in a project and return a complete multi-file report. Preferred over calling get_device_migration_report() file by file when you need project-wide coverage.
+
+The report includes:
+- Per-file issue tables with line/col positions
+- Auto-fixable vs. needs-manual-review classification for every issue
+- Suggested code fixes for auto-fixable issues
+- Migration collateral links for manual-review issues
+
+Use get_projects() first to discover the project name. Source and target devices are read from the project's migration settings — configure them in VS Code before calling this tool.`,
+				inputSchema: {
+					projectName: z.string().describe('Project name from get_projects(). Used to locate project files and migration device settings.'),
+				} as any,
+			},
+			async ({ projectName }: any) => {
+				if (!extensionContext) {
+					return { content: [{ type: 'text' as const, text: 'Error: Extension context not available.' }] };
+				}
+
+				try {
+					await runProjectCheck(extensionContext, projectName);
+					const projects = getAllProjects();
+					const projectInfo = projects.find((p: any) => p.name === projectName);
+					if (!projectInfo) {
+						return { content: [{ type: 'text' as const, text: `Project "${projectName}" not found. Call get_projects() to list available projects.` }] };
+					}
+
+					const report = genProjectReport(projectInfo, false);
+					if (!report) {
+						return { content: [{ type: 'text' as const, text: `No migration issues found for project "${projectName}". Verify the project has currentDevice and migrationDevices configured.` }] };
+					}
+
+					return { content: [{ type: 'text' as const, text: report }] };
+				} catch (err) {
+					const msg = err instanceof Error ? err.message : String(err);
+					return { content: [{ type: 'text' as const, text: `Error running project migration check: ${msg}` }] };
 				}
 			}
 		);

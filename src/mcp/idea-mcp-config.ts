@@ -1,4 +1,4 @@
-import { migrationRunMigrationCheckOnUri, exportMigrationAgentReport } from '../migration';
+import { migrationRunMigrationCheckOnUri, migrationRunMigrationCheckOnProject, exportMigrationAgentReport, exportProjectMigrationAgentReport } from '../migration';
 import { registerBitfieldToDriverlibMigrationOnUri, exportRegisterBitfieldAgentReport } from '../register';
 import { DEVICE_LIST } from '../deviceData';
 import { getProjects, allProjectInfos } from '../utilities/project';
@@ -13,7 +13,9 @@ export const IDEA_MCP_DEFAULT_PORT = 55001;
 
 export const IDEA_MCP_HANDLERS = {
 	runMigrationCheck: migrationRunMigrationCheckOnUri,
+	runProjectMigrationCheck: migrationRunMigrationCheckOnProject,
 	generateMigrationReport: exportMigrationAgentReport,
+	generateProjectMigrationReport: exportProjectMigrationAgentReport,
 	runBitfieldToDriverlibMigrationCheck: registerBitfieldToDriverlibMigrationOnUri,
 	generateBitfieldToDriverlibMigrationReport: exportRegisterBitfieldAgentReport,
 	getDeviceList: () => DEVICE_LIST,
