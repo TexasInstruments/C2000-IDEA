@@ -26,12 +26,18 @@ If the source project does not use SysConfig (no `.syscfg` file), skip this phas
 entirely — tell the user SysConfig migration is not applicable, update
 `c2000-migration.md` with Phase 3 SKIPPED, and proceed to Phase 4.
 
+If the ccs-sysconfig MCP is not available, tell the user that SysConfig migration must
+be done manually (open the source `.syscfg` in CCS, switch to target device, resolve
+errors, save) and record it as a deferred manual step in `c2000-migration.md`.
+
 If the source project uses SysConfig for pin/peripheral configuration, migrate the
 `.syscfg` to the target device. The source `.syscfg` stays untouched — work on a copy.
 
 ## 3.1 Copy the source `.syscfg` file
 
 Copy the source `.syscfg` file into the target project directory.
+- **If a `.syscfg` already exists in the target** (from the imported template), replace
+  it with the source copy.
 
 ## 3.2 Open the copied file
 
@@ -41,6 +47,8 @@ result.
 ## 3.3 Get migration targets
 
 Call `listMigrationTargets` to retrieve all candidate device + package combinations.
+- **If the list is empty**, the installed SysConfig version may not support migration
+  for this target — report to the user and fall back to manual SysConfig reconfiguration.
 
 ## 3.4 Filter
 
@@ -50,7 +58,8 @@ requested for the migration.
 ## 3.5 Prompt the user
 
 Present the filtered device/package options and ask the user which specific device and
-package to use. If no entries match the target family, stop and report to the user.
+package to use. If no entries match the target family, stop and report to the user with
+the full unfiltered list so the user can select the closest available target.
 
 ## 3.6 Migrate
 
@@ -66,6 +75,8 @@ Call `getErrorsAndWarnings`. Review all errors and warnings.
 - If a module or configurable no longer exists on the target device, use
   `getModuleDescription` and `getInstanceConfiguration` to explore available options
   and find the best equivalent.
+- **Only use configurable values that `getModuleDescription` lists as valid** — do not
+  invent values not in the allowed set.
 - After each fix, re-run `getErrorsAndWarnings` to check progress.
 - Iterate until all errors are resolved.
 - If an issue cannot be resolved after reasonable investigation, report it to the user.
@@ -79,6 +90,11 @@ already removed it before `.syscfg` migration — check with `getModuleInstances
 avoid a redundant removal.)
 
 ## 3.10 Save
+
+**Only call `save` after `getErrorsAndWarnings` returns zero errors.** Saving with
+unresolved errors produces invalid generated output. If errors remain that cannot be
+resolved, record them as deferred items in `c2000-migration.md` and tell the user before
+deciding whether to save.
 
 Call `save` to persist the migrated configuration and regenerate all artifacts.
 

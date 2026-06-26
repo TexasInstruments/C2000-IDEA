@@ -30,6 +30,10 @@ to proceed.
 Precondition: user application files are already copied into the target project (Phase 2,
 step 2.7).
 
+**Critical:** All file edits in this phase are made to the **target** project only.
+Never edit files in the source project directory. Before editing any file, confirm its
+path is under the target project — not the source.
+
 ## Before modifying any files
 
 Ask the user:
@@ -65,6 +69,8 @@ The agent must fix **every** issue — easy or complex:
 - **Complex (manual review ⚠):** investigate deeply — read surrounding code to understand
   intent, review function definitions, analyze which registers are touched, use
   **ti-asm-mcp** to understand register behavior, then construct the correct fix.
+- **If a flagged item is inside a comment or `#if 0` block**, it is not active code —
+  skip it and note it as a known inactive-code flag; do not modify the line.
 - Only if an item **truly cannot be resolved** does the agent report it to the user.
 
 ## Reading Migration Collateral links
@@ -79,7 +85,9 @@ https://dev.ti.com/tirex/content/<C2000Ware_version>/docs/
 
 The `#<symbol>` anchor targets the exact function, enum, or register that changed.
 When no `Suggested fix` is provided, retrieve and parse this URL using the following
-protocol:
+protocol. **If all retrieval methods fail** (network restriction, URL change), report the
+symbol to the user with the collateral URL and ask them to paste the relevant diff section
+— do not fabricate a fix for a complex issue when collateral is unavailable.
 
 1. **Attempt normal retrieval** — fetch the URL directly.
 2. **If retrieval fails**, try in order: `curl`, `wget`, downloading the raw HTML to a
@@ -161,6 +169,9 @@ For each header file in the target project:
 4. Re-run the migration report to confirm each item is resolved or no longer relevant
    (e.g., the flagged item was in a comment, not active code).
 5. Iterate until the report is clean for this file.
+6. **Convergence guard:** if re-running the report after a fix shows the same issue still
+   flagged at the same line, the fix did not take effect — do not loop indefinitely.
+   After two failed attempts on the same item, stop and report it to the user.
 
 No build step for headers — the loop terminates purely on a clean report. Do not call
 `buildProject` during Phase A — it is unnecessary and slow at this stage.
@@ -180,12 +191,19 @@ For each source file in the target project:
 2. If the report returns **zero issues**: verify includes, types, and logic, then build.
 3. Fix every issue one by one.
 4. Re-run the migration report to confirm resolution or irrelevance.
-5. Rebuild to check for compilation issues in that file.
+5. Rebuild to check for compilation issues in that file. **Always call `buildProject` on
+   the target project, not the source project.**
 6. Iterate report + build until either:
    - The file is clean and compiles successfully, OR
    - The only remaining build errors point to *other* files (the error's file:line is not
      the current file) — add those to the deferred-errors list and move on.
-7. Move to the next file.
+7. **If a build error is unrelated to migration** (pre-existing syntax error, wrong
+   `#include`, missing file also missing in source project), record it with a
+   `[NON-MIGRATION]` tag in the deferred-errors list and continue — do not block
+   migration progress on pre-existing issues.
+8. **If a build error is "driverlib header not found"**, this indicates a missing SDK
+   include path — stop and ask the user to verify the include path set in Phase 2.
+9. Move to the next file.
 
 After all files are processed, review the deferred-errors list. If the referenced file
 was migrated and the error disappeared, remove it. If errors persist, carry them into
@@ -202,6 +220,9 @@ After all files are migrated and the project builds:
 4. If the issue count is unchanged across two consecutive sweeps, the agent is stuck —
    escalate to the user with a list of the unresolved issues.
 5. Review any remaining deferred-errors from Phase B and resolve or flag them.
+6. **If the build is clean but report flags linger**, verify the flagged items are inside
+   inactive branches (Approach 1 source-device `#ifdef`, `#if 0`, or comments) — if so,
+   the migration is functionally complete; document these as known inactive-code flags.
 
 ---
 

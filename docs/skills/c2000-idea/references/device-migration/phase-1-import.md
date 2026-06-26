@@ -35,6 +35,13 @@ to proceed.
   If they don't, stop and flag the inconsistency to the user.
 - **Validate source device:** Confirm the discovered source device is in the
   `list_migration_devices()` supported list. If not, notify the user and **terminate**.
+- **Validate target device:** Confirm every requested target device is also in the
+  supported list. If a target is not supported (e.g., F29x migration is not yet
+  implemented), tell the user and exclude that target — do not attempt migration for it.
+- **If IDEA MCP does not list the project:** call `get_projects(rescan: true)` once to
+  re-scan. If still missing, ask the user to verify the project is open in CCS.
+- **Device name mismatch:** IDEA MCP uses lowercase family names (e.g., `f28004x`).
+  Normalize the user-supplied device name to lowercase before comparing.
 
 ## 1.3 Identify SDK type and C2000Ware path
 
@@ -50,6 +57,8 @@ Then derive:
 - If Motor Control or Digital Power: `c2000ware_path = <sdk_root>/c2000ware/`
 
 **Note this path** — it is used heavily in all subsequent phases.
+- **If the SDK path cannot be resolved** (variable not expanded, path not on disk), stop
+  and ask the user for the absolute path to the C2000Ware root before continuing.
 
 ## 1.4 Read AGENTS.md (if present)
 
@@ -71,13 +80,20 @@ The starter project location depends on the target device:
 
 - Import via CCS MCP `importProject`.
 - Repeat for each target migration device.
+- **If the universal project path does not exist on disk**, the target device or SDK
+  version may not include a universal example — ask the user to point to the starter
+  project they want to use as the base.
+- **If `importProject` reports a name conflict** (project already exists in workspace),
+  rename the existing project out of the way or ask the user to delete it before
+  reimporting.
 
 ## 1.6 Build the imported starter project
 
 - Call `buildProject` on the freshly imported universal driverlib example.
 - This confirms the import, toolchain, and SDK references are healthy.
 - If the build fails, **stop and report to the user** — this is an environment/SDK issue,
-  not a migration problem.
+  not a migration problem. Include the compiler error output in your report so the user
+  can diagnose the toolchain or SDK installation.
 
 ## 1.7 Rename the target project
 
@@ -86,6 +102,8 @@ The starter project location depends on the target device:
 - If the sourceProjectName includes the source project device, remove the source device name.
 - This establishes a clear naming convention and prevents collisions when migrating to
   multiple targets.
+- **If a project with that name already exists**, append a numeric suffix (e.g., `_1`)
+  and inform the user of the chosen name.
 
 ## 1.8 Rebuild after rename
 
@@ -104,3 +122,7 @@ discovered, SDK type, target project imported/renamed/built) and ask: *"Phase 1 
 complete. Does everything look correct? Ready to move to Phase 2 (project settings
 alignment)?"* Wait for the user's confirmation, then **re-read `device-migration.md`**
 to proceed.
+
+> **Multi-target note:** Phase 1 covers all targets at once (one import + rename per
+> target). Do **not** start Phase 2 for any target until Phase 1 is fully complete for
+> all targets.

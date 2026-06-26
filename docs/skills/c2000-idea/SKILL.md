@@ -41,6 +41,14 @@ agent, then retry.
 2. Look up the migration task in the workflow matrix below.
 3. Open the matching reference file and follow its steps.
 
+**General rules (apply to all workflows):**
+- Never fabricate migration data — all symbol replacements and suggested fixes must come
+  from the IDEA MCP or migration collateral URLs, not from memory.
+- Keep the source project untouched throughout — it is the golden reference.
+- Confirm with the user before applying bulk changes (same symbol repeated many times).
+- If any phase MCP call fails and cannot be resolved, stop and ask the user; do not skip
+  the step or guess the outcome.
+
 ## Workflow matrix
 
 | Task                                          | Reference file                                | Primary IDEA MCP tool                         |
