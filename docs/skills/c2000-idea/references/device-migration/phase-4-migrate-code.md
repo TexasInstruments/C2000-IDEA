@@ -30,6 +30,10 @@ to proceed.
 Precondition: user application files are already copied into the target project (Phase 2,
 step 2.7).
 
+**Critical:** All file edits in this phase are made to the **target** project only.
+Never edit files in the source project directory. Before editing any file, confirm its
+path is under the target project — not the source.
+
 ## Before modifying any files
 
 Ask the user:
@@ -44,6 +48,10 @@ Ask the user:
   — this marker lets the C2000 IDEA extension track which branch is active per device.
 - **Approach 2 (clean replacement):** Simply replace old symbols with new ones; no
   preprocessor wrappers.
+
+**Record the choice in `c2000-migration.md` header** (after the phase status table) as
+`**Strategy:** Shared codebase (#ifdef)` or `**Strategy:** Clean replacement` so any
+resume operations follow the same pattern consistently.
 
 ## About `//_DEVICE_MIGRATION_` markers
 
@@ -65,6 +73,11 @@ The agent must fix **every** issue — easy or complex:
 - **Complex (manual review ⚠):** investigate deeply — read surrounding code to understand
   intent, review function definitions, analyze which registers are touched, use
   **ti-asm-mcp** to understand register behavior, then construct the correct fix.
+- **If a flagged item is inside a comment or `#if 0` block**, it is not active code —
+  skip it and note it as a known inactive-code flag; do not modify the line.
+- **If an issue has `Change: removed`, no `Suggested fix`, and no `Migration Collateral`
+  link**, do not write a replacement from training knowledge — report the symbol to the
+  user with its file path and line number and mark it `needs human review`.
 - Only if an item **truly cannot be resolved** does the agent report it to the user.
 
 ## Reading Migration Collateral links
@@ -96,6 +109,16 @@ protocol:
    added/removed/renamed parameters, changed types, deprecated alternatives.
 9. **Propose code changes** — apply the fix using only data extracted from the collateral.
    Do not infer or hallucinate parameter names or types not present in the page.
+
+**If all retrieval methods fail** (network restriction, firewall block, URL change):
+- Try the **ti-asm-mcp** tool to query register/symbol details for the target device
+- If that also fails, search the local SDK installation at `C2000Ware/driverlib/{target_device}/`
+  for the header file containing the replacement symbol
+- If local SDK is not available, **stop and report to user:** "Cannot confidently fix
+  `{symbol}` — collateral inaccessible and SDK source not found. Please provide SDK path
+  or manual replacement."
+- **Never fabricate API calls or register values** when uncertain — fabricated fixes cause
+  runtime crashes.
 
 ## Background migration check note
 
@@ -145,15 +168,42 @@ After completing each file's fix loop, update `c2000-migration.md` with a per-fi
 - Any unresolved issues (with line numbers and reasons)
 - Any deferred build errors pointing to other files
 
-This checkpoint ensures progress is recoverable if context is lost mid-phase.
+Maintain a running progress table in `c2000-migration.md`:
+
+```
+| File | Issues | Fixed | Unresolved | Status |
+|------|--------|-------|------------|--------|
+| adc.h | 2 | 2 | 0 | ✅ |
+| epwm.c | 5 | 4 | 1 | ⚠ |
+```
+
+Update this table after each file. Status: ✅ = clean, ⚠ = unresolved items, ⏭ = skipped.
+This table is the primary recovery point if context is lost — it shows exactly where to resume.
+
+**For large projects (>50 files):** Before starting each file, add its row with status
+`⏳ In Progress`. Update to ✅ or ⚠ after completing. If the session is interrupted, the
+last `⏳ In Progress` row is the resume point — re-read that file's report and continue.
+Do not re-process rows already marked ✅.
 
 ---
+
+## 4.0 Pre-migration report
+
+Before starting the per-file loop, call `get_project_migration_report` once on the
+entire target project. This gives a total issue count across all files and lets you
+build the initial file list ordered by issue count (highest first within each category).
+Report to the user: *"Found `<N>` issues across `<M>` files. Starting migration."*
+
+If `get_project_migration_report` is unavailable or fails, proceed with per-file
+`get_device_migration_report` calls — the pre-migration report is optional but recommended.
 
 ## 4.1 Phase A — Migrate `.h` files first (no build step)
 
 For each header file in the target project:
 
-1. Run `get_device_migration_report` on the file.
+1. Run `get_device_migration_report` on the file. **Pass the target project's file path
+   — not the source project's path.** Verify the path starts with the target project
+   directory before calling.
 2. If the report returns **zero issues**: static analysis found no incompatibilities. This
    does not guarantee full migration — verify includes, types, and peripheral config
    logic. Proceed to the next file.
@@ -161,9 +211,16 @@ For each header file in the target project:
 4. Re-run the migration report to confirm each item is resolved or no longer relevant
    (e.g., the flagged item was in a comment, not active code).
 5. Iterate until the report is clean for this file.
+6. **Convergence guard:** if re-running the report after a fix shows the same issue still
+   flagged at the same line, the fix did not take effect — do not loop indefinitely.
+   After two failed attempts on the same item, stop and report it to the user.
 
 No build step for headers — the loop terminates purely on a clean report. Do not call
 `buildProject` during Phase A — it is unnecessary and slow at this stage.
+
+**A clean Phase A report means all headers are resolved — it does not mean migration is
+complete.** Always proceed to Phase B (`.c` files) and Phase C (final sweep) before
+moving to Phase 5.
 
 ## 4.2 Phase B — Migrate `.c` files (with build step)
 
@@ -180,12 +237,19 @@ For each source file in the target project:
 2. If the report returns **zero issues**: verify includes, types, and logic, then build.
 3. Fix every issue one by one.
 4. Re-run the migration report to confirm resolution or irrelevance.
-5. Rebuild to check for compilation issues in that file.
+5. Rebuild to check for compilation issues in that file. **Always call `buildProject` on
+   the target project, not the source project.**
 6. Iterate report + build until either:
    - The file is clean and compiles successfully, OR
    - The only remaining build errors point to *other* files (the error's file:line is not
      the current file) — add those to the deferred-errors list and move on.
-7. Move to the next file.
+7. **If a build error is unrelated to migration** (pre-existing syntax error, wrong
+   `#include`, missing file also missing in source project), record it with a
+   `[NON-MIGRATION]` tag in the deferred-errors list and continue — do not block
+   migration progress on pre-existing issues.
+8. **If a build error is "driverlib header not found"**, this indicates a missing SDK
+   include path — stop and ask the user to verify the include path set in Phase 2.
+9. Move to the next file.
 
 After all files are processed, review the deferred-errors list. If the referenced file
 was migrated and the error disappeared, remove it. If errors persist, carry them into
@@ -202,6 +266,9 @@ After all files are migrated and the project builds:
 4. If the issue count is unchanged across two consecutive sweeps, the agent is stuck —
    escalate to the user with a list of the unresolved issues.
 5. Review any remaining deferred-errors from Phase B and resolve or flag them.
+6. **If the build is clean but report flags linger**, verify the flagged items are inside
+   inactive branches (Approach 1 source-device `#ifdef`, `#if 0`, or comments) — if so,
+   the migration is functionally complete; document these as known inactive-code flags.
 
 ---
 

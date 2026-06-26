@@ -63,6 +63,7 @@ var migrationCodeLenses: MigrationCodeLens[] = [];
 
 let migrationCodelensProvider: MigrationCodelensProvider;
 let migrationCodeActionProvider: MigrationCodeActionProvider;
+let lastMigratedProjectInfo: project.ProjectInfo | undefined;
 
 export function migrationGetAutoMigrationGuideMainPage()
 {
@@ -194,11 +195,11 @@ export function migrationSetup(context: vscode.ExtensionContext)
 	);
 
 	let exportMigrationDisposal = vscode.commands.registerCommand(info.C2000_IDEA_CMD_EXPORT_MIGRATION_REPORT, (args)=>{
-		if (args && args.treeItem && args.projectInfo)
-		{
+		if (args && args.treeItem && args.projectInfo) {
 			exportProjectMigrationDiagnostics(args.projectInfo, lastMigrationCheckTimestampPerURI);
-		}
-		else {
+		} else if (lastMigratedProjectInfo) {
+			exportProjectMigrationDiagnostics(lastMigratedProjectInfo, lastMigrationCheckTimestampPerURI);
+		} else {
 			exportMigrationDiagnostics();
 		}
 	});
@@ -206,8 +207,10 @@ export function migrationSetup(context: vscode.ExtensionContext)
 	let exportMigrationAgentReportDisposal = vscode.commands.registerCommand(info.C2000_IDEA_CMD_EXPORT_MIGRATION_AGENT_REPORT, (args) => {
 		if (args && args.treeItem && args.projectInfo) {
 			exportProjectMigrationAgentReport(args.projectInfo);
+		} else if (lastMigratedProjectInfo) {
+			exportProjectMigrationAgentReport(lastMigratedProjectInfo);
 		} else {
-			exportMigrationAgentReport();
+			exportMigrationAgentReport(true, vscode.window.activeTextEditor?.document.uri);
 		}
 	});
 
@@ -602,13 +605,14 @@ export async function migrationRunMigrationCheckOnProject(context: vscode.Extens
 				migrationFilesIndex++;
 			}
 		}
-		outputChannel.appendLine(`Migration check completed on ${projectName}`);
+		outputChannel.appendLine(`Migration check completed on ${selectedProject}`);
+		lastMigratedProjectInfo = projectInfo;
 
 		// Final progress report
-		if (progress) 
+		if (progress)
 			{
 				progress.report({ increment: 100, message: "Migration check completed." });
-				vscode.window.showInformationMessage("Migration check completed on " + projectName + " project");
+				vscode.window.showInformationMessage("Migration check completed on " + selectedProject + " project");
 			}
 	}
 	else {
@@ -1356,10 +1360,11 @@ export async function migrationRunMigrationCheckOnActiveTextEditor(context: vsco
 {
 	if (vscode.window.activeTextEditor)
 	{
+		lastMigratedProjectInfo = undefined;
 		migrationCodeActions = [];
 		migrationCodeLenses = [];
 		migrationDiagnosticsCollection.clear();
-		
+
 		let currentDevice: string;
 		let migrationDevices: string[];
 		var projectInfo = project.projectGetUriProjectInfo(vscode.window.activeTextEditor.document.uri);
@@ -1443,17 +1448,34 @@ export class MigrationCodelensProvider implements vscode.CodeLensProvider {
 
 function exportMigrationDiagnostics()
 {
-	let exportText = "";
+	const timestamp = new Date().toISOString();
 
-	migrationDiagnosticsCollection.forEach((
-		uri: vscode.Uri, 
-		diagnostics: readonly vscode.Diagnostic[], 
-		collection: vscode.DiagnosticCollection) => {
-			exportText += "File: " + uri.fsPath + "\n";
-			for (let diagnostic of diagnostics){
-				exportText += vscode.DiagnosticSeverity[diagnostic.severity].toString() + " - " + diagnostic.message + "\n";
-			}
-			exportText += "\n";
+	let inferredSource = "Unknown";
+	let inferredTargets = new Set<string>();
+	for (const val of migrationDiagnosticMetadata.values()) {
+		inferredSource = val.sourceDevice;
+		inferredTargets.add(val.targetDevice);
+	}
+	const inferredTargetStr = Array.from(inferredTargets).join(", ") || "Unknown";
+
+	let totalIssues = 0;
+	migrationDiagnosticsCollection.forEach((_, diagnostics) => { totalIssues += diagnostics.length; });
+
+	let exportText = "";
+	exportText += "C2000 Migration Report\n";
+	exportText += "======================\n";
+	exportText += "Generated:    " + timestamp + "\n";
+	exportText += "Migration:    " + inferredSource + " -> " + inferredTargetStr + "\n";
+	exportText += "Total Issues: " + totalIssues + "\n";
+	exportText += "\n";
+	exportText += "----------------------------------------------------------------------\n\n";
+
+	migrationDiagnosticsCollection.forEach((uri: vscode.Uri, diagnostics: readonly vscode.Diagnostic[]) => {
+		exportText += "File: " + uri.fsPath + "  [" + diagnostics.length + " issue" + (diagnostics.length !== 1 ? "s" : "") + "]\n";
+		for (let diagnostic of diagnostics) {
+			exportText += "  " + vscode.DiagnosticSeverity[diagnostic.severity].toString() + " - " + diagnostic.message + "\n";
+		}
+		exportText += "\n";
 	});
 
 	vscode.workspace.openTextDocument().then((textDoc: vscode.TextDocument) => {
@@ -1462,62 +1484,63 @@ function exportMigrationDiagnostics()
 				edit.insert(new vscode.Position(0, 0), exportText);
 			});
 		});
-	}, (error: any) => {
-
-	});
-
+	}, (_error: any) => {});
 }
 
 function exportProjectMigrationDiagnostics(projectInfo: project.ProjectInfo, lastMigrationCheckTimestampPerURI: { [uri: string]: number})
 {
-	let exportText = "";
-	var projectUri = projectInfo.uri;
+	const projectUri = projectInfo.uri;
 	const projectFsPath = projectUri.fsPath || projectUri.path;
-
-	exportText += "Migration Info\n";
-	exportText += "From: " + projectInfo.migrationState.currentDevice + "\n";
-	exportText += "To: " + projectInfo.migrationState.migrationDevices.join(", ") + "\n";
+	const timestamp = new Date().toISOString();
 	const ignoredSymbols = projectInfo.migrationState.migrationCheckExceptions;
 	const ignoredFolders = projectInfo.migrationState.migrationCheckFolderExceptions;
-	if(ignoredSymbols && ignoredSymbols.length > 0){
-		exportText += "Ignores the following migration incompatibilities: " + ignoredSymbols?.join(", ") + "\n";
-	}
-	if(ignoredFolders && ignoredFolders.length > 0){
-	exportText += "Ignores the following folders: " + ignoredFolders?.map(exceptionpath => projectFsPath + "/" + exceptionpath).join("; ") + "\n";
-	}
 
-	migrationDiagnosticsCollection.forEach((
-		uri: vscode.Uri, 
-		diagnostics: readonly vscode.Diagnostic[], 
-		collection: vscode.DiagnosticCollection) => {
-			if (uri.path.includes(projectInfo.uri.path))
-			{
-				exportText += "File: " + uri.fsPath + "\n";
-				exportText += "Migration time taken: " + (lastMigrationCheckTimestampPerURI[uri.fsPath] || "N/A")+ "seconds\n";
-				for (let diagnostic of diagnostics){
-					const { start } = diagnostic.range;
-					const line = start.line + 1;
-					const column = start.character + 1; 
-					exportText += vscode.DiagnosticSeverity[diagnostic.severity].toString() + " - " + diagnostic.message + "[Ln " + line + ", Col " + column +"]" +"\n";
-				}
-				exportText += "\n";
-			}
+	let totalIssues = 0;
+	let filesAnalyzed = 0;
+	migrationDiagnosticsCollection.forEach((uri, diagnostics) => {
+		if (uri.path.includes(projectInfo.uri.path)) {
+			filesAnalyzed++;
+			totalIssues += diagnostics.length;
+		}
 	});
 
-	const filename = `${projectInfo.name}_migration_report.txt`; 
+	let exportText = "";
+	exportText += "C2000 Migration Report\n";
+	exportText += "======================\n";
+	exportText += "Project:          " + projectInfo.name + "\n";
+	exportText += "Path:             " + projectFsPath + "\n";
+	exportText += "Generated:        " + timestamp + "\n";
+	exportText += "Migration:        " + projectInfo.migrationState.currentDevice + " -> " + projectInfo.migrationState.migrationDevices.join(", ") + "\n";
+	exportText += "Files Analyzed:   " + filesAnalyzed + "\n";
+	exportText += "Total Issues:     " + totalIssues + "\n";
+	exportText += "Ignored Symbols (" + (ignoredSymbols?.length || 0) + "): " + ((ignoredSymbols && ignoredSymbols.length > 0) ? ignoredSymbols.join(", ") : "None") + "\n";
+	exportText += "Ignored Folders (" + (ignoredFolders?.length || 0) + "): " + ((ignoredFolders && ignoredFolders.length > 0) ? ignoredFolders.map(f => projectFsPath + "/" + f).join("; ") : "None") + "\n";
+	exportText += "\n";
+	exportText += "----------------------------------------------------------------------\n\n";
 
+	migrationDiagnosticsCollection.forEach((uri: vscode.Uri, diagnostics: readonly vscode.Diagnostic[]) => {
+		if (uri.path.includes(projectInfo.uri.path)) {
+			exportText += "File: " + uri.fsPath + "  [" + diagnostics.length + " issue" + (diagnostics.length !== 1 ? "s" : "") + "]";
+			exportText += "  [Time: " + (lastMigrationCheckTimestampPerURI[uri.fsPath] || "N/A") + "s]\n";
+			for (let diagnostic of diagnostics) {
+				const { start } = diagnostic.range;
+				const line = start.line + 1;
+				const column = start.character + 1;
+				exportText += "  " + vscode.DiagnosticSeverity[diagnostic.severity].toString() + " - " + diagnostic.message + " [Ln " + line + ", Col " + column + "]\n";
+			}
+			exportText += "\n";
+		}
+	});
+
+	const filename = `${projectInfo.name}_migration_report.txt`;
 	vscode.workspace.openTextDocument().then((textDoc: vscode.TextDocument) => {
 		vscode.window.showTextDocument(textDoc, 2, false).then(textEditor => {
 			textEditor.edit(edit => {
 				edit.insert(new vscode.Position(0, 0), exportText);
 			});
-		vscode.window.showInformationMessage(`Opened report: ${filename}`);
+			vscode.window.showInformationMessage(`Opened report: ${filename}`);
 		});
-	}, (error: any) => {
-
-	});
-
-
+	}, (_error: any) => {});
 }
 
 /**
@@ -1666,10 +1689,13 @@ function buildMigrationAgentReportInstructions(sourceDevice: string, targetDevic
 	return md;
 }
 
-export function exportMigrationAgentReport(openAfter: boolean = true): string
+export function exportMigrationAgentReport(openAfter: boolean = true, filterUri?: vscode.Uri): string
 {
 	let isEmpty = true;
-	migrationDiagnosticsCollection.forEach(() => { isEmpty = false; });
+	migrationDiagnosticsCollection.forEach((uri, diagnostics) => {
+		if (filterUri && uri.toString() !== filterUri.toString()) { return; }
+		if (diagnostics.length > 0) { isEmpty = false; }
+	});
 	if (isEmpty) {
 		if (openAfter) {
 			vscode.window.showWarningMessage("No migration issues found. Run Migration Check first.");
@@ -1680,7 +1706,8 @@ export function exportMigrationAgentReport(openAfter: boolean = true): string
 	// Infer source/target devices from collected metadata
 	let inferredSource = "SourceDevice";
 	let inferredTargets = new Set<string>();
-	for (const val of migrationDiagnosticMetadata.values()) {
+	for (const [key, val] of migrationDiagnosticMetadata) {
+		if (filterUri && !key.startsWith(filterUri.fsPath + ":")) { continue; }
 		inferredSource = val.sourceDevice;
 		inferredTargets.add(val.targetDevice);
 	}
@@ -1700,7 +1727,8 @@ export function exportMigrationAgentReport(openAfter: boolean = true): string
 	let globalIssueIndex = 0;
 
 	// Pre-pass: count total issues for global index denominator
-	migrationDiagnosticsCollection.forEach((_, diagnostics) => {
+	migrationDiagnosticsCollection.forEach((uri, diagnostics) => {
+		if (filterUri && uri.toString() !== filterUri.toString()) { return; }
 		if (diagnostics.length > 0) { totalIssues += diagnostics.length; }
 	});
 	const grandTotal = totalIssues;
@@ -1709,6 +1737,7 @@ export function exportMigrationAgentReport(openAfter: boolean = true): string
 	migrationDiagnosticsCollection.forEach((
 		uri: vscode.Uri,
 		diagnostics: readonly vscode.Diagnostic[]) => {
+			if (filterUri && uri.toString() !== filterUri.toString()) { return; }
 			if (diagnostics.length === 0) { return; }
 			filesWithIssues++;
 			issuesMd += `### \`${uri.fsPath}\`\n\n`;
@@ -1805,7 +1834,7 @@ export function exportMigrationAgentReport(openAfter: boolean = true): string
 	return md;
 }
 
-function exportProjectMigrationAgentReport(projectInfo: project.ProjectInfo)
+export function exportProjectMigrationAgentReport(projectInfo: project.ProjectInfo, openAfter: boolean = true): string
 {
 	const projectUri = projectInfo.uri;
 	const projectFsPath = projectUri.fsPath || projectUri.path;
@@ -1815,20 +1844,29 @@ function exportProjectMigrationAgentReport(projectInfo: project.ProjectInfo)
 		if (uri.path.includes(projectInfo.uri.path) && diagnostics.length > 0) { isEmpty = false; }
 	});
 	if (isEmpty) {
-		vscode.window.showWarningMessage("No migration issues found for this project. Run Migration Check first.");
-		return;
+		if (openAfter) {
+			vscode.window.showWarningMessage("No migration issues found for this project. Run Migration Check first.");
+		}
+		return '';
 	}
 
 	const timestamp = new Date().toISOString();
 	const ignoredSymbols = projectInfo.migrationState.migrationCheckExceptions;
 	const ignoredFolders = projectInfo.migrationState.migrationCheckFolderExceptions;
 
+	let totalFilesAnalyzed = 0;
+	migrationDiagnosticsCollection.forEach((uri) => {
+		if (uri.path.includes(projectInfo.uri.path)) { totalFilesAnalyzed++; }
+	});
+
 	let md = `# C2000 Migration Agent Report\n`;
 	md += `Generated: ${timestamp}\n\n`;
 	md += `## Project: ${projectInfo.name}\n\n`;
+	md += `- **Path:** \`${projectFsPath}\`\n`;
 	md += `- **Migration:** ${projectInfo.migrationState.currentDevice} → ${projectInfo.migrationState.migrationDevices.join(", ")}\n`;
-	md += `- **Ignored Symbols:** ${(ignoredSymbols && ignoredSymbols.length > 0) ? ignoredSymbols.join(", ") : "None"}\n`;
-	md += `- **Ignored Folders:** ${(ignoredFolders && ignoredFolders.length > 0) ? ignoredFolders.map(f => projectFsPath + "/" + f).join("; ") : "None"}\n\n`;
+	md += `- **Files Analyzed:** ${totalFilesAnalyzed}\n`;
+	md += `- **Ignored Symbols (${(ignoredSymbols && ignoredSymbols.length > 0) ? ignoredSymbols.length : 0}):** ${(ignoredSymbols && ignoredSymbols.length > 0) ? ignoredSymbols.join(", ") : "None"}\n`;
+	md += `- **Ignored Folders (${(ignoredFolders && ignoredFolders.length > 0) ? ignoredFolders.length : 0}):** ${(ignoredFolders && ignoredFolders.length > 0) ? ignoredFolders.map(f => `\`${projectFsPath}/${f}\``).join(", ") : "None"}\n\n`;
 	if ((ignoredSymbols && ignoredSymbols.length > 0) || (ignoredFolders && ignoredFolders.length > 0)) {
 		md += `> ⚠️ **AI Agent — Ignored Items Notice:** The symbols and folders listed above as "Ignored" have been **explicitly excluded** by the user from migration checks. `;
 		md += `**Do NOT suggest or apply fixes for any issues located in ignored folders or involving ignored symbols.** `;
@@ -1849,6 +1887,14 @@ function exportProjectMigrationAgentReport(projectInfo: project.ProjectInfo)
 		if (uri.path.includes(projectInfo.uri.path) && diagnostics.length > 0) { totalIssues += diagnostics.length; }
 	});
 	const grandTotal = totalIssues;
+
+	// Pre-pass: count files with issues for scoping context
+	migrationDiagnosticsCollection.forEach((uri, diagnostics) => {
+		if (uri.path.includes(projectInfo.uri.path) && diagnostics.length > 0) { filesWithIssues++; }
+	});
+	md += `- **Files with Issues:** ${filesWithIssues} of ${totalFilesAnalyzed}\n`;
+	md += `- **Total Issues:** ${grandTotal}\n\n`;
+	filesWithIssues = 0; // reset for render pass below
 	totalIssues = 0;
 
 	migrationDiagnosticsCollection.forEach((
@@ -1934,16 +1980,20 @@ function exportProjectMigrationAgentReport(projectInfo: project.ProjectInfo)
 		md += `\n`;
 	}
 
-	const filename = `${projectInfo.name}_migration_agent_report.md`;
-	vscode.workspace.openTextDocument().then((textDoc: vscode.TextDocument) => {
-		vscode.window.showTextDocument(textDoc, 2, false).then(textEditor => {
-			textEditor.edit(edit => {
-				edit.insert(new vscode.Position(0, 0), md);
+	if (openAfter) {
+		const filename = `${projectInfo.name}_migration_agent_report.md`;
+		vscode.workspace.openTextDocument().then((textDoc: vscode.TextDocument) => {
+			vscode.window.showTextDocument(textDoc, 2, false).then(textEditor => {
+				textEditor.edit(edit => {
+					edit.insert(new vscode.Position(0, 0), md);
+				});
+				vscode.window.showInformationMessage(`Opened report: ${filename}`);
 			});
-			vscode.window.showInformationMessage(`Opened report: ${filename}`);
+		}, (_error: any) => {
 		});
-	}, (_error: any) => {
-	});
+	}
+
+	return md;
 }
 
 function getRegisterMigrationDriverlibCode(migEl: MigrationElement)
