@@ -195,16 +195,27 @@ let collateralAdditionalTreeWordChangeHandler: project.ProjectWordSelectionChang
 export class CollateralAdditionalTreeView {
 	constructor(context: vscode.ExtensionContext) {
         extensionContext = context;
-        var collateralFindabilityFile = require("./../../collateral_findability/" + "sysconfig_collateral_links");
-        if (collateralFindabilityFile && collateralFindabilityFile["getCollateralData"])
-        {
-            collateralFindabilityData = collateralFindabilityFile["getCollateralData"]();
+
+        try {
+            var collateralFindabilityFile = require("./../../collateral_findability/" + "sysconfig_collateral_links");
+            if (collateralFindabilityFile && collateralFindabilityFile["getCollateralData"])
+            {
+                collateralFindabilityData = collateralFindabilityFile["getCollateralData"]();
+            }
+        } catch (e) {
+            console.error('[C2000-IDEA] Failed to load sysconfig_collateral_links:', e);
         }
-        var collateralAdditionalMappingFile = require("./../../collateral_findability/" + "collateral_additional_mappings");
-        if (collateralAdditionalMappingFile && collateralAdditionalMappingFile["getCollateralDataMappings"])
-        {
-            collateralAdditionalMappingData = collateralAdditionalMappingFile["getCollateralDataMappings"]();
+
+        try {
+            var collateralAdditionalMappingFile = require("./../../collateral_findability/" + "collateral_additional_mappings");
+            if (collateralAdditionalMappingFile && collateralAdditionalMappingFile["getCollateralDataMappings"])
+            {
+                collateralAdditionalMappingData = collateralAdditionalMappingFile["getCollateralDataMappings"]();
+            }
+        } catch (e) {
+            console.error('[C2000-IDEA] Failed to load collateral_additional_mappings:', e);
         }
+
 		collaterlAdditionalTreeView = vscode.window.createTreeView(info.C2000_IDEA_VIEW_COLLATERAL_ADDITIONAL_TREE_VIEW, { treeDataProvider: collateralAdditionalTreeViewTreeDataProvider(), showCollapseAll: true });
         context.subscriptions.push(collaterlAdditionalTreeView);
         project.wordChangeSubscription.push(collateralAdditionalTreeWordChangeHandler);

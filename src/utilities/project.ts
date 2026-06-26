@@ -153,8 +153,8 @@ export function projectSetup(context: vscode.ExtensionContext)
 		
 		// var watcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(
 		// 	vscode.workspace.workspaceFolders[0],
-		// 	'*'
-		// )); //glob search string
+		// 	'*/.cproject'
+		// ));
 		// watcher.onDidChange(workspaceTopLevelFolderWatcherChange);
 		// watcher.onDidCreate(workspaceTopLevelFolderWatcherCreate);
 		// watcher.onDidDelete(workspaceTopLevelFolderWatcherDelete);
@@ -274,15 +274,11 @@ function workspaceTopLevelFolderWatcherChange(uri: vscode.Uri)
 }
 function workspaceTopLevelFolderWatcherCreate(uri: vscode.Uri)
 {
-	if (isTopLevelItem(uri)) {
-		addProject(uri);
-	}
+	addProject(uri);
 }
 function workspaceTopLevelFolderWatcherDelete(uri: vscode.Uri)
 {
-	if (isTopLevelItem(uri)) {
-		removeProject(uri);
-	}
+	removeProject(uri);
 }
 
 function projectUpdateCurrentDeviceStatusbar()

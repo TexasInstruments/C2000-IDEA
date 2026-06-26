@@ -17,30 +17,40 @@ import { tiAsmSkillsInit } from './skills/ti-asm-skills';
 
 let isTheia : boolean = false;
 
+function safeInit(name: string, fn: () => void) {
+	try {
+		fn();
+	} catch (e) {
+		console.error(`[C2000-IDEA] Failed to initialize ${name}:`, e);
+	}
+}
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 
 	packageJson.loadPackageJSON(context);
 
-	utils.isTheiaEnv().then((t) => { isTheia = t; });
+	isTheia = await utils.isTheiaEnv();
 
-	project.projectSetup(context);
-	register.registerSetup(context);
-	interrupt.interruptSetup(context);
-	walkthroughs.walkthroughsSetup(context);
+	safeInit('project', () => project.projectSetup(context));
+	safeInit('register', () => register.registerSetup(context));
+	safeInit('interrupt', () => interrupt.interruptSetup(context));
+	safeInit('walkthroughs', () => walkthroughs.walkthroughsSetup(context));
 
 	if (project.projectGetCurrentDevice())
 	{
-		register.registerSetupAutoCompletes(project.projectGetCurrentDevice(), context);
-		interrupt.interruptSetupAutoCompletes(project.projectGetCurrentDevice(), context);
+		safeInit('registerAutoCompletes', () =>
+			register.registerSetupAutoCompletes(project.projectGetCurrentDevice(), context));
+		safeInit('interruptAutoCompletes', () =>
+			interrupt.interruptSetupAutoCompletes(project.projectGetCurrentDevice(), context));
 	}
 
-	migration.migrationSetup(context);
+	safeInit('migration', () => migration.migrationSetup(context));
 
-	tiAsmMcpInit(context);
-	ideaMcpInit(context);
-	tiAsmSkillsInit(context);
+	safeInit('tiAsmMcp', () => tiAsmMcpInit(context));
+	safeInit('ideaMcp', () => ideaMcpInit(context));
+	safeInit('tiAsmSkills', () => tiAsmSkillsInit(context));
 
 	let disposableOpenCollateral = vscode.commands.registerCommand(info.C2000_IDEA_CMD_OPEN_COLLATERAL, (args) => {
 		if (args && args.link)
@@ -64,18 +74,18 @@ export function activate(context: vscode.ExtensionContext) {
 		// vscode.commands.getCommands().then(val=>{
 		// 	console.log(val);
 		// });
-		//vscode.commands.executeCommand('ccs.open.browser', "https://www.ti.com/document-viewer/TMS320F280025C-Q1/datasheet#GUID-3C72F23D-966B-4D6E-8228-DF14845CCC41/TITLE-SPRSP45SPRS945_PINDIAG_SEC"); 
+		//vscode.commands.executeCommand('ccs.open.browser', "https://www.ti.com/document-viewer/TMS320F280025C-Q1/datasheet#GUID-3C72F23D-966B-4D6E-8228-DF14845CCC41/TITLE-SPRSP45SPRS945_PINDIAG_SEC");
 	});
 
 
 	context.subscriptions.push(
 		disposableOpenCollateral, debugDisposal);
-	
-	new CollateralTreeView(context);
-	new CollateralAdditionalTreeView(context);
-	new ProjectTreeView(context);
-	new FeatureTreeView(context);
-	
+
+	safeInit('CollateralTreeView', () => new CollateralTreeView(context));
+	safeInit('CollateralAdditionalTreeView', () => new CollateralAdditionalTreeView(context));
+	safeInit('ProjectTreeView', () => new ProjectTreeView(context));
+	safeInit('FeatureTreeView', () => new FeatureTreeView(context));
+
 	if (vscode.window.activeTextEditor)
 	{
 		project.projectOnChangeActiveTextEditor(vscode.window.activeTextEditor);

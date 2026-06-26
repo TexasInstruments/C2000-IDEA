@@ -32,8 +32,8 @@ Call `list_migration_devices()` from IDEA MCP immediately after collecting input
 - Confirm every **target device** the user provided is in the supported list.
 - If any target device is not supported, notify the user which device(s) are unsupported
   and **terminate** — do not proceed.
-- The source device is validated later (Step 1.2) once discovered from the project, but
-  if it is not in the supported list, also notify the user and terminate.
+- The source device is validated later (Phase 1, step 1.2) once discovered from the
+  project, but if it is not in the supported list, also notify the user and terminate.
 
 ## Dependencies
 
@@ -69,366 +69,57 @@ Call `list_migration_devices()` from IDEA MCP immediately after collecting input
 - Provides device TRM access for register definitions and peripheral details
 - Ground truth for device configuration at the hardware level
 
+## Migration log file
+
+At the very start of the workflow — before reading any phase file — create a file called
+`c2000-migration.md` in the **target project directory**. This file is your persistent
+migration log. Update it continuously throughout the workflow:
+
+- Record migration info (source project, source device, target device, SDK type, paths).
+- At each phase: record the phase status (IN PROGRESS / COMPLETE / SKIPPED), key findings,
+  and actions taken.
+- In Phase 4: record per-file status (issues found, issues fixed, unresolved items).
+- At the end: this file becomes part of the final deliverable for the user.
+
+**If your context is getting long or you feel disoriented, re-read `c2000-migration.md`
+to recover your position and progress.**
+
 ## How to run this workflow
 
-### Step 1 — Discover, import, and validate the target project
+This workflow is split into five phases. **Execute them in strict order.** Read one phase
+file at a time, complete all steps in it, then return here and read the next phase file.
+Do not read ahead — only load the next phase when the current one is done.
 
-#### 1.1 Collect and validate required inputs
+> **Per-target:** When migrating to multiple target devices, run Phases 2, 3, 4, and 5
+> once for each target project independently. Phase 1 covers all targets.
 
-- Confirm the user has provided the source project name/path and target device(s).
-- If either is missing, ask explicitly before proceeding.
+### Phase sequence
 
-#### 1.2 Discover the source project
+1. **Read `device-migration/phase-1-import.md`** — Discover the source project, identify
+   the SDK, import and validate the target project(s).
+   → When complete, return here.
 
-- **CCS MCP:** Call `getProjectDescriptors` and `getProjectProductReferences` for the
-  source project. Note the device, SDK paths, build config, and product references.
-- **IDEA MCP:** Call `get_projects()`. Locate the source project by name.
-- **Cross-check:** The device, project name, and SDK info from both MCPs must agree.
-  If they don't, stop and flag the inconsistency to the user.
-- **Validate source device:** Confirm the discovered source device is in the
-  `list_migration_devices()` supported list. If not, notify the user and **terminate**.
+2. **Read `device-migration/phase-2-settings.md`** — Analyze and align project settings:
+   compiler, linker, includes, source file inventory.
+   → When complete, return here.
 
-#### 1.3 Identify SDK type and C2000Ware path
+3. **Read `device-migration/phase-3-sysconfig.md`** — Migrate the SysConfig (.syscfg)
+   configuration to the target device.
+   → When complete, return here.
 
-The source project is based on one of three SDKs:
-- **C2000Ware** (base SDK) — C2000Ware is the top-level directory itself
-- **Motor Control SDK for C2000** — has `c2000ware/` folder at top level
-- **Digital Power SDK** — has `c2000ware/` folder at top level
+4. **Read `device-migration/phase-4-migrate-code.md`** — Migrate all source code: headers
+   first, then source files, then a final sweep.
+   → When complete, return here.
 
-Determine which SDK the source uses from `getProjectProductReferences` (by the product
-name in the references) and by checking for a `c2000ware/` subfolder at the SDK root.
-Then derive:
-- If C2000Ware: `c2000ware_path = <sdk_root>`
-- If Motor Control or Digital Power: `c2000ware_path = <sdk_root>/c2000ware/`
-
-**Note this path** — it is used heavily in all subsequent steps.
-
-#### 1.4 Read AGENTS.md (if present)
-
-- Check for `AGENTS.md` at the SDK root. If it exists, read and follow its instructions.
-- If the SDK is Motor Control or Digital Power, also check for `AGENTS.md` inside the
-  `c2000ware/` subfolder. Read and follow if present.
-
-#### 1.5 Import the universal driverlib example for the target device
-
-- The starter project is always located at:
-  `<c2000ware_path>/driverlib/<target-device>/examples/universal`
-- Import via CCS MCP `importProject`.
-- Repeat for each target migration device.
-
-#### 1.6 Build the imported starter project
-
-- Call `buildProject` on the freshly imported universal driverlib example.
-- This confirms the import, toolchain, and SDK references are healthy.
-- If the build fails, **stop and report to the user** — this is an environment/SDK issue,
-  not a migration problem.
-
-#### 1.7 Rename the target project
-
-- Call CCS MCP `renameProject` to rename the imported project to
-  `<sourceProjectName>_<targetDevice>`.
-- If the sourceProjectName includes the source project device, remove the source device name
-- This establishes a clear naming convention and prevents collisions when migrating to
-  multiple targets.
-
-#### 1.8 Rebuild after rename
-
-- Call `buildProject` again on the renamed project.
-- This confirms the rename did not break any internal project references or path
-  dependencies.
-- If the build fails, **stop and report to the user** — this is a rename/path issue.
-
----
-
-### Step 2 — Analyze and align project settings
-
-> **Per-target:** When migrating to multiple target devices, run Step 2 and Step 3 once
-> for each target project independently.
-
-Compare the source (golden) project against the target project. Apply settings from the
-source to the target, except where differences are legitimate device deltas.
-
-Use CCS MCP `getToolFlags` to read settings from both projects and `setToolFlags` to
-apply mismatches to the target. The agent should apply settings automatically (not just
-flag them) unless the difference is clearly a device-specific delta.
-
-#### 2.1 Compiler flags
-
-- Optimization level, debug info, warning levels, language standard, custom flags.
-- Apply source settings to target where they differ.
-
-#### 2.2 Predefined symbols / defines
-
-- User `#define`s passed at the compiler level (e.g., feature flags, board identifiers).
-- Apply source defines to target. Device-specific defines (e.g., `_F28004x`) should
-  remain as the target device's define — do not overwrite.
-
-#### 2.3 Include paths
-
-- User-added include directories beyond SDK defaults.
-- Apply source paths to target. Adjust any device-specific SDK paths to point to the
-  target device's equivalent.
-
-#### 2.4 Linker flags
-
-- Stack/heap sizes, output format, map file generation.
-- Apply source settings to target.
-
-#### 2.5 Linker command file
-
-Detect which path the **source** project uses:
-- **Path A** — a `.cmd` file in the project's application files (user-managed)
-- **Path B** — CMD module configured within SysConfig (generated output)
-
-Then check what the **target** imported project uses.
-
-**If source = Path A and target = Path A:**
-- Proceed to reconciliation (see below).
-
-**If source = Path A and target = Path B:**
-- Remove the CMD module from the target project's SysConfig.
-- Add an example target linker cmd file to the project (see reference paths below).
-- Then proceed to reconciliation.
-
-**If source = Path B:**
-- Handled entirely by the SysConfig migration step (2.8). No separate cmd work needed.
-- When migrating the CMD module in SysConfig, the sections should match the source
-  project and the memory regions assigned to sections should match as closely as possible.
-
-**Finding the target device example linker cmd files:**
-
-The reference cmd files are located at:
-`<c2000ware_path>/driverlib/<target-device>/cmd/`
-
-List all files in the cmd directory and identify the two key reference files:
-- The **RAM** linker cmd — file name ends with `_generic_ram_lnk.cmd`
-- The **flash** linker cmd — file name ends with `_flash_ram_lnk.cmd`
-
-Read both files for context before reconciliation.
-
-**Reconciliation:**
-
-Port user customizations from the source cmd onto the target device's cmd file:
-- The sections in the target should match the source project.
-- The memory regions assigned to sections should match as closely as possible.
-- Use the target device's RAM and flash cmd files as the ground truth for valid memory
-  regions and addresses on the target device.
-
-#### 2.6 Libraries
-
-- Additional libraries linked by the source (math libs, custom .lib files).
-- Apply to target. Adjust device-specific library paths to target equivalents.
-
-#### 2.7 Source file inventory
-
-Identify which source `.c`/`.h` files are user application code (migrate these) vs. files
-that should come from the new SDK (ignore these). Use these heuristics:
-
-- **Files under the project directory** are most likely user application code — migrate them.
-- **Files referenced from SDK paths** are device/library files — ignore them.
-- **SDK files copied into the project** — sometimes `device.c`/`device.h` or driverlib
-  files are copied into the project. These are easily detectable by name and should be
-  ignored; the target SDK provides its own versions.
-- **SysConfig-generated files** — ignore these; they are regenerated after SysConfig
-  migration. Detect them two ways:
-  - Call `listGeneratedArtifacts` (ccs-sysconfig MCP) to get the generated file names.
-  - Use `sysConfigOutputLocation` from `getProjectDescriptors` to find the SysConfig
-    output folder — ignore all files under it.
-
-- Copy the identified user application code into the target project.
-
-#### 2.8 SysConfig (.syscfg)
-
-If the source project uses SysConfig for pin/peripheral configuration, migrate the
-`.syscfg` to the target device. The source `.syscfg` stays untouched — work on a copy.
-
-1. **Copy** the source `.syscfg` file into the target project directory.
-2. **Open** the copied file via `openFile`. Read the `additionalInstructions` field in
-   the result.
-3. **Get migration targets** — call `listMigrationTargets` to retrieve all candidate
-   device + package combinations.
-4. **Filter** — narrow the list to entries matching the target device family the user
-   originally requested for the migration.
-5. **Prompt** — present the filtered device/package options and ask the user which
-   specific device and package to use. If no entries match the target family, stop and
-   report to the user.
-6. **Migrate** via `migrate(device, package)` using the user's selected device and
-   package.
-7. **Check errors** via `getErrorsAndWarnings`. Review all errors and warnings.
-8. **Fix issues iteratively:**
-   - Use `changeConfiguration` to resolve errors.
-   - If a module or configurable no longer exists on the target device, use
-     `getModuleDescription` and `getInstanceConfiguration` to explore available options
-     and find the best equivalent.
-   - After each fix, re-run `getErrorsAndWarnings` to check progress.
-   - Iterate until all errors are resolved.
-   - If an issue cannot be resolved after reasonable investigation, report it to the user.
-9. **Handle CMD module (if applicable):** If the source project uses Path A (user `.cmd`
-   file, per Step 2.5) and the target's SysConfig still contains a CMD module, call
-   `removeModuleInstances` to remove it so it does not generate a conflicting linker
-   command file. (Step 2.5 may have already removed it before `.syscfg` migration — check
-   with `getModuleInstances` first to avoid a redundant removal.)
-10. **Save** via `save` to persist the migrated configuration and regenerate all artifacts.
-11. **Close** via `closeFile`.
-
-The generated outputs (`.c`/`.h`) are automatically correct after migration — no manual
-migration needed for SysConfig-generated files.
-
-#### 2.9 Post-build steps
-
-- Custom post-build commands (hex file generation, checksums, etc.).
-- Apply source post-build steps to target where applicable.
-
-#### 2.10 Runtime support (RTS)
-
-- RTS library selection may differ per device but should match in flavor (e.g., floating
-  point support level).
-- Verify the target uses the equivalent RTS variant.
-
----
-
-### Step 3 — Migrate source code
-
-Precondition: user application files are already copied into the target project (Step 2.7).
-
-**Before modifying any files, ask the user:**
-> "Do you want to (1) keep a shared codebase with `#ifdef` device branches so both source
-> and target devices compile from one file (this way the new files in the target project
-> have both the old source project code and newly generated migration code), or (2) a
-> clean replacement targeting only the new device?"
-
-- **Approach 1 (shared `#ifdef`):** Wrap changed code in `#if`/`#elif`/`#endif` blocks.
-  Remember all modifications are only made on the target device project.
-  Always add the `//_DEVICE_MIGRATION_` suffix to each `#if`, `#elif`, and `#endif` line
-  — this marker lets the C2000 IDEA extension track which branch is active per device.
-- **Approach 2 (clean replacement):** Simply replace old symbols with new ones; no
-  preprocessor wrappers.
-
-**About `//_DEVICE_MIGRATION_` markers:** These suffixes on `#if`/`#elif`/`#endif` lines
-are placed by the C2000 IDEA extension to track device-specific branches. When a
-migration report flags a symbol inside such a block, fix only the **target device's
-branch**, not the source device branch. Do not remove or alter existing markers.
-
-**About pre-computed function fixes:** When `get_device_migration_report` provides a
-`Suggested fix` for a function call, apply it **verbatim** — the fix already accounts for
-all argument reordering, added/removed parameters, and type changes. Do not re-derive arguments.
-
-
-The agent must fix **every** issue — easy or complex:
-- **Easy (auto-fixable ✓):** apply the suggested replacement directly.
-- **Complex (manual review ⚠):** investigate deeply — read surrounding code to understand
-  intent, review function definitions, analyze which registers are touched, use
-  **ti-asm-mcp** to understand register behavior, then construct the correct fix.
-- Only if an item **truly cannot be resolved** does the agent report it to the user.
-
-**Reading Migration Collateral links:** Each issue in the report may include a
-`Migration Collateral` URL of the form:
-
-```
-https://dev.ti.com/tirex/content/<C2000Ware_version>/docs/
-  <version>_Migration_Guides/html_pages/diff_reports/
-  <version>_<sourceDevice>_vs_<version>_<targetDevice>_driverlib.html#<symbol>
-```
-
-The `#<symbol>` anchor targets the exact function, enum, or register that changed.
-When no `Suggested fix` is provided, retrieve and parse this URL using the following
-protocol:
-
-1. **Attempt normal retrieval** — fetch the URL directly.
-2. **If retrieval fails**, try in order: `curl`, `wget`, downloading the raw HTML to a
-   temp file.
-3. **Save the content locally** — do not rely on in-memory streaming for large HTML pages.
-4. **Parse the document** — extract text content; strip style/script tags.
-5. **Locate the `#<symbol>` anchor** — navigate to the exact section identified by the
-   anchor fragment; do not stop at a partial match or a nearby entry.
-6. **Read surrounding sections for context** — include the full table row or function
-   block at the anchor, plus the immediately preceding and following entries.
-7. **Follow referenced structs, enums, typedefs, and macros** — if the diff references
-   a type or enum defined elsewhere in the page, locate and read those definitions too.
-8. **Summarize differences and migration impact** — old signature → new signature,
-   added/removed/renamed parameters, changed types, deprecated alternatives.
-9. **Propose code changes** — apply the fix using only data extracted from the collateral.
-   Do not infer or hallucinate parameter names or types not present in the page.
-
-**Note:** The C2000 IDEA extension may be running a continuous migration check in the
-background. The VS Code Problems panel may update as files change. Use
-`get_device_migration_report` — not the diagnostics panel — as the authoritative source.
-
-#### 3.1 Phase A — Migrate `.h` files first (no build step)
-
-For each header file in the target project:
-
-1. Run `get_device_migration_report` on the file.
-2. If the report returns **zero issues**: static analysis found no incompatibilities. This
-   does not guarantee full migration — verify includes, types, and peripheral config
-   logic. Proceed to the next file.
-3. Fix every issue one by one.
-4. Re-run the migration report to confirm each item is resolved or no longer relevant
-   (e.g., the flagged item was in a comment, not active code).
-5. Iterate until the report is clean for this file.
-
-No build step for headers — the loop terminates purely on a clean report. Do not call
-`buildProject` during Phase A — it is unnecessary and slow at this stage.
-
-#### 3.2 Phase B — Migrate `.c` files (with build step)
-
-Process files in dependency order: files with no project-internal `#include`s first,
-then files that only include already-migrated project files. This prevents cascading
-fix/break cycles caused by migrating a caller before its included header is clean.
-
-Maintain a **deferred-errors list** `{file, line, error_message}` for cross-file build
-errors discovered during this phase.
-
-For each source file in the target project:
-
-1. Run `get_device_migration_report` on the file.
-2. If the report returns **zero issues**: verify includes, types, and logic, then build.
-3. Fix every issue one by one.
-4. Re-run the migration report to confirm resolution or irrelevance.
-5. Rebuild to check for compilation issues in that file.
-6. Iterate report + build until either:
-   - The file is clean and compiles successfully, OR
-   - The only remaining build errors point to *other* files (the error's file:line is not
-     the current file) — add those to the deferred-errors list and move on.
-7. Move to the next file.
-
-After all files are processed, review the deferred-errors list. If the referenced file
-was migrated and the error disappeared, remove it. If errors persist, carry them into
-Phase C.
-
-#### 3.3 Phase C — Final sweep
-
-After all files are migrated and the project builds:
-
-1. Re-run `get_device_migration_report` on **every file** (both `.h` and `.c`).
-2. **Completion criteria:** report returns zero issues for every file **and** `buildProject`
-   returns no errors (warnings acceptable).
-3. If issues surface, repeat the fix loop for the affected files.
-4. If the issue count is unchanged across two consecutive sweeps, the agent is stuck —
-   escalate to the user with a list of the unresolved issues.
-5. Review any remaining deferred-errors from Phase B and resolve or flag them.
-
----
-
-### Step 4 — Report back
-
-Provide a structured migration summary:
-
-1. **Per-file table** — one row per file: issues found, issues fixed, issues needing human review.
-2. **Unresolved symbols** — list any symbols where a confident replacement could not be
-   found. Include file path, line number, and reason. Mark them "needs human review".
-3. **Modified files** — list all files changed so the user can review diffs.
-4. **Final build status** — pass or fail; list any remaining non-migration errors.
-5. **SysConfig status** — if SysConfig was not migrated (MCP unavailable), state the
-   remaining manual step: open the source `.syscfg` in CCS SysConfig for the target
-   device and reconfigure peripherals to match the source.
-6. **SDK version change** — source SDK version → target SDK version.
-7. **Deferred / manual actions** — anything the user must do before the project is
-   production-ready (SysConfig, hardware testing, bitfield migration if not done).
+5. **Read `device-migration/phase-5-report.md`** — Produce the structured migration
+   summary for the user.
+   → Migration complete.
 
 ---
 
 ## Do / Don't
+
+These rules apply across all phases:
 
 - Do keep the source project unchanged — it is the golden reference.
 - Do cross-check CCS MCP and IDEA MCP results for consistency.
