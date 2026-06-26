@@ -125,4 +125,8 @@ to proceed.
 
 > **Multi-target note:** Phase 1 covers all targets at once (one import + rename per
 > target). Do **not** start Phase 2 for any target until Phase 1 is fully complete for
-> all targets.
+> all targets. **If migrating to multiple devices:** After all Phase 1 imports complete,
+> confirm with the user: "All target projects imported. Do you want to (1) complete
+> Phases 2–5 for one device at a time, or (2) batch all Phase 2 configs first, then all
+> Phase 3 SysConfigs, etc.?" Follow their preference — some prefer end-to-end per device
+> for early validation, others prefer batching for efficiency.

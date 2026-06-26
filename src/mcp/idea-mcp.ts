@@ -19,6 +19,7 @@ import {
 	IDEA_MCP_HANDLERS,
 } from './idea-mcp-config';
 import { deployIdeaSkills } from '../skills/idea-skills';
+import { isDeviceF29x } from '../deviceData';
 
 let httpServer: http.Server | null = null;
 let extensionContext: vscode.ExtensionContext | null = null;
@@ -108,7 +109,11 @@ function createMcpServerInstance(): McpServer {
 			},
 			async () => {
 				const devices = getDeviceList();
-				return { content: [{ type: 'text' as const, text: devices.join('\n') }] };
+				const structured = devices.map(d => ({
+					name: d,
+					supported: !isDeviceF29x(d),
+				}));
+				return { content: [{ type: 'text' as const, text: JSON.stringify(structured, null, 2) }] };
 			}
 		);
 	}
@@ -136,13 +141,18 @@ function createMcpServerInstance(): McpServer {
 					return { content: [{ type: 'text' as const, text: 'No projects found. Open a workspace with CCS projects and try with rescan: true.' }] };
 				}
 
-				const serialized = projects.map(p => ({
-					name: p.name,
-					path: p.uri?.fsPath || p.uri?.path || '',
-					deviceVariant: p.deviceVariant,
-					currentDevice: p.migrationState.currentDevice,
-					migrationDevices: p.migrationState.migrationDevices,
-				}));
+				const serialized = projects.map(p => {
+					const projectPath = p.uri?.fsPath || p.uri?.path || '';
+					const resumeLogPath = path.join(projectPath, 'c2000-migration.md');
+					return {
+						name: p.name,
+						path: projectPath,
+						deviceVariant: p.deviceVariant,
+						currentDevice: p.migrationState.currentDevice,
+						migrationDevices: p.migrationState.migrationDevices,
+						hasResumeLog: fs.existsSync(resumeLogPath),
+					};
+				});
 
 				return { content: [{ type: 'text' as const, text: JSON.stringify(serialized, null, 2) }] };
 			}

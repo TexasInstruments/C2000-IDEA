@@ -1887,6 +1887,14 @@ export function exportProjectMigrationAgentReport(projectInfo: project.ProjectIn
 		if (uri.path.includes(projectInfo.uri.path) && diagnostics.length > 0) { totalIssues += diagnostics.length; }
 	});
 	const grandTotal = totalIssues;
+
+	// Pre-pass: count files with issues for scoping context
+	migrationDiagnosticsCollection.forEach((uri, diagnostics) => {
+		if (uri.path.includes(projectInfo.uri.path) && diagnostics.length > 0) { filesWithIssues++; }
+	});
+	md += `- **Files with Issues:** ${filesWithIssues} of ${totalFilesAnalyzed}\n`;
+	md += `- **Total Issues:** ${grandTotal}\n\n`;
+	filesWithIssues = 0; // reset for render pass below
 	totalIssues = 0;
 
 	migrationDiagnosticsCollection.forEach((

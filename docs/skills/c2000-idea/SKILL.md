@@ -48,6 +48,10 @@ agent, then retry.
 - Confirm with the user before applying bulk changes (same symbol repeated many times).
 - If any phase MCP call fails and cannot be resolved, stop and ask the user; do not skip
   the step or guess the outcome.
+- **Before starting any migration:** Recommend the user commit all changes and create a
+  clean Git branch (e.g., `migration-to-f28p55x`) so rollback is trivial if needed.
+  After Phase 5, suggest committing with a descriptive message including source/target
+  devices.
 
 ## Workflow matrix
 

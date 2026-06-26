@@ -49,6 +49,10 @@ Ask the user:
 - **Approach 2 (clean replacement):** Simply replace old symbols with new ones; no
   preprocessor wrappers.
 
+**Record the choice in `c2000-migration.md` header** (after the phase status table) as
+`**Strategy:** Shared codebase (#ifdef)` or `**Strategy:** Clean replacement` so any
+resume operations follow the same pattern consistently.
+
 ## About `//_DEVICE_MIGRATION_` markers
 
 These suffixes on `#if`/`#elif`/`#endif` lines are placed by the C2000 IDEA extension to
@@ -85,9 +89,7 @@ https://dev.ti.com/tirex/content/<C2000Ware_version>/docs/
 
 The `#<symbol>` anchor targets the exact function, enum, or register that changed.
 When no `Suggested fix` is provided, retrieve and parse this URL using the following
-protocol. **If all retrieval methods fail** (network restriction, URL change), report the
-symbol to the user with the collateral URL and ask them to paste the relevant diff section
-— do not fabricate a fix for a complex issue when collateral is unavailable.
+protocol:
 
 1. **Attempt normal retrieval** — fetch the URL directly.
 2. **If retrieval fails**, try in order: `curl`, `wget`, downloading the raw HTML to a
@@ -104,6 +106,16 @@ symbol to the user with the collateral URL and ask them to paste the relevant di
    added/removed/renamed parameters, changed types, deprecated alternatives.
 9. **Propose code changes** — apply the fix using only data extracted from the collateral.
    Do not infer or hallucinate parameter names or types not present in the page.
+
+**If all retrieval methods fail** (network restriction, firewall block, URL change):
+- Try the **ti-asm-mcp** tool to query register/symbol details for the target device
+- If that also fails, search the local SDK installation at `C2000Ware/driverlib/{target_device}/`
+  for the header file containing the replacement symbol
+- If local SDK is not available, **stop and report to user:** "Cannot confidently fix
+  `{symbol}` — collateral inaccessible and SDK source not found. Please provide SDK path
+  or manual replacement."
+- **Never fabricate API calls or register values** when uncertain — fabricated fixes cause
+  runtime crashes.
 
 ## Background migration check note
 
@@ -153,9 +165,34 @@ After completing each file's fix loop, update `c2000-migration.md` with a per-fi
 - Any unresolved issues (with line numbers and reasons)
 - Any deferred build errors pointing to other files
 
-This checkpoint ensures progress is recoverable if context is lost mid-phase.
+Maintain a running progress table in `c2000-migration.md`:
+
+```
+| File | Issues | Fixed | Unresolved | Status |
+|------|--------|-------|------------|--------|
+| adc.h | 2 | 2 | 0 | ✅ |
+| epwm.c | 5 | 4 | 1 | ⚠ |
+```
+
+Update this table after each file. Status: ✅ = clean, ⚠ = unresolved items, ⏭ = skipped.
+This table is the primary recovery point if context is lost — it shows exactly where to resume.
+
+**For large projects (>50 files):** Before starting each file, add its row with status
+`⏳ In Progress`. Update to ✅ or ⚠ after completing. If the session is interrupted, the
+last `⏳ In Progress` row is the resume point — re-read that file's report and continue.
+Do not re-process rows already marked ✅.
 
 ---
+
+## 4.0 Pre-migration report
+
+Before starting the per-file loop, call `get_project_migration_report` once on the
+entire target project. This gives a total issue count across all files and lets you
+build the initial file list ordered by issue count (highest first within each category).
+Report to the user: *"Found `<N>` issues across `<M>` files. Starting migration."*
+
+If `get_project_migration_report` is unavailable or fails, proceed with per-file
+`get_device_migration_report` calls — the pre-migration report is optional but recommended.
 
 ## 4.1 Phase A — Migrate `.h` files first (no build step)
 
