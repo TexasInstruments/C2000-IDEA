@@ -117,8 +117,9 @@ This workflow is split into five phases. **Execute them in strict order.** Read 
 file at a time, complete all steps in it, then return here and read the next phase file.
 Do not read ahead — only load the next phase when the current one is done.
 
-> **Per-target:** When migrating to multiple target devices, run Phases 2, 3, 4, and 5
-> once for each target project independently. Phase 1 covers all targets.
+> **Per-target:** When migrating to multiple target devices, migrate **one device at a
+> time** — run Phases 2, 3, 4, and 5 fully for one target before starting the next. Do not
+> interleave or batch phases across targets. Phase 1 covers all targets at once.
 
 ### Phase sequence
 

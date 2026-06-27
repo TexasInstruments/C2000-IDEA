@@ -66,11 +66,14 @@ the generic steps in this phase — follow it first.**
 ## 3.3 Ensure the device-support module is present
 
 Call `getModuleInstances` and check for the device-support module.
-- If it is **missing** (a source `.syscfg` that did not use it), call `addModuleInstances`
-  to add it. This guarantees `device.c`/`device.h`, `.opt`, and `.cmd.genlibs` are
-  generated for the target.
 - If it is **already present** (the universal template, or a source that already used it),
   no action — this case is already correct.
+- If it is **missing** (a source `.syscfg` that did not use it), add it:
+  1. Retrieve the list of modules available to add in the current SysConfig context.
+  2. Find the **device-support** module in that list and note its full module path /
+     identifier — do not guess the path; take it from the list.
+  3. Call `addModuleInstances` with that full path. This guarantees `device.c`/`device.h`,
+     `.opt`, and `.cmd.genlibs` are generated for the target.
 
 ## 3.4 Get migration targets (source-has-syscfg only)
 

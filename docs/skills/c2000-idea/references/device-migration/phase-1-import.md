@@ -128,6 +128,11 @@ Seed each log with the migration info gathered so far: source project name, sour
 target device, SDK type, and `c2000ware_path`. You will update it at the end of every
 phase from here on.
 
+> **Multi-target sequencing:** Phase 1 covers all targets at once (one import + rename per
+> target). After Phase 1, migrate **one device at a time** — run Phases 2–5 fully for one
+> target before starting Phase 2 for the next. Do not interleave or batch phases across
+> targets.
+
 ---
 
 **Update `c2000-migration.md`:** In each target's log, record Phase 1 as COMPLETE and add
@@ -138,11 +143,3 @@ discovered, SDK type, target project imported/renamed/built) and ask: *"Phase 1 
 complete. Does everything look correct? Ready to move to Phase 2 (project settings
 alignment)?"* Wait for the user's confirmation, then **re-read `device-migration.md`**
 to proceed.
-
-> **Multi-target note:** Phase 1 covers all targets at once (one import + rename per
-> target). Do **not** start Phase 2 for any target until Phase 1 is fully complete for
-> all targets. **If migrating to multiple devices:** After all Phase 1 imports complete,
-> confirm with the user: "All target projects imported. Do you want to (1) complete
-> Phases 2–5 for one device at a time, or (2) batch all Phase 2 configs first, then all
-> Phase 3 SysConfigs, etc.?" Follow their preference — some prefer end-to-end per device
-> for early validation, others prefer batching for efficiency.
