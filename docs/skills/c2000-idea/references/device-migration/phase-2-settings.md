@@ -102,7 +102,7 @@ module from the target syscfg so it does not generate a competing linker file.)
 **Finding the target device reference linker cmd files:**
 
 The reference cmd files are located at:
-`<c2000ware_path>/driverlib/<target-device>/cmd/`
+`<c2000ware_path>/device_support/<target-device>/common/cmd/`
 
 List all files in the cmd directory and identify the two key reference files:
 - The **RAM** linker cmd — file name ends with `_ram_lnk.cmd`
