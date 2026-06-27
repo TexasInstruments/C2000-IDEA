@@ -190,9 +190,13 @@ Do not re-process rows already marked ✅.
 ## 4.0 Pre-migration report
 
 Before starting the per-file loop, call `get_project_migration_report` once on the
-entire target project. This gives a total issue count across all files and lets you
-build the initial file list ordered by issue count (highest first within each category).
-Report to the user: *"Found `<N>` issues across `<M>` files. Starting migration."*
+entire target project. This gives a total issue count across all files and an overview of
+where the work is concentrated. Report to the user: *"Found `<N>` issues across `<M>`
+files. Starting migration."*
+
+Use this report for scope reporting and to prioritize attention — **not** to set the file
+processing order. The processing order is fixed by 4.1–4.3: all `.h` files first, then
+`.c` files in dependency order. Issue count never overrides that order.
 
 If `get_project_migration_report` is unavailable or fails, proceed with per-file
 `get_device_migration_report` calls — the pre-migration report is optional but recommended.

@@ -3,8 +3,9 @@
 > You are in **Phase 1** of the device-migration workflow.
 
 **Before starting:** State which phases are complete and which phase you are about to
-start. If this is the first phase, confirm that `c2000-migration.md` has been created
-in the target project directory.
+start. This is the first phase — the migration log (`c2000-migration.md`) does not exist
+yet. You will create it in step 1.9, after the target project has been imported and
+renamed.
 
 **If any MCP tool call fails, returns an unexpected error, or produces a result you
 cannot interpret — stop and ask the user for help.** Do not guess, retry blindly, or
@@ -116,10 +117,21 @@ The starter project location depends on the target device:
   dependencies.
 - If the build fails, **stop and report to the user** — this is a rename/path issue.
 
+## 1.9 Create the migration log file
+
+For **each** target project (one per target device), create a `c2000-migration.md` file
+in that target project's directory. This is the persistent migration log for that target
+— when migrating to multiple targets, each target project gets its own separate log;
+there is never a single shared log.
+
+Seed each log with the migration info gathered so far: source project name, source device,
+target device, SDK type, and `c2000ware_path`. You will update it at the end of every
+phase from here on.
+
 ---
 
-**Update `c2000-migration.md`:** Record Phase 1 as COMPLETE. Log the source project name,
-source device, SDK type, c2000ware_path, target project name(s), and build status.
+**Update `c2000-migration.md`:** In each target's log, record Phase 1 as COMPLETE and add
+the target project name and build status (the migration info was seeded in step 1.9).
 
 **Phase 1 complete.** Present a summary of what was done to the user (source project
 discovered, SDK type, target project imported/renamed/built) and ask: *"Phase 1 is

@@ -71,15 +71,21 @@ Call `list_migration_devices()` from IDEA MCP immediately after collecting input
 
 ## Migration log file
 
-At the very start of the workflow — before reading any phase file — create a file called
-`c2000-migration.md` in the **target project directory**. This file is your persistent
-migration log. Update it continuously throughout the workflow:
+Each target project gets its own persistent migration log: a file called
+`c2000-migration.md` that lives in **that target project's directory**. When migrating to
+multiple targets, there is one log per target project — never a single shared log.
+
+The log is created during Phase 1, once the target project has been imported and renamed
+(Phase 1, step 1.9) — not before, because the target project directory does not exist
+until then. From that point on, update it continuously throughout the workflow:
 
 - Record migration info (source project, source device, target device, SDK type, paths).
 - At each phase: record the phase status (IN PROGRESS / COMPLETE / SKIPPED), key findings,
   and actions taken.
 - In Phase 4: record per-file status (issues found, issues fixed, unresolved items).
 - At the end: this file becomes part of the final deliverable for the user.
+
+When working on a given target, always read and update **that target's own** log.
 
 **If your context is getting long or you feel disoriented, re-read `c2000-migration.md`
 to recover your position and progress.**
