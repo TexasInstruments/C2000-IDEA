@@ -21,7 +21,7 @@ agent, then retry.
 
 **Before starting any task, verify the IDEA MCP server is live:**
 
-1. Attempt `list_migration_devices()` as a probe call.
+1. Attempt `get_projects()` as a probe call.
    - If it succeeds → server is running. Proceed.
    - If it fails or is unreachable → server is not running. **Stop here.**
 2. Tell the user: *"The IDEA MCP server is not running. Please enable it:"*
