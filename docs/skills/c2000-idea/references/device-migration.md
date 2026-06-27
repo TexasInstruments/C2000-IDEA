@@ -65,7 +65,10 @@ Call `list_migration_devices()` from IDEA MCP immediately after collecting input
 - `migrate` — migrate the configuration to a target device
 - `getErrorsAndWarnings` — validate configuration after changes
 - `changeConfiguration` — modify configuration values (atomic — all succeed or all revert)
-- `removeModuleInstances` — remove module instances (e.g., CMD module for linker cmd normalization)
+- `addModuleInstances` — add a module instance (e.g., the device-support module the target
+  must always have, or a CMD module when the source uses one)
+- `removeModuleInstances` — remove module instances (e.g., the CMD module when the source
+  uses a plain `.cmd` file)
 - `save` — persist changes and regenerate all artifacts
 - `closeFile` — close the `.syscfg` file when done
 
@@ -127,8 +130,9 @@ Do not read ahead — only load the next phase when the current one is done.
    compiler, linker, includes, source file inventory.
    → When complete, return here.
 
-3. **Read `device-migration/phase-3-sysconfig.md`** — Migrate the SysConfig (.syscfg)
-   configuration to the target device.
+3. **Read `device-migration/phase-3-sysconfig.md`** — Ensure the target syscfg has the
+   device-support module, migrate the source SysConfig (.syscfg) configuration if present,
+   and normalize the CMD module to match the source linker style.
    → When complete, return here.
 
 4. **Read `device-migration/phase-4-migrate-code.md`** — Migrate all source code: headers
@@ -149,6 +153,10 @@ These rules apply across all phases:
 - Do cross-check CCS MCP and IDEA MCP results for consistency.
 - Do terminate early if devices are not in the supported migration list.
 - Do apply settings automatically unless the difference is a legitimate device delta.
+- Do ensure the target always has a `.syscfg` with the device-support module present — it
+  regenerates `device.c`/`device.h`, `.opt`, and `.cmd.genlibs`.
+- Do mirror the source's linker style: a CMD module in the target syscfg if the source used
+  one, a plain `.cmd` (CMD module removed) if the source used a plain file.
 - Do read AGENTS.md from SDK roots if present.
 - Do take file paths and device names from MCP tools — never invent them.
 - Do ask the user for shared (`#ifdef`) vs. clean replacement preference before modifying any files.
@@ -157,7 +165,7 @@ These rules apply across all phases:
 - Do use `get_device_migration_report` as the authoritative source — not the VS Code diagnostics panel.
 - Don't recall C2000 migration facts from memory — the MCP is the source of truth.
 - Don't modify or migrate SysConfig-generated output files — migrate the .syscfg instead.
-- Don't copy device-specific startup/driver files from the source — use the target SDK's versions.
+- Don't copy device-specific startup/driver files (`device.c`/`device.h`) from the source — the target's device-support module regenerates them.
 - Don't run `buildProject` during Phase A (header migration) — the loop is report-only.
 - Don't modify SDK driverlib source files — only the project's own application source files.
 - Do fetch migration collateral links when no `Suggested fix` is provided — read the full `#symbol` anchor block before writing any replacement code.

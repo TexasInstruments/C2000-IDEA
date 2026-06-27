@@ -25,9 +25,11 @@ structured migration summary to the user:
    found. Include file path, line number, and reason. Mark them "needs human review".
 3. **Modified files** — list all files changed so the user can review diffs.
 4. **Final build status** — pass or fail; list any remaining non-migration errors.
-5. **SysConfig status** — if SysConfig was not migrated (MCP unavailable), state the
-   remaining manual step: open the source `.syscfg` in CCS SysConfig for the target
-   device and reconfigure peripherals to match the source.
+5. **SysConfig status** — confirm the target syscfg has the device-support module and state
+   the linker style applied (CMD module vs plain `.cmd`). If SysConfig was not migrated (MCP
+   unavailable), state the remaining manual steps: ensure the device-support module is
+   present, reconfigure peripherals for the target device to match the source, and normalize
+   the CMD module to the source linker style.
 6. **SDK version change** — source SDK version → target SDK version.
 7. **Deferred / manual actions** — anything the user must do before the project is
    production-ready (SysConfig, hardware testing, bitfield migration if not done).
