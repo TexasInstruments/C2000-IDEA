@@ -16,7 +16,7 @@ to proceed.
 - Do keep the source project unchanged — it is the golden reference.
 - Do apply settings automatically unless the difference is a legitimate device delta.
 - Do take file paths and device names from MCP tools — never invent them.
-- Don't copy device-specific startup/driver files from the source — use the target SDK's versions.
+- Don't copy device-specific startup/driver files (`device.c`/`device.h`) from the source — the target's device-support module regenerates them.
 - Don't modify SDK driverlib source files — only the project's own application source files.
 - Never call `setToolFlags` for a build configuration other than the one identified in the
   build configuration guard — even if the source has equivalent settings in other configs.
