@@ -106,8 +106,8 @@ The reference cmd files are located at:
 `<c2000ware_path>/driverlib/<target-device>/cmd/`
 
 List all files in the cmd directory and identify the two key reference files:
-- The **RAM** linker cmd — file name ends with `_generic_ram_lnk.cmd`
-- The **flash** linker cmd — file name ends with `_flash_ram_lnk.cmd`
+- The **RAM** linker cmd — file name ends with `_ram_lnk.cmd`
+- The **flash** linker cmd — file name ends with `_flash_lnk.cmd`
 
 Read both files for context before reconciliation.
 

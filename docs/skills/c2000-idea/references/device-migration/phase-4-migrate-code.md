@@ -112,7 +112,7 @@ protocol:
 
 **If all retrieval methods fail** (network restriction, firewall block, URL change):
 - Try the **ti-asm-mcp** tool to query register/symbol details for the target device
-- If that also fails, search the local SDK installation at `C2000Ware/driverlib/{target_device}/`
+- If that also fails, search the local SDK installation at `<c2000ware_path>/driverlib/<target-device>/`
   for the header file containing the replacement symbol
 - If local SDK is not available, **stop and report to user:** "Cannot confidently fix
   `{symbol}` — collateral inaccessible and SDK source not found. Please provide SDK path

@@ -40,7 +40,11 @@ Call `list_migration_devices()` from IDEA MCP immediately after collecting input
 **idea-mcp** (required):
 - `get_projects()` — detect projects, current device, configured migration devices
 - `list_migration_devices()` — supported migration device families
-- `get_device_migration_report()` — run migration analysis on source files
+- `get_project_migration_report()` — run migration analysis across the whole project in one
+  call. Called **once** at the start of Phase 4 to size the work and report total scope.
+- `get_device_migration_report()` — run migration analysis on a single source file. Called
+  **iteratively** throughout Phase 4 — the per-file workhorse, used far more often than the
+  project-level report.
 
 **ccs-project MCP** (required):
 - `getProjectDescriptors` — project metadata (name, device, build config, `sysConfigOutputLocation`)
@@ -94,11 +98,15 @@ to recover your position and progress.**
 
 If you are resuming a migration that was started in a previous session:
 
-1. Read `c2000-migration.md` from the target project directory.
-2. Identify the last phase recorded as COMPLETE and the last file checkpoint (if in Phase 4).
-3. Re-read only the phase file for the phase you are resuming — do not re-read completed phases.
-4. In Phase 4: locate the last file marked ✅ in the progress table and continue from the next file.
-5. Do not repeat steps that are already recorded as complete in the log.
+1. Locate the target project's `c2000-migration.md`. The `get_projects()` result also
+   reports a `hasResumeLog` flag per project — cross-check that flag against the actual
+   file on disk. Only report to the user if the two disagree (flag says a log exists but
+   the file is missing, or the reverse); otherwise proceed.
+2. Read `c2000-migration.md` from the target project directory.
+3. Identify the last phase recorded as COMPLETE and the last file checkpoint (if in Phase 4).
+4. Re-read only the phase file for the phase you are resuming — do not re-read completed phases.
+5. In Phase 4: locate the last file marked ✅ in the progress table and continue from the next file.
+6. Do not repeat steps that are already recorded as complete in the log.
 
 ## How to run this workflow
 
