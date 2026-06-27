@@ -1,0 +1,193 @@
+# Phase 4 — Sub-Agent Briefing Template
+
+> **This file is used by the orchestrator (top-level agent) only.**
+> Copy and fill out this template in full before dispatching any Phase 4 sub-agent.
+> Do not dispatch a sub-agent without completing every field.
+
+---
+
+## When to use this template
+
+The orchestrator dispatches one sub-agent per task unit:
+
+| Task unit | Sub-agent reads | One dispatch covers |
+|-----------|----------------|---------------------|
+| All `.h` files | `phase-4a-headers.md` | All header files in the project |
+| One `.c` file | `phase-4b-sources.md` | Exactly one source file |
+| Final sweep | `phase-4c-sweep.md` | The whole project (sweep + clean build) |
+
+**One `.c` file per sub-agent dispatch.** If there are 10 `.c` files, there are 10
+separate Phase 4B dispatches. Never bundle multiple `.c` files into one sub-agent.
+
+---
+
+## Briefing template — Phase 4A (all `.h` files)
+
+Fill out and send this to the Phase 4A sub-agent:
+
+```
+You are a sub-agent. Read phase-4a-headers.md and follow it exactly.
+
+Briefing:
+  Target project directory : <absolute path>
+  Target project name      : <name from c2000-migration.md>
+  Source device            : <e.g. f28003x>
+  Target device            : <e.g. f28p55x>
+  Migration approach       : Approach 1 (#ifdef) | Approach 2 (clean replacement)
+  c2000ware_path           : <path>
+  SDK version              : <e.g. C2000Ware_5_04_00_00>
+  Active build config      : <e.g. CPU1_FLASH>
+
+  Files to migrate (in order):
+    1. <absolute path to first .h file>
+    2. <absolute path to second .h file>
+    ...
+
+  File progress table in c2000-migration.md so far:
+    <paste current table rows>
+
+Do not read any file other than phase-4a-headers.md.
+Return your structured result when all .h files are complete.
+```
+
+---
+
+## Briefing template — Phase 4B (one `.c` file)
+
+Fill out and send this to the Phase 4B sub-agent. **One sub-agent per file.**
+
+```
+You are a sub-agent. Read phase-4b-sources.md and follow it exactly.
+
+Briefing:
+  File to migrate          : <absolute path to .c file>
+  Target project name      : <name from c2000-migration.md>
+  Target project directory : <absolute path>
+  Source device            : <e.g. f28003x>
+  Target device            : <e.g. f28p55x>
+  Migration approach       : Approach 1 (#ifdef) | Approach 2 (clean replacement)
+  c2000ware_path           : <path>
+  SDK version              : <e.g. C2000Ware_5_04_00_00>
+  Active build config      : <e.g. CPU1_FLASH>
+
+  Deferred-errors context  : <paste any deferred-errors from prior .c file dispatches
+                               that point to THIS file, or write "None">
+
+  File progress table in c2000-migration.md so far:
+    <paste current table rows>
+
+Do not read any file other than phase-4b-sources.md.
+Do not start on any other .c file.
+Return your structured result when this file is complete.
+```
+
+---
+
+## Briefing template — Phase 4C (final sweep)
+
+Fill out and send this to the Phase 4C sub-agent:
+
+```
+You are a sub-agent. Read phase-4c-sweep.md and follow it exactly.
+
+Briefing:
+  Target project name      : <name from c2000-migration.md>
+  Target project directory : <absolute path>
+  Source device            : <e.g. f28003x>
+  Target device            : <e.g. f28p55x>
+  c2000ware_path           : <path>
+  SDK version              : <e.g. C2000Ware_5_04_00_00>
+  Active build config      : <e.g. CPU1_FLASH>
+
+  All migrated files (from 4A and 4B):
+    .h files: <list>
+    .c files: <list>
+
+  Deferred-errors list (from Phase 4B):
+    <paste deferred-errors from c2000-migration.md, or write "None">
+
+  File progress table in c2000-migration.md:
+    <paste current table rows>
+
+Do not read any file other than phase-4c-sweep.md.
+Return your structured result when the clean build is confirmed.
+```
+
+---
+
+## Orchestrator checkpoint (required after every sub-agent)
+
+After receiving a sub-agent's structured result, the orchestrator must complete
+all of the following before dispatching the next sub-agent:
+
+1. **Confirm log written:** verify `c2000-migration.md` contains the expected row or
+   section for the just-completed task unit.
+2. **Aggregate results:** add the sub-agent's `Issues found`, `Fixed`, `Unresolved`,
+   and `Deferred build errors` to the running totals.
+3. **Carry deferred-errors forward:** copy any cross-file deferred-errors into the
+   briefing of the sub-agent that will handle the referenced file.
+4. **Confirm user visibility:** the inline summary was presented in the conversation.
+5. **Only then** dispatch the next sub-agent.
+
+---
+
+## Orchestrator sequencing rules
+
+```
+Phase 4 sequence:
+
+  [4A dispatch] → wait for 4A structured result → orchestrator checkpoint
+       ↓
+  [4B dispatch: first .c file] → wait → checkpoint
+       ↓
+  [4B dispatch: second .c file] → wait → checkpoint
+       ↓
+  ... (one .c file per dispatch) ...
+       ↓
+  [4B dispatch: last .c file] → wait → checkpoint
+       ↓
+  [4C dispatch] → wait for 4C structured result → orchestrator checkpoint
+       ↓
+  Present Phase 4 complete summary to user
+  Ask for user confirmation
+  Re-read device-migration.md for Phase 5
+```
+
+**Never dispatch two sub-agents simultaneously.** Files may have interdependencies
+and builds must reflect cumulative state. Parallel dispatch will produce race conditions
+on `c2000-migration.md` writes and incorrect build states.
+
+**Never dispatch Phase 4B before Phase 4A is complete.** Header migration must finish
+first to prevent cascading compile errors in source files.
+
+**Never dispatch Phase 4C before all Phase 4B dispatches are complete.**
+
+---
+
+## `.c` file processing order
+
+Process `.c` files in **dependency order**:
+
+1. Files that include no project-internal headers first (leaf files).
+2. Files that include already-migrated project headers next.
+3. Files with the most `#include` dependencies last (typically `main.c`).
+
+This prevents fixing a caller before its included header is clean, which would cause
+the build to fail for reasons unrelated to the current file's migration.
+
+To determine order: look at the `#include` directives in each `.c` file. Build a
+simple dependency graph — files that only include SDK headers have no project-internal
+dependencies and go first.
+
+---
+
+## Recovery: resuming an interrupted Phase 4
+
+If the Phase 4 session was interrupted (network drop, context limit, session end):
+
+1. Re-read `c2000-migration.md` in the target project.
+2. Find the last completed entry in the file progress table (last row with ✅ or ⚠).
+3. Find any row with status `⏳ In Progress` — this was interrupted mid-file.
+4. For a mid-file interruption: find the last `[<filename>:<line>] FIXED:` micro-checkpoint
+   entry in `c2000-migration.md`. Resume from the next issue after that entry.
+5. Continue dispatching sub-agents from the resume point — do not re-process ✅ rows.

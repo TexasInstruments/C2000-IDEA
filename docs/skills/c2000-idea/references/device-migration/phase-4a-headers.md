@@ -1,0 +1,220 @@
+# Phase 4A — Migrate Header Files (`.h`)
+
+> You are a **sub-agent** executing Phase 4A for a single target project.
+> You were briefed by the orchestrator. All context you need is in your briefing.
+> **Do not read any other phase file. Do not look ahead. Do not act beyond this file's scope.**
+
+---
+
+## Your assignment
+
+You are migrating all `.h` header files in **one target project** from the source device
+to the target device. You must:
+
+1. Migrate every `.h` file one at a time.
+2. Use `get_device_migration_report` as the only authoritative source of issues.
+3. Record a micro-checkpoint in `c2000-migration.md` after every individual fix.
+4. Return a structured result to the orchestrator when all headers are done.
+
+**Stop and ask the user** if any MCP tool call fails, returns an unexpected error, or
+produces a result you cannot interpret. Do not guess or skip.
+
+---
+
+## Briefing fields (confirm before starting)
+
+The orchestrator should have provided all of the following. If any is missing, ask the
+orchestrator before proceeding:
+
+| Field | Value |
+|-------|-------|
+| Target project directory | `<absolute path>` |
+| Target project name | `<project name>` |
+| Source device | `<e.g. f28003x>` |
+| Target device | `<e.g. f28p55x>` |
+| Migration approach | Approach 1 (`#ifdef`) OR Approach 2 (clean replacement) |
+| List of `.h` files to migrate | `<paths provided by orchestrator>` |
+
+---
+
+## Rules for Phase 4A
+
+- Process `.h` files in the order provided by the orchestrator.
+- Use only `get_device_migration_report` — not the VS Code diagnostics panel.
+- Do **not** call `buildProject` during Phase 4A. Header migration is report-only.
+- Do not modify files in the source project. Every edit is on the target project.
+- Do not read collateral links by page title only — navigate to the exact `#anchor` and
+  read the full diff block.
+- Do not fabricate API calls or register values. If uncertain, stop and report.
+- Apply `Suggested fix` values **verbatim** — do not re-derive arguments.
+- For **Approach 1** (`#ifdef`): wrap changed code in `#if`/`#elif`/`#endif` blocks.
+  Add the `//_DEVICE_MIGRATION_` suffix to every `#if`, `#elif`, `#endif` line.
+  Fix only the **target device's branch** if the file already has `#ifdef` blocks.
+- For **Approach 2** (clean replacement): replace old symbols directly. No wrappers.
+- **MCP hang guard:** Phase 4A does not call `buildProject`, but if any MCP tool call
+  (e.g., `get_device_migration_report`) has produced **no response at all** after a long
+  wait (typically 2–3 minutes), assume the tool has hung. Do **not** keep waiting.
+  Record in `c2000-migration.md`:
+  `HANG: <tool>(<args>) — no response after timeout. Phase 4A, <file>.`
+  Tell the user: *"The `<tool>` call has not responded. The MCP tool may have hung.
+  Please check the CCS console, restart the MCP server if needed, and tell me
+  the result so I can continue."* Wait for the user's response before proceeding.
+
+---
+
+## How to fix each issue
+
+- **Easy (auto-fixable ✓):** apply the `Suggested fix` verbatim.
+- **Complex (manual review ⚠):** read surrounding code, check intent, use ti-asm-mcp
+  if needed, construct fix from collateral only.
+- **Item is inside a comment or `#if 0` block:** skip it. Note as inactive-code flag.
+  Do not modify the line.
+- **`Change: removed`, no `Suggested fix`, no collateral link:** do not write a
+  replacement from memory. Flag the symbol to the user with file + line and mark it
+  `needs human review`.
+
+## Reading Migration Collateral links
+
+Each issue may include a `Migration Collateral` URL with a `#<symbol>` anchor. When
+no `Suggested fix` is provided, retrieve and parse it:
+
+1. Fetch the URL directly.
+2. If that fails, try `curl`, then `wget`, then download to a temp file.
+3. Save the content locally — do not stream large HTML pages.
+4. Strip `<style>` and `<script>` tags; extract text.
+5. Navigate to the exact `#<symbol>` anchor — do not stop at a partial match.
+6. Read the full table row or function block at the anchor plus the surrounding entries.
+7. Follow referenced structs, enums, typedefs, and macros if the diff references them.
+8. Summarize: old signature → new signature, added/removed parameters, type changes.
+9. Apply the fix using only data from the collateral. No inferred parameters.
+
+If all retrieval methods fail: try ti-asm-mcp → try local SDK at
+`<c2000ware_path>/driverlib/<target-device>/` → if still unavailable, stop and report
+to the user: *"Cannot confidently fix `{symbol}` — collateral inaccessible and SDK
+source not found."* Never fabricate.
+
+---
+
+## Per-file loop (repeat for every `.h` file)
+
+### Step 1 — Confirm file path
+
+Before touching the file, verify its path starts with the **target project directory**.
+If it is under the source project directory, stop immediately and ask the orchestrator.
+
+### Step 2 — Run migration report
+
+```
+get_device_migration_report(<absolute path to .h file>)
+```
+
+### Step 3 — Handle zero-issues result
+
+If the report returns zero issues, the static analyser found no incompatibilities.
+This does not guarantee correctness. Quickly verify:
+
+- No `#include` paths contain the source device name (e.g., `f28003x`).
+- No source-device typedefs or type names are used verbatim.
+- `#ifdef` / `#if defined` guards (if any) reference the **target** device macro,
+  not the source device macro. (Search for `#ifdef _<SOURCE-DEVICE-UPPER>_` or
+  `#if defined(_<SOURCE-DEVICE-UPPER>_)` patterns anywhere in the file — including
+  inside function bodies, not just at the top.)
+
+If all checks pass, record the file as clean and proceed to the next file.
+
+If any check reveals an issue, fix it and record it in `c2000-migration.md` as:
+```
+[<filename>:<line>] MANUAL-FIX: <description>
+```
+Then proceed to the next `.h` file.
+
+### Step 4 — Fix each issue (one at a time)
+
+For each issue in the report:
+
+1. Apply the fix (see rules above).
+2. Write a micro-checkpoint immediately to `c2000-migration.md`:
+   ```
+   [<filename>:<line>] FIXED: <old-symbol> → <new-symbol>
+   ```
+   or if deferred:
+   ```
+   [<filename>:<line>] DEFERRED: <reason>
+   ```
+3. Re-run `get_device_migration_report` on the file.
+4. Confirm the issue is resolved or confirmed inactive.
+
+### Step 5 — Convergence guard
+
+If the **same issue** is still flagged at the **same line AND same symbol** after
+**two consecutive fix attempts**:
+
+- The fix did not take effect.
+- Stop retrying that specific `(line, symbol)` pair.
+- Record it as unresolved:
+  ```
+  [<filename>:<line>] UNRESOLVED: <symbol> — fix did not take effect after 2 attempts
+  ```
+- Continue to the next issue.
+
+> A line re-appearing with a **different symbol** is NOT convergence. That is normal
+> when multiple changed symbols on the same line are fixed one at a time.
+
+### Step 6 — Complete the file
+
+When the report returns zero issues (or all remaining issues are deferred/unresolved):
+
+- Update the file progress table in `c2000-migration.md`:
+  ```
+  | <filename> | <issues found> | <fixed> | <unresolved> | ✅ or ⚠ |
+  ```
+  Status: ✅ = clean, ⚠ = has unresolved items.
+- Proceed to the next `.h` file.
+
+---
+
+## After all `.h` files are processed
+
+### Final check
+
+Re-read the `c2000-migration.md` file progress table. Confirm every `.h` file has a
+row with status ✅ or ⚠. If any row is missing, re-process that file before returning.
+
+### Structured result (required — return this to the orchestrator)
+
+Return **both** outputs:
+
+**1. Inline summary** (in conversation, for human visibility):
+
+```
+=== Phase 4A Complete ===
+Files processed: <N>
+Total issues found: <total>
+Total fixed: <fixed>
+Total unresolved: <unresolved>
+
+Unresolved items:
+  - <filename>:<line> — <symbol> — <reason>
+  (or "None")
+
+c2000-migration.md updated: ✅
+```
+
+**2. Log entry** (already written to `c2000-migration.md` during processing):
+
+```
+## Phase 4A — Header Migration
+| File | Issues | Fixed | Unresolved | Status |
+|------|--------|-------|------------|--------|
+| <file1.h> | <N> | <M> | <K> | ✅/⚠ |
+...
+Phase 4A status: COMPLETE (or PARTIAL if unresolved > 0)
+```
+
+---
+
+## ⛔ Stop here
+
+Your scope ends at the last `.h` file. Do not read `phase-4b-sources.md` or any
+other file. Do not start on `.c` files. Return your structured result to the
+orchestrator and wait.
