@@ -20,6 +20,11 @@
         * [Run Migration Check on Project](#check_project)
         * [Migration Code Actions](#code_actions)
         * [Export Migration Report](#migration_report)
+* [AI Agent Support (MCP Servers)](#ai_agent)
+    * [IDEA MCP Server](#idea_mcp)
+    * [TI ASM MCP Server](#ti_asm_mcp)
+    * [AI Agent Device Migration Workflow](#ai_agent_migration)
+    * [Bitfield-to-Driverlib Conversion](#ai_agent_bitfield)
 
 <a name="intro"></a>
 
@@ -32,7 +37,7 @@ For more in depth details about supported features and tool usage, see the [C200
 
 # Getting Started 
 
-This tool is available in the CCS extension market place. You can also downlaod the vsix file directly from GITHUB.
+This tool is available in the CCS extension market place. You can also download the vsix file directly from GITHUB.
 https://github.com/TexasInstruments/C2000-IDEA. See detailed installation steps below.
 <a name="prereqs"></a>
 
@@ -125,7 +130,7 @@ Register vision is available for both driverlib and bitfield code register acces
     1. If the file uses driverlib register reads and writes (using HWREG and HWREGH accesses), run **C2000 IDEA - FEATURES** -> **Register Code Support** -> **Run Driverlib Register Vision on Current File**
     1. If the file uses bitfield  register reads and writes (using .bit and .all accesses), run **C2000 IDEA - FEATURES** -> **Register Code Support** -> **Bitfield Support** -> **Run Bitfield Register Vision on Current File**
 1. If no project has been detected (or if the file doesn't belong to a project), the extension will prompt you to input the C2000 device for the file
-1. Detected registers will be highlighted in yellow. Hover over the highlighted registers to access direct links into each register descrioption in the device TRM.
+1. Detected registers will be highlighted in yellow. Hover over the highlighted registers to access direct links into each register description in the device TRM.
 
 ![image](resources/common/c2000-register-vision.gif)
 <a name="code_assist"></a>
@@ -216,8 +221,395 @@ Note:
 ### Export Migration Report
 
 1. The migration report can be opened by clicking **C2000 IDEA - FEATURES** -> **Migration Support** -> **Export Migration Report**. Choose migrated project
-2. The tool will open the migration report file with a default "Untitled" name. The file can be exported and stored to your file system. 
+2. The tool will open the migration report file with a default "Untitled" name. The file can be exported and stored to your file system.
     3. The migration report will contain all the migration warnings and errors detected, including their locations in the file.
    The top of the report also contains information about which files/folders were ignored (customizable) and the time taken to run the check for each file.
 
 ![image](resources/common/c2000-idea-migrationreport.gif)
+<a name="ai_agent"></a>
+
+# AI Agent Support (MCP Servers)
+
+C2000-IDEA includes built-in **Model Context Protocol (MCP) server** support, which allows AI coding assistants to interact directly with your C2000 projects — reading project settings, running migration analysis, querying device TRM data, and executing full device-to-device migration workflows — all from within a natural-language conversation.
+
+> **What is an MCP server?**
+> MCP (Model Context Protocol) is an open standard that lets AI agents call tools hosted by applications. When the C2000-IDEA MCP servers are running, your AI assistant gains access to C2000-specific tools it can invoke automatically as it helps you work.
+
+## Supported AI Assistants
+
+The following AI coding assistants support MCP tool calling and work with C2000-IDEA out of the box:
+
+| AI Assistant | Platform | How to configure MCP |
+|---|---|---|
+| **GitHub Copilot** (Agent mode) | VS Code | Add to `.vscode/mcp.json` in your workspace |
+| **Cursor** | Cursor IDE | Add to `mcp_servers.json` in Cursor settings |
+| **Cline** | VS Code extension | Add via Cline → MCP Servers → Configure |
+| **Roo Code** | VS Code extension | Add via Roo Code → MCP Servers → Configure |
+| **Continue** | VS Code / JetBrains | Add to `~/.continue/config.json` MCP block |
+| **Claude Desktop** | Desktop app | Add to `claude_desktop_config.json` |
+| **ChatGPT** (with Codex CLI) | CLI / Web | Configure MCP in Codex CLI settings |
+| Any MCP-compatible agent | — | Point to `http://localhost:55001/mcp` |
+
+> **Transport note:** Both C2000-IDEA MCP servers use **HTTP/SSE (Streamable HTTP)** transport. Make sure your AI assistant is configured to use HTTP-based MCP servers (not `stdio` only).
+<a name="idea_mcp"></a>
+
+## Step 1 — Enable the IDEA MCP Server
+
+The **IDEA MCP server** is the primary interface. It gives your AI assistant access to C2000-IDEA tools such as project listing, migration report generation, and bitfield-to-driverlib conversion.
+
+**To enable:**
+1. Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS)
+2. Run: **`C2000-IDEA: Enable IDEA MCP`**
+3. Verify it is running: run **`C2000-IDEA: Check IDEA MCP`** — it will display the server URL (`http://localhost:55001/mcp`) when active
+
+**To stop the server:** Run **`C2000-IDEA: Disable IDEA MCP`** from the Command Palette.
+
+**Default URL:** `http://localhost:55001/mcp`
+
+You can change the port or host in VS Code / CCS Settings (`Ctrl+,`) by searching for `c2000-idea`:
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `c2000-idea.ideaMcp.port` | `55001` | Port the IDEA MCP server listens on |
+| `c2000-idea.ideaMcp.host` | `localhost` | Host address the IDEA MCP server binds to |
+
+### Register the IDEA MCP server with your AI assistant
+
+After enabling, register the server with your AI assistant using the URL `http://localhost:55001/mcp`.
+
+**Quick setup — let the extension do it for you:**
+Run **`C2000-IDEA: Get IDEA MCP Instructions`** from the Command Palette. The extension will display a copy-ready JSON snippet and step-by-step instructions tailored to your setup.
+
+**Manual setup — add to your agent's MCP configuration file:**
+```json
+{
+  "mcpServers": {
+    "c2000-idea": {
+      "url": "http://localhost:55001/mcp"
+    }
+  }
+}
+```
+*The exact key (`mcpServers`, `mcp`, or `servers`) depends on your AI assistant — refer to its documentation.*
+<a name="ti_asm_mcp"></a>
+
+## Step 2 — Enable the TI ASM MCP Server (Optional but Recommended)
+
+The **TI ASM MCP server** gives your AI assistant on-demand access to TI device Technical Reference Manuals (TRM) — including register definitions, bit-field descriptions, and peripheral documentation. This is especially useful during device migration when the assistant needs to verify register-level intent before constructing a replacement.
+
+**To enable:**
+1. Open the Command Palette
+2. Run: **`C2000-IDEA: Enable MCP`**
+
+**To stop the server:** Run **`C2000-IDEA: Disable MCP`** from the Command Palette.
+
+**Default URL:** `http://localhost:55000/mcp`
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `c2000-idea.mcp.port` | `55000` | Port the TI ASM MCP server listens on |
+| `c2000-idea.mcp.host` | `localhost` | Host address the TI ASM MCP server binds to |
+
+**Register with your AI assistant:**
+Run **`C2000-IDEA: Get MCP Instructions`** from the Command Palette for a copy-ready configuration snippet.
+<a name="ai_agent_migration"></a>
+
+## AI-Assisted Device Migration
+
+Once both MCP servers are enabled and registered, your AI assistant can perform a **complete, end-to-end C2000 device migration** — from importing the source project all the way to a clean build on the target device — with minimal manual steps.
+
+> This is a deeper capability than the [manual migration check](#migration). It creates a fully migrated target project, touching compiler settings, SysConfig, header files, source symbols, and linker files.
+
+### Supported Migration Paths
+
+| Source → Target | Status |
+|---|---|
+| F28x → F28x (e.g., F28003x → F28P55x, F2837xD → F28P65x) | ✅ Fully supported |
+| F28x → F29x | 🚧 Coming soon |
+
+### Migration Architecture — How It Works
+
+> **Note:** The device names **F28003x** (source) and **F28P55x** (target) used throughout this section and the diagram below are illustrative examples only. You can use any supported C2000 source and target device pair. Refer to the [Supported Migration Paths](#ai_agent_migration) table for the list of supported combinations.
+
+The AI agent drives a structured **5-phase workflow**. Each phase uses the IDEA MCP and supporting MCP servers to inspect the project, apply changes, verify the result, and log progress before moving to the next phase.
+
+```mermaid
+flowchart TD
+    START(["▶  Start Migration\nUser: Migrate my F28003x project to F28P55x\nusing the C2000-IDEA AI migration workflow"])
+
+    PROBE["🔍  Step 0 — Verify IDEA MCP Server\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nProbe: call get_projects() to test server reachability\n✔  Pass → server is live, continue to Phase 1\n✘  Fail → stop; instruct user:\n     Command Palette → C2000-IDEA: Enable IDEA MCP\n     Then re-register MCP and retry probe"]
+
+    P1["📦  Phase 1 — Project Import and Baseline\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1.1  Import source project into CCS workspace\n1.2  Validate SDK disk path against getProjectProductReferences\n1.3  Build source project → confirm zero compile errors\n1.4  Rename project to target device name  e.g. myproject_f28p55x\n1.5  Rebuild renamed project → confirm build still passes\n1.6  Create c2000-migration.md  append-only audit log\n     Records: source device · target device · active build config"]
+
+    P2["⚙️  Phase 2 — Build Settings Alignment\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n2.1  Identify active build configuration  e.g. CPU1_FLASH or Debug\n2.2  Align compiler flags to target device SDK\n2.3  Update include paths  source SDK path → target SDK path\n2.4  Update predefined device symbol  F28003x → F28P55x\n2.5  Update linker CMD file style and memory map for target\n2.6  Read back and verify every setting after applying\n2.7  Update c2000-migration.md with confirmed build config name"]
+
+    P3["🔧  Phase 3 — SysConfig Migration  3A + 3B\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n3A.1  Copy source .syscfg file into target project directory\n3A.2  Record all source peripheral module instances  used in 3B audit\n3A.3  Extract clock configuration from source device.c for reference\n─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─\n3B.1  Open target .syscfg → change device_support to target device\n3B.2  Migrate all peripheral instances\n      ADC · PWM · GPIO · SPI · UART · I2C · CLB · DMA · EQEP · ECAP\n3B.3  Normalize CMD linker output sections for target memory map\n3B.4  Peripheral coverage audit → flag missing instances vs source list\n3B.5  Verify device.opt and device.c integrate cleanly into build"]
+
+    P4H["📄  Phase 4A — Header File Migration  per file\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4A.1  Replace all #include paths containing source device name\n      source SDK path → target SDK path\n4A.2  Update device macro guards\n      #ifdef F28003x → #ifdef F28P55x\n4A.3  Verify no stale source-device include paths remain in file"]
+
+    P4S["📝  Phase 4B — Source File Migration  per file\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4B.1  Check file state → skip if already partially migrated\n4B.2  Replace device-specific driverlib API symbols\n      using get_device_migration_report output\n4B.3  Update GPIO pin number assignments for target device pinout\n4B.4  Replace hardcoded peripheral base addresses\n      query TI ASM MCP for target device register map as needed\n4B.5  Wrap remaining conditional code in device macro guards"]
+
+    P4C["🔁  Phase 4C — Final Sweep and Build Verification\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4C.1  Regression scan across all migrated files\n      Flag residual source-device strings · symbols · base addresses\n4C.2  Pass 1 clean build → identify remaining compile errors\n4C.3  Resolve all build errors found in sweep\n4C.4  Pass 2 clean build → confirm zero errors before Phase 5"]
+
+    P5["📊  Phase 5 — Report and Hardware Verification\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n5.1  Final clean build → zero errors required to proceed\n5.2  Bitfield register scan → flag legacy .bit/.all accesses\n5.3  Export migration report\n     All issue locations · suggested fixes · collateral links\n5.4  Generate hardware verification checklist\n     H1 Clock tree config     H2 GPIO pinout and mux\n     H3 Peripheral base addr  H4 Interrupt routing PIE/PIPE\n     H5 Memory map linker     H6 Power domains analog subsystem\n     H7 Boot mode device cfg  H8 Debug interface JTAG"]
+
+    DONE(["✅  Migration Complete\nTarget project builds clean on target device\nFull audit log recorded in c2000-migration.md\nMigration report and hardware checklist exported"])
+
+    START --> PROBE
+    PROBE --> P1
+    P1    --> P2
+    P2    --> P3
+    P3    --> P4H & P4S
+    P4H   --> P4C
+    P4S   --> P4C
+    P4C   --> P5
+    P5    --> DONE
+
+    style START fill:#C00000,color:#ffffff,stroke:#8B0000,stroke-width:2px
+    style PROBE fill:#404040,color:#ffffff,stroke:#202020,stroke-width:1px
+    style P1    fill:#1F497D,color:#ffffff,stroke:#17375E,stroke-width:1px
+    style P2    fill:#17375E,color:#ffffff,stroke:#0F243E,stroke-width:1px
+    style P3    fill:#215732,color:#ffffff,stroke:#17401E,stroke-width:1px
+    style P4H   fill:#7B3F00,color:#ffffff,stroke:#5C2E00,stroke-width:1px
+    style P4S   fill:#7B3F00,color:#ffffff,stroke:#5C2E00,stroke-width:1px
+    style P4C   fill:#5C2E00,color:#ffffff,stroke:#3D1E00,stroke-width:1px
+    style P5    fill:#4B0082,color:#ffffff,stroke:#320057,stroke-width:1px
+    style DONE  fill:#215732,color:#ffffff,stroke:#17401E,stroke-width:2px
+```
+
+### How to Start a Migration
+
+**Prerequisites (do this once):**
+1. Install C2000-IDEA (see [Installing C2000-IDEA](#extension_install))
+2. Enable the IDEA MCP server: Command Palette → `C2000-IDEA: Enable IDEA MCP`
+3. Enable the TI ASM MCP server: Command Palette → `C2000-IDEA: Enable MCP`
+4. Register both servers with your AI assistant (see Steps 1 and 2 above)
+5. Open your C2000 project workspace in CCS 20 or VS Code
+
+> **Safety tip:** Before starting, commit all your current changes to Git and create a new branch (e.g., `git checkout -b migration-to-f28p55x`). This makes it easy to roll back if needed.
+
+**Start the migration — just ask your AI assistant:**
+
+> **Example prompt** *(substitute your own source and target device names)*:
+> *"I have a C2000 F28003x project. Please migrate it to F28P55x using the C2000-IDEA migration workflow."*
+
+The AI assistant will:
+- Verify the IDEA MCP server is reachable
+- Discover your projects using `get_projects()`
+- Execute all five phases automatically, pausing to confirm with you before bulk changes
+- Produce a `c2000-migration.md` log and a final migration report
+
+If the AI assistant does not automatically use the C2000-IDEA tools, explicitly mention:
+> *"Use the C2000-IDEA MCP tools (IDEA MCP server at `http://localhost:55001/mcp`) to perform the migration."*
+<a name="ai_agent_bitfield"></a>
+
+## AI-Assisted Bitfield-to-Driverlib Conversion
+
+If your project uses legacy **bitfield register access** patterns (`AdcRegs.ADCCTL1.bit.ADCBGPWD = 1`), your AI assistant can convert these to modern **driverlib function calls** (`ADC_setPowerMode(...)`) for the same device.
+
+> **Run this before device migration.** Converting bitfield code to driverlib first reduces noise in the device migration report and produces a cleaner result.
+
+**Ask your AI assistant:**
+
+> *"My F28003x project uses bitfield register accesses. Please convert them to driverlib calls using C2000-IDEA."*
+
+The assistant uses the `get_bitfield_to_driverlib_migration_report` IDEA MCP tool to identify all bitfield patterns and generate driverlib replacements. Results are shown with file locations and suggested fixes.
+
+For technical details, see `docs/skills/c2000-idea/references/bitfield-to-driverlib-migration.md`.
+
+---
+<a name="ai_agent_local_setup"></a>
+
+## Local Setup Guide — Running AI-Assisted Migration on Your Machine
+
+This section provides a complete, step-by-step guide for setting up the C2000-IDEA AI migration on your local computer, including how to handle common proxy and network issues.
+
+### Complete Setup Checklist
+
+| Step | Action | Details |
+|------|--------|---------|
+| 1 | Install CCS 20 | Required to build and manage C2000 projects. Download from [ti.com/tool/CCSTUDIO](https://www.ti.com/tool/download/CCSTUDIO/) |
+| 2 | Install C2000-IDEA | See [Installing C2000-IDEA](#extension_install) |
+| 3 | Install your AI assistant | See the [Supported AI Assistants](#ai_agent) table above |
+| 4 | Enable IDEA MCP server | Command Palette → `C2000-IDEA: Enable IDEA MCP` |
+| 5 | Enable TI ASM MCP server | Command Palette → `C2000-IDEA: Enable MCP` |
+| 6 | Register both MCP servers | Follow the agent-specific instructions below |
+| 7 | Open your project workspace | Open your C2000 project folder in CCS 20 or VS Code |
+| 8 | Start the migration | Ask your AI assistant (see [How to Start a Migration](#ai_agent_migration)) |
+
+---
+
+### Registering MCP Servers — Agent-by-Agent Instructions
+
+#### GitHub Copilot (VS Code — Agent Mode)
+
+Create or update the file `.vscode/mcp.json` inside your workspace folder:
+
+```json
+{
+  "servers": {
+    "c2000-idea": {
+      "url": "http://localhost:55001/mcp"
+    },
+    "ti-asm": {
+      "url": "http://localhost:55000/mcp"
+    }
+  }
+}
+```
+
+> Make sure GitHub Copilot is in **Agent mode** (not Chat mode). MCP tools are only available in Agent mode.
+
+#### Cursor
+
+Open **Cursor → Settings → MCP** and add the following entries:
+
+```json
+{
+  "mcpServers": {
+    "c2000-idea": {
+      "url": "http://localhost:55001/mcp"
+    },
+    "ti-asm": {
+      "url": "http://localhost:55000/mcp"
+    }
+  }
+}
+```
+
+#### Cline (VS Code Extension)
+
+1. Open the Cline panel in the VS Code sidebar
+2. Click **MCP Servers → Configure MCP Servers**
+3. Add the following to the configuration file:
+```json
+{
+  "mcpServers": {
+    "c2000-idea": {
+      "url": "http://localhost:55001/mcp"
+    },
+    "ti-asm": {
+      "url": "http://localhost:55000/mcp"
+    }
+  }
+}
+```
+
+#### Roo Code (VS Code Extension)
+
+1. Open the Roo Code panel in the VS Code sidebar
+2. Navigate to **MCP Servers → Edit MCP Settings**
+3. Add the same `mcpServers` block shown for Cline above
+
+#### Continue (VS Code / JetBrains)
+
+Edit `~/.continue/config.json` and add an `mcpServers` array:
+
+```json
+{
+  "mcpServers": [
+    { "name": "c2000-idea", "url": "http://localhost:55001/mcp" },
+    { "name": "ti-asm",     "url": "http://localhost:55000/mcp" }
+  ]
+}
+```
+
+#### Claude Desktop
+
+Edit the Claude Desktop configuration file:
+- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "c2000-idea": {
+      "url": "http://localhost:55001/mcp"
+    },
+    "ti-asm": {
+      "url": "http://localhost:55000/mcp"
+    }
+  }
+}
+```
+
+---
+
+### Troubleshooting — Proxy and Network Issues
+
+If your machine is behind a corporate proxy or firewall, you may encounter connectivity issues between your AI assistant and the C2000-IDEA MCP servers running on `localhost`. The following covers the most common scenarios.
+
+---
+
+#### Problem 1 — AI assistant cannot connect to `http://localhost:55001/mcp`
+
+**Symptom:** The agent reports the MCP tool is unavailable or times out on tool calls.
+
+**Root cause:** Some AI agents route HTTP requests through the system proxy. Many corporate proxies do not forward `localhost` / `127.0.0.1` requests correctly, causing the connection to fail.
+
+**Resolution — add localhost to the proxy bypass list:**
+
+- **Windows (System Proxy):**
+  1. Open **Settings → Network & Internet → Proxy → Manual proxy setup**
+  2. In the **"Don't use the proxy server for these addresses"** field, add: `localhost;127.0.0.1;::1`
+  3. Click **Save**
+
+- **VS Code / CCS (settings.json):**
+  ```json
+  "http.noProxy": "localhost,127.0.0.1,::1"
+  ```
+
+- **Environment variable (all platforms):**
+  ```
+  NO_PROXY=localhost,127.0.0.1,::1
+  ```
+
+---
+
+#### Problem 2 — MCP server starts but the agent reports "connection refused"
+
+**Possible causes and resolutions:**
+
+| Cause | Resolution |
+|-------|------------|
+| Port `55001` already in use by another process | Change the port: open VS Code Settings (`Ctrl+,`), search `c2000-idea.ideaMcp.port`, set a free port (e.g., `55011`), then re-enable the server and update your agent config |
+| Windows Firewall blocking the port | Add an inbound exception in **Windows Defender Firewall** for TCP port `55001` on `localhost` |
+| Agent config has the wrong URL | Run `C2000-IDEA: Check IDEA MCP` in the Command Palette — it displays the exact URL the server is listening on. Update your agent config to match |
+
+---
+
+#### Problem 3 — Agent does not use MCP tools ("Tool not found")
+
+**Root cause:** The MCP servers are registered but the agent session was started before the config was applied, or the agent does not support HTTP MCP transport.
+
+**Resolution:**
+1. Confirm the server is running: Command Palette → `C2000-IDEA: Check IDEA MCP`
+2. Re-run `C2000-IDEA: Get IDEA MCP Instructions` and re-apply the configuration snippet
+3. **Restart** the agent session (close and reopen the chat or agent panel) after updating the config
+4. Confirm your AI assistant supports **HTTP/SSE MCP transport** — not all agents support HTTP-based servers. Refer to your assistant's documentation.
+
+---
+
+#### Problem 4 — MCP server stops unexpectedly
+
+**Expected behavior.** The IDEA MCP server and TI ASM MCP server are hosted by the C2000-IDEA VS Code extension. They run only while CCS 20 or VS Code is open with the extension active. If you close the IDE, the servers stop.
+
+**Recommendation:** Keep CCS 20 or VS Code open throughout your AI migration session. Re-enable the servers if they stop:
+- Command Palette → `C2000-IDEA: Enable IDEA MCP`
+- Command Palette → `C2000-IDEA: Enable MCP`
+
+---
+
+#### Problem 5 — VPN intercepts or blocks localhost traffic
+
+**Root cause:** Some corporate VPN clients route all traffic including `localhost` through the VPN tunnel, breaking local MCP connections.
+
+**Resolution:**
+1. Add `127.0.0.1`, `localhost`, and `::1` to the **split-tunnel exclusion list** in your VPN client
+2. If the VPN policy is locked by your IT department, contact IT and request a proxy bypass exception for `localhost:55001` and `localhost:55000`
+3. Alternatively, change the MCP server host binding to an explicit local IP (e.g., `127.0.0.1`) by setting `c2000-idea.ideaMcp.host` to `127.0.0.1` in VS Code Settings
+
+---
+
+> **Quick reference — proxy bypass values to configure across all tools:**
+> `localhost`, `127.0.0.1`, `::1`
