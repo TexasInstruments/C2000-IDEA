@@ -11,6 +11,18 @@ cannot interpret — stop and ask the user for help.** Do not guess, retry blind
 skip the step. Describe what you tried, what the tool returned, and ask the user how
 to proceed.
 
+### Rules for this phase
+
+- Do keep the source project unchanged — it is the golden reference.
+- Do ensure the target syscfg always has the device-support module — add it if missing.
+- Do mirror the source's linker style: a CMD module in the target syscfg if the source used
+  one, a plain `.cmd` (CMD module removed) if the source used a plain file.
+- Don't modify or migrate SysConfig-generated output files — migrate the `.syscfg` instead.
+- Don't invoke SysConfig MCP regeneration until the full `.syscfg` migration is complete.
+
+> **Per-target:** When migrating to multiple target devices, run Phase 3 once for each
+> target project independently.
+
 ---
 
 **This phase always runs.** The target project must always end with a `.syscfg` that

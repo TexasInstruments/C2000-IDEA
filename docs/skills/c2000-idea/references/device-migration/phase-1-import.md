@@ -159,6 +159,11 @@ Seed the log with:
 **Immediately update the log:** Set Phase 1 status to COMPLETE and add the build result.
 If a `HANG:` was noted in your context during step 1.7, record it here now in the log.
 
+> **Multi-target sequencing:** Phase 1 covers all targets at once (one import + rename per
+> target). After Phase 1, migrate **one device at a time** — run Phases 2–5 fully for one
+> target before starting Phase 2 for the next. Do not interleave or batch phases across
+> targets.
+
 ---
 
 Repeat steps 1.5–1.8 for each remaining target device before continuing.
