@@ -16,7 +16,7 @@ the MCP* for a given migration task; the MCP supplies the analysis.
 These workflows require the IDEA MCP server, CCS Project MCP, and (for TRM register
 lookups) TI ASM MCP to be running. They are hosted by the C2000-IDEA VS Code extension
 over HTTP. If any required MCP tools are not available in your session, tell the user
-to enable them (Command Palette → `C2000-IDEA: Enable IDEA MCP` / `Enable TI ASM MCP`)
+to enable them (Command Palette → `C2000-IDEA: Enable IDEA MCP` / `Enable TI ASM MCP`, or click **MCP Servers** in the VS Code status bar)
 and register them with their agent, then retry.
 
 **Before starting any device migration task, run the Phase 0 pre-flight check:**

@@ -431,8 +431,8 @@ This section provides a complete, step-by-step guide for setting up the C2000-ID
 | 1 | Install CCS 20 | Required to build and manage C2000 projects. Download from [ti.com/tool/CCSTUDIO](https://www.ti.com/tool/download/CCSTUDIO/) |
 | 2 | Install C2000-IDEA | See [Installing C2000-IDEA](#extension_install) |
 | 3 | Install your AI assistant | See the [Supported AI Assistants](#ai_agent) table above |
-| 4 | Enable IDEA MCP server | Command Palette → `C2000-IDEA: Enable IDEA MCP` |
-| 5 | Enable TI ASM MCP server | Command Palette → `C2000-IDEA: Enable MCP` |
+| 4 | Enable IDEA MCP server | Command Palette → `C2000-IDEA: Enable IDEA MCP` (or click **MCP Servers** in the status bar) |
+| 5 | Enable TI ASM MCP server | Command Palette → `C2000-IDEA: Enable MCP` (or click **MCP Servers** in the status bar) |
 | 6 | Register both MCP servers | Follow the agent-specific instructions below |
 | 7 | Open your project workspace | Open your C2000 project folder in CCS 20 or VS Code |
 | 8 | Start the migration | Ask your AI assistant (see [How to Start a Migration](#ai_agent_migration)) |
@@ -572,8 +572,8 @@ If your machine is behind a corporate proxy or firewall, you may encounter conne
 **Expected behavior.** The IDEA MCP server and TI ASM MCP server are hosted by the C2000-IDEA VS Code extension. They run only while CCS 20 or VS Code is open with the extension active. If you close the IDE, the servers stop.
 
 **Recommendation:** Keep CCS 20 or VS Code open throughout your AI migration session. Re-enable the servers if they stop:
-- Command Palette → `C2000-IDEA: Enable IDEA MCP`
-- Command Palette → `C2000-IDEA: Enable MCP`
+- Command Palette → `C2000-IDEA: Enable IDEA MCP`  (or click **MCP Servers** in the status bar → select IDEA MCP)
+- Command Palette → `C2000-IDEA: Enable MCP`  (or click **MCP Servers** in the status bar → select TI-ASM MCP)
 
 ---
 

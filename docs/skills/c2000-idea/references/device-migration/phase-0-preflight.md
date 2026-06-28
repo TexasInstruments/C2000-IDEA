@@ -15,7 +15,7 @@ Call `get_projects()` with no arguments.
 - **Failure / unreachable** → IDEA MCP is not running. **Stop.**
   Tell the user:
   > *"The IDEA MCP server is not running. Please enable it:"*
-  > - Command Palette → `C2000-IDEA: Enable IDEA MCP`
+  > - Command Palette → `C2000-IDEA: Enable IDEA MCP`  (or click **MCP Servers** in the VS Code status bar)
   > - After enabling, re-register the MCP with your agent tool, then tell me to retry.
 
 Do not proceed past Step 0.1 until `get_projects()` succeeds.
