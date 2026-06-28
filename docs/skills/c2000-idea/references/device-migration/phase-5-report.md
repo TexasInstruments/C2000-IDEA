@@ -86,6 +86,33 @@ If a build is required, call `buildProject` on the **target** project (not the s
    > Do not omit these — they represent risks of silent runtime failure that the user
    > must personally verify before deploying the migrated firmware to hardware.
 
+8. **Hardware verification checklist** — minimum checks the user must perform on
+   physical hardware before declaring the migrated firmware production-ready.
+
+   Present this checklist to the user verbatim. The user must tick each item; do not
+   mark the migration fully production-ready until the user confirms they have reviewed
+   these steps (or explicitly accepts the risk of skipping them).
+
+   > **⚠ Hardware verification — required before production deployment:**
+   >
+   > The following checks cannot be performed by a software tool. They require connecting
+   > to the target board and observing live hardware behaviour:
+   >
+   > | # | Check | How to verify |
+   > |---|-------|---------------|
+   > | H1 | **System clock correct** | Halt in CCS debugger immediately after `Device_init()` / `SysCtl_setClock()`. Inspect `PLLSYSCLK` via the `SysCtl` register view or an oscilloscope on a clocked output pin. Compare against the Phase 3 reference value captured in `c2000-migration.md` (`## Phase 3 — Source clock configuration`). |
+   > | H2 | **Peripheral clocks enabled** | Verify `SysCtl_enablePeripheral()` calls in `device.c` / `main.c` for each peripheral used. Confirm peripherals are accessible (no `NMIWDFLG` or bus fault on first register access). |
+   > | H3 | **GPIO pinmux valid for target device** | Review all `REVIEW-REQUIRED: hardcoded GPIO pin` items from item 7. Check the target device's GPIO mux table (TRM) to confirm the pin assignments are available. A pin that existed on the source device may map to a different function or not exist on the target. |
+   > | H4 | **ADC / comparator reference voltage** | If ADC or CMPSS modules are used, verify the reference voltage configuration matches the target board's hardware design. ADC `VREFHI`/`VREFLO` pinout and reference options differ between device families. |
+   > | H5 | **PWM output timing** | For EPWM/HRPWM: verify switching frequency, dead-band, and trip-zone assignments produce the expected waveforms on the target board. EPWM base addresses and clock dividers may differ. |
+   > | H6 | **Communication bus loopback / protocol test** | For SPI, I2C, CAN/DCAN, MCAN, or UART (SCI): run a loopback or communicate with a known-good peripheral node to confirm the baud rate and bit-format are correct on the target device. |
+   > | H7 | **Interrupt service confirmed** | Trigger at least one interrupt per ISR migrated (ADC EOC, EPWM period, GPIO, etc.) and confirm the CPU enters the ISR. Interrupt vector table offsets and PIE group assignments may have changed between devices. |
+   > | H8 | **Memory map / stack overflow** | Run the application through its full operating loop. Check the stack high-water mark in CCS (Expressions view → `_stack` symbol) to confirm no stack overflow occurred after linker section remapping. |
+   >
+   > **If any check fails:** record the failure in `c2000-migration.md` under
+   > `## Phase 5 — Hardware verification` and open a targeted debug session.
+   > Do not ship firmware that has not been tested on target hardware.
+
 **If the IDEA MCP is unreachable at this point**, construct the summary from
 `c2000-migration.md` alone and note that the live migration report could not be
 regenerated.
