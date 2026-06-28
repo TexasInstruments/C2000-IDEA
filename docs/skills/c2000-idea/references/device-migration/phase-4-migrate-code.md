@@ -84,18 +84,40 @@ From the target project directory, collect:
    - Files that include already-migrated project headers next.
    - Files with the most project-internal dependencies last (typically `main.c`).
 
+3. **`.asm` files** — list all application assembly files in the target project directory.
+   Apply the same exclusions (exclude SDK paths, SysConfig-generated paths, driverlib paths).
+
+   > **⚠ Assembly files are out of scope for automated migration.**
+   > The device-migration workflow migrates driverlib API and register symbols in C/C++
+   > source files only. Assembly (`.asm`) files for CLA firmware, boot routines, or
+   > hardware-assist code must be reviewed **manually** — the migration tool does not
+   > analyse them, and automated replacement would be unsafe.
+   >
+   > For each `.asm` file found:
+   > 1. Record it in `c2000-migration.md` as:
+   >    `REVIEW-REQUIRED: <filename> — assembly file; manual inspection required`
+   > 2. Add a row to the progress table with status `⚠ Manual`.
+   > 3. Tell the user: *"Assembly file `<filename>` was found in the target project.
+   >    Assembly files are not migrated automatically. Please review this file manually
+   >    for device-specific register addresses, memory section names, and instruction
+   >    variants that may differ on the target device."*
+   >
+   > Do not dispatch a sub-agent for `.asm` files. Do not skip recording them.
+
 Record the ordered list in `c2000-migration.md`:
 ```
 ## Phase 4 file list
 .h files (Phase 4A): file1.h, file2.h, ...
 .c files (Phase 4B, in order): fileA.c, fileB.c, ..., main.c
+.asm files (manual review): fileX.asm, fileY.asm, ...  (or "none")
 ```
 
-Add all files to the progress table with status `⬜ Pending`:
+Add all files to the progress table with status `⬜ Pending` (or `⚠ Manual` for `.asm`):
 ```
 | File | Issues | Fixed | Unresolved | Status |
 |------|--------|-------|------------|--------|
 | file1.h | — | — | — | ⬜ |
+| fileX.asm | — | — | — | ⚠ Manual |
 ...
 ```
 
@@ -138,20 +160,35 @@ Phase 4B briefing template.
 
 For each `.c` file (in the dependency order from Step 4.1):
 
-1. Mark the file as `⏳ In Progress` in the progress table.
-2. Fill out the Phase 4B briefing template completely, including any deferred-errors
+1. **Pre-dispatch state check (required — especially when resuming):**
+   Before marking as `⏳ In Progress` or dispatching, check the current progress table row
+   for this file in `c2000-migration.md`:
+   - If the row shows `✅` or `⚠` → this file was already completed. **Skip it entirely.**
+     Do not re-dispatch. This prevents double-applying migrations after a session resume.
+   - If the row shows `⏳ In Progress` → the file was dispatched in a prior session but the
+     result was not recorded. Read the **current file content on disk** to determine how far
+     the previous sub-agent got:
+     - If the file appears fully migrated (no source-device symbols visible, consistent
+       driverlib style throughout) → treat it as ✅ and update the progress table accordingly
+       without re-dispatching.
+     - If the file appears partially migrated (mix of old and new symbols, or cut off
+       mid-function) → pass the last micro-checkpoint line number in the briefing so the
+       new sub-agent can resume from that point rather than restarting from line 1.
+   - If the row shows `⬜ Pending` → proceed normally to step 2.
+2. Mark the file as `⏳ In Progress` in the progress table.
+3. Fill out the Phase 4B briefing template completely, including any deferred-errors
    from prior dispatches that point to this file.
-3. Dispatch the sub-agent with:
+4. Dispatch the sub-agent with:
    - Instruction file: `phase-4b-sources.md`
    - Exactly this one `.c` file
    - Full briefing
-4. **Wait** for the structured result.
-5. **Orchestrator checkpoint:**
+5. **Wait** for the structured result.
+6. **Orchestrator checkpoint:**
    - Verify the log entry was written to `c2000-migration.md`.
    - Update the progress table row for this file (✅ or ⚠).
    - Carry any new cross-file deferred-errors forward to the affected file's future briefing.
    - Aggregate totals.
-6. Only then dispatch the next `.c` file.
+7. Only then dispatch the next `.c` file.
 
 ---
 
