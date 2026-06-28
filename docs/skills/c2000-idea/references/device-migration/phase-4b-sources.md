@@ -116,18 +116,46 @@ get_device_migration_report(<absolute path to .c file>)
 ### Step 3 — Handle zero-issues result
 
 If the report returns zero issues, the static analyser found no migration
-incompatibilities. Before calling `buildProject`, verify:
+incompatibilities. Before calling `buildProject`, verify each of the following and
+**actively fix any hit found** — do not just flag them:
 
-- No `#include` paths contain the source device name (e.g., `f28003x`).
-- No source-device type names are used verbatim (e.g., `F28003x_DEVICE_TYPE`).
-- `#ifdef` / `#if defined` guards reference the **target** device macro, not source.
-- No hardcoded peripheral base addresses that differ between devices.
+**3-i. `#include` path device-name replacement (auto-fix):**
+Scan the file for any `#include` directive whose path contains the source device name
+string (e.g., `f28003x`, `F28003x`). For each hit:
+1. Replace the source device name component with the target device name
+   (e.g., `"f28003x_device.h"` → `"f28p55x_device.h"`).
+2. Verify the resulting file path exists on disk before writing.
+   - If it exists → write the fix and record:
+     `[<filename>:<line>] FIXED: #include path updated → <new path>`
+   - If it does **not** exist → do not write a broken include. Record:
+     `[<filename>:<line>] REVIEW-REQUIRED: #include <old path> — no matching target file found at <expected path>`
+     Flag it to the user.
 
-If any check reveals an issue, fix it and record it in `c2000-migration.md` as:
+> **Note:** This replacement is distinct from the migration report — the report does not
+> flag `#include` path strings. This manual scan is always required.
+
+**3-ii. Source-device type name check:**
+Scan for source-device type names used verbatim (e.g., `F28003x_DEVICE_TYPE`). If found,
+flag each occurrence:
 ```
-[<filename>:<line>] MANUAL-FIX: <description>
+[<filename>:<line>] REVIEW-REQUIRED: source-device type name <name> — verify target equivalent
 ```
-Then go to Step 6 (build).
+
+**3-iii. `#ifdef` device-macro guard check:**
+Confirm `#ifdef` / `#if defined` guards reference the **target** device macro, not source
+(e.g., `#ifdef _F28003x_` must become `#ifdef _F28P55X_`). If any source-device macro is
+found, replace it with the target device's equivalent macro and record:
+```
+[<filename>:<line>] FIXED: #ifdef guard updated → <new macro>
+```
+
+**3-iv. Hardcoded peripheral base address check:**
+Scan for hardcoded peripheral base addresses (e.g., `0x00006400`). If found, flag:
+```
+[<filename>:<line>] REVIEW-REQUIRED: hardcoded base address — verify address is valid on target device
+```
+
+After all checks are complete, proceed to Step 3a (GPIO check) then Step 6 (build).
 
 ### Step 3a — GPIO remapping check (run for EVERY file, regardless of issue count)
 

@@ -111,22 +111,41 @@ get_device_migration_report(<absolute path to .h file>)
 ### Step 3 — Handle zero-issues result
 
 If the report returns zero issues, the static analyser found no incompatibilities.
-This does not guarantee correctness. Quickly verify:
+This does not guarantee correctness. Actively check and fix each of the following:
 
-- No `#include` paths contain the source device name (e.g., `f28003x`).
-- No source-device typedefs or type names are used verbatim.
-- `#ifdef` / `#if defined` guards (if any) reference the **target** device macro,
-  not the source device macro. (Search for `#ifdef _<SOURCE-DEVICE-UPPER>_` or
-  `#if defined(_<SOURCE-DEVICE-UPPER>_)` patterns anywhere in the file — including
-  inside function bodies, not just at the top.)
+**3-i. `#include` path device-name replacement (auto-fix):**
+Scan the file for any `#include` directive whose path contains the source device name
+string (e.g., `f28003x`, `F28003x`). For each hit:
+1. Replace the source device name component with the target device name
+   (e.g., `"f28003x_device.h"` → `"f28p55x_device.h"`).
+2. Verify the resulting file exists on disk before writing.
+   - If it exists → write the fix and record:
+     `[<filename>:<line>] FIXED: #include path updated → <new path>`
+   - If it does **not** exist → do not write a broken include. Record:
+     `[<filename>:<line>] REVIEW-REQUIRED: #include <old path> — no matching target file found at <expected path>`
+     Flag it to the user.
 
-If all checks pass, record the file as clean and proceed to the next file.
+> **Note:** The migration report does not flag `#include` path strings. This scan is
+> always required even when the report returns zero issues.
 
-If any check reveals an issue, fix it and record it in `c2000-migration.md` as:
+**3-ii. Source-device typedef / type name check:**
+Scan for source-device type names used verbatim (e.g., `F28003x_DEVICE_TYPE`). If found,
+flag each occurrence:
 ```
-[<filename>:<line>] MANUAL-FIX: <description>
+[<filename>:<line>] REVIEW-REQUIRED: source-device type name <name> — verify target equivalent
 ```
-Then proceed to the next `.h` file.
+
+**3-iii. `#ifdef` device-macro guard check:**
+Confirm `#ifdef` / `#if defined` guards reference the **target** device macro, not source.
+Search for `#ifdef _<SOURCE-DEVICE-UPPER>_` or `#if defined(_<SOURCE-DEVICE-UPPER>_)`
+anywhere in the file — including inside function bodies, not just at the top.
+If any source-device macro is found, replace it with the target device's equivalent macro
+and record:
+```
+[<filename>:<line>] FIXED: #ifdef guard updated → <new macro>
+```
+
+If all checks pass with no fixes needed, record the file as clean and proceed to the next file.
 
 ### Step 4 — Fix each issue (one at a time)
 

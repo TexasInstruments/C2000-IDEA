@@ -46,6 +46,13 @@ are found outside the `sysConfigOutputLocation` folder and outside the SDK path,
 them to the sweep list and run the migration report on them too. Do **not** run the
 report on files inside `sysConfigOutputLocation` — those are generated outputs.
 
+> **`.asm` files are excluded from this sweep.** They were listed in the Phase 4 file
+> list with status `⚠ Manual` during Step 4.1. Do not run `get_device_migration_report`
+> on them — the tool does not analyse assembly. Confirm they are logged in
+> `c2000-migration.md` as `REVIEW-REQUIRED` and that the user has been notified.
+> If any `.asm` file was not logged during Step 4.1 (e.g., added after Phase 3),
+> add it to the log now: `REVIEW-REQUIRED: <filename> — assembly file; manual inspection required`
+
 For each file with remaining issues: apply the fix loop from Phase 4B (fix → report →
 build → repeat) until clean.
 
