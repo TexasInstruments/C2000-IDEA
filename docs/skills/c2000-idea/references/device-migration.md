@@ -85,7 +85,7 @@ Each target project gets its own persistent migration log: a file called
 multiple targets, there is one log per target project — never a single shared log.
 
 The log is created during Phase 1, once the target project has been imported and renamed
-(Phase 1, step 1.8) — not before, because the target project directory does not exist
+(Phase 1, step 1.9) — not before, because the target project directory does not exist
 until then. From that point on, update it continuously throughout the workflow:
 
 - Record migration info (source project, source device, target device, SDK type, paths).
@@ -122,13 +122,18 @@ If you are resuming a migration that was started in a previous session:
 > ⛔ **Do not read ahead.** Read one phase file at a time. Complete every step in it.
 > Return here. Only then read the next phase file. Do not open the next phase file early.
 
-This workflow is split into five phases. **Execute them in strict order.**
+This workflow is split into six phases. **Execute them in strict order.**
 
 > **Per-target:** When migrating to multiple target devices, migrate **one device at a
 > time** — run Phases 2, 3, 4, and 5 fully for one target before starting the next. Do not
 > interleave or batch phases across targets. Phase 1 covers all targets at once.
 
 ### Phase sequence
+
+0. **Read `device-migration/phase-0-preflight.md`** — Run the pre-flight check: probe all
+   MCP servers (IDEA MCP, CCS Project MCP, TI ASM MCP), verify Git state, and initialize
+   the session context. **This phase runs once before Phase 1 and is mandatory.**
+   → When complete, return here.
 
 1. **Read `device-migration/phase-1-import.md`** — Discover the source project, identify
    the SDK, import and validate the target project(s).

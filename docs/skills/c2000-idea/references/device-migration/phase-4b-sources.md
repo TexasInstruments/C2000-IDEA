@@ -29,6 +29,8 @@ orchestrator before proceeding:
 | Source device | `<e.g. f28003x>` |
 | Target device | `<e.g. f28p55x>` |
 | Migration approach | Approach 1 (`#ifdef`) OR Approach 2 (clean replacement) |
+| Active build config | `<e.g. CPU1_FLASH>` |
+| `sysConfigOutputLocation` | `<path — do not edit any file under this folder>` |
 | Deferred-errors context | Any errors from previous files pointing to this file |
 
 ---

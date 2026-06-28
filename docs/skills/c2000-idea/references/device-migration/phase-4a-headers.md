@@ -33,6 +33,8 @@ orchestrator before proceeding:
 | Source device | `<e.g. f28003x>` |
 | Target device | `<e.g. f28p55x>` |
 | Migration approach | Approach 1 (`#ifdef`) OR Approach 2 (clean replacement) |
+| Active build config | `<e.g. CPU1_FLASH>` |
+| `sysConfigOutputLocation` | `<path — do not edit any file under this folder>` |
 | List of `.h` files to migrate | `<paths provided by orchestrator>` |
 
 ---
@@ -41,6 +43,10 @@ orchestrator before proceeding:
 
 - Process `.h` files in the order provided by the orchestrator.
 - Use only `get_device_migration_report` — not the VS Code diagnostics panel.
+- **If `get_device_migration_report` returns 0 issues for a file:** record
+  `[<filename>] 0 issues — no migration changes needed` in `c2000-migration.md`,
+  update the progress table row to ✅, and proceed to the next file immediately.
+  Do not re-call the tool or wait — zero issues is a valid, complete result.
 - Do **not** call `buildProject` during Phase 4A. Header migration is report-only.
 - Do not modify files in the source project. Every edit is on the target project.
 - Do not read collateral links by page title only — navigate to the exact `#anchor` and

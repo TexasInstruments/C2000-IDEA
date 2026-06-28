@@ -205,17 +205,44 @@ briefing template. Fill out all fields, including the complete deferred-errors l
 
 ### Orchestrator checkpoint after Phase 4C
 
-1. Verify `c2000-migration.md` records `Phase 4 status: COMPLETE`.
-2. Verify `Final clean build: PASS` is recorded.
-3. Aggregate all totals across 4A + 4B + 4C.
+1. Check whether Phase 4C reported a **clean build (0 errors)** or a **non-passing build**.
+2. Aggregate all totals across 4A + 4B + 4C so far.
+3. If `Final clean build: PASS` → proceed directly to Step 4.6.
+4. If `Final clean build: FAIL` → proceed to Step 4.5 (build error triage).
 
 ---
 
-## Step 4.5 — Phase 4 complete
+## Step 4.5 — Dispatch Phase 4D (build error triage) — *if needed*
+
+⛔ **Only dispatch Phase 4D if Phase 4C reported a non-passing build.**
+⛔ **Do not read `phase-4d-build-triage.md` yourself. Send it to the sub-agent.**
+
+If Phase 4C's final `buildProject()` call returned errors, dispatch a Phase 4D sub-agent:
+
+1. Pass the Phase 4C build error output verbatim in the briefing.
+2. Pass the current `c2000-migration.md` contents for context.
+3. Use the standard sub-agent briefing format from
+   [`phase-4-sub-agent-briefing.md`](phase-4-sub-agent-briefing.md), with:
+   - Instruction file: `phase-4d-build-triage.md`
+   - Target project name, source device, target device (as usual)
+
+**Wait** for the Phase 4D structured result.
+
+### Orchestrator checkpoint after Phase 4D
+
+1. Check Phase 4D's returned status: `CLEAN BUILD` or `BUILD NOT CLEAN — manual items remain`.
+2. Merge any new `DEFERRED-MANUAL` items from Phase 4D into the master deferred list.
+3. Update the Phase status table in `c2000-migration.md` with the Phase 4D row.
+4. Proceed to Step 4.6 regardless of Phase 4D outcome — the Phase 4D file records all
+   remaining manual items; do not loop Phase 4D again.
+
+---
+
+## Step 4.6 — Phase 4 complete
 
 Update `c2000-migration.md`:
 ```
-| Phase 4 — Code | ✅ COMPLETE | <N files> migrated, <M issues> fixed, clean build PASS |
+| Phase 4 — Code | ✅ COMPLETE | <N files> migrated, <M issues> fixed, clean build <PASS/FAIL with manual items> |
 ```
 
 Present a complete summary to the user:
@@ -225,7 +252,7 @@ Phase 4 complete for <target project name>.
 Files migrated: <total>
 Issues found: <total> | Fixed: <total> | Unresolved: <total>
 DEFERRED-MANUAL: <K items — list them>
-Final clean build: PASS
+Final clean build: <PASS | FAIL — <Z> errors remain, recorded as DEFERRED-MANUAL>
 
 Any items needing manual review have been recorded in c2000-migration.md.
 ```

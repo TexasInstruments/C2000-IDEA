@@ -32,6 +32,8 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 | Target project directory | `<absolute path>` |
 | Source device | `<e.g. f28003x>` |
 | Target device | `<e.g. f28p55x>` |
+| Active build config | `<e.g. CPU1_FLASH>` |
+| `sysConfigOutputLocation` | `<path — do not run migration report on files here>` |
 | All `.h` and `.c` files migrated | `<list from Phase 4A and 4B logs>` |
 
 ---
@@ -169,6 +171,10 @@ fix them now before proceeding to Phase 5. These are real errors — do not supp
 
 If the second build passes: record `Final clean build: PASS` in `c2000-migration.md`.
 
+If the second build fails: record `Final clean build: FAIL — <X> errors` in
+`c2000-migration.md`. **Do not attempt further fixes here** — return the FAIL result to
+the orchestrator so it can dispatch Phase 4D (build error triage).
+
 ---
 
 ## Step 6 — Update c2000-migration.md
@@ -182,26 +188,31 @@ Deferred-errors resolved: <M>
 Remaining DEFERRED-MANUAL: <K> (see items below)
 Final clean build: PASS / FAIL
 
-Phase 4 status: COMPLETE
+Phase 4C status: COMPLETE
 ```
 
-Update the Phase status table:
+> **Do NOT write `Phase 4 status: COMPLETE` here.** That entry is written by the
+> orchestrator in Step 4.6 of `phase-4-migrate-code.md` — after Phase 4D has run
+> (if needed). Writing it here prematurely would mark Phase 4 complete before the
+> build triage loop has had a chance to resolve remaining errors.
+
+Update the Phase status table for Phase 4C only:
 ```
-| Phase 4 — Code | ✅ COMPLETE | <N files> migrated, <M issues> fixed, clean build PASS |
+| Phase 4C — Sweep | ✅ COMPLETE | sweep clean, clean build <PASS/FAIL> |
 ```
 
 ---
 
-## Structured result (required — return to orchestrator or user)
+## Structured result (required — return to orchestrator)
 
 ```
 === Phase 4C Complete ===
 Final sweep: CLEAN / PARTIAL
 Issues resolved in sweep: <N>
 DEFERRED-MANUAL items: <K>
-Final clean build: PASS / FAIL
+Final clean build: PASS / FAIL   ← orchestrator reads this field to decide whether to dispatch Phase 4D
 
-Phase 4 overall:
+Phase 4C overall:
   Files migrated: <total>
   Issues found: <total>
   Issues fixed: <total>
@@ -214,11 +225,14 @@ c2000-migration.md updated: ✅
 
 ## ⛔ Stop here
 
-Your scope ends at the clean build confirmation. Do not read `phase-5-report.md` or
-any other file. Present your structured result to the user and ask:
+Your scope ends at the clean build result. Do not read `phase-5-report.md`,
+`phase-4d-build-triage.md`, or any other file.
 
-> *"Phase 4 is complete. Final clean build: PASS. Does everything look correct?
-> Ready to move to Phase 5 (migration report)?"*
+Return your structured result to the **orchestrator** (`phase-4-migrate-code.md`).
+The orchestrator will:
+- If `Final clean build: PASS` → proceed to Step 4.6 (Phase 4 complete summary).
+- If `Final clean build: FAIL` → dispatch Phase 4D (build error triage) via Step 4.5.
 
-Wait for user confirmation. Then **re-read `device-migration.md`** to get instructions
-for Phase 5.
+**Do not ask the user "Ready to move to Phase 5?" here.** That question is asked by
+the orchestrator after Phase 4D has run (or been skipped for a passing build), in
+Step 4.6.

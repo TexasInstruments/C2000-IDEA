@@ -331,27 +331,29 @@ Once both MCP servers are enabled and registered, your AI assistant can perform 
 
 > **Note:** The device names **F28003x** (source) and **F28P55x** (target) used throughout this section and the diagram below are illustrative examples only. You can use any supported C2000 source and target device pair. Refer to the [Supported Migration Paths](#ai_agent_migration) table for the list of supported combinations.
 
-The AI agent drives a structured **5-phase workflow**. Each phase uses the IDEA MCP and supporting MCP servers to inspect the project, apply changes, verify the result, and log progress before moving to the next phase.
+The AI agent drives a structured **6-phase workflow** (Phase 0 pre-flight + Phases 1–5). Each phase uses the IDEA MCP and supporting MCP servers to inspect the project, apply changes, verify the result, and log progress before moving to the next phase.
 
 ```mermaid
 flowchart TD
     START(["▶  Start Migration\nUser: Migrate my F28003x project to F28P55x\nusing the C2000-IDEA AI migration workflow"])
 
-    PROBE["🔍  Step 0 — Verify IDEA MCP Server\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nProbe: call get_projects() to test server reachability\n✔  Pass → server is live, continue to Phase 1\n✘  Fail → stop; instruct user:\n     Command Palette → C2000-IDEA: Enable IDEA MCP\n     Then re-register MCP and retry probe"]
+    PROBE["🔍  Phase 0 — Pre-flight Check\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nProbe 1: call get_projects() — test IDEA MCP reachability\nProbe 2: call getToolOptions() — test CCS Project MCP\nProbe 3: test TI ASM MCP  soft warning only\nGit check: confirm clean working tree · recommend migration branch\n✔  All probes pass → record session context · proceed to Phase 1\n✘  Hard stop on IDEA MCP or CCS Project MCP failure:\n     Command Palette → C2000-IDEA: Enable IDEA MCP\n     Then re-register MCP and retry probe"]
 
-    P1["📦  Phase 1 — Project Import and Baseline\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1.1  Import source project into CCS workspace\n1.2  Validate SDK disk path against getProjectProductReferences\n1.3  Build source project → confirm zero compile errors\n1.4  Rename project to target device name  e.g. myproject_f28p55x\n1.5  Rebuild renamed project → confirm build still passes\n1.6  Create c2000-migration.md  append-only audit log\n     Records: source device · target device · active build config"]
+    P1["📦  Phase 1 — Project Import and Baseline\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1.1  Validate source project name and target device inputs\n1.2  Discover source project → device · SDK paths · build config\n1.3  Identify SDK type and resolve C2000Ware path\n1.5  Import universal driverlib example for target device\n1.6  Build imported starter → confirm zero compile errors\n1.7  Rename project to target device name  e.g. myproject_f28p55x\n1.8  Rebuild renamed project → confirm build still passes\n1.9  Create c2000-migration.md  append-only audit log\n     Records: source device · target device · active build config TBD"]
 
-    P2["⚙️  Phase 2 — Build Settings Alignment\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n2.1  Identify active build configuration  e.g. CPU1_FLASH or Debug\n2.2  Align compiler flags to target device SDK\n2.3  Update include paths  source SDK path → target SDK path\n2.4  Update predefined device symbol  F28003x → F28P55x\n2.5  Update linker CMD file style and memory map for target\n2.6  Read back and verify every setting after applying\n2.7  Update c2000-migration.md with confirmed build config name"]
+    P2["⚙️  Phase 2 — Build Settings Alignment\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n2.0  Identify active build config  e.g. CPU1_FLASH or Debug\n     Record confirmed config in c2000-migration.md\n2.1  Align compiler flags to target device SDK\n2.2  Update predefined device symbol  F28003x → F28P55x\n2.3  Update include paths  source SDK path → target SDK path\n2.4  Update linker flags  stack · heap · map-file\n2.5  Detect linker CMD style  CMD module vs plain .cmd\n2.6  Copy application source files to target project\n2.10 Read-back diff — verify all applied settings"]
 
-    P3["🔧  Phase 3 — SysConfig Migration  3A + 3B\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n3A.1  Copy source .syscfg file into target project directory\n3A.2  Record all source peripheral module instances  used in 3B audit\n3A.3  Extract clock configuration from source device.c for reference\n─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─\n3B.1  Open target .syscfg → change device_support to target device\n3B.2  Migrate all peripheral instances\n      ADC · PWM · GPIO · SPI · UART · I2C · CLB · DMA · EQEP · ECAP\n3B.3  Normalize CMD linker output sections for target memory map\n3B.4  Peripheral coverage audit → flag missing instances vs source list\n3B.5  Verify device.opt and device.c integrate cleanly into build"]
+    P3["🔧  Phase 3 — SysConfig Migration  3A + 3B\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n3A.1  Copy source .syscfg file into target project directory\n3A.2  Open target .syscfg · record source module list for audit\n3A.3  Ensure device_support module present  add if missing\n─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─\n3B.1  Migrate device → select target device and package\n3B.2  Coverage audit → flag modules silently dropped by migrate()\n3B.3  Fix configuration errors iteratively\n3B.4  Normalize CMD module to match source linker style\n3B.5  Error gate after CMD normalization → save and close\n3B.6  Verify SysConfig outputs wired into CCS project build"]
 
-    P4H["📄  Phase 4A — Header File Migration  per file\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4A.1  Replace all #include paths containing source device name\n      source SDK path → target SDK path\n4A.2  Update device macro guards\n      #ifdef F28003x → #ifdef F28P55x\n4A.3  Verify no stale source-device include paths remain in file"]
+    P4H["📄  Phase 4A — Header File Migration  per file\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4A.1  Replace all #include paths containing source device name\n4A.2  Update device macro guards  #ifdef F28003x → #ifdef F28P55x\n4A.3  Verify no stale source-device include paths remain"]
 
-    P4S["📝  Phase 4B — Source File Migration  per file\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4B.1  Check file state → skip if already partially migrated\n4B.2  Replace device-specific driverlib API symbols\n      using get_device_migration_report output\n4B.3  Update GPIO pin number assignments for target device pinout\n4B.4  Replace hardcoded peripheral base addresses\n      query TI ASM MCP for target device register map as needed\n4B.5  Wrap remaining conditional code in device macro guards"]
+    P4S["📝  Phase 4B — Source File Migration  per file\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4B.1  Run get_device_migration_report → fix each flagged issue\n4B.2  GPIO remapping check on every .c file\n4B.3  Build after migration report is clean\n4B.4  Fix any build errors · defer cross-file errors to 4C\n4B.5  Repeat until clean build for this file"]
 
-    P4C["🔁  Phase 4C — Final Sweep and Build Verification\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4C.1  Regression scan across all migrated files\n      Flag residual source-device strings · symbols · base addresses\n4C.2  Pass 1 clean build → identify remaining compile errors\n4C.3  Resolve all build errors found in sweep\n4C.4  Pass 2 clean build → confirm zero errors before Phase 5"]
+    P4C["🔁  Phase 4C — Final Sweep and Build Verification\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4C.1  Re-run migration report on all migrated files\n4C.2  Regression baseline check near all fix sites\n4C.3  Resolve deferred cross-file build errors from 4B\n4C.4  Two-pass clean rebuild  first cleans objects · second verifies\n       ✔  PASS → proceed to Phase 5\n       ✘  FAIL → dispatch Phase 4D  build error triage"]
 
-    P5["📊  Phase 5 — Report and Hardware Verification\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n5.1  Final clean build → zero errors required to proceed\n5.2  Bitfield register scan → flag legacy .bit/.all accesses\n5.3  Export migration report\n     All issue locations · suggested fixes · collateral links\n5.4  Generate hardware verification checklist\n     H1 Clock tree config     H2 GPIO pinout and mux\n     H3 Peripheral base addr  H4 Interrupt routing PIE/PIPE\n     H5 Memory map linker     H6 Power domains analog subsystem\n     H7 Boot mode device cfg  H8 Debug interface JTAG"]
+    P4D["🔨  Phase 4D — Build Error Triage  dispatched only on FAIL\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4D.1  Collect current build error list via buildProject()\n4D.2  Classify each error:\n       A: missing include or file-not-found\n       B: undefined symbol\n       C: deprecated or renamed API\n       D: linker/memory-map  deferred-manual\n4D.3  Apply fixes for categories A–C\n       Uses get_device_migration_report for authoritative fixes\n4D.4  Rebuild and evaluate  max 3 triage iterations\n4D.5  Record results · return build status to orchestrator"]
+
+    P5["📊  Phase 5 — Report and Hardware Verification\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n5.1  Final clean build  skip if Phase 4C PASS in same session\n5.2  Structured summary: per-file table · unresolved symbols\n5.3  SysConfig status · SDK version change logged\n5.4  Bitfield register scan → flag legacy .bit/.all for follow-up\n5.5  Hardware verification checklist\n     H1 Clock tree config     H2 GPIO pinout and mux\n     H3 Peripheral base addr  H4 Interrupt routing PIE/PIPE\n     H5 Memory map linker     H6 Power domains analog subsystem\n     H7 Boot mode device cfg  H8 Debug interface JTAG"]
 
     DONE(["✅  Migration Complete\nTarget project builds clean on target device\nFull audit log recorded in c2000-migration.md\nMigration report and hardware checklist exported"])
 
@@ -362,7 +364,9 @@ flowchart TD
     P3    --> P4H & P4S
     P4H   --> P4C
     P4S   --> P4C
-    P4C   --> P5
+    P4C   -->|"PASS"| P5
+    P4C   -->|"FAIL"| P4D
+    P4D   --> P5
     P5    --> DONE
 
     style START fill:#C00000,color:#ffffff,stroke:#8B0000,stroke-width:2px
@@ -373,18 +377,14 @@ flowchart TD
     style P4H   fill:#7B3F00,color:#ffffff,stroke:#5C2E00,stroke-width:1px
     style P4S   fill:#7B3F00,color:#ffffff,stroke:#5C2E00,stroke-width:1px
     style P4C   fill:#5C2E00,color:#ffffff,stroke:#3D1E00,stroke-width:1px
+    style P4D   fill:#8B0000,color:#ffffff,stroke:#5C0000,stroke-width:1px
     style P5    fill:#4B0082,color:#ffffff,stroke:#320057,stroke-width:1px
     style DONE  fill:#215732,color:#ffffff,stroke:#17401E,stroke-width:2px
 ```
 
 ### How to Start a Migration
 
-**Prerequisites (do this once):**
-1. Install C2000-IDEA (see [Installing C2000-IDEA](#extension_install))
-2. Enable the IDEA MCP server: Command Palette → `C2000-IDEA: Enable IDEA MCP`
-3. Enable the TI ASM MCP server: Command Palette → `C2000-IDEA: Enable MCP`
-4. Register both servers with your AI assistant (see Steps 1 and 2 above)
-5. Open your C2000 project workspace in CCS 20 or VS Code
+**Prerequisites (do this once):** Complete the [Setup Checklist](#ai_agent_local_setup) below — install CCS 20, C2000-IDEA, and your AI assistant; enable both MCP servers; and register them with your agent.
 
 > **Safety tip:** Before starting, commit all your current changes to Git and create a new branch (e.g., `git checkout -b migration-to-f28p55x`). This makes it easy to roll back if needed.
 
@@ -441,19 +441,32 @@ This section provides a complete, step-by-step guide for setting up the C2000-ID
 
 ### Registering MCP Servers — Agent-by-Agent Instructions
 
-#### GitHub Copilot (VS Code — Agent Mode)
+#### Common MCP Server URLs
 
-Create or update the file `.vscode/mcp.json` inside your workspace folder:
+All agents connect to the same two servers. The JSON key (`"servers"` vs `"mcpServers"`) and file location vary by agent — see the agent-specific notes below.
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "c2000-idea": {
       "url": "http://localhost:55001/mcp"
     },
     "ti-asm": {
       "url": "http://localhost:55000/mcp"
     }
+  }
+}
+```
+
+#### GitHub Copilot (VS Code — Agent Mode)
+
+Create or update `.vscode/mcp.json` inside your workspace folder using the configuration above, but replace the outer key `"mcpServers"` with `"servers"`:
+
+```json
+{
+  "servers": {
+    "c2000-idea": { "url": "http://localhost:55001/mcp" },
+    "ti-asm":     { "url": "http://localhost:55000/mcp" }
   }
 }
 ```
@@ -462,48 +475,23 @@ Create or update the file `.vscode/mcp.json` inside your workspace folder:
 
 #### Cursor
 
-Open **Cursor → Settings → MCP** and add the following entries:
-
-```json
-{
-  "mcpServers": {
-    "c2000-idea": {
-      "url": "http://localhost:55001/mcp"
-    },
-    "ti-asm": {
-      "url": "http://localhost:55000/mcp"
-    }
-  }
-}
-```
+Open **Cursor → Settings → MCP** and paste the common `mcpServers` block above.
 
 #### Cline (VS Code Extension)
 
 1. Open the Cline panel in the VS Code sidebar
 2. Click **MCP Servers → Configure MCP Servers**
-3. Add the following to the configuration file:
-```json
-{
-  "mcpServers": {
-    "c2000-idea": {
-      "url": "http://localhost:55001/mcp"
-    },
-    "ti-asm": {
-      "url": "http://localhost:55000/mcp"
-    }
-  }
-}
-```
+3. Paste the common `mcpServers` block above into the configuration file
 
 #### Roo Code (VS Code Extension)
 
 1. Open the Roo Code panel in the VS Code sidebar
 2. Navigate to **MCP Servers → Edit MCP Settings**
-3. Add the same `mcpServers` block shown for Cline above
+3. Paste the common `mcpServers` block above into the settings file
 
 #### Continue (VS Code / JetBrains)
 
-Edit `~/.continue/config.json` and add an `mcpServers` array:
+Edit `~/.continue/config.json`. Continue uses an **array** format instead of an object:
 
 ```json
 {
@@ -520,18 +508,7 @@ Edit the Claude Desktop configuration file:
 - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 - **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
 
-```json
-{
-  "mcpServers": {
-    "c2000-idea": {
-      "url": "http://localhost:55001/mcp"
-    },
-    "ti-asm": {
-      "url": "http://localhost:55000/mcp"
-    }
-  }
-}
-```
+Paste the common `mcpServers` block above into the file.
 
 ---
 

@@ -78,11 +78,25 @@ takes precedence over the generic steps in this phase — follow it first.**
 >
 > **How:** Call `getProjectDescriptors` on the **source** project name (not the target)
 > and extract its `sysConfigLocation` field — this is the absolute path to the **source**
-> project's original `.syscfg` file. Open that path read-only via `openFile`, call
-> `getModuleInstances`, then call `closeFile` immediately. **Do not leave the source
-> syscfg open.** Do not use the target project's `sysConfigLocation` here — it points
-> to the copy written in step 3.1, which already has the source content but will be
-> modified in Phase 3B.
+> project's original `.syscfg` file.
+>
+> ⚠ **Before calling `openFile` on the source `.syscfg`**, call `closeFile` once as a
+> precaution. Phase 2 step 2.5 opens the source syscfg to detect CMD module style and
+> then closes it — but if this session was resumed after Phase 2 completed, the source
+> syscfg may still be held open by the SysConfig MCP. Calling `closeFile` here (even
+> if nothing is open) is safe and prevents `openFile` from operating on a stale session.
+>
+> Then open that path via `openFile`, call `getModuleInstances`, then call `closeFile`
+> immediately.
+>
+> ⚠ **Do NOT call `changeConfiguration`, `addModuleInstances`, `removeModuleInstances`,
+> or `save` while the source `.syscfg` is open here.** The source project is the golden
+> reference — any write call to it is a corruption. Call `closeFile` immediately after
+> `getModuleInstances` returns.
+>
+> **Do not leave the source syscfg open.** Do not use the target project's
+> `sysConfigLocation` here — it points to the copy written in step 3.1, which already
+> has the source content but will be modified in Phase 3B.
 >
 > Write the result to `c2000-migration.md` under:
 > ```

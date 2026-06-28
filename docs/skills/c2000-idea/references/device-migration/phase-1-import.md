@@ -244,9 +244,34 @@ Seed the log with:
   The active build config is identified in Phase 2 by calling `getToolFlags` on the source
   project. It cannot be reliably determined in Phase 1. Phase 2 will update this field once
   the config is confirmed. All subsequent phases read the final value from the log.
-- Phase 1 status: IN PROGRESS
+- **Phase 0 pre-flight results** — embed the session-context results captured during Phase 0:
+  ```
+  Pre-flight (Phase 0):
+    IDEA MCP         : <live | ERROR — <message>>
+    CCS Project MCP  : <live | ERROR — <message>>
+    TI ASM MCP       : <live | not available>
+    Git branch       : <branch name>
+    Git state        : <clean | <N> uncommitted changes>
+  ```
+  If Phase 0 was skipped or not run, record: `Pre-flight (Phase 0): not run`.
+- Phase status table (seed with):
+  ```
+  | Phase | Status | Notes |
+  |-------|--------|-------|
+  | Phase 0 — Pre-flight     | <see below> | <see below> |
+  | Phase 1 — Import         | ⏳ IN PROGRESS | |
+  | Phase 2 — Settings       | ⬜ PENDING | |
+  | Phase 3 — SysConfig      | ⬜ PENDING | |
+  | Phase 4 — Migrate Code   | ⬜ PENDING | |
+  | Phase 5 — Report         | ⬜ PENDING | |
+  ```
+  **Phase 0 row — set based on session context:**
+  - If Phase 0 pre-flight results are present in your session context (you ran Phase 0
+    earlier in this session): set `✅ COMPLETE | MCP health check complete`
+  - If Phase 0 was not run or context is absent: set `⚠ SKIPPED | pre-flight not run`
+  - Do **not** hard-code `✅ COMPLETE` for Phase 0 if you did not actually run Phase 0.
 
-**Immediately update the log:** Set Phase 1 status to COMPLETE and add both build results
+**Immediately update the log:** Set Phase 1 status to ✅ COMPLETE and add both build results
 (step 1.6 pre-rename build and step 1.8 post-rename build).
 If any `HANG:` was noted in your context during steps 1.6 or 1.8, record it here now.
 

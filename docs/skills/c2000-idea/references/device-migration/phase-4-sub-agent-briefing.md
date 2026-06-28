@@ -37,6 +37,7 @@ Briefing:
   c2000ware_path           : <path>
   SDK version              : <e.g. C2000Ware_5_04_00_00>
   Active build config      : <e.g. CPU1_FLASH>
+  sysConfigOutputLocation  : <path — from getProjectDescriptors; do not edit files here>
 
   Files to migrate (in order):
     1. <absolute path to first .h file>
@@ -69,6 +70,7 @@ Briefing:
   c2000ware_path           : <path>
   SDK version              : <e.g. C2000Ware_5_04_00_00>
   Active build config      : <e.g. CPU1_FLASH>
+  sysConfigOutputLocation  : <path — from getProjectDescriptors; do not edit files here>
 
   Deferred-errors context  : <paste any deferred-errors from prior .c file dispatches
                                that point to THIS file, or write "None">
@@ -98,6 +100,7 @@ Briefing:
   c2000ware_path           : <path>
   SDK version              : <e.g. C2000Ware_5_04_00_00>
   Active build config      : <e.g. CPU1_FLASH>
+  sysConfigOutputLocation  : <path — from getProjectDescriptors; do not edit files here>
 
   All migrated files (from 4A and 4B):
     .h files: <list>
@@ -131,6 +134,36 @@ all of the following before dispatching the next sub-agent:
 
 ---
 
+## Briefing template — Phase 4D (build error triage)
+
+Fill out and send this to the Phase 4D sub-agent. **Only dispatch when Phase 4C reports
+a non-passing build.**
+
+```
+You are a sub-agent. Read phase-4d-build-triage.md and follow it exactly.
+
+Briefing:
+  Target project name      : <name from c2000-migration.md>
+  Target project directory : <absolute path>
+  Source device            : <e.g. f28003x>
+  Target device            : <e.g. f28p55x>
+  SDK version              : <e.g. C2000Ware_5_04_00_00>
+  c2000ware_path           : <path>
+  Active build config      : <e.g. CPU1_FLASH>
+  sysConfigOutputLocation  : <path — from getProjectDescriptors; do not edit files here>
+
+  Build error output from Phase 4C (verbatim):
+    <paste the full buildProject error output here>
+
+  c2000-migration.md current content (summary):
+    <paste the Phase 4 progress table and deferred-errors list>
+
+Do not read any file other than phase-4d-build-triage.md.
+Return your structured result when the triage is complete or the convergence limit is reached.
+```
+
+---
+
 ## Orchestrator sequencing rules
 
 ```
@@ -148,7 +181,11 @@ Phase 4 sequence:
        ↓
   [4C dispatch] → wait for 4C structured result → orchestrator checkpoint
        ↓
-  Present Phase 4 complete summary to user
+  if 4C build PASS → Present Phase 4 complete summary to user
+  if 4C build FAIL → [4D dispatch] → wait for 4D structured result → checkpoint
+                          ↓
+                     Present Phase 4 complete summary to user
+       ↓
   Ask for user confirmation
   Re-read device-migration.md for Phase 5
 ```

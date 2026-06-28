@@ -10,6 +10,12 @@
 **Stop and ask the user** if any MCP tool call fails, returns an unexpected error, or
 produces a result you cannot interpret. Do not guess, retry blindly, or skip the step.
 
+> **⚠ If any step after `openFile` causes an unrecoverable error:** call `closeFile`
+> on the target `.syscfg` before stopping or escalating to the user. Leaving SysConfig
+> in a locked-open state will block all subsequent CCS MCP and SysConfig MCP calls in
+> Phase 4. Even if the save failed, `closeFile` discards the in-memory state and
+> releases the file lock — it is always safe to call.
+
 ---
 
 ## Rules for Phase 3B
