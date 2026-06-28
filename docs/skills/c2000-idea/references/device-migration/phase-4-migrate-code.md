@@ -1,286 +1,276 @@
-# Phase 4 — Migrate Source Code
+# Phase 4 — Migrate Source Code (Orchestrator)
 
-> You are in **Phase 4** of the device-migration workflow.
+> You are the **orchestrator** for Phase 4. Your job is to dispatch sub-agents in
+> sequence, confirm their results, and maintain the `c2000-migration.md` log.
+> You do **not** fix files yourself — sub-agents do that.
 
-**Before starting:** State which phases are complete and which phase you are about to
-start. If disoriented, re-read `c2000-migration.md` in the target project to recover
-your position.
+**Before starting:** Confirm in `c2000-migration.md` that Phases 1, 2, and 3 are all
+marked COMPLETE for this target project. If any are not, stop and complete them first.
 
 **If any MCP tool call fails, returns an unexpected error, or produces a result you
 cannot interpret — stop and ask the user for help.** Do not guess, retry blindly, or
-skip the step. Describe what you tried, what the tool returned, and ask the user how
-to proceed.
-
-### Rules for this phase
-
-- Do ask the user for shared (`#ifdef`) vs. clean replacement preference before modifying any files.
-- Do process `.h` files before `.c` files — fixing headers first prevents cascading compile errors.
-- Do maintain a deferred-errors list during Phase B for cross-file build errors.
-- Do use `get_device_migration_report` as the authoritative source — not the VS Code diagnostics panel.
-- Do fetch migration collateral links when no `Suggested fix` is provided — read the full `#symbol` anchor block before writing any replacement code.
-- Don't recall C2000 migration facts from memory — the MCP is the source of truth.
-- Don't run `buildProject` during Phase A (header migration) — the loop is report-only.
-- Don't modify SDK driverlib source files — only the project's own application source files.
-- Don't read only the page title or surrounding text of a collateral link — navigate to the exact `#anchor` section and read the complete diff block.
-- Don't alter existing `//_DEVICE_MIGRATION_` pragma markers — but do add them when generating new `#ifdef` blocks in Approach 1.
-
-> **Per-target:** When migrating to multiple target devices, run Phase 4 once for each
-> target project independently.
-
-Precondition: user application files are already copied into the target project (Phase 2,
-step 2.7).
-
-**Critical:** All file edits in this phase are made to the **target** project only.
-Never edit files in the source project directory. Before editing any file, confirm its
-path is under the target project — not the source.
-
-## Before modifying any files
-
-Ask the user:
-> "Do you want to (1) keep a shared codebase with `#ifdef` device branches so both source
-> and target devices compile from one file (this way the new files in the target project
-> have both the old source project code and newly generated migration code), or (2) a
-> clean replacement targeting only the new device?"
-
-- **Approach 1 (shared `#ifdef`):** Wrap changed code in `#if`/`#elif`/`#endif` blocks.
-  Remember all modifications are only made on the target device project.
-  Always add the `//_DEVICE_MIGRATION_` suffix to each `#if`, `#elif`, and `#endif` line
-  — this marker lets the C2000 IDEA extension track which branch is active per device.
-- **Approach 2 (clean replacement):** Simply replace old symbols with new ones; no
-  preprocessor wrappers.
-
-**Record the choice in `c2000-migration.md` header** (after the phase status table) as
-`**Strategy:** Shared codebase (#ifdef)` or `**Strategy:** Clean replacement` so any
-resume operations follow the same pattern consistently.
-
-## About `//_DEVICE_MIGRATION_` markers
-
-These suffixes on `#if`/`#elif`/`#endif` lines are placed by the C2000 IDEA extension to
-track device-specific branches. When a migration report flags a symbol inside such a
-block, fix only the **target device's branch**, not the source device branch. Do not
-remove or alter existing markers.
-
-## About pre-computed function fixes
-
-When `get_device_migration_report` provides a `Suggested fix` for a function call, apply
-it **verbatim** — the fix already accounts for all argument reordering, added/removed
-parameters, and type changes. Do not re-derive arguments.
-
-## Fixing issues — easy and complex
-
-The agent must fix **every** issue — easy or complex:
-- **Easy (auto-fixable ✓):** apply the suggested replacement directly.
-- **Complex (manual review ⚠):** investigate deeply — read surrounding code to understand
-  intent, review function definitions, analyze which registers are touched, use
-  **ti-asm-mcp** to understand register behavior, then construct the correct fix.
-- **If a flagged item is inside a comment or `#if 0` block**, it is not active code —
-  skip it and note it as a known inactive-code flag; do not modify the line.
-- **If an issue has `Change: removed`, no `Suggested fix`, and no `Migration Collateral`
-  link**, do not write a replacement from training knowledge — report the symbol to the
-  user with its file path and line number and mark it `needs human review`.
-- Only if an item **truly cannot be resolved** does the agent report it to the user.
-
-## Reading Migration Collateral links
-
-Each issue in the report may include a `Migration Collateral` URL of the form:
-
-```
-https://dev.ti.com/tirex/content/<C2000Ware_version>/docs/
-  <version>_Migration_Guides/html_pages/diff_reports/
-  <version>_<sourceDevice>_vs_<version>_<targetDevice>_driverlib.html#<symbol>
-```
-
-The `#<symbol>` anchor targets the exact function, enum, or register that changed.
-When no `Suggested fix` is provided, retrieve and parse this URL using the following
-protocol:
-
-1. **Attempt normal retrieval** — fetch the URL directly.
-2. **If retrieval fails**, try in order: `curl`, `wget`, downloading the raw HTML to a
-   temp file.
-3. **Save the content locally** — do not rely on in-memory streaming for large HTML pages.
-4. **Parse the document** — extract text content; strip style/script tags.
-5. **Locate the `#<symbol>` anchor** — navigate to the exact section identified by the
-   anchor fragment; do not stop at a partial match or a nearby entry.
-6. **Read surrounding sections for context** — include the full table row or function
-   block at the anchor, plus the immediately preceding and following entries.
-7. **Follow referenced structs, enums, typedefs, and macros** — if the diff references
-   a type or enum defined elsewhere in the page, locate and read those definitions too.
-8. **Summarize differences and migration impact** — old signature → new signature,
-   added/removed/renamed parameters, changed types, deprecated alternatives.
-9. **Propose code changes** — apply the fix using only data extracted from the collateral.
-   Do not infer or hallucinate parameter names or types not present in the page.
-
-**If all retrieval methods fail** (network restriction, firewall block, URL change):
-- Try the **ti-asm-mcp** tool to query register/symbol details for the target device
-- If that also fails, search the local SDK installation at `<c2000ware_path>/driverlib/<target-device>/`
-  for the header file containing the replacement symbol
-- If local SDK is not available, **stop and report to user:** "Cannot confidently fix
-  `{symbol}` — collateral inaccessible and SDK source not found. Please provide SDK path
-  or manual replacement."
-- **Never fabricate API calls or register values** when uncertain — fabricated fixes cause
-  runtime crashes.
-
-## Background migration check note
-
-The C2000 IDEA extension may be running a continuous migration check in the background.
-The VS Code Problems panel may update as files change. Use `get_device_migration_report`
-— not the diagnostics panel — as the authoritative source.
+skip the step.
 
 ---
 
-## Sub-agent dispatch (recommended)
+## Per-target isolation
 
-If your platform supports spawning sub-agents (Claude Code Agent tool, Cursor Task
-tool / `/multitask`, GitHub Copilot `/fleet`, OpenAI Codex subagents, etc.), dispatch
-one sub-agent per file for the fix loop in Phases A and B below. This keeps migration
-report data and collateral HTML out of the orchestrator's context window.
+When migrating to multiple target devices, run Phase 4 **once for each target project
+independently**. Complete all of Phase 4 (4A + 4B + 4C) for one target before starting
+Phase 4 for the next. Do not interleave file edits across different target projects.
 
-**How to dispatch per-file sub-agents:**
+If you find yourself looking at files from two different target project directories,
+stop and re-read `c2000-migration.md` to confirm which target you are working on.
 
-1. Build the ordered file list (all `.h` files first, then `.c` files in dependency order).
-2. For each file, spawn a sub-agent with a prompt that includes:
-   - The file path to migrate
-   - The source device and target device names
-   - The migration approach (Approach 1 `#ifdef` or Approach 2 clean replacement)
-   - The rules from the sections above (markers, pre-computed fixes, collateral protocol)
-   - Whether to build after fixing (no for `.h` files, yes for `.c` files)
-3. Each sub-agent runs the full fix loop for its file: run
-   `get_device_migration_report`, fix all issues, re-run the report until clean (and
-   rebuild for `.c` files).
-4. Each sub-agent returns a structured result: `{file, issuesFound, issuesFixed,
-   unresolvedIssues[], deferredErrors[]}`.
-5. The orchestrator collects all results and aggregates the deferred-errors list.
+---
 
-**Sequencing:** Process all files strictly one at a time, in order. Complete one file's
-sub-agent before spawning the next. `.h` files first, then `.c` files in dependency
-order. Do not run sub-agents in parallel — files may have interdependencies and builds
-must reflect the cumulative state of all prior fixes.
+## Step 4.0 — Strategy and pre-migration report
 
-**If your platform does not support sub-agents**, process files sequentially using the
-steps below. The workflow is identical — only the execution model differs.
+### 4.0a Ask the user for migration strategy
 
-## Per-file checkpoint (no-sub-agent path)
+Ask:
+> "Do you want to (1) keep a shared codebase with `#ifdef` device branches so both
+> source and target devices compile from one file, or (2) a clean replacement targeting
+> only the new device?"
 
-After completing each file's fix loop, update `c2000-migration.md` with a per-file entry:
-- File path
-- Number of issues found
-- Number of issues fixed
-- Any unresolved issues (with line numbers and reasons)
-- Any deferred build errors pointing to other files
+- **Approach 1 (shared `#ifdef`):** Changed code is wrapped in `#if`/`#elif`/`#endif`
+  blocks with `//_DEVICE_MIGRATION_` suffix on each directive line.
+- **Approach 2 (clean replacement):** Old symbols are replaced directly.
 
-Maintain a running progress table in `c2000-migration.md`:
+Record the choice in `c2000-migration.md`:
+```
+**Strategy:** Shared codebase (#ifdef)
+```
+or
+```
+**Strategy:** Clean replacement
+```
 
+> **Multi-target note:** When migrating to multiple target devices, ask this question
+> **once** (before Phase 4 for the first target) and apply the **same strategy to all
+> targets**. Do not re-ask for each target — a consistent strategy prevents diverging
+> codebases. If the user needs different strategies per target, they must explicitly
+> request that, and you should note the per-target strategy in each target's
+> `c2000-migration.md`.
+
+### 4.0b Pre-migration scope report
+
+**Project name guard:** Confirm the **target** project name from `c2000-migration.md`
+before calling any report tool. Do not call `get_project_migration_report` with the
+source project name.
+
+Call `get_project_migration_report(<target project name>)`. Report to the user:
+*"Found `<N>` issues across `<M>` files. Starting migration."*
+
+Use this for scope reporting only — not to set processing order. Processing order is
+always fixed: all `.h` files first, then `.c` files in dependency order.
+
+---
+
+## Step 4.1 — Build the file list
+
+From the target project directory, collect:
+
+1. **`.h` files** — all application header files. Exclude:
+   - Files under `<c2000ware_path>/` (SDK files — do not modify SDK source).
+   - Files inside the `sysConfigOutputLocation` folder (SysConfig-generated outputs —
+     e.g., `device.h` in the `syscfg_c/` folder; these are regenerated by SysConfig).
+   - Files that are clearly part of the C2000Ware driverlib (e.g., paths containing
+     `/driverlib/` followed by a device family name).
+2. **`.c` files** — all application source files in dependency order. Apply the same
+   exclusions as for `.h` files above. Exclude `device.c` in the `sysConfigOutputLocation`
+   — it is SysConfig-generated. In dependency order:
+   - Leaf files first (those that only `#include` SDK headers, no project-internal `#include`s).
+   - Files that include already-migrated project headers next.
+   - Files with the most project-internal dependencies last (typically `main.c`).
+
+3. **`.asm` files** — list all application assembly files in the target project directory.
+   Apply the same exclusions (exclude SDK paths, SysConfig-generated paths, driverlib paths).
+
+   > **⚠ Assembly files are out of scope for automated migration.**
+   > The device-migration workflow migrates driverlib API and register symbols in C/C++
+   > source files only. Assembly (`.asm`) files for CLA firmware, boot routines, or
+   > hardware-assist code must be reviewed **manually** — the migration tool does not
+   > analyse them, and automated replacement would be unsafe.
+   >
+   > For each `.asm` file found:
+   > 1. Record it in `c2000-migration.md` as:
+   >    `REVIEW-REQUIRED: <filename> — assembly file; manual inspection required`
+   > 2. Add a row to the progress table with status `⚠ Manual`.
+   > 3. Tell the user: *"Assembly file `<filename>` was found in the target project.
+   >    Assembly files are not migrated automatically. Please review this file manually
+   >    for device-specific register addresses, memory section names, and instruction
+   >    variants that may differ on the target device."*
+   >
+   > Do not dispatch a sub-agent for `.asm` files. Do not skip recording them.
+
+Record the ordered list in `c2000-migration.md`:
+```
+## Phase 4 file list
+.h files (Phase 4A): file1.h, file2.h, ...
+.c files (Phase 4B, in order): fileA.c, fileB.c, ..., main.c
+.asm files (manual review): fileX.asm, fileY.asm, ...  (or "none")
+```
+
+Add all files to the progress table with status `⬜ Pending` (or `⚠ Manual` for `.asm`):
 ```
 | File | Issues | Fixed | Unresolved | Status |
 |------|--------|-------|------------|--------|
-| adc.h | 2 | 2 | 0 | ✅ |
-| epwm.c | 5 | 4 | 1 | ⚠ |
+| file1.h | — | — | — | ⬜ |
+| fileX.asm | — | — | — | ⚠ Manual |
+...
 ```
 
-Update this table after each file. Status: ✅ = clean, ⚠ = unresolved items, ⏭ = skipped.
-This table is the primary recovery point if context is lost — it shows exactly where to resume.
+---
 
-**For large projects (>50 files):** Before starting each file, add its row with status
-`⏳ In Progress`. Update to ✅ or ⚠ after completing. If the session is interrupted, the
-last `⏳ In Progress` row is the resume point — re-read that file's report and continue.
-Do not re-process rows already marked ✅.
+## Step 4.2 — Dispatch Phase 4A (all `.h` files)
+
+⛔ **Do not read `phase-4a-headers.md` yourself. Send it to the sub-agent.**
+
+Read [`phase-4-sub-agent-briefing.md`](phase-4-sub-agent-briefing.md) for the exact
+briefing template to fill out and send. Fill out **every field** before dispatching.
+
+Dispatch one sub-agent with:
+- Instruction file: `phase-4a-headers.md`
+- All `.h` file paths (in order)
+- Full briefing (all fields from the template)
+
+**Wait** for the sub-agent's structured result before doing anything else.
+
+### Orchestrator checkpoint after Phase 4A
+
+After the sub-agent returns:
+
+1. Verify `c2000-migration.md` contains a completed row for every `.h` file.
+2. Aggregate totals: issues found, fixed, unresolved.
+3. Confirm inline summary was presented to the user.
+4. Update progress table status for all `.h` rows (✅ or ⚠).
+
+Only then proceed to Step 4.3.
 
 ---
 
-## 4.0 Pre-migration report
+## Step 4.3 — Dispatch Phase 4B (one `.c` file per sub-agent)
 
-Before starting the per-file loop, call `get_project_migration_report` once on the
-entire target project. This gives a total issue count across all files and an overview of
-where the work is concentrated. Report to the user: *"Found `<N>` issues across `<M>`
-files. Starting migration."*
+⛔ **Do not read `phase-4b-sources.md` yourself. Send it to the sub-agent.**
+⛔ **Dispatch one sub-agent per `.c` file. Never bundle multiple `.c` files.**
 
-Use this report for scope reporting and to prioritize attention — **not** to set the file
-processing order. The processing order is fixed by 4.1–4.3: all `.h` files first, then
-`.c` files in dependency order. Issue count never overrides that order.
+Read [`phase-4-sub-agent-briefing.md`](phase-4-sub-agent-briefing.md) for the exact
+Phase 4B briefing template.
 
-If `get_project_migration_report` is unavailable or fails, proceed with per-file
-`get_device_migration_report` calls — the pre-migration report is optional but recommended.
+For each `.c` file (in the dependency order from Step 4.1):
 
-## 4.1 Phase A — Migrate `.h` files first (no build step)
-
-For each header file in the target project:
-
-1. Run `get_device_migration_report` on the file. **Pass the target project's file path
-   — not the source project's path.** Verify the path starts with the target project
-   directory before calling.
-2. If the report returns **zero issues**: static analysis found no incompatibilities. This
-   does not guarantee full migration — verify includes, types, and peripheral config
-   logic. Proceed to the next file.
-3. Fix every issue one by one.
-4. Re-run the migration report to confirm each item is resolved or no longer relevant
-   (e.g., the flagged item was in a comment, not active code).
-5. Iterate until the report is clean for this file.
-6. **Convergence guard:** if re-running the report after a fix shows the same issue still
-   flagged at the same line, the fix did not take effect — do not loop indefinitely.
-   After two failed attempts on the same item, stop and report it to the user.
-
-No build step for headers — the loop terminates purely on a clean report. Do not call
-`buildProject` during Phase A — it is unnecessary and slow at this stage.
-
-**A clean Phase A report means all headers are resolved — it does not mean migration is
-complete.** Always proceed to Phase B (`.c` files) and Phase C (final sweep) before
-moving to Phase 5.
-
-## 4.2 Phase B — Migrate `.c` files (with build step)
-
-Process files in dependency order: files with no project-internal `#include`s first,
-then files that only include already-migrated project files. This prevents cascading
-fix/break cycles caused by migrating a caller before its included header is clean.
-
-Maintain a **deferred-errors list** `{file, line, error_message}` for cross-file build
-errors discovered during this phase.
-
-For each source file in the target project:
-
-1. Run `get_device_migration_report` on the file.
-2. If the report returns **zero issues**: verify includes, types, and logic, then build.
-3. Fix every issue one by one.
-4. Re-run the migration report to confirm resolution or irrelevance.
-5. Rebuild to check for compilation issues in that file. **Always call `buildProject` on
-   the target project, not the source project.**
-6. Iterate report + build until either:
-   - The file is clean and compiles successfully, OR
-   - The only remaining build errors point to *other* files (the error's file:line is not
-     the current file) — add those to the deferred-errors list and move on.
-7. **If a build error is unrelated to migration** (pre-existing syntax error, wrong
-   `#include`, missing file also missing in source project), record it with a
-   `[NON-MIGRATION]` tag in the deferred-errors list and continue — do not block
-   migration progress on pre-existing issues.
-8. **If a build error is "driverlib header not found"**, this indicates a missing SDK
-   include path — stop and ask the user to verify the include path set in Phase 2.
-9. Move to the next file.
-
-After all files are processed, review the deferred-errors list. If the referenced file
-was migrated and the error disappeared, remove it. If errors persist, carry them into
-Phase C.
-
-## 4.3 Phase C — Final sweep
-
-After all files are migrated and the project builds:
-
-1. Re-run `get_device_migration_report` on **every file** (both `.h` and `.c`).
-2. **Completion criteria:** report returns zero issues for every file **and** `buildProject`
-   returns no errors (warnings acceptable).
-3. If issues surface, repeat the fix loop for the affected files.
-4. If the issue count is unchanged across two consecutive sweeps, the agent is stuck —
-   escalate to the user with a list of the unresolved issues.
-5. Review any remaining deferred-errors from Phase B and resolve or flag them.
-6. **If the build is clean but report flags linger**, verify the flagged items are inside
-   inactive branches (Approach 1 source-device `#ifdef`, `#if 0`, or comments) — if so,
-   the migration is functionally complete; document these as known inactive-code flags.
+1. **Pre-dispatch state check (required — especially when resuming):**
+   Before marking as `⏳ In Progress` or dispatching, check the current progress table row
+   for this file in `c2000-migration.md`:
+   - If the row shows `✅` or `⚠` → this file was already completed. **Skip it entirely.**
+     Do not re-dispatch. This prevents double-applying migrations after a session resume.
+   - If the row shows `⏳ In Progress` → the file was dispatched in a prior session but the
+     result was not recorded. Read the **current file content on disk** to determine how far
+     the previous sub-agent got:
+     - If the file appears fully migrated (no source-device symbols visible, consistent
+       driverlib style throughout) → treat it as ✅ and update the progress table accordingly
+       without re-dispatching.
+     - If the file appears partially migrated (mix of old and new symbols, or cut off
+       mid-function) → pass the last micro-checkpoint line number in the briefing so the
+       new sub-agent can resume from that point rather than restarting from line 1.
+   - If the row shows `⬜ Pending` → proceed normally to step 2.
+2. Mark the file as `⏳ In Progress` in the progress table.
+3. Fill out the Phase 4B briefing template completely, including any deferred-errors
+   from prior dispatches that point to this file.
+4. Dispatch the sub-agent with:
+   - Instruction file: `phase-4b-sources.md`
+   - Exactly this one `.c` file
+   - Full briefing
+5. **Wait** for the structured result.
+6. **Orchestrator checkpoint:**
+   - Verify the log entry was written to `c2000-migration.md`.
+   - Update the progress table row for this file (✅ or ⚠).
+   - Carry any new cross-file deferred-errors forward to the affected file's future briefing.
+   - Aggregate totals.
+7. Only then dispatch the next `.c` file.
 
 ---
 
-**Update `c2000-migration.md`:** Record Phase 4 as COMPLETE. Include the per-file summary
-table (issues found, fixed, unresolved), the deferred-errors list status, and the final
-build result after Phase C.
+## Step 4.4 — Dispatch Phase 4C (final sweep)
 
-**Phase 4 complete.** Present a summary of what was done to the user (files migrated,
-issues found/fixed per file, any unresolved items, final build status) and ask: *"Phase 4
-is complete. Does everything look correct? Ready to move to Phase 5 (migration report)?"*
-Wait for the user's confirmation, then **re-read `device-migration.md`** to proceed.
+⛔ **Do not read `phase-4c-sweep.md` yourself. Send it to the sub-agent.**
+
+Only dispatch Phase 4C after **all** Phase 4B dispatches are complete and checkpointed.
+
+Read [`phase-4-sub-agent-briefing.md`](phase-4-sub-agent-briefing.md) for the Phase 4C
+briefing template. Fill out all fields, including the complete deferred-errors list.
+
+**Wait** for the Phase 4C structured result.
+
+### Orchestrator checkpoint after Phase 4C
+
+1. Check whether Phase 4C reported a **clean build (0 errors)** or a **non-passing build**.
+2. Aggregate all totals across 4A + 4B + 4C so far.
+3. If `Final clean build: PASS` → proceed directly to Step 4.6.
+4. If `Final clean build: FAIL` → proceed to Step 4.5 (build error triage).
+
+---
+
+## Step 4.5 — Dispatch Phase 4D (build error triage) — *if needed*
+
+⛔ **Only dispatch Phase 4D if Phase 4C reported a non-passing build.**
+⛔ **Do not read `phase-4d-build-triage.md` yourself. Send it to the sub-agent.**
+
+If Phase 4C's final `buildProject()` call returned errors, dispatch a Phase 4D sub-agent:
+
+1. Pass the Phase 4C build error output verbatim in the briefing.
+2. Pass the current `c2000-migration.md` contents for context.
+3. Use the standard sub-agent briefing format from
+   [`phase-4-sub-agent-briefing.md`](phase-4-sub-agent-briefing.md), with:
+   - Instruction file: `phase-4d-build-triage.md`
+   - Target project name, source device, target device (as usual)
+
+**Wait** for the Phase 4D structured result.
+
+### Orchestrator checkpoint after Phase 4D
+
+1. Check Phase 4D's returned status: `CLEAN BUILD` or `BUILD NOT CLEAN — manual items remain`.
+2. Merge any new `DEFERRED-MANUAL` items from Phase 4D into the master deferred list.
+3. Update the Phase status table in `c2000-migration.md` with the Phase 4D row.
+4. Proceed to Step 4.6 regardless of Phase 4D outcome — the Phase 4D file records all
+   remaining manual items; do not loop Phase 4D again.
+
+---
+
+## Step 4.6 — Phase 4 complete
+
+Update `c2000-migration.md`:
+```
+| Phase 4 — Code | ✅ COMPLETE | <N files> migrated, <M issues> fixed, clean build <PASS/FAIL with manual items> |
+```
+
+Present a complete summary to the user:
+
+```
+Phase 4 complete for <target project name>.
+Files migrated: <total>
+Issues found: <total> | Fixed: <total> | Unresolved: <total>
+DEFERRED-MANUAL: <K items — list them>
+Final clean build: <PASS | FAIL — <Z> errors remain, recorded as DEFERRED-MANUAL>
+
+Any items needing manual review have been recorded in c2000-migration.md.
+```
+
+Ask: *"Does everything look correct? Ready to move to Phase 5 (migration report)?"*
+
+Wait for the user's confirmation. Then **re-read `device-migration.md`** to proceed.
+
+---
+
+## Recovery: resuming an interrupted Phase 4
+
+If this session was interrupted (context limit, session end, crash):
+
+1. Re-read `c2000-migration.md` in the target project.
+2. Note the last completed row in the file progress table (last ✅ or ⚠).
+3. If a row shows `⏳ In Progress`, that file was interrupted mid-migration.
+4. Resume from the interrupted file — for a mid-file interruption, pass the
+   last micro-checkpoint line number in the briefing so the sub-agent can
+   continue from where it left off.
+5. Do not re-process rows already marked ✅.

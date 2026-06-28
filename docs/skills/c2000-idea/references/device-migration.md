@@ -31,9 +31,11 @@ explicitly:
 Call `list_migration_devices()` from IDEA MCP immediately after collecting inputs.
 - Confirm every **target device** the user provided is in the supported list.
 - If any target device is not supported, notify the user which device(s) are unsupported
-  and **terminate** — do not proceed.
+  and **exclude those targets** — remove them from the target list and continue with the
+  remaining supported targets. If **all** targets are unsupported, stop and tell the user.
 - The source device is validated later (Phase 1, step 1.2) once discovered from the
-  project, but if it is not in the supported list, also notify the user and terminate.
+  project. If the source device is not in the supported list, notify the user and
+  **stop** — migration cannot proceed without a supported source.
 
 ## Dependencies
 
@@ -99,6 +101,10 @@ to recover your position and progress.**
 
 ## Resuming a paused migration
 
+> ⛔ **If you are resuming:** Read `c2000-migration.md` FIRST — before reading the Phase
+> sequence below. Identify where you left off, then jump directly to the correct phase file.
+> **Do not start from Phase 1 unless Phase 1 is explicitly recorded as incomplete.**
+
 If you are resuming a migration that was started in a previous session:
 
 1. Locate the target project's `c2000-migration.md`. The `get_projects()` result also
@@ -113,15 +119,21 @@ If you are resuming a migration that was started in a previous session:
 
 ## How to run this workflow
 
-This workflow is split into five phases. **Execute them in strict order.** Read one phase
-file at a time, complete all steps in it, then return here and read the next phase file.
-Do not read ahead — only load the next phase when the current one is done.
+> ⛔ **Do not read ahead.** Read one phase file at a time. Complete every step in it.
+> Return here. Only then read the next phase file. Do not open the next phase file early.
+
+This workflow is split into six phases. **Execute them in strict order.**
 
 > **Per-target:** When migrating to multiple target devices, migrate **one device at a
 > time** — run Phases 2, 3, 4, and 5 fully for one target before starting the next. Do not
 > interleave or batch phases across targets. Phase 1 covers all targets at once.
 
 ### Phase sequence
+
+0. **Read `device-migration/phase-0-preflight.md`** — Run the pre-flight check: probe all
+   MCP servers (IDEA MCP, CCS Project MCP, TI ASM MCP), verify Git state, and initialize
+   the session context. **This phase runs once before Phase 1 and is mandatory.**
+   → When complete, return here.
 
 1. **Read `device-migration/phase-1-import.md`** — Discover the source project, identify
    the SDK, import and validate the target project(s).
@@ -150,12 +162,24 @@ Do not read ahead — only load the next phase when the current one is done.
 
 These rules apply across all phases:
 
+### Universal project invariants (absolute — never override)
+
+- Do keep the target project in the **universal project style**: it must always retain a
+  `.syscfg` with the `device_support` module as the non-negotiable baseline — regardless
+  of whether the source project used SysConfig at all. Never remove the target's `.syscfg`.
+- Do treat `device_support` as the **absolute minimum** in the target syscfg. It generates
+  `device.c`/`device.h` (clocking/init), `.opt` (compiler options), and `.cmd.genlibs`
+  (linker libs), and provides pinmux data essential for the target device — even if the
+  user does not configure any peripheral in SysConfig right now.
+- Do layer all other syscfg content (peripheral configs, CMD module, etc.) **on top of** the
+  `device_support` baseline if the source used them — but the baseline is always preserved.
+
+### General rules
+
 - Do keep the source project unchanged — it is the golden reference.
 - Do cross-check CCS MCP and IDEA MCP results for consistency.
-- Do terminate early if devices are not in the supported migration list.
+- Do exclude unsupported target devices (notify user); stop only if the source device is unsupported.
 - Do apply settings automatically unless the difference is a legitimate device delta.
-- Do ensure the target always has a `.syscfg` with the device-support module present — it
-  regenerates `device.c`/`device.h`, `.opt`, and `.cmd.genlibs`.
 - Do mirror the source's linker style: a CMD module in the target syscfg if the source used
   one, a plain `.cmd` (CMD module removed) if the source used a plain file.
 - Do read AGENTS.md from SDK roots if present.
