@@ -84,6 +84,40 @@ If the source uses a plain `.cmd` (no CMD module), skip this step.
 
 Call `migrate(device, package)` using the user's selected device and package.
 
+## 3.7a Peripheral coverage audit (required after migrate)
+
+After `migrate()` returns, verify that all peripheral modules present in the **source**
+syscfg are still present in the **target** syscfg. `migrate()` can silently drop modules
+that have no direct equivalent on the target device without raising an error.
+
+1. Call `getModuleInstances` to retrieve the full list of module instances now present in
+   the target syscfg.
+2. Compare the returned list against the source module list you recorded in Phase 3A
+   (step 3.2 — the `getModuleInstances` call on the source syscfg before it was closed).
+   - If Phase 3A did not record the source module list, call `getModuleInstances` on the
+     **source** project's `.syscfg` now (open it read-only, list instances, close it).
+3. For each source module that is **absent** from the target module list:
+   - Check whether the peripheral exists on the target device by calling
+     `getModuleDescription` for that module name.
+   - **If the module description returns valid data** (module exists on target): the module
+     was silently dropped by `migrate()`. Attempt to restore it with `addModuleInstances`,
+     then re-apply the source instance configuration via `changeConfiguration`.
+     Record in `c2000-migration.md`:
+     `MIGRATE-RESTORED: <module> — silently dropped by migrate(), manually re-added`
+   - **If the module description returns an error or empty result** (module not on target):
+     the peripheral genuinely does not exist on this device. Do **not** attempt to add it.
+     Record in `c2000-migration.md`:
+     `FEATURE-ABSENT: <module> — peripheral not available on <target-device>`
+     Tell the user: *"Module `<module>` was present in the source project but does not
+     exist on `<target-device>`. It has been removed. You must implement equivalent
+     functionality differently or confirm it is not needed for your application."*
+4. If all source modules are present in the target, record:
+   `Peripheral coverage audit: PASS — all <N> source modules present after migrate()`
+
+> **Note:** This audit is distinct from step 3.9 error fixing. Step 3.9 fixes
+> configuration errors within modules that *are* present. This step catches modules that
+> were entirely silently dropped. Always run this audit before step 3.8.
+
 ## 3.8 Check errors
 
 Call `getErrorsAndWarnings`. Review all errors and warnings.
@@ -221,6 +255,44 @@ The generated outputs are automatically correct after migration — `device.c`/`
 (from the device-support module), the peripheral `.c`/`.h`, the `.opt`, the `.cmd.genlibs`,
 and (when a CMD module is present) the generated `.cmd`. No manual migration is needed for
 any SysConfig-generated file.
+
+---
+
+## 3.12a SysConfig output integration check (required before Phase 4)
+
+Before closing and handing off to Phase 4, verify that the SysConfig-generated outputs are
+actually wired into the CCS project build. This check must happen here — Phase 4 builds the
+project and a misconfigured output wiring would cause silent wrong compilation.
+
+1. Call `getProjectDescriptors` on the **target** project and note `sysConfigOutputLocation`
+   (the folder where SysConfig writes `device.c`, `device.h`, `.opt`, etc.).
+
+2. **Verify `device.c` is compiled:**
+   - Confirm `device.c` exists in the `sysConfigOutputLocation` folder on disk.
+   - Call `getToolFlags` on the target project's **compiler** tool for the active build
+     configuration. Look for `device.c` (or the full path) listed as a source file, or verify
+     CCS automatically includes all files in the `sysConfigOutputLocation` folder as sources.
+   - If `device.c` is present on disk but NOT in the compiler source list: call the
+     appropriate CCS MCP tool to add it as a source file, or tell the user to add it manually
+     and do not proceed to Phase 4 until confirmed.
+
+3. **Verify `device.opt` is passed to the compiler:**
+   - Call `getToolFlags` on the target project's **compiler** tool for the active build
+     configuration.
+   - Look for a flag matching `--cmd_file=<...>/device.opt` or `@<...>/device.opt`.
+   - If the `.opt` flag is **missing**: the device guard defines from the device-support
+     module (e.g., `--define=_LAUNCHXL_F28P55X`) will not be applied — the project may
+     compile but produce incorrect device-initialization code.
+   - In this case, call `setToolFlags` to add `--cmd_file=<sysConfigOutputLocation>/device.opt`
+     to the compiler flags, then read back with `getToolFlags` to confirm it was applied.
+   - Record the result in `c2000-migration.md`:
+     ```
+     Phase 3 — SysConfig output integration: device.c compiled: yes/no, device.opt wired: yes/no
+     ```
+   - If either check could not be confirmed, flag it to the user:
+     *"Please verify in CCS that `device.c` is compiled and `device.opt` is passed to the
+     compiler for the `<active build config>` build configuration. Proceeding without these
+     will produce incorrect device initialization."*
 
 ---
 
