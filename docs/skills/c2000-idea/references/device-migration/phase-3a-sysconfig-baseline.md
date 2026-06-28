@@ -49,6 +49,14 @@ as-is (it already contains the device-support module).
 >   first, then repeat the full Phase 3A + Phase 3B sequence for `cpu2.syscfg`. Record
 >   each in `c2000-migration.md` separately. Tell the user about the dual-core syscfg
 >   before starting and confirm which CPU's syscfg to process first.
+>
+> **⚠ SysConfig MCP supports only one open file at a time (dual-syscfg):**
+> Before starting Phase 3A for `cpu2.syscfg`, confirm that `cpu1.syscfg` is fully closed.
+> Phase 3B step 3.12 calls `closeFile` — verify that call completed successfully before
+> calling `openFile` on `cpu2.syscfg`. If `closeFile` for cpu1 was not confirmed (e.g., the
+> session ended between phases), call `closeFile` once now as a precaution before opening
+> cpu2. Opening a second `.syscfg` while another is already open may silently operate on
+> the wrong file or return an error depending on the SysConfig MCP version.
 
 ## 3.2 Open the target `.syscfg`
 
@@ -62,6 +70,29 @@ Open the target project's `.syscfg` via `openFile` (ccs-sysconfig MCP) — the c
 or the universal's own file when the source had none. Read the `additionalInstructions`
 field in the result. **If `additionalInstructions` contains device-specific guidance, it
 takes precedence over the generic steps in this phase — follow it first.**
+
+> **Record the source module list now (required for Phase 3B coverage audit):**
+> **Before** this step modifies anything, call `getModuleInstances` on the **source**
+> project's `.syscfg` to capture the baseline module inventory. This list is the ground
+> truth that Phase 3B step 3.7a compares against after `migrate()` runs.
+>
+> **How:** Call `getProjectDescriptors` on the **source** project name (not the target)
+> and extract its `sysConfigLocation` field — this is the absolute path to the **source**
+> project's original `.syscfg` file. Open that path read-only via `openFile`, call
+> `getModuleInstances`, then call `closeFile` immediately. **Do not leave the source
+> syscfg open.** Do not use the target project's `sysConfigLocation` here — it points
+> to the copy written in step 3.1, which already has the source content but will be
+> modified in Phase 3B.
+>
+> Write the result to `c2000-migration.md` under:
+> ```
+> ## Phase 3A — Source module list
+> <paste the full getModuleInstances result here — one module name per line>
+> ```
+>
+> **If the source has no `.syscfg`** (step 3.1 was skipped): record
+> `Phase 3A — Source module list: N/A (source had no syscfg)` and skip this step.
+> Phase 3B will skip the coverage audit accordingly.
 
 > **⚠ SysConfig version / format incompatibility:**
 > If `openFile` returns an error mentioning version mismatch, incompatible format, or
@@ -106,14 +137,54 @@ for an instance whose name equals `"device_support"` or whose module type/ID con
 > intent.
 >
 > The source project's clock configuration typically lives in its `device.c` (now excluded
-> from migration). After completing Phase 3, tell the user:
-> *"The `device_support` module in the target syscfg has been set to target-device defaults.
-> Please review and reconfigure the oscillator source, CPU frequency, and peripheral clock
-> enables in the target SysConfig to match your source project's intent. Check the source
-> project's `device.c` for the original settings."*
->
-> Record this as a `REVIEW-REQUIRED: device_support clock/oscillator settings` item in
-> `c2000-migration.md`.
+> from migration). See step 3.3a below — it extracts these settings before they are lost.
+
+## 3.3a Extract source clock settings for user reference (required)
+
+**Purpose:** Before Phase 3B modifies the target syscfg, capture the source project's
+clock configuration so the user has the original values when they manually reconfigure
+the target `device_support` module.
+
+**How to extract:**
+
+1. Locate the source project's `device.c`:
+   - Call `getProjectDescriptors` on the **source** project to get its root directory.
+   - Look for `device.c` directly in the **source** project directory or in a `device/`
+     subdirectory inside the **source** project. This is the file excluded from migration
+     in Phase 2 step 2.7 — read it from the **source** directory (do not touch it; read-only).
+   - **⚠ Do NOT read `device.c` from the target project's `sysConfigOutputLocation` folder.**
+     The `sysConfigOutputLocation` folder (e.g., `syscfg_c/`) inside the **target** project
+     also contains a `device.c`, but that file is **SysConfig-generated for the target device**
+     with target-device defaults — it does NOT contain the source project's clock configuration.
+     Reading it here would capture the wrong (default) values. Always look in the **source**
+     project directory, not the target.
+2. Scan the file for the following patterns and extract their values:
+   - `SysCtl_setClock(...)` or `Device_initCPUTimers(...)` — CPU clock configuration
+   - `SysCtl_selectOscSource(...)` — oscillator source (INTOSC1/INTOSC2/XTAL)
+   - `SysCtl_setAuxClock(...)` — auxiliary clock (if present)
+   - Any `#define` for `DEVICE_SYSCLK_FREQ`, `CPU_FREQ`, or equivalent frequency constants
+   - Any `SysCtl_enablePeripheral(...)` calls — peripheral clock enables
+3. Write these extracted values verbatim to `c2000-migration.md` under:
+   ```
+   ## Phase 3 — Source clock configuration (for manual reference)
+   SysCtl_setClock: <extracted call or value>
+   Oscillator source: <INTOSC1 / INTOSC2 / XTAL — from SysCtl_selectOscSource>
+   CPU frequency: <value from DEVICE_SYSCLK_FREQ or equivalent define>
+   Auxiliary clock: <extracted call, or "not configured">
+   Peripheral enables: <list of SysCtl_enablePeripheral calls, or "none found">
+   ```
+4. If the source `device.c` cannot be located (e.g., the source project uses a
+   different init structure), record: `CLOCK-REFERENCE: device.c not found — user must
+   extract clock settings manually from the source project` and notify the user.
+
+After completing this extraction, record the standard review item:
+`REVIEW-REQUIRED: device_support clock/oscillator settings — see "Source clock configuration" section above`
+
+Tell the user:
+*"Clock configuration has been extracted from the source project's `device.c` and
+recorded in `c2000-migration.md`. After Phase 3, please open the target SysConfig and
+reconfigure the `device_support` module's oscillator source, CPU frequency, and
+peripheral clock enables to match these values."*
 
 ---
 
