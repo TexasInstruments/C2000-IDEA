@@ -30,11 +30,23 @@ source to the target, except where differences are legitimate device deltas.
 Use CCS MCP `getToolFlags` to read settings from both projects and `setToolFlags` to
 apply mismatches to the target.
 
-**Build configuration:** Identify which build configuration the source project actively
-uses (typically `CPU1_FLASH` or `Debug`). Apply all Phase 2 settings to **that same
-configuration** in the target. Do not apply settings to a different build config by
-mistake. If the source has multiple build configurations, ask the user which one to
-target before proceeding.
+## 2.0 Identify the active build configuration
+
+Call `getToolFlags` on the **source** project and identify which build configuration it
+actively uses (typically `CPU1_FLASH` or `Debug`). Apply all Phase 2 settings to **that
+same configuration** in the target. Do not apply settings to a different build config by
+mistake. If the source has multiple build configurations, ask the user which one to target
+before proceeding.
+
+**Update `c2000-migration.md`:** Replace the placeholder recorded in Phase 1 step 1.9:
+```
+Active build config: TBD — to be confirmed and filled in Phase 2 (step 2.0)
+```
+with the confirmed value:
+```
+Active build config: <confirmed config name, e.g. CPU1_FLASH>
+```
+All subsequent phases (3, 4, 5) read this value from the log. Do not leave it as TBD.
 
 **For every step in this phase:** before applying any change, tell the user what you
 found (source value vs. target value) and what you plan to apply. Wait for the user to
@@ -227,9 +239,12 @@ that should come from the new SDK (ignore these). Use these heuristics:
   migration. This includes the device-support and CMD-module outputs: `device.c`,
   `device.h`, the generated `.cmd`, `.opt`, and `.cmd.genlibs`. Detect them two ways:
   - To call `listGeneratedArtifacts` (ccs-sysconfig MCP), the source `.syscfg` **must be
-    open** first. Call `openFile` on the source `.syscfg` path, then call
-    `listGeneratedArtifacts`, then call `closeFile` immediately. Use the returned names as
-    the exclusion list.
+    open** first. **Important:** Step 2.5 already opened and closed the source `.syscfg`
+    for CMD module detection. You must open it again here — call `openFile` on the source
+    `.syscfg` path (from `getProjectDescriptors` on the source project), call
+    `listGeneratedArtifacts`, then call `closeFile` immediately. Do not leave it open.
+    If the source has no `.syscfg`, skip this sub-step and rely on the name-based fallback.
+    Use the returned names as the exclusion list.
   - Use `sysConfigOutputLocation` from `getProjectDescriptors` to find the SysConfig
     output folder — ignore all files under it regardless of name.
 
