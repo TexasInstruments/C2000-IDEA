@@ -42,16 +42,12 @@ call — it returns the list of available build tool options without modifying a
 
 ## Step 0.3 — Probe TI ASM MCP
 
-Attempt any TI ASM MCP tool call. The exact tool name depends on which tools the TI ASM
-MCP exposes — try the first tool listed in the MCP's tool manifest (any lightweight
-introspection or info call). The default port is `55000`.
+Call `list_devices` (TI ASM MCP) to list the devices the TI ASM MCP supports. It takes no
+arguments and is a lightweight read-only call — the result does not matter, this only
+confirms the MCP is available and responding. The default port is `55000`.
 
-> **If you cannot determine any tool name** from the MCP manifest, try a minimal call to
-> any tool you know the TI ASM MCP provides (e.g., a device-lookup or TRM-query tool).
-> If no tool is callable, treat TI ASM MCP as unavailable (soft warning — see below).
-
-- **Success** → TI ASM MCP is live.
-- **Failure / tool not found** → TI ASM MCP is not available. This is a **soft warning**
+- **Success (any response)** → TI ASM MCP is live.
+- **Tool not found / unreachable** → TI ASM MCP is not available. This is a **soft warning**
   (not a hard stop), because TI ASM MCP is only required when a migration report issue
   has no `Suggested fix` and you need to look up the register in the TRM. Tell the user:
   > *"TI ASM MCP is not available (port 55000). Migration can proceed, but if any Phase 4
