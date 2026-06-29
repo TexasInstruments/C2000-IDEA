@@ -30,8 +30,22 @@ orchestrator before proceeding:
 | Target device | `<e.g. f28p55x>` |
 | Migration approach | Approach 1 (`#ifdef`) OR Approach 2 (clean replacement) |
 | Active build config | `<e.g. CPU1_FLASH>` |
+| `c2000ware_path` | `<absolute path to C2000Ware root>` |
 | `sysConfigOutputLocation` | `<path — do not edit any file under this folder>` |
 | Deferred-errors context | Any errors from previous files pointing to this file |
+
+> **REQUIRED: Verify migration approach from `c2000-migration.md` before touching the file:**
+> Read `c2000-migration.md` and locate the `## Phase 4 — Migration Strategy` section.
+> Confirm the `Strategy:` value matches the `Migration approach` in your briefing above.
+>
+> - If the log says `Strategy: Approach 1 (shared #ifdef)` → use `#ifdef` wrapping for every fix in this file.
+> - If the log says `Strategy: Approach 2 (clean replacement)` → replace symbols directly for every fix in this file.
+> - **If the section is missing or the values conflict:** stop and ask the orchestrator
+>   to confirm the strategy before proceeding. Do not guess or default to one approach.
+>
+> This check is required for **every Phase 4B dispatch** — not just the first file.
+> Even if you processed a previous file with one approach, re-read the log entry to
+> confirm consistency before starting on this file.
 
 ---
 
@@ -65,8 +79,8 @@ orchestrator before proceeding:
 
 ## How to fix each issue
 
-- **Easy (auto-fixable ✓):** apply the `Suggested fix` verbatim.
-- **Complex (manual review ⚠):** read surrounding code, check intent, use ti-asm-mcp
+- **Easy (auto-fixable):** apply the `Suggested fix` verbatim.
+- **Complex (manual review):** read surrounding code, check intent, use ti-asm-mcp
   if needed, construct fix from collateral only.
   > **Argument-order sanity check (required for complex fixes):**
   > After applying a complex fix (one derived from collateral, not from a `Suggested fix`),
@@ -179,6 +193,9 @@ After all checks are complete, proceed to Step 3a (GPIO check) then Step 6 (buil
 **How to verify each hit:**
 1. Open the target device's GPIO header:
    `<c2000ware_path>/driverlib/<target-device>/driverlib/gpio.h`
+   > **Use the lowercase device family name** (e.g., `f28p55x`, not `F28P55X`) —
+   > the same format that IDEA MCP returns for the target device. The C2000Ware
+   > driverlib directory names are all lowercase.
 2. In that file, search for the **exact peripheral name** used in the source code
    (e.g., `SPIA_SIMO`, `EPWM1A`, `I2CA_SDA`). GPIO pin-config macros follow the naming
    pattern `GPIO_<PIN_NUMBER>_<PERIPHERAL_SIGNAL>` — e.g., `GPIO_16_SPIA_SIMO`.
@@ -241,7 +258,7 @@ After the migration report is clean (zero issues, or all remaining are deferred)
 buildProject(<target project name>)
 ```
 
-> **⚠ MCP hang guard:** If `buildProject` produces no response after ~2–3 minutes,
+> **WARNING: MCP hang guard:** If `buildProject` produces no response after ~2–3 minutes,
 > record `HANG: buildProject(<project>) — Phase 4B, <file>` in `c2000-migration.md`
 > and immediately alert the user (see MCP hang guard rule above). Do not wait indefinitely.
 
@@ -318,18 +335,18 @@ Unresolved items:
   (or "None")
 
 Build status: PASS / FAIL / PARTIAL
-c2000-migration.md updated: ✅
+c2000-migration.md updated: DONE
 ```
 
 **2. Log entry** (written to `c2000-migration.md`):
 
 ```
-| <filename.c> | <N> | <M> | <K> | ✅/⚠ |
+| <filename.c> | <N> | <M> | <K> | DONE/WARN |
 ```
 
 ---
 
-## ⛔ Stop here
+## STOP: Stop here
 
 Your scope is exactly this one `.c` file. Do not start on the next file. Do not read
 `phase-4c-sweep.md` or any other file. Return your structured result to the orchestrator

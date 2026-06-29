@@ -101,7 +101,7 @@ to recover your position and progress.**
 
 ## Resuming a paused migration
 
-> ⛔ **If you are resuming:** Read `c2000-migration.md` FIRST — before reading the Phase
+> STOP: **If you are resuming:** Read `c2000-migration.md` FIRST — before reading the Phase
 > sequence below. Identify where you left off, then jump directly to the correct phase file.
 > **Do not start from Phase 1 unless Phase 1 is explicitly recorded as incomplete.**
 
@@ -114,12 +114,12 @@ If you are resuming a migration that was started in a previous session:
 2. Read `c2000-migration.md` from the target project directory.
 3. Identify the last phase recorded as COMPLETE and the last file checkpoint (if in Phase 4).
 4. Re-read only the phase file for the phase you are resuming — do not re-read completed phases.
-5. In Phase 4: locate the last file marked ✅ in the progress table and continue from the next file.
+5. In Phase 4: locate the last file marked DONE in the progress table and continue from the next file.
 6. Do not repeat steps that are already recorded as complete in the log.
 
 ## How to run this workflow
 
-> ⛔ **Do not read ahead.** Read one phase file at a time. Complete every step in it.
+> STOP: **Do not read ahead.** Read one phase file at a time. Complete every step in it.
 > Return here. Only then read the next phase file. Do not open the next phase file early.
 
 This workflow is split into six phases. **Execute them in strict order.**

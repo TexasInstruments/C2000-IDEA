@@ -21,8 +21,6 @@ to proceed.
 - Never call `setToolFlags` for a build configuration other than the one identified in the
   build configuration guard — even if the source has equivalent settings in other configs.
 
-> **Per-target:** When migrating to multiple target devices, run Phase 2 once for each
-> target project independently.
 
 Compare the source (golden) project against the target project. Apply settings from the
 source to the target, except where differences are legitimate device deltas.
@@ -32,11 +30,32 @@ apply mismatches to the target.
 
 ## 2.0 Identify the active build configuration
 
-Call `getToolFlags` on the **source** project and identify which build configuration it
-actively uses (typically `CPU1_FLASH` or `Debug`). Apply all Phase 2 settings to **that
-same configuration** in the target. Do not apply settings to a different build config by
-mistake. If the source has multiple build configurations, ask the user which one to target
-before proceeding.
+Call `getToolFlags` on the **source** project's **compiler** tool (use the compiler tool
+name returned by `getProjectDescriptors` for the source project — commonly
+`TI_ARM_C2000_CGT` or the equivalent C2000 compiler tool identifier; use the exact name
+from the project descriptor, do not invent one) and identify which build configuration it
+actively uses (typically `CPU1_FLASH` or `Debug`).
+
+> **CRITICAL: Multiple build configurations — explicit user confirmation required:**
+> If `getToolFlags` returns **more than one build configuration** (e.g., both `CPU1_FLASH`
+> and `CPU1_RAM`), **STOP immediately** and ask the user:
+> > *"The source project has multiple build configurations: `<list all configs found>`.
+> > Which one should I use as the active build configuration for this migration?
+> > All Phase 2 settings (compiler flags, defines, include paths, linker flags, libraries)
+> > will be applied to the configuration you select."*
+>
+> **Do NOT:**
+> - Assume the first config in the list is correct
+> - Apply settings to all configs (this will misconfigure the project)
+> - Guess based on config name (e.g., "FLASH is probably the one")
+>
+> **Wait for the user's explicit response** naming which config to use. Do not proceed
+> until you have a confirmed single build configuration name.
+>
+> If only one build configuration is found, proceed without asking.
+
+Apply all Phase 2 settings to **that same configuration** in the target. Do not apply
+settings to a different build config by mistake.
 
 **Update `c2000-migration.md`:** Replace the placeholder recorded in Phase 1 step 1.9:
 ```
@@ -47,6 +66,12 @@ with the confirmed value:
 Active build config: <confirmed config name, e.g. CPU1_FLASH>
 ```
 All subsequent phases (3, 4, 5) read this value from the log. Do not leave it as TBD.
+
+> **GUARD: Before every `setToolFlags` call in Phase 2, confirm you are passing the
+> correct build configuration name.** If you call `setToolFlags` with the wrong config
+> or a config name that does not match what was recorded in `c2000-migration.md` at the
+> top of this step, all settings will be applied to the wrong configuration and every
+> subsequent phase will fail or produce incorrect builds.
 
 **For every step in this phase:** before applying any change, tell the user what you
 found (source value vs. target value) and what you plan to apply. Wait for the user to
@@ -114,7 +139,7 @@ You must actively inspect the source SysConfig — do not guess from file names 
 Record the detected style in `c2000-migration.md` — Phase 3 reads it to decide whether the
 target syscfg keeps or drops its CMD module.
 
-> **⚠ Hybrid source — plain `.cmd` + CMD module both present:**
+> **WARNING: Hybrid source — plain `.cmd` + CMD module both present:**
 > Some projects have a CMD module in their syscfg **and** a separately-registered plain
 > `.cmd` file (the CMD module generates the standard memory map; the plain `.cmd` adds
 > custom sections on top). If step 2 finds a CMD module **and** the source's linker tool
@@ -134,6 +159,14 @@ migration (Phase 3). Skip the rest of this step.
 **If the source uses a plain `.cmd` file:** set up the target's plain `.cmd` file now, using
 the SDK's target-device reference as the starting point. (Phase 3 will remove the CMD
 module from the target syscfg so it does not generate a competing linker file.)
+
+> **REQUIRED: Write the reconciled `.cmd` file to disk before registering it.**
+> After completing the reconciliation below, you must physically write the reconciled
+> content to `<target project directory>/<filename>.cmd` using your file-write tool
+> **before** calling `setToolFlags` to register it. If you skip this step, the CCS
+> project will register a path that does not exist yet, and the build will fail with
+> a "linker command file not found" error that is hard to diagnose. The write must
+> succeed (confirm the file exists on disk) before proceeding to the registration step.
 
 **Finding the source `.cmd` file path (required before reconciliation):**
 
@@ -165,8 +198,19 @@ The reference cmd files are located at:
 `<c2000ware_path>/device_support/<target-device>/common/cmd/`
 
 List all files in the cmd directory and identify the two key reference files:
-- The **RAM** linker cmd — file name ends with `_ram_lnk.cmd`
-- The **flash** linker cmd — file name ends with `_flash_lnk.cmd`
+- The **RAM** linker cmd — look for a file whose name contains `_generic_ram_lnk.cmd` first.
+  - If found, present it to the user as the default and wait for confirmation before using it.
+  - If not found, fall back to any file ending with `_ram_lnk.cmd`. List all candidates,
+    present the first match as the default, and ask the user to confirm or choose a different
+    file before proceeding.
+- The **flash** linker cmd — look for a file whose name contains `_generic_flash_lnk.cmd` first.
+  - If found, present it to the user as the default and wait for confirmation before using it.
+  - If not found, fall back to any file ending with `_flash_lnk.cmd`. List all candidates,
+    present the first match as the default, and ask the user to confirm or choose a different
+    file before proceeding.
+
+**Always wait for explicit user confirmation** on which cmd file to use before reading it —
+whether the `_generic_` file was found or a fallback is being used.
 
 Read both files for context before reconciliation.
 
@@ -230,11 +274,16 @@ that should come from the new SDK (ignore these). Use these heuristics:
 - **Files under the project directory** are most likely user application code — migrate them.
 - **Files referenced from SDK paths** are device/library files — ignore them.
 - **SDK files copied into the project** — sometimes `device.c`/`device.h` or driverlib
-  files are copied into the project. These are easily detectable by name and should be
-  ignored. **Never copy `device.c`, `device.h`, or any file whose name matches a driverlib
-  module** (e.g., `adc.c`, `spi.c`) — even if they appear under the project directory.
-  `device.c`/`device.h` in particular are **regenerated by the target's device-support
-  module** (Phase 3), so the source copies must not be carried over.
+  files are copied into the project. These are easily detectable and should be ignored.
+  - **Always exclude** `device.c` and `device.h` regardless of location — they are
+    **regenerated by the target's device-support module** (Phase 3).
+  - **Exclude a file named after a driverlib module** (e.g., `adc.c`, `spi.c`) **only if**
+    its path is inside the SDK (`c2000ware_path`) or inside the `sysConfigOutputLocation`.
+    A file with such a name that lives under the project directory is likely a **user
+    application wrapper** — do not silently exclude it. Instead, **flag it to the user**:
+    > *"File `<name>` in the project directory shares a name with a driverlib module.
+    > Should it be copied to the target as application code, or excluded?"*
+    Wait for the user's answer before deciding.
 - **SysConfig-generated files** — ignore these; they are regenerated after SysConfig
   migration. This includes the device-support and CMD-module outputs: `device.c`,
   `device.h`, the generated `.cmd`, `.opt`, and `.cmd.genlibs`. Detect them two ways:
@@ -262,6 +311,15 @@ names `board.c`, `board.h`, `device.c`, `device.h`, any file with a `.syscfg.c` 
 Wait for the user to confirm the lists are correct before copying.
 
 **After confirmation — copy the files (required, do not skip):**
+
+> **Use the physical target project directory path** — not a path derived from the project
+> name. Call `getProjectDescriptors` on the **target** project name to obtain its root
+> directory path. Use that exact path for all file writes. This matters because Phase 1
+> step 1.7 may have recorded that CCS renamed the workspace entry but left the physical
+> folder at the original imported name (e.g., `...\universal\`). Writing to a
+> name-derived path in that case would silently fail or create files in the wrong location.
+> The correct physical path is also recorded in `c2000-migration.md` under
+> "Target project directory".
 
 Use your platform's file-write tool to physically copy each confirmed application file into
 the target project directory, preserving the relative subdirectory structure. Do not just
@@ -336,4 +394,5 @@ generated files excluded), and any items the user modified or overrode.
 **Phase 2 complete.** Present a summary of what was done to the user (settings aligned,
 linker cmd handled, source files copied, post-build steps applied) and ask: *"Phase 2 is
 complete. Does everything look correct? Ready to move to Phase 3 (SysConfig migration)?"*
-Wait for the user's confirmation, then **re-read `device-migration.md`** to proceed.
+Wait for the user's confirmation, then **re-read the skill routing file** (`SKILL.md` —
+the file that led you here) to find Phase 3 and proceed.

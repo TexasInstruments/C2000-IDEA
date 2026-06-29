@@ -20,8 +20,6 @@ to proceed.
 - Don't modify or migrate SysConfig-generated output files — migrate the `.syscfg` instead.
 - Don't invoke SysConfig MCP regeneration until the full `.syscfg` migration is complete.
 
-> **Per-target:** When migrating to multiple target devices, run Phase 3 once for each
-> target project independently.
 
 ---
 
@@ -58,4 +56,3 @@ to the target device, resolve errors, save) and record it as a deferred manual s
 > **Do not read both files at once.** Read 3A, execute it fully, then read 3B and
 > execute it. This prevents context overload on long SysConfig migrations.
 
-> **Per-target:** Run Phase 3 (both 3A and 3B) once for each target project independently.

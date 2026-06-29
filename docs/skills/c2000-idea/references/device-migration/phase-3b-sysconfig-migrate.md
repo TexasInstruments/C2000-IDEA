@@ -10,7 +10,7 @@
 **Stop and ask the user** if any MCP tool call fails, returns an unexpected error, or
 produces a result you cannot interpret. Do not guess, retry blindly, or skip the step.
 
-> **⚠ If any step after `openFile` causes an unrecoverable error:** call `closeFile`
+> **WARNING: If any step after `openFile` causes an unrecoverable error:** call `closeFile`
 > on the target `.syscfg` before stopping or escalating to the user. Leaving SysConfig
 > in a locked-open state will block all subsequent CCS MCP and SysConfig MCP calls in
 > Phase 4. Even if the save failed, `closeFile` discards the in-memory state and
@@ -42,9 +42,14 @@ Look for the `Phase 3A: COMPLETE` entry and read the `3B path` field:
   then 3.10a → 3.11 → 3.12.
 
 If the `c2000-migration.md` checkpoint is missing or unclear, re-derive the path:
-- Check whether the target project's `.syscfg` was replaced with the source's (ask: does
-  the target `.syscfg` contain source-device peripherals?). If yes → full path.
-- If the target `.syscfg` is still the universal template → skip path.
+- Open the target project's `.syscfg` via `openFile`, then call `getModuleInstances`.
+  Inspect the returned module list:
+  - If it contains peripheral modules beyond `device_support` (e.g., ADC, EPWM, SPI
+    instances that match the source device's peripherals) → the source syscfg was copied
+    in → **full path** (run steps 3.4–3.12).
+  - If the only module is `device_support` (universal template content) → the source had
+    no syscfg or the copy was not done → **skip path** (go directly to step 3.10).
+  Call `closeFile` after inspecting, then proceed with the determined path.
 
 ---
 
@@ -143,7 +148,7 @@ Call `getErrorsAndWarnings`. Review all errors and warnings.
 - Iterate until all errors are resolved.
 - If an issue cannot be resolved after reasonable investigation, report it to the user.
 
-> **⚠ Convergence guard — avoid infinite fix loops:**
+> **WARNING: Convergence guard — avoid infinite fix loops:**
 > Track each error by its exact module + configurable + error message. If the **same
 > error** reappears for the **same module and configurable** after **two consecutive
 > `changeConfiguration` attempts**, the fix is not taking effect — stop retrying that
@@ -153,7 +158,7 @@ Call `getErrorsAndWarnings`. Review all errors and warnings.
 > resolved after 2 attempts. Please review manually."* Then continue to the next error.
 > A different error appearing for the same module is **not** convergence — keep fixing.
 
-> **⚠ Peripheral module entirely absent from the target device:**
+> **WARNING: Peripheral module entirely absent from the target device:**
 > Some errors indicate that a whole peripheral module (e.g., `MFOTA`, `BGCRC`, `CLB` tile
 > count beyond what the target has) simply does not exist on the target device —
 > `getModuleDescription` will return an error or empty result for these modules.
@@ -177,14 +182,20 @@ Make the target syscfg's CMD module match the **source linker style** recorded i
   (it came in with the copied source syscfg). Using the snapshot captured in step 3.6a,
   restore/reconcile the linker sections configuration via `changeConfiguration`.
 
-  > **⚠ Validate memory region names against the target device before restoring sections:**
+  > **WARNING: Validate memory region names against the target device before restoring sections:**
   > The snapshot was captured from the source device's CMD module and contains memory region
   > names that belong to the **source device** (e.g., `RAMLS0`, `FLASHB`). The target device
   > may use different region names. Before calling `changeConfiguration` to restore each
   > section:
-  > 1. Read the target device's reference `.cmd` file
-  >    (`<c2000ware_path>/driverlib/<target-device>/cmd/*_flash_lnk.cmd`) to obtain the
-  >    list of valid memory region names for the target.
+  > 1. Locate the target device's reference `.cmd` file:
+  >    - List all files in `<c2000ware_path>/device_support/<target-device>/common/cmd/`.
+  >    - **Preferred file:** look for a file whose name contains `_generic_flash_lnk.cmd`. If
+  >      found, present it to the user as the default and ask for confirmation before using it.
+  >    - If no file containing `_generic_flash_lnk.cmd` exists, list all files ending with
+  >      `_flash_lnk.cmd` and ask the user which one to use. The file that Phase 2 step 2.5
+  >      already selected is the recommended default — present it as such and wait for user
+  >      confirmation.
+  >    - Read the confirmed file to obtain the list of valid memory region names for the target.
   > 2. For each section in the snapshot, check that its assigned memory region name exists
   >    in the target device's reference cmd.
   > 3. If the region name is valid → restore via `changeConfiguration` as-is.
@@ -203,7 +214,7 @@ Make the target syscfg's CMD module match the **source linker style** recorded i
   call `removeModuleInstances` to remove it so it does not generate a competing linker
   command file.
 
-  > **⚠ Delete the stale generated `.cmd` file after `removeModuleInstances` (critical):**
+  > **WARNING: Delete the stale generated `.cmd` file after `removeModuleInstances` (critical):**
   > Calling `removeModuleInstances` removes the CMD module from the `.syscfg`, but the
   > previously-generated `.cmd` file (e.g., `<device>_<package>.cmd`) is **still physically
   > on disk** in the `sysConfigOutputLocation` folder. CCS will pick up any `.cmd` file it
@@ -243,7 +254,7 @@ unresolved errors produces invalid generated output.
 
 Call `save` to persist the configuration and regenerate all artifacts.
 
-> **⚠ Verify `sysConfigOutputLocation` is clean after save:**
+> **WARNING: Verify `sysConfigOutputLocation` is clean after save:**
 > After `save` completes, list all files in the `sysConfigOutputLocation` folder. Check for
 > any files that clearly belong to the **source device** — for example, files whose names
 > contain the source device name string (e.g., `f28003x_` when the target is `f28004x`).
@@ -311,4 +322,5 @@ module / removed for plain cmd), and any unresolved SysConfig issues.
 ensured, SysConfig migrated to target device/package if applicable, errors found and fixed,
 CMD module kept or removed to match the source) and ask: *"Phase 3 is complete. Does
 everything look correct? Ready to move to Phase 4 (source code migration)?"* Wait for the
-user's confirmation, then **re-read `device-migration.md`** to proceed.
+user's confirmation, then **re-read the skill routing file** (`SKILL.md` — the file that
+led you here) to find Phase 4 and proceed.

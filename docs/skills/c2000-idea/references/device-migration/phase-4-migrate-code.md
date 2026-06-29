@@ -13,17 +13,6 @@ skip the step.
 
 ---
 
-## Per-target isolation
-
-When migrating to multiple target devices, run Phase 4 **once for each target project
-independently**. Complete all of Phase 4 (4A + 4B + 4C) for one target before starting
-Phase 4 for the next. Do not interleave file edits across different target projects.
-
-If you find yourself looking at files from two different target project directories,
-stop and re-read `c2000-migration.md` to confirm which target you are working on.
-
----
-
 ## Step 4.0 — Strategy and pre-migration report
 
 ### 4.0a Ask the user for migration strategy
@@ -37,21 +26,23 @@ Ask:
   blocks with `//_DEVICE_MIGRATION_` suffix on each directive line.
 - **Approach 2 (clean replacement):** Old symbols are replaced directly.
 
-Record the choice in `c2000-migration.md`:
+Record the choice in `c2000-migration.md` **under a dedicated section immediately after the
+Phase 4 file list**, formatted exactly as follows — the sub-agents read this exact string:
 ```
-**Strategy:** Shared codebase (#ifdef)
+## Phase 4 — Migration Strategy
+Strategy: Approach 1 (shared #ifdef)
 ```
 or
 ```
-**Strategy:** Clean replacement
+## Phase 4 — Migration Strategy
+Strategy: Approach 2 (clean replacement)
 ```
 
-> **Multi-target note:** When migrating to multiple target devices, ask this question
-> **once** (before Phase 4 for the first target) and apply the **same strategy to all
-> targets**. Do not re-ask for each target — a consistent strategy prevents diverging
-> codebases. If the user needs different strategies per target, they must explicitly
-> request that, and you should note the per-target strategy in each target's
-> `c2000-migration.md`.
+> **CRITICAL: The strategy must be recorded in `c2000-migration.md` BEFORE dispatching
+> any sub-agent (4A, 4B, 4C, 4D).** Every sub-agent reads its approach from this log
+> entry at startup. If it is missing or ambiguous, sub-agents will produce inconsistent
+> file edits that cannot be safely combined. Do not dispatch Phase 4A until this entry
+> is confirmed present in the log.
 
 ### 4.0b Pre-migration scope report
 
@@ -61,6 +52,12 @@ source project name.
 
 Call `get_project_migration_report(<target project name>)`. Report to the user:
 *"Found `<N>` issues across `<M>` files. Starting migration."*
+
+> **Tool name note:** `get_project_migration_report` is the **project-level** tool —
+> only the orchestrator (this step) calls it to get scope. Sub-agents (4A, 4B, 4C) call
+> `get_device_migration_report` (file-level — takes an absolute file path). Do not
+> confuse the two: using the project-level tool inside a sub-agent will return the wrong
+> scope; using the file-level tool here will miss files not yet flagged.
 
 Use this for scope reporting only — not to set processing order. Processing order is
 always fixed: all `.h` files first, then `.c` files in dependency order.
@@ -84,10 +81,18 @@ From the target project directory, collect:
    - Files that include already-migrated project headers next.
    - Files with the most project-internal dependencies last (typically `main.c`).
 
+   > **Defining "project-internal" vs "SDK" `#include`:**
+   > An `#include` is **project-internal** if its resolved header path falls inside the
+   > **target project directory** (i.e., the path starts with `targetProjectDir`).
+   > An `#include` is an **SDK header** if its resolved path falls under `c2000ware_path`
+   > or any other system/compiler include directory. When in doubt, check whether the
+   > header file exists inside the target project directory — if yes, it is project-internal;
+   > if it only exists under the SDK path, it is an SDK header.
+
 3. **`.asm` files** — list all application assembly files in the target project directory.
    Apply the same exclusions (exclude SDK paths, SysConfig-generated paths, driverlib paths).
 
-   > **⚠ Assembly files are out of scope for automated migration.**
+   > **WARNING: Assembly files are out of scope for automated migration.**
    > The device-migration workflow migrates driverlib API and register symbols in C/C++
    > source files only. Assembly (`.asm`) files for CLA firmware, boot routines, or
    > hardware-assist code must be reviewed **manually** — the migration tool does not
@@ -96,7 +101,7 @@ From the target project directory, collect:
    > For each `.asm` file found:
    > 1. Record it in `c2000-migration.md` as:
    >    `REVIEW-REQUIRED: <filename> — assembly file; manual inspection required`
-   > 2. Add a row to the progress table with status `⚠ Manual`.
+   > 2. Add a row to the progress table with status `MANUAL`.
    > 3. Tell the user: *"Assembly file `<filename>` was found in the target project.
    >    Assembly files are not migrated automatically. Please review this file manually
    >    for device-specific register addresses, memory section names, and instruction
@@ -112,12 +117,12 @@ Record the ordered list in `c2000-migration.md`:
 .asm files (manual review): fileX.asm, fileY.asm, ...  (or "none")
 ```
 
-Add all files to the progress table with status `⬜ Pending` (or `⚠ Manual` for `.asm`):
+Add all files to the progress table with status `PENDING` (or `MANUAL` for `.asm`):
 ```
 | File | Issues | Fixed | Unresolved | Status |
 |------|--------|-------|------------|--------|
-| file1.h | — | — | — | ⬜ |
-| fileX.asm | — | — | — | ⚠ Manual |
+| file1.h | — | — | — | PENDING |
+| fileX.asm | — | — | — | MANUAL |
 ...
 ```
 
@@ -125,7 +130,7 @@ Add all files to the progress table with status `⬜ Pending` (or `⚠ Manual` f
 
 ## Step 4.2 — Dispatch Phase 4A (all `.h` files)
 
-⛔ **Do not read `phase-4a-headers.md` yourself. Send it to the sub-agent.**
+STOP: **Do not read `phase-4a-headers.md` yourself. Send it to the sub-agent.**
 
 Read [`phase-4-sub-agent-briefing.md`](phase-4-sub-agent-briefing.md) for the exact
 briefing template to fill out and send. Fill out **every field** before dispatching.
@@ -144,7 +149,7 @@ After the sub-agent returns:
 1. Verify `c2000-migration.md` contains a completed row for every `.h` file.
 2. Aggregate totals: issues found, fixed, unresolved.
 3. Confirm inline summary was presented to the user.
-4. Update progress table status for all `.h` rows (✅ or ⚠).
+4. Update progress table status for all `.h` rows (DONE or WARN).
 
 Only then proceed to Step 4.3.
 
@@ -152,8 +157,8 @@ Only then proceed to Step 4.3.
 
 ## Step 4.3 — Dispatch Phase 4B (one `.c` file per sub-agent)
 
-⛔ **Do not read `phase-4b-sources.md` yourself. Send it to the sub-agent.**
-⛔ **Dispatch one sub-agent per `.c` file. Never bundle multiple `.c` files.**
+STOP: **Do not read `phase-4b-sources.md` yourself. Send it to the sub-agent.**
+STOP: **Dispatch one sub-agent per `.c` file. Never bundle multiple `.c` files.**
 
 Read [`phase-4-sub-agent-briefing.md`](phase-4-sub-agent-briefing.md) for the exact
 Phase 4B briefing template.
@@ -161,21 +166,21 @@ Phase 4B briefing template.
 For each `.c` file (in the dependency order from Step 4.1):
 
 1. **Pre-dispatch state check (required — especially when resuming):**
-   Before marking as `⏳ In Progress` or dispatching, check the current progress table row
+   Before marking as `IN PROGRESS` or dispatching, check the current progress table row
    for this file in `c2000-migration.md`:
-   - If the row shows `✅` or `⚠` → this file was already completed. **Skip it entirely.**
-     Do not re-dispatch. This prevents double-applying migrations after a session resume.
-   - If the row shows `⏳ In Progress` → the file was dispatched in a prior session but the
+    - If the row shows `DONE` or `WARN` → this file was already completed. **Skip it entirely.**
+      Do not re-dispatch. This prevents double-applying migrations after a session resume.
+    - If the row shows `IN PROGRESS` → the file was dispatched in a prior session but the
      result was not recorded. Read the **current file content on disk** to determine how far
      the previous sub-agent got:
      - If the file appears fully migrated (no source-device symbols visible, consistent
-       driverlib style throughout) → treat it as ✅ and update the progress table accordingly
+       driverlib style throughout) → treat it as DONE and update the progress table accordingly
        without re-dispatching.
      - If the file appears partially migrated (mix of old and new symbols, or cut off
        mid-function) → pass the last micro-checkpoint line number in the briefing so the
        new sub-agent can resume from that point rather than restarting from line 1.
-   - If the row shows `⬜ Pending` → proceed normally to step 2.
-2. Mark the file as `⏳ In Progress` in the progress table.
+   - If the row shows `PENDING` → proceed normally to step 2.
+2. Mark the file as `IN PROGRESS` in the progress table.
 3. Fill out the Phase 4B briefing template completely, including any deferred-errors
    from prior dispatches that point to this file.
 4. Dispatch the sub-agent with:
@@ -185,7 +190,7 @@ For each `.c` file (in the dependency order from Step 4.1):
 5. **Wait** for the structured result.
 6. **Orchestrator checkpoint:**
    - Verify the log entry was written to `c2000-migration.md`.
-   - Update the progress table row for this file (✅ or ⚠).
+   - Update the progress table row for this file (DONE or WARN).
    - Carry any new cross-file deferred-errors forward to the affected file's future briefing.
    - Aggregate totals.
 7. Only then dispatch the next `.c` file.
@@ -194,7 +199,7 @@ For each `.c` file (in the dependency order from Step 4.1):
 
 ## Step 4.4 — Dispatch Phase 4C (final sweep)
 
-⛔ **Do not read `phase-4c-sweep.md` yourself. Send it to the sub-agent.**
+STOP: **Do not read `phase-4c-sweep.md` yourself. Send it to the sub-agent.**
 
 Only dispatch Phase 4C after **all** Phase 4B dispatches are complete and checkpointed.
 
@@ -214,8 +219,8 @@ briefing template. Fill out all fields, including the complete deferred-errors l
 
 ## Step 4.5 — Dispatch Phase 4D (build error triage) — *if needed*
 
-⛔ **Only dispatch Phase 4D if Phase 4C reported a non-passing build.**
-⛔ **Do not read `phase-4d-build-triage.md` yourself. Send it to the sub-agent.**
+STOP: **Only dispatch Phase 4D if Phase 4C reported a non-passing build.**
+STOP: **Do not read `phase-4d-build-triage.md` yourself. Send it to the sub-agent.**
 
 If Phase 4C's final `buildProject()` call returned errors, dispatch a Phase 4D sub-agent:
 
@@ -242,7 +247,7 @@ If Phase 4C's final `buildProject()` call returned errors, dispatch a Phase 4D s
 
 Update `c2000-migration.md`:
 ```
-| Phase 4 — Code | ✅ COMPLETE | <N files> migrated, <M issues> fixed, clean build <PASS/FAIL with manual items> |
+| Phase 4 — Code | COMPLETE | <N files> migrated, <M issues> fixed, clean build <PASS/FAIL with manual items> |
 ```
 
 Present a complete summary to the user:
@@ -259,7 +264,8 @@ Any items needing manual review have been recorded in c2000-migration.md.
 
 Ask: *"Does everything look correct? Ready to move to Phase 5 (migration report)?"*
 
-Wait for the user's confirmation. Then **re-read `device-migration.md`** to proceed.
+Wait for the user's confirmation. Then **re-read the skill routing file** (`SKILL.md` —
+the file that led you here) to find Phase 5 and proceed.
 
 ---
 
@@ -268,9 +274,9 @@ Wait for the user's confirmation. Then **re-read `device-migration.md`** to proc
 If this session was interrupted (context limit, session end, crash):
 
 1. Re-read `c2000-migration.md` in the target project.
-2. Note the last completed row in the file progress table (last ✅ or ⚠).
-3. If a row shows `⏳ In Progress`, that file was interrupted mid-migration.
+2. Note the last completed row in the file progress table (last DONE or WARN).
+3. If a row shows `IN PROGRESS`, that file was interrupted mid-migration.
 4. Resume from the interrupted file — for a mid-file interruption, pass the
    last micro-checkpoint line number in the briefing so the sub-agent can
    continue from where it left off.
-5. Do not re-process rows already marked ✅.
+5. Do not re-process rows already marked DONE.

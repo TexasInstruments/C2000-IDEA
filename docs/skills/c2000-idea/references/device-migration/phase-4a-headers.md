@@ -37,6 +37,18 @@ orchestrator before proceeding:
 | `sysConfigOutputLocation` | `<path — do not edit any file under this folder>` |
 | List of `.h` files to migrate | `<paths provided by orchestrator>` |
 
+> **REQUIRED: Verify migration approach from `c2000-migration.md` before touching any file:**
+> Read `c2000-migration.md` and locate the `## Phase 4 — Migration Strategy` section.
+> Confirm the `Strategy:` value matches the `Migration approach` in your briefing above.
+>
+> - If the log says `Strategy: Approach 1 (shared #ifdef)` → use `#ifdef` wrapping for every fix.
+> - If the log says `Strategy: Approach 2 (clean replacement)` → replace symbols directly for every fix.
+> - **If the section is missing or the values conflict:** stop and ask the orchestrator
+>   to confirm the strategy before proceeding. Do not guess or default to one approach.
+>
+> Apply this approach **consistently to every file** — all `.h` files must use the same strategy.
+> Do not switch approach mid-way. The approach in the log is the authoritative source.
+
 ---
 
 ## Rules for Phase 4A
@@ -45,7 +57,7 @@ orchestrator before proceeding:
 - Use only `get_device_migration_report` — not the VS Code diagnostics panel.
 - **If `get_device_migration_report` returns 0 issues for a file:** record
   `[<filename>] 0 issues — no migration changes needed` in `c2000-migration.md`,
-  update the progress table row to ✅, and proceed to the next file immediately.
+  update the progress table row to DONE, and proceed to the next file immediately.
   Do not re-call the tool or wait — zero issues is a valid, complete result.
 - Do **not** call `buildProject` during Phase 4A. Header migration is report-only.
 - Do not modify files in the source project. Every edit is on the target project.
@@ -70,8 +82,8 @@ orchestrator before proceeding:
 
 ## How to fix each issue
 
-- **Easy (auto-fixable ✓):** apply the `Suggested fix` verbatim.
-- **Complex (manual review ⚠):** read surrounding code, check intent, use ti-asm-mcp
+- **Easy (auto-fixable):** apply the `Suggested fix` verbatim.
+- **Complex (manual review):** read surrounding code, check intent, use ti-asm-mcp
   if needed, construct fix from collateral only.
 - **Item is inside a comment or `#if 0` block:** skip it. Note as inactive-code flag.
   Do not modify the line.
@@ -191,9 +203,9 @@ When the report returns zero issues (or all remaining issues are deferred/unreso
 
 - Update the file progress table in `c2000-migration.md`:
   ```
-  | <filename> | <issues found> | <fixed> | <unresolved> | ✅ or ⚠ |
+  | <filename> | <issues found> | <fixed> | <unresolved> | DONE or WARN |
   ```
-  Status: ✅ = clean, ⚠ = has unresolved items.
+  Status: DONE = clean, WARN = has unresolved items.
 - Proceed to the next `.h` file.
 
 ---
@@ -203,7 +215,7 @@ When the report returns zero issues (or all remaining issues are deferred/unreso
 ### Final check
 
 Re-read the `c2000-migration.md` file progress table. Confirm every `.h` file has a
-row with status ✅ or ⚠. If any row is missing, re-process that file before returning.
+row with status DONE or WARN. If any row is missing, re-process that file before returning.
 
 ### Structured result (required — return this to the orchestrator)
 
@@ -222,7 +234,7 @@ Unresolved items:
   - <filename>:<line> — <symbol> — <reason>
   (or "None")
 
-c2000-migration.md updated: ✅
+c2000-migration.md updated: DONE
 ```
 
 **2. Log entry** (already written to `c2000-migration.md` during processing):
@@ -231,14 +243,14 @@ c2000-migration.md updated: ✅
 ## Phase 4A — Header Migration
 | File | Issues | Fixed | Unresolved | Status |
 |------|--------|-------|------------|--------|
-| <file1.h> | <N> | <M> | <K> | ✅/⚠ |
+| <file1.h> | <N> | <M> | <K> | DONE/WARN |
 ...
 Phase 4A status: COMPLETE (or PARTIAL if unresolved > 0)
 ```
 
 ---
 
-## ⛔ Stop here
+## STOP: Stop here
 
 Your scope ends at the last `.h` file. Do not read `phase-4b-sources.md` or any
 other file. Do not start on `.c` files. Return your structured result to the

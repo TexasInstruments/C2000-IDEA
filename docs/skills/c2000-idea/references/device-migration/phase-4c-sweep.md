@@ -13,7 +13,7 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 
 **Stop and ask the user** if any MCP tool call fails or returns an unexpected result.
 
-> **⚠ MCP hang guard (applies throughout Phase 4C):**
+> **WARNING: MCP hang guard (applies throughout Phase 4C):**
 > If `buildProject` or any other MCP tool call has produced **no response at all** after
 > a long wait (typically 2–3 minutes), assume the tool has hung. Do **not** keep waiting.
 > Record in `c2000-migration.md`:
@@ -49,7 +49,7 @@ them to the sweep list and run the migration report on them too. Do **not** run 
 report on files inside `sysConfigOutputLocation` — those are generated outputs.
 
 > **`.asm` files are excluded from this sweep.** They were listed in the Phase 4 file
-> list with status `⚠ Manual` during Step 4.1. Do not run `get_device_migration_report`
+> list with status `MANUAL` during Step 4.1. Do not run `get_device_migration_report`
 > on them — the tool does not analyse assembly. Confirm they are logged in
 > `c2000-migration.md` as `REVIEW-REQUIRED` and that the user has been notified.
 > If any `.asm` file was not logged during Step 4.1 (e.g., added after Phase 3),
@@ -145,23 +145,28 @@ symbol inventory (which would be impractical for large files).
 
 ## Step 5 — Clean rebuild (required)
 
-⚠ **This step is mandatory before declaring Phase 4 complete.**
+WARNING: **This step is mandatory before declaring Phase 4 complete.**
 
 Call `buildProject` on the target project. Do **not** rely on an incremental build —
 stale `.obj` files from before migration may hide compilation errors. To force a clean
-rebuild, call `buildProject` twice: once to clean (which removes all previous `.obj`
-files), then again to rebuild from scratch:
+rebuild, call `buildProject` twice:
 
 ```
-buildProject(<target project name>)   ← first call cleans previous build artifacts
-buildProject(<target project name>)   ← second call rebuilds from scratch
+buildProject(<target project name>)   ← first call: builds with any stale objects present
+buildProject(<target project name>)   ← second call: builds from the fresh state left by the first call
 ```
 
-> **Note:** The `buildProject` MCP tool does not accept a `clean=true` parameter.
-> Calling it twice achieves a clean rebuild — the first call discards stale objects,
-> the second confirms the full project builds cleanly.
+> **Note:** The `buildProject` MCP tool does not accept a `clean=true` parameter. The
+> two-call approach achieves a reliable rebuild: the first call compiles all files against
+> the current (post-migration) source state, replacing stale `.obj` files; the second call
+> confirms a complete, consistent build from that clean object set.
+>
+> **If the CCS MCP exposes a `cleanProject` tool**, call it once before the first
+> `buildProject` instead — that is a more explicit clean and reduces build time (one
+> `cleanProject` + one `buildProject` is equivalent to two `buildProject` calls).
+> If no `cleanProject` tool is available, use the two-call approach above.
 
-> **⚠ MCP hang guard:** If either `buildProject` call produces no response after
+> **WARNING: MCP hang guard:** If either `buildProject` call produces no response after
 > ~2–3 minutes, record `HANG: buildProject(<project>) — Phase 4C, Step 5` in
 > `c2000-migration.md` and immediately alert the user (see hang guard rule above).
 > Do not wait indefinitely for either call.
@@ -198,7 +203,7 @@ Phase 4C status: COMPLETE
 
 Update the Phase status table for Phase 4C only:
 ```
-| Phase 4C — Sweep | ✅ COMPLETE | sweep clean, clean build <PASS/FAIL> |
+| Phase 4C — Sweep | COMPLETE | sweep clean, clean build <PASS/FAIL> |
 ```
 
 ---
@@ -218,12 +223,12 @@ Phase 4C overall:
   Issues fixed: <total>
   Unresolved / DEFERRED-MANUAL: <total>
 
-c2000-migration.md updated: ✅
+c2000-migration.md updated: DONE
 ```
 
 ---
 
-## ⛔ Stop here
+## STOP: Stop here
 
 Your scope ends at the clean build result. Do not read `phase-5-report.md`,
 `phase-4d-build-triage.md`, or any other file.

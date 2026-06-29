@@ -12,28 +12,26 @@ cannot interpret — stop and ask the user for help.** Do not guess, retry blind
 skip the step. Describe what you tried, what the tool returned, and ask the user how
 to proceed.
 
-> **Per-target:** When migrating to multiple target devices, run Phase 5 once for each
-> target project independently — produce a separate report per target.
 
 ---
 
 Re-read `c2000-migration.md` to gather the full migration history, then provide a
 structured migration summary to the user:
 
-## 5.1 Fresh build (skip if Phase 4C clean build was just completed)
+## 5.1 Fresh build (always required)
 
-Phase 4C already performs a mandatory two-pass clean rebuild before declaring Phase 4
-complete. If `c2000-migration.md` records `Final clean build: PASS` for Phase 4C and
-you are in the **same session** (Phase 5 follows immediately after Phase 4 with no
-interruption), **skip this step** — the Phase 4C clean build is the authoritative final
-build status and repeating it here adds no value.
+Phase 5 always runs its own validation build. AI agents do not have a reliable concept
+of "same session", so skipping based on session continuity is not safe — a file may have
+been modified between Phase 4C and Phase 5 without the agent being aware.
 
-Run `buildProject` here **only if** one of these conditions is true:
-- Phase 4C was completed in a **previous session** (you are resuming in a new session).
-- The user or environment has modified files since Phase 4C completed.
-- `c2000-migration.md` does not record a `Final clean build: PASS` for Phase 4C.
+Run `buildProject` on the **target** project (not the source). If `c2000-migration.md`
+already records `Final clean build: PASS` for Phase 4C and no files have been modified
+since (verified by checking file timestamps or asking the user), you may confirm with the
+user whether to skip — but do **not** skip unilaterally.
 
-If a build is required, call `buildProject` on the **target** project (not the source).
+> **If `buildProject` produces no response after ~2–3 minutes**, assume a hang. Record
+> `HANG: buildProject — Phase 5, step 5.1` in `c2000-migration.md` and alert the user.
+> Wait for their response before continuing.
 
 ## 5.2 Structured summary (present to user)
 
@@ -93,7 +91,7 @@ If a build is required, call `buildProject` on the **target** project (not the s
    mark the migration fully production-ready until the user confirms they have reviewed
    these steps (or explicitly accepts the risk of skipping them).
 
-   > **⚠ Hardware verification — required before production deployment:**
+   > **WARNING: Hardware verification — required before production deployment:**
    >
    > The following checks cannot be performed by a software tool. They require connecting
    > to the target board and observing live hardware behaviour:
@@ -138,8 +136,11 @@ convert bitfield register access patterns.
 | `<Module>Regs.<REGISTER>.all` | `EpwmRegsArray[0]->TBCTL.all` |
 | Struct pointer with `.bit.` dereference | `pADC->ADCCTL1.bit.INTPULSEPOS` |
 
-**How to search:** Scan file text for the strings `->bit.`, `.bit.`, `Regs.`, and any
-pattern matching `[A-Za-z]+Regs[._]` (case-sensitive).
+**How to search:** Scan file text for `->bit.`, `.bit.`, and the pattern
+`[A-Za-z]+Regs[._]` (case-sensitive). Do **not** use the bare string `Regs.` alone —
+it is too broad and will match non-bitfield identifiers (e.g., `pUartRegs.count`).
+The pattern `[A-Za-z]+Regs[._]` is specific enough to target the C2000 bitfield register
+naming convention while avoiding false positives.
 
 > **Skip comment lines and string literals:** When scanning, skip any line that is:
 > - A single-line comment (line starts with `//` after optional whitespace).
@@ -164,7 +165,7 @@ pattern matching `[A-Za-z]+Regs[._]` (case-sensitive).
 - Add the following to the **Deferred / manual actions** section of the structured summary
   (item 7 above):
 
-  > **⚠ Bitfield register access patterns detected in migrated source files.**
+  > **WARNING: Bitfield register access patterns detected in migrated source files.**
   > These patterns (`->bit.`, `<Module>Regs.`) use the C2000 bitfield register layer
   > which is device-specific and was **not** converted by the device-migration workflow.
   > Leaving them in place may compile but will access wrong registers on the target device

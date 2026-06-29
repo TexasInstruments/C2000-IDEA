@@ -63,7 +63,7 @@ Each iteration = one full (classify → fix → rebuild) cycle.
 If after 3 iterations the build is still not clean:
 - Record `Phase 4D: CONVERGENCE LIMIT REACHED` in `c2000-migration.md`.
 - List all remaining errors as `DEFERRED-MANUAL` items.
-- Return control to the orchestrator with status `⚠ BUILD NOT CLEAN — manual items remain`.
+- Return control to the orchestrator with status `WARN: BUILD NOT CLEAN — manual items remain`.
 - **Do not continue past 3 iterations.** An unconverging triage loop is a signal that
   the errors require human judgement or upstream investigation.
 
@@ -76,7 +76,7 @@ Call `buildProject(<target project name>)` to get the **current** error output.
 > Even if the orchestrator provided a prior error list, call `buildProject()` fresh —
 > Phase 4C may have partially resolved some errors that are no longer present.
 
-> **⚠ MCP hang guard — `buildProject` may not respond:**
+> **WARNING: MCP hang guard — `buildProject` may not respond:**
 > `buildProject` is a long-running synchronous call. If the MCP tool call has produced
 > **no response at all** (no result, no error, no progress output) after a long wait
 > (typically 2–3 minutes), assume the tool has hung. Do **not** keep waiting.
@@ -186,7 +186,7 @@ For each error classified as A, B, or C (not D, not `DEFERRED-MANUAL`):
 
 Call `buildProject(<target project name>)` again.
 
-> **⚠ MCP hang guard — `buildProject` may not respond:**
+> **WARNING: MCP hang guard — `buildProject` may not respond:**
 > Same rule as Step 4D.1. If `buildProject` produces no response after a long wait
 > (2–3 minutes), record in `c2000-migration.md`:
 > `HANG: buildProject(<project>) — no response after timeout. Phase 4D, step 4D.4, iteration <N>.`
@@ -225,7 +225,7 @@ Phase 4D status: <CLEAN BUILD | CONVERGENCE LIMIT | REGRESSION DETECTED>
 
 Then update the Phase status table:
 ```
-| Phase 4D — Build Triage | <✅ COMPLETE | ⚠ MANUAL ITEMS> | <summary> |
+| Phase 4D — Build Triage | <COMPLETE | MANUAL ITEMS> | <summary> |
 ```
 
 Return the following structured result to the orchestrator:

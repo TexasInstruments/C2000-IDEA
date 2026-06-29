@@ -24,7 +24,7 @@ to proceed.
 
 ## 1.1 Collect and validate required inputs
 
-- Confirm the user has provided the source project name/path and target device(s).
+- Confirm the user has provided the source project name/path and target device.
 - If either is missing, ask explicitly before proceeding.
 
 ## 1.2 Discover the source project
@@ -34,11 +34,18 @@ to proceed.
 - **IDEA MCP:** Call `get_projects()`. Locate the source project by name.
 - **Cross-check:** The device, project name, and SDK info from both MCPs must agree.
   If they don't, stop and flag the inconsistency to the user.
+
+  > **Device name format note:** IDEA MCP returns lowercase family names (e.g., `f28003x`),
+  > while CCS MCP may return full part numbers (e.g., `TMS320F28003x`). Treat these as
+  > **matching** if the IDEA MCP's lowercase family name appears as a substring of the CCS
+  > MCP's device string (case-insensitive). Only stop if the family names are genuinely
+  > different (e.g., `f28003x` vs `f28004x`). Do not raise a false inconsistency for
+  > format differences that clearly refer to the same device family.
 - **Validate source device:** Confirm the discovered source device is in the
   `list_migration_devices()` supported list. If not, notify the user and **terminate**.
-- **Validate target device:** Confirm every requested target device is also in the
-  supported list. If a target is not supported (e.g., F29x migration is not yet
-  implemented), tell the user and exclude that target — do not attempt migration for it.
+- **Validate target device:** Confirm the requested target device is also in the
+  supported list. If the target is not supported (e.g., F29x migration is not yet
+  implemented), tell the user and **terminate** — do not attempt migration.
 - **If IDEA MCP does not list the project:** call `get_projects(rescan: true)` once to
   re-scan. If still missing, ask the user to verify the project is open in CCS.
 - **Device name mismatch:** IDEA MCP uses lowercase family names (e.g., `f28004x`).
@@ -83,61 +90,28 @@ Then derive:
 - If the SDK is Motor Control or Digital Power, also check for `AGENTS.md` inside the
   `c2000ware/` subfolder. Read and follow if present.
 
-## 1.5 – 1.9 Import, build, rename, rebuild, and log — one target at a time
-
-> **For each target device, complete steps 1.5 through 1.9 as an atomic unit before
-> moving to the next target.** Do not import all targets first and then build/rename — each
-> target must be imported, built, renamed, rebuilt, and logged before the next target is
-> imported. This prevents name collisions and ensures each target's project is fully
-> established before proceeding.
+## 1.5 – 1.9 Import, build, rename, rebuild, and log
 
 ### 1.5 Import the universal driverlib example for the target device
 
 The starter project location depends on the target device:
 
-| Target device          | Universal project path                                                  |
-| ---------------------- | ----------------------------------------------------------------------- |
-| f2837xd                | `<c2000ware_path>/driverlib/<target-device>/examples/cpu1/universal`    |
-| f2837xs                | `<c2000ware_path>/driverlib/<target-device>/examples/cpu1/universal`    |
-| f2807x                 | `<c2000ware_path>/driverlib/<target-device>/examples/cpu1/universal`    |
-| f28p65x                | `<c2000ware_path>/driverlib/<target-device>/examples/c28x/universal`    |
-| All other devices      | `<c2000ware_path>/driverlib/<target-device>/examples/universal`         |
+| Target device          | Universal project path                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------ |
+| f28p65x                | `<c2000ware_path>/driverlib/<target-device>/examples/c28x/universal`                 |
+| All other devices      | `<c2000ware_path>/driverlib/<target-device>/examples/universal`                      |
+
+> **f2837xd, f2837xs, f2807x — ask the user:**
+> These devices do not have a `universal/` starter project at a predictable path.
+> **Ask the user to provide the path to the starter project they want to use as the base.**
+> Do not guess or invent a path.
 
 - Import via CCS MCP `importProject`.
-- **If the universal project path does not exist on disk**, the target device or SDK
-  version may not include a universal example — ask the user to point to the starter
-  project they want to use as the base.
+- **If the path does not exist on disk**, ask the user to provide the path to the starter
+  project they want to use as the base. Do not guess or invent a path.
 - **If `importProject` reports a name conflict** (a project with the same name already
   exists in the workspace), rename the conflicting project to `<existingName>_bak` using
   `renameProject` before reimporting. Inform the user of the rename.
-
-> **⚠ Dual-core source project detection (required before import):**
-> Before importing the target's universal project, check whether the **source** project
-> is part of a dual-core pair. Dual-core devices (e.g., `f2837xd`, `f2838x`, `f28p65x`)
-> have separate CPU1 and CPU2 projects that are linked in the CCS workspace.
->
-> **How to detect:** Call `getProjectDescriptors` on the source project. If the result
-> contains a `linkedProjects` field (or equivalent) listing a companion project
-> (typically named with `_cpu2` or `_CPU2`), the source is dual-core.
->
-> **If the source is dual-core:**
-> 1. The target device also needs a CPU2 project. Import the CPU2 universal example:
->    - `f2837xd` / `f2838x`: `<c2000ware_path>/driverlib/<target-device>/examples/cpu2/universal`
->    - `f28p65x`: `<c2000ware_path>/driverlib/<target-device>/examples/c28x/universal_cpu2`
->      (path may vary — check that the path exists on disk before calling `importProject`)
-> 2. Import the CPU2 universal project immediately after the CPU1 import (still in step 1.5).
-> 3. Build and rename the CPU1 project in steps 1.6–1.7, then build and rename the CPU2
->    project through the same steps (repeat 1.6–1.8 for CPU2 before moving to 1.9).
-> 4. Rename the CPU2 project in step 1.7 to `<sourceProjectName>_<targetDevice>_cpu2`.
-> 5. Create a **separate** `c2000-migration.md` in the CPU2 target project directory in
->    step 1.9. Record `Core: CPU2` in the log header.
-> 6. Run Phases 2–5 independently for the CPU2 project, treating it as a second
->    migration target (same source device, same target device, different core).
->
-> **If the source is single-core:** proceed normally — no CPU2 import needed.
->
-> **If the CPU2 universal path does not exist on disk**, ask the user to provide the
-> CPU2 starter project path before continuing.
 
 ### 1.6 Build the imported starter project
 
@@ -152,7 +126,7 @@ The starter project location depends on the target device:
   not a migration problem. Include the compiler error output in your report so the user
   can diagnose the toolchain or SDK installation.
 
-> **⚠ MCP hang guard — `buildProject` may not respond:**
+> **WARNING: MCP hang guard — `buildProject` may not respond:**
 > `buildProject` is a long-running synchronous call. If the MCP tool call has produced
 > **no response at all** (no result, no error, no progress output) after a long wait
 > (typically 2–3 minutes), assume the tool has hung. Do **not** keep waiting.
@@ -173,11 +147,15 @@ The starter project location depends on the target device:
   `<sourceProjectName>_<targetDevice>`.
 - If the source project name includes the source device string, remove it first
   (e.g., `myApp_f28003x` → `myApp_f28p55x`, not `myApp_f28003x_f28p55x`).
-- This gives each target project a stable, unique name.
+  - **If the source device name appears multiple times** in the project name, remove only
+    the **last** occurrence (closest to the end). Trim any resulting double-underscores
+    (`__` → `_`). Show the proposed new name to the user and wait for confirmation before
+    applying the rename.
+- This gives the target project a stable, unique name.
 - **If a project with that name already exists**, append a numeric suffix (e.g., `_1`)
   and inform the user of the chosen name.
 
-> **⚠ Verify that the physical on-disk directory was also renamed (required):**
+> **WARNING: Verify that the physical on-disk directory was also renamed (required):**
 > CCS `renameProject` renames the project in the workspace but may or may not rename the
 > physical directory on disk depending on the CCS version and whether the project was
 > imported in-place or copied. After `renameProject` returns:
@@ -206,7 +184,7 @@ The starter project location depends on the target device:
 - If the build fails, **stop and report to the user** — this is a rename/path issue.
   Include the compiler error output so the user can diagnose.
 
-> **⚠ MCP hang guard — `buildProject` may not respond:**
+> **WARNING: MCP hang guard — `buildProject` may not respond:**
 > Same rule as step 1.6. If `buildProject` produces no response after a long wait
 > (2–3 minutes), note the hang in your context and record it in step 1.9:
 > `HANG: buildProject(<renamedProject>) — no response after timeout. Phase 1, step 1.8.`
@@ -217,11 +195,14 @@ The starter project location depends on the target device:
 Create a `c2000-migration.md` file in that **target project's directory** using your
 platform's file-write tool (e.g., VS Code's built-in file creation, or a shell
 `write_file` / `echo` command — whichever is available in your agent environment).
+If none of those tool names work, use your agent's code-execution capability to create
+the file via a shell command (e.g., PowerShell `Set-Content` or bash `cat >`). If no
+write capability is available at all, stop and tell the user to create the file manually
+with the content specified below, then confirm creation before continuing.
 
-This file is the persistent migration log for this target. When migrating to multiple
-targets, each target gets its own separate log — there is never a single shared log.
+This file is the persistent migration log for this target project.
 
-> **⚠ `c2000-migration.md` is append-only — never overwrite prior phase sections:**
+> **WARNING: `c2000-migration.md` is append-only — never overwrite prior phase sections:**
 > Every phase appends its results to this file. When updating the log in any phase:
 > - **Read the current file content first**, then write back the existing content plus your
 >   new addition. Never write the file from scratch — doing so would destroy all prior
@@ -259,62 +240,27 @@ Seed the log with:
   | Phase | Status | Notes |
   |-------|--------|-------|
   | Phase 0 — Pre-flight     | <see below> | <see below> |
-  | Phase 1 — Import         | ⏳ IN PROGRESS | |
-  | Phase 2 — Settings       | ⬜ PENDING | |
-  | Phase 3 — SysConfig      | ⬜ PENDING | |
-  | Phase 4 — Migrate Code   | ⬜ PENDING | |
-  | Phase 5 — Report         | ⬜ PENDING | |
+  | Phase 1 — Import         | IN PROGRESS | |
+  | Phase 2 — Settings       | PENDING | |
+  | Phase 3 — SysConfig      | PENDING | |
+  | Phase 4 — Migrate Code   | PENDING | |
+  | Phase 5 — Report         | PENDING | |
   ```
   **Phase 0 row — set based on session context:**
   - If Phase 0 pre-flight results are present in your session context (you ran Phase 0
-    earlier in this session): set `✅ COMPLETE | MCP health check complete`
-  - If Phase 0 was not run or context is absent: set `⚠ SKIPPED | pre-flight not run`
-  - Do **not** hard-code `✅ COMPLETE` for Phase 0 if you did not actually run Phase 0.
+    earlier in this session): set `COMPLETE | MCP health check complete`
+  - If Phase 0 was not run or context is absent: set `SKIPPED | pre-flight not run`
+  - Do **not** hard-code `COMPLETE` for Phase 0 if you did not actually run Phase 0.
 
-**Immediately update the log:** Set Phase 1 status to ✅ COMPLETE and add both build results
+**Immediately update the log:** Set Phase 1 status to COMPLETE and add both build results
 (step 1.6 pre-rename build and step 1.8 post-rename build).
 If any `HANG:` was noted in your context during steps 1.6 or 1.8, record it here now.
 
-> **Multi-target sequencing:** Phase 1 covers all targets at once (one import + build +
-> rename per target). After Phase 1, migrate **one device at a time** — run Phases 2–5
-> fully for one target before starting Phase 2 for the next. Do not interleave or batch
-> phases across targets.
-
----
-
-Repeat steps 1.5–1.9 for each remaining target device before continuing.
 
 ---
 
 **Phase 1 complete.** Present a summary to the user (source project discovered, SDK type,
-all target projects imported/built/renamed) and ask: *"Phase 1 is complete. Does
+target project imported/built/renamed) and ask: *"Phase 1 is complete. Does
 everything look correct? Ready to move to Phase 2 (project settings alignment)?"*
-Wait for the user's confirmation, then **re-read `device-migration.md`** to proceed.
-
-> **Multi-target note:** After all Phase 1 loops complete, confirm with the user:
-> *"All target projects are set up. The recommended approach is to complete Phases 2–5
-> end-to-end for one device at a time — this gives early validation on the first target
-> before investing effort in the others. Alternatively, you can batch all Phase 2s first,
-> then all Phase 3s, etc. Which do you prefer?"*
-> Follow their preference. **End-to-end per device is strongly recommended** — if the
-> first migration reveals issues with the source project or environment, you catch them
-> before repeating the same mistake across all targets.
-> **Do not start Phase 2 for any target until Phase 1 is complete for all targets.**
->
-> **Batch mode — safety rules (if the user chooses batching):**
-> "Batch all Phase 2s" means: complete Phase 2 fully for target A, then fully for
-> target B, then fully for target C — **one at a time, sequentially**. It does NOT mean
-> running Phase 2 steps for multiple targets simultaneously or interleaving edits across
-> projects. The same rule applies to every batched phase.
->
-> Additional constraints when batching:
-> - Each target has its own `c2000-migration.md` log in its own project directory.
->   Never share one log file across targets.
-> - After completing a batched phase for all targets, pause and confirm with the user
->   before moving to the next phase batch — allow them to review results per target.
-> - If one target fails a phase (e.g., SysConfig migration fails for target B), complete
->   that phase for all other targets first, then return to target B's failure. Do not
->   skip ahead to the next phase for any target that has a pending failure.
-> - Track which target you are currently working on in your context. Before every
->   `buildProject`, `setToolFlags`, or file-write call, confirm the project name and
->   directory match the **current target** — not a previously completed target.
+Wait for the user's confirmation, then **re-read the skill routing file** (`SKILL.md` —
+the file that led you here) to find Phase 2 and proceed.
