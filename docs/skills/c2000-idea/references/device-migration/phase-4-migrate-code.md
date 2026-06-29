@@ -264,8 +264,8 @@ Any items needing manual review have been recorded in c2000-migration.md.
 
 Ask: *"Does everything look correct? Ready to move to Phase 5 (migration report)?"*
 
-Wait for the user's confirmation. Then **re-read the skill routing file** (`SKILL.md` —
-the file that led you here) to find Phase 5 and proceed.
+Wait for the user's confirmation. Then **return to `device-migration.md`** (the workflow
+orchestrator that sent you here) and proceed to Phase 5.
 
 ---
 

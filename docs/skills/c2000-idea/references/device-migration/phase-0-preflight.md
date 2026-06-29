@@ -24,34 +24,26 @@ Do not proceed past Step 0.1 until `get_projects()` succeeds.
 
 ## Step 0.2 — Probe CCS Project MCP
 
-Call `getToolOptions` (ccs-project MCP). This is the lightest read-only introspection
-call — it returns the list of available build tool options without modifying anything.
+Call `getProducts` (ccs-project MCP). This is a simple read-only call that takes no
+arguments — it returns the list of installed TI software products without modifying anything.
 
-- **Success** → CCS Project MCP is live.
-- **Tool not found / error** → CCS Project MCP is not registered or not running.
+- **Success (any response)** → CCS Project MCP is live.
+- **Tool not found / unreachable** → CCS Project MCP is not registered or not running.
   Tell the user:
   > *"The CCS Project MCP is not available. This is required for project import, build,
   > and settings management during migration. Please register it with your agent tool."*
   > **Stop** — do not proceed to Phase 1 without CCS Project MCP.
 
-> **If `getToolOptions` returns an error that looks like a usage error** (e.g., "required
-> parameter missing") rather than "tool not found", the MCP is live — the tool requires
-> arguments. In that case, treat it as a successful probe.
-
 ---
 
 ## Step 0.3 — Probe TI ASM MCP
 
-Attempt any TI ASM MCP tool call. The exact tool name depends on which tools the TI ASM
-MCP exposes — try the first tool listed in the MCP's tool manifest (any lightweight
-introspection or info call). The default port is `55000`.
+Call `list_devices` (TI ASM MCP) to list the devices the TI ASM MCP supports. It takes no
+arguments and is a lightweight read-only call — the result does not matter, this only
+confirms the MCP is available and responding. The default port is `55000`.
 
-> **If you cannot determine any tool name** from the MCP manifest, try a minimal call to
-> any tool you know the TI ASM MCP provides (e.g., a device-lookup or TRM-query tool).
-> If no tool is callable, treat TI ASM MCP as unavailable (soft warning — see below).
-
-- **Success** → TI ASM MCP is live.
-- **Failure / tool not found** → TI ASM MCP is not available. This is a **soft warning**
+- **Success (any response)** → TI ASM MCP is live.
+- **Tool not found / unreachable** → TI ASM MCP is not available. This is a **soft warning**
   (not a hard stop), because TI ASM MCP is only required when a migration report issue
   has no `Suggested fix` and you need to look up the register in the TRM. Tell the user:
   > *"TI ASM MCP is not available (port 55000). Migration can proceed, but if any Phase 4
@@ -64,12 +56,41 @@ introspection or info call). The default port is `55000`.
 
 ---
 
-## Step 0.4 — Verify Git state
+## Step 0.4 — Probe CCS SysConfig MCP
 
-Check the Git status of the workspace (use a read-only Git status check — do not commit
-or stage anything here).
+Call `listFiles` (ccs-sysconfig MCP) to list the `.syscfg` files in the workspace. The
+result itself does not matter — this only confirms the MCP is available and responding.
 
-### 0.4a — Confirm clean working tree
+- **Success (any response)** → CCS SysConfig MCP is live.
+- **Tool not found / error** → CCS SysConfig MCP is not available. This is a **soft warning**
+  (not a hard stop): Phase 3 can still run, but the `.syscfg` migration will have to be done
+  manually in CCS. Tell the user:
+  > *"The CCS SysConfig MCP is not available. Migration can proceed, but Phase 3 (SysConfig
+  > migration) will require manual SysConfig work. To enable it, register the CCS SysConfig
+  > MCP with your agent tool."*
+
+  **Note this warning in your session context** — do NOT write to `c2000-migration.md` here
+  (the log does not exist yet; Phase 1 step 1.9 will embed it). Continue to Step 0.5.
+
+---
+
+## Step 0.5 — Verify Git state
+
+Git is **optional** — only run the Git checks if the project is actually under Git version
+control. Use read-only checks; do not commit or stage anything here.
+
+### 0.5a — Check whether Git applies
+
+1. Check whether the `git` command is available (e.g., run `git --version`).
+   - **Not available** → record `Git: not available` in your **session context**, skip the
+     remaining Git checks (0.5b–0.5c), and continue to Step 0.6.
+2. If `git` is available, check whether the project is inside a Git repository (e.g., run
+   `git status`, or `git rev-parse --is-inside-work-tree`, from the source project directory).
+   - **Not a repository** → record `Git: not a repository` in your **session context**, skip
+     0.5b–0.5c, and continue to Step 0.6.
+   - **Inside a repository** → proceed to 0.5b.
+
+### 0.5b — Confirm clean working tree
 
 Verify there are no uncommitted modifications to the **source project** directory.
 
@@ -84,7 +105,7 @@ Verify there are no uncommitted modifications to the **source project** director
     exist yet; Phase 1 step 1.9 will embed it). Continue.
   - If the user wants to commit first → wait for them to do so, then re-check.
 
-### 0.4b — Confirm migration branch exists or offer to create one
+### 0.5c — Confirm migration branch exists or offer to create one
 
 Check whether the current branch name suggests a migration branch (e.g., contains
 `migration`, `migrate`, or `mig`).
@@ -102,7 +123,7 @@ Check whether the current branch name suggests a migration branch (e.g., contain
 
 ---
 
-## Step 0.5 — Record pre-flight results for Phase 1
+## Step 0.6 — Record pre-flight results for Phase 1
 
 > **Do NOT create `c2000-migration.md` in Phase 0.** The migration log lives inside
 > each target project's directory, which does not exist until Phase 1 imports and
@@ -118,11 +139,13 @@ so Phase 1 can reference them when creating `c2000-migration.md`:
 
 ```
 Pre-flight results (to embed in c2000-migration.md at Phase 1 step 1.9):
-  IDEA MCP:         live
-  CCS Project MCP:  live
-  TI ASM MCP:       <live | not available (warned)>
-  Git branch:       <branch name>
-  Git state:        <clean | dirty — user acknowledged>
+  IDEA MCP:           live
+  CCS Project MCP:    live
+  CCS SysConfig MCP:  <live | not available (warned)>
+  TI ASM MCP:         <live | not available (warned)>
+  Git:                <in repo | not a repository | not available>
+  Git branch:         <branch name | n/a>
+  Git state:          <clean | dirty — user acknowledged | n/a>
 ```
 
 Phase 1 step 1.9 will seed `c2000-migration.md` with these values under the session
@@ -130,7 +153,7 @@ header. The Phase status table (Phase 0 through Phase 5) is created by Phase 1, 
 
 ---
 
-## Step 0.6 — Phase 0 complete
+## Step 0.7 — Phase 0 complete
 
 Confirm to the user:
 
@@ -138,15 +161,16 @@ Confirm to the user:
 Pre-flight check complete.
 IDEA MCP: live
 CCS Project MCP: live
+<DONE or WARNING> CCS SysConfig MCP: <live | not available>
 <DONE or WARNING> TI ASM MCP: <live | not available>
-<DONE or WARNING> Git state: <clean | dirty — acknowledged>
+<DONE or WARNING> Git: <clean on branch <name> | dirty — acknowledged | not a repository | not available>
 Migration log: will be created in Phase 1 step 1.9 (once target project is imported)
 
 Ready to start Phase 1 (project import).
 ```
 
-Then **re-read the skill routing file** (`SKILL.md` — the file that led you here) to
-find Phase 1 and proceed.
+Then **return to `device-migration.md`** (the workflow orchestrator that sent you here)
+and proceed to Phase 1.
 
 ---
 
@@ -156,5 +180,7 @@ find Phase 1 and proceed.
 |---------|--------|
 | `get_projects()` fails | Hard stop — IDEA MCP required |
 | CCS Project MCP not found | Hard stop — required for all build operations |
+| CCS SysConfig MCP not found | Soft warning — Phase 3 needs manual SysConfig; note and continue |
 | TI ASM MCP not found | Soft warning — note in session context and continue |
+| Git not installed / project not a repo | Skip Git checks — record in session context and continue |
 | Git working tree dirty | User decision — note outcome in session context and continue |

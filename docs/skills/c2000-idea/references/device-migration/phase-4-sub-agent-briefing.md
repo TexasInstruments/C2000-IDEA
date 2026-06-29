@@ -198,7 +198,7 @@ Phase 4 sequence:
                      Present Phase 4 complete summary to user
        ↓
   Ask for user confirmation
-  Re-read SKILL.md for Phase 5
+  Return to device-migration.md for Phase 5
 ```
 
 **Never dispatch two sub-agents simultaneously.** Files may have interdependencies

@@ -19,23 +19,14 @@ over HTTP. If any required MCP tools are not available in your session, tell the
 to enable them (Command Palette → `C2000-IDEA: Enable IDEA MCP` / `Enable TI ASM MCP`, or click **MCP Servers** in the VS Code status bar)
 and register them with their agent, then retry.
 
-**Before starting any device migration task, run the Phase 0 pre-flight check:**
-
-- Reference file: [`references/device-migration/phase-0-preflight.md`](references/device-migration/phase-0-preflight.md)
-- Phase 0 probes all three MCPs, verifies Git state, and records pre-flight results as session context for Phase 1.
-- Do not start Phase 1 until Phase 0 completes without a hard stop.
-
-For non-migration tasks (e.g., bitfield-to-driverlib conversion), run the minimal probe
-below instead of full Phase 0:
-
-**Minimal MCP probe (non-migration tasks):**
+**Minimal MCP probe (before any task):**
 
 1. Attempt `get_projects()` as a probe call.
    - If it succeeds → server is running. Proceed.
    - If it fails or is unreachable → server is not running. **Stop here.**
 2. Tell the user: *"The IDEA MCP server is not running. Please enable it:"*
    - **Enable:** Command Palette → `C2000-IDEA: Enable IDEA MCP`
-   - **Verify (optional, VS Code only):** Command Palette → `C2000-IDEA: Check IDEA MCP`
+   - **Verify:** Command Palette → `C2000-IDEA: Check IDEA MCP`
      — shows a status message confirming the server URL (`http://localhost:55001/mcp`)
    - After enabling, re-register the MCP with their agent tool, then retry the probe call.
 3. Do not proceed with any migration step until the probe call succeeds.
@@ -57,7 +48,7 @@ below instead of full Phase 0:
 - Confirm with the user before applying bulk changes (same symbol repeated many times).
 - If any phase MCP call fails and cannot be resolved, stop and ask the user; do not skip
   the step or guess the outcome.
-- **Before starting any migration:** Recommend the user commit all changes and create a
+- **Before starting any migration:** Recommend the user to put the project on a git repository and commit all changes and create a
   clean Git branch (e.g., `migration-to-f28p55x`) so rollback is trivial if needed.
   After Phase 5, suggest committing with a descriptive message including source/target
   devices.

@@ -58,6 +58,7 @@ Call `list_migration_devices()` from IDEA MCP immediately after collecting input
 - `getToolOptions` — available build tool options
 
 **ccs-sysconfig MCP** (required when project uses SysConfig):
+- `listFiles` — list the `.syscfg` files in the workspace (also used as the Phase 0 availability probe)
 - `openFile` — open a `.syscfg` file (mandatory before any config tools)
 - `getModuleInstances` — list configured module instances
 - `getInstanceConfiguration` — inspect instance settings (use `changesOnly: true` to see user customizations)
@@ -125,18 +126,18 @@ If you are resuming a migration that was started in a previous session:
 This workflow is split into six phases. **Execute them in strict order.**
 
 > **Per-target:** When migrating to multiple target devices, migrate **one device at a
-> time** — run Phases 2, 3, 4, and 5 fully for one target before starting the next. Do not
-> interleave or batch phases across targets. Phase 1 covers all targets at once.
+> time** — run Phases 1, 2, 3, 4, and 5 fully for one target before starting the next. Do not
+> interleave or batch phases across targets. 
 
 ### Phase sequence
 
 0. **Read `device-migration/phase-0-preflight.md`** — Run the pre-flight check: probe all
-   MCP servers (IDEA MCP, CCS Project MCP, TI ASM MCP), verify Git state, and initialize
+   MCP servers (IDEA MCP, CCS Project MCP, CCS SysConfig MCP, TI ASM MCP), verify Git state, and initialize
    the session context. **This phase runs once before Phase 1 and is mandatory.**
    → When complete, return here.
 
 1. **Read `device-migration/phase-1-import.md`** — Discover the source project, identify
-   the SDK, import and validate the target project(s).
+   the SDK, import and validate the target project.
    → When complete, return here.
 
 2. **Read `device-migration/phase-2-settings.md`** — Analyze and align project settings:
@@ -164,9 +165,6 @@ These rules apply across all phases:
 
 ### Universal project invariants (absolute — never override)
 
-- Do keep the target project in the **universal project style**: it must always retain a
-  `.syscfg` with the `device_support` module as the non-negotiable baseline — regardless
-  of whether the source project used SysConfig at all. Never remove the target's `.syscfg`.
 - Do treat `device_support` as the **absolute minimum** in the target syscfg. It generates
   `device.c`/`device.h` (clocking/init), `.opt` (compiler options), and `.cmd.genlibs`
   (linker libs), and provides pinmux data essential for the target device — even if the
@@ -186,14 +184,12 @@ These rules apply across all phases:
 - Do take file paths and device names from MCP tools — never invent them.
 - Do ask the user for shared (`#ifdef`) vs. clean replacement preference before modifying any files.
 - Do process `.h` files before `.c` files — fixing headers first prevents cascading compile errors.
-- Do maintain a deferred-errors list during Phase B for cross-file build errors.
 - Do use `get_device_migration_report` as the authoritative source — not the VS Code diagnostics panel.
+- Do fetch migration collateral links when no `Suggested fix` is provided — read the full `#symbol` anchor block before writing any replacement code.
 - Don't recall C2000 migration facts from memory — the MCP is the source of truth.
 - Don't modify or migrate SysConfig-generated output files — migrate the .syscfg instead.
 - Don't copy device-specific startup/driver files (`device.c`/`device.h`) from the source — the target's device-support module regenerates them.
-- Don't run `buildProject` during Phase A (header migration) — the loop is report-only.
 - Don't modify SDK driverlib source files — only the project's own application source files.
-- Do fetch migration collateral links when no `Suggested fix` is provided — read the full `#symbol` anchor block before writing any replacement code.
 - Don't read only the page title or surrounding text of a collateral link — navigate to the exact `#anchor` section and read the complete diff block.
 - Don't invoke SysConfig MCP regeneration until the full `.syscfg` migration is complete.
 - Don't alter existing `//_DEVICE_MIGRATION_` pragma markers — but do add them when generating new `#ifdef` blocks in Approach 1.
