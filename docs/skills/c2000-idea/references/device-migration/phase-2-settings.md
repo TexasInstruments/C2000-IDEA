@@ -30,11 +30,23 @@ source to the target, except where differences are legitimate device deltas.
 Use CCS MCP `getToolFlags` to read settings from both projects and `setToolFlags` to
 apply mismatches to the target.
 
-**Build configuration:** Identify which build configuration the source project actively
-uses (typically `CPU1_FLASH` or `Debug`). Apply all Phase 2 settings to **that same
-configuration** in the target. Do not apply settings to a different build config by
-mistake. If the source has multiple build configurations, ask the user which one to
-target before proceeding.
+## 2.0 Identify the active build configuration
+
+Call `getToolFlags` on the **source** project and identify which build configuration it
+actively uses (typically `CPU1_FLASH` or `Debug`). Apply all Phase 2 settings to **that
+same configuration** in the target. Do not apply settings to a different build config by
+mistake. If the source has multiple build configurations, ask the user which one to target
+before proceeding.
+
+**Update `c2000-migration.md`:** Replace the placeholder recorded in Phase 1 step 1.9:
+```
+Active build config: TBD — to be confirmed and filled in Phase 2 (step 2.0)
+```
+with the confirmed value:
+```
+Active build config: <confirmed config name, e.g. CPU1_FLASH>
+```
+All subsequent phases (3, 4, 5) read this value from the log. Do not leave it as TBD.
 
 **For every step in this phase:** before applying any change, tell the user what you
 found (source value vs. target value) and what you plan to apply. Wait for the user to
@@ -88,16 +100,64 @@ CMD-module decision in Phase 3:
 - **Plain `.cmd`** — the source uses a standalone, user-managed `.cmd` file (always the case
   when the source has no SysConfig).
 
+**Detecting CMD module presence in the source syscfg (required):**
+
+You must actively inspect the source SysConfig — do not guess from file names alone.
+
+1. Call `openFile` (ccs-sysconfig MCP) on the **source** project's `.syscfg` file path
+   (obtain it from `getProjectDescriptors`).
+2. Call `getModuleInstances` and look for a module whose name contains `"CMD"` or
+   `"linkerCommandFile"` (exact module ID may vary — match case-insensitively).
+3. If such a module instance exists → **CMD module** style. If not → **Plain `.cmd`** style.
+4. Call `closeFile` on the source syscfg immediately after detection — never leave it open.
+
 Record the detected style in `c2000-migration.md` — Phase 3 reads it to decide whether the
 target syscfg keeps or drops its CMD module.
 
-**If the source uses a CMD module:** no linker file work in this phase. The target keeps a
-CMD module in its syscfg, and the sections are reconciled during the SysConfig migration
-(Phase 3). Skip the rest of this step.
+> **⚠ Hybrid source — plain `.cmd` + CMD module both present:**
+> Some projects have a CMD module in their syscfg **and** a separately-registered plain
+> `.cmd` file (the CMD module generates the standard memory map; the plain `.cmd` adds
+> custom sections on top). If step 2 finds a CMD module **and** the source's linker tool
+> flags (`getToolFlags`) already contain a `--cmd_file` entry pointing to a `.cmd` file
+> in the project directory, the source is **hybrid style**. In this case:
+> 1. Treat the CMD module as authoritative for the standard memory map sections.
+> 2. Treat the plain `.cmd` file as an overlay with custom sections.
+> 3. Record **hybrid** in `c2000-migration.md` and flag the user: *"Source uses both a
+>    CMD module and a plain `.cmd` overlay. Please confirm whether the target should also
+>    use hybrid style, or consolidate into one style."* Wait for confirmation before
+>    continuing — do not assume a style.
+
+**If the source uses a CMD module (non-hybrid):** no linker file work in this phase. The
+target keeps a CMD module in its syscfg, and the sections are reconciled during the SysConfig
+migration (Phase 3). Skip the rest of this step.
 
 **If the source uses a plain `.cmd` file:** set up the target's plain `.cmd` file now, using
 the SDK's target-device reference as the starting point. (Phase 3 will remove the CMD
 module from the target syscfg so it does not generate a competing linker file.)
+
+**Finding the source `.cmd` file path (required before reconciliation):**
+
+Before reading the source `.cmd`, you must locate it reliably:
+1. Call `getToolFlags` (ccs-project MCP) on the **source** project's linker tool for the
+   active build configuration.
+2. Look for a `--cmd_file` flag entry — its value is the registered `.cmd` file path.
+   If you find one, use that exact path to read the source `.cmd` file.
+3. If no `--cmd_file` flag is present, scan the source project directory for `.cmd` files.
+   If exactly one is found, use it. If multiple are found, see the multi-`.cmd` note below.
+4. **If the path is absolute and points outside the project or SDK directory** (e.g.,
+   `C:/company/shared/custom.cmd`), that file may not be accessible from the current
+   environment. In this case, report the path to the user and ask them to copy the file
+   content into the project directory before continuing. Do not proceed with reconciliation
+   using a path you cannot read.
+
+> **Multiple `.cmd` files in source (RAM vs FLASH):**
+> Some projects include both a RAM linker cmd (e.g., `*_ram_lnk.cmd`) and a flash linker
+> cmd (e.g., `*_flash_lnk.cmd`), each registered for a different CCS build configuration.
+> If multiple `.cmd` files are found:
+> 1. Call `getToolFlags` for the **active build configuration** on the source project.
+> 2. Identify which `.cmd` file is registered for that exact configuration.
+> 3. Use that file for reconciliation — do not use the other configuration's `.cmd`.
+> 4. Tell the user which `.cmd` file you are using and which configuration it belongs to.
 
 **Finding the target device reference linker cmd files:**
 
@@ -126,10 +186,32 @@ reference cmd file:
   (e.g., a memory block that does not exist on the target device), flag it to the user
   — do not silently drop the section or invent a region name.
 
+**Registering the plain `.cmd` with the CCS project (required — plain `.cmd` style only):**
+
+After writing the reconciled `.cmd` file into the target project directory, you must
+explicitly register it with the CCS project's linker tool so it is picked up during builds:
+
+1. Call `getToolFlags` (ccs-project MCP) on the target project's linker tool to see what
+   flags are already set. Identify whether the linker uses `--cmd_file` or `-@` for
+   registering command files. CCS projects typically use `--cmd_file` for explicit linker
+   command files; `-@` is for option-response files (a file that contains linker options,
+   not a linker command file itself). **Use `--cmd_file`** unless `getToolFlags` shows
+   the source project was already using `-@` for this purpose.
+2. Call `setToolFlags` on the target project with the linker tool (`TI_ARM_C2000_Linker`
+   or equivalent) and add the `.cmd` file path to the `--cmd_file` linker option for the
+   active build configuration.
+3. Confirm the flag was set by calling `getToolFlags` and verifying the path appears.
+
+> If you skip this registration step the project will build without the custom linker
+> script and produce incorrect memory placement or a link error — even if the `.cmd` file
+> is present on disk.
+
 > **Ordering:** the plain `.cmd` set up here and the CMD-module removal in Phase 3 must
 > both complete before the Phase 4 build. No build happens between Phase 2 and Phase 3, so
 > the brief window where both a plain `.cmd` and the syscfg-generated cmd exist is safe —
-> but never run a build until Phase 3 has normalized the CMD module.
+> but **never run a build until Phase 3 has normalized the CMD module** (removed the CMD
+> module from the target syscfg). Building in this window will link TWO competing linker
+> command files and fail.
 
 ## 2.6 Libraries
 
@@ -156,13 +238,19 @@ that should come from the new SDK (ignore these). Use these heuristics:
 - **SysConfig-generated files** — ignore these; they are regenerated after SysConfig
   migration. This includes the device-support and CMD-module outputs: `device.c`,
   `device.h`, the generated `.cmd`, `.opt`, and `.cmd.genlibs`. Detect them two ways:
-  - Call `listGeneratedArtifacts` (ccs-sysconfig MCP) to get the generated file names.
+  - To call `listGeneratedArtifacts` (ccs-sysconfig MCP), the source `.syscfg` **must be
+    open** first. **Important:** Step 2.5 already opened and closed the source `.syscfg`
+    for CMD module detection. You must open it again here — call `openFile` on the source
+    `.syscfg` path (from `getProjectDescriptors` on the source project), call
+    `listGeneratedArtifacts`, then call `closeFile` immediately. Do not leave it open.
+    If the source has no `.syscfg`, skip this sub-step and rely on the name-based fallback.
+    Use the returned names as the exclusion list.
   - Use `sysConfigOutputLocation` from `getProjectDescriptors` to find the SysConfig
-    output folder — ignore all files under it.
+    output folder — ignore all files under it regardless of name.
 
-**If `listGeneratedArtifacts` is unavailable**, exclude all files matching the names
-`board.c`, `board.h`, `device.c`, `device.h`, any file with a `.syscfg.c` / `.syscfg.h`
-extension, any `.opt` or `.cmd.genlibs` file, and all files under the
+**If `listGeneratedArtifacts` is unavailable or fails**, exclude all files matching the
+names `board.c`, `board.h`, `device.c`, `device.h`, any file with a `.syscfg.c` /
+`.syscfg.h` extension, any `.opt` or `.cmd.genlibs` file, and all files under the
 `sysConfigOutputLocation` folder — treat them as generated and do not copy them.
 
 **Before copying**, present two lists to the user:
@@ -172,6 +260,13 @@ extension, any `.opt` or `.cmd.genlibs` file, and all files under the
    device startup file, etc.).
 
 Wait for the user to confirm the lists are correct before copying.
+
+**After confirmation — copy the files (required, do not skip):**
+
+Use your platform's file-write tool to physically copy each confirmed application file into
+the target project directory, preserving the relative subdirectory structure. Do not just
+acknowledge the list — perform the actual file copy. After copying, report the list of
+files successfully written to the target.
 
 ## 2.8 Post-build steps
 
@@ -187,6 +282,49 @@ Wait for the user to confirm the lists are correct before copying.
 - Verify the target uses the equivalent RTS variant.
 - **If the target device requires a different FPU/TMU RTS variant**, use the target
   device's correct variant — do not copy the source RTS name verbatim.
+
+---
+
+## 2.10 Settings verification (read-back diff — required)
+
+After all `setToolFlags` calls in steps 2.1–2.9 are complete, read back the applied
+settings from the **target** project and confirm they match what you intended to write.
+
+**For each tool category where you called `setToolFlags`:**
+
+1. Call `getToolFlags` on the **target** project for that tool and the active build
+   configuration.
+2. Compare the returned value against what you applied:
+   - **Compiler flags (2.1):** confirm optimization level, debug info, warning levels,
+     any custom flags are present.
+   - **Predefined defines (2.2):** confirm every user-added `#define` appears; confirm
+     no source-device defines were accidentally copied.
+   - **Include paths (2.3):** confirm every added path appears; confirm no path still
+     contains the source device name string.
+   - **Linker flags (2.4):** confirm stack/heap sizes, map file flag, output format.
+   - **Plain `.cmd` registration (2.5, if plain style):** confirm `--cmd_file` points
+     to the reconciled target `.cmd` file in the target project directory.
+   - **Libraries (2.6):** confirm all required libraries are linked.
+   - **Post-build steps (2.8, if any were applied):** confirm the post-build command is
+     present and that any device-name substitution was applied correctly.
+   - **RTS library (2.9, if changed):** confirm the correct RTS variant for the target
+     device is selected.
+3. If any value is missing, wrong, or applied to the wrong build configuration:
+   - Re-apply it with `setToolFlags` and read back again.
+   - If it still does not match after re-apply, stop and report the discrepancy to
+     the user — do not silently proceed with a misconfigured project.
+4. Record the verification result in `c2000-migration.md`:
+   ```
+   Phase 2 settings verification: PASS — all applied settings confirmed via read-back.
+   ```
+   Or, if any mismatch was corrected:
+   ```
+   Phase 2 settings verification: CORRECTED — <description of what was re-applied>.
+   ```
+
+> **This step is not optional.** A setting applied to the wrong build configuration
+> or silently ignored by `setToolFlags` will cause a build failure or wrong device
+> configuration in Phase 4 — long after this phase has been marked complete.
 
 ---
 

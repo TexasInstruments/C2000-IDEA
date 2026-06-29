@@ -13,15 +13,24 @@ the MCP* for a given migration task; the MCP supplies the analysis.
 
 ## Prerequisite
 
-These workflows require the IDEA MCP server to be running. It is hosted by the C2000-IDEA
-extension over HTTP. If the IDEA MCP tools are not available in your session, tell the user
-to enable it (Command Palette → "C2000-IDEA: Enable IDEA MCP") and register it with their
-agent, then retry.
+These workflows require the IDEA MCP server, CCS Project MCP, and (for TRM register
+lookups) TI ASM MCP to be running. They are hosted by the C2000-IDEA VS Code extension
+over HTTP. If any required MCP tools are not available in your session, tell the user
+to enable them (Command Palette → `C2000-IDEA: Enable IDEA MCP` / `Enable TI ASM MCP`, or click **MCP Servers** in the VS Code status bar)
+and register them with their agent, then retry.
 
+**Before starting any device migration task, run the Phase 0 pre-flight check:**
 
-**Before starting any task, verify the IDEA MCP server is live:**
+- Reference file: [`references/device-migration/phase-0-preflight.md`](references/device-migration/phase-0-preflight.md)
+- Phase 0 probes all three MCPs, verifies Git state, and records pre-flight results as session context for Phase 1.
+- Do not start Phase 1 until Phase 0 completes without a hard stop.
 
-1. Attempt `list_migration_devices()` as a probe call.
+For non-migration tasks (e.g., bitfield-to-driverlib conversion), run the minimal probe
+below instead of full Phase 0:
+
+**Minimal MCP probe (non-migration tasks):**
+
+1. Attempt `get_projects()` as a probe call.
    - If it succeeds → server is running. Proceed.
    - If it fails or is unreachable → server is not running. **Stop here.**
 2. Tell the user: *"The IDEA MCP server is not running. Please enable it:"*
