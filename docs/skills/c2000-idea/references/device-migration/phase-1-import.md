@@ -95,49 +95,32 @@ Then derive:
 
 The starter project location depends on the target device:
 
-| Target device          | Universal project path                                                  |
-| ---------------------- | ----------------------------------------------------------------------- |
-| f2837xd                | `<c2000ware_path>/driverlib/<target-device>/examples/cpu1/universal`    |
-| f2837xs                | `<c2000ware_path>/driverlib/<target-device>/examples/cpu1/universal`    |
-| f2807x                 | `<c2000ware_path>/driverlib/<target-device>/examples/cpu1/universal`    |
-| f28p65x                | `<c2000ware_path>/driverlib/<target-device>/examples/c28x/universal`    |
-| All other devices      | `<c2000ware_path>/driverlib/<target-device>/examples/universal`         |
+| Target device          | Universal project path                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------ |
+| f28p65x                | `<c2000ware_path>/driverlib/<target-device>/examples/c28x/universal`                 |
+| All other devices      | `<c2000ware_path>/driverlib/<target-device>/examples/universal`                      |
+
+> **f2837xd, f2837xs, f2807x — ask the user:**
+> These devices do not have a `universal/` starter project at a predictable path.
+> **Ask the user to provide the path to the starter project they want to use as the base.**
+> Do not guess or invent a path.
 
 - Import via CCS MCP `importProject`.
-- **If the universal project path does not exist on disk**, the target device or SDK
-  version may not include a universal example — ask the user to point to the starter
-  project they want to use as the base.
+- **If the path does not exist on disk**, ask the user to provide the path to the starter
+  project they want to use as the base. Do not guess or invent a path.
 - **If `importProject` reports a name conflict** (a project with the same name already
   exists in the workspace), rename the conflicting project to `<existingName>_bak` using
   `renameProject` before reimporting. Inform the user of the rename.
 
-> **WARNING: Dual-core source project detection (required before import):**
-> Before importing the target's universal project, check whether the **source** project
-> is part of a dual-core pair. Dual-core devices (e.g., `f2837xd`, `f2838x`, `f28p65x`)
-> have separate CPU1 and CPU2 projects that are linked in the CCS workspace.
+> **STOP: Dual-core source project detected:**
+> Before importing the target's universal project, call `getProjectDescriptors` on the
+> source project and check whether the result contains a `linkedProjects` field listing a
+> companion project (typically named with `_cpu2` or `_CPU2`).
 >
-> **How to detect:** Call `getProjectDescriptors` on the source project. If the result
-> contains a `linkedProjects` field (or equivalent) listing a companion project
-> (typically named with `_cpu2` or `_CPU2`), the source is dual-core.
+> **If the source is dual-core — STOP.** Dual-core project migration is not supported
+> by this workflow. Inform the user and do not continue.
 >
-> **If the source is dual-core:**
-> 1. The target device also needs a CPU2 project. Import the CPU2 universal example:
->    - `f2837xd` / `f2838x`: `<c2000ware_path>/driverlib/<target-device>/examples/cpu2/universal`
->    - `f28p65x`: `<c2000ware_path>/driverlib/<target-device>/examples/c28x/universal_cpu2`
->      (path may vary — check that the path exists on disk before calling `importProject`)
-> 2. Import the CPU2 universal project immediately after the CPU1 import (still in step 1.5).
-> 3. Build and rename the CPU1 project in steps 1.6–1.7, then build and rename the CPU2
->    project through the same steps (repeat 1.6–1.8 for CPU2 before moving to 1.9).
-> 4. Rename the CPU2 project in step 1.7 to `<sourceProjectName>_<targetDevice>_cpu2`.
-> 5. Create a **separate** `c2000-migration.md` in the CPU2 target project directory in
->    step 1.9. Record `Core: CPU2` in the log header.
-> 6. Run Phases 2–5 independently for the CPU2 project, treating it as a second
->    migration target (same source device, same target device, different core).
->
-> **If the source is single-core:** proceed normally — no CPU2 import needed.
->
-> **If the CPU2 universal path does not exist on disk**, ask the user to provide the
-> CPU2 starter project path before continuing.
+> **If the source is single-core:** proceed normally.
 
 ### 1.6 Build the imported starter project
 

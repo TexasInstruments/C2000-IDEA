@@ -38,25 +38,11 @@ or empty, the source project has no `.syscfg` — skip this step.
 If the source has no `.syscfg`, skip this step and keep the universal project's `.syscfg`
 as-is (it already contains the device-support module).
 
-> **WARNING: Dual-core devices (e.g., `f2837xd`, `f2838x`, `f28p65x`):**
-> Dual-core devices may have **two** `.syscfg` files — one per CPU core (e.g.,
-> `cpu1.syscfg` and `cpu2.syscfg`). `getProjectDescriptors` typically returns only the
-> primary syscfg path in `sysConfigLocation`. Before continuing, check the source project
-> directory for additional `.syscfg` files.
+> **STOP: Dual-core syscfg detected:**
+> Before continuing, check the source project directory for additional `.syscfg` files.
 > - If only one `.syscfg` is found, proceed normally.
-> - If **two** `.syscfg` files are found, you must migrate **both**: run the entire Phase 3
->   sequence (Phase 3A steps 3.1–3.3, then Phase 3B steps 3.4–3.12) for `cpu1.syscfg`
->   first, then repeat the full Phase 3A + Phase 3B sequence for `cpu2.syscfg`. Record
->   each in `c2000-migration.md` separately. Tell the user about the dual-core syscfg
->   before starting and confirm which CPU's syscfg to process first.
->
-> **WARNING: SysConfig MCP supports only one open file at a time (dual-syscfg):**
-> Before starting Phase 3A for `cpu2.syscfg`, confirm that `cpu1.syscfg` is fully closed.
-> Phase 3B step 3.12 calls `closeFile` — verify that call completed successfully before
-> calling `openFile` on `cpu2.syscfg`. If `closeFile` for cpu1 was not confirmed (e.g., the
-> session ended between phases), call `closeFile` once now as a precaution before opening
-> cpu2. Opening a second `.syscfg` while another is already open may silently operate on
-> the wrong file or return an error depending on the SysConfig MCP version.
+> - If **two** `.syscfg` files are found — **STOP.** Dual-core project migration is not
+>   supported by this workflow. Inform the user and do not continue.
 
 ## 3.2 Open the target `.syscfg`
 

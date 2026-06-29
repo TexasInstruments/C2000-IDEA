@@ -165,8 +165,19 @@ The reference cmd files are located at:
 `<c2000ware_path>/device_support/<target-device>/common/cmd/`
 
 List all files in the cmd directory and identify the two key reference files:
-- The **RAM** linker cmd — file name ends with `_ram_lnk.cmd`
-- The **flash** linker cmd — file name ends with `_flash_lnk.cmd`
+- The **RAM** linker cmd — look for a file whose name contains `_generic_ram_lnk.cmd` first.
+  - If found, present it to the user as the default and wait for confirmation before using it.
+  - If not found, fall back to any file ending with `_ram_lnk.cmd`. List all candidates,
+    present the first match as the default, and ask the user to confirm or choose a different
+    file before proceeding.
+- The **flash** linker cmd — look for a file whose name contains `_generic_flash_lnk.cmd` first.
+  - If found, present it to the user as the default and wait for confirmation before using it.
+  - If not found, fall back to any file ending with `_flash_lnk.cmd`. List all candidates,
+    present the first match as the default, and ask the user to confirm or choose a different
+    file before proceeding.
+
+**Always wait for explicit user confirmation** on which cmd file to use before reading it —
+whether the `_generic_` file was found or a fallback is being used.
 
 Read both files for context before reconciliation.
 
@@ -262,6 +273,15 @@ names `board.c`, `board.h`, `device.c`, `device.h`, any file with a `.syscfg.c` 
 Wait for the user to confirm the lists are correct before copying.
 
 **After confirmation — copy the files (required, do not skip):**
+
+> **Use the physical target project directory path** — not a path derived from the project
+> name. Call `getProjectDescriptors` on the **target** project name to obtain its root
+> directory path. Use that exact path for all file writes. This matters because Phase 1
+> step 1.7 may have recorded that CCS renamed the workspace entry but left the physical
+> folder at the original imported name (e.g., `...\universal\`). Writing to a
+> name-derived path in that case would silently fail or create files in the wrong location.
+> The correct physical path is also recorded in `c2000-migration.md` under
+> "Target project directory".
 
 Use your platform's file-write tool to physically copy each confirmed application file into
 the target project directory, preserving the relative subdirectory structure. Do not just

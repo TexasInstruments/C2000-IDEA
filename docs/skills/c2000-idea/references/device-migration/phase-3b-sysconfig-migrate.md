@@ -182,9 +182,15 @@ Make the target syscfg's CMD module match the **source linker style** recorded i
   > names that belong to the **source device** (e.g., `RAMLS0`, `FLASHB`). The target device
   > may use different region names. Before calling `changeConfiguration` to restore each
   > section:
-  > 1. Read the target device's reference `.cmd` file
-  >    (`<c2000ware_path>/driverlib/<target-device>/cmd/*_flash_lnk.cmd`) to obtain the
-  >    list of valid memory region names for the target.
+  > 1. Locate the target device's reference `.cmd` file:
+  >    - List all files in `<c2000ware_path>/device_support/<target-device>/common/cmd/`.
+  >    - **Preferred file:** look for a file whose name contains `_generic_flash_lnk.cmd`. If
+  >      found, present it to the user as the default and ask for confirmation before using it.
+  >    - If no file containing `_generic_flash_lnk.cmd` exists, list all files ending with
+  >      `_flash_lnk.cmd` and ask the user which one to use. The file that Phase 2 step 2.5
+  >      already selected is the recommended default — present it as such and wait for user
+  >      confirmation.
+  >    - Read the confirmed file to obtain the list of valid memory region names for the target.
   > 2. For each section in the snapshot, check that its assigned memory region name exists
   >    in the target device's reference cmd.
   > 3. If the region name is valid → restore via `changeConfiguration` as-is.
