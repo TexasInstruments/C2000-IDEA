@@ -149,17 +149,22 @@ WARNING: **This step is mandatory before declaring Phase 4 complete.**
 
 Call `buildProject` on the target project. Do **not** rely on an incremental build —
 stale `.obj` files from before migration may hide compilation errors. To force a clean
-rebuild, call `buildProject` twice: once to clean (which removes all previous `.obj`
-files), then again to rebuild from scratch:
+rebuild, call `buildProject` twice:
 
 ```
-buildProject(<target project name>)   ← first call cleans previous build artifacts
-buildProject(<target project name>)   ← second call rebuilds from scratch
+buildProject(<target project name>)   ← first call: builds with any stale objects present
+buildProject(<target project name>)   ← second call: builds from the fresh state left by the first call
 ```
 
-> **Note:** The `buildProject` MCP tool does not accept a `clean=true` parameter.
-> Calling it twice achieves a clean rebuild — the first call discards stale objects,
-> the second confirms the full project builds cleanly.
+> **Note:** The `buildProject` MCP tool does not accept a `clean=true` parameter. The
+> two-call approach achieves a reliable rebuild: the first call compiles all files against
+> the current (post-migration) source state, replacing stale `.obj` files; the second call
+> confirms a complete, consistent build from that clean object set.
+>
+> **If the CCS MCP exposes a `cleanProject` tool**, call it once before the first
+> `buildProject` instead — that is a more explicit clean and reduces build time (one
+> `cleanProject` + one `buildProject` is equivalent to two `buildProject` calls).
+> If no `cleanProject` tool is available, use the two-call approach above.
 
 > **WARNING: MCP hang guard:** If either `buildProject` call produces no response after
 > ~2–3 minutes, record `HANG: buildProject(<project>) — Phase 4C, Step 5` in

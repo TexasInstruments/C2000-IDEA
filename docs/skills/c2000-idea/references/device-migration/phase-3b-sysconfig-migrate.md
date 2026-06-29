@@ -42,9 +42,14 @@ Look for the `Phase 3A: COMPLETE` entry and read the `3B path` field:
   then 3.10a → 3.11 → 3.12.
 
 If the `c2000-migration.md` checkpoint is missing or unclear, re-derive the path:
-- Check whether the target project's `.syscfg` was replaced with the source's (ask: does
-  the target `.syscfg` contain source-device peripherals?). If yes → full path.
-- If the target `.syscfg` is still the universal template → skip path.
+- Open the target project's `.syscfg` via `openFile`, then call `getModuleInstances`.
+  Inspect the returned module list:
+  - If it contains peripheral modules beyond `device_support` (e.g., ADC, EPWM, SPI
+    instances that match the source device's peripherals) → the source syscfg was copied
+    in → **full path** (run steps 3.4–3.12).
+  - If the only module is `device_support` (universal template content) → the source had
+    no syscfg or the copy was not done → **skip path** (go directly to step 3.10).
+  Call `closeFile` after inspecting, then proceed with the determined path.
 
 ---
 
@@ -317,4 +322,5 @@ module / removed for plain cmd), and any unresolved SysConfig issues.
 ensured, SysConfig migrated to target device/package if applicable, errors found and fixed,
 CMD module kept or removed to match the source) and ask: *"Phase 3 is complete. Does
 everything look correct? Ready to move to Phase 4 (source code migration)?"* Wait for the
-user's confirmation, then **re-read `device-migration.md`** to proceed.
+user's confirmation, then **re-read the skill routing file** (`SKILL.md` — the file that
+led you here) to find Phase 4 and proceed.

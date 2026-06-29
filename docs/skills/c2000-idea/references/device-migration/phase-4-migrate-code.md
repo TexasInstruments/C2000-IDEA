@@ -13,17 +13,6 @@ skip the step.
 
 ---
 
-## Per-target isolation
-
-When migrating to multiple target devices, run Phase 4 **once for each target project
-independently**. Complete all of Phase 4 (4A + 4B + 4C) for one target before starting
-Phase 4 for the next. Do not interleave file edits across different target projects.
-
-If you find yourself looking at files from two different target project directories,
-stop and re-read `c2000-migration.md` to confirm which target you are working on.
-
----
-
 ## Step 4.0 — Strategy and pre-migration report
 
 ### 4.0a Ask the user for migration strategy
@@ -37,21 +26,23 @@ Ask:
   blocks with `//_DEVICE_MIGRATION_` suffix on each directive line.
 - **Approach 2 (clean replacement):** Old symbols are replaced directly.
 
-Record the choice in `c2000-migration.md`:
+Record the choice in `c2000-migration.md` **under a dedicated section immediately after the
+Phase 4 file list**, formatted exactly as follows — the sub-agents read this exact string:
 ```
-**Strategy:** Shared codebase (#ifdef)
+## Phase 4 — Migration Strategy
+Strategy: Approach 1 (shared #ifdef)
 ```
 or
 ```
-**Strategy:** Clean replacement
+## Phase 4 — Migration Strategy
+Strategy: Approach 2 (clean replacement)
 ```
 
-> **Multi-target note:** When migrating to multiple target devices, ask this question
-> **once** (before Phase 4 for the first target) and apply the **same strategy to all
-> targets**. Do not re-ask for each target — a consistent strategy prevents diverging
-> codebases. If the user needs different strategies per target, they must explicitly
-> request that, and you should note the per-target strategy in each target's
-> `c2000-migration.md`.
+> **CRITICAL: The strategy must be recorded in `c2000-migration.md` BEFORE dispatching
+> any sub-agent (4A, 4B, 4C, 4D).** Every sub-agent reads its approach from this log
+> entry at startup. If it is missing or ambiguous, sub-agents will produce inconsistent
+> file edits that cannot be safely combined. Do not dispatch Phase 4A until this entry
+> is confirmed present in the log.
 
 ### 4.0b Pre-migration scope report
 
@@ -61,6 +52,12 @@ source project name.
 
 Call `get_project_migration_report(<target project name>)`. Report to the user:
 *"Found `<N>` issues across `<M>` files. Starting migration."*
+
+> **Tool name note:** `get_project_migration_report` is the **project-level** tool —
+> only the orchestrator (this step) calls it to get scope. Sub-agents (4A, 4B, 4C) call
+> `get_device_migration_report` (file-level — takes an absolute file path). Do not
+> confuse the two: using the project-level tool inside a sub-agent will return the wrong
+> scope; using the file-level tool here will miss files not yet flagged.
 
 Use this for scope reporting only — not to set processing order. Processing order is
 always fixed: all `.h` files first, then `.c` files in dependency order.
@@ -83,6 +80,14 @@ From the target project directory, collect:
    - Leaf files first (those that only `#include` SDK headers, no project-internal `#include`s).
    - Files that include already-migrated project headers next.
    - Files with the most project-internal dependencies last (typically `main.c`).
+
+   > **Defining "project-internal" vs "SDK" `#include`:**
+   > An `#include` is **project-internal** if its resolved header path falls inside the
+   > **target project directory** (i.e., the path starts with `targetProjectDir`).
+   > An `#include` is an **SDK header** if its resolved path falls under `c2000ware_path`
+   > or any other system/compiler include directory. When in doubt, check whether the
+   > header file exists inside the target project directory — if yes, it is project-internal;
+   > if it only exists under the SDK path, it is an SDK header.
 
 3. **`.asm` files** — list all application assembly files in the target project directory.
    Apply the same exclusions (exclude SDK paths, SysConfig-generated paths, driverlib paths).
@@ -259,7 +264,8 @@ Any items needing manual review have been recorded in c2000-migration.md.
 
 Ask: *"Does everything look correct? Ready to move to Phase 5 (migration report)?"*
 
-Wait for the user's confirmation. Then **re-read `device-migration.md`** to proceed.
+Wait for the user's confirmation. Then **re-read the skill routing file** (`SKILL.md` —
+the file that led you here) to find Phase 5 and proceed.
 
 ---
 

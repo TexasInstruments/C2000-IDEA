@@ -33,10 +33,11 @@ Briefing:
   Target project name      : <name from c2000-migration.md>
   Source device            : <e.g. f28003x>
   Target device            : <e.g. f28p55x>
-  Migration approach       : Approach 1 (#ifdef) | Approach 2 (clean replacement)
+  Migration approach       : Approach 1 (#ifdef)           ← FILL IN EXACTLY ONE
+                           OR Approach 2 (clean replacement)
   c2000ware_path           : <path>
   SDK version              : <e.g. C2000Ware_5_04_00_00>
-  Active build config      : <e.g. CPU1_FLASH>
+  Active build config      : <e.g. CPU1_FLASH>             ← copy verbatim from c2000-migration.md
   sysConfigOutputLocation  : <path — from getProjectDescriptors; do not edit files here>
 
   Files to migrate (in order):
@@ -50,6 +51,11 @@ Briefing:
 Do not read any file other than phase-4a-headers.md.
 Return your structured result when all .h files are complete.
 ```
+
+> **Orchestrator checklist before dispatching Phase 4A:**
+> - [ ] `Migration approach` field contains **exactly one** of the two options (not both, not blank, not "TBD")
+> - [ ] `Active build config` field is copied **verbatim** from `c2000-migration.md` (`Active build config:` line)
+> - [ ] `c2000-migration.md` contains a `## Phase 4 — Migration Strategy` section with `Strategy:` filled in
 
 ---
 
@@ -66,10 +72,11 @@ Briefing:
   Target project directory : <absolute path>
   Source device            : <e.g. f28003x>
   Target device            : <e.g. f28p55x>
-  Migration approach       : Approach 1 (#ifdef) | Approach 2 (clean replacement)
+  Migration approach       : Approach 1 (#ifdef)           ← FILL IN EXACTLY ONE — same as Phase 4A
+                           OR Approach 2 (clean replacement)
   c2000ware_path           : <path>
   SDK version              : <e.g. C2000Ware_5_04_00_00>
-  Active build config      : <e.g. CPU1_FLASH>
+  Active build config      : <e.g. CPU1_FLASH>             ← copy verbatim from c2000-migration.md
   sysConfigOutputLocation  : <path — from getProjectDescriptors; do not edit files here>
 
   Deferred-errors context  : <paste any deferred-errors from prior .c file dispatches
@@ -82,6 +89,10 @@ Do not read any file other than phase-4b-sources.md.
 Do not start on any other .c file.
 Return your structured result when this file is complete.
 ```
+
+> **Orchestrator checklist before dispatching each Phase 4B:**
+> - [ ] `Migration approach` matches exactly what was used in Phase 4A (read from `c2000-migration.md` `## Phase 4 — Migration Strategy`)
+> - [ ] `Active build config` is copied verbatim from `c2000-migration.md` — do not retype from memory
 
 ---
 
@@ -187,7 +198,7 @@ Phase 4 sequence:
                      Present Phase 4 complete summary to user
        ↓
   Ask for user confirmation
-  Re-read device-migration.md for Phase 5
+  Re-read SKILL.md for Phase 5
 ```
 
 **Never dispatch two sub-agents simultaneously.** Files may have interdependencies

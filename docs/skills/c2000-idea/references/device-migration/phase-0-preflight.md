@@ -58,7 +58,9 @@ introspection or info call). The default port is `55000`.
   > issue requires TRM register lookup, you will need to enable it:*
   > *Command Palette → `C2000-IDEA: Enable TI ASM MCP`*"
 
-  Record the warning in `c2000-migration.md` (see Step 0.5). Continue to Step 0.4.
+  **Note this warning in your session context** — do NOT write to `c2000-migration.md` here.
+  The log does not exist yet. Phase 1 step 1.9 will embed it when the log is created.
+  Continue to Step 0.4.
 
 ---
 
@@ -77,8 +79,9 @@ Verify there are no uncommitted modifications to the **source project** director
   > or stash these before starting migration so the pre-migration state is recoverable."*
   
   Ask: *"Do you want to commit/stash first, or proceed anyway?"*
-  - If the user says proceed → note `Git state: dirty (user acknowledged)` in the
-    migration log and continue.
+  - If the user says proceed → note `Git state: dirty (user acknowledged)` in your
+    **session context** (do NOT write to `c2000-migration.md` here — the log does not
+    exist yet; Phase 1 step 1.9 will embed it). Continue.
   - If the user wants to commit first → wait for them to do so, then re-check.
 
 ### 0.4b — Confirm migration branch exists or offer to create one
@@ -95,7 +98,7 @@ Check whether the current branch name suggests a migration branch (e.g., contain
   Ask: *"Create a migration branch now, or proceed on the current branch?"*
   - If user wants a new branch → help them create it (e.g., `git checkout -b
     migration-to-<targetDevice>`), then confirm the switch.
-  - If user says proceed on current branch → note in the migration log and continue.
+  - If user says proceed on current branch → note in your **session context** and continue.
 
 ---
 
@@ -142,7 +145,8 @@ Migration log: will be created in Phase 1 step 1.9 (once target project is impor
 Ready to start Phase 1 (project import).
 ```
 
-Then **re-read `device-migration.md`** to find Phase 1 and proceed.
+Then **re-read the skill routing file** (`SKILL.md` — the file that led you here) to
+find Phase 1 and proceed.
 
 ---
 
@@ -152,5 +156,5 @@ Then **re-read `device-migration.md`** to find Phase 1 and proceed.
 |---------|--------|
 | `get_projects()` fails | Hard stop — IDEA MCP required |
 | CCS Project MCP not found | Hard stop — required for all build operations |
-| TI ASM MCP not found | Soft warning — record and continue |
-| Git working tree dirty | User decision — record outcome and continue |
+| TI ASM MCP not found | Soft warning — note in session context and continue |
+| Git working tree dirty | User decision — note outcome in session context and continue |

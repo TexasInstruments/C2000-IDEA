@@ -17,7 +17,6 @@ produces a result you cannot interpret. Do not guess, retry blindly, or skip the
 - Don't modify or migrate SysConfig-generated output files — migrate the `.syscfg` instead.
 - Work on a copy of the source `.syscfg` inside the target project; never touch the source.
 
-> **Per-target:** Run Phase 3A once for each target project independently.
 
 ---
 
@@ -37,12 +36,6 @@ or empty, the source project has no `.syscfg` — skip this step.
 
 If the source has no `.syscfg`, skip this step and keep the universal project's `.syscfg`
 as-is (it already contains the device-support module).
-
-> **STOP: Dual-core syscfg detected:**
-> Before continuing, check the source project directory for additional `.syscfg` files.
-> - If only one `.syscfg` is found, proceed normally.
-> - If **two** `.syscfg` files are found — **STOP.** Dual-core project migration is not
->   supported by this workflow. Inform the user and do not continue.
 
 ## 3.2 Open the target `.syscfg`
 
@@ -67,10 +60,14 @@ takes precedence over the generic steps in this phase — follow it first.**
 > project's original `.syscfg` file.
 >
 > WARNING: **Before calling `openFile` on the source `.syscfg`**, call `closeFile` once as a
-> precaution. Phase 2 step 2.5 opens the source syscfg to detect CMD module style and
-> then closes it — but if this session was resumed after Phase 2 completed, the source
-> syscfg may still be held open by the SysConfig MCP. Calling `closeFile` here (even
-> if nothing is open) is safe and prevents `openFile` from operating on a stale session.
+> precaution. Phase 2 opens the source syscfg in **two separate places**:
+> - Step 2.5 opens it to detect CMD module style, then closes it.
+> - Step 2.7 opens it again to call `listGeneratedArtifacts`, then closes it.
+>
+> If this session was resumed after Phase 2 completed (or was interrupted mid-step 2.7),
+> the source syscfg may still be held open by the SysConfig MCP. Calling `closeFile`
+> here (even if nothing is open) is safe and prevents `openFile` from operating on a
+> stale session.
 >
 > Then open that path via `openFile`, call `getModuleInstances`, then call `closeFile`
 > immediately.
@@ -119,9 +116,12 @@ takes precedence over the generic steps in this phase — follow it first.**
 
 Call `getModuleInstances` and check for the device-support module.
 
-**The device-support module name is `device_support` (exact string, case-sensitive).** Look
-for an instance whose name equals `"device_support"` or whose module type/ID contains
-`"device_support"` (case-insensitive match on the module type).
+**The device-support module name is `device_support`.** Look for a match using these rules:
+
+- **Instance name:** compare the instance's `name` field against `"device_support"` — this comparison is **case-sensitive** (exact string match).
+- **Module type/ID:** if no instance name matches exactly, check whether the instance's module type or module ID **contains** `"device_support"` — this comparison is **case-insensitive**.
+
+Use the first rule that produces a match. If neither rule finds a match, the module is absent.
 
 - If it is **missing** (a source `.syscfg` that did not use it), call `addModuleInstances`
   with the module name `"device_support"` to add it. This guarantees `device.c`/`device.h`,
@@ -148,16 +148,21 @@ the target `device_support` module.
 **How to extract:**
 
 1. Locate the source project's `device.c`:
-   - Call `getProjectDescriptors` on the **source** project to get its root directory.
-   - Look for `device.c` directly in the **source** project directory or in a `device/`
-     subdirectory inside the **source** project. This is the file excluded from migration
-     in Phase 2 step 2.7 — read it from the **source** directory (do not touch it; read-only).
-   - **WARNING: Do NOT read `device.c` from the target project's `sysConfigOutputLocation` folder.**
-     The `sysConfigOutputLocation` folder (e.g., `syscfg_c/`) inside the **target** project
-     also contains a `device.c`, but that file is **SysConfig-generated for the target device**
-     with target-device defaults — it does NOT contain the source project's clock configuration.
-     Reading it here would capture the wrong (default) values. Always look in the **source**
-     project directory, not the target.
+   - Call `getProjectDescriptors` on the **source** project to get its root directory and
+     its `sysConfigOutputLocation` field.
+   - Search for `device.c` in the following order (stop at the first location where the file is found):
+     1. Directly in the **source** project root directory.
+     2. In a `device/` subdirectory directly inside the **source** project root.
+     3. In the source project's **`sysConfigOutputLocation`** folder (e.g., `syscfg_c/`) —
+        for source projects that use SysConfig, `device.c` is a SysConfig-generated file
+        and lives here, not in the project root.
+   - Read the file from the **source** directory (do not touch it; read-only).
+   - **WARNING: Do NOT read `device.c` from the TARGET project's `sysConfigOutputLocation` folder.**
+     The `sysConfigOutputLocation` folder inside the **target** project also contains a `device.c`,
+     but that file is **SysConfig-generated for the target device** with target-device defaults —
+     it does NOT contain the source project's clock configuration. Reading it here would capture
+     the wrong (default) values. Always locate the file in the **source** project tree,
+     using the three search locations listed above.
 2. Scan the file for the following patterns and extract their values:
    - `SysCtl_setClock(...)` or `Device_initCPUTimers(...)` — CPU clock configuration
    - `SysCtl_selectOscSource(...)` — oscillator source (INTOSC1/INTOSC2/XTAL)

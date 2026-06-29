@@ -37,6 +37,18 @@ orchestrator before proceeding:
 | `sysConfigOutputLocation` | `<path — do not edit any file under this folder>` |
 | List of `.h` files to migrate | `<paths provided by orchestrator>` |
 
+> **REQUIRED: Verify migration approach from `c2000-migration.md` before touching any file:**
+> Read `c2000-migration.md` and locate the `## Phase 4 — Migration Strategy` section.
+> Confirm the `Strategy:` value matches the `Migration approach` in your briefing above.
+>
+> - If the log says `Strategy: Approach 1 (shared #ifdef)` → use `#ifdef` wrapping for every fix.
+> - If the log says `Strategy: Approach 2 (clean replacement)` → replace symbols directly for every fix.
+> - **If the section is missing or the values conflict:** stop and ask the orchestrator
+>   to confirm the strategy before proceeding. Do not guess or default to one approach.
+>
+> Apply this approach **consistently to every file** — all `.h` files must use the same strategy.
+> Do not switch approach mid-way. The approach in the log is the authoritative source.
+
 ---
 
 ## Rules for Phase 4A
