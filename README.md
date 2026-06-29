@@ -237,20 +237,18 @@ C2000-IDEA includes built-in **Model Context Protocol (MCP) server** support, wh
 
 ## Supported AI Assistants
 
-The following AI coding assistants support MCP tool calling and work with C2000-IDEA out of the box:
+The following AI coding assistants work with C2000-IDEA out of the box:
 
-| AI Assistant | Platform | How to configure MCP |
-|---|---|---|
-| **GitHub Copilot** (Agent mode) | VS Code | Add to `.vscode/mcp.json` in your workspace |
-| **Cursor** | Cursor IDE | Add to `mcp_servers.json` in Cursor settings |
-| **Cline** | VS Code extension | Add via Cline → MCP Servers → Configure |
-| **Roo Code** | VS Code extension | Add via Roo Code → MCP Servers → Configure |
-| **Continue** | VS Code / JetBrains | Add to `~/.continue/config.json` MCP block |
-| **Claude Desktop** | Desktop app | Add to `claude_desktop_config.json` |
-| **ChatGPT** (with Codex CLI) | CLI / Web | Configure MCP in Codex CLI settings |
-| Any MCP-compatible agent | — | Point to `http://localhost:55001/mcp` |
+| AI Assistant | Platform |
+|---|---|
+| **Claude Code** | CLI / VS Code |
+| **GitHub Copilot** (Agent mode) | VS Code |
+| **Cursor** | Cursor IDE |
+| **OpenAI Codex CLI** | CLI |
 
-> **Transport note:** Both C2000-IDEA MCP servers use **HTTP/SSE (Streamable HTTP)** transport. Make sure your AI assistant is configured to use HTTP-based MCP servers (not `stdio` only).
+You do not need to edit any config files by hand. The extension provides
+**`C2000-IDEA: Register IDEA MCP`** and **`C2000-IDEA: Register TI ASM MCP`** commands that
+prompt for the tool you are using and write the correct MCP configuration file automatically.
 <a name="idea_mcp"></a>
 
 ## Step 1 — Enable the IDEA MCP Server
@@ -275,22 +273,12 @@ You can change the port or host in VS Code / CCS Settings (`Ctrl+,`) by searchin
 
 ### Register the IDEA MCP server with your AI assistant
 
-After enabling, register the server with your AI assistant using the URL `http://localhost:55001/mcp`.
+Run **`C2000-IDEA: Register IDEA MCP`** from the Command Palette and select the tool you are
+using (Claude Code, Cursor, GitHub Copilot, or OpenAI Codex CLI). The extension writes the
+correct MCP configuration file for that tool automatically — no manual editing required.
 
-**Quick setup — let the extension do it for you:**
-Run **`C2000-IDEA: Get IDEA MCP Instructions`** from the Command Palette. The extension will display a copy-ready JSON snippet and step-by-step instructions tailored to your setup.
-
-**Manual setup — add to your agent's MCP configuration file:**
-```json
-{
-  "mcpServers": {
-    "c2000-idea": {
-      "url": "http://localhost:55001/mcp"
-    }
-  }
-}
-```
-*The exact key (`mcpServers`, `mcp`, or `servers`) depends on your AI assistant — refer to its documentation.*
+> **Power users:** If you prefer to configure the server yourself, run
+> **`C2000-IDEA: IDEA MCP Instructions`** for a copy-ready snippet.
 <a name="ti_asm_mcp"></a>
 
 ## Step 2 — Enable the TI ASM MCP Server (Optional but Recommended)
@@ -299,9 +287,9 @@ The **TI ASM MCP server** gives your AI assistant on-demand access to TI device 
 
 **To enable:**
 1. Open the Command Palette
-2. Run: **`C2000-IDEA: Enable MCP`**
+2. Run: **`C2000-IDEA: Enable TI ASM MCP`**
 
-**To stop the server:** Run **`C2000-IDEA: Disable MCP`** from the Command Palette.
+**To stop the server:** Run **`C2000-IDEA: Disable TI ASM MCP`** from the Command Palette.
 
 **Default URL:** `http://localhost:55000/mcp`
 
@@ -311,7 +299,9 @@ The **TI ASM MCP server** gives your AI assistant on-demand access to TI device 
 | `c2000-idea.mcp.host` | `localhost` | Host address the TI ASM MCP server binds to |
 
 **Register with your AI assistant:**
-Run **`C2000-IDEA: Get MCP Instructions`** from the Command Palette for a copy-ready configuration snippet.
+Run **`C2000-IDEA: Register TI ASM MCP`** from the Command Palette and select your tool — the
+extension writes the correct configuration file automatically. Power users who prefer manual
+setup can run **`C2000-IDEA: TI ASM MCP Instructions`** for a copy-ready snippet.
 <a name="ai_agent_migration"></a>
 
 ## AI-Assisted Device Migration
@@ -386,7 +376,7 @@ flowchart TD
 
 **Prerequisites (do this once):** Complete the [Setup Checklist](#ai_agent_local_setup) below — install CCS 20, C2000-IDEA, and your AI assistant; enable both MCP servers; and register them with your agent.
 
-> **Safety tip:** Before starting, commit all your current changes to Git and create a new branch (e.g., `git checkout -b migration-to-f28p55x`). This makes it easy to roll back if needed.
+> **Safety tip (Git users only):** If your C2000 application project is version-controlled in Git, commit your current changes and create a new branch (e.g., `git checkout -b migration-to-f28p55x`) before starting, so you can roll back easily. If your project isn't in Git, you can skip this.
 
 **Start the migration — just ask your AI assistant:**
 
@@ -399,8 +389,9 @@ The AI assistant will:
 - Execute all five phases automatically, pausing to confirm with you before bulk changes
 - Produce a `c2000-migration.md` log and a final migration report
 
-If the AI assistant does not automatically use the C2000-IDEA tools, explicitly mention:
-> *"Use the C2000-IDEA MCP tools (IDEA MCP server at `http://localhost:55001/mcp`) to perform the migration."*
+If the AI assistant does not start the workflow automatically, invoke the migration skill
+directly with its slash command:
+> `/c2000-idea`
 <a name="ai_agent_bitfield"></a>
 
 ## AI-Assisted Bitfield-to-Driverlib Conversion
@@ -432,83 +423,23 @@ This section provides a complete, step-by-step guide for setting up the C2000-ID
 | 2 | Install C2000-IDEA | See [Installing C2000-IDEA](#extension_install) |
 | 3 | Install your AI assistant | See the [Supported AI Assistants](#ai_agent) table above |
 | 4 | Enable IDEA MCP server | Command Palette → `C2000-IDEA: Enable IDEA MCP` (or click **MCP Servers** in the status bar) |
-| 5 | Enable TI ASM MCP server | Command Palette → `C2000-IDEA: Enable MCP` (or click **MCP Servers** in the status bar) |
-| 6 | Register both MCP servers | Follow the agent-specific instructions below |
+| 5 | Enable TI ASM MCP server | Command Palette → `C2000-IDEA: Enable TI ASM MCP` (or click **MCP Servers** in the status bar) |
+| 6 | Register both MCP servers | Run `C2000-IDEA: Register IDEA MCP` and `C2000-IDEA: Register TI ASM MCP`, then select your tool |
 | 7 | Open your project workspace | Open your C2000 project folder in CCS 20 or VS Code |
 | 8 | Start the migration | Ask your AI assistant (see [How to Start a Migration](#ai_agent_migration)) |
 
 ---
 
-### Registering MCP Servers — Agent-by-Agent Instructions
+### Registering MCP Servers
 
-#### Common MCP Server URLs
+Run **`C2000-IDEA: Register IDEA MCP`** and **`C2000-IDEA: Register TI ASM MCP`** from the
+Command Palette and select your tool when prompted. The extension writes the correct config
+file for that tool automatically (`.mcp.json` for Claude Code, `.cursor/mcp.json` for Cursor,
+`.vscode/mcp.json` for GitHub Copilot, or `.codex/config.toml` for OpenAI Codex CLI).
 
-All agents connect to the same two servers. The JSON key (`"servers"` vs `"mcpServers"`) and file location vary by agent — see the agent-specific notes below.
-
-```json
-{
-  "mcpServers": {
-    "c2000-idea": {
-      "url": "http://localhost:55001/mcp"
-    },
-    "ti-asm": {
-      "url": "http://localhost:55000/mcp"
-    }
-  }
-}
-```
-
-#### GitHub Copilot (VS Code — Agent Mode)
-
-Create or update `.vscode/mcp.json` inside your workspace folder using the configuration above, but replace the outer key `"mcpServers"` with `"servers"`:
-
-```json
-{
-  "servers": {
-    "c2000-idea": { "url": "http://localhost:55001/mcp" },
-    "ti-asm":     { "url": "http://localhost:55000/mcp" }
-  }
-}
-```
-
-> Make sure GitHub Copilot is in **Agent mode** (not Chat mode). MCP tools are only available in Agent mode.
-
-#### Cursor
-
-Open **Cursor → Settings → MCP** and paste the common `mcpServers` block above.
-
-#### Cline (VS Code Extension)
-
-1. Open the Cline panel in the VS Code sidebar
-2. Click **MCP Servers → Configure MCP Servers**
-3. Paste the common `mcpServers` block above into the configuration file
-
-#### Roo Code (VS Code Extension)
-
-1. Open the Roo Code panel in the VS Code sidebar
-2. Navigate to **MCP Servers → Edit MCP Settings**
-3. Paste the common `mcpServers` block above into the settings file
-
-#### Continue (VS Code / JetBrains)
-
-Edit `~/.continue/config.json`. Continue uses an **array** format instead of an object:
-
-```json
-{
-  "mcpServers": [
-    { "name": "c2000-idea", "url": "http://localhost:55001/mcp" },
-    { "name": "ti-asm",     "url": "http://localhost:55000/mcp" }
-  ]
-}
-```
-
-#### Claude Desktop
-
-Edit the Claude Desktop configuration file:
-- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
-- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-
-Paste the common `mcpServers` block above into the file.
+Power users who prefer to configure the servers manually can run
+**`C2000-IDEA: IDEA MCP Instructions`** or **`C2000-IDEA: TI ASM MCP Instructions`** for a
+copy-ready snippet.
 
 ---
 
@@ -561,7 +492,7 @@ If your machine is behind a corporate proxy or firewall, you may encounter conne
 
 **Resolution:**
 1. Confirm the server is running: Command Palette → `C2000-IDEA: Check IDEA MCP`
-2. Re-run `C2000-IDEA: Get IDEA MCP Instructions` and re-apply the configuration snippet
+2. Re-run `C2000-IDEA: Register IDEA MCP` and re-select your tool to rewrite the config file
 3. **Restart** the agent session (close and reopen the chat or agent panel) after updating the config
 4. Confirm your AI assistant supports **HTTP/SSE MCP transport** — not all agents support HTTP-based servers. Refer to your assistant's documentation.
 
@@ -573,7 +504,7 @@ If your machine is behind a corporate proxy or firewall, you may encounter conne
 
 **Recommendation:** Keep CCS 20 or VS Code open throughout your AI migration session. Re-enable the servers if they stop:
 - Command Palette → `C2000-IDEA: Enable IDEA MCP`  (or click **MCP Servers** in the status bar → select IDEA MCP)
-- Command Palette → `C2000-IDEA: Enable MCP`  (or click **MCP Servers** in the status bar → select TI-ASM MCP)
+- Command Palette → `C2000-IDEA: Enable TI ASM MCP`  (or click **MCP Servers** in the status bar → select TI-ASM MCP)
 
 ---
 
