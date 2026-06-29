@@ -394,5 +394,5 @@ generated files excluded), and any items the user modified or overrode.
 **Phase 2 complete.** Present a summary of what was done to the user (settings aligned,
 linker cmd handled, source files copied, post-build steps applied) and ask: *"Phase 2 is
 complete. Does everything look correct? Ready to move to Phase 3 (SysConfig migration)?"*
-Wait for the user's confirmation, then **re-read the skill routing file** (`SKILL.md` —
-the file that led you here) to find Phase 3 and proceed.
+Wait for the user's confirmation, then **return to `device-migration.md`** (the workflow
+orchestrator that sent you here) and proceed to Phase 3.

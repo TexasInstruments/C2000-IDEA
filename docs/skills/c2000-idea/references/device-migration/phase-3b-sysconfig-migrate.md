@@ -322,5 +322,5 @@ module / removed for plain cmd), and any unresolved SysConfig issues.
 ensured, SysConfig migrated to target device/package if applicable, errors found and fixed,
 CMD module kept or removed to match the source) and ask: *"Phase 3 is complete. Does
 everything look correct? Ready to move to Phase 4 (source code migration)?"* Wait for the
-user's confirmation, then **re-read the skill routing file** (`SKILL.md` — the file that
-led you here) to find Phase 4 and proceed.
+user's confirmation, then **return to `device-migration.md`** (the workflow orchestrator
+that sent you here) and proceed to Phase 4.

@@ -48,8 +48,8 @@ to proceed.
   implemented), tell the user and **terminate** — do not attempt migration.
 - **If IDEA MCP does not list the project:** call `get_projects(rescan: true)` once to
   re-scan. If still missing, ask the user to verify the project is open in CCS.
-- **Device name mismatch:** IDEA MCP uses lowercase family names (e.g., `f28004x`).
-  Normalize the user-supplied device name to lowercase before comparing.
+- **Normalize user input:** lowercase any user-supplied device name before comparing it
+  against the supported list (IDEA MCP family names are lowercase).
 
 ## 1.3 Identify SDK type and C2000Ware path
 
@@ -81,8 +81,6 @@ Then derive:
      *"The SDK path `<path>` from the project reference does not exist on disk. Please
      provide the absolute path to the installed C2000Ware root."* Wait for the user to
      supply the correct path before recording `c2000ware_path`.
-- **If the SDK path cannot be resolved** (variable not expanded, path not on disk), stop
-  and ask the user for the absolute path to the C2000Ware root before continuing.
 
 ## 1.4 Read AGENTS.md (if present)
 
@@ -96,10 +94,11 @@ Then derive:
 
 The starter project location depends on the target device:
 
-| Target device          | Universal project path                                                               |
-| ---------------------- | ------------------------------------------------------------------------------------ |
-| f28p65x                | `<c2000ware_path>/driverlib/<target-device>/examples/c28x/universal`                 |
-| All other devices      | `<c2000ware_path>/driverlib/<target-device>/examples/universal`                      |
+| Target device            | Universal project path                                               |
+| ------------------------ | -------------------------------------------------------------------- |
+| f28p65x                  | `<c2000ware_path>/driverlib/<target-device>/examples/c28x/universal` |
+| f2837xd, f2837xs, f2807x | No predictable path — ask the user (see note below)                  |
+| All other devices        | `<c2000ware_path>/driverlib/<target-device>/examples/universal`      |
 
 > **f2837xd, f2837xs, f2807x — ask the user:**
 > These devices do not have a `universal/` starter project at a predictable path.
@@ -228,11 +227,13 @@ Seed the log with:
 - **Phase 0 pre-flight results** — embed the session-context results captured during Phase 0:
   ```
   Pre-flight (Phase 0):
-    IDEA MCP         : <live | ERROR — <message>>
-    CCS Project MCP  : <live | ERROR — <message>>
-    TI ASM MCP       : <live | not available>
-    Git branch       : <branch name>
-    Git state        : <clean | <N> uncommitted changes>
+    IDEA MCP          : <live | ERROR — <message>>
+    CCS Project MCP   : <live | ERROR — <message>>
+    CCS SysConfig MCP : <live | not available>
+    TI ASM MCP        : <live | not available>
+    Git               : <in repo | not a repository | not available>
+    Git branch        : <branch name | n/a>
+    Git state         : <clean | dirty — user acknowledged | n/a>
   ```
   If Phase 0 was skipped or not run, record: `Pre-flight (Phase 0): not run`.
 - Phase status table (seed with):
@@ -262,5 +263,5 @@ If any `HANG:` was noted in your context during steps 1.6 or 1.8, record it here
 **Phase 1 complete.** Present a summary to the user (source project discovered, SDK type,
 target project imported/built/renamed) and ask: *"Phase 1 is complete. Does
 everything look correct? Ready to move to Phase 2 (project settings alignment)?"*
-Wait for the user's confirmation, then **re-read the skill routing file** (`SKILL.md` —
-the file that led you here) to find Phase 2 and proceed.
+Wait for the user's confirmation, then **return to `device-migration.md`** (the workflow
+orchestrator that sent you here) and proceed to Phase 2.
