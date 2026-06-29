@@ -145,8 +145,8 @@ Migration log: will be created in Phase 1 step 1.9 (once target project is impor
 Ready to start Phase 1 (project import).
 ```
 
-Then **re-read the skill routing file** (`SKILL.md` — the file that led you here) to
-find Phase 1 and proceed.
+Then **return to `device-migration.md`** (the workflow orchestrator that sent you here)
+and proceed to Phase 1.
 
 ---
 
