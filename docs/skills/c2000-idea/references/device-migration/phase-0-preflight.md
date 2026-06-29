@@ -24,19 +24,15 @@ Do not proceed past Step 0.1 until `get_projects()` succeeds.
 
 ## Step 0.2 — Probe CCS Project MCP
 
-Call `getToolOptions` (ccs-project MCP). This is the lightest read-only introspection
-call — it returns the list of available build tool options without modifying anything.
+Call `getProducts` (ccs-project MCP). This is a simple read-only call that takes no
+arguments — it returns the list of installed TI software products without modifying anything.
 
-- **Success** → CCS Project MCP is live.
-- **Tool not found / error** → CCS Project MCP is not registered or not running.
+- **Success (any response)** → CCS Project MCP is live.
+- **Tool not found / unreachable** → CCS Project MCP is not registered or not running.
   Tell the user:
   > *"The CCS Project MCP is not available. This is required for project import, build,
   > and settings management during migration. Please register it with your agent tool."*
   > **Stop** — do not proceed to Phase 1 without CCS Project MCP.
-
-> **If `getToolOptions` returns an error that looks like a usage error** (e.g., "required
-> parameter missing") rather than "tool not found", the MCP is live — the tool requires
-> arguments. In that case, treat it as a successful probe.
 
 ---
 
