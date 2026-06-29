@@ -126,8 +126,8 @@ If you are resuming a migration that was started in a previous session:
 This workflow is split into six phases. **Execute them in strict order.**
 
 > **Per-target:** When migrating to multiple target devices, migrate **one device at a
-> time** — run Phases 2, 3, 4, and 5 fully for one target before starting the next. Do not
-> interleave or batch phases across targets. Phase 1 covers all targets at once.
+> time** — run Phases 1, 2, 3, 4, and 5 fully for one target before starting the next. Do not
+> interleave or batch phases across targets. 
 
 ### Phase sequence
 
@@ -137,7 +137,7 @@ This workflow is split into six phases. **Execute them in strict order.**
    → When complete, return here.
 
 1. **Read `device-migration/phase-1-import.md`** — Discover the source project, identify
-   the SDK, import and validate the target project(s).
+   the SDK, import and validate the target project.
    → When complete, return here.
 
 2. **Read `device-migration/phase-2-settings.md`** — Analyze and align project settings:
@@ -167,7 +167,7 @@ These rules apply across all phases:
 
 - Do keep the target project in the **universal project style**: it must always retain a
   `.syscfg` with the `device_support` module as the non-negotiable baseline — regardless
-  of whether the source project used SysConfig at all. Never remove the target's `.syscfg`.
+  of whether the source project used SysConfig at all. Never remove the target's `.syscfg` if the source project did not have a syscfg file. 
 - Do treat `device_support` as the **absolute minimum** in the target syscfg. It generates
   `device.c`/`device.h` (clocking/init), `.opt` (compiler options), and `.cmd.genlibs`
   (linker libs), and provides pinmux data essential for the target device — even if the
