@@ -38,7 +38,7 @@ or empty, the source project has no `.syscfg` — skip this step.
 If the source has no `.syscfg`, skip this step and keep the universal project's `.syscfg`
 as-is (it already contains the device-support module).
 
-> **⚠ Dual-core devices (e.g., `f2837xd`, `f2838x`, `f28p65x`):**
+> **WARNING: Dual-core devices (e.g., `f2837xd`, `f2838x`, `f28p65x`):**
 > Dual-core devices may have **two** `.syscfg` files — one per CPU core (e.g.,
 > `cpu1.syscfg` and `cpu2.syscfg`). `getProjectDescriptors` typically returns only the
 > primary syscfg path in `sysConfigLocation`. Before continuing, check the source project
@@ -50,7 +50,7 @@ as-is (it already contains the device-support module).
 >   each in `c2000-migration.md` separately. Tell the user about the dual-core syscfg
 >   before starting and confirm which CPU's syscfg to process first.
 >
-> **⚠ SysConfig MCP supports only one open file at a time (dual-syscfg):**
+> **WARNING: SysConfig MCP supports only one open file at a time (dual-syscfg):**
 > Before starting Phase 3A for `cpu2.syscfg`, confirm that `cpu1.syscfg` is fully closed.
 > Phase 3B step 3.12 calls `closeFile` — verify that call completed successfully before
 > calling `openFile` on `cpu2.syscfg`. If `closeFile` for cpu1 was not confirmed (e.g., the
@@ -80,7 +80,7 @@ takes precedence over the generic steps in this phase — follow it first.**
 > and extract its `sysConfigLocation` field — this is the absolute path to the **source**
 > project's original `.syscfg` file.
 >
-> ⚠ **Before calling `openFile` on the source `.syscfg`**, call `closeFile` once as a
+> WARNING: **Before calling `openFile` on the source `.syscfg`**, call `closeFile` once as a
 > precaution. Phase 2 step 2.5 opens the source syscfg to detect CMD module style and
 > then closes it — but if this session was resumed after Phase 2 completed, the source
 > syscfg may still be held open by the SysConfig MCP. Calling `closeFile` here (even
@@ -89,7 +89,7 @@ takes precedence over the generic steps in this phase — follow it first.**
 > Then open that path via `openFile`, call `getModuleInstances`, then call `closeFile`
 > immediately.
 >
-> ⚠ **Do NOT call `changeConfiguration`, `addModuleInstances`, `removeModuleInstances`,
+> WARNING: **Do NOT call `changeConfiguration`, `addModuleInstances`, `removeModuleInstances`,
 > or `save` while the source `.syscfg` is open here.** The source project is the golden
 > reference — any write call to it is a corruption. Call `closeFile` immediately after
 > `getModuleInstances` returns.
@@ -108,7 +108,7 @@ takes precedence over the generic steps in this phase — follow it first.**
 > `Phase 3A — Source module list: N/A (source had no syscfg)` and skip this step.
 > Phase 3B will skip the coverage audit accordingly.
 
-> **⚠ SysConfig version / format incompatibility:**
+> **WARNING: SysConfig version / format incompatibility:**
 > If `openFile` returns an error mentioning version mismatch, incompatible format, or
 > unsupported schema, the source `.syscfg` was created with a significantly different
 > SysConfig version.
@@ -143,7 +143,7 @@ for an instance whose name equals `"device_support"` or whose module type/ID con
 - If it is **already present** (the universal template, or a source that already used it),
   no action — this case is already correct.
 
-> **⚠ Clock/oscillator configuration is NOT automatically migrated:**
+> **WARNING: Clock/oscillator configuration is NOT automatically migrated:**
 > The `device_support` module controls oscillator source (internal INTOSC vs. external
 > XTAL), CPU frequency, and peripheral clock enables. After `addModuleInstances` (or when
 > the module is already present but comes from the universal template), these configurables
@@ -166,7 +166,7 @@ the target `device_support` module.
    - Look for `device.c` directly in the **source** project directory or in a `device/`
      subdirectory inside the **source** project. This is the file excluded from migration
      in Phase 2 step 2.7 — read it from the **source** directory (do not touch it; read-only).
-   - **⚠ Do NOT read `device.c` from the target project's `sysConfigOutputLocation` folder.**
+   - **WARNING: Do NOT read `device.c` from the target project's `sysConfigOutputLocation` folder.**
      The `sysConfigOutputLocation` folder (e.g., `syscfg_c/`) inside the **target** project
      also contains a `device.c`, but that file is **SysConfig-generated for the target device**
      with target-device defaults — it does NOT contain the source project's clock configuration.

@@ -111,7 +111,7 @@ The starter project location depends on the target device:
   exists in the workspace), rename the conflicting project to `<existingName>_bak` using
   `renameProject` before reimporting. Inform the user of the rename.
 
-> **⚠ Dual-core source project detection (required before import):**
+> **WARNING: Dual-core source project detection (required before import):**
 > Before importing the target's universal project, check whether the **source** project
 > is part of a dual-core pair. Dual-core devices (e.g., `f2837xd`, `f2838x`, `f28p65x`)
 > have separate CPU1 and CPU2 projects that are linked in the CCS workspace.
@@ -152,7 +152,7 @@ The starter project location depends on the target device:
   not a migration problem. Include the compiler error output in your report so the user
   can diagnose the toolchain or SDK installation.
 
-> **⚠ MCP hang guard — `buildProject` may not respond:**
+> **WARNING: MCP hang guard — `buildProject` may not respond:**
 > `buildProject` is a long-running synchronous call. If the MCP tool call has produced
 > **no response at all** (no result, no error, no progress output) after a long wait
 > (typically 2–3 minutes), assume the tool has hung. Do **not** keep waiting.
@@ -177,7 +177,7 @@ The starter project location depends on the target device:
 - **If a project with that name already exists**, append a numeric suffix (e.g., `_1`)
   and inform the user of the chosen name.
 
-> **⚠ Verify that the physical on-disk directory was also renamed (required):**
+> **WARNING: Verify that the physical on-disk directory was also renamed (required):**
 > CCS `renameProject` renames the project in the workspace but may or may not rename the
 > physical directory on disk depending on the CCS version and whether the project was
 > imported in-place or copied. After `renameProject` returns:
@@ -206,7 +206,7 @@ The starter project location depends on the target device:
 - If the build fails, **stop and report to the user** — this is a rename/path issue.
   Include the compiler error output so the user can diagnose.
 
-> **⚠ MCP hang guard — `buildProject` may not respond:**
+> **WARNING: MCP hang guard — `buildProject` may not respond:**
 > Same rule as step 1.6. If `buildProject` produces no response after a long wait
 > (2–3 minutes), note the hang in your context and record it in step 1.9:
 > `HANG: buildProject(<renamedProject>) — no response after timeout. Phase 1, step 1.8.`
@@ -221,7 +221,7 @@ platform's file-write tool (e.g., VS Code's built-in file creation, or a shell
 This file is the persistent migration log for this target. When migrating to multiple
 targets, each target gets its own separate log — there is never a single shared log.
 
-> **⚠ `c2000-migration.md` is append-only — never overwrite prior phase sections:**
+> **WARNING: `c2000-migration.md` is append-only — never overwrite prior phase sections:**
 > Every phase appends its results to this file. When updating the log in any phase:
 > - **Read the current file content first**, then write back the existing content plus your
 >   new addition. Never write the file from scratch — doing so would destroy all prior
@@ -259,19 +259,19 @@ Seed the log with:
   | Phase | Status | Notes |
   |-------|--------|-------|
   | Phase 0 — Pre-flight     | <see below> | <see below> |
-  | Phase 1 — Import         | ⏳ IN PROGRESS | |
-  | Phase 2 — Settings       | ⬜ PENDING | |
-  | Phase 3 — SysConfig      | ⬜ PENDING | |
-  | Phase 4 — Migrate Code   | ⬜ PENDING | |
-  | Phase 5 — Report         | ⬜ PENDING | |
+  | Phase 1 — Import         | IN PROGRESS | |
+  | Phase 2 — Settings       | PENDING | |
+  | Phase 3 — SysConfig      | PENDING | |
+  | Phase 4 — Migrate Code   | PENDING | |
+  | Phase 5 — Report         | PENDING | |
   ```
   **Phase 0 row — set based on session context:**
   - If Phase 0 pre-flight results are present in your session context (you ran Phase 0
-    earlier in this session): set `✅ COMPLETE | MCP health check complete`
-  - If Phase 0 was not run or context is absent: set `⚠ SKIPPED | pre-flight not run`
-  - Do **not** hard-code `✅ COMPLETE` for Phase 0 if you did not actually run Phase 0.
+    earlier in this session): set `COMPLETE | MCP health check complete`
+  - If Phase 0 was not run or context is absent: set `SKIPPED | pre-flight not run`
+  - Do **not** hard-code `COMPLETE` for Phase 0 if you did not actually run Phase 0.
 
-**Immediately update the log:** Set Phase 1 status to ✅ COMPLETE and add both build results
+**Immediately update the log:** Set Phase 1 status to COMPLETE and add both build results
 (step 1.6 pre-rename build and step 1.8 post-rename build).
 If any `HANG:` was noted in your context during steps 1.6 or 1.8, record it here now.
 

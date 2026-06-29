@@ -133,10 +133,10 @@ Confirm to the user:
 
 ```
 Pre-flight check complete.
-✅ IDEA MCP: live
-✅ CCS Project MCP: live
-<✅ or ⚠> TI ASM MCP: <live | not available>
-<✅ or ⚠> Git state: <clean | dirty — acknowledged>
+IDEA MCP: live
+CCS Project MCP: live
+<DONE or WARNING> TI ASM MCP: <live | not available>
+<DONE or WARNING> Git state: <clean | dirty — acknowledged>
 Migration log: will be created in Phase 1 step 1.9 (once target project is imported)
 
 Ready to start Phase 1 (project import).

@@ -114,7 +114,7 @@ You must actively inspect the source SysConfig — do not guess from file names 
 Record the detected style in `c2000-migration.md` — Phase 3 reads it to decide whether the
 target syscfg keeps or drops its CMD module.
 
-> **⚠ Hybrid source — plain `.cmd` + CMD module both present:**
+> **WARNING: Hybrid source — plain `.cmd` + CMD module both present:**
 > Some projects have a CMD module in their syscfg **and** a separately-registered plain
 > `.cmd` file (the CMD module generates the standard memory map; the plain `.cmd` adds
 > custom sections on top). If step 2 finds a CMD module **and** the source's linker tool

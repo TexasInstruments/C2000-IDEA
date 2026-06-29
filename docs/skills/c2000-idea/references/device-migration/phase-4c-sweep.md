@@ -13,7 +13,7 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 
 **Stop and ask the user** if any MCP tool call fails or returns an unexpected result.
 
-> **⚠ MCP hang guard (applies throughout Phase 4C):**
+> **WARNING: MCP hang guard (applies throughout Phase 4C):**
 > If `buildProject` or any other MCP tool call has produced **no response at all** after
 > a long wait (typically 2–3 minutes), assume the tool has hung. Do **not** keep waiting.
 > Record in `c2000-migration.md`:
@@ -49,7 +49,7 @@ them to the sweep list and run the migration report on them too. Do **not** run 
 report on files inside `sysConfigOutputLocation` — those are generated outputs.
 
 > **`.asm` files are excluded from this sweep.** They were listed in the Phase 4 file
-> list with status `⚠ Manual` during Step 4.1. Do not run `get_device_migration_report`
+> list with status `MANUAL` during Step 4.1. Do not run `get_device_migration_report`
 > on them — the tool does not analyse assembly. Confirm they are logged in
 > `c2000-migration.md` as `REVIEW-REQUIRED` and that the user has been notified.
 > If any `.asm` file was not logged during Step 4.1 (e.g., added after Phase 3),
@@ -145,7 +145,7 @@ symbol inventory (which would be impractical for large files).
 
 ## Step 5 — Clean rebuild (required)
 
-⚠ **This step is mandatory before declaring Phase 4 complete.**
+WARNING: **This step is mandatory before declaring Phase 4 complete.**
 
 Call `buildProject` on the target project. Do **not** rely on an incremental build —
 stale `.obj` files from before migration may hide compilation errors. To force a clean
@@ -161,7 +161,7 @@ buildProject(<target project name>)   ← second call rebuilds from scratch
 > Calling it twice achieves a clean rebuild — the first call discards stale objects,
 > the second confirms the full project builds cleanly.
 
-> **⚠ MCP hang guard:** If either `buildProject` call produces no response after
+> **WARNING: MCP hang guard:** If either `buildProject` call produces no response after
 > ~2–3 minutes, record `HANG: buildProject(<project>) — Phase 4C, Step 5` in
 > `c2000-migration.md` and immediately alert the user (see hang guard rule above).
 > Do not wait indefinitely for either call.
@@ -198,7 +198,7 @@ Phase 4C status: COMPLETE
 
 Update the Phase status table for Phase 4C only:
 ```
-| Phase 4C — Sweep | ✅ COMPLETE | sweep clean, clean build <PASS/FAIL> |
+| Phase 4C — Sweep | COMPLETE | sweep clean, clean build <PASS/FAIL> |
 ```
 
 ---
@@ -218,12 +218,12 @@ Phase 4C overall:
   Issues fixed: <total>
   Unresolved / DEFERRED-MANUAL: <total>
 
-c2000-migration.md updated: ✅
+c2000-migration.md updated: DONE
 ```
 
 ---
 
-## ⛔ Stop here
+## STOP: Stop here
 
 Your scope ends at the clean build result. Do not read `phase-5-report.md`,
 `phase-4d-build-triage.md`, or any other file.

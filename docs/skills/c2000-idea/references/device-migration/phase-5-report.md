@@ -93,7 +93,7 @@ If a build is required, call `buildProject` on the **target** project (not the s
    mark the migration fully production-ready until the user confirms they have reviewed
    these steps (or explicitly accepts the risk of skipping them).
 
-   > **⚠ Hardware verification — required before production deployment:**
+   > **WARNING: Hardware verification — required before production deployment:**
    >
    > The following checks cannot be performed by a software tool. They require connecting
    > to the target board and observing live hardware behaviour:
@@ -164,7 +164,7 @@ pattern matching `[A-Za-z]+Regs[._]` (case-sensitive).
 - Add the following to the **Deferred / manual actions** section of the structured summary
   (item 7 above):
 
-  > **⚠ Bitfield register access patterns detected in migrated source files.**
+  > **WARNING: Bitfield register access patterns detected in migrated source files.**
   > These patterns (`->bit.`, `<Module>Regs.`) use the C2000 bitfield register layer
   > which is device-specific and was **not** converted by the device-migration workflow.
   > Leaving them in place may compile but will access wrong registers on the target device

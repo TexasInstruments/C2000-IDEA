@@ -65,8 +65,8 @@ orchestrator before proceeding:
 
 ## How to fix each issue
 
-- **Easy (auto-fixable ✓):** apply the `Suggested fix` verbatim.
-- **Complex (manual review ⚠):** read surrounding code, check intent, use ti-asm-mcp
+- **Easy (auto-fixable):** apply the `Suggested fix` verbatim.
+- **Complex (manual review):** read surrounding code, check intent, use ti-asm-mcp
   if needed, construct fix from collateral only.
   > **Argument-order sanity check (required for complex fixes):**
   > After applying a complex fix (one derived from collateral, not from a `Suggested fix`),
@@ -241,7 +241,7 @@ After the migration report is clean (zero issues, or all remaining are deferred)
 buildProject(<target project name>)
 ```
 
-> **⚠ MCP hang guard:** If `buildProject` produces no response after ~2–3 minutes,
+> **WARNING: MCP hang guard:** If `buildProject` produces no response after ~2–3 minutes,
 > record `HANG: buildProject(<project>) — Phase 4B, <file>` in `c2000-migration.md`
 > and immediately alert the user (see MCP hang guard rule above). Do not wait indefinitely.
 
@@ -318,18 +318,18 @@ Unresolved items:
   (or "None")
 
 Build status: PASS / FAIL / PARTIAL
-c2000-migration.md updated: ✅
+c2000-migration.md updated: DONE
 ```
 
 **2. Log entry** (written to `c2000-migration.md`):
 
 ```
-| <filename.c> | <N> | <M> | <K> | ✅/⚠ |
+| <filename.c> | <N> | <M> | <K> | DONE/WARN |
 ```
 
 ---
 
-## ⛔ Stop here
+## STOP: Stop here
 
 Your scope is exactly this one `.c` file. Do not start on the next file. Do not read
 `phase-4c-sweep.md` or any other file. Return your structured result to the orchestrator

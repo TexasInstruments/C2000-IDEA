@@ -223,8 +223,8 @@ dependencies and go first.
 If the Phase 4 session was interrupted (network drop, context limit, session end):
 
 1. Re-read `c2000-migration.md` in the target project.
-2. Find the last completed entry in the file progress table (last row with ✅ or ⚠).
-3. Find any row with status `⏳ In Progress` — this was interrupted mid-file.
+2. Find the last completed entry in the file progress table (last row with DONE or WARN).
+3. Find any row with status `IN PROGRESS` — this was interrupted mid-file.
 4. For a mid-file interruption: find the last `[<filename>:<line>] FIXED:` micro-checkpoint
    entry in `c2000-migration.md`. Resume from the next issue after that entry.
-5. Continue dispatching sub-agents from the resume point — do not re-process ✅ rows.
+5. Continue dispatching sub-agents from the resume point — do not re-process DONE rows.

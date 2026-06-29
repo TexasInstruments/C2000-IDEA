@@ -10,7 +10,7 @@
 **Stop and ask the user** if any MCP tool call fails, returns an unexpected error, or
 produces a result you cannot interpret. Do not guess, retry blindly, or skip the step.
 
-> **⚠ If any step after `openFile` causes an unrecoverable error:** call `closeFile`
+> **WARNING: If any step after `openFile` causes an unrecoverable error:** call `closeFile`
 > on the target `.syscfg` before stopping or escalating to the user. Leaving SysConfig
 > in a locked-open state will block all subsequent CCS MCP and SysConfig MCP calls in
 > Phase 4. Even if the save failed, `closeFile` discards the in-memory state and
@@ -143,7 +143,7 @@ Call `getErrorsAndWarnings`. Review all errors and warnings.
 - Iterate until all errors are resolved.
 - If an issue cannot be resolved after reasonable investigation, report it to the user.
 
-> **⚠ Convergence guard — avoid infinite fix loops:**
+> **WARNING: Convergence guard — avoid infinite fix loops:**
 > Track each error by its exact module + configurable + error message. If the **same
 > error** reappears for the **same module and configurable** after **two consecutive
 > `changeConfiguration` attempts**, the fix is not taking effect — stop retrying that
@@ -153,7 +153,7 @@ Call `getErrorsAndWarnings`. Review all errors and warnings.
 > resolved after 2 attempts. Please review manually."* Then continue to the next error.
 > A different error appearing for the same module is **not** convergence — keep fixing.
 
-> **⚠ Peripheral module entirely absent from the target device:**
+> **WARNING: Peripheral module entirely absent from the target device:**
 > Some errors indicate that a whole peripheral module (e.g., `MFOTA`, `BGCRC`, `CLB` tile
 > count beyond what the target has) simply does not exist on the target device —
 > `getModuleDescription` will return an error or empty result for these modules.
@@ -177,7 +177,7 @@ Make the target syscfg's CMD module match the **source linker style** recorded i
   (it came in with the copied source syscfg). Using the snapshot captured in step 3.6a,
   restore/reconcile the linker sections configuration via `changeConfiguration`.
 
-  > **⚠ Validate memory region names against the target device before restoring sections:**
+  > **WARNING: Validate memory region names against the target device before restoring sections:**
   > The snapshot was captured from the source device's CMD module and contains memory region
   > names that belong to the **source device** (e.g., `RAMLS0`, `FLASHB`). The target device
   > may use different region names. Before calling `changeConfiguration` to restore each
@@ -203,7 +203,7 @@ Make the target syscfg's CMD module match the **source linker style** recorded i
   call `removeModuleInstances` to remove it so it does not generate a competing linker
   command file.
 
-  > **⚠ Delete the stale generated `.cmd` file after `removeModuleInstances` (critical):**
+  > **WARNING: Delete the stale generated `.cmd` file after `removeModuleInstances` (critical):**
   > Calling `removeModuleInstances` removes the CMD module from the `.syscfg`, but the
   > previously-generated `.cmd` file (e.g., `<device>_<package>.cmd`) is **still physically
   > on disk** in the `sysConfigOutputLocation` folder. CCS will pick up any `.cmd` file it
@@ -243,7 +243,7 @@ unresolved errors produces invalid generated output.
 
 Call `save` to persist the configuration and regenerate all artifacts.
 
-> **⚠ Verify `sysConfigOutputLocation` is clean after save:**
+> **WARNING: Verify `sysConfigOutputLocation` is clean after save:**
 > After `save` completes, list all files in the `sysConfigOutputLocation` folder. Check for
 > any files that clearly belong to the **source device** — for example, files whose names
 > contain the source device name string (e.g., `f28003x_` when the target is `f28004x`).
