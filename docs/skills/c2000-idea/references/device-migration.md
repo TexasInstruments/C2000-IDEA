@@ -58,6 +58,7 @@ Call `list_migration_devices()` from IDEA MCP immediately after collecting input
 - `getToolOptions` — available build tool options
 
 **ccs-sysconfig MCP** (required when project uses SysConfig):
+- `listFiles` — list the `.syscfg` files in the workspace (also used as the Phase 0 availability probe)
 - `openFile` — open a `.syscfg` file (mandatory before any config tools)
 - `getModuleInstances` — list configured module instances
 - `getInstanceConfiguration` — inspect instance settings (use `changesOnly: true` to see user customizations)
@@ -131,7 +132,7 @@ This workflow is split into six phases. **Execute them in strict order.**
 ### Phase sequence
 
 0. **Read `device-migration/phase-0-preflight.md`** — Run the pre-flight check: probe all
-   MCP servers (IDEA MCP, CCS Project MCP, TI ASM MCP), verify Git state, and initialize
+   MCP servers (IDEA MCP, CCS Project MCP, CCS SysConfig MCP, TI ASM MCP), verify Git state, and initialize
    the session context. **This phase runs once before Phase 1 and is mandatory.**
    → When complete, return here.
 
