@@ -185,11 +185,11 @@ These rules apply across all phases:
 - Do ask the user for shared (`#ifdef`) vs. clean replacement preference before modifying any files.
 - Do process `.h` files before `.c` files — fixing headers first prevents cascading compile errors.
 - Do use `get_device_migration_report` as the authoritative source — not the VS Code diagnostics panel.
+- Do fetch migration collateral links when no `Suggested fix` is provided — read the full `#symbol` anchor block before writing any replacement code.
 - Don't recall C2000 migration facts from memory — the MCP is the source of truth.
 - Don't modify or migrate SysConfig-generated output files — migrate the .syscfg instead.
 - Don't copy device-specific startup/driver files (`device.c`/`device.h`) from the source — the target's device-support module regenerates them.
 - Don't modify SDK driverlib source files — only the project's own application source files.
-- Do fetch migration collateral links when no `Suggested fix` is provided — read the full `#symbol` anchor block before writing any replacement code.
 - Don't read only the page title or surrounding text of a collateral link — navigate to the exact `#anchor` section and read the complete diff block.
 - Don't invoke SysConfig MCP regeneration until the full `.syscfg` migration is complete.
 - Don't alter existing `//_DEVICE_MIGRATION_` pragma markers — but do add them when generating new `#ifdef` blocks in Approach 1.
