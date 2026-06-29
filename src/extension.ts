@@ -14,7 +14,7 @@ import * as utils from './utilities/utils';
 import { tiAsmMcpInit } from './mcp/ti-asm-mcp';
 import { ideaMcpInit } from './mcp/idea-mcp';
 import { tiAsmSkillsInit } from './skills/ti-asm-skills';
-import { mcpStatusBarInit } from './mcpStatusBar';
+import { mcpStatusBarInit } from './mcp/mcp-status-bar';
 
 let isTheia : boolean = false;
 
