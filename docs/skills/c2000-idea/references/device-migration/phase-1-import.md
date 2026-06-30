@@ -80,11 +80,13 @@ Then derive:
      provide the absolute path to the installed C2000Ware root."* Wait for the user to
      supply the correct path before recording `c2000ware_path`.
 
-## 1.4 Read AGENTS.md (if present)
+## 1.4 Locate AGENTS.md (if present)
 
-- Check for `AGENTS.md` at the SDK root. Do not read it yet. 
+- Check for `AGENTS.md` at the SDK root. Note its location but **do not read it yet** — it
+  will be used later, during source-code migration (Phase 4), when writing code for the
+  target device.
 - If the SDK is Motor Control or Digital Power, also check for `AGENTS.md` inside the
-  `c2000ware/` subfolder. Do not read it yet.
+  `c2000ware/` subfolder. Note its location but do not read it yet.
 
 ## 1.5 – 1.9 Import, build, rename, rebuild, and log
 
