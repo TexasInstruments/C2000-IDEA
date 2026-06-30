@@ -8,7 +8,7 @@ F28003x → F28P55x, F28004x → F280039x). Use when the user asks to migrate, p
 or upgrade between C2000 F28x devices.
 
 This workflow keeps the source project unchanged as the golden reference. A new project
-is created for each target device, settings are aligned, and code is migrated using the
+is created for the target device, settings are aligned, and code is migrated using the
 IDEA MCP tools. All migration findings come from the MCP — never recall migration facts
 from memory.
 
@@ -24,15 +24,13 @@ The following must be provided by the user before starting. If either is missing
 explicitly:
 
 1. **Source project name/path** — the project to use as the golden migration source
-2. **Target migration device(s)** — one or more target F28x device families
+2. **Target device** — the target F28x device family
 
 ### Input validation (before proceeding)
 
 Call `list_migration_devices()` from IDEA MCP immediately after collecting inputs.
-- Confirm every **target device** the user provided is in the supported list.
-- If any target device is not supported, notify the user which device(s) are unsupported
-  and **exclude those targets** — remove them from the target list and continue with the
-  remaining supported targets. If **all** targets are unsupported, stop and tell the user.
+- Confirm the **target device** the user provided is in the supported list.
+- If the target device is not supported, notify the user and **stop** — migration cannot proceed.
 - The source device is validated later (Phase 1, step 1.2) once discovered from the
   project. If the source device is not in the supported list, notify the user and
   **stop** — migration cannot proceed without a supported source.
@@ -81,21 +79,20 @@ Call `list_migration_devices()` from IDEA MCP immediately after collecting input
 
 ## Migration log file
 
-Each target project gets its own persistent migration log: a file called
-`c2000-migration.md` that lives in **that target project's directory**. When migrating to
-multiple targets, there is one log per target project — never a single shared log.
+The target project has a persistent migration log: a file called
+`c2000-migration.md` that lives in **the target project's directory**.
 
 The log is created during Phase 1, once the target project has been imported and renamed
 (Phase 1, step 1.9) — not before, because the target project directory does not exist
 until then. From that point on, update it continuously throughout the workflow:
 
-- Record migration info (source project, source device, target device, SDK type, paths).
+- Record migration info (source project, source device, target project, target device, SDK type, paths).
 - At each phase: record the phase status (IN PROGRESS / COMPLETE / SKIPPED), key findings,
   and actions taken.
 - In Phase 4: record per-file status (issues found, issues fixed, unresolved items).
 - At the end: this file becomes part of the final deliverable for the user.
 
-When working on a given target, always read and update **that target's own** log.
+Always read and update this log throughout the workflow.
 
 **If your context is getting long or you feel disoriented, re-read `c2000-migration.md`
 to recover your position and progress.**
@@ -122,12 +119,12 @@ If you are resuming a migration that was started in a previous session:
 
 > STOP: **Do not read ahead.** Read one phase file at a time. Complete every step in it.
 > Return here. Only then read the next phase file. Do not open the next phase file early.
+>
+> **Sub-phases follow the same rule:** within Phase 3, read sub-phase 3A fully before
+> reading 3B. Within Phase 4, the orchestrator dispatches sub-agents to read sub-phase
+> files — the orchestrator itself never reads them directly.
 
 This workflow is split into six phases. **Execute them in strict order.**
-
-> **Per-target:** When migrating to multiple target devices, migrate **one device at a
-> time** — run Phases 1, 2, 3, 4, and 5 fully for one target before starting the next. Do not
-> interleave or batch phases across targets. 
 
 ### Phase sequence
 
@@ -147,11 +144,21 @@ This workflow is split into six phases. **Execute them in strict order.**
 3. **Read `device-migration/phase-3-sysconfig.md`** — Ensure the target syscfg has the
    device-support module, migrate the source SysConfig (.syscfg) configuration if present,
    and normalize the CMD module to match the source linker style.
-   → When complete, return here.
+   Phase 3 is an orchestrator that dispatches two sub-phases in sequence — the phase file
+   directs you to read them one at a time:
+   - **3A** `device-migration/phase-3a-sysconfig-baseline.md` — copy syscfg, open it, ensure `device_support` module is present
+   - **3B** `device-migration/phase-3b-sysconfig-migrate.md` — migrate peripherals, fix errors, normalize CMD module, save, close
+   → When Phase 3B is complete, return here.
 
-4. **Read `device-migration/phase-4-migrate-code.md`** — Migrate all source code: headers
-   first, then source files, then a final sweep.
-   → When complete, return here.
+4. **Read `device-migration/phase-4-migrate-code.md`** — Migrate all source code. Phase 4
+   is an orchestrator: it builds the file list, records the migration strategy, then
+   dispatches sub-agents (never reads sub-phase files itself). Sub-phase files and when
+   they are dispatched:
+   - **4A** `device-migration/phase-4a-headers.md` — all `.h` files (one sub-agent for the full header batch)
+   - **4B** `device-migration/phase-4b-sources.md` — each `.c` file (one sub-agent per file, in dependency order)
+   - **4C** `device-migration/phase-4c-sweep.md` — final sweep and build verification (one sub-agent)
+   - **4D** `device-migration/phase-4d-build-triage.md` — build error triage (one sub-agent; only if 4C reports a failing build)
+   → When Phase 4 is complete (Step 4.6 done), return here.
 
 5. **Read `device-migration/phase-5-report.md`** — Produce the structured migration
    summary for the user.
@@ -176,7 +183,7 @@ These rules apply across all phases:
 
 - Do keep the source project unchanged — it is the golden reference.
 - Do cross-check CCS MCP and IDEA MCP results for consistency.
-- Do exclude unsupported target devices (notify user); stop only if the source device is unsupported.
+- If the target device is unsupported, notify the user and stop; stop also if the source device is unsupported.
 - Do apply settings automatically unless the difference is a legitimate device delta.
 - Do mirror the source's linker style: a CMD module in the target syscfg if the source used
   one, a plain `.cmd` (CMD module removed) if the source used a plain file.

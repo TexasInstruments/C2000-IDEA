@@ -13,7 +13,7 @@ the MCP* for a given migration task; the MCP supplies the analysis.
 
 ## Prerequisite
 
-These workflows require the IDEA MCP server, CCS Project MCP, and (for TRM register
+These workflows require the IDEA MCP server, CCS Project MCP, CCS SysConfig MCP and (for TRM register
 lookups) TI ASM MCP to be running. They are hosted by the C2000-IDEA VS Code extension
 over HTTP. If any required MCP tools are not available in your session, tell the user
 to enable them (Command Palette → `C2000-IDEA: Enable IDEA MCP` / `Enable TI ASM MCP`, or click **MCP Servers** in the VS Code status bar)
@@ -61,8 +61,8 @@ and register them with their agent, then retry.
 | Bitfield → driverlib conversion               | references/bitfield-to-driverlib-migration.md | get_bitfield_to_driverlib_migration_report    |
 
 Notes:
-- Device-to-device migration moves code from a source device family to one or more target
-  device families. Two migration paths are supported:
+- Device-to-device migration moves code from a source device family to a target device
+  family. Two migration paths are supported:
   - **F28x → F28x** — fully implemented
   - **F28x → F29x** — not yet implemented
 - The primary MCP is idea-mcp. Supporting MCPs used during migration:
