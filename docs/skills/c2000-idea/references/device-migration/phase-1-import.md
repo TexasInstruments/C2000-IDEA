@@ -32,7 +32,7 @@ to proceed.
 - **CCS MCP:** Call `getProjectDescriptors` and `getProjectProductReferences` for the
   source project. Note the device, SDK paths, build config, and product references.
 - **IDEA MCP:** Call `get_projects()`. Locate the source project by name.
-- **Cross-check:** The device, project name, and SDK info from both MCPs must agree.
+- **Cross-check:** The device and project name from both MCPs must agree.
   If they don't, stop and flag the inconsistency to the user.
 
   > **Device name format note:** IDEA MCP returns lowercase family names (e.g., `f28003x`),
@@ -73,20 +73,20 @@ Then derive:
   installed, or an older version that is installed at a different path.
   1. Extract the version token from the SDK path returned by `getProjectProductReferences`
      (the last path component of the SDK root, e.g., `C2000Ware_5_04_00_00`).
-  2. Confirm that a directory at that path exists on disk (attempt to list its top-level
-     contents or read a known file such as `README.md` or `manifest.html`).
-  3. **If the path exists:** record the confirmed `c2000ware_path` and version — proceed.
-  4. **If the path does not exist on disk** (variable not expanded, stale reference, or
+  2. **If the path exists:** record the confirmed `c2000ware_path` and version — proceed.
+  3. **If the path does not exist on disk** (variable not expanded, stale reference, or
      version mismatch): do **not** guess a path — stop and tell the user:
      *"The SDK path `<path>` from the project reference does not exist on disk. Please
      provide the absolute path to the installed C2000Ware root."* Wait for the user to
      supply the correct path before recording `c2000ware_path`.
 
-## 1.4 Read AGENTS.md (if present)
+## 1.4 Locate AGENTS.md (if present)
 
-- Check for `AGENTS.md` at the SDK root. If it exists, read and follow its instructions.
+- Check for `AGENTS.md` at the SDK root. Note its location but **do not read it yet** — it
+  will be used later, during source-code migration (Phase 4), when writing code for the
+  target device.
 - If the SDK is Motor Control or Digital Power, also check for `AGENTS.md` inside the
-  `c2000ware/` subfolder. Read and follow if present.
+  `c2000ware/` subfolder. Note its location but do not read it yet.
 
 ## 1.5 – 1.9 Import, build, rename, rebuild, and log
 
@@ -119,8 +119,7 @@ The starter project location depends on the target device:
   project.
 - Call `buildProject` on the freshly imported universal driverlib example.
 - This confirms the import, toolchain, and SDK references are healthy **before** any
-  renaming. If the build fails at this stage, you have not renamed anything yet — it is
-  safe to discard the imported project and diagnose the environment or SDK issue.
+  renaming.
 - If the build fails, **stop and report to the user** — this is an environment/SDK issue,
   not a migration problem. Include the compiler error output in your report so the user
   can diagnose the toolchain or SDK installation.
@@ -143,7 +142,7 @@ The starter project location depends on the target device:
 ### 1.7 Rename the target project
 
 - Call CCS MCP `renameProject` to rename the imported project to
-  `<sourceProjectName>_<targetDevice>`.
+  `<sourceProjectName>_<targetDevice>`. Confirm the new name with the user prior to executing the rename. 
 - If the source project name includes the source device string, remove it first
   (e.g., `myApp_f28003x` → `myApp_f28p55x`, not `myApp_f28003x_f28p55x`).
   - **If the source device name appears multiple times** in the project name, remove only
@@ -151,8 +150,7 @@ The starter project location depends on the target device:
     (`__` → `_`). Show the proposed new name to the user and wait for confirmation before
     applying the rename.
 - This gives the target project a stable, unique name.
-- **If a project with that name already exists**, append a numeric suffix (e.g., `_1`)
-  and inform the user of the chosen name.
+- If rename fails, stop and report to the user. 
 
 > **WARNING: Verify that the physical on-disk directory was also renamed (required):**
 > CCS `renameProject` renames the project in the workspace but may or may not rename the
