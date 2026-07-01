@@ -129,7 +129,7 @@ This workflow is split into six phases. **Execute them in strict order.**
 ### Phase sequence
 
 0. **Read `device-migration/phase-0-preflight.md`** — Run the pre-flight check: probe all
-   MCP servers (IDEA MCP, CCS Project MCP, CCS SysConfig MCP, TI ASM MCP), verify Git state, and initialize
+   MCP servers (IDEA MCP, CCS Project MCP, CCS SysConfig MCP, TI ASM MCP) and initialize
    the session context. **This phase runs once before Phase 1 and is mandatory.**
    → When complete, return here.
 
@@ -191,7 +191,7 @@ These rules apply across all phases:
 - Do take file paths and device names from MCP tools — never invent them.
 - Do ask the user for shared (`#ifdef`) vs. clean replacement preference before modifying any files.
 - Do process `.h` files before `.c` files — fixing headers first prevents cascading compile errors.
-- Do use `get_device_migration_report` as the authoritative source — not the VS Code diagnostics panel.
+- Do use `get_device_migration_report` as the authoritative source
 - Do fetch migration collateral links when no `Suggested fix` is provided — read the full `#symbol` anchor block before writing any replacement code.
 - Don't recall C2000 migration facts from memory — the MCP is the source of truth.
 - Don't modify or migrate SysConfig-generated output files — migrate the .syscfg instead.

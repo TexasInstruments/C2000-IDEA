@@ -14,25 +14,21 @@ to proceed.
 ### Rules for this phase
 
 - Do keep the source project unchanged — it is the golden reference.
-- Do ensure the target syscfg always has the device-support module — add it if missing.
 - Do mirror the source's linker style: a CMD module in the target syscfg if the source used
   one, a plain `.cmd` (CMD module removed) if the source used a plain file.
 - Don't modify or migrate SysConfig-generated output files — migrate the `.syscfg` instead.
 - Don't invoke SysConfig MCP regeneration until the full `.syscfg` migration is complete.
 
-
 ---
 
-**This phase always runs.** The target project must always end with a `.syscfg` that
+**This phase always runs.** The target project must always end with a `.syscfg` file that
 contains the **device-support module** — it generates `device.c`/`device.h` (clocking),
 `.opt` (compiler options), and `.cmd.genlibs` (linker libs). Even when the source has no
 SysConfig, this phase still ensures the device-support module is present and normalizes the
 CMD module to match the source linker style (recorded in Phase 2, step 2.5).
 
 If the ccs-sysconfig MCP is not available, tell the user the SysConfig work must be done
-manually (ensure the device-support module is present, migrate any source peripheral config
-to the target device, resolve errors, save) and record it as a deferred manual step in
-`c2000-migration.md`.
+manually and record it as a deferred manual step in `c2000-migration.md`.
 
 ---
 
@@ -46,7 +42,7 @@ to the target device, resolve errors, save) and record it as a deferred manual s
 ### Execution order
 
 1. **Read `phase-3a-sysconfig-baseline.md` now** and complete Phase 3A in full.
-   Phase 3A ends with the `.syscfg` open and the `device_support` module confirmed present.
+   Phase 3A ends with the `.syscfg` file open and the `device_support` module confirmed present.
    It does **not** close the file.
 
 2. **After Phase 3A is done, read `phase-3b-sysconfig-migrate.md`** and complete Phase 3B.
