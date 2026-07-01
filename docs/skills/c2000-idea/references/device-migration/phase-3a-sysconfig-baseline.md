@@ -22,8 +22,8 @@ produces a result you cannot interpret. Do not guess, retry blindly, or skip the
 ## 3.1 Copy the source `.syscfg` file (source-has-syscfg only)
 
 If the source project has a `.syscfg`, copy it into the target project directory, replacing
-the target universal template's `.syscfg`. The source `.syscfg` itself stays untouched — work on
-the copy.
+the target universal template's `.syscfg` (this means remove the universal projects `.syscfg`fike). 
+The source `.syscfg` itself stays untouched — work on the copy.
 
 If the source has no `.syscfg`, skip this step and keep the universal project's `.syscfg`
 as-is (it already contains the device-support module).
@@ -39,12 +39,9 @@ field in the result.
 Call `getModuleInstances` and check for the device-support module.
 
 **The device-support module name is `device_support`.** Look for a match using these rules:
-
+- The complete module name is `/driverlib/device_support.js`
 - **Instance name:** compare the instance's `name` field against `"device_support"` —
   this comparison is **case-sensitive** (exact string match).
-- **Module type/ID:** if no instance name matches exactly, check whether the instance's
-  module type or module ID **contains** `"device_support"` — this comparison is
-  **case-insensitive**.
 
 Use the first rule that produces a match. If neither rule finds a match, the module is absent.
 

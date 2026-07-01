@@ -97,8 +97,7 @@ Make the target syscfg's CMD module match the **source linker style** recorded i
 - **Source used a CMD module** → the target keeps a CMD module. It should already be present
   (it came in with the copied source syscfg).
 
-  Verify each section and its assigned memory region is correct for the target device. If the
-  CMD module is somehow absent, `addModuleInstances` to add it first.
+  If the CMD module is somehow absent, `addModuleInstances` to add it first.
 
 - **Source used a plain `.cmd` file** → the target must not have a CMD module (Phase 2
   already set up the plain `.cmd`). If one is present (e.g., from the universal template),
@@ -108,9 +107,6 @@ Make the target syscfg's CMD module match the **source linker style** recorded i
 ## 3.10a Error gate after CMD normalization (required)
 
 **Before saving, call `getErrorsAndWarnings` now** — after step 3.10 and before step 3.11.
-
-The CMD module change (add/remove/reconfigure) can introduce new errors that were not
-present after step 3.9. Do not skip this check.
 
 - If the result contains **new errors**, treat them the same as in step 3.9 — fix with
   `changeConfiguration`, then re-run `getErrorsAndWarnings` until zero errors remain.
