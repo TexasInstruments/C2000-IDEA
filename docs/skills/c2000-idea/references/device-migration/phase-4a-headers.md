@@ -82,14 +82,15 @@ orchestrator before proceeding:
 
 ## How to fix each issue
 
-- **Easy (auto-fixable):** apply the `Suggested fix` verbatim.
-- **Complex (manual review):** read surrounding code, check intent, use ti-asm-mcp
-  if needed, construct fix from collateral only.
+The agent must fix **every** issue — easy or complex:
+- **Easy (auto-fixable ✓):** apply the suggested replacement directly.
+- **Complex (manual review ⚠):** investigate deeply — read surrounding code to understand
+  intent, review function definitions, analyze which registers are touched, use
+  **ti-asm-mcp** to understand register behavior, then construct the correct fix.
+- Only if an item **truly cannot be resolved** does the agent report it to the user.
 - **Item is inside a comment or `#if 0` block:** skip it. Note as inactive-code flag.
-  Do not modify the line.
 - **`Change: removed`, no `Suggested fix`, no collateral link:** do not write a
-  replacement from memory. Flag the symbol to the user with file + line and mark it
-  `needs human review`.
+  replacement from memory. Flag to the user with file + line. Mark `needs human review`.
 
 ## Reading Migration Collateral links
 
@@ -125,6 +126,10 @@ If it is under the source project directory, stop immediately and ask the orches
 ```
 get_device_migration_report(<absolute path to .h file>)
 ```
+
+> **Note:** The C2000 IDEA extension may be running a continuous migration check in the
+> background. The VS Code Problems panel may update as files change. Use
+> `get_device_migration_report` — not the diagnostics panel — as the authoritative source.
 
 ### Step 3 — Handle zero-issues result
 
