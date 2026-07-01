@@ -127,13 +127,8 @@ If no write capability is available, stop and tell the user to create the file m
 
 This file is the persistent migration log for this target project.
 
-> **WARNING: `c2000-migration.md` is append-only — never overwrite prior phase sections:**
+> **WARNING: `c2000-migration.md` is append-only — never overwrite the prior phase sections:**
 > Every phase appends its results to this file. When updating the log in any phase:
-> - **Read the current file content first**, then write back the existing content plus your
->   new addition. Never write the file from scratch — doing so would destroy all prior
->   phase records.
-> - If your agent environment provides an append tool (e.g., `append_file`), prefer it over
->   a full `write_file` to reduce the risk of accidental overwrite.
 > - The only exception is the initial creation here in step 1.9 — this is the one and only
 >   time the file is created (written from scratch). After this point, all writes are appends.
 
