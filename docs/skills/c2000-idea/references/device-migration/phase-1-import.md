@@ -170,7 +170,6 @@ Seed the log with:
 
 **Immediately update the log:** Set Phase 1 status to COMPLETE and add both build results
 (step 1.6 pre-rename build and step 1.8 post-rename build).
-If any `HANG:` was noted in your context during steps 1.6 or 1.8, record it here now.
 
 ---
 

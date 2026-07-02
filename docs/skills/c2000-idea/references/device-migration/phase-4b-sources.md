@@ -67,13 +67,6 @@ orchestrator before proceeding:
   Add `//_DEVICE_MIGRATION_` suffix to every `#if`, `#elif`, `#endif` line.
   Fix only the **target device's branch** when existing `#ifdef` blocks are present.
 - For **Approach 2** (clean replacement): replace symbols directly. No wrappers.
-- **MCP hang guard:** If `buildProject` or any other MCP tool call has produced **no
-  response at all** after a long wait (typically 2–3 minutes), assume the tool has hung.
-  Do **not** keep waiting. Record in `c2000-migration.md`:
-  `HANG: <tool>(<args>) — no response after timeout. Phase 4B, <file>.`
-  Then tell the user: *"The `<tool>` call has not responded. The MCP tool may have hung.
-  Please check the CCS console, restart the MCP server if needed, and tell me
-  the result so I can continue."* Wait for the user's response before proceeding.
 
 ---
 
@@ -262,10 +255,6 @@ After the migration report is clean (zero issues, or all remaining are deferred)
 ```
 buildProject(<target project name>)
 ```
-
-> **WARNING: MCP hang guard:** If `buildProject` produces no response after ~2–3 minutes,
-> record `HANG: buildProject(<project>) — Phase 4B, <file>` in `c2000-migration.md`
-> and immediately alert the user (see MCP hang guard rule above). Do not wait indefinitely.
 
 ### Step 7 — Handle build errors
 

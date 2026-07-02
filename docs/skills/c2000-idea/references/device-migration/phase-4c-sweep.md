@@ -13,15 +13,6 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 
 **Stop and ask the user** if any MCP tool call fails or returns an unexpected result.
 
-> **WARNING: MCP hang guard (applies throughout Phase 4C):**
-> If `buildProject` or any other MCP tool call has produced **no response at all** after
-> a long wait (typically 2–3 minutes), assume the tool has hung. Do **not** keep waiting.
-> Record in `c2000-migration.md`:
-> `HANG: <tool>(<args>) — no response after timeout. Phase 4C, Step <N>.`
-> Tell the user: *"The `<tool>` call has not responded. The MCP tool may have hung.
-> Please check the CCS console, restart the MCP server if needed, and tell me
-> the result so I can continue."* Wait for the user's response before proceeding.
-
 ---
 
 ## Briefing fields (confirm before starting)
