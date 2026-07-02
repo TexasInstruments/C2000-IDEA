@@ -54,7 +54,7 @@ orchestrator before proceeding:
 ## Rules for Phase 4A
 
 - Process `.h` files in the order provided by the orchestrator.
-- Use only `get_device_migration_report` — not the VS Code diagnostics panel.
+- Use only `get_device_migration_report`.
 - **If `get_device_migration_report` returns 0 issues for a file:** record
   `[<filename>] 0 issues — no migration changes needed` in `c2000-migration.md`,
   update the progress table row to DONE, and proceed to the next file immediately.
@@ -69,14 +69,6 @@ orchestrator before proceeding:
   Add the `//_DEVICE_MIGRATION_` suffix to every `#if`, `#elif`, `#endif` line.
   Fix only the **target device's branch** if the file already has `#ifdef` blocks.
 - For **Approach 2** (clean replacement): replace old symbols directly. No wrappers.
-- **MCP hang guard:** Phase 4A does not call `buildProject`, but if any MCP tool call
-  (e.g., `get_device_migration_report`) has produced **no response at all** after a long
-  wait (typically 2–3 minutes), assume the tool has hung. Do **not** keep waiting.
-  Record in `c2000-migration.md`:
-  `HANG: <tool>(<args>) — no response after timeout. Phase 4A, <file>.`
-  Tell the user: *"The `<tool>` call has not responded. The MCP tool may have hung.
-  Please check the CCS console, restart the MCP server if needed, and tell me
-  the result so I can continue."* Wait for the user's response before proceeding.
 
 ---
 
@@ -123,13 +115,8 @@ If it is under the source project directory, stop immediately and ask the orches
 
 ### Step 2 — Run migration report
 
-```
-get_device_migration_report(<absolute path to .h file>)
-```
+Use get_device_migration_report with absolute path to .h file, source device and target device.
 
-> **Note:** The C2000 IDEA extension may be running a continuous migration check in the
-> background. The VS Code Problems panel may update as files change. Use
-> `get_device_migration_report` — not the diagnostics panel — as the authoritative source.
 
 ### Step 3 — Handle zero-issues result
 
@@ -160,7 +147,8 @@ flag each occurrence:
 
 **3-iii. `#ifdef` device-macro guard check:**
 Confirm `#ifdef` / `#if defined` guards reference the **target** device macro, not source.
-Search for `#ifdef _<SOURCE-DEVICE-UPPER>_` or `#if defined(_<SOURCE-DEVICE-UPPER>_)`
+The macro for the device is usually starting with F28, for example F28003x, or F28004x.
+Search for `#ifdef <SOURCE-DEVICE>` or `#if defined(<SOURCE-DEVICE>)`
 anywhere in the file — including inside function bodies, not just at the top.
 If any source-device macro is found, replace it with the target device's equivalent macro
 and record:
@@ -185,6 +173,8 @@ For each issue in the report:
    ```
 3. Re-run `get_device_migration_report` on the file.
 4. Confirm the issue is resolved or confirmed inactive.
+5. If the issue on the same area of the code is reported again, check that it is not wrapped in
+   an #ifdef or is not part of the commented code. If it is one of those scenarios, ignore it.
 
 ### Step 5 — Convergence guard
 
