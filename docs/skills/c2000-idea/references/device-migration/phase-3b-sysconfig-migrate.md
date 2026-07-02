@@ -30,6 +30,9 @@ Look for the `Phase 3A: COMPLETE` entry.
 If the `c2000-migration.md` checkpoint is missing or unclear, re-derive the path:
 - Open the target project's `.syscfg` via `openFile`, then call `getModuleInstances`.
   Inspect the returned module list contains `device_support` or not. If it is absent notify to user, and terminate the migration mentioning the reason.
+- check the status of whether source-has-syscfg (whether the source project had `.syscfg` file). If it did, then that source has been copied to the target    
+  project already. If not then the universal project's syscfg file was kept.
+  In the case where there was no `.syscfg` file in the source project, we just need to normalize the CMD module. Hence jump to the 3.10 step. 
 
 ---
 
@@ -54,6 +57,9 @@ the full unfiltered list so the user can select the closest available target.
 ## 3.7 Migrate (source-has-syscfg only)
 
 Call `migrate(device, package)` using the user's selected device and package.
+ > If the `migrate` tool for SysCofnig MCP repeatedly fails. Pause and ask the user to manually
+ > click the migrate button in the SysConfig GUI and confirm that they have clicked the migrate button 
+ > and saved the file.
 
 ## 3.8 Check errors
 

@@ -26,12 +26,13 @@ apply mismatches to the target.
 
 ## 2.0 Identify the active build configuration
 
-Call `getProjectDescriptors` with properies `activeBuildConfiguration` and `buildConfigurationIndex` on the **source** project and identify which build configuration it actively uses (typically `CPU1_FLASH` or `Debug`).
+Call `getProjectDescriptors` with properties `activeBuildConfiguration` and `buildConfigurationIndex` on the **source** project and identify which build configuration it actively uses (typically `CPU1_FLASH` or `Debug`).
 
 Apply all Phase 2 settings to **that same configuration** in the target. Do not apply
 settings to a different build config by mistake.
 
-**Update `c2000-migration.md`:** with active build configuration info
+**Update `c2000-migration.md`:** with active build configuration info. If the build configuration is tied to RAM or FLASH, make a note of this as
+it will be important when implementing the linker cmd file.
 
 **For every step in this phase:** before applying any change, tell the user what you
 found (source value vs. target value) and what you plan to apply.
@@ -113,7 +114,9 @@ List all files in the cmd directory and identify the two key reference files:
 - The **RAM** linker cmd — file name ends with `_generic_ram_lnk.cmd`
 - The **flash** linker cmd — file name ends with `_generic_flash_lnk.cmd`
 
-Read both files for context before reconciliation.
+Read both files for context before reconciliation. If the build configuration selected in 2.0 is 
+tied to RAM or FLASH, use mainly the content from that linker cmd file. 
+Otherwise, ask the user for confirmation on which one to prioritize. If user is unused, default to FLASH.
 
 **Reconciliation:**
 
@@ -125,6 +128,21 @@ Port user customizations from the source cmd onto the target device's cmd file:
 - **If a source section cannot be mapped** to any memory region in the target cmd file
   (e.g., a memory block that does not exist on the target device), flag it to the user
   — do not silently drop the section or invent a region name.
+- Memory regions are based on the Hardware of the source and target device, you cannot
+  add new regions that dont physically exist on the device hardware
+- If on the source device, sections were mapped to regions that dont exist on the target,
+  other similar regions should be used instead
+- Some sections are only relevant because of the presence of a peripheral or certain type of
+  memory, those sections can be dropped but must be noted in the `c2000-migration.md`.
+  Examples are these are MUTLI-CORE memory sections and regions, GSRAM availability, 
+  CAN message RAMs, etc.
+
+**Write the final CMD file:**
+
+After all decisions are made, write one linker cmd file to the target project:
+- For the name of the cmd file created in the target project, match the name with the source 
+  project's linker cmd file name (replace any device name mentions with the target device 
+  name).
 
 ## 2.6 Libraries
 
@@ -160,7 +178,14 @@ that should come from the new SDK (ignore these). Use these heuristics:
    — list every file path and the reason it was excluded (SDK path, SysConfig-generated,
    device startup file, etc.).
 
-Wait for the user to confirm the lists are correct before copying. After confirmation — copy the files to the target project and report the list of files successfully copied.
+Wait for the user to confirm the lists are correct before copying. After confirmation — **copy the files to the target project** and report the list of files successfully copied. List the application files and folder strucutre in the `c2000-migration.md` file.
+Make sure that the files copied, have the same folder structure in the target project as the source project.
+
+**Remove the main.c file from the target project**, since the application files from the 
+source project includes the `main()` definition.
+
+**Validate the target project directory structure** after the copy is finished.
+Confirm with the user by showing the source and target project's folder structure and files. Once confirmed, move to the next step.
 
 ## 2.8 Post-build steps
 
@@ -195,5 +220,7 @@ Wait for the user to confirm the lists are correct before copying. After confirm
 
 **Update `c2000-migration.md`:** Record Phase 2 as COMPLETE. Log the settings compared and
 applied, the source file inventory (application files copied, device/generated files
-excluded), and any items the user modified or overrode. Then **return to `device-migration.md`**
-and proceed to Phase 3.
+excluded), the target project's directory and file structure and any items the user modified or overrode. 
+Ask: *"Phase 2 is complete. Does everything look correct? Ready to move to Phase 3?"*
+Wait for the user's confirmation, then **return to `device-migration.md`** (the workflow
+orchestrator that sent you here) and proceed to Phase 3.

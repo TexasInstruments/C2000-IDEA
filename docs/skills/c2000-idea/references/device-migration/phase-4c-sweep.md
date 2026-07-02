@@ -147,36 +147,15 @@ symbol inventory (which would be impractical for large files).
 
 WARNING: **This step is mandatory before declaring Phase 4 complete.**
 
-Call `buildProject` on the target project. Do **not** rely on an incremental build —
-stale `.obj` files from before migration may hide compilation errors. To force a clean
-rebuild, call `buildProject` twice:
+Call `buildProject` on the target project. 
 
 ```
-buildProject(<target project name>)   ← first call: builds with any stale objects present
-buildProject(<target project name>)   ← second call: builds from the fresh state left by the first call
+buildProject(<target project name>) 
 ```
 
-> **Note:** The `buildProject` MCP tool does not accept a `clean=true` parameter. The
-> two-call approach achieves a reliable rebuild: the first call compiles all files against
-> the current (post-migration) source state, replacing stale `.obj` files; the second call
-> confirms a complete, consistent build from that clean object set.
->
-> **If the CCS MCP exposes a `cleanProject` tool**, call it once before the first
-> `buildProject` instead — that is a more explicit clean and reduces build time (one
-> `cleanProject` + one `buildProject` is equivalent to two `buildProject` calls).
-> If no `cleanProject` tool is available, use the two-call approach above.
+If the build passes: record `Final clean build: PASS` in `c2000-migration.md`.
 
-> **WARNING: MCP hang guard:** If either `buildProject` call produces no response after
-> ~2–3 minutes, record `HANG: buildProject(<project>) — Phase 4C, Step 5` in
-> `c2000-migration.md` and immediately alert the user (see hang guard rule above).
-> Do not wait indefinitely for either call.
-
-If the second build fails on errors that were **not** present during incremental builds:
-fix them now before proceeding to Phase 5. These are real errors — do not suppress them.
-
-If the second build passes: record `Final clean build: PASS` in `c2000-migration.md`.
-
-If the second build fails: record `Final clean build: FAIL — <X> errors` in
+If the build fails: record `Final clean build: FAIL — <X> errors` in
 `c2000-migration.md`. **Do not attempt further fixes here** — return the FAIL result to
 the orchestrator so it can dispatch Phase 4D (build error triage).
 

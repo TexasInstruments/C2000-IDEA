@@ -17,7 +17,6 @@ to proceed.
 - Do keep the source project unchanged — it is the golden reference.
 - Do cross-check CCS Project MCP and IDEA MCP results for consistency.
 - Do terminate early if devices are not in the supported migration list.
-- Do read AGENTS.md from `c2000ware_path` if present.
 - Do take file paths and device names from MCP tools — never invent them.
 
 ---
@@ -79,17 +78,19 @@ Then derive:
 - Check for `AGENTS.md` at `<c2000ware_path>` (derived in step 1.3). Note its location but
   **do not read it yet** — it will be used later, during source-code migration (Phase 4),
   when writing code for the target device.
+  Note whether AGENTS.md was found at the root `<c2000ware_path>` or not. Only check the root 
+  `<c2000ware_path>` directory for this file. No need to check any other path.
 
 
 ## 1.5 Import the universal driverlib example for the target device
 
 The starter project location depends on the target device:
 
-| Target device            | Universal project path                                               |
-| ------------------------ | -------------------------------------------------------------------- |
-| f28p65x, f2838x          | `<c2000ware_path>/driverlib/<target-device>/examples/c28x/universal` |
-| f2837xd, f2837xs, f2807x | No predictable path — ask the user (see note below)                  |
-| All other devices        | `<c2000ware_path>/driverlib/<target-device>/examples/universal`      |
+| Target device            | Universal project path                                                                               |
+| ------------------------ | ---------------------------------------------------------------------------------------------------- |
+| f28p65x, f2838x          | `<c2000ware_path>/driverlib/<target-device>/examples/c28x/universal/CCS/universal_c2000.projectspec` |
+| f2837xd, f2837xs, f2807x | No predictable path — ask the user (see note below)                                                  |
+| All other devices        | `<c2000ware_path>/driverlib/<target-device>/examples/universal/CCS/universal_c2000.projectspec`      |
 
 > **f2837xd, f2837xs, f2807x — ask the user:**
 > These devices do not have a `universal/` starter project at a predictable path.
@@ -140,6 +141,7 @@ Seed the log with:
 - `c2000ware_path`
 - SDK version string (exact string from `getProjectProductReferences`, e.g., `C2000Ware_5_04_00_00`)
 - Target project name and directory
+- AGENTS.md availability
 - **Phase 0 pre-flight results** — embed the session-context results captured during Phase 0:
   ```
   Pre-flight (Phase 0):

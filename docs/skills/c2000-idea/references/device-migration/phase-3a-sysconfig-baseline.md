@@ -19,10 +19,12 @@ produces a result you cannot interpret. Do not guess, retry blindly, or skip the
 
 ---
 
+If the source project does not include a syscfg file, keep universal project's syscfg file. Skip 3.1 and go directly to 3.2 instead.
+
 ## 3.1 Copy the source `.syscfg` file (source-has-syscfg only)
 
 If the source project has a `.syscfg`, copy it into the target project directory, replacing
-the target universal template's `.syscfg` (this means remove the universal projects `.syscfg`fike). 
+the target universal template's `.syscfg` (this means remove the universal project's `.syscfg` file). 
 The source `.syscfg` itself stays untouched — work on the copy.
 
 If the source has no `.syscfg`, skip this step and keep the universal project's `.syscfg`
@@ -60,7 +62,7 @@ Phase 3A: COMPLETE
   syscfg copied: yes / no (source had no syscfg)
   source-has-syscfg: yes / no
   device_support module: present / added
-  openFile result: OK / version-incompatibility-fallback
+  openFile result: OK 
 ```
 
 **Do not call `save` or `closeFile` yet — the file is still open for Phase 3B.**

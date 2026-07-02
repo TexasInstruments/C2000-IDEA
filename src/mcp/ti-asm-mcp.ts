@@ -450,4 +450,6 @@ export function tiAsmMcpInit(context: vscode.ExtensionContext) {
 		registerMcpCmd,
 		mcpInstructionsCmd
 	);
+
+	enableMcpCommand(context);
 }

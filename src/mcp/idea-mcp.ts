@@ -665,4 +665,6 @@ export function ideaMcpInit(context: vscode.ExtensionContext) {
 		registerCmd,
 		instructionsCmd
 	);
+
+	enableMcpCommand();
 }
