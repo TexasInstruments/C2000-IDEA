@@ -40,7 +40,8 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 
 ## Step 1 — Re-run migration report on all files
 
-Run `get_device_migration_report` on every `.h` and `.c` file listed in your briefing
+Run `get_device_migration_report` (with the absolute file path, source device, and target
+device) on every `.h` and `.c` file listed in your briefing
 (the files processed in 4A and 4B). In addition, scan the target project directory for
 any `.h` or `.c` files **not** in the 4A/4B list — these may have been added or
 regenerated after Phase 3 (e.g., new source files the user added). If additional files

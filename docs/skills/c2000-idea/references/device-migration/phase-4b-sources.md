@@ -128,9 +128,7 @@ source project, stop immediately and ask the orchestrator.
 
 ### Step 2 — Run migration report
 
-```
-get_device_migration_report(<absolute path to .c file>)
-```
+Use get_device_migration_report with absolute path to .c file, source device and target device.
 
 > **Note:** The C2000 IDEA extension may be running a continuous migration check in the
 > background. The VS Code Problems panel may update as files change. Use
