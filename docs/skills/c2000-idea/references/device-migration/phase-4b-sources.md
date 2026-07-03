@@ -168,14 +168,13 @@ flag each occurrence:
 ```
 
 **3-iii. `#ifdef` device-macro guard check:**
-Confirm the project's own `#ifdef` / `#if defined` **device-define** guards reference the
-**target** device, not the source (e.g., `#ifdef _F28003x_` must become `#ifdef _F28P55x_`
-— keep the family-name casing: uppercase with a lowercase trailing `x`). These are the
-project's device-selection defines, **not** the `//_DEVICE_MIGRATION_` extension markers.
-If a source-device guard is found, replace the source family name with the target family
-name (same wrapper) and record:
+Confirm any `#ifdef` / `#if defined` device guards reference the **target** device, not the
+source (e.g. `#ifdef F28003x` must become `#ifdef F28P55x`). Use the exact device name from
+the migration list — no underscores or other wrappers. If a source-device guard is found,
+replace the source device name with the target device name (leave `//_DEVICE_MIGRATION_`
+marker lines unchanged) and record:
 ```
-[<filename>:<line>] FIXED: #ifdef guard updated → <new macro>
+[<filename>:<line>] FIXED: #ifdef guard updated → <new guard>
 ```
 
 **3-iv. Hardcoded peripheral base address check:**

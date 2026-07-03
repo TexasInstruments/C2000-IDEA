@@ -158,17 +158,14 @@ flag each occurrence:
 ```
 
 **3-iii. `#ifdef` device-macro guard check:**
-Confirm the project's own `#ifdef` / `#if defined` **device-define** guards reference the
-**target** device, not the source. These are the project's device-selection defines
-(commonly underscore-wrapped, e.g. `_F28003x_`) — **not** the `//_DEVICE_MIGRATION_`
-extension markers. The device token keeps the family-name casing (uppercase with a lowercase
-trailing `x`, e.g. `F28003x` → `F28P55x`).
-Search for the source device family name inside any guard — e.g. `#ifdef _<SOURCE-DEVICE>_`
-or `#if defined(_<SOURCE-DEVICE>_)` — anywhere in the file, including inside function bodies,
-not just at the top. If a source-device guard is found, replace the source family name with
-the target family name (same wrapper, same casing) and record:
+Confirm any `#ifdef` / `#if defined` device guards reference the **target** device, not the
+source. Use the exact device name from the migration list (e.g. `F28003x`, `F28P55x`) — no
+underscores or other wrappers. Search for the source device name in guards anywhere in the
+file (including inside function bodies), e.g. `#ifdef F28003x` or `#if defined(F28003x)`. If
+found, replace the source device name with the target device name (leave
+`//_DEVICE_MIGRATION_` marker lines unchanged) and record:
 ```
-[<filename>:<line>] FIXED: #ifdef guard updated → <new macro>
+[<filename>:<line>] FIXED: #ifdef guard updated → <new guard>
 ```
 
 If all checks pass with no fixes needed, record the file as clean and proceed to the next file.

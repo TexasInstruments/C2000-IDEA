@@ -48,11 +48,11 @@ found (source value vs. target value) and what you plan to apply.
 
 - User `#define`s passed at the compiler level (e.g., feature flags, board identifiers).
 - Show the user: source defines vs. target defines, and which ones you plan to apply.
-- Device-specific defines (e.g., `_F28004x`) should remain as the target device's
+- Device-specific defines (e.g., `F28004x`) should remain as the target device's
   define — do not overwrite.
-- **Treat any define whose name contains the source device name string** (e.g.,
-  `_F28004x_`, `_LAUNCHXL_F28004x`) as device-specific — do not copy it to the target;
-  the target project template already has the correct device guard.
+- **Treat any define whose name contains the source device name string** (e.g., `F28004x`,
+  or a board define like `LAUNCHXL_F28004x`) as device-specific — do not copy it to the
+  target; the target project template already has the correct device guard.
 - **If the same symbol is defined with a different value** in source vs. target (e.g., a
   clock-speed constant tied to the device), flag it to the user and do not overwrite
   without explicit confirmation. Apply settings from the source to the target, after confirmation.
