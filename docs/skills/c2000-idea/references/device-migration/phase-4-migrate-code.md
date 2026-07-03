@@ -25,10 +25,32 @@ Precondition: user application files are already copied into the target project 
 > project have both the old source project code and newly generated migration code), or
 > (2) a clean replacement targeting only the new device?"
 
-- **Approach 1 (shared `#ifdef`):** Wrap changed code in `#if`/`#elif`/`#endif` blocks.
-  Remember all modifications are only made on the target device project.
-  Always add the `//_DEVICE_MIGRATION_` suffix to each `#if`, `#elif`, and `#endif` line
-  — this marker lets the C2000 IDEA extension track which branch is active per device.
+- **Approach 1 (shared `#ifdef`):** Wrap the changed code in a device-conditional block so
+  the original source-device code and the migrated target-device code both live in the
+  target project. Use this **exact** structure:
+
+  ```
+  #if <source>  //_DEVICE_MIGRATION_
+  <original source-device code>
+  #elif <target>  //_DEVICE_MIGRATION_
+  <migrated target-device code>
+  #endif  //_DEVICE_MIGRATION_
+  ```
+
+  - `<source>` and `<target>` are the **device family names** in the extension's format:
+    uppercase letters and digits with a **lowercase trailing `x`** — e.g. `F28003x`,
+    `F28004x`, `F28P55x`, `F28P65x` (a few carry an extra uppercase suffix, e.g. `F2837xD`).
+  - Use the `currentDevice` / `migrationDevices` strings from `get_projects()` **verbatim**
+    for `<source>` and `<target>`. The extension matches these **case-sensitively** — a
+    lowercased token (e.g. `f28003x`) is NOT recognized and the branch tracking silently
+    breaks.
+  - Put the **original** source-device code in the `#if <source>` branch and the **migrated**
+    target-device code in the `#elif <target>` branch. The `//_DEVICE_MIGRATION_` marker must
+    appear on the `#if`, `#elif`, and `#endif` lines. All modifications are made only on the
+    target device project.
+  - When `get_device_migration_report`'s `Suggested fix` already contains this wrapped block,
+    apply it **verbatim** — only hand-construct the block for changes the report did not
+    pre-wrap.
 - **Approach 2 (clean replacement):** Simply replace old symbols with new ones; no
   preprocessor wrappers.
 

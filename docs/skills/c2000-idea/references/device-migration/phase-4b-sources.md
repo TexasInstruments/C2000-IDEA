@@ -63,9 +63,21 @@ orchestrator before proceeding:
 - Do not read collateral links by page title only — navigate to the exact `#anchor`.
 - Do not fabricate API calls or register values. If uncertain, stop and report.
 - Apply `Suggested fix` values **verbatim** — do not re-derive arguments.
-- For **Approach 1** (`#ifdef`): wrap changed code in `#if`/`#elif`/`#endif` blocks.
-  Add `//_DEVICE_MIGRATION_` suffix to every `#if`, `#elif`, `#endif` line.
-  Fix only the **target device's branch** when existing `#ifdef` blocks are present.
+- For **Approach 1** (`#ifdef`): wrap changed code in this **exact** block —
+
+  ```
+  #if <source>  //_DEVICE_MIGRATION_
+  <original source-device code>
+  #elif <target>  //_DEVICE_MIGRATION_
+  <migrated target-device code>
+  #endif  //_DEVICE_MIGRATION_
+  ```
+
+  `<source>` / `<target>` are the source/target device family names **verbatim from the
+  briefing** (format like `F28003x`, `F28P55x` — uppercase with a lowercase trailing `x`;
+  the match is **case-sensitive**, so never lowercase them). The `//_DEVICE_MIGRATION_`
+  marker goes on the `#if`, `#elif`, and `#endif` lines. Fix only the **target device's
+  branch** when existing `#ifdef` blocks are present.
 - For **Approach 2** (clean replacement): replace symbols directly. No wrappers.
 
 ---

@@ -83,8 +83,9 @@ For each deferred error:
 
 Check if any remaining report flags are inside inactive code branches:
 
-- **Approach 1** (`#ifdef`): flags inside the source-device `#ifdef` branch are
-  expected — the source branch is inactive on the target device. These are
+- **Approach 1** (`#ifdef`): flags inside the source-device branch
+  (`#if <source>  //_DEVICE_MIGRATION_`, where `<source>` is the source device family name)
+  are expected — that branch is inactive on the target device. These are
   **functionally complete**; document them as known inactive-code flags.
 - **`#if 0` or comments**: flags here are not active code. Document as inactive.
 
