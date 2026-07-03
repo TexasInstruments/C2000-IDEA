@@ -34,16 +34,19 @@ to proceed.
 - **Cross-check:** The device and project name from both MCPs must agree.
   If they don't, stop and flag the inconsistency to the user.
 
-  > **Device name format note:** IDEA MCP returns lowercase family names (e.g., `f28003x`),
+  > **Device name format note:** IDEA MCP returns device family names in the canonical
+  > mixed-case form (e.g., `F28003x`, `F28P55x` — uppercase with a lowercase trailing `x`),
   > while CCS Project MCP may return full part numbers (e.g., `TMS320F28003x`). Treat these as
-  > **matching** if the IDEA MCP's lowercase family name appears as a substring of the CCS
-  > MCP's device string (case-insensitive). Only stop if the family names are genuinely
-  > different (e.g., `f28003x` vs `f28004x`). Do not raise a false inconsistency for
-  > format differences that clearly refer to the same device family.
+  > **matching** if the IDEA MCP's family name appears (case-insensitively) as a substring of
+  > the CCS MCP's device string. Only stop if the family names are genuinely different
+  > (e.g., `F28003x` vs `F28004x`). Do not raise a false inconsistency for format differences
+  > that clearly refer to the same device family.
 - **Validate source device:** Confirm the discovered source device is in the
   `list_migration_devices()` supported list. If not, notify the user and **terminate**.
-- **Normalize user input:** lowercase any user-supplied device name before comparing it
-  against the supported list (IDEA MCP family names are lowercase).
+- **Compare device names case-insensitively:** a user-supplied device name may be typed in
+  any case — compare it case-insensitively against the supported list, then use the canonical
+  form returned by `list_migration_devices()` / `get_projects()` (the `F28003x` mixed-case
+  form — uppercase with a lowercase trailing `x`) from that point on.
 
 ## 1.3 Identify SDK type and C2000Ware path
 

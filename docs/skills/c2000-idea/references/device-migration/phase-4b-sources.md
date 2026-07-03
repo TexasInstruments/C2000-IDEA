@@ -168,9 +168,12 @@ flag each occurrence:
 ```
 
 **3-iii. `#ifdef` device-macro guard check:**
-Confirm `#ifdef` / `#if defined` guards reference the **target** device macro, not source
-(e.g., `#ifdef _F28003x_` must become `#ifdef _F28P55X_`). If any source-device macro is
-found, replace it with the target device's equivalent macro and record:
+Confirm the project's own `#ifdef` / `#if defined` **device-define** guards reference the
+**target** device, not the source (e.g., `#ifdef _F28003x_` must become `#ifdef _F28P55x_`
+— keep the family-name casing: uppercase with a lowercase trailing `x`). These are the
+project's device-selection defines, **not** the `//_DEVICE_MIGRATION_` extension markers.
+If a source-device guard is found, replace the source family name with the target family
+name (same wrapper) and record:
 ```
 [<filename>:<line>] FIXED: #ifdef guard updated → <new macro>
 ```

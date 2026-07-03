@@ -158,12 +158,15 @@ flag each occurrence:
 ```
 
 **3-iii. `#ifdef` device-macro guard check:**
-Confirm `#ifdef` / `#if defined` guards reference the **target** device macro, not source.
-The macro for the device is usually starting with F28, for example F28003x, or F28004x.
-Search for `#ifdef <SOURCE-DEVICE>` or `#if defined(<SOURCE-DEVICE>)`
-anywhere in the file — including inside function bodies, not just at the top.
-If any source-device macro is found, replace it with the target device's equivalent macro
-and record:
+Confirm the project's own `#ifdef` / `#if defined` **device-define** guards reference the
+**target** device, not the source. These are the project's device-selection defines
+(commonly underscore-wrapped, e.g. `_F28003x_`) — **not** the `//_DEVICE_MIGRATION_`
+extension markers. The device token keeps the family-name casing (uppercase with a lowercase
+trailing `x`, e.g. `F28003x` → `F28P55x`).
+Search for the source device family name inside any guard — e.g. `#ifdef _<SOURCE-DEVICE>_`
+or `#if defined(_<SOURCE-DEVICE>_)` — anywhere in the file, including inside function bodies,
+not just at the top. If a source-device guard is found, replace the source family name with
+the target family name (same wrapper, same casing) and record:
 ```
 [<filename>:<line>] FIXED: #ifdef guard updated → <new macro>
 ```
