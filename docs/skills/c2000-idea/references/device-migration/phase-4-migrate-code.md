@@ -37,9 +37,8 @@ Precondition: user application files are already copied into the target project 
   #endif  //_DEVICE_MIGRATION_
   ```
 
-  - `<source>` and `<target>` must exactly match device entries from `list_migration_devices()`
-    (the same strings `get_projects()` returns as `currentDevice` / `migrationDevices`). Use
-    them **verbatim** — do not alter them in any way.
+  - `<source>` and `<target>` must exactly match device entries from `list_migration_devices()`.
+    Use them **verbatim** — do not alter them in any way.
   - Put the **original** source-device code in the `#if <source>` branch and the **migrated**
     target-device code in the `#elif <target>` branch. The `//_DEVICE_MIGRATION_` marker must
     appear on the `#if`, `#elif`, and `#endif` lines. All modifications are made only on the
