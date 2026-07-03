@@ -83,6 +83,12 @@ Strategy: Approach 2 (clean replacement)
 before calling any report tool. Do not call `get_project_migration_report` with the
 source project name.
 
+**Refresh IDEA MCP's project list first:** the target project was only just created/renamed
+in Phase 1, so IDEA MCP may not have detected it yet. Call `get_projects()` and confirm the
+target project name appears in the result. If it does not, call `get_projects(rescan: true)`
+once, then retry. Do not call `get_project_migration_report` until the target project is
+confirmed present.
+
 Call `get_project_migration_report(<target project name>)`. Report to the user:
 *"Found `<N>` issues across `<M>` files. Starting migration."*
 
