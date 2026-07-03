@@ -71,9 +71,10 @@ Call `get_project_migration_report(<target project name>)`. Report to the user:
 
 > **Note:** `get_project_migration_report` is the **project-level** tool —
 > only the orchestrator (this step) calls it to get scope. Sub-agents (4A, 4B, 4C) call
-> `get_device_migration_report` (file-level — takes an absolute file path). Do not
-> confuse the two: using the project-level tool inside a sub-agent will return the wrong
-> scope; using the file-level tool here will miss files not yet flagged.
+> `get_device_migration_report` (file-level — takes an absolute file path, source device,
+> and target device). Do not confuse the two: using the project-level tool inside a
+> sub-agent will return the wrong scope; using the file-level tool here will miss files
+> not yet flagged.
 
 Use this for scope reporting only — not to set processing order. Processing order is
 always fixed: all `.h` files first, then `.c` files in dependency order.
