@@ -28,8 +28,8 @@ or invent values.
 |---|---|---|
 | `targetProjectName` | CCS project name of the target project | Phase 1 (renameProject result) |
 | `targetProjectDir` | Absolute path to the target project directory on disk | Phase 1 (getProjectDescriptors) |
-| `sourceDevice` | Source device family name (e.g., `f28003x`) | Phase 1 (IDEA MCP get_projects) |
-| `targetDevice` | Target device family name (e.g., `f28p55x`) | Phase 1 (IDEA MCP get_projects) |
+| `sourceDevice` | Source device name (matches a `list_migration_devices()` entry, e.g. `F28003x`) | Phase 1 (IDEA MCP get_projects) |
+| `targetDevice` | Target device name (matches a `list_migration_devices()` entry, e.g. `F28P55x`) | Phase 1 (IDEA MCP get_projects) |
 | `c2000ware_path` | Absolute path to the C2000Ware root | Phase 1 (SDK resolution) |
 | `activeBuildConfig` | Active build configuration name (e.g., `CPU1_FLASH`) | Phase 2 (getToolFlags) |
 | `sysConfigOutputLocation` | SysConfig-generated output folder path | Phase 3 (getProjectDescriptors) |

@@ -21,8 +21,8 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 |-------|-------|
 | Target project name | `<project name>` |
 | Target project directory | `<absolute path>` |
-| Source device | `<e.g. f28003x>` |
-| Target device | `<e.g. f28p55x>` |
+| Source device | `<e.g. F28003x>` |
+| Target device | `<e.g. F28P55x>` |
 | Active build config | `<e.g. CPU1_FLASH>` |
 | `sysConfigOutputLocation` | `<path — do not run migration report on files here>` |
 | All `.h` and `.c` files migrated | `<list from Phase 4A and 4B logs>` |
@@ -84,7 +84,7 @@ For each deferred error:
 Check if any remaining report flags are inside inactive code branches:
 
 - **Approach 1** (`#ifdef`): flags inside the source-device branch
-  (`#if <source>  //_DEVICE_MIGRATION_`, where `<source>` is the source device family name)
+  (`#if <source>  //_DEVICE_MIGRATION_`, where `<source>` is the source device name)
   are expected — that branch is inactive on the target device. These are
   **functionally complete**; document them as known inactive-code flags.
 - **`#if 0` or comments**: flags here are not active code. Document as inactive.

@@ -37,13 +37,9 @@ Precondition: user application files are already copied into the target project 
   #endif  //_DEVICE_MIGRATION_
   ```
 
-  - `<source>` and `<target>` are the **device family names** in the extension's format:
-    uppercase letters and digits with a **lowercase trailing `x`** — e.g. `F28003x`,
-    `F28004x`, `F28P55x`, `F28P65x` (a few carry an extra uppercase suffix, e.g. `F2837xD`).
-  - Use the `currentDevice` / `migrationDevices` strings from `get_projects()` **verbatim**
-    for `<source>` and `<target>`. The extension matches these **case-sensitively** — a
-    lowercased token (e.g. `f28003x`) is NOT recognized and the branch tracking silently
-    breaks.
+  - `<source>` and `<target>` must exactly match device entries from `list_migration_devices()`
+    (the same strings `get_projects()` returns as `currentDevice` / `migrationDevices`). Use
+    them **verbatim** — do not alter them in any way.
   - Put the **original** source-device code in the `#if <source>` branch and the **migrated**
     target-device code in the `#elif <target>` branch. The `//_DEVICE_MIGRATION_` marker must
     appear on the `#if`, `#elif`, and `#endif` lines. All modifications are made only on the

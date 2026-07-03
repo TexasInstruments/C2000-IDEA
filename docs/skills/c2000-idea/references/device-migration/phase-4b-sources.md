@@ -26,8 +26,8 @@ orchestrator before proceeding:
 | File to migrate | `<absolute path to .c file>` |
 | Target project name | `<project name>` |
 | Target project directory | `<absolute path>` |
-| Source device | `<e.g. f28003x>` |
-| Target device | `<e.g. f28p55x>` |
+| Source device | `<e.g. F28003x>` |
+| Target device | `<e.g. F28P55x>` |
 | Migration approach | Approach 1 (`#ifdef`) OR Approach 2 (clean replacement) |
 | Active build config | `<e.g. CPU1_FLASH>` |
 | `c2000ware_path` | `<absolute path to C2000Ware root>` |
@@ -73,9 +73,8 @@ orchestrator before proceeding:
   #endif  //_DEVICE_MIGRATION_
   ```
 
-  `<source>` / `<target>` are the source/target device family names **verbatim from the
-  briefing** (format like `F28003x`, `F28P55x` — uppercase with a lowercase trailing `x`;
-  the match is **case-sensitive**, so never lowercase them). The `//_DEVICE_MIGRATION_`
+  `<source>` / `<target>` are the source/target device names from the briefing — they match
+  the `list_migration_devices()` entries exactly; use them **verbatim**. The `//_DEVICE_MIGRATION_`
   marker goes on the `#if`, `#elif`, and `#endif` lines. Fix only the **target device's
   branch** when existing `#ifdef` blocks are present.
 - For **Approach 2** (clean replacement): replace symbols directly. No wrappers.

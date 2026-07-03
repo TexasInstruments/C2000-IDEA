@@ -199,4 +199,4 @@ These rules apply across all phases:
 - Don't modify SDK driverlib source files — only the project's own application source files.
 - Don't read only the page title or surrounding text of a collateral link — navigate to the exact `#anchor` section and read the complete diff block.
 - Don't invoke SysConfig MCP regeneration until the full `.syscfg` migration is complete.
-- Don't alter existing `//_DEVICE_MIGRATION_` pragma markers — but do add them when generating new `#ifdef` blocks in Approach 1. The `#if`/`#elif` conditions are the source/target device family names in the extension's format (e.g. `F28003x`, `F28P65x` — uppercase with a lowercase trailing `x`), used verbatim and matched case-sensitively.
+- Don't alter existing `//_DEVICE_MIGRATION_` pragma markers — but do add them when generating new `#ifdef` blocks in Approach 1. The `#if`/`#elif` conditions are the source/target device names, matching the `list_migration_devices()` entries exactly (used verbatim).
