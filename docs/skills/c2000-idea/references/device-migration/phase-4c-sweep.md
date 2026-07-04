@@ -13,15 +13,6 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 
 **Stop and ask the user** if any MCP tool call fails or returns an unexpected result.
 
-> **WARNING: MCP hang guard (applies throughout Phase 4C):**
-> If `buildProject` or any other MCP tool call has produced **no response at all** after
-> a long wait (typically 2–3 minutes), assume the tool has hung. Do **not** keep waiting.
-> Record in `c2000-migration.md`:
-> `HANG: <tool>(<args>) — no response after timeout. Phase 4C, Step <N>.`
-> Tell the user: *"The `<tool>` call has not responded. The MCP tool may have hung.
-> Please check the CCS console, restart the MCP server if needed, and tell me
-> the result so I can continue."* Wait for the user's response before proceeding.
-
 ---
 
 ## Briefing fields (confirm before starting)
@@ -30,8 +21,8 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 |-------|-------|
 | Target project name | `<project name>` |
 | Target project directory | `<absolute path>` |
-| Source device | `<e.g. f28003x>` |
-| Target device | `<e.g. f28p55x>` |
+| Source device | `<e.g. F28003x>` |
+| Target device | `<e.g. F28P55x>` |
 | Active build config | `<e.g. CPU1_FLASH>` |
 | `sysConfigOutputLocation` | `<path — do not run migration report on files here>` |
 | All `.h` and `.c` files migrated | `<list from Phase 4A and 4B logs>` |
@@ -40,7 +31,8 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 
 ## Step 1 — Re-run migration report on all files
 
-Run `get_device_migration_report` on every `.h` and `.c` file listed in your briefing
+Run `get_device_migration_report` (with the absolute file path, source device, and target
+device) on every `.h` and `.c` file listed in your briefing
 (the files processed in 4A and 4B). In addition, scan the target project directory for
 any `.h` or `.c` files **not** in the 4A/4B list — these may have been added or
 regenerated after Phase 3 (e.g., new source files the user added). If additional files
@@ -91,8 +83,9 @@ For each deferred error:
 
 Check if any remaining report flags are inside inactive code branches:
 
-- **Approach 1** (`#ifdef`): flags inside the source-device `#ifdef` branch are
-  expected — the source branch is inactive on the target device. These are
+- **Approach 1** (`#ifdef`): flags inside the source-device branch
+  (`#if <source>  //_DEVICE_MIGRATION_`, where `<source>` is the source device name)
+  are expected — that branch is inactive on the target device. These are
   **functionally complete**; document them as known inactive-code flags.
 - **`#if 0` or comments**: flags here are not active code. Document as inactive.
 

@@ -26,8 +26,8 @@ orchestrator before proceeding:
 | File to migrate | `<absolute path to .c file>` |
 | Target project name | `<project name>` |
 | Target project directory | `<absolute path>` |
-| Source device | `<e.g. f28003x>` |
-| Target device | `<e.g. f28p55x>` |
+| Source device | `<e.g. F28003x>` |
+| Target device | `<e.g. F28P55x>` |
 | Migration approach | Approach 1 (`#ifdef`) OR Approach 2 (clean replacement) |
 | Active build config | `<e.g. CPU1_FLASH>` |
 | `c2000ware_path` | `<absolute path to C2000Ware root>` |
@@ -63,17 +63,21 @@ orchestrator before proceeding:
 - Do not read collateral links by page title only — navigate to the exact `#anchor`.
 - Do not fabricate API calls or register values. If uncertain, stop and report.
 - Apply `Suggested fix` values **verbatim** — do not re-derive arguments.
-- For **Approach 1** (`#ifdef`): wrap changed code in `#if`/`#elif`/`#endif` blocks.
-  Add `//_DEVICE_MIGRATION_` suffix to every `#if`, `#elif`, `#endif` line.
-  Fix only the **target device's branch** when existing `#ifdef` blocks are present.
+- For **Approach 1** (`#ifdef`): wrap changed code in this **exact** block —
+
+  ```
+  #if <source>  //_DEVICE_MIGRATION_
+  <original source-device code>
+  #elif <target>  //_DEVICE_MIGRATION_
+  <migrated target-device code>
+  #endif  //_DEVICE_MIGRATION_
+  ```
+
+  `<source>` / `<target>` are the source/target device names from the briefing — they match
+  the `list_migration_devices()` entries exactly; use them **verbatim**. The `//_DEVICE_MIGRATION_`
+  marker goes on the `#if`, `#elif`, and `#endif` lines. Fix only the **target device's
+  branch** when existing `#ifdef` blocks are present.
 - For **Approach 2** (clean replacement): replace symbols directly. No wrappers.
-- **MCP hang guard:** If `buildProject` or any other MCP tool call has produced **no
-  response at all** after a long wait (typically 2–3 minutes), assume the tool has hung.
-  Do **not** keep waiting. Record in `c2000-migration.md`:
-  `HANG: <tool>(<args>) — no response after timeout. Phase 4B, <file>.`
-  Then tell the user: *"The `<tool>` call has not responded. The MCP tool may have hung.
-  Please check the CCS console, restart the MCP server if needed, and tell me
-  the result so I can continue."* Wait for the user's response before proceeding.
 
 ---
 
@@ -128,9 +132,7 @@ source project, stop immediately and ask the orchestrator.
 
 ### Step 2 — Run migration report
 
-```
-get_device_migration_report(<absolute path to .c file>)
-```
+Use get_device_migration_report with absolute path to .c file, source device and target device.
 
 > **Note:** The C2000 IDEA extension may be running a continuous migration check in the
 > background. The VS Code Problems panel may update as files change. Use
@@ -165,11 +167,13 @@ flag each occurrence:
 ```
 
 **3-iii. `#ifdef` device-macro guard check:**
-Confirm `#ifdef` / `#if defined` guards reference the **target** device macro, not source
-(e.g., `#ifdef _F28003x_` must become `#ifdef _F28P55X_`). If any source-device macro is
-found, replace it with the target device's equivalent macro and record:
+Confirm any `#ifdef` / `#if defined` device guards reference the **target** device, not the
+source (e.g. `#ifdef F28003x` must become `#ifdef F28P55x`). Use the exact device name from
+the migration list — no underscores or other wrappers. If a source-device guard is found,
+replace the source device name with the target device name (leave `//_DEVICE_MIGRATION_`
+marker lines unchanged) and record:
 ```
-[<filename>:<line>] FIXED: #ifdef guard updated → <new macro>
+[<filename>:<line>] FIXED: #ifdef guard updated → <new guard>
 ```
 
 **3-iv. Hardcoded peripheral base address check:**
@@ -264,10 +268,6 @@ After the migration report is clean (zero issues, or all remaining are deferred)
 ```
 buildProject(<target project name>)
 ```
-
-> **WARNING: MCP hang guard:** If `buildProject` produces no response after ~2–3 minutes,
-> record `HANG: buildProject(<project>) — Phase 4B, <file>` in `c2000-migration.md`
-> and immediately alert the user (see MCP hang guard rule above). Do not wait indefinitely.
 
 ### Step 7 — Handle build errors
 

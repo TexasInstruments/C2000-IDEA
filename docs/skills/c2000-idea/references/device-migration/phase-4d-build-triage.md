@@ -28,8 +28,8 @@ or invent values.
 |---|---|---|
 | `targetProjectName` | CCS project name of the target project | Phase 1 (renameProject result) |
 | `targetProjectDir` | Absolute path to the target project directory on disk | Phase 1 (getProjectDescriptors) |
-| `sourceDevice` | Source device family name (e.g., `f28003x`) | Phase 1 (IDEA MCP get_projects) |
-| `targetDevice` | Target device family name (e.g., `f28p55x`) | Phase 1 (IDEA MCP get_projects) |
+| `sourceDevice` | Source device name (matches a `list_migration_devices()` entry, e.g. `F28003x`) | Phase 1 |
+| `targetDevice` | Target device name (matches a `list_migration_devices()` entry, e.g. `F28P55x`) | Phase 1 |
 | `c2000ware_path` | Absolute path to the C2000Ware root | Phase 1 (SDK resolution) |
 | `activeBuildConfig` | Active build configuration name (e.g., `CPU1_FLASH`) | Phase 2 (getToolFlags) |
 | `sysConfigOutputLocation` | SysConfig-generated output folder path | Phase 3 (getProjectDescriptors) |
@@ -75,19 +75,6 @@ Call `buildProject(<target project name>)` to get the **current** error output.
 
 > Even if the orchestrator provided a prior error list, call `buildProject()` fresh —
 > Phase 4C may have partially resolved some errors that are no longer present.
-
-> **WARNING: MCP hang guard — `buildProject` may not respond:**
-> `buildProject` is a long-running synchronous call. If the MCP tool call has produced
-> **no response at all** (no result, no error, no progress output) after a long wait
-> (typically 2–3 minutes), assume the tool has hung. Do **not** keep waiting.
-> Immediately:
-> 1. Record in `c2000-migration.md`:
->    `HANG: buildProject(<project>) — no response after timeout. Phase 4D, step 4D.1, iteration <N>.`
-> 2. Stop and tell the user:
->    *"The `buildProject` call has not responded. The MCP tool may have hung.
->    Please check the CCS console, restart the MCP server if needed, and tell me
->    whether the build succeeded or failed so I can continue."*
-> 3. Wait for the user's response before taking any further action.
 
 Parse the output into individual error entries. For each entry, note:
 - File path and line number
@@ -185,12 +172,6 @@ For each error classified as A, B, or C (not D, not `DEFERRED-MANUAL`):
 ## Step 4D.4 — Rebuild and evaluate
 
 Call `buildProject(<target project name>)` again.
-
-> **WARNING: MCP hang guard — `buildProject` may not respond:**
-> Same rule as Step 4D.1. If `buildProject` produces no response after a long wait
-> (2–3 minutes), record in `c2000-migration.md`:
-> `HANG: buildProject(<project>) — no response after timeout. Phase 4D, step 4D.4, iteration <N>.`
-> Stop and ask the user whether the build succeeded or failed before continuing.
 
 - **0 errors** → build is clean. Proceed to Step 4D.5.
 - **Same errors as before (no reduction)** → the fixes had no effect. This counts as

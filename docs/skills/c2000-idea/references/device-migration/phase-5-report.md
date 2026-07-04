@@ -29,10 +29,6 @@ already records `Final clean build: PASS` for Phase 4C and no files have been mo
 since (verified by checking file timestamps or asking the user), you may confirm with the
 user whether to skip — but do **not** skip unilaterally.
 
-> **If `buildProject` produces no response after ~2–3 minutes**, assume a hang. Record
-> `HANG: buildProject — Phase 5, step 5.1` in `c2000-migration.md` and alert the user.
-> Wait for their response before continuing.
-
 ## 5.2 Structured summary (present to user)
 
 1. **Per-file table** — one row per file: issues found, issues fixed, issues needing human review.

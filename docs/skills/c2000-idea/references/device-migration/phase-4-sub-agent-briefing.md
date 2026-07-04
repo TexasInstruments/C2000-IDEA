@@ -31,8 +31,8 @@ You are a sub-agent. Read phase-4a-headers.md and follow it exactly.
 Briefing:
   Target project directory : <absolute path>
   Target project name      : <name from c2000-migration.md>
-  Source device            : <e.g. f28003x>
-  Target device            : <e.g. f28p55x>
+  Source device            : <e.g. F28003x>
+  Target device            : <e.g. F28P55x>
   Migration approach       : Approach 1 (#ifdef)           ← FILL IN EXACTLY ONE
                            OR Approach 2 (clean replacement)
   c2000ware_path           : <path>
@@ -70,8 +70,8 @@ Briefing:
   File to migrate          : <absolute path to .c file>
   Target project name      : <name from c2000-migration.md>
   Target project directory : <absolute path>
-  Source device            : <e.g. f28003x>
-  Target device            : <e.g. f28p55x>
+  Source device            : <e.g. F28003x>
+  Target device            : <e.g. F28P55x>
   Migration approach       : Approach 1 (#ifdef)           ← FILL IN EXACTLY ONE — same as Phase 4A
                            OR Approach 2 (clean replacement)
   c2000ware_path           : <path>
@@ -106,8 +106,8 @@ You are a sub-agent. Read phase-4c-sweep.md and follow it exactly.
 Briefing:
   Target project name      : <name from c2000-migration.md>
   Target project directory : <absolute path>
-  Source device            : <e.g. f28003x>
-  Target device            : <e.g. f28p55x>
+  Source device            : <e.g. F28003x>
+  Target device            : <e.g. F28P55x>
   c2000ware_path           : <path>
   SDK version              : <e.g. C2000Ware_5_04_00_00>
   Active build config      : <e.g. CPU1_FLASH>
@@ -156,8 +156,8 @@ You are a sub-agent. Read phase-4d-build-triage.md and follow it exactly.
 Briefing:
   Target project name      : <name from c2000-migration.md>
   Target project directory : <absolute path>
-  Source device            : <e.g. f28003x>
-  Target device            : <e.g. f28p55x>
+  Source device            : <e.g. F28003x>
+  Target device            : <e.g. F28P55x>
   SDK version              : <e.g. C2000Ware_5_04_00_00>
   c2000ware_path           : <path>
   Active build config      : <e.g. CPU1_FLASH>

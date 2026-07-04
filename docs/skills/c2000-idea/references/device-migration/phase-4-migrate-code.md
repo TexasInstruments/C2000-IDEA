@@ -25,10 +25,27 @@ Precondition: user application files are already copied into the target project 
 > project have both the old source project code and newly generated migration code), or
 > (2) a clean replacement targeting only the new device?"
 
-- **Approach 1 (shared `#ifdef`):** Wrap changed code in `#if`/`#elif`/`#endif` blocks.
-  Remember all modifications are only made on the target device project.
-  Always add the `//_DEVICE_MIGRATION_` suffix to each `#if`, `#elif`, and `#endif` line
-  — this marker lets the C2000 IDEA extension track which branch is active per device.
+- **Approach 1 (shared `#ifdef`):** Wrap the changed code in a device-conditional block so
+  the original source-device code and the migrated target-device code both live in the
+  target project. Use this **exact** structure:
+
+  ```
+  #if <source>  //_DEVICE_MIGRATION_
+  <original source-device code>
+  #elif <target>  //_DEVICE_MIGRATION_
+  <migrated target-device code>
+  #endif  //_DEVICE_MIGRATION_
+  ```
+
+  - `<source>` and `<target>` must exactly match device entries from `list_migration_devices()`.
+    Use them **verbatim** — do not alter them in any way.
+  - Put the **original** source-device code in the `#if <source>` branch and the **migrated**
+    target-device code in the `#elif <target>` branch. The `//_DEVICE_MIGRATION_` marker must
+    appear on the `#if`, `#elif`, and `#endif` lines. All modifications are made only on the
+    target device project.
+  - When `get_device_migration_report`'s `Suggested fix` already contains this wrapped block,
+    apply it **verbatim** — only hand-construct the block for changes the report did not
+    pre-wrap.
 - **Approach 2 (clean replacement):** Simply replace old symbols with new ones; no
   preprocessor wrappers.
 
@@ -66,14 +83,21 @@ Strategy: Approach 2 (clean replacement)
 before calling any report tool. Do not call `get_project_migration_report` with the
 source project name.
 
+**Refresh IDEA MCP's project list first:** the target project was only just created/renamed
+in Phase 1, so IDEA MCP may not have detected it yet. Call `get_projects()` and confirm the
+target project name appears in the result. If it does not, call `get_projects(rescan: true)`
+once, then retry. Do not call `get_project_migration_report` until the target project is
+confirmed present.
+
 Call `get_project_migration_report(<target project name>)`. Report to the user:
 *"Found `<N>` issues across `<M>` files. Starting migration."*
 
 > **Note:** `get_project_migration_report` is the **project-level** tool —
 > only the orchestrator (this step) calls it to get scope. Sub-agents (4A, 4B, 4C) call
-> `get_device_migration_report` (file-level — takes an absolute file path). Do not
-> confuse the two: using the project-level tool inside a sub-agent will return the wrong
-> scope; using the file-level tool here will miss files not yet flagged.
+> `get_device_migration_report` (file-level — takes an absolute file path, source device,
+> and target device). Do not confuse the two: using the project-level tool inside a
+> sub-agent will return the wrong scope; using the file-level tool here will miss files
+> not yet flagged.
 
 Use this for scope reporting only — not to set processing order. Processing order is
 always fixed: all `.h` files first, then `.c` files in dependency order.

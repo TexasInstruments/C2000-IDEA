@@ -369,6 +369,23 @@ export function updateProjectCurrentDevice(projectInfo: ProjectInfo, device: str
 	}
 }
 
+export function updateProjectMigrationDevices(projectInfo: ProjectInfo, devices: string[])
+{
+	const currentDevice = projectInfo.migrationState.currentDevice;
+	const seen = new Set<string>();
+	const filtered: string[] = [];
+	for (const device of devices)
+	{
+		if (!deviceData.DEVICE_LIST.includes(device)) { continue; } // skip unknown families
+		if (device === currentDevice) { continue; }                 // silently drop the source device
+		if (seen.has(device)) { continue; }                         // dedup
+		seen.add(device);
+		filtered.push(device);
+	}
+	projectInfo.migrationState.migrationDevices = filtered;
+	saveProjects(extensionContext);
+}
+
 
 export async function getProjects(context: vscode.ExtensionContext)
 {

@@ -71,6 +71,8 @@ const SERVER_INSTRUCTIONS = `${IDEA_MCP_PLATFORM} development assistant. Provide
 
 AVAILABLE TOOLS:
 - get_projects() — Discover projects in the workspace with their device info and paths.
+- set_project_current_device() — Manually set a project's current (source) device for migration when the auto-detected device is wrong.
+- set_project_migration_devices() — Set a project's target (migration) device list for device-to-device migration.
 - list_migration_devices() — Get all supported device families for migration.
 - get_project_migration_report() — Run a device-to-device migration check on ALL files in a project and get a complete multi-file report. Use this for project-level migration.
 - get_device_migration_report() — Run a device-to-device migration check on a single source file. Use this when you need per-file control (e.g. fixing one file at a time after a project report).
@@ -155,6 +157,76 @@ function createMcpServerInstance(): McpServer {
 				});
 
 				return { content: [{ type: 'text' as const, text: JSON.stringify(serialized, null, 2) }] };
+			}
+		);
+	}
+
+	if (IDEA_MCP_HANDLERS.setProjectCurrentDevice && IDEA_MCP_HANDLERS.getAllProjectInfos && IDEA_MCP_HANDLERS.getDeviceList) {
+		const setCurrentDevice = IDEA_MCP_HANDLERS.setProjectCurrentDevice;
+		const getAllProjectInfos = IDEA_MCP_HANDLERS.getAllProjectInfos;
+		const deviceList = IDEA_MCP_HANDLERS.getDeviceList();
+
+		server.registerTool(
+			'set_project_current_device',
+			{
+				description: `Manually set a ${IDEA_MCP_PLATFORM} project's current (source) device for device-to-device migration. Overwrites the project's currentDevice in the IDEA project data and persists it. Use this when a project's current device is wrong — e.g. a freshly created target project that still reports the source device — and you need to force a specific source device before running a migration report.
+
+Note: currentDevice is otherwise derived from the project's .cproject file. A later get_projects(rescan: true) re-derives it from disk and may overwrite this manual value. Use device family names from list_migration_devices().`,
+				inputSchema: {
+					projectName: z.string().describe('Project name from get_projects(). Identifies which project to update.'),
+					sourceDevice: z.enum(deviceList as [string, ...string[]]).describe('Source device family to set as the project current device. Must be one of the families from list_migration_devices().'),
+				} as any,
+			},
+			async ({ projectName, sourceDevice }: any) => {
+				const projects = getAllProjectInfos();
+				const projectInfo = projects.find((p: any) => p.name === projectName);
+				if (!projectInfo) {
+					return { content: [{ type: 'text' as const, text: `Project "${projectName}" not found. Call get_projects() to list available projects.` }] };
+				}
+
+				setCurrentDevice(projectInfo, sourceDevice);
+
+				const applied = projectInfo.migrationState.currentDevice;
+				if (applied !== sourceDevice) {
+					return { content: [{ type: 'text' as const, text: `Failed to set current device for project "${projectName}" to "${sourceDevice}". Current device remains "${applied}".` }] };
+				}
+
+				return { content: [{ type: 'text' as const, text: `Set current device for project "${projectName}" to "${applied}".` }] };
+			}
+		);
+	}
+
+	if (IDEA_MCP_HANDLERS.setProjectMigrationDevices && IDEA_MCP_HANDLERS.getAllProjectInfos && IDEA_MCP_HANDLERS.getDeviceList) {
+		const setMigrationDevices = IDEA_MCP_HANDLERS.setProjectMigrationDevices;
+		const getAllProjectInfos = IDEA_MCP_HANDLERS.getAllProjectInfos;
+		const deviceList = IDEA_MCP_HANDLERS.getDeviceList();
+
+		server.registerTool(
+			'set_project_migration_devices',
+			{
+				description: `Set a ${IDEA_MCP_PLATFORM} project's target (migration) device list for device-to-device migration. Overwrites the project's migrationDevices in the IDEA project data and persists it. These are the devices the project will be migrated to; the migration report checks the current (source) device against each of them.
+
+Any entry equal to the project's current device is dropped automatically (you cannot migrate a device to itself), and duplicates are collapsed. Passing an empty array clears all target devices. Use device family names from list_migration_devices().`,
+				inputSchema: {
+					projectName: z.string().describe('Project name from get_projects(). Identifies which project to update.'),
+					migrationDevices: z.array(z.enum(deviceList as [string, ...string[]])).describe('Target device families to migrate to. Each must be one of the families from list_migration_devices(). An empty array clears all targets.'),
+				} as any,
+			},
+			async ({ projectName, migrationDevices }: any) => {
+				const projects = getAllProjectInfos();
+				const projectInfo = projects.find((p: any) => p.name === projectName);
+				if (!projectInfo) {
+					return { content: [{ type: 'text' as const, text: `Project "${projectName}" not found. Call get_projects() to list available projects.` }] };
+				}
+
+				setMigrationDevices(projectInfo, migrationDevices);
+
+				const applied = projectInfo.migrationState.migrationDevices;
+				if (applied.length === 0) {
+					return { content: [{ type: 'text' as const, text: `Set migration devices for project "${projectName}" to [] (no target devices).` }] };
+				}
+
+				return { content: [{ type: 'text' as const, text: `Set migration devices for project "${projectName}" to [${applied.join(', ')}].` }] };
 			}
 		);
 	}

@@ -30,8 +30,8 @@ orchestrator before proceeding:
 |-------|-------|
 | Target project directory | `<absolute path>` |
 | Target project name | `<project name>` |
-| Source device | `<e.g. f28003x>` |
-| Target device | `<e.g. f28p55x>` |
+| Source device | `<e.g. F28003x>` |
+| Target device | `<e.g. F28P55x>` |
 | Migration approach | Approach 1 (`#ifdef`) OR Approach 2 (clean replacement) |
 | Active build config | `<e.g. CPU1_FLASH>` |
 | `sysConfigOutputLocation` | `<path — do not edit any file under this folder>` |
@@ -65,9 +65,20 @@ orchestrator before proceeding:
   read the full diff block.
 - Do not fabricate API calls or register values. If uncertain, stop and report.
 - Apply `Suggested fix` values **verbatim** — do not re-derive arguments.
-- For **Approach 1** (`#ifdef`): wrap changed code in `#if`/`#elif`/`#endif` blocks.
-  Add the `//_DEVICE_MIGRATION_` suffix to every `#if`, `#elif`, `#endif` line.
-  Fix only the **target device's branch** if the file already has `#ifdef` blocks.
+- For **Approach 1** (`#ifdef`): wrap changed code in this **exact** block —
+
+  ```
+  #if <source>  //_DEVICE_MIGRATION_
+  <original source-device code>
+  #elif <target>  //_DEVICE_MIGRATION_
+  <migrated target-device code>
+  #endif  //_DEVICE_MIGRATION_
+  ```
+
+  `<source>` / `<target>` are the source/target device names from the briefing — they match
+  the `list_migration_devices()` entries exactly; use them **verbatim**. The `//_DEVICE_MIGRATION_`
+  marker goes on the `#if`, `#elif`, and `#endif` lines. Fix only the **target device's
+  branch** if the file already has `#ifdef` blocks.
 - For **Approach 2** (clean replacement): replace old symbols directly. No wrappers.
 
 ---
@@ -146,14 +157,14 @@ flag each occurrence:
 ```
 
 **3-iii. `#ifdef` device-macro guard check:**
-Confirm `#ifdef` / `#if defined` guards reference the **target** device macro, not source.
-The macro for the device is usually starting with F28, for example F28003x, or F28004x.
-Search for `#ifdef <SOURCE-DEVICE>` or `#if defined(<SOURCE-DEVICE>)`
-anywhere in the file — including inside function bodies, not just at the top.
-If any source-device macro is found, replace it with the target device's equivalent macro
-and record:
+Confirm any `#ifdef` / `#if defined` device guards reference the **target** device, not the
+source. Use the exact device name from the migration list (e.g. `F28003x`, `F28P55x`) — no
+underscores or other wrappers. Search for the source device name in guards anywhere in the
+file (including inside function bodies), e.g. `#ifdef F28003x` or `#if defined(F28003x)`. If
+found, replace the source device name with the target device name (leave
+`//_DEVICE_MIGRATION_` marker lines unchanged) and record:
 ```
-[<filename>:<line>] FIXED: #ifdef guard updated → <new macro>
+[<filename>:<line>] FIXED: #ifdef guard updated → <new guard>
 ```
 
 If all checks pass with no fixes needed, record the file as clean and proceed to the next file.
