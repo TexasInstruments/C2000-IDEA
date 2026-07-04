@@ -89,7 +89,10 @@ target project name appears in the result. If it does not, call `get_projects(re
 once, then retry. Do not call `get_project_migration_report` until the target project is
 confirmed present.
 
-Call `get_project_migration_report(<target project name>)`. Report to the user:
+Call `get_project_migration_report(<target project name>, <source device>, [<target device>])`,
+passing the source and target devices from `c2000-migration.md` (matching the
+`list_migration_devices()` entries) so the report reflects the intended migration pair rather
+than relying on the project's stored settings. Report to the user:
 *"Found `<N>` issues across `<M>` files. Starting migration."*
 
 > **Note:** `get_project_migration_report` is the **project-level** tool —
