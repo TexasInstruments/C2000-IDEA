@@ -79,6 +79,22 @@ export function addMigrationCheckFolderException(exceptionFolder: string, projec
 	saveProjects(extensionContext);
 }
 
+export function removeMigrationCheckFolderException(exceptionFolder: string, projectInfo: ProjectInfo)
+{
+	const list = projectInfo.migrationState.migrationCheckFolderExceptions;
+	if (!list) { return; }
+	projectInfo.migrationState.migrationCheckFolderExceptions = list.filter(e => e !== exceptionFolder);
+	saveProjects(extensionContext);
+}
+
+export function setMigrationCheckFolderExceptions(paths: string[], projectInfo: ProjectInfo)
+{
+	const seen = new Set<string>(); // dedup, preserve order
+	projectInfo.migrationState.migrationCheckFolderExceptions =
+		paths.filter(p => (seen.has(p) ? false : (seen.add(p), true)));
+	saveProjects(extensionContext);
+}
+
 export function projectGetCurrentDevice() : string
 {
 	const projectConfig = vscode.workspace.getConfiguration('c2000-idea.project');

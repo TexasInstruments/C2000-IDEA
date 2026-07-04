@@ -275,14 +275,19 @@ export async function getFileTypesInFolder(folderUri : vscode.Uri, fileExtension
 
 }
 
+// Normalize a migration exception entry: trim, unify separators, drop a leading "./" and any
+// surrounding slashes. Shared so stored form == resolved form == remove-match form.
+export function normalizeMigrationExceptionPath(entry: string): string {
+	return entry.trim().replace(/\\/g, "/").replace(/^\.\//, "").replace(/^\/+|\/+$/g, "");
+}
+
 export async function getIgnoredProjectCCodeUris(projectFsPath: string, migrationCheckFolderExceptions: string[]): Promise<vscode.Uri[]> {
 	const projectCCodeUrisIgnored: vscode.Uri[] = [];
 	const outputChannel = vscode.window.createOutputChannel("Ignored Files Output"); // Create output channel
 	const projectUri = vscode.Uri.file(projectFsPath);
 
 	for (const exception of migrationCheckFolderExceptions) {
-		// Normalize the entry: trim, unify separators, drop leading "./" and surrounding slashes.
-		const normalized = exception.trim().replace(/\\/g, "/").replace(/^\.\//, "").replace(/^\/+|\/+$/g, "");
+		const normalized = normalizeMigrationExceptionPath(exception);
 		if (!normalized) { continue; }
 
 		const ignoredUri = vscode.Uri.joinPath(projectUri, normalized);
