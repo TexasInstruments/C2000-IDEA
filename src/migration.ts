@@ -534,7 +534,7 @@ async function migrationEnableContininuousMigrationCheck(context: vscode.Extensi
     );
 }
 
-export async function migrationRunMigrationCheckOnProject(context: vscode.ExtensionContext, projectName?:string, progress?: vscode.Progress<{ message?: string; increment?: number }>, token?: vscode.CancellationToken)
+export async function migrationRunMigrationCheckOnProject(context: vscode.ExtensionContext, projectName?:string, progress?: vscode.Progress<{ message?: string; increment?: number }>, token?: vscode.CancellationToken, sourceDeviceOverride?: string, migrationDevicesOverride?: string[])
 {
 	outputChannel.appendLine("Starting migrationRunMigrationCheckOnProject...");
 	var selectedProject: string | undefined;
@@ -555,9 +555,9 @@ export async function migrationRunMigrationCheckOnProject(context: vscode.Extens
 		// Log the entire projectInfo object
 		//outputChannel.appendLine("Project Info: " + JSON.stringify(projectInfo));
 
-		var currentDevice = projectInfo.migrationState.currentDevice;
-		var migrationDevices = projectInfo.migrationState.migrationDevices;
-        var projectUri = projectInfo.uri; 
+		var currentDevice = sourceDeviceOverride ?? projectInfo.migrationState.currentDevice;
+		var migrationDevices = migrationDevicesOverride ?? projectInfo.migrationState.migrationDevices;
+        var projectUri = projectInfo.uri;
         const projectFsPath = projectUri.fsPath || projectUri.path;
 		var projectFsPathUri = vscode.Uri.file(projectFsPath);
 		var projectCCodeUris = await utils.getFileTypesInFolder(projectFsPathUri, [".c", ".h"]);	
@@ -1834,10 +1834,13 @@ export function exportMigrationAgentReport(openAfter: boolean = true, filterUri?
 	return md;
 }
 
-export function exportProjectMigrationAgentReport(projectInfo: project.ProjectInfo, openAfter: boolean = true): string
+export function exportProjectMigrationAgentReport(projectInfo: project.ProjectInfo, openAfter: boolean = true, sourceDeviceOverride?: string, migrationDevicesOverride?: string[]): string
 {
 	const projectUri = projectInfo.uri;
 	const projectFsPath = projectUri.fsPath || projectUri.path;
+
+	const reportSourceDevice = sourceDeviceOverride ?? projectInfo.migrationState.currentDevice;
+	const reportMigrationDevices = migrationDevicesOverride ?? projectInfo.migrationState.migrationDevices;
 
 	let isEmpty = true;
 	migrationDiagnosticsCollection.forEach((uri, diagnostics) => {
@@ -1863,7 +1866,7 @@ export function exportProjectMigrationAgentReport(projectInfo: project.ProjectIn
 	md += `Generated: ${timestamp}\n\n`;
 	md += `## Project: ${projectInfo.name}\n\n`;
 	md += `- **Path:** \`${projectFsPath}\`\n`;
-	md += `- **Migration:** ${projectInfo.migrationState.currentDevice} → ${projectInfo.migrationState.migrationDevices.join(", ")}\n`;
+	md += `- **Migration:** ${reportSourceDevice} → ${reportMigrationDevices.join(", ")}\n`;
 	md += `- **Files Analyzed:** ${totalFilesAnalyzed}\n`;
 	md += `- **Ignored Symbols (${(ignoredSymbols && ignoredSymbols.length > 0) ? ignoredSymbols.length : 0}):** ${(ignoredSymbols && ignoredSymbols.length > 0) ? ignoredSymbols.join(", ") : "None"}\n`;
 	md += `- **Ignored Folders (${(ignoredFolders && ignoredFolders.length > 0) ? ignoredFolders.length : 0}):** ${(ignoredFolders && ignoredFolders.length > 0) ? ignoredFolders.map(f => `\`${projectFsPath}/${f}\``).join(", ") : "None"}\n\n`;
@@ -1872,8 +1875,8 @@ export function exportProjectMigrationAgentReport(projectInfo: project.ProjectIn
 		md += `**Do NOT suggest or apply fixes for any issues located in ignored folders or involving ignored symbols.** `;
 		md += `If you encounter code that references an ignored symbol, leave it unchanged and do not flag it as needing migration.\n\n`;
 	}
-	const firstTargetDevice = projectInfo.migrationState.migrationDevices[0] ?? "TargetDevice";
-	md += buildMigrationAgentReportInstructions(projectInfo.migrationState.currentDevice, firstTargetDevice);
+	const firstTargetDevice = reportMigrationDevices[0] ?? "TargetDevice";
+	md += buildMigrationAgentReportInstructions(reportSourceDevice, firstTargetDevice);
 
 	let totalIssues = 0;
 	let autoFixable = 0;
