@@ -297,25 +297,27 @@ The report includes:
 - Suggested code fixes for auto-fixable issues
 - Migration collateral links for manual-review issues
 
-Use get_projects() first to discover the project name. Source and target devices are read from the project's migration settings — configure them in VS Code before calling this tool.`,
+Use get_projects() first to discover the project name. By default source and target devices are read from the project's migration settings. Optionally pass sourceDevice and/or targetDevices to override those settings for this report only — the override is not saved to the project (a later get_projects/report without overrides reverts to the configured devices).`,
 				inputSchema: {
 					projectName: z.string().describe('Project name from get_projects(). Used to locate project files and migration device settings.'),
+					sourceDevice: z.string().optional().describe('Optional source device override for this report only. If omitted, the project\'s configured current device is used. Use a family name from list_migration_devices().'),
+					targetDevices: z.array(z.string()).optional().describe('Optional target device override list for this report only. If omitted, the project\'s configured migration devices are used. Use family names from list_migration_devices().'),
 				} as any,
 			},
-			async ({ projectName }: any) => {
+			async ({ projectName, sourceDevice, targetDevices }: any) => {
 				if (!extensionContext) {
 					return { content: [{ type: 'text' as const, text: 'Error: Extension context not available.' }] };
 				}
 
 				try {
-					await runProjectCheck(extensionContext, projectName);
+					await runProjectCheck(extensionContext, projectName, undefined, undefined, sourceDevice, targetDevices);
 					const projects = getAllProjects();
 					const projectInfo = projects.find((p: any) => p.name === projectName);
 					if (!projectInfo) {
 						return { content: [{ type: 'text' as const, text: `Project "${projectName}" not found. Call get_projects() to list available projects.` }] };
 					}
 
-					const report = genProjectReport(projectInfo, false);
+					const report = genProjectReport(projectInfo, false, sourceDevice, targetDevices);
 					if (!report) {
 						return { content: [{ type: 'text' as const, text: `No migration issues found for project "${projectName}". Verify the project has currentDevice and migrationDevices configured.` }] };
 					}
