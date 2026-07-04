@@ -29,8 +29,8 @@ function newMigrationDeviceSaveClick() {
         migrationState.migrationDevices = undefined;
     }
     var migrationCheckExceptions = document.getElementById('migrationCheckExceptions');
-    migrationState.migrationCheckExceptions = migrationCheckExceptions.value.replace(/\s/g, '').split(";").filter(e => e);
-    migrationState.migrationCheckFolderExceptions = migrationCheckFolderExceptions.value.replace(/\s/g, '').split(";").filter(e => e);
+    migrationState.migrationCheckExceptions = migrationCheckExceptions.value.split(";").map(e => e.trim()).filter(e => e);
+    migrationState.migrationCheckFolderExceptions = migrationCheckFolderExceptions.value.split(";").map(e => e.trim()).filter(e => e);
 
 
     vscode.setState(migrationState);

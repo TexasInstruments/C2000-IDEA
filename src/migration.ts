@@ -572,38 +572,38 @@ export async function migrationRunMigrationCheckOnProject(context: vscode.Extens
 			progress.report({ increment: 0, message: "Starting migration check..." });
 		}
 
-		const totalFilesafterignoring = (projectCCodeUris.length - projectCCodeUrisIgnored.length); 
+		// Build a lookup set of ignored URIs once, then derive the work list by filtering the
+		// project files against it. This avoids the unreliable length-subtraction (duplicate or
+		// out-of-tree ignored entries could previously make the count go negative) and the
+		// per-iteration re-mapping of the ignored list.
+		const ignoredUriSet = new Set(projectCCodeUrisIgnored.map(uri => uri.toString()));
+		const projectCCodeUrisToMigrate = projectCCodeUris.filter(uri => !ignoredUriSet.has(uri.toString()));
+
+		const totalFilesafterignoring = projectCCodeUrisToMigrate.length;
 		outputChannel.appendLine("Total Project Files :"+ projectCCodeUris.length);
 		outputChannel.appendLine("Total Project Files to Migrate:"+ totalFilesafterignoring);
 
-		if(totalFilesafterignoring < 0){
-			vscode.window.showErrorMessage("Error: " + projectName + " - Wrong info on Migration Check Folders and Files Exception");
-			return;
-		}
-
 		let migrationFilesIndex = 0;
-		for (let projectCCodeUrisIndex = 0; projectCCodeUrisIndex < projectCCodeUris.length; projectCCodeUrisIndex++) {
+		for (let projectCCodeUrisIndex = 0; projectCCodeUrisIndex < projectCCodeUrisToMigrate.length; projectCCodeUrisIndex++) {
 			if (token?.isCancellationRequested) {
 				outputChannel.appendLine("Migration check was cancelled.");
 				vscode.window.showInformationMessage("Migration check cancelled on " + projectName + " project");
-                return; 
+                return;
             }
-			var ccodeUri = projectCCodeUris[projectCCodeUrisIndex]; 
-			if(!(projectCCodeUrisIgnored.map(uri => uri.toString()).includes(ccodeUri.toString()))){
-				try {
-					outputChannel.appendLine(`Processing file: ${ccodeUri.fsPath}`);
-					await migrationRunMigrationCheckOnUri(context, ccodeUri, currentDevice, migrationDevices);
-					outputChannel.appendLine(`Migration Time taken: ${lastMigrationCheckTimestampPerURI[ccodeUri.fsPath] || "N/A"} seconds`);
-					const increment = Math.round(((1) / totalFilesafterignoring) * 100);
-					const incrementStatus = Math.round(((migrationFilesIndex + 1) / totalFilesafterignoring) * 100);
-					if (progress) {
-						progress.report({ increment: increment, message: `Processing(${incrementStatus}%)  ${ccodeUri.fsPath}` });
-					}
-				} 
-				catch (error) {
+			var ccodeUri = projectCCodeUrisToMigrate[projectCCodeUrisIndex];
+			try {
+				outputChannel.appendLine(`Processing file: ${ccodeUri.fsPath}`);
+				await migrationRunMigrationCheckOnUri(context, ccodeUri, currentDevice, migrationDevices);
+				outputChannel.appendLine(`Migration Time taken: ${lastMigrationCheckTimestampPerURI[ccodeUri.fsPath] || "N/A"} seconds`);
+				const increment = Math.round(((1) / totalFilesafterignoring) * 100);
+				const incrementStatus = Math.round(((migrationFilesIndex + 1) / totalFilesafterignoring) * 100);
+				if (progress) {
+					progress.report({ increment: increment, message: `Processing(${incrementStatus}%)  ${ccodeUri.fsPath}` });
 				}
-				migrationFilesIndex++;
 			}
+			catch (error) {
+			}
+			migrationFilesIndex++;
 		}
 		outputChannel.appendLine(`Migration check completed on ${selectedProject}`);
 		lastMigratedProjectInfo = projectInfo;

@@ -59,7 +59,10 @@ export function addMigrationCheckException(exceptionCode: string, projectInfo: P
 	{
 		projectInfo.migrationState.migrationCheckExceptions = [];
 	}
-	projectInfo.migrationState.migrationCheckExceptions.push(exceptionCode);
+	if (!projectInfo.migrationState.migrationCheckExceptions.includes(exceptionCode))
+	{
+		projectInfo.migrationState.migrationCheckExceptions.push(exceptionCode);
+	}
 	saveProjects(extensionContext);
 }
 
@@ -69,7 +72,10 @@ export function addMigrationCheckFolderException(exceptionFolder: string, projec
 	{
 		projectInfo.migrationState.migrationCheckFolderExceptions = [];
 	}
-	projectInfo.migrationState.migrationCheckFolderExceptions.push(exceptionFolder);
+	if (!projectInfo.migrationState.migrationCheckFolderExceptions.includes(exceptionFolder))
+	{
+		projectInfo.migrationState.migrationCheckFolderExceptions.push(exceptionFolder);
+	}
 	saveProjects(extensionContext);
 }
 
