@@ -1,7 +1,7 @@
 import { migrationRunMigrationCheckOnUri, migrationRunMigrationCheckOnProject, exportMigrationAgentReport, exportProjectMigrationAgentReport } from '../migration';
 import { registerBitfieldToDriverlibMigrationOnUri, exportRegisterBitfieldAgentReport } from '../register';
 import { DEVICE_LIST } from '../deviceData';
-import { getProjects, allProjectInfos } from '../utilities/project';
+import { getProjects, allProjectInfos, updateProjectCurrentDevice } from '../utilities/project';
 
 export const IDEA_MCP_PLATFORM = 'C2000';
 export const IDEA_MCP_SERVER_NAME = 'idea-mcp';
@@ -21,4 +21,5 @@ export const IDEA_MCP_HANDLERS = {
 	getDeviceList: () => DEVICE_LIST,
 	getProjects: getProjects,
 	getAllProjectInfos: () => allProjectInfos,
+	setProjectCurrentDevice: updateProjectCurrentDevice,
 };
