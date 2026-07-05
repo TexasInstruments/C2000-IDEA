@@ -275,22 +275,45 @@ export async function getFileTypesInFolder(folderUri : vscode.Uri, fileExtension
 
 }
 
+// Normalize a migration exception entry: trim, unify separators, drop a leading "./" and any
+// surrounding slashes. Shared so stored form == resolved form == remove-match form.
+export function normalizeMigrationExceptionPath(entry: string): string {
+	return entry.trim().replace(/\\/g, "/").replace(/^\.\//, "").replace(/^\/+|\/+$/g, "");
+}
+
 export async function getIgnoredProjectCCodeUris(projectFsPath: string, migrationCheckFolderExceptions: string[]): Promise<vscode.Uri[]> {
 	const projectCCodeUrisIgnored: vscode.Uri[] = [];
+	const outputChannel = vscode.window.createOutputChannel("Ignored Files Output"); // Create output channel
+	const projectUri = vscode.Uri.file(projectFsPath);
 
 	for (const exception of migrationCheckFolderExceptions) {
-		const ignoredUri = vscode.Uri.file(path.join(projectFsPath, exception));
-		const ignoredFsPath = ignoredUri.fsPath;
+		const normalized = normalizeMigrationExceptionPath(exception);
+		if (!normalized) { continue; }
 
-		if (ignoredFsPath.endsWith(".c") || ignoredFsPath.endsWith(".h")) {
-			projectCCodeUrisIgnored.push(ignoredUri);
-		} else {
-			const projectCCodeUrisFolder = await getFileTypesInFolder(ignoredUri, [".c", ".h"]);
-			projectCCodeUrisIgnored.push(...projectCCodeUrisFolder);
+		const ignoredUri = vscode.Uri.joinPath(projectUri, normalized);
+		const ignoredFsPath = ignoredUri.fsPath || ignoredUri.path;
+
+		try {
+			// Classify by the actual filesystem entry, not by the path's suffix.
+			const stat = await vscode.workspace.fs.stat(ignoredUri);
+			if (stat.type === vscode.FileType.Directory) {
+				const projectCCodeUrisFolder = await getFileTypesInFolder(ignoredUri, [".c", ".h"]);
+				projectCCodeUrisIgnored.push(...projectCCodeUrisFolder);
+				outputChannel.appendLine(`Ignored folder: ${ignoredFsPath}`);
+			} else {
+				projectCCodeUrisIgnored.push(ignoredUri);
+				outputChannel.appendLine(`Ignored file: ${ignoredFsPath}`);
+			}
+		} catch (err) {
+			// Path does not exist or could not be read — skip this one entry rather than
+			// aborting the whole migration check.
+			const msg = err instanceof Error ? err.message : String(err);
+			outputChannel.appendLine(`Skipped unresolved exception "${exception}" (${ignoredFsPath}): ${msg}`);
 		}
 	}
 
-	return projectCCodeUrisIgnored;
+	outputChannel.show(); // Show the output channel if needed
+	return projectCCodeUrisIgnored; // Return the accumulated URIs
 }
 
 export async function getFileInFoldersRecursive(folderUri : vscode.Uri, fileName : string): Promise<vscode.Uri | undefined>

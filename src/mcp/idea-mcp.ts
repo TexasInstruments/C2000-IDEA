@@ -20,6 +20,7 @@ import {
 } from './idea-mcp-config';
 import { deployIdeaSkills } from '../skills/idea-skills';
 import { isDeviceF29x } from '../deviceData';
+import { normalizeMigrationExceptionPath } from '../utilities/utils';
 
 let httpServer: http.Server | null = null;
 let extensionContext: vscode.ExtensionContext | null = null;
@@ -73,7 +74,7 @@ AVAILABLE TOOLS:
 - get_projects() — Discover projects in the workspace with their device info, paths, and current folder exclusions (migrationFolderExceptions).
 - set_project_current_device() — Manually set a project's current (source) device for migration when the auto-detected device is wrong.
 - set_project_migration_devices() — Set a project's target (migration) device list for device-to-device migration.
-- set_project_migration_folder_exceptions() — Set folder/file exclusions for the project migration report. Paths are relative to the project root. Call this before get_project_migration_report() to exclude build output folders and SysConfig-generated folders.
+- update_project_file_folder_exceptions() — Read, add, remove, or replace a project's list of file/folder paths excluded from migration checks.
 - list_migration_devices() — Get all supported device families for migration.
 - get_project_migration_report() — Run a device-to-device migration check on ALL files in a project and get a complete multi-file report. Use this for project-level migration.
 - get_device_migration_report() — Run a device-to-device migration check on a single source file. Use this when you need per-file control (e.g. fixing one file at a time after a project report).
@@ -83,7 +84,7 @@ RECOMMENDED FLOW:
 1. Call get_projects() to discover projects, their current devices, migration targets, and current folder exclusions (migrationFolderExceptions).
 2. For device-to-device migration (project level — preferred):
    a. Call list_migration_devices() if you need to verify or select device names.
-   b. Check migrationFolderExceptions from get_projects(). If the build output folder and SysConfig-generated folder are not already excluded, call set_project_migration_folder_exceptions() with those relative paths before running the report.
+   b. Check migrationFolderExceptions from get_projects(). If the build output folder and SysConfig-generated folder are not already excluded, call update_project_file_folder_exceptions() with operation "add" and those relative paths before running the report.
    c. Call get_project_migration_report() with the project name to analyze all files at once.
    d. Issues marked "Auto-fixable" have a concrete code replacement you can apply directly. Issues marked "Needs manual review" require reading the linked migration guide.
    e. After fixing files, call get_device_migration_report() on individual files to verify the fixes are clean.
@@ -234,34 +235,66 @@ Any entry equal to the project's current device is dropped automatically (you ca
 		);
 	}
 
-	if (IDEA_MCP_HANDLERS.setProjectMigrationFolderExceptions && IDEA_MCP_HANDLERS.getAllProjectInfos) {
-		const setFolderExceptions = IDEA_MCP_HANDLERS.setProjectMigrationFolderExceptions;
+	if (IDEA_MCP_HANDLERS.addMigrationFolderException && IDEA_MCP_HANDLERS.removeMigrationFolderException && IDEA_MCP_HANDLERS.setMigrationFolderExceptions && IDEA_MCP_HANDLERS.getAllProjectInfos) {
+		const addFolderException = IDEA_MCP_HANDLERS.addMigrationFolderException;
+		const removeFolderException = IDEA_MCP_HANDLERS.removeMigrationFolderException;
+		const setFolderExceptions = IDEA_MCP_HANDLERS.setMigrationFolderExceptions;
 		const getAllProjectInfos = IDEA_MCP_HANDLERS.getAllProjectInfos;
 
 		server.registerTool(
-			'set_project_migration_folder_exceptions',
+			'update_project_file_folder_exceptions',
 			{
-				description: `Set the folder/file exclusion list for a ${IDEA_MCP_PLATFORM} project's migration report. Paths in this list are skipped when get_project_migration_report scans the project — use this to exclude build output folders, SysConfig-generated file folders, or any other paths that should not be analysed. Paths are relative to the project root. Pass an empty array to clear all exclusions.`,
+				description: `Read, add, remove, or replace a ${IDEA_MCP_PLATFORM} project's file/folder migration-exception list — the folders and files excluded from migration checks (their .c/.h files are skipped).
+
+Behavior:
+- Omit \`paths\` to read: returns the project's current exception list without changing anything (any operation).
+- \`operation: "add"\` (default) — append each path (duplicates ignored).
+- \`operation: "remove"\` — remove each matching path from the list.
+- \`operation: "set"\` — replace the whole list with \`paths\`; an empty array clears it.
+
+Paths are relative to the project root and stored as given — they do NOT need to exist yet (e.g. a build directory before the first build); non-existent entries are simply ignored during a migration check until they exist.`,
 				inputSchema: {
 					projectName: z.string().describe('Project name from get_projects(). Identifies which project to update.'),
-					folderExceptions: z.array(z.string()).describe('Relative paths (from project root) to exclude from migration scanning. Can be folders or individual .c/.h files. Pass an empty array to clear all exclusions. Examples: ["CPU1_FLASH", "syscfg"]'),
+					operation: z.enum(['add', 'remove', 'set']).optional().describe('add (default) appends, remove deletes matching entries, set replaces the whole list. Ignored when paths is omitted (read-only).'),
+					paths: z.array(z.string()).optional().describe('Relative file/folder paths to operate on. Omit to just read the current list.'),
 				} as any,
 			},
-			async ({ projectName, folderExceptions }: any) => {
+			async ({ projectName, operation, paths }: any) => {
 				const projects = getAllProjectInfos();
 				const projectInfo = projects.find((p: any) => p.name === projectName);
 				if (!projectInfo) {
 					return { content: [{ type: 'text' as const, text: `Project "${projectName}" not found. Call get_projects() to list available projects.` }] };
 				}
 
-				setFolderExceptions(projectInfo, folderExceptions);
+				const currentList = (): string[] => projectInfo.migrationState.migrationCheckFolderExceptions || [];
 
-				const applied = projectInfo.migrationState.migrationCheckFolderExceptions || [];
-				if (applied.length === 0) {
-					return { content: [{ type: 'text' as const, text: `Cleared all migration folder exceptions for project "${projectName}".` }] };
+				// Read-only: no paths provided.
+				if (paths === undefined) {
+					return { content: [{ type: 'text' as const, text: `File/folder exceptions for project "${projectName}": [${currentList().join(', ')}]` }] };
 				}
 
-				return { content: [{ type: 'text' as const, text: `Set migration folder exceptions for project "${projectName}" to [${applied.join(', ')}].` }] };
+				const normalized = (paths as string[]).map(normalizeMigrationExceptionPath).filter(p => p);
+				const op = operation ?? 'add';
+				const summary: string[] = [];
+
+				if (op === 'add') {
+					for (const p of normalized) {
+						const already = currentList().includes(p);
+						addFolderException(p, projectInfo);
+						summary.push(`${already ? 'already-present' : 'added'}: ${p}`);
+					}
+				} else if (op === 'remove') {
+					for (const p of normalized) {
+						const present = currentList().includes(p);
+						removeFolderException(p, projectInfo);
+						summary.push(`${present ? 'removed' : 'not-present'}: ${p}`);
+					}
+				} else {
+					setFolderExceptions(normalized, projectInfo);
+					summary.push(`set list to ${normalized.length} entr${normalized.length === 1 ? 'y' : 'ies'}`);
+				}
+
+				return { content: [{ type: 'text' as const, text: `Updated file/folder exceptions for project "${projectName}" (${op}):\n${summary.join('\n')}\n\nResulting list: [${currentList().join(', ')}]` }] };
 			}
 		);
 	}

@@ -59,7 +59,10 @@ export function addMigrationCheckException(exceptionCode: string, projectInfo: P
 	{
 		projectInfo.migrationState.migrationCheckExceptions = [];
 	}
-	projectInfo.migrationState.migrationCheckExceptions.push(exceptionCode);
+	if (!projectInfo.migrationState.migrationCheckExceptions.includes(exceptionCode))
+	{
+		projectInfo.migrationState.migrationCheckExceptions.push(exceptionCode);
+	}
 	saveProjects(extensionContext);
 }
 
@@ -69,7 +72,26 @@ export function addMigrationCheckFolderException(exceptionFolder: string, projec
 	{
 		projectInfo.migrationState.migrationCheckFolderExceptions = [];
 	}
-	projectInfo.migrationState.migrationCheckFolderExceptions.push(exceptionFolder);
+	if (!projectInfo.migrationState.migrationCheckFolderExceptions.includes(exceptionFolder))
+	{
+		projectInfo.migrationState.migrationCheckFolderExceptions.push(exceptionFolder);
+	}
+	saveProjects(extensionContext);
+}
+
+export function removeMigrationCheckFolderException(exceptionFolder: string, projectInfo: ProjectInfo)
+{
+	const list = projectInfo.migrationState.migrationCheckFolderExceptions;
+	if (!list) { return; }
+	projectInfo.migrationState.migrationCheckFolderExceptions = list.filter(e => e !== exceptionFolder);
+	saveProjects(extensionContext);
+}
+
+export function setMigrationCheckFolderExceptions(paths: string[], projectInfo: ProjectInfo)
+{
+	const seen = new Set<string>(); // dedup, preserve order
+	projectInfo.migrationState.migrationCheckFolderExceptions =
+		paths.filter(p => (seen.has(p) ? false : (seen.add(p), true)));
 	saveProjects(extensionContext);
 }
 

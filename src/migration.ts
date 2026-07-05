@@ -572,6 +572,10 @@ export async function migrationRunMigrationCheckOnProject(context: vscode.Extens
 			progress.report({ increment: 0, message: "Starting migration check..." });
 		}
 
+		// Build a lookup set of ignored URIs once, then derive the work list by filtering the
+		// project files against it. This avoids the unreliable length-subtraction (duplicate or
+		// out-of-tree ignored entries could previously make the count go negative) and the
+		// per-iteration re-mapping of the ignored list.
 		const ignoredUriSet = new Set(projectCCodeUrisIgnored.map(uri => uri.toString()));
 		const filesToProcess = projectCCodeUris.filter(uri => !ignoredUriSet.has(uri.toString()));
 		const totalFilesafterignoring = filesToProcess.length;
