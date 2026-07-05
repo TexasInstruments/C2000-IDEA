@@ -59,8 +59,7 @@ branch**, not the source device branch. Do not remove or alter existing markers.
 all argument reordering, added/removed parameters, and type changes. Do not re-derive
 arguments.
 
-Record the choice in `c2000-migration.md` **under a dedicated section immediately after the
-Phase 4 file list**, formatted exactly as follows — the sub-agents read this exact string:
+Record the choice in `c2000-migration.md` in a dedicated section. This section MUST be placed BEFORE the Phase 4 file list section. Formatted exactly as follows — the sub-agents read this exact string:
 ```
 ## Phase 4 — Migration Strategy
 Strategy: Approach 1 (shared #ifdef)
@@ -88,11 +87,6 @@ in Phase 1, so IDEA MCP may not have detected it yet. Call `get_projects()` and 
 target project name appears in the result. If it does not, call `get_projects(rescan: true)`
 once, then retry. Do not call `get_project_migration_report` until the target project is
 confirmed present.
-
-**Set build directory exclusion before running the report:**
-1. Call `getProjectDescriptors` requesting only `["location", "buildDirectoryLocation"]` on the target project.
-2. Strip the `location` value (plus its trailing `/`) from the start of `buildDirectoryLocation` to get the relative path (e.g. `CPU1_RAM`).
-3. Check `migrationFolderExceptions` from `get_projects()` for the target project. If the relative build directory path is not already in the list, call `set_project_migration_folder_exceptions` with it to exclude the build output folder and all files inside it from the migration scan.
 
 Call `get_project_migration_report(<target project name>, <source device>, [<target device>])`,
 passing the source and target devices from `c2000-migration.md` (matching the
