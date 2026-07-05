@@ -145,7 +145,12 @@ Port user customizations from the source cmd onto the target device's cmd file:
 
 **Write the final CMD file:**
 
-After all decisions are made, write one linker cmd file to the target project:
+After all decisions are made, write exactly one linker cmd file to the target project —
+the one matching the active build configuration from step 2.0. Do NOT write a second cmd
+file for the other configuration; reading both reference files for context does not mean
+writing both. Delete any other `_generic_ram_lnk.cmd` or `_generic_flash_lnk.cmd` files
+already present in the target project directory — the imported starter ships with both,
+and leaving them causes duplicate MEMORY region errors at link time.
 - For the name of the cmd file created in the target project, match the name with the source 
   project's linker cmd file name (replace any device name mentions with the target device 
   name).
