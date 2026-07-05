@@ -89,6 +89,11 @@ target project name appears in the result. If it does not, call `get_projects(re
 once, then retry. Do not call `get_project_migration_report` until the target project is
 confirmed present.
 
+**Set build directory exclusion before running the report:**
+1. Call `getProjectDescriptors` requesting only `["location", "buildDirectoryLocation"]` on the target project.
+2. Strip the `location` value (plus its trailing `/`) from the start of `buildDirectoryLocation` to get the relative path (e.g. `CPU1_RAM`).
+3. Check `migrationFolderExceptions` from `get_projects()` for the target project. If the relative build directory path is not already in the list, call `set_project_migration_folder_exceptions` with it to exclude the build output folder and all files inside it from the migration scan.
+
 Call `get_project_migration_report(<target project name>, <source device>, [<target device>])`,
 passing the source and target devices from `c2000-migration.md` (matching the
 `list_migration_devices()` entries) so the report reflects the intended migration pair rather

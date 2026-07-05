@@ -277,28 +277,20 @@ export async function getFileTypesInFolder(folderUri : vscode.Uri, fileExtension
 
 export async function getIgnoredProjectCCodeUris(projectFsPath: string, migrationCheckFolderExceptions: string[]): Promise<vscode.Uri[]> {
 	const projectCCodeUrisIgnored: vscode.Uri[] = [];
-	const outputChannel = vscode.window.createOutputChannel("Ignored Files Output"); // Create output channel
-	// Convert exceptions to URIs
-	const ignoredFoldersFiles = migrationCheckFolderExceptions.map(exception => projectFsPath + "/" + exception);
-	const ignoredFoldersFilesUris = ignoredFoldersFiles.map(exceptionPath => vscode.Uri.file(exceptionPath));
 
-	for (const ignoredUri of ignoredFoldersFilesUris) {
-    	const ignoredFsPath = ignoredUri.fsPath || ignoredUri.path;
+	for (const exception of migrationCheckFolderExceptions) {
+		const ignoredUri = vscode.Uri.file(path.join(projectFsPath, exception));
+		const ignoredFsPath = ignoredUri.fsPath;
 
-    	// Check if the ignored path is a file
-    	if (ignoredFsPath.endsWith(".c") || ignoredFsPath.endsWith(".h")) {
-        	projectCCodeUrisIgnored.push(ignoredUri);
-        	outputChannel.appendLine(`Ignored file: ${ignoredFsPath}`);
-    	} else {
-        	// It's a folder, retrieve its .c and .h files
-        	const projectCCodeUrisFolder = await getFileTypesInFolder(ignoredUri, [".c", ".h"]);
-        	projectCCodeUrisIgnored.push(...projectCCodeUrisFolder);
-        	outputChannel.appendLine(`Ignored folder: ${ignoredFsPath}`);
-    	}	
+		if (ignoredFsPath.endsWith(".c") || ignoredFsPath.endsWith(".h")) {
+			projectCCodeUrisIgnored.push(ignoredUri);
+		} else {
+			const projectCCodeUrisFolder = await getFileTypesInFolder(ignoredUri, [".c", ".h"]);
+			projectCCodeUrisIgnored.push(...projectCCodeUrisFolder);
+		}
 	}
 
-	outputChannel.show(); // Show the output channel if needed
-	return projectCCodeUrisIgnored; // Return the accumulated URIs 
+	return projectCCodeUrisIgnored;
 }
 
 export async function getFileInFoldersRecursive(folderUri : vscode.Uri, fileName : string): Promise<vscode.Uri | undefined>

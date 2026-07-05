@@ -70,21 +70,23 @@ export function checkMcp() {
 const SERVER_INSTRUCTIONS = `${IDEA_MCP_PLATFORM} development assistant. Provides project discovery, device-to-device migration analysis, and bitfield-to-driverlib migration analysis for ${IDEA_MCP_PLATFORM} MCU projects.
 
 AVAILABLE TOOLS:
-- get_projects() — Discover projects in the workspace with their device info and paths.
+- get_projects() — Discover projects in the workspace with their device info, paths, and current folder exclusions (migrationFolderExceptions).
 - set_project_current_device() — Manually set a project's current (source) device for migration when the auto-detected device is wrong.
 - set_project_migration_devices() — Set a project's target (migration) device list for device-to-device migration.
+- set_project_migration_folder_exceptions() — Set folder/file exclusions for the project migration report. Paths are relative to the project root. Call this before get_project_migration_report() to exclude build output folders and SysConfig-generated folders.
 - list_migration_devices() — Get all supported device families for migration.
 - get_project_migration_report() — Run a device-to-device migration check on ALL files in a project and get a complete multi-file report. Use this for project-level migration.
 - get_device_migration_report() — Run a device-to-device migration check on a single source file. Use this when you need per-file control (e.g. fixing one file at a time after a project report).
 - get_bitfield_to_driverlib_migration_report() — Run a bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register accesses and suggests driverlib function replacements.
 
 RECOMMENDED FLOW:
-1. Call get_projects() to discover projects, their current devices, and migration targets. If the list is empty or the project you are looking for is missing, call get_projects(rescan: true) once to re-scan the workspace.
+1. Call get_projects() to discover projects, their current devices, migration targets, and current folder exclusions (migrationFolderExceptions).
 2. For device-to-device migration (project level — preferred):
    a. Call list_migration_devices() if you need to verify or select device names.
-   b. Call get_project_migration_report() with the project name to analyze all files at once.
-   c. Issues marked "Auto-fixable" have a concrete code replacement you can apply directly. Issues marked "Needs manual review" require reading the linked migration guide.
-   d. After fixing files, call get_device_migration_report() on individual files to verify the fixes are clean.
+   b. Check migrationFolderExceptions from get_projects(). If the build output folder and SysConfig-generated folder are not already excluded, call set_project_migration_folder_exceptions() with those relative paths before running the report.
+   c. Call get_project_migration_report() with the project name to analyze all files at once.
+   d. Issues marked "Auto-fixable" have a concrete code replacement you can apply directly. Issues marked "Needs manual review" require reading the linked migration guide.
+   e. After fixing files, call get_device_migration_report() on individual files to verify the fixes are clean.
 3. For bitfield-to-driverlib migration:
    a. Use get_projects() to get the project's currentDevice.
    b. Call get_bitfield_to_driverlib_migration_report() with the file path and sourceDevice.
@@ -152,6 +154,7 @@ function createMcpServerInstance(): McpServer {
 						deviceVariant: p.deviceVariant,
 						currentDevice: p.migrationState.currentDevice,
 						migrationDevices: p.migrationState.migrationDevices,
+						migrationFolderExceptions: p.migrationState.migrationCheckFolderExceptions || [],
 						hasResumeLog: fs.existsSync(resumeLogPath),
 					};
 				});
@@ -227,6 +230,38 @@ Any entry equal to the project's current device is dropped automatically (you ca
 				}
 
 				return { content: [{ type: 'text' as const, text: `Set migration devices for project "${projectName}" to [${applied.join(', ')}].` }] };
+			}
+		);
+	}
+
+	if (IDEA_MCP_HANDLERS.setProjectMigrationFolderExceptions && IDEA_MCP_HANDLERS.getAllProjectInfos) {
+		const setFolderExceptions = IDEA_MCP_HANDLERS.setProjectMigrationFolderExceptions;
+		const getAllProjectInfos = IDEA_MCP_HANDLERS.getAllProjectInfos;
+
+		server.registerTool(
+			'set_project_migration_folder_exceptions',
+			{
+				description: `Set the folder/file exclusion list for a ${IDEA_MCP_PLATFORM} project's migration report. Paths in this list are skipped when get_project_migration_report scans the project — use this to exclude build output folders, SysConfig-generated file folders, or any other paths that should not be analysed. Paths are relative to the project root. Pass an empty array to clear all exclusions.`,
+				inputSchema: {
+					projectName: z.string().describe('Project name from get_projects(). Identifies which project to update.'),
+					folderExceptions: z.array(z.string()).describe('Relative paths (from project root) to exclude from migration scanning. Can be folders or individual .c/.h files. Pass an empty array to clear all exclusions. Examples: ["CPU1_FLASH", "syscfg"]'),
+				} as any,
+			},
+			async ({ projectName, folderExceptions }: any) => {
+				const projects = getAllProjectInfos();
+				const projectInfo = projects.find((p: any) => p.name === projectName);
+				if (!projectInfo) {
+					return { content: [{ type: 'text' as const, text: `Project "${projectName}" not found. Call get_projects() to list available projects.` }] };
+				}
+
+				setFolderExceptions(projectInfo, folderExceptions);
+
+				const applied = projectInfo.migrationState.migrationCheckFolderExceptions || [];
+				if (applied.length === 0) {
+					return { content: [{ type: 'text' as const, text: `Cleared all migration folder exceptions for project "${projectName}".` }] };
+				}
+
+				return { content: [{ type: 'text' as const, text: `Set migration folder exceptions for project "${projectName}" to [${applied.join(', ')}].` }] };
 			}
 		);
 	}

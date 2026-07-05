@@ -560,9 +560,9 @@ export async function migrationRunMigrationCheckOnProject(context: vscode.Extens
         var projectUri = projectInfo.uri;
         const projectFsPath = projectUri.fsPath || projectUri.path;
 		var projectFsPathUri = vscode.Uri.file(projectFsPath);
-		var projectCCodeUris = await utils.getFileTypesInFolder(projectFsPathUri, [".c", ".h"]);	
+		var projectCCodeUris = await utils.getFileTypesInFolder(projectFsPathUri, [".c", ".h"]);
 		var projectCCodeUrisIgnored = await utils.getIgnoredProjectCCodeUris(projectFsPath, projectInfo.migrationState.migrationCheckFolderExceptions || []);
-		
+
 		migrationCodeActions = [];
 		migrationCodeLenses = [];
 		migrationDiagnosticsCollection.clear();
@@ -572,37 +572,30 @@ export async function migrationRunMigrationCheckOnProject(context: vscode.Extens
 			progress.report({ increment: 0, message: "Starting migration check..." });
 		}
 
-		const totalFilesafterignoring = (projectCCodeUris.length - projectCCodeUrisIgnored.length); 
+		const ignoredUriSet = new Set(projectCCodeUrisIgnored.map(uri => uri.toString()));
+		const filesToProcess = projectCCodeUris.filter(uri => !ignoredUriSet.has(uri.toString()));
+		const totalFilesafterignoring = filesToProcess.length;
 		outputChannel.appendLine("Total Project Files :"+ projectCCodeUris.length);
 		outputChannel.appendLine("Total Project Files to Migrate:"+ totalFilesafterignoring);
 
-		if(totalFilesafterignoring < 0){
-			vscode.window.showErrorMessage("Error: " + projectName + " - Wrong info on Migration Check Folders and Files Exception");
-			return;
-		}
-
-		let migrationFilesIndex = 0;
-		for (let projectCCodeUrisIndex = 0; projectCCodeUrisIndex < projectCCodeUris.length; projectCCodeUrisIndex++) {
+		for (let migrationFilesIndex = 0; migrationFilesIndex < filesToProcess.length; migrationFilesIndex++) {
 			if (token?.isCancellationRequested) {
 				outputChannel.appendLine("Migration check was cancelled.");
 				vscode.window.showInformationMessage("Migration check cancelled on " + projectName + " project");
-                return; 
+                return;
             }
-			var ccodeUri = projectCCodeUris[projectCCodeUrisIndex]; 
-			if(!(projectCCodeUrisIgnored.map(uri => uri.toString()).includes(ccodeUri.toString()))){
-				try {
-					outputChannel.appendLine(`Processing file: ${ccodeUri.fsPath}`);
-					await migrationRunMigrationCheckOnUri(context, ccodeUri, currentDevice, migrationDevices);
-					outputChannel.appendLine(`Migration Time taken: ${lastMigrationCheckTimestampPerURI[ccodeUri.fsPath] || "N/A"} seconds`);
-					const increment = Math.round(((1) / totalFilesafterignoring) * 100);
-					const incrementStatus = Math.round(((migrationFilesIndex + 1) / totalFilesafterignoring) * 100);
-					if (progress) {
-						progress.report({ increment: increment, message: `Processing(${incrementStatus}%)  ${ccodeUri.fsPath}` });
-					}
-				} 
-				catch (error) {
+			const ccodeUri = filesToProcess[migrationFilesIndex];
+			try {
+				outputChannel.appendLine(`Processing file: ${ccodeUri.fsPath}`);
+				await migrationRunMigrationCheckOnUri(context, ccodeUri, currentDevice, migrationDevices);
+				outputChannel.appendLine(`Migration Time taken: ${lastMigrationCheckTimestampPerURI[ccodeUri.fsPath] || "N/A"} seconds`);
+				const increment = Math.round(((1) / totalFilesafterignoring) * 100);
+				const incrementStatus = Math.round(((migrationFilesIndex + 1) / totalFilesafterignoring) * 100);
+				if (progress) {
+					progress.report({ increment: increment, message: `Processing(${incrementStatus}%)  ${ccodeUri.fsPath}` });
 				}
-				migrationFilesIndex++;
+			}
+			catch (error) {
 			}
 		}
 		outputChannel.appendLine(`Migration check completed on ${selectedProject}`);
@@ -874,7 +867,7 @@ function migrationFindAllLineNumbersWithCodeChange(documentText: string, allCode
 		}
 	}
 
-	return relevantLineNumbers.length > 0 ? relevantLineNumbers.map(lineNumber => lineNumber - 1) : [-1];
+	return relevantLineNumbers.map(lineNumber => lineNumber - 1);
 
 }
 
