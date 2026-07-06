@@ -339,11 +339,13 @@ flowchart TD
 
     P3["🔧  Phase 3 — SysConfig Migration  3A + 3B\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n3A.1  Copy source .syscfg file into target project directory\n3A.2  Open target .syscfg · record source module list for audit\n3A.3  Ensure device_support module present  add if missing\n─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─\n3B.1  Migrate device → select target device and package\n3B.2  Coverage audit → flag modules silently dropped by migrate()\n3B.3  Fix configuration errors iteratively\n3B.4  Normalize CMD module to match source linker style\n3B.5  Error gate after CMD normalization → save and close\n3B.6  Verify SysConfig outputs wired into CCS project build"]
 
-    P4H["📄  Phase 4A — Header File Migration  per file\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4A.1  Replace all #include paths containing source device name\n4A.2  Update device macro guards  #ifdef F28003x → #ifdef F28P55x\n4A.3  Verify no stale source-device include paths remain"]
+    P4PRE["⬇️  Phase 4.pre + 4.0 — Preparation\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4.pre  Download migration guide HTML to target project dir\n       On failure: prompt user to download via Chrome/Edge\n4.0a  Ask user: #ifdef shared codebase or clean replacement?\n4.0b  Scope report via get_project_migration_report()"]
 
-    P4S["📝  Phase 4B — Source File Migration  per file\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4B.1  Run get_device_migration_report → fix each flagged issue\n4B.2  GPIO remapping check on every .c file\n4B.3  Build after migration report is clean\n4B.4  Fix any build errors · defer cross-file errors to 4C\n4B.5  Repeat until clean build for this file"]
+    P4H["📄  Phase 4A — Header File Migration  per file\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4A.1  Replace all #include paths containing source device name\n4A.2  Update device macro guards  #ifdef F28003x → #ifdef F28P55x\n4A.3  Complex fixes: render_migration_guide_section(htmlPath, anchor)\n4A.4  Verify no stale source-device include paths remain"]
 
-    P4C["🔁  Phase 4C — Final Sweep and Build Verification\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4C.1  Re-run migration report on all migrated files\n4C.2  Regression baseline check near all fix sites\n4C.3  Resolve deferred cross-file build errors from 4B\n4C.4  Two-pass clean rebuild  first cleans objects · second verifies\n       ✔  PASS → proceed to Phase 5\n       ✘  FAIL → dispatch Phase 4D  build error triage"]
+    P4S["📝  Phase 4B — Source File Migration  per file\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4B.1  Run get_device_migration_report → fix each flagged issue\n       Complex fixes: render_migration_guide_section(htmlPath, anchor)\n4B.2  GPIO remapping check on every .c file\n4B.3  Build after migration report is clean\n4B.4  Fix any build errors · defer cross-file errors to 4C\n4B.5  Repeat until clean build for this file"]
+
+    P4C["🔁  Phase 4C — Final Sweep and Build Verification\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4C.1  Re-run migration report on all migrated files\n       Complex fixes: render_migration_guide_section(htmlPath, anchor)\n4C.2  Regression baseline check near all fix sites\n4C.3  Resolve deferred cross-file build errors from 4B\n4C.4  Two-pass clean rebuild  first cleans objects · second verifies\n       ✔  PASS → proceed to Phase 5\n       ✘  FAIL → dispatch Phase 4D  build error triage"]
 
     P4D["🔨  Phase 4D — Build Error Triage  dispatched only on FAIL\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4D.1  Collect current build error list via buildProject()\n4D.2  Classify each error:\n       A: missing include or file-not-found\n       B: undefined symbol\n       C: deprecated or renamed API\n       D: linker/memory-map  deferred-manual\n4D.3  Apply fixes for categories A–C\n       Uses get_device_migration_report for authoritative fixes\n4D.4  Rebuild and evaluate  max 3 triage iterations\n4D.5  Record results · return build status to orchestrator"]
 
@@ -355,8 +357,9 @@ flowchart TD
     PROBE --> P1
     P1    --> P2
     P2    --> P3
-    P3    --> P4H & P4S
-    P4H   --> P4C
+    P3    --> P4PRE
+    P4PRE --> P4H
+    P4H   --> P4S
     P4S   --> P4C
     P4C   -->|"PASS"| P5
     P4C   -->|"FAIL"| P4D
@@ -368,6 +371,7 @@ flowchart TD
     style P1    fill:#1F497D,color:#ffffff,stroke:#17375E,stroke-width:1px
     style P2    fill:#17375E,color:#ffffff,stroke:#0F243E,stroke-width:1px
     style P3    fill:#215732,color:#ffffff,stroke:#17401E,stroke-width:1px
+    style P4PRE fill:#7B3F00,color:#ffffff,stroke:#5C2E00,stroke-width:1px
     style P4H   fill:#7B3F00,color:#ffffff,stroke:#5C2E00,stroke-width:1px
     style P4S   fill:#7B3F00,color:#ffffff,stroke:#5C2E00,stroke-width:1px
     style P4C   fill:#5C2E00,color:#ffffff,stroke:#3D1E00,stroke-width:1px
