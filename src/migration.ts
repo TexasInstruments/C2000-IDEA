@@ -11,9 +11,9 @@ const outputChannel = vscode.window.createOutputChannel("My Extension Logs");
 const C2000_MIGRATION_DIAGNOSTIC_COLLECTION_NAME = "C2000 Migration";
 const C2000_MIGRATION_INCOMPAT_CODE = "C2000_MIGRATION_INCOMPAT";
 const C2000_MIGRATION_INCOMPAT_SOURCE = "C2000 Migration Check";
-const C2000_MIGRATION_C2000WARE_VERSION = "C2000Ware_6_00_00_00";
-const C2000_MIGRATION_C2000WARE_OLDVERSION = "C2000Ware_5_04_00_00";
-const C2000_MIGRATION_C29SDK_VERSION = "F29H85X-SDK";
+const C2000_MIGRATION_C2000WARE_VERSION = "C2000Ware_26_01_00_00";
+const C2000_MIGRATION_C2000WARE_OLDVERSION = "C2000Ware_26_01_00_00";
+const C2000_MIGRATION_C29SDK_VERSION = "F29H85X-SDK_26_00_00";
 let C2000_AUTO_MIGRATION_GUIDE_LINK = "https://dev.ti.com/tirex/content/" + C2000_MIGRATION_C2000WARE_VERSION + "/docs/" + C2000_MIGRATION_C2000WARE_VERSION + "_Migration_Guides/html_pages/";
 
 const lastMigrationCheckTimestampPerURI: {[uri:string]: number } = {}; //Object to store duration time for each file
