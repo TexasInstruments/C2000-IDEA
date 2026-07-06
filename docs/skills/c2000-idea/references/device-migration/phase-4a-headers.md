@@ -98,22 +98,18 @@ The agent must fix **every** issue — easy or complex:
 ## Reading Migration Collateral links
 
 Each issue may include a `Migration Collateral` URL with a `#<symbol>` anchor. When
-no `Suggested fix` is provided, retrieve and parse it:
+no `Suggested fix` is provided, read the local migration guide HTML from your briefing:
 
-1. Fetch the URL directly.
-2. If that fails, try `curl`, then `wget`, then download to a temp file.
-3. Save the content locally — do not stream large HTML pages.
-4. Strip `<style>` and `<script>` tags; extract text.
-5. Navigate to the exact `#<symbol>` anchor — do not stop at a partial match.
-6. Read the full table row or function block at the anchor plus the surrounding entries.
-7. Follow referenced structs, enums, typedefs, and macros if the diff references them.
-8. Summarize: old signature → new signature, added/removed parameters, type changes.
-9. Apply the fix using only data from the collateral. No inferred parameters.
+1. Navigate to the exact `#<symbol>` anchor — do not stop at a partial match.
+2. Read the full table row or function block at the anchor plus the surrounding entries.
+3. Follow referenced structs, enums, typedefs, and macros if the diff references them.
+4. Summarize: old signature → new signature, added/removed parameters, type changes.
+5. Apply the fix using only data from the collateral. No inferred parameters.
 
-If all retrieval methods fail: try ti-asm-mcp → try local SDK at
-`<c2000ware_path>/driverlib/<target-device>/` → if still unavailable, stop and report
-to the user: *"Cannot confidently fix `{symbol}` — collateral inaccessible and SDK
-source not found."* Never fabricate.
+If `Migration guide HTML` is `DOWNLOAD FAILED` or the anchor is not found: try
+`ti-asm-mcp` → try local SDK at `<c2000ware_path>/driverlib/<target-device>/` →
+if still unavailable, stop and report: *"Cannot confidently fix `{symbol}` —
+collateral inaccessible."* Never fabricate.
 
 ---
 

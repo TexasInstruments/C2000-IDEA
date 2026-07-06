@@ -15,7 +15,92 @@ skip the step.
 
 Precondition: user application files are already copied into the target project (Step 2.7).
 
+---
+
+## Step 4.pre — Download migration guide collateral HTML
+
+Download the full driverlib diff-report HTML for this migration pair to the **target
+project directory** once, so every sub-agent (4A, 4B, 4C) can read it from disk instead
+of making a separate network request per symbol.
+
+### 4.pre.1 — Compute URL and local path
+
+Read `c2000-migration.md` to get `sourceDevice` and `targetDevice` in **lowercase**
+(e.g. `f28003x`, `f28p65x`). Compute SDK version labels based on device families using
+the same logic as the IDEA extension:
+
+| Migration type | `FROM_SDK` | `TO_SDK` | Base URL version |
+|---|---|---|---|
+| F28x → F28x | `C2000Ware_6_00_00_00` | `C2000Ware_6_00_00_00` | `C2000Ware_6_00_00_00` |
+| F28x → F29x | `C2000Ware_5_04_00_00` | `F29H85X-SDK` | `C2000Ware_5_04_00_00` |
+
+Construct the values:
+```
+BASE_URL  = https://dev.ti.com/tirex/content/<Base URL version>/docs/<Base URL version>_Migration_Guides/html_pages/
+FILENAME  = <FROM_SDK>_<sourceDevice>_vs_<TO_SDK>_<targetDevice>_driverlib.html
+FULL_URL  = <BASE_URL>diff_reports/<FILENAME>
+LOCAL_OUT = <targetProjectPath>/<FILENAME>
+```
+
+**Example** (F28003x → F28P65x):
+```
+FILENAME  = C2000Ware_6_00_00_00_f28003x_vs_C2000Ware_6_00_00_00_f28p65x_driverlib.html
+FULL_URL  = https://dev.ti.com/tirex/content/C2000Ware_6_00_00_00/docs/C2000Ware_6_00_00_00_Migration_Guides/html_pages/diff_reports/C2000Ware_6_00_00_00_f28003x_vs_C2000Ware_6_00_00_00_f28p65x_driverlib.html
+LOCAL_OUT = <targetProjectPath>/C2000Ware_6_00_00_00_f28003x_vs_C2000Ware_6_00_00_00_f28p65x_driverlib.html
+```
+
+### 4.pre.2 — Run the download
+
+Run this PowerShell command with the computed values substituted:
+
+```powershell
+powershell -Command "
+\$url = '<FULL_URL>'
+\$out = '<LOCAL_OUT>'
+if (-not (Test-Path \$out)) {
+    Invoke-WebRequest -Uri \$url -OutFile \$out -UseDefaultCredentials -TimeoutSec 60
+    Write-Host 'Downloaded'
+} else { Write-Host 'Already cached' }"
+```
+
+`-UseDefaultCredentials` passes the current Windows user's credentials to TI's server
+(required when on a corporate network / VPN). `-TimeoutSec 60` aborts on a slow response.
+
+### 4.pre.3 — Record in c2000-migration.md
+
+**On success** (prints `Downloaded` or `Already cached`): add this line to `c2000-migration.md`:
+```
+Migration guide HTML: <LOCAL_OUT>
+```
+
+**On failure** (network error, 404, timeout): the automated download was blocked
+(common on corporate networks). Ask the user to download it manually:
+
+> "The migration guide HTML could not be downloaded automatically. Please open the
+> following URL in Chrome or Edge, save the page as:
+>
+> **URL:** `<FULL_URL>`
+>
+> **Save as (exact filename and location):** `<LOCAL_OUT>`
+>
+> Once saved, type **done** to continue."
+
+Wait for the user's confirmation, then verify the file exists at `<LOCAL_OUT>`.
+
+- **File found:** record `Migration guide HTML: <LOCAL_OUT>` in `c2000-migration.md` and proceed.
+- **File not found or user skips:** record `Migration guide HTML: DOWNLOAD FAILED — URL: <FULL_URL>`
+  in `c2000-migration.md`. Sub-agents will fall back to fetching the URL directly.
+
+Pass the recorded line verbatim in the `Migration guide HTML` field of every sub-agent briefing
+(4A, 4B, 4C). Sub-agents use the local file when available and fall back to the URL when not.
+
+---
+
 ## Step 4.0 — Strategy and pre-migration report
+
+> **Prerequisite:** Step 4.pre must be complete and `Migration guide HTML` must be
+> recorded in `c2000-migration.md` before asking for the migration approach. Every
+> sub-agent briefing requires this path.
 
 ### 4.0a Ask the user for migration strategy
 

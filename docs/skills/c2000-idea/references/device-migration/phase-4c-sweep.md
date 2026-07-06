@@ -29,6 +29,18 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 
 ---
 
+## Reading Migration Collateral links
+
+When fixing a reported issue that has no `Suggested fix`, read the local migration guide
+HTML from your briefing. Navigate to the exact `#<symbol>` anchor, read the diff block,
+and apply the fix using only that data.
+
+If `Migration guide HTML` is `DOWNLOAD FAILED` or the anchor is not found: try
+`ti-asm-mcp` or the SDK header at `<c2000ware_path>/driverlib/<target-device>/driverlib/<module>.h`.
+Never fabricate replacements.
+
+---
+
 ## Step 1 — Re-run migration report on all files
 
 Run `get_device_migration_report` (with the absolute file path, source device, and target
