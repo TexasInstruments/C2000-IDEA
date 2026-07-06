@@ -39,6 +39,7 @@ Briefing:
   SDK version              : <e.g. C2000Ware_5_04_00_00>
   Active build config      : <e.g. CPU1_FLASH>             ← copy verbatim from c2000-migration.md
   sysConfigOutputLocation  : <path — from getProjectDescriptors; do not edit files here>
+  Migration guide HTML     : <value from c2000-migration.md>    ← copy verbatim (path or "DOWNLOAD FAILED — URL: <url>")
 
   Files to migrate (in order):
     1. <absolute path to first .h file>
@@ -78,6 +79,7 @@ Briefing:
   SDK version              : <e.g. C2000Ware_5_04_00_00>
   Active build config      : <e.g. CPU1_FLASH>             ← copy verbatim from c2000-migration.md
   sysConfigOutputLocation  : <path — from getProjectDescriptors; do not edit files here>
+  Migration guide HTML     : <value from c2000-migration.md>
 
   Deferred-errors context  : <paste any deferred-errors from prior .c file dispatches
                                that point to THIS file, or write "None">
@@ -112,6 +114,7 @@ Briefing:
   SDK version              : <e.g. C2000Ware_5_04_00_00>
   Active build config      : <e.g. CPU1_FLASH>
   sysConfigOutputLocation  : <path — from getProjectDescriptors; do not edit files here>
+  Migration guide HTML     : <value from c2000-migration.md>
 
   All migrated files (from 4A and 4B):
     .h files: <list>

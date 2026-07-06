@@ -3,6 +3,7 @@ import { isRunning as isIdeaMcpRunning } from './idea-mcp';
 import { isRunning as isTiAsmMcpRunning } from './ti-asm-mcp';
 import { IDEA_MCP_VSCODE_CONFIG } from './idea-mcp-config';
 import { MCP_VSCODE_CONFIG } from './ti-asm-mcp-config';
+import { SKILL_VSCODE_CONFIG } from '../skills/ti-asm-skills-config';
 
 const POLL_INTERVAL_MS = 2000;
 
@@ -15,16 +16,23 @@ const ASM_MCP_ENABLE_CMD   = `${MCP_VSCODE_CONFIG}.enableTiAsmMcp`;
 const ASM_MCP_DISABLE_CMD  = `${MCP_VSCODE_CONFIG}.disableTiAsmMcp`;
 const TOGGLE_CMD           = `${IDEA_MCP_VSCODE_CONFIG}.mcpStatusBarToggle`;
 
-/** QuickPick row carrying a server discriminator so we branch on identity, not label text. */
+/** QuickPick row — toggle items carry a server discriminator; register items carry a cmd string. */
 interface McpServerPick extends vscode.QuickPickItem {
-	server: 'idea' | 'asm';
+	server?: 'idea' | 'asm';
+	cmd?:    string;
 }
 
 function dot(running: boolean): string {
 	return running ? '$(circle-filled)' : '$(circle-outline)';
 }
 
-/** QuickPick listing both MCP servers — select one to toggle it. */
+function recentTag(key: string, lastKey: string | undefined): string {
+	return key === lastKey ? '  $(history) recently used' : '';
+}
+
+let lastPickedKey: string | undefined;
+
+/** QuickPick listing both MCP servers — select one to toggle it, or choose a registration action. */
 async function showTogglePick(): Promise<void> {
 	const ideaRunning = isIdeaMcpRunning();
 	const asmRunning  = isTiAsmMcpRunning();
@@ -40,6 +48,22 @@ async function showTogglePick(): Promise<void> {
 			label:       `${dot(asmRunning)} ${ASM_MCP_LABEL}`,
 			description: asmRunning ? 'Running — click to disable' : 'Stopped — click to enable',
 		},
+		{ kind: vscode.QuickPickItemKind.Separator, label: 'Register' },
+		{
+			cmd:         `${IDEA_MCP_VSCODE_CONFIG}.registerIdeaMcp`,
+			label:       '$(plug) Register IDEA MCP',
+			description: 'Register IDEA MCP with your agent tool' + recentTag('registerIdeaMcp', lastPickedKey),
+		},
+		{
+			cmd:         `${MCP_VSCODE_CONFIG}.registerTiAsmMcp`,
+			label:       '$(plug) Register TI ASM MCP',
+			description: 'Register TI ASM MCP with your agent tool' + recentTag('registerTiAsmMcp', lastPickedKey),
+		},
+		{
+			cmd:         `${SKILL_VSCODE_CONFIG}.registerSkills`,
+			label:       '$(plug) Register Skills',
+			description: 'Register C2000-IDEA skills with your agent tool' + recentTag('registerSkills', lastPickedKey),
+		},
 	];
 
 	const picked = await vscode.window.showQuickPick(items, {
@@ -49,7 +73,10 @@ async function showTogglePick(): Promise<void> {
 
 	if (!picked) { return; }
 
-	if (picked.server === 'idea') {
+	if (picked.cmd) {
+		lastPickedKey = picked.cmd.split('.').pop();
+		await vscode.commands.executeCommand(picked.cmd);
+	} else if (picked.server === 'idea') {
 		await vscode.commands.executeCommand(ideaRunning ? IDEA_MCP_DISABLE_CMD : IDEA_MCP_ENABLE_CMD);
 	} else {
 		await vscode.commands.executeCommand(asmRunning ? ASM_MCP_DISABLE_CMD : ASM_MCP_ENABLE_CMD);
