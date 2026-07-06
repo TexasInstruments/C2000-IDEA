@@ -108,7 +108,7 @@ Each issue may include a `Migration Collateral` URL with a `#<symbol>` anchor. W
 no `Suggested fix` is provided, call:
 
 ```
-render_migration_guide_section(
+get_migration_guide_section(
   htmlPath = <Migration guide HTML from briefing>,
   anchor   = <symbol name from the #fragment of the Migration Collateral URL>
 )

@@ -941,7 +941,7 @@ function registerBitfieldAgentReportMDHeader(): string {
 	
 	let deviceDisplay = device || "unknown";
 	let deviceNote = device ? "" : "\n> ⚠️ **Device could not be determined automatically.** Please infer from file paths, `#include` directives, or ask the user.\n";
-	const sdkVersion = deviceDisplay.toUpperCase().includes("F29") ? "F29H85X-SDK" : "C2000Ware_6_00_00_00";
+	const sdkVersion = deviceDisplay.toUpperCase().includes("F29") ? "F29H85X-SDK_26_00_00" : "C2000Ware_26_01_00_00";
 
 	let header = `# C2000 Register Bitfield to Driverlib Migration Report
 **Generated:** ${timestamp}
