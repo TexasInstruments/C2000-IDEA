@@ -95,12 +95,6 @@ export function setMigrationCheckFolderExceptions(paths: string[], projectInfo: 
 	saveProjects(extensionContext);
 }
 
-export function updateProjectMigrationFolderExceptions(projectInfo: ProjectInfo, folderExceptions: string[])
-{
-	projectInfo.migrationState.migrationCheckFolderExceptions = folderExceptions;
-	saveProjects(extensionContext);
-}
-
 export function projectGetCurrentDevice() : string
 {
 	const projectConfig = vscode.workspace.getConfiguration('c2000-idea.project');

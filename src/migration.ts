@@ -577,18 +577,18 @@ export async function migrationRunMigrationCheckOnProject(context: vscode.Extens
 		// out-of-tree ignored entries could previously make the count go negative) and the
 		// per-iteration re-mapping of the ignored list.
 		const ignoredUriSet = new Set(projectCCodeUrisIgnored.map(uri => uri.toString()));
-		const filesToProcess = projectCCodeUris.filter(uri => !ignoredUriSet.has(uri.toString()));
-		const totalFilesafterignoring = filesToProcess.length;
+		const projectCCodeUrisToMigrate = projectCCodeUris.filter(uri => !ignoredUriSet.has(uri.toString()));
+		const totalFilesafterignoring = projectCCodeUrisToMigrate.length;
 		outputChannel.appendLine("Total Project Files :"+ projectCCodeUris.length);
 		outputChannel.appendLine("Total Project Files to Migrate:"+ totalFilesafterignoring);
 
-		for (let migrationFilesIndex = 0; migrationFilesIndex < filesToProcess.length; migrationFilesIndex++) {
+		for (let migrationFilesIndex = 0; migrationFilesIndex < projectCCodeUrisToMigrate.length; migrationFilesIndex++) {
 			if (token?.isCancellationRequested) {
 				outputChannel.appendLine("Migration check was cancelled.");
 				vscode.window.showInformationMessage("Migration check cancelled on " + projectName + " project");
                 return;
             }
-			const ccodeUri = filesToProcess[migrationFilesIndex];
+			const ccodeUri = projectCCodeUrisToMigrate[migrationFilesIndex];
 			try {
 				outputChannel.appendLine(`Processing file: ${ccodeUri.fsPath}`);
 				await migrationRunMigrationCheckOnUri(context, ccodeUri, currentDevice, migrationDevices);

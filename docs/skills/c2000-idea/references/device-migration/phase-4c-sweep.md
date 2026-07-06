@@ -34,7 +34,7 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 When fixing a reported issue that has no `Suggested fix`, call:
 
 ```
-render_migration_guide_section(
+get_migration_guide_section(
   htmlPath = <Migration guide HTML from briefing>,
   anchor   = <symbol name from the #fragment of the Migration Collateral URL>
 )
