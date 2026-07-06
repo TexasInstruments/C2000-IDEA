@@ -113,6 +113,12 @@ The starter project location depends on the target device:
   (e.g., `myApp_f28003x` → `myApp_f28p55x`, not `myApp_f28003x_f28p55x`).
 - This gives the target project a stable, unique name. 
 
+## 1.7a Copy target configuration files
+
+- If the renamed project has no `targetConfigs` folder: create it, then copy all `.ccxml` files from `<c2000ware_path>/device_support/<target-device-lowercase>/common/targetConfigs/` into it.
+- If `targetConfigs` already exists: check if any `.ccxml` file inside it has the target device name in its filename. If yes, skip. If no such file exists, copy all `.ccxml` files from `<c2000ware_path>/device_support/<target-device-lowercase>/common/targetConfigs/` into it.
+Do not ask the user — perform both cases automatically.
+
 ## 1.8 Rebuild after rename
 
 - Call `buildProject` again on the **renamed** project.

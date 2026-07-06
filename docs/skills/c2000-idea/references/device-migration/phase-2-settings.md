@@ -66,6 +66,12 @@ found (source value vs. target value) and what you plan to apply.
   that component with the target device name and verify the resulting path exists on disk.
 - Apply settings from the source to the target, after confirmation.
 
+**After applying include paths — macro resolution check (required):**
+
+For every `${MACRO_NAME}` referenced in the applied include paths, check if that macro is defined in the target project. If missing, copy its definition from the source project, replace the source device name in the value with the target device name, and add it to **all build configurations** in the target project. Record each added macro in `c2000-migration.md`.
+
+> **Example:** Source defines `C2000WARE_DLIB_ROOT = ${COM_TI_C2000WARE_INSTALL_DIR}/driverlib/f28003x/driverlib/`. The universal target starter does not have this macro, so the include path `--include_path="${C2000WARE_DLIB_ROOT}"` would expand to nothing. Add it to the target project as `C2000WARE_DLIB_ROOT = ${COM_TI_C2000WARE_INSTALL_DIR}/driverlib/f28p551x/driverlib/`.
+
 ## 2.4 Linker flags
 
 - Use `getToolFlags` with toolType of `linker` to  get all of the linker settings.
@@ -139,7 +145,12 @@ Port user customizations from the source cmd onto the target device's cmd file:
 
 **Write the final CMD file:**
 
-After all decisions are made, write one linker cmd file to the target project:
+After all decisions are made, write exactly one linker cmd file to the target project —
+the one matching the active build configuration from step 2.0. Do NOT write a second cmd
+file for the other configuration; reading both reference files for context does not mean
+writing both. Delete any other `_generic_ram_lnk.cmd` or `_generic_flash_lnk.cmd` files
+already present in the target project directory — the imported starter ships with both,
+and leaving them causes duplicate MEMORY region errors at link time.
 - For the name of the cmd file created in the target project, match the name with the source 
   project's linker cmd file name (replace any device name mentions with the target device 
   name).

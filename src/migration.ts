@@ -11,9 +11,9 @@ const outputChannel = vscode.window.createOutputChannel("My Extension Logs");
 const C2000_MIGRATION_DIAGNOSTIC_COLLECTION_NAME = "C2000 Migration";
 const C2000_MIGRATION_INCOMPAT_CODE = "C2000_MIGRATION_INCOMPAT";
 const C2000_MIGRATION_INCOMPAT_SOURCE = "C2000 Migration Check";
-const C2000_MIGRATION_C2000WARE_VERSION = "C2000Ware_6_00_00_00";
-const C2000_MIGRATION_C2000WARE_OLDVERSION = "C2000Ware_5_04_00_00";
-const C2000_MIGRATION_C29SDK_VERSION = "F29H85X-SDK";
+const C2000_MIGRATION_C2000WARE_VERSION = "C2000Ware_26_01_00_00";
+const C2000_MIGRATION_C2000WARE_OLDVERSION = "C2000Ware_26_01_00_00";
+const C2000_MIGRATION_C29SDK_VERSION = "F29H85X-SDK_26_00_00";
 let C2000_AUTO_MIGRATION_GUIDE_LINK = "https://dev.ti.com/tirex/content/" + C2000_MIGRATION_C2000WARE_VERSION + "/docs/" + C2000_MIGRATION_C2000WARE_VERSION + "_Migration_Guides/html_pages/";
 
 const lastMigrationCheckTimestampPerURI: {[uri:string]: number } = {}; //Object to store duration time for each file
@@ -560,9 +560,9 @@ export async function migrationRunMigrationCheckOnProject(context: vscode.Extens
         var projectUri = projectInfo.uri;
         const projectFsPath = projectUri.fsPath || projectUri.path;
 		var projectFsPathUri = vscode.Uri.file(projectFsPath);
-		var projectCCodeUris = await utils.getFileTypesInFolder(projectFsPathUri, [".c", ".h"]);	
+		var projectCCodeUris = await utils.getFileTypesInFolder(projectFsPathUri, [".c", ".h"]);
 		var projectCCodeUrisIgnored = await utils.getIgnoredProjectCCodeUris(projectFsPath, projectInfo.migrationState.migrationCheckFolderExceptions || []);
-		
+
 		migrationCodeActions = [];
 		migrationCodeLenses = [];
 		migrationDiagnosticsCollection.clear();
@@ -578,19 +578,17 @@ export async function migrationRunMigrationCheckOnProject(context: vscode.Extens
 		// per-iteration re-mapping of the ignored list.
 		const ignoredUriSet = new Set(projectCCodeUrisIgnored.map(uri => uri.toString()));
 		const projectCCodeUrisToMigrate = projectCCodeUris.filter(uri => !ignoredUriSet.has(uri.toString()));
-
 		const totalFilesafterignoring = projectCCodeUrisToMigrate.length;
 		outputChannel.appendLine("Total Project Files :"+ projectCCodeUris.length);
 		outputChannel.appendLine("Total Project Files to Migrate:"+ totalFilesafterignoring);
 
-		let migrationFilesIndex = 0;
-		for (let projectCCodeUrisIndex = 0; projectCCodeUrisIndex < projectCCodeUrisToMigrate.length; projectCCodeUrisIndex++) {
+		for (let migrationFilesIndex = 0; migrationFilesIndex < projectCCodeUrisToMigrate.length; migrationFilesIndex++) {
 			if (token?.isCancellationRequested) {
 				outputChannel.appendLine("Migration check was cancelled.");
 				vscode.window.showInformationMessage("Migration check cancelled on " + projectName + " project");
                 return;
             }
-			var ccodeUri = projectCCodeUrisToMigrate[projectCCodeUrisIndex];
+			const ccodeUri = projectCCodeUrisToMigrate[migrationFilesIndex];
 			try {
 				outputChannel.appendLine(`Processing file: ${ccodeUri.fsPath}`);
 				await migrationRunMigrationCheckOnUri(context, ccodeUri, currentDevice, migrationDevices);
@@ -603,7 +601,6 @@ export async function migrationRunMigrationCheckOnProject(context: vscode.Extens
 			}
 			catch (error) {
 			}
-			migrationFilesIndex++;
 		}
 		outputChannel.appendLine(`Migration check completed on ${selectedProject}`);
 		lastMigratedProjectInfo = projectInfo;
@@ -874,7 +871,7 @@ function migrationFindAllLineNumbersWithCodeChange(documentText: string, allCode
 		}
 	}
 
-	return relevantLineNumbers.length > 0 ? relevantLineNumbers.map(lineNumber => lineNumber - 1) : [-1];
+	return relevantLineNumbers.map(lineNumber => lineNumber - 1);
 
 }
 

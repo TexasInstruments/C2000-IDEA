@@ -20,6 +20,7 @@ import {
 } from './idea-mcp-config';
 import { deployIdeaSkills } from '../skills/idea-skills';
 import { isDeviceF29x } from '../deviceData';
+import { renderMigrationGuideMarkdown } from '../migrationGuide';
 import { normalizeMigrationExceptionPath } from '../utilities/utils';
 
 let httpServer: http.Server | null = null;
@@ -71,7 +72,7 @@ export function checkMcp() {
 const SERVER_INSTRUCTIONS = `${IDEA_MCP_PLATFORM} development assistant. Provides project discovery, device-to-device migration analysis, and bitfield-to-driverlib migration analysis for ${IDEA_MCP_PLATFORM} MCU projects.
 
 AVAILABLE TOOLS:
-- get_projects() — Discover projects in the workspace with their device info and paths.
+- get_projects() — Discover projects in the workspace with their device info, paths, and current folder exclusions (migrationFolderExceptions).
 - set_project_current_device() — Manually set a project's current (source) device for migration when the auto-detected device is wrong.
 - set_project_migration_devices() — Set a project's target (migration) device list for device-to-device migration.
 - update_project_file_folder_exceptions() — Read, add, remove, or replace a project's list of file/folder paths excluded from migration checks.
@@ -81,12 +82,13 @@ AVAILABLE TOOLS:
 - get_bitfield_to_driverlib_migration_report() — Run a bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register accesses and suggests driverlib function replacements.
 
 RECOMMENDED FLOW:
-1. Call get_projects() to discover projects, their current devices, and migration targets. If the list is empty or the project you are looking for is missing, call get_projects(rescan: true) once to re-scan the workspace.
+1. Call get_projects() to discover projects, their current devices, migration targets, and current folder exclusions (migrationFolderExceptions).
 2. For device-to-device migration (project level — preferred):
    a. Call list_migration_devices() if you need to verify or select device names.
-   b. Call get_project_migration_report() with the project name to analyze all files at once.
-   c. Issues marked "Auto-fixable" have a concrete code replacement you can apply directly. Issues marked "Needs manual review" require reading the linked migration guide.
-   d. After fixing files, call get_device_migration_report() on individual files to verify the fixes are clean.
+   b. Check migrationFolderExceptions from get_projects(). If the build output folder and SysConfig-generated folder are not already excluded, call update_project_file_folder_exceptions() with operation "add" and those relative paths before running the report.
+   c. Call get_project_migration_report() with the project name to analyze all files at once.
+   d. Issues marked "Auto-fixable" have a concrete code replacement you can apply directly. Issues marked "Needs manual review" require reading the linked migration guide.
+   e. After fixing files, call get_device_migration_report() on individual files to verify the fixes are clean.
 3. For bitfield-to-driverlib migration:
    a. Use get_projects() to get the project's currentDevice.
    b. Call get_bitfield_to_driverlib_migration_report() with the file path and sourceDevice.
@@ -154,6 +156,7 @@ function createMcpServerInstance(): McpServer {
 						deviceVariant: p.deviceVariant,
 						currentDevice: p.migrationState.currentDevice,
 						migrationDevices: p.migrationState.migrationDevices,
+						migrationFolderExceptions: p.migrationState.migrationCheckFolderExceptions || [],
 						hasResumeLog: fs.existsSync(resumeLogPath),
 					};
 				});
@@ -443,6 +446,35 @@ Pass the sourceDevice from get_projects() to identify the device family for regi
 			}
 		);
 	}
+
+	server.registerTool(
+		'get_migration_guide_section',
+		{
+			description: `Get a section of a downloaded TI driverlib migration-guide HTML report as Markdown.
+
+Given the local path to the HTML file (downloaded in the migration workflow) and a symbol anchor (the fragment from a Migration Collateral URL, e.g. "CMPSS_configFilterHigh"), returns a structured Markdown block describing the change: old/new function signatures, argument changes, removed/added parameters, and the full diff body.
+
+Use this instead of reading the raw HTML — the tool navigates the anchor, strips difflib markup, and reconstructs function bodies automatically.
+
+If the anchor is not found in the report, the result contains "_ERROR: section not found._" — treat this as a fallback signal and try ti-asm-mcp or the local SDK header instead.`,
+			inputSchema: {
+				htmlPath: z.string().describe('Absolute path to the downloaded migration-guide HTML file (the Migration guide HTML value from c2000-migration.md).'),
+				anchor: z.string().describe('Symbol name to look up (e.g. "CMPSS_configFilterHigh"). Matches the #fragment in the Migration Collateral URL.'),
+			} as any,
+		},
+		async ({ htmlPath, anchor }: any) => {
+			if (!fs.existsSync(htmlPath)) {
+				return { content: [{ type: 'text' as const, text: `Error: File not found: ${htmlPath}` }] };
+			}
+			try {
+				const md = renderMigrationGuideMarkdown(htmlPath, anchor);
+				return { content: [{ type: 'text' as const, text: md }] };
+			} catch (err) {
+				const msg = err instanceof Error ? err.message : String(err);
+				return { content: [{ type: 'text' as const, text: `Error getting migration guide section: ${msg}` }] };
+			}
+		}
+	);
 
 	return server;
 }
