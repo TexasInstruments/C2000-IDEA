@@ -31,8 +31,8 @@ the same logic as the IDEA extension:
 
 | Migration type | `FROM_SDK` | `TO_SDK` | Base URL version |
 |---|---|---|---|
-| F28x → F28x | `C2000Ware_6_00_00_00` | `C2000Ware_6_00_00_00` | `C2000Ware_6_00_00_00` |
-| F28x → F29x | `C2000Ware_5_04_00_00` | `F29H85X-SDK` | `C2000Ware_5_04_00_00` |
+| F28x → F28x | `C2000Ware_26_01_00_00` | `C2000Ware_26_01_00_00` | `C2000Ware_26_01_00_00` |
+| F28x → F29x | `C2000Ware_26_01_00_00` | `F29H85X-SDK_26_00_00` | `C2000Ware_26_01_00_00` |
 
 Construct the values:
 ```
@@ -44,9 +44,9 @@ LOCAL_OUT = <targetProjectPath>/<FILENAME>
 
 **Example** (F28003x → F28P65x):
 ```
-FILENAME  = C2000Ware_6_00_00_00_f28003x_vs_C2000Ware_6_00_00_00_f28p65x_driverlib.html
-FULL_URL  = https://dev.ti.com/tirex/content/C2000Ware_6_00_00_00/docs/C2000Ware_6_00_00_00_Migration_Guides/html_pages/diff_reports/C2000Ware_6_00_00_00_f28003x_vs_C2000Ware_6_00_00_00_f28p65x_driverlib.html
-LOCAL_OUT = <targetProjectPath>/C2000Ware_6_00_00_00_f28003x_vs_C2000Ware_6_00_00_00_f28p65x_driverlib.html
+FILENAME  = C2000Ware_26_01_00_00_f28003x_vs_C2000Ware_26_01_00_00_f28p65x_driverlib.html
+FULL_URL  = https://dev.ti.com/tirex/content/C2000Ware_26_01_00_00/docs/C2000Ware_26_01_00_00_Migration_Guides/html_pages/diff_reports/C2000Ware_26_01_00_00_f28003x_vs_C2000Ware_26_01_00_00_f28p65x_driverlib.html
+LOCAL_OUT = <targetProjectPath>/C2000Ware_26_01_00_00_f28003x_vs_C2000Ware_26_01_00_00_f28p65x_driverlib.html
 ```
 
 ### 4.pre.2 — Run the download
