@@ -20,6 +20,7 @@ import {
 } from './idea-mcp-config';
 import { deployIdeaSkills } from '../skills/idea-skills';
 import { isDeviceF29x } from '../deviceData';
+import { renderMigrationGuideMarkdown } from '../migrationGuide';
 import { normalizeMigrationExceptionPath } from '../utilities/utils';
 
 let httpServer: http.Server | null = null;
@@ -445,6 +446,37 @@ Pass the sourceDevice from get_projects() to identify the device family for regi
 			}
 		);
 	}
+
+	server.registerTool(
+		'render_migration_guide_section',
+		{
+			description: `Render a section of a downloaded TI driverlib migration-guide HTML report as Markdown.
+
+Given the local path to the HTML file (downloaded in the migration workflow) and a symbol anchor (the fragment from a Migration Collateral URL, e.g. "CMPSS_configFilterHigh"), returns a structured Markdown block describing the change: old/new function signatures, argument changes, removed/added parameters, and the full diff body.
+
+Pass anchor "--all" to render the entire report as a single Markdown document.
+
+Use this instead of reading the raw HTML — the tool navigates the anchor, strips difflib markup, and reconstructs function bodies automatically.
+
+If the anchor is not found in the report, the result contains "_ERROR: section not found._" — treat this as a fallback signal and try ti-asm-mcp or the local SDK header instead.`,
+			inputSchema: {
+				htmlPath: z.string().describe('Absolute path to the downloaded migration-guide HTML file (the Migration guide HTML value from c2000-migration.md).'),
+				anchor: z.string().describe('Symbol name to look up (e.g. "CMPSS_configFilterHigh"). Matches the #fragment in the Migration Collateral URL. Pass "--all" to render the full report.'),
+			} as any,
+		},
+		async ({ htmlPath, anchor }: any) => {
+			if (!fs.existsSync(htmlPath)) {
+				return { content: [{ type: 'text' as const, text: `Error: File not found: ${htmlPath}` }] };
+			}
+			try {
+				const md = renderMigrationGuideMarkdown(htmlPath, anchor);
+				return { content: [{ type: 'text' as const, text: md }] };
+			} catch (err) {
+				const msg = err instanceof Error ? err.message : String(err);
+				return { content: [{ type: 'text' as const, text: `Error rendering migration guide section: ${msg}` }] };
+			}
+		}
+	);
 
 	return server;
 }

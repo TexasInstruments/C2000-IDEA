@@ -31,13 +31,22 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 
 ## Reading Migration Collateral links
 
-When fixing a reported issue that has no `Suggested fix`, read the local migration guide
-HTML from your briefing. Navigate to the exact `#<symbol>` anchor, read the diff block,
-and apply the fix using only that data.
+When fixing a reported issue that has no `Suggested fix`, call:
 
-If `Migration guide HTML` is `DOWNLOAD FAILED` or the anchor is not found: try
-`ti-asm-mcp` or the SDK header at `<c2000ware_path>/driverlib/<target-device>/driverlib/<module>.h`.
-Never fabricate replacements.
+```
+render_migration_guide_section(
+  htmlPath = <Migration guide HTML from briefing>,
+  anchor   = <symbol name from the #fragment of the Migration Collateral URL>
+)
+```
+
+The tool returns a Markdown block with the old/new signatures and diff body. Apply
+the fix using only that data.
+
+If `Migration guide HTML` is `DOWNLOAD FAILED` or the tool returns an error: ask the
+user *"Collateral not available for `{symbol}`. Should I try ti-asm-mcp or the local
+SDK header at `<c2000ware_path>/driverlib/<target-device>/driverlib/<module>.h`?"*
+and wait for confirmation before proceeding. Never fabricate.
 
 ---
 

@@ -98,18 +98,22 @@ The agent must fix **every** issue — easy or complex:
 ## Reading Migration Collateral links
 
 Each issue may include a `Migration Collateral` URL with a `#<symbol>` anchor. When
-no `Suggested fix` is provided, read the local migration guide HTML from your briefing:
+no `Suggested fix` is provided, call:
 
-1. Navigate to the exact `#<symbol>` anchor — do not stop at a partial match.
-2. Read the full table row or function block at the anchor plus the surrounding entries.
-3. Follow referenced structs, enums, typedefs, and macros if the diff references them.
-4. Summarize: old signature → new signature, added/removed parameters, type changes.
-5. Apply the fix using only data from the collateral. No inferred parameters.
+```
+render_migration_guide_section(
+  htmlPath = <Migration guide HTML from briefing>,
+  anchor   = <symbol name from the #fragment of the Migration Collateral URL>
+)
+```
 
-If `Migration guide HTML` is `DOWNLOAD FAILED` or the anchor is not found: try
-`ti-asm-mcp` → try local SDK at `<c2000ware_path>/driverlib/<target-device>/` →
-if still unavailable, stop and report: *"Cannot confidently fix `{symbol}` —
-collateral inaccessible."* Never fabricate.
+The tool returns a Markdown block with the old/new signatures, argument changes, and
+diff body. Apply the fix using only that data. No inferred parameters.
+
+If `Migration guide HTML` is `DOWNLOAD FAILED` or the tool returns an error: ask the
+user *"Collateral not available for `{symbol}`. Should I try ti-asm-mcp or the local
+SDK header at `<c2000ware_path>/driverlib/<target-device>/driverlib/<module>.h`?"*
+and wait for confirmation before proceeding. Never fabricate.
 
 ---
 
