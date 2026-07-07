@@ -74,6 +74,8 @@ export const C2000_IDEA_VIEW_COLLATERAL_ADDITIONAL_TREE_VIEW = "c2000-idea.colla
 //
 export const C2000_IDEA_CMD_PROJECT_TREE_VIEW_REFRESH = "c2000-idea.projectTreeView.refreshEntry";
 export const C2000_IDEA_VIEW_PROJECT_TREE_VIEW = "c2000-idea.projectTreeView";
+export const C2000_IDEA_CMD_COLLATERAL_TREE_VIEW_REFRESH = "c2000-idea.collateralTreeView.refreshEntry";
+export const C2000_IDEA_CMD_COLLATERAL_ADDITIONAL_TREE_VIEW_REFRESH = "c2000-idea.collateralAdditionalView.refreshEntry";
 
 //
 // Walkthroughs

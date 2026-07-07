@@ -16,7 +16,10 @@ export class CollateralTreeView {
 	constructor(context: vscode.ExtensionContext) {
         extensionContext = context;
 		collaterlTreeView = vscode.window.createTreeView(info.C2000_IDEA_VIEW_COLLATERAL_TREE_VIEW, { treeDataProvider: collateralTreeViewTreeDataProvider(), showCollapseAll: true });
-        context.subscriptions.push(collaterlTreeView);
+        let disposableCollateralTreeViewRefresh = vscode.commands.registerCommand(info.C2000_IDEA_CMD_COLLATERAL_TREE_VIEW_REFRESH, () => {
+            collateralTreeDidChangeTreeData.fire();
+        });
+        context.subscriptions.push(collaterlTreeView, disposableCollateralTreeViewRefresh);
         project.deviceChangeSubscription.push(collateralTreeProjectChangeHandler);
 	}
 }

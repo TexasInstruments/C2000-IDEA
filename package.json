@@ -201,6 +201,16 @@
         "icon": "$(refresh)"
       },
       {
+        "command": "c2000-idea.collateralTreeView.refreshEntry",
+        "title": "C2000: Collateral Tree View Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "c2000-idea.collateralAdditionalView.refreshEntry",
+        "title": "C2000: Additional Resources Tree View Refresh",
+        "icon": "$(refresh)"
+      },
+      {
         "command": "c2000-idea.runBitfieldMigrationCheck",
         "title": "C2000: Run Bitfield Migration Check on File",
         "icon": {
@@ -509,6 +519,16 @@
         {
           "command": "c2000-idea.projectTreeView.refreshEntry",
           "when": "view == c2000-idea.projectTreeView",
+          "group": "navigation"
+        },
+        {
+          "command": "c2000-idea.collateralTreeView.refreshEntry",
+          "when": "view == c2000-idea.collateralTreeView",
+          "group": "navigation"
+        },
+        {
+          "command": "c2000-idea.collateralAdditionalView.refreshEntry",
+          "when": "view == c2000-idea.collateralAdditionalView",
           "group": "navigation"
         }
       ],
