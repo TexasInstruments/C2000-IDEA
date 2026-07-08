@@ -217,7 +217,10 @@ export class CollateralAdditionalTreeView {
         }
 
 		collaterlAdditionalTreeView = vscode.window.createTreeView(info.C2000_IDEA_VIEW_COLLATERAL_ADDITIONAL_TREE_VIEW, { treeDataProvider: collateralAdditionalTreeViewTreeDataProvider(), showCollapseAll: true });
-        context.subscriptions.push(collaterlAdditionalTreeView);
+        let disposableCollateralAdditionalTreeViewRefresh = vscode.commands.registerCommand(info.C2000_IDEA_CMD_COLLATERAL_ADDITIONAL_TREE_VIEW_REFRESH, () => {
+            collateralAdditionalTreeDidChangeTreeData.fire();
+        });
+        context.subscriptions.push(collaterlAdditionalTreeView, disposableCollateralAdditionalTreeViewRefresh);
         project.wordChangeSubscription.push(collateralAdditionalTreeWordChangeHandler);
 	}
 }

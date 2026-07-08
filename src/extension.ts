@@ -32,7 +32,13 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	packageJson.loadPackageJSON(context);
 
-	isTheia = await utils.isTheiaEnv();
+	// Fire-and-forget: do NOT await here. isTheia's only consumer is the deferred
+	// openCollateral command handler below, so the value isn't needed synchronously.
+	// Awaiting vscode.commands.getCommands() before registering the tree views deferred
+	// their TreeDataProvider registration past Theia's frontend "ready" snapshot
+	// (eclipse-theia/theia#3907), intermittently leaving the contributed views empty on
+	// Code Composer Studio. Registering everything in one synchronous tick avoids that.
+	utils.isTheiaEnv().then(v => { isTheia = v; });
 
 	safeInit('project', () => project.projectSetup(context));
 	safeInit('register', () => register.registerSetup(context));
