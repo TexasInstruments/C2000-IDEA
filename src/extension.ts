@@ -98,7 +98,6 @@ export async function activate(context: vscode.ExtensionContext) {
 	{
 		project.projectOnChangeActiveTextEditor(vscode.window.activeTextEditor);
 	}
-
 }
 
 // This method is called when your extension is deactivated

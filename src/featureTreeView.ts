@@ -120,6 +120,15 @@ function featureTreeInfosInit(){
                 },
                 {
                     treeItem: {
+                        label: packageJson.getPackageJSONCommand(info.C2000_IDEA_CMD_DOWNLOAD_AUTO_MIGRATION_GUIDE).title.replace("C2000: ", ""),
+                        //iconPath: packageJson.convertJSONIconPath(packageJson.getPackageJSONCommand(info.C2000_IDEA_CMD_DOWNLOAD_AUTO_MIGRATION_GUIDE).icon),
+                        iconPath: utils.getNoneIconPath(extensionContext),
+                        contextValue: info.C2000_IDEA_VIEW_FEATURE_TREE_VIEW + ".downloadAutoMigrationGuide",
+                        tooltip: "Click to download any-to-any migration guide HTML for offline access. Select source device, target device, and output file location."
+                    },
+                },
+                {
+                    treeItem: {
                         label: packageJson.getPackageJSONCommand(info.C2000_IDEA_CMD_RUN_MIGRATION_CHECK).title.replace("C2000: ", ""),
                         //iconPath: packageJson.convertJSONIconPath(packageJson.getPackageJSONCommand(info.C2000_IDEA_CMD_RUN_MIGRATION_CHECK).icon),
                         iconPath: utils.getNoneIconPath(extensionContext),

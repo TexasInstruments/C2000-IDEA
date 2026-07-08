@@ -22,6 +22,7 @@ export const C2000_IDEA_CMD_SETUP_MIGRATION = "c2000-idea.setupMigration";
 export const C2000_IDEA_CMD_SETUP_PROJECT_CURRENT_DEVICE = "c2000-idea.setupProjectCurrentDevice";
 export const C2000_IDEA_CMD_CLEAR_ALL_MIGRATION_DATA = "c2000-idea.clearAllMigrationData";
 export const C2000_IDEA_CMD_OPEN_AUTO_MIGRATION_GUIDE = "c2000-idea.openAnyToAnyMigrationGuide";
+export const C2000_IDEA_CMD_DOWNLOAD_AUTO_MIGRATION_GUIDE = "c2000-idea.downloadAutoMigrationGuide";
 export const C2000_IDEA_CMD_ENABLE_CONT_MIGRATION_CHECK = "c2000-idea.enableContininuousMigrationCheck";
 export const C2000_IDEA_CMD_DISABLE_CONT_MIGRATION_CHECK = "c2000-idea.disableContininuousMigrationCheck";
 export const C2000_IDEA_CMD_EXPORT_MIGRATION_REPORT = "c2000-idea.exportMigrationReport";

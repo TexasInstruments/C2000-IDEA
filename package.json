@@ -2,7 +2,7 @@
   "name": "c2000-idea",
   "displayName": "C2000 IDEA",
   "description": "C2000 Real-Time Controller IDE ASSIST",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "engines": {
     "vscode": "^1.76.0"
   },
@@ -95,6 +95,11 @@
       {
         "command": "c2000-idea.openAnyToAnyMigrationGuide",
         "title": "C2000: Open Any-to-Any Migration Guide",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "c2000-idea.downloadAutoMigrationGuide",
+        "title": "C2000: Download Any-to-Any Migration Guide",
         "icon": "$(globe)"
       },
       {
@@ -616,6 +621,11 @@
         {
           "command": "c2000-idea.openAnyToAnyMigrationGuide",
           "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.openAnyToAnyMigrationGuide",
+          "group": "inline"
+        },
+        {
+          "command": "c2000-idea.downloadAutoMigrationGuide",
+          "when": "view == c2000-idea.featureTreeView && viewItem == c2000-idea.featureTreeView.downloadAutoMigrationGuide",
           "group": "inline"
         },
         {

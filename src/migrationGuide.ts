@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { migrationSDKVersionUpdate, C2000_AUTO_MIGRATION_GUIDE_LINK } from './migration';
 
 //
 // migrationGuide.ts
@@ -194,4 +195,89 @@ export function renderMigrationGuideMarkdownFromHtml(html: string, anchor: strin
 export function renderMigrationGuideMarkdown(htmlPath: string, anchor: string): string {
 	const html = fs.readFileSync(path.resolve(htmlPath), 'utf8');
 	return renderMigrationGuideMarkdownFromHtml(html, anchor);
+}
+
+/**
+ * Result type for downloadMigrationGuideHtml operation.
+ */
+export interface MigrationDownloadResult {
+	success: boolean;
+	error?: string;  // Only populated if success is false
+	filePath?: string;  // The path where HTML was saved (for confirmation)
+	fileSize?: number;  // Size in bytes (optional, for verification)
+}
+
+/**
+ * Download a migration guide HTML file from TI's servers and save it locally.
+ *
+ * Constructs the remote URL based on source and target devices, fetches the HTML,
+ * and writes it to the specified output path. Overwrites existing files.
+ *
+ * @param sourceDevice Source device name (e.g., "F28374D")
+ * @param targetDevice Target device name (e.g., "F29H85X")
+ * @param outputPath   Absolute file path where HTML should be saved (including filename)
+ * @returns DownloadResult with success status, optional error message, file path, and size
+ */
+export async function downloadMigrationGuideHtml(
+	sourceDevice: string,
+	targetDevice: string,
+	outputPath: string
+): Promise<MigrationDownloadResult> {
+	try {
+		// Validate that source and target devices are different
+		if (sourceDevice.toLowerCase() === targetDevice.toLowerCase()) {
+			return {
+				success: false,
+				error: `Source and target devices must be different. Both: ${sourceDevice}`
+			};
+		}
+
+		// Get SDK versions and update the base URL based on device migration direction
+		const sdkUpdate = await migrationSDKVersionUpdate(sourceDevice, targetDevice);
+
+		// Construct the migration guide URL following the pattern:
+		// {BASE}/diff_reports/{FROM_VERSION}_{source_device}_vs_{TO_VERSION}_{target_device}_driverlib.html
+		const url = C2000_AUTO_MIGRATION_GUIDE_LINK +
+			"diff_reports/" +
+			sdkUpdate.from + "_" +
+			sourceDevice.toLowerCase() +
+			"_vs_" +
+			sdkUpdate.to + "_" +
+			targetDevice.toLowerCase() +
+			"_driverlib.html";
+
+		// Fetch the HTML from the remote URL
+		const response = await fetch(url);
+		if (!response.ok) {
+			return {
+				success: false,
+				error: `Failed to fetch migration guide: HTTP ${response.status} ${response.statusText} for URL: ${url}`
+			};
+		}
+
+		const html = await response.text();
+
+		// Write the HTML to the output path, overwriting if it exists
+		fs.writeFileSync(outputPath, html, 'utf8');
+
+		// Get file size for confirmation
+		const stats = fs.statSync(outputPath);
+
+		return {
+			success: true,
+			filePath: outputPath,
+			fileSize: stats.size
+		};
+	} catch (error) {
+		let errorMessage = 'Unknown error';
+		if (error instanceof TypeError) {
+			errorMessage = `Network error: ${error.message}`;
+		} else if (error instanceof Error) {
+			errorMessage = error.message;
+		}
+		return {
+			success: false,
+			error: `Failed to download migration guide: ${errorMessage}`
+		};
+	}
 }

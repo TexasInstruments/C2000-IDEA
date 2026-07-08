@@ -6,6 +6,7 @@ import * as preprocessor from './utilities/preprocessor';
 import * as deviceData from './deviceData';
 import * as register from './register';
 import path = require('path');
+import { downloadMigrationGuideHtml } from './migrationGuide';
 
 const outputChannel = vscode.window.createOutputChannel("My Extension Logs");
 const C2000_MIGRATION_DIAGNOSTIC_COLLECTION_NAME = "C2000 Migration";
@@ -14,7 +15,7 @@ const C2000_MIGRATION_INCOMPAT_SOURCE = "C2000 Migration Check";
 const C2000_MIGRATION_C2000WARE_VERSION = "C2000Ware_26_01_00_00";
 const C2000_MIGRATION_C2000WARE_OLDVERSION = "C2000Ware_26_01_00_00";
 const C2000_MIGRATION_C29SDK_VERSION = "F29H85X-SDK_26_00_00";
-let C2000_AUTO_MIGRATION_GUIDE_LINK = "https://dev.ti.com/tirex/content/" + C2000_MIGRATION_C2000WARE_VERSION + "/docs/" + C2000_MIGRATION_C2000WARE_VERSION + "_Migration_Guides/html_pages/";
+export let C2000_AUTO_MIGRATION_GUIDE_LINK = "https://dev.ti.com/tirex/content/" + C2000_MIGRATION_C2000WARE_VERSION + "/docs/" + C2000_MIGRATION_C2000WARE_VERSION + "_Migration_Guides/html_pages/";
 
 const lastMigrationCheckTimestampPerURI: {[uri:string]: number } = {}; //Object to store duration time for each file
 
@@ -115,9 +116,13 @@ export function migrationSetup(context: vscode.ExtensionContext)
 
 	
 	let disposableOpenAutoMigrationGuide = vscode.commands.registerCommand(info.C2000_IDEA_CMD_OPEN_AUTO_MIGRATION_GUIDE, (args) => {
-		
+
 		vscode.env.openExternal(vscode.Uri.parse(migrationGetAutoMigrationGuideMainPage()));
-				
+
+	});
+
+	let downloadAutoMigrationGuideDisposable = vscode.commands.registerCommand(info.C2000_IDEA_CMD_DOWNLOAD_AUTO_MIGRATION_GUIDE, (args) => {
+		migrationDownloadAutoMigrationGuide(context, args);
 	});
 
 	let enableContinuousMigrationCheckDisposable = vscode.commands.registerCommand(info.C2000_IDEA_CMD_ENABLE_CONT_MIGRATION_CHECK, () => {		
@@ -216,6 +221,7 @@ export function migrationSetup(context: vscode.ExtensionContext)
 
 	context.subscriptions.push(
 		disposableOpenAutoMigrationGuide,
+		downloadAutoMigrationGuideDisposable,
 		enableContinuousMigrationCheckDisposable,
 		disableContinuousMigrationCheckDisposable,
 		runMigrationCheckDisposable,
@@ -2034,4 +2040,70 @@ function getRegisterMigrationBitfiledCode(migEl: MigrationElement)
 		bfCode = code;
 	}
 	return bfCode;
+}
+
+async function migrationDownloadAutoMigrationGuide(context: vscode.ExtensionContext, args?: { sourceDevice?: string; targetDevice?: string; outputPath?: string }): Promise<void> {
+	let sourceDevice: string;
+	let targetDevice: string;
+	let outputPath: string;
+
+	// If args are provided with all required values, use them directly
+	if (args && args.sourceDevice && args.targetDevice && args.outputPath) {
+		sourceDevice = args.sourceDevice;
+		targetDevice = args.targetDevice;
+		outputPath = args.outputPath;
+	} else {
+		// Show interactive prompts for user selection
+		const deviceOptions = deviceData.DEVICE_LIST.map(device => ({
+			label: device,
+			picked: false
+		}));
+
+		// Source device selection
+		const sourceSelected = await vscode.window.showQuickPick(deviceOptions, {
+			title: "Select source device",
+			placeHolder: "Choose source device"
+		});
+
+		if (!sourceSelected) {
+			return;  // User cancelled
+		}
+		sourceDevice = sourceSelected.label;
+
+		// Target device selection
+		const targetSelected = await vscode.window.showQuickPick(deviceOptions, {
+			title: "Select target device",
+			placeHolder: "Choose target device"
+		});
+
+		if (!targetSelected) {
+			return;  // User cancelled
+		}
+		targetDevice = targetSelected.label;
+
+		// Output file path selection
+		const uri = await vscode.window.showSaveDialog({
+			defaultUri: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined,
+			filters: {
+				"HTML files": ["html"],
+				"All files": ["*"]
+			}
+		});
+
+		if (!uri) {
+			return;  // User cancelled
+		}
+		outputPath = uri.fsPath;
+	}
+
+	// Download the migration guide
+	const result = await downloadMigrationGuideHtml(sourceDevice, targetDevice, outputPath);
+
+	if (result.success) {
+		vscode.window.showInformationMessage(
+			`Migration guide downloaded: ${result.filePath} (${result.fileSize} bytes)`
+		);
+	} else {
+		vscode.window.showErrorMessage(`Download failed: ${result.error}`);
+	}
 }
