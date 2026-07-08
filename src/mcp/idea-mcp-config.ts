@@ -2,6 +2,7 @@ import { migrationRunMigrationCheckOnUri, migrationRunMigrationCheckOnProject, e
 import { registerBitfieldToDriverlibMigrationOnUri, exportRegisterBitfieldAgentReport } from '../register';
 import { DEVICE_LIST } from '../deviceData';
 import { getProjects, allProjectInfos, updateProjectCurrentDevice, updateProjectMigrationDevices, addMigrationCheckFolderException, removeMigrationCheckFolderException, setMigrationCheckFolderExceptions } from '../utilities/project';
+import { downloadMigrationGuideHtml } from '../migrationGuide';
 
 export const IDEA_MCP_PLATFORM = 'C2000';
 export const IDEA_MCP_SERVER_NAME = 'idea-mcp';
@@ -26,4 +27,5 @@ export const IDEA_MCP_HANDLERS = {
 	addMigrationFolderException: addMigrationCheckFolderException,
 	removeMigrationFolderException: removeMigrationCheckFolderException,
 	setMigrationFolderExceptions: setMigrationCheckFolderExceptions,
+	downloadMigrationGuide: downloadMigrationGuideHtml,
 };

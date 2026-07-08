@@ -80,6 +80,7 @@ AVAILABLE TOOLS:
 - get_project_migration_report() — Run a device-to-device migration check on ALL files in a project and get a complete multi-file report. Use this for project-level migration.
 - get_device_migration_report() — Run a device-to-device migration check on a single source file. Use this when you need per-file control (e.g. fixing one file at a time after a project report).
 - get_bitfield_to_driverlib_migration_report() — Run a bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register accesses and suggests driverlib function replacements.
+- download_migration_guide() — Download the TI any-to-any driverlib migration-guide HTML for a source→target device pair to an absolute local file path.
 
 RECOMMENDED FLOW:
 1. Call get_projects() to discover projects, their current devices, migration targets, and current folder exclusions (migrationFolderExceptions).
@@ -232,6 +233,34 @@ Any entry equal to the project's current device is dropped automatically (you ca
 				}
 
 				return { content: [{ type: 'text' as const, text: `Set migration devices for project "${projectName}" to [${applied.join(', ')}].` }] };
+			}
+		);
+	}
+
+	if (IDEA_MCP_HANDLERS.downloadMigrationGuide && IDEA_MCP_HANDLERS.getDeviceList) {
+		const downloadMigrationGuide = IDEA_MCP_HANDLERS.downloadMigrationGuide;
+		const deviceList = IDEA_MCP_HANDLERS.getDeviceList();
+
+		server.registerTool(
+			'download_migration_guide',
+			{
+				description: `Download the TI any-to-any driverlib migration-guide HTML report for a source→target device pair and save it to a local file.
+
+The report is the diff of driverlib between the two devices (function/register/enum changes) — the same content the migration reports link to. It is fetched from dev.ti.com, so **network access is required**, and an existing file at the output path is overwritten.
+
+Source and target must be different devices, both from list_migration_devices(). \`outputPath\` must be an **absolute** file path including the \`.html\` filename (e.g. a project path from get_projects() joined with a filename) — a relative path is NOT resolved against the workspace and will write to an unpredictable location.`,
+				inputSchema: {
+					sourceDevice: z.enum(deviceList as [string, ...string[]]).describe('Source device family. Must be one of the families from list_migration_devices() and different from targetDevice.'),
+					targetDevice: z.enum(deviceList as [string, ...string[]]).describe('Target device family. Must be one of the families from list_migration_devices() and different from sourceDevice.'),
+					outputPath: z.string().describe('Absolute file path (including the .html filename) to write the downloaded guide to. Must be absolute — relative paths are not resolved against the workspace.'),
+				} as any,
+			},
+			async ({ sourceDevice, targetDevice, outputPath }: any) => {
+				const result = await downloadMigrationGuide(sourceDevice, targetDevice, outputPath);
+				if (result.success) {
+					return { content: [{ type: 'text' as const, text: `Downloaded migration guide (${sourceDevice} → ${targetDevice}) to ${result.filePath} (${result.fileSize} bytes).` }] };
+				}
+				return { content: [{ type: 'text' as const, text: `Error: ${result.error}` }] };
 			}
 		);
 	}
