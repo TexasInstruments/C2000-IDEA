@@ -483,7 +483,9 @@ Pass the sourceDevice from get_projects() to identify the device family for regi
 
 Given the local path to the HTML file (downloaded in the migration workflow) and a symbol anchor (the fragment from a Migration Collateral URL, e.g. "CMPSS_configFilterHigh"), returns a structured Markdown block describing the change: old/new function signatures, argument changes, removed/added parameters, and the full diff body.
 
-Use this instead of reading the raw HTML — the tool navigates the anchor, strips difflib markup, and reconstructs function bodies automatically.
+Workflow: download the report once with download_migration_guide, then ALWAYS call this tool with that file path + anchor to read any section.
+
+NEVER read the downloaded HTML raw — it is difflib-mangled and huge. Always use this tool to get a section's Markdown; reading the raw HTML is not allowed.
 
 If the anchor is not found in the report, the result contains "_ERROR: section not found._" — treat this as a fallback signal and try ti-asm-mcp or the local SDK header instead.`,
 			inputSchema: {
