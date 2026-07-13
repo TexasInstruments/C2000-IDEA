@@ -138,40 +138,51 @@ This file is the persistent migration log for this target project.
 > - The only exception is the initial creation here in step 1.9 — this is the one and only
 >   time the file is created (written from scratch). After this point, all writes are appends.
 
-Seed the log with:
-- Source project name and directory
-- Source device (family name)
-- Target device (family name)
-- SDK type (C2000Ware / Motor Control SDK / Digital Power SDK)
-- `c2000ware_path`
-- SDK version string (exact string from `getProjectProductReferences`, e.g., `C2000Ware_5_04_00_00`)
-- Target project name and directory
-- AGENTS.md availability
-- **Phase 0 pre-flight results** — embed the session-context results captured during Phase 0:
-  ```
-  Pre-flight (Phase 0):
-    IDEA MCP          : <live | ERROR — <message>>
-    CCS Project MCP   : <live | ERROR — <message>>
-    CCS SysConfig MCP : <live | not available>
-    TI ASM MCP        : <live | not available>
-  ```
-  If Phase 0 was skipped or not run, record: `Pre-flight (Phase 0): not run`.
-- Phase status table (seed with):
-  ```
-  | Phase | Status | Notes |
-  |-------|--------|-------|
-  | Phase 0 — Pre-flight     | <see below> | <see below> |
-  | Phase 1 — Import         | IN PROGRESS | |
-  | Phase 2 — Settings       | PENDING | |
-  | Phase 3 — SysConfig      | PENDING | |
-  | Phase 4 — Migrate Code   | PENDING | |
-  | Phase 5 — Report         | PENDING | |
-  ```
-  **Phase 0 row — set based on session context:**
-  - If Phase 0 pre-flight results are present in your session context (you ran Phase 0
-    earlier in this session): set `COMPLETE | MCP health check complete`
-  - If Phase 0 was not run or context is absent: set `SKIPPED | pre-flight not run`
-  - Do **not** hard-code `COMPLETE` for Phase 0 if you did not actually run Phase 0.
+Seed the log using this exact template — fill in every `<placeholder>`:
+
+```markdown
+# C2000 Migration Log
+
+| Field | Value |
+|---|---|
+| Source project | `<sourceProjectName>` |
+| Source project directory | `<sourceProjectDir>` |
+| Source device | `<sourceDevice>` |
+| Target project | `<targetProjectName>` |
+| Target project directory | `<targetProjectDir>` |
+| Target device | `<targetDevice>` |
+| SDK type | `<C2000Ware / Motor Control SDK / Digital Power SDK>` |
+| C2000Ware path | `<c2000ware_path>` |
+| SDK version | `<e.g. C2000Ware_5_04_00_00>` |
+| AGENTS.md | `<found at <path> / not found>` |
+
+## Pre-flight (Phase 0)
+
+| MCP | Status |
+|---|---|
+| IDEA MCP | `<live / ERROR — <message>>` |
+| CCS Project MCP | `<live / ERROR — <message>>` |
+| CCS SysConfig MCP | `<live / not available>` |
+| TI ASM MCP | `<live / not available>` |
+
+*(If Phase 0 was not run, write: `Pre-flight (Phase 0): not run`)*
+
+## Phase Status
+
+| Phase | Status | Notes |
+|---|---|---|
+| Phase 0 — Pre-flight | `<COMPLETE / SKIPPED>` | `<MCP health check complete / pre-flight not run>` |
+| Phase 1 — Import | `IN PROGRESS` | |
+| Phase 2 — Settings | `PENDING` | |
+| Phase 3 — SysConfig | `PENDING` | |
+| Phase 4 — Migrate Code | `PENDING` | |
+| Phase 5 — Report | `PENDING` | |
+```
+
+**Phase 0 row — set based on session context:**
+- Phase 0 ran in this session → `COMPLETE | MCP health check complete`
+- Phase 0 not run → `SKIPPED | pre-flight not run`
+- Do **not** hard-code `COMPLETE` if you did not actually run Phase 0.
 
 **Immediately update the log:** Set Phase 1 status to COMPLETE and add both build results
 (step 1.6 pre-rename build and step 1.8 post-rename build).

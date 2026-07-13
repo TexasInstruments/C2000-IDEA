@@ -19,22 +19,23 @@ produces a result you cannot interpret. Do not guess, retry blindly, or skip the
 
 ---
 
-If the source project does not include a syscfg file, keep universal project's syscfg file. Skip 3.1 and go directly to 3.2 instead.
+In both cases the final `.syscfg` in the target project must be named **`<targetProjectName>.syscfg`**.
+
+If the source project does not include a syscfg file, rename the universal project's `.syscfg` to `<targetProjectName>.syscfg`. Skip 3.1 and go directly to 3.2 instead.
 
 ## 3.1 Copy the source `.syscfg` file (source-has-syscfg only)
 
-If the source project has a `.syscfg`, copy it into the target project directory, replacing
-the target universal template's `.syscfg` (this means remove the universal project's `.syscfg` file). 
-The source `.syscfg` itself stays untouched — work on the copy.
+If the source project has a `.syscfg`:
+1. Note the filename of the existing `.syscfg` in the target project directory (e.g. `universal_c2000.syscfg`).
+2. Copy the source `.syscfg` into the target project directory and rename the copy to `<targetProjectName>.syscfg` (it does **not** overwrite the universal template because the filenames differ).
+3. Delete the file noted in step 1.
+4. Confirm only one `.syscfg` remains in the target project directory and its name is `<targetProjectName>.syscfg` before continuing.
 
-If the source has no `.syscfg`, skip this step and keep the universal project's `.syscfg`
-as-is (it already contains the device-support module).
+The source `.syscfg` itself stays untouched — work on the copy.
 
 ## 3.2 Open the target `.syscfg`
 
-Open the target project's `.syscfg` via `openFile` (ccs-sysconfig MCP) — the copy from 3.1,
-or the universal's own file when the source had none. Read the `additionalInstructions`
-field in the result.
+Open the target project's `.syscfg` via `openFile` (ccs-sysconfig MCP) — always `<targetProjectName>.syscfg` in the target project directory. Read the `additionalInstructions` field in the result.
 
 ## 3.3 Ensure the device-support module is present
 
@@ -61,6 +62,7 @@ Write a micro-checkpoint to `c2000-migration.md`:
 Phase 3A: COMPLETE
   syscfg copied: yes / no (source had no syscfg)
   source-has-syscfg: yes / no
+  target syscfg filename: <targetProjectName>.syscfg
   device_support module: present / added
   openFile result: OK 
 ```
