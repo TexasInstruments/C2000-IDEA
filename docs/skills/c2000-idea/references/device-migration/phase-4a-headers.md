@@ -37,10 +37,17 @@ orchestrator before proceeding:
 | `sysConfigOutputLocation` | `<path — do not edit any file under this folder>` |
 | List of `.h` files to migrate | `<paths provided by orchestrator>` |
 
-> **REQUIRED: Verify migration approach from `c2000-migration.md` before touching any file:**
+> **REQUIRED: Two checks before touching any file:**
+>
+> **1. Migration guide HTML:**
+> Check the `Migration guide HTML:` value from your briefing.
+> - If the value is `DOWNLOAD FAILED` or the file does not exist on disk → **stop**.
+>   Tell the orchestrator: *"Migration guide HTML is not available. Re-run Step 4.pre before dispatching Phase 4A."*
+> - If the file exists on disk → proceed to check 2.
+>
+> **2. Migration approach:**
 > Read `c2000-migration.md` and locate the `## Phase 4 — Migration Strategy` section.
 > Confirm the `Strategy:` value matches the `Migration approach` in your briefing above.
->
 > - If the log says `Strategy: Approach 1 (shared #ifdef)` → use `#ifdef` wrapping for every fix.
 > - If the log says `Strategy: Approach 2 (clean replacement)` → replace symbols directly for every fix.
 > - **If the section is missing or the values conflict:** stop and ask the orchestrator
