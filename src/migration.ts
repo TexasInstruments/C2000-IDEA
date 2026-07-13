@@ -628,7 +628,7 @@ export async function migrationRunMigrationCheckOnProject(context: vscode.Extens
 export async function getMigrationJSON(context: vscode.ExtensionContext, currentDevice: string, migrationDevice:  string)
 {
 	var jsonMigrationDataName = currentDevice.toLowerCase() + "_" + migrationDevice.toLocaleLowerCase() + ".json";
-	var jsonMigrationData = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", jsonMigrationDataName));
+	var jsonMigrationData = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", "any_to_any_data", jsonMigrationDataName));
 	const jsonMigrationDataContent = Buffer.from(jsonMigrationData).toString('utf8');
 	var jsonMigration : MigrationData = JSON.parse(jsonMigrationDataContent);
 
@@ -639,7 +639,7 @@ export async function getMigrationResolutionJSON(context: vscode.ExtensionContex
 {
 
 	var jsonMigrationResolutionDataName = currentDevice.toLowerCase() + "_" + migrationDevice.toLocaleLowerCase() + "_register_migration.json";
-	var jsonMigrationResolutionData = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", jsonMigrationResolutionDataName));
+	var jsonMigrationResolutionData = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", "bitfield_data", jsonMigrationResolutionDataName));
 	const jsonMigrationResolutionDataContent = Buffer.from(jsonMigrationResolutionData).toString('utf8');
 	var jsonMigrationResolution: MigrationResolutionData = JSON.parse(jsonMigrationResolutionDataContent);
 
@@ -656,7 +656,7 @@ export async function getMigrationDriverlibResolutionJSON(context: vscode.Extens
 	
 		// Check for F29H85x device migration
 		if(utils.isDeviceInMigrationResolutionList(migrationDevice)){
-			var jsonF28F29MigrationData = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", jsonMigrationDriverlibResolutionDataName));
+			var jsonF28F29MigrationData = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", "resolutions_data_v1", jsonMigrationDriverlibResolutionDataName));
 			const jsonF28F29MigrationDataContent = Buffer.from(jsonF28F29MigrationData).toString('utf8');
 			const f28F29Data: MigrationDriverlibResolutionData = JSON.parse(jsonF28F29MigrationDataContent);
 			// Merge the data
@@ -666,7 +666,7 @@ export async function getMigrationDriverlibResolutionJSON(context: vscode.Extens
 
 		// Check for EPWM_MCPWM device migration
 		if(utils.isDeviceInMCPWMMigrationResolutionList(migrationDevice)){
-			var jsonEPWMMCPWMMigrationData = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", "epwm_mcpwm_migration.json"));
+			var jsonEPWMMCPWMMigrationData = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", "resolutions_data_v1", "epwm_mcpwm_migration.json"));
 			const jsonEPWMMCPWMMigrationDataContent = Buffer.from(jsonEPWMMCPWMMigrationData).toString('utf8');
 			const epwmMcpwmData: MigrationDriverlibResolutionData = JSON.parse(jsonEPWMMCPWMMigrationDataContent);
 			// Merge the data
@@ -783,8 +783,8 @@ export async function functionmigrationEnhancement(code: string, trimmedLineText
 	}
 
 	const [functionMapBuffer, argChangeBuffer] = await Promise.all([
-		vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", functionMapFile)),
-		vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", argChangeFile)),
+		vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", "resolutions_data_v1", functionMapFile)),
+		vscode.workspace.fs.readFile(vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", "resolutions_data_v1", argChangeFile)),
 	]);
 	
 	const functionMappings: FunctionMap[] = JSON.parse(Buffer.from(functionMapBuffer).toString('utf-8'));
