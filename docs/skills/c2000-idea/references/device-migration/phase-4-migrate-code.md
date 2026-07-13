@@ -15,6 +15,8 @@ skip the step.
 
 Precondition: user application files are already copied into the target project (Step 2.7).
 
+Ask the user: *"Phases 1, 2, and 3 are complete. Ready to start Phase 4 (source code migration)?"* Wait for confirmation before proceeding.
+
 ---
 
 ## Step 4.pre — Download migration guide collateral HTML
@@ -24,6 +26,8 @@ project directory** once, so every sub-agent (4A, 4B, 4C) can read it from disk 
 of making a separate network request per symbol.
 
 ### 4.pre.1 — Compute URL and local path
+
+> **Do not skip 4.pre.2 even if `Migration guide HTML:` is already recorded in `c2000-migration.md` — the file may not exist on disk in a new session.**
 
 Read `c2000-migration.md` to get `sourceDevice` and `targetDevice` in **lowercase**
 (e.g. `f28003x`, `f28p65x`). Compute SDK version labels based on device families using
@@ -104,7 +108,7 @@ Pass the recorded line verbatim in the `Migration guide HTML` field of every sub
 
 ### 4.0a Ask the user for migration strategy
 
-**Before modifying any files, ask the user:**
+**Before dispatching any sub-agent, ask the user:**
 > "Do you want to (1) keep a shared codebase with `#ifdef` device branches so both
 > source and target devices compile from one file (this way the new files in the target
 > project have both the old source project code and newly generated migration code), or
@@ -376,8 +380,7 @@ Any items needing manual review have been recorded in c2000-migration.md.
 
 Ask: *"Does everything look correct? Ready to move to Phase 5 (migration report)?"*
 
-Wait for the user's confirmation. Then **return to `device-migration.md`** (the workflow
-orchestrator that sent you here) and proceed to Phase 5.
+Wait for the user's confirmation. Then **return to `device-migration.md`** and proceed to Phase 5.
 
 ---
 
