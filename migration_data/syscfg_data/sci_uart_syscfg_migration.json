@@ -1,0 +1,1918 @@
+{
+  "baudRates": {
+    "from_type": "number",
+    "from_displayName": "Baud Rate",
+    "from_description": "The set of baud rates that are used by this instance. On some devices, these rates are used to pre-compute a table of clock dividers necessary for each rate.",
+    "from_default": 115200,
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "baud",
+    "to_type": "number",
+    "to_displayName": "Baud Rate",
+    "status": "mapped",
+    "fixMsg": "Baud rate maps directly. Note the UART baud generator is clocked by the system clock (UART_CLK_FREQ / SYSCLK), whereas SCI is clocked by LSPCLK - the numeric divisor differs even for the same baud."
+  },
+  "brrReg": {
+    "from_type": "number",
+    "from_displayName": "BRR Register Field (LSB)",
+    "from_description": null,
+    "from_default": 115200,
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": null,
+    "status": "no_equivalent",
+    "fixMsg": "SCI exposes a single BRR divisor field; UART computes its integer+fractional baud divisors (IBRD/FBRD) internally from the baud rate, with no equivalent exposed field. No counterpart."
+  },
+  "baudVal": {
+    "from_type": "number",
+    "from_displayName": "Actual Baud Rate Value",
+    "from_description": "Actual baud rate value calculated based on LSPCLK and programmable values for this module. Not all baud rates are possible, depending on LSPCLK and BRR register values available. See the LSPCLK and LSPCLK Divider settings in \"Global Parameters\" being used to calculate this. Note: The actual baud rate is calculated based on the chosen settings and could still vary based on real-world factors like operating temperature, age etc. However this real-world error is typically negligible.",
+    "from_default": 115200,
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "baudVal",
+    "to_type": "number",
+    "to_displayName": "Actual Baud Rate Value",
+    "status": "mapped",
+    "fixMsg": "Computed actual-baud readback; direct counterpart."
+  },
+  "baudErr": {
+    "from_type": "number",
+    "from_displayName": "Baud Rate Error Percent [%]",
+    "from_description": "Percent error of the actual vs. set baud rate of the C2000 SCI. It is recommended to choose an LSPCLK divider and baud rate that will reduce this error as much as possible to avoid incorrectly transmitting/receiving bits or corrupting data.",
+    "from_default": 0,
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "baudErr",
+    "to_type": "number",
+    "to_displayName": "Baud Rate Error Percent",
+    "status": "mapped",
+    "fixMsg": "Computed baud-error readback; direct counterpart."
+  },
+  "loopback": {
+    "from_type": "bool",
+    "from_displayName": "Use Loopback Mode",
+    "from_description": "Whether or not to use loopback mode.",
+    "from_default": false,
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "loopback",
+    "to_type": "bool",
+    "to_displayName": "Enable Loopback Mode",
+    "status": "mapped",
+    "fixMsg": "Loopback-mode enable maps directly."
+  },
+  "wordLenght": {
+    "from_type": "enum",
+    "from_displayName": "Word Length",
+    "from_description": "Length of word.",
+    "from_default": "8",
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "wlen",
+    "to_type": "enum",
+    "to_displayName": "Word Length",
+    "status": "mapped",
+    "fixMsg": "Word length maps 1:1 for 5-8 bits. SCI word lengths 1-4 have no UART equivalent (UART minimum is 5 bits) and cannot be migrated.",
+    "option_map": {
+      "1": {
+        "to_option": null,
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": []
+      },
+      "2": {
+        "to_option": null,
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": []
+      },
+      "3": {
+        "to_option": null,
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": []
+      },
+      "4": {
+        "to_option": null,
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": []
+      },
+      "5": {
+        "to_option": "UART_CONFIG_WLEN_5",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "6": {
+        "to_option": "UART_CONFIG_WLEN_6",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "7": {
+        "to_option": "UART_CONFIG_WLEN_7",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "8": {
+        "to_option": "UART_CONFIG_WLEN_8",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      }
+    }
+  },
+  "stop": {
+    "from_type": "enum",
+    "from_displayName": "Stop Mode",
+    "from_description": "Number of stop bits.",
+    "from_default": "ONE",
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "stp2",
+    "to_type": "enum",
+    "to_displayName": "Stop Bits",
+    "status": "mapped",
+    "fixMsg": "Stop-bit selection maps 1:1.",
+    "option_map": {
+      "ONE": {
+        "to_option": "UART_CONFIG_STOP_ONE",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "TWO": {
+        "to_option": "UART_CONFIG_STOP_TWO",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      }
+    }
+  },
+  "parity": {
+    "from_type": "enum",
+    "from_displayName": "Parity Mode",
+    "from_description": "Parity mode.",
+    "from_default": "SCI_CONFIG_PAR_NONE",
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "eps",
+    "to_type": "enum",
+    "to_displayName": "Parity Select",
+    "status": "partial",
+    "mapping_type": "structural",
+    "fixMsg": "STRUCTURAL: SCI's single parity config splits into three UART configs - pen (Parity Enable), eps (Parity Select odd/even), sps (Stick Parity). PAR_NONE -> pen=false. PAR_EVEN/PAR_ODD -> pen=true with eps set to the mapped value (option_map values are eps enums, not options of a single to_config). Raw register values differ; translate by symbol.",
+    "option_map": {
+      "SCI_CONFIG_PAR_NONE": {
+        "to_option": null,
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": []
+      },
+      "SCI_CONFIG_PAR_EVEN": {
+        "to_option": "UART_CONFIG_PAR_EVEN",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "SCI_CONFIG_PAR_ODD": {
+        "to_option": "UART_CONFIG_PAR_ODD",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      }
+    }
+  },
+  "useInterrupts": {
+    "from_type": "bool",
+    "from_displayName": "Use Interrupt",
+    "from_description": "Whether or not to use Interrupt mode.",
+    "from_default": true,
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "enInterrupt",
+    "to_type": "bool",
+    "to_displayName": "Enable Interrupts",
+    "status": "mapped",
+    "fixMsg": "Enable-interrupts maps directly (useInterrupts -> enInterrupt)."
+  },
+  "useFifo": {
+    "from_type": "bool",
+    "from_displayName": "Use FIFO",
+    "from_description": "Whether or not to use FIFO mode.",
+    "from_default": true,
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "fen",
+    "to_type": "bool",
+    "to_displayName": "Enable FIFO",
+    "status": "mapped",
+    "fixMsg": "Enable-FIFO maps directly (useFifo -> fen). Note the default differs: SCI defaults FIFO on, UART fen defaults off."
+  },
+  "registerInterrupts": {
+    "from_type": "bool",
+    "from_displayName": null,
+    "from_description": "INTERNAL: Hidden config maintained to avoid compatibility issues.",
+    "from_default": false,
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "registerInterrupts",
+    "to_type": "bool",
+    "to_displayName": "Register Interrupt Handler",
+    "status": "mapped",
+    "fixMsg": "Hidden helper that drives interrupt-handler registration; direct counterpart."
+  },
+  "selectRegisteredInterrupts": {
+    "from_type": "multiselect",
+    "from_displayName": "Select Interrupt Handlers to register",
+    "from_description": "List of interrupt handlers to be registered in the interrupt module.",
+    "from_default": [],
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "registerInterrupts",
+    "to_type": "bool",
+    "to_displayName": "Register Interrupt Handler",
+    "status": "partial",
+    "mapping_type": "structural",
+    "fixMsg": "STRUCTURAL: SCI selects RX and/or TX interrupt handlers separately; UART registers a single combined interrupt handler (one interrupt line). Both selections collapse onto the single registerInterrupts bool - there is no per-direction handler option on UART.",
+    "option_map": {
+      "registerRxInt": {
+        "to_option": null,
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": []
+      },
+      "registerTxInt": {
+        "to_option": null,
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": []
+      }
+    }
+  },
+  "enabledInterrupts": {
+    "from_type": "multiselect",
+    "from_displayName": "Enabled Interrupts",
+    "from_description": "Which interrupts to enabled.",
+    "from_default": [],
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "enabledInterrupts",
+    "to_type": "multiselect",
+    "to_displayName": "Enabled Interrupts",
+    "status": "partial",
+    "mapping_type": "structural",
+    "fixMsg": "STRUCTURAL: SCI's RXRDY/BRKDT summary maps to UART_INT_RX (add UART_INT_BE to catch break); TXRDY maps to UART_INT_TX (UART merges the TXRDY/TXFF split - steer with UART_setTxIntMode). In FIFO mode also enable UART_INT_RT so sub-trigger bytes still interrupt.",
+    "option_map": {
+      "SCI_INT_RXRDY_BRKDT": {
+        "to_option": "UART_INT_RX",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "SCI_INT_TXRDY": {
+        "to_option": "UART_INT_TX",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      }
+    }
+  },
+  "enabledFIFOInterrupts": {
+    "from_type": "multiselect",
+    "from_displayName": "Enabled FIFO Interrupts",
+    "from_description": "Which FIFO interrupts to enabled.",
+    "from_default": [],
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "enabledInterrupts",
+    "to_type": "multiselect",
+    "to_displayName": "Enabled Interrupts",
+    "status": "partial",
+    "mapping_type": "structural",
+    "fixMsg": "STRUCTURAL: UART has no separate FIFO-interrupt enables; FIFO behaviour is driven by the trigger levels (txiflsel/rxiflsel) plus UART_INT_RX/TX and UART_INT_RT. SCI_INT_RXFF -> UART_INT_RX (+RT); SCI_INT_TXFF -> UART_INT_TX.",
+    "option_map": {
+      "SCI_INT_RXFF": {
+        "to_option": "UART_INT_RX",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "SCI_INT_TXFF": {
+        "to_option": "UART_INT_TX",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      }
+    }
+  },
+  "enabledErrorInterrupts": {
+    "from_type": "multiselect",
+    "from_displayName": "Enabled Error Interrupts",
+    "from_description": "Which error interrupts to enabled.",
+    "from_default": [],
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "enabledInterrupts",
+    "to_type": "multiselect",
+    "to_displayName": "Enabled Interrupts",
+    "status": "partial",
+    "mapping_type": "structural",
+    "fixMsg": "STRUCTURAL: UART folds error interrupts into the single enabledInterrupts list. SCI_INT_RXERR is a summary that fans out to UART_INT_OE|BE|PE|FE (enable all four - option_map shows the primary OE). PE/FE/OE map 1:1 to UART_INT_PE/FE/OE.",
+    "option_map": {
+      "SCI_INT_RXERR": {
+        "to_option": "UART_INT_OE",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "SCI_INT_PE": {
+        "to_option": "UART_INT_PE",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "SCI_INT_FE": {
+        "to_option": "UART_INT_FE",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "SCI_INT_OE": {
+        "to_option": "UART_INT_OE",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      }
+    }
+  },
+  "txFifo": {
+    "from_type": "enum",
+    "from_displayName": "Transmit FIFO Interrupt Level",
+    "from_description": "Transmit FIFO interrupt level used.",
+    "from_default": "SCI_FIFO_TX0",
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "txiflsel",
+    "to_type": "enum",
+    "to_displayName": "Transmit FIFO Trigger Level",
+    "status": "mapped",
+    "fixMsg": "Transmit FIFO trigger level. On F28E12x, SCI fine levels TX0-TX15 map 1:1 to UART fine levels (UART_FIFO_TXn); SCI_FIFO_TX16 (interrupt when full) has no fine equivalent (UART fine stops at TX15). On F28P65x there are NO fine levels - only coarse 1/8..7/8 fractions (UART_FIFO_TX1_8..TX7_8) - so no per-level option migrates; set the coarse trigger manually. Governed by the UART fineGrainConfig device flag.",
+    "option_map": {
+      "SCI_FIFO_TX0": {
+        "to_option": "UART_FIFO_TX0",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX1": {
+        "to_option": "UART_FIFO_TX1",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX2": {
+        "to_option": "UART_FIFO_TX2",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX3": {
+        "to_option": "UART_FIFO_TX3",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX4": {
+        "to_option": "UART_FIFO_TX4",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX5": {
+        "to_option": "UART_FIFO_TX5",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX6": {
+        "to_option": "UART_FIFO_TX6",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX7": {
+        "to_option": "UART_FIFO_TX7",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX8": {
+        "to_option": "UART_FIFO_TX8",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX9": {
+        "to_option": "UART_FIFO_TX9",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX10": {
+        "to_option": "UART_FIFO_TX10",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX11": {
+        "to_option": "UART_FIFO_TX11",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX12": {
+        "to_option": "UART_FIFO_TX12",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX13": {
+        "to_option": "UART_FIFO_TX13",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX14": {
+        "to_option": "UART_FIFO_TX14",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX15": {
+        "to_option": "UART_FIFO_TX15",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_TX16": {
+        "to_option": null,
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": []
+      }
+    }
+  },
+  "rxFifo": {
+    "from_type": "enum",
+    "from_displayName": "Receive FIFO Interrupt Level",
+    "from_description": "Receive FIFO interrupt level used.",
+    "from_default": "SCI_FIFO_RX0",
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "rxiflsel",
+    "to_type": "enum",
+    "to_displayName": "Receive FIFO Trigger Level",
+    "status": "mapped",
+    "fixMsg": "Receive FIFO trigger level. NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (interrupt when FULL, value 0), NOT empty - so SCI_FIFO_RX0 (empty) has no UART equivalent and must never map to RX0. On F28E12x, SCI_FIFO_RX1-RX15 map 1:1 to UART fine levels and SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL. On F28P65x there are no fine levels (coarse UART_FIFO_RX1_8..RX7_8 only) - set the coarse trigger manually.",
+    "option_map": {
+      "SCI_FIFO_RX0": {
+        "to_option": null,
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": []
+      },
+      "SCI_FIFO_RX1": {
+        "to_option": "UART_FIFO_RX1",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX2": {
+        "to_option": "UART_FIFO_RX2",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX3": {
+        "to_option": "UART_FIFO_RX3",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX4": {
+        "to_option": "UART_FIFO_RX4",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX5": {
+        "to_option": "UART_FIFO_RX5",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX6": {
+        "to_option": "UART_FIFO_RX6",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX7": {
+        "to_option": "UART_FIFO_RX7",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX8": {
+        "to_option": "UART_FIFO_RX8",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX9": {
+        "to_option": "UART_FIFO_RX9",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX10": {
+        "to_option": "UART_FIFO_RX10",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX11": {
+        "to_option": "UART_FIFO_RX11",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX12": {
+        "to_option": "UART_FIFO_RX12",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX13": {
+        "to_option": "UART_FIFO_RX13",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX14": {
+        "to_option": "UART_FIFO_RX14",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX15": {
+        "to_option": "UART_FIFO_RX15",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "SCI_FIFO_RX16": {
+        "to_option": "UART_FIFO_RXFULL",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      }
+    }
+  },
+  "useCase": {
+    "from_type": "enum",
+    "from_displayName": "Use Case",
+    "from_description": "Peripheral use case",
+    "from_default": "ALL",
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "useCase",
+    "to_type": "enum",
+    "to_displayName": "Use Case",
+    "status": "mapped",
+    "fixMsg": "Use-case selector maps 1:1 (same option set).",
+    "option_map": {
+      "CUSTOM": {
+        "to_option": "CUSTOM",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "ALL": {
+        "to_option": "ALL",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "RECEIVE ONLY": {
+        "to_option": "RECEIVE ONLY",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      },
+      "TRANSMIT ONLY": {
+        "to_option": "TRANSMIT ONLY",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28E12x"
+        ]
+      }
+    }
+  },
+  "useInterfacePins": {
+    "from_type": "multiselect",
+    "from_displayName": "Pins Used",
+    "from_description": "The pins used by the pinmux section.",
+    "from_default": [],
+    "devices": [
+      "F2807x",
+      "F2837xS",
+      "F2837xD",
+      "F28004x",
+      "F28002x",
+      "F28003x",
+      "F280013x",
+      "F280015x",
+      "F2838x",
+      "F28P55x",
+      "F28P551x",
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_devices": [
+      "F28P65x",
+      "F28E12x"
+    ],
+    "to_config": "useInterfacePins",
+    "to_type": "multiselect",
+    "to_displayName": "Pins Used",
+    "status": "mapped",
+    "fixMsg": "Pinmux interface pins map 1:1 (RX->RX, TX->TX); the pin symbol prefix changes SCI@ -> UART@.",
+    "option_map": {
+      "SCI@_RX": {
+        "to_option": "UART@_RX",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      },
+      "SCI@_TX": {
+        "to_option": "UART@_TX",
+        "devices": [
+          "F2807x",
+          "F2837xS",
+          "F2837xD",
+          "F28004x",
+          "F28002x",
+          "F28003x",
+          "F280013x",
+          "F280015x",
+          "F2838x",
+          "F28P55x",
+          "F28P551x",
+          "F28P65x",
+          "F28E12x"
+        ],
+        "to_devices": [
+          "F28P65x",
+          "F28E12x"
+        ]
+      }
+    }
+  }
+}
