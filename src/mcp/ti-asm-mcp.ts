@@ -283,9 +283,11 @@ export async function mcpInstructions() {
 	vscode.window.showTextDocument(doc);
 }
 
-export async function enableMcpCommand(context: vscode.ExtensionContext) {
+export async function enableMcpCommand(context: vscode.ExtensionContext, showInfo: boolean = true) {
 	try {
-		vscode.window.showInformationMessage('Starting MCP Server...');
+		if (showInfo) {
+			vscode.window.showInformationMessage('Starting TI ASM MCP Server...');
+		}
 
 		// Get MCP configuration from extension settings
 		const config = vscode.workspace.getConfiguration(MCP_VSCODE_CONFIG + '.mcp');
@@ -371,7 +373,9 @@ export async function enableMcpCommand(context: vscode.ExtensionContext) {
 
 		// Start HTTP server
 		httpServer = app.listen(port, host, () => {
-			vscode.window.showInformationMessage(`MCP Server running on http://${host}:${port}/mcp`);
+			if (showInfo) {
+				vscode.window.showInformationMessage(`TI ASM MCP Server running on http://${host}:${port}/mcp`);
+			}
 			console.log(`[MCP] Server started with multi-session support on http://${host}:${port}/mcp`);
 		});
 
@@ -379,17 +383,17 @@ export async function enableMcpCommand(context: vscode.ExtensionContext) {
 		httpServer.on('error', (err: NodeJS.ErrnoException) => {
 			if (err.code === 'EADDRINUSE') {
 				vscode.window.showErrorMessage(
-					`Port ${port} is already in use. Stop the running server first.`
+					`TI ASM MCP Port ${port} is already in use. Stop the running server first.`
 				);
 			} else {
-				vscode.window.showErrorMessage(`Server error: ${err.message}`);
+				vscode.window.showErrorMessage(`TI ASM MCP Server error: ${err.message}`);
 			}
 			console.error('[MCP] HTTP server error:', err);
 		});
 
 	} catch (err) {
 		const message = err instanceof Error ? err.message : String(err);
-		vscode.window.showErrorMessage(`Failed to enable MCP: ${message}`);
+		vscode.window.showErrorMessage(`TI ASM MCP Failed to enable MCP: ${message}`);
 		console.error('[MCP] Enable error:', err);
 	}
 }
@@ -451,5 +455,5 @@ export function tiAsmMcpInit(context: vscode.ExtensionContext) {
 		mcpInstructionsCmd
 	);
 
-	enableMcpCommand(context);
+	enableMcpCommand(context, false);
 }

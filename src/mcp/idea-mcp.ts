@@ -724,9 +724,11 @@ export async function mcpInstructions() {
 	vscode.window.showTextDocument(doc);
 }
 
-export async function enableMcpCommand() {
+export async function enableMcpCommand(showInfo: boolean = true) {
 	try {
-		vscode.window.showInformationMessage('Starting IDEA MCP Server...');
+		if (showInfo) {
+			vscode.window.showInformationMessage('Starting IDEA MCP Server...');
+		}
 
 		const port = getMcpPort();
 		const host = getMcpHost();
@@ -791,7 +793,9 @@ export async function enableMcpCommand() {
 		});
 
 		httpServer = app.listen(port, host, () => {
-			vscode.window.showInformationMessage(`IDEA MCP Server running on http://${host}:${port}/mcp`);
+			if (showInfo) {
+				vscode.window.showInformationMessage(`IDEA MCP Server running on http://${host}:${port}/mcp`);
+			}
 			console.log(`[IDEA-MCP] Server started on http://${host}:${port}/mcp`);
 		});
 
@@ -869,5 +873,5 @@ export function ideaMcpInit(context: vscode.ExtensionContext) {
 		instructionsCmd
 	);
 
-	enableMcpCommand();
+	enableMcpCommand(false);
 }
