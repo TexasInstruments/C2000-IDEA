@@ -1,0 +1,5778 @@
+{
+  "changed": [
+    {
+      "code": "SCI_setConfig",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "configuration",
+      "from_signature": "void SCI_setConfig(uint32_t base, uint32_t lspclkHz, uint32_t baud, uint32_t config)",
+      "mapping_type": "adapted",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_setConfig",
+          "signature": "void UART_setConfig(uint32_t base, uint32_t uartClk, uint32_t baud, uint32_t config)",
+          "role": "primary",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": "SCIx_BASE -> UARTx_BASE"
+            },
+            {
+              "from_arg": "lspclkHz",
+              "to_arg": "uartClk",
+              "transform": "Clock-domain change: SCI is clocked by LSPCLK (lspclkHz); the UART is clocked by its module clock UART_CLK_FREQ (SYSCLK). Pass the UART clock, never LSPCLK."
+            },
+            {
+              "from_arg": "baud",
+              "to_arg": "baud",
+              "transform": null
+            },
+            {
+              "from_arg": "config",
+              "to_arg": "config",
+              "transform": "Translate config flags SYMBOLICALLY via the symbols table (SCI_CONFIG_* -> UART_CONFIG_*). Raw numeric values are NOT interchangeable between the peripherals."
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "UART_setConfig(base, uartClk, baud, config);"
+      ],
+      "fixMsg": "Direct counterpart. Change the clock argument to the UART module clock and translate the SCI_CONFIG_* flags to UART_CONFIG_* symbols. SCI word length supports 1-8 bits; UART supports only 5-8 (UART_CONFIG_WLEN_5..8). SCI_CONFIG_WLEN_1..4 have no UART equivalent. Baud generation differs (SCI: 8x oversampling divider off LSPCLK; UART: 16x fractional divider with automatic high-speed 8x fallback) - the baud argument is the same target rate, accuracy characteristics differ."
+    },
+    {
+      "code": "SCI_getConfig",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "configuration",
+      "from_signature": "void SCI_getConfig(uint32_t base, uint32_t lspclkHz, uint32_t *baud, uint32_t *config)",
+      "mapping_type": "adapted",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_getConfig",
+          "signature": "void UART_getConfig(uint32_t base, uint32_t uartClk, uint32_t *baud, uint32_t *config)",
+          "role": "primary",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            },
+            {
+              "from_arg": "lspclkHz",
+              "to_arg": "uartClk",
+              "transform": "Clock-domain change: SCI is clocked by LSPCLK (lspclkHz); the UART is clocked by its module clock UART_CLK_FREQ (SYSCLK). Pass the UART clock, never LSPCLK."
+            },
+            {
+              "from_arg": "baud",
+              "to_arg": "baud",
+              "transform": "pointer out-param, same role"
+            },
+            {
+              "from_arg": "config",
+              "to_arg": "config",
+              "transform": "returned flags are UART_CONFIG_*; back-translate symbolically"
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "UART_getConfig(base, uartClk, *baud, *config);"
+      ],
+      "fixMsg": "Direct counterpart with the clock-domain change; returned config uses UART_CONFIG_* encoding."
+    },
+    {
+      "code": "SCI_setBaud",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "configuration",
+      "from_signature": "void SCI_setBaud(uint32_t base, uint32_t lspclkHz, uint32_t baud)",
+      "mapping_type": "one_to_many",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_getConfig",
+          "signature": "void UART_getConfig(uint32_t base, uint32_t uartClk, uint32_t *baud, uint32_t *config)",
+          "role": "read current frame config",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            },
+            {
+              "from_arg": "lspclkHz",
+              "to_arg": "uartClk",
+              "transform": "Clock-domain change: SCI is clocked by LSPCLK (lspclkHz); the UART is clocked by its module clock UART_CLK_FREQ (SYSCLK). Pass the UART clock, never LSPCLK."
+            },
+            {
+              "from_arg": null,
+              "to_arg": "baud",
+              "transform": "out-param: receives the current baud (discarded)"
+            },
+            {
+              "from_arg": null,
+              "to_arg": "config",
+              "transform": "out-param: receives the current frame config, reused below"
+            }
+          ]
+        },
+        {
+          "symbol": "UART_setConfig",
+          "signature": "void UART_setConfig(uint32_t base, uint32_t uartClk, uint32_t baud, uint32_t config)",
+          "role": "re-apply with new baud",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            },
+            {
+              "from_arg": "lspclkHz",
+              "to_arg": "uartClk",
+              "transform": "Clock-domain change: SCI is clocked by LSPCLK (lspclkHz); the UART is clocked by its module clock UART_CLK_FREQ (SYSCLK). Pass the UART clock, never LSPCLK."
+            },
+            {
+              "from_arg": "baud",
+              "to_arg": "baud",
+              "transform": "the NEW baud rate being set"
+            },
+            {
+              "from_arg": null,
+              "to_arg": "config",
+              "transform": "the frame config read back from UART_getConfig - preserves word length / parity / stop bits"
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "uint32_t cfg, curBaud;",
+        "UART_getConfig(base, UART_CLK_FREQ, &curBaud, &cfg);",
+        "UART_setConfig(base, UART_CLK_FREQ, newBaud, cfg);"
+      ],
+      "fixMsg": "Expand to read-modify-write of the full configuration. UART has no baud-only setter; UART_setConfig briefly disables/re-enables the module, so in-flight characters can be lost - change baud while idle."
+    },
+    {
+      "code": "SCI_setParityMode",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "configuration",
+      "from_signature": "void SCI_setParityMode(uint32_t base, SCI_ParityType parity)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_setParityMode",
+          "signature": "void UART_setParityMode(uint32_t base, uint32_t parity)",
+          "role": "primary",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            },
+            {
+              "from_arg": "parity",
+              "to_arg": "parity",
+              "transform": "SCI_ParityType enum -> UART_CONFIG_PAR_* value (symbolic translation; numeric values differ). UART additionally offers PAR_ONE/PAR_ZERO stick parity."
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "UART_setParityMode(base, parity);"
+      ],
+      "fixMsg": "Direct counterpart; translate the parity symbol."
+    },
+    {
+      "code": "SCI_getParityMode",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "configuration",
+      "from_signature": "SCI_ParityType SCI_getParityMode(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_getParityMode",
+          "signature": "uint32_t UART_getParityMode(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_getParityMode(base);"
+      ],
+      "fixMsg": "Direct counterpart with symbolic back-translation of the return value. Return is a UART_CONFIG_PAR_* value, not SCI_ParityType; back-translate symbolically."
+    },
+    {
+      "code": "SCI_enableModule",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "control",
+      "from_signature": "void SCI_enableModule(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_enableModule",
+          "signature": "void UART_enableModule(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_enableModule(base);"
+      ],
+      "fixMsg": "Direct counterpart. UART_enableModule enables the module with FIFO and TX/RX in one step (UARTEN|TXE|RXE|FEN); SCI splits these across enableModule/enableTxModule/enableRxModule/enableFIFO."
+    },
+    {
+      "code": "SCI_disableModule",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "control",
+      "from_signature": "void SCI_disableModule(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_disableModule",
+          "signature": "void UART_disableModule(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_disableModule(base);"
+      ],
+      "fixMsg": "Direct counterpart. UART_disableModule waits for the transmitter to go idle (BUSY flag) before disabling; SCI_disableModule stops immediately via SW reset."
+    },
+    {
+      "code": "SCI_performSoftwareReset",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "control",
+      "from_signature": "void SCI_performSoftwareReset(uint32_t base)",
+      "mapping_type": "one_to_many",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_disableModule",
+          "signature": "void UART_disableModule(uint32_t base)",
+          "role": "stop module"
+        },
+        {
+          "symbol": "UART_clearRxError",
+          "signature": "void UART_clearRxError(uint32_t base)",
+          "role": "clear latched RX errors"
+        },
+        {
+          "symbol": "UART_enableModule",
+          "signature": "void UART_enableModule(uint32_t base)",
+          "role": "restart module"
+        }
+      ],
+      "fix": [
+        "UART_disableModule(base);",
+        "UART_clearRxError(base);",
+        "UART_enableModule(base);"
+      ],
+      "fixMsg": "Expand to disable + clear errors + enable. UART has no single SW-reset bit; disable/enable plus error clear reproduces the effect. FIFO contents are flushed when FEN toggles as part of disable/enable."
+    },
+    {
+      "code": "SCI_enableLoopback",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "control",
+      "from_signature": "void SCI_enableLoopback(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_enableLoopback",
+          "signature": "void UART_enableLoopback(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_enableLoopback(base);"
+      ],
+      "fixMsg": "Direct counterpart."
+    },
+    {
+      "code": "SCI_disableLoopback",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "control",
+      "from_signature": "void SCI_disableLoopback(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_disableLoopback",
+          "signature": "void UART_disableLoopback(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_disableLoopback(base);"
+      ],
+      "fixMsg": "Direct counterpart."
+    },
+    {
+      "code": "SCI_isBaseValid",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "control",
+      "from_signature": "#ifdef DEBUG bool SCI_isBaseValid(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_isBaseValid",
+          "signature": "#ifdef DEBUG bool UART_isBaseValid(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_isBaseValid(base);"
+      ],
+      "fixMsg": "Direct counterpart (debug-only assert helper)."
+    },
+    {
+      "code": "SCI_enableFIFO",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "buffering",
+      "from_signature": "void SCI_enableFIFO(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_enableFIFO",
+          "signature": "void UART_enableFIFO(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_enableFIFO(base);"
+      ],
+      "fixMsg": "Direct counterpart (both 16-deep FIFOs)."
+    },
+    {
+      "code": "SCI_disableFIFO",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "buffering",
+      "from_signature": "void SCI_disableFIFO(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_disableFIFO",
+          "signature": "void UART_disableFIFO(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_disableFIFO(base);"
+      ],
+      "fixMsg": "Direct counterpart."
+    },
+    {
+      "code": "SCI_isFIFOEnabled",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "buffering",
+      "from_signature": "bool SCI_isFIFOEnabled(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_isFIFOEnabled",
+          "signature": "bool UART_isFIFOEnabled(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_isFIFOEnabled(base);"
+      ],
+      "fixMsg": "Direct counterpart."
+    },
+    {
+      "code": "SCI_resetRxFIFO",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "buffering",
+      "from_signature": "void SCI_resetRxFIFO(uint32_t base)",
+      "mapping_type": "one_to_many",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_disableFIFO",
+          "signature": "void UART_disableFIFO(uint32_t base)",
+          "role": "flush both FIFOs"
+        },
+        {
+          "symbol": "UART_enableFIFO",
+          "signature": "void UART_enableFIFO(uint32_t base)",
+          "role": "re-enable"
+        }
+      ],
+      "fix": [
+        "UART_disableFIFO(base);",
+        "UART_enableFIFO(base);"
+      ],
+      "fixMsg": "Expand to FEN toggle (flushes both FIFOs). UART cannot flush one FIFO side only: toggling FEN (disableFIFO/enableFIFO) flushes BOTH TX and RX FIFOs. If single-side flush semantics matter, drain the RX FIFO by reading instead."
+    },
+    {
+      "code": "SCI_resetTxFIFO",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "buffering",
+      "from_signature": "void SCI_resetTxFIFO(uint32_t base)",
+      "mapping_type": "one_to_many",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_disableFIFO",
+          "signature": "void UART_disableFIFO(uint32_t base)",
+          "role": "flush both FIFOs"
+        },
+        {
+          "symbol": "UART_enableFIFO",
+          "signature": "void UART_enableFIFO(uint32_t base)",
+          "role": "re-enable"
+        }
+      ],
+      "fix": [
+        "UART_disableFIFO(base);",
+        "UART_enableFIFO(base);"
+      ],
+      "fixMsg": "Expand to FEN toggle (flushes both FIFOs). UART cannot flush one FIFO side only: toggling FEN (disableFIFO/enableFIFO) flushes BOTH TX and RX FIFOs. If single-side flush semantics matter, drain the RX FIFO by reading instead."
+    },
+    {
+      "code": "SCI_resetChannels",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "buffering",
+      "from_signature": "void SCI_resetChannels(uint32_t base)",
+      "mapping_type": "one_to_many",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_disableFIFO",
+          "signature": "void UART_disableFIFO(uint32_t base)",
+          "role": "flush both FIFOs"
+        },
+        {
+          "symbol": "UART_enableFIFO",
+          "signature": "void UART_enableFIFO(uint32_t base)",
+          "role": "re-enable"
+        }
+      ],
+      "fix": [
+        "UART_disableFIFO(base);",
+        "UART_enableFIFO(base);"
+      ],
+      "fixMsg": "Expand to FEN toggle; equivalent to resetting both SCI FIFO channels."
+    },
+    {
+      "code": "SCI_setFIFOInterruptLevel",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "functionalArea": "buffering",
+      "from_signature": "void SCI_setFIFOInterruptLevel(uint32_t base, SCI_TxFIFOLevel txLevel, SCI_RxFIFOLevel rxLevel)",
+      "mapping_type": "adapted",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_setFIFOLevelFine",
+          "signature": "void UART_setFIFOLevelFine(uint32_t base, UART_TxFIFOLevelFine txLevel, UART_RxFIFOLevelFine rxLevel)",
+          "role": "primary",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            },
+            {
+              "from_arg": "txLevel",
+              "to_arg": "txLevel",
+              "transform": "SCI_FIFO_TXn -> UART_FIFO_TXn (n=0..15); see symbols table for edge cases"
+            },
+            {
+              "from_arg": "rxLevel",
+              "to_arg": "rxLevel",
+              "transform": "SCI_FIFO_RXn -> UART_FIFO_RXn (n=1..15); see symbols table for edge cases"
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "UART_setFIFOLevelFine(base, txLevel, rxLevel);"
+      ],
+      "fixMsg": "Use the fine-grained UART level setter with symbolic level translation. SCI_FIFO_TX16 (\"interrupt when TX full\") has no UART equivalent (fine levels stop at TX15). SCI_FIFO_RX0 (\"interrupt when RX empty\") has no UART equivalent - and beware: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (=0, RX FULL), NOT empty. Never map RX0 -> RX0. SCI_FIFO_RX16 (\"interrupt when RX full\") -> UART_FIFO_RXFULL. UART_setFIFOLevelFine unlocks per-entry levels by writing UART_CUSTOM_FIFO_LEVEL_KEY to IFLS internally; the coarse alternative UART_setFIFOLevel offers only 1/8..7/8 fractions."
+    },
+    {
+      "code": "SCI_setFIFOInterruptLevel",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "functionalArea": "buffering",
+      "from_signature": "void SCI_setFIFOInterruptLevel(uint32_t base, SCI_TxFIFOLevel txLevel, SCI_RxFIFOLevel rxLevel)",
+      "mapping_type": "partial",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_setFIFOLevel",
+          "signature": "void UART_setFIFOLevel(uint32_t base, uint32_t txLevel, uint32_t rxLevel)",
+          "role": "primary",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            },
+            {
+              "from_arg": "txLevel",
+              "to_arg": "txLevel",
+              "transform": "SCI fine TX level (TX0..TX16) -> nearest UART coarse fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). LOSSY: F28P65x UART has no per-entry fine levels. Verify chosen trigger depth."
+            },
+            {
+              "from_arg": "rxLevel",
+              "to_arg": "rxLevel",
+              "transform": "SCI fine RX level (RX1..RX16) -> nearest UART coarse fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). LOSSY. Verify chosen trigger depth."
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "UART_setFIFOLevel(base, txLevel, rxLevel);"
+      ],
+      "fixMsg": "F28P65x UART exposes only coarse FIFO trigger levels (1/8..7/8), not the per-entry fine levels available on F28E12x. Map to the coarse setter with a lossy level approximation and verify the trigger depth. (On F28E12x this maps directly to UART_setFIFOLevelFine.) REVIEW: coarse level approximation is a team-review item."
+    },
+    {
+      "code": "SCI_getFIFOInterruptLevel",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "functionalArea": "buffering",
+      "from_signature": "void SCI_getFIFOInterruptLevel(uint32_t base, SCI_TxFIFOLevel *txLevel, SCI_RxFIFOLevel *rxLevel)",
+      "mapping_type": "adapted",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_getFIFOLevelFine",
+          "signature": "void UART_getFIFOLevelFine(uint32_t base, uint32_t *txLevel, uint32_t *rxLevel)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_getFIFOLevelFine(base, *txLevel, *rxLevel);"
+      ],
+      "fixMsg": "Direct counterpart of the fine-level getter; back-translate symbols. Out-params are uint32_t fine levels (UART_FIFO_TXn/RXn), not SCI enum types."
+    },
+    {
+      "code": "SCI_getFIFOInterruptLevel",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "functionalArea": "buffering",
+      "from_signature": "void SCI_getFIFOInterruptLevel(uint32_t base, SCI_TxFIFOLevel *txLevel, SCI_RxFIFOLevel *rxLevel)",
+      "mapping_type": "partial",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_getFIFOLevel",
+          "signature": "void UART_getFIFOLevel(uint32_t base, uint32_t *txLevel, uint32_t *rxLevel)",
+          "role": "primary",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            },
+            {
+              "from_arg": "txLevel",
+              "to_arg": "txLevel",
+              "transform": "Out-param returns a coarse UART fraction, not an SCI fine level. LOSSY back-translation on F28P65x."
+            },
+            {
+              "from_arg": "rxLevel",
+              "to_arg": "rxLevel",
+              "transform": "Out-param returns a coarse UART fraction, not an SCI fine level. LOSSY back-translation on F28P65x."
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "UART_getFIFOLevel(base, txLevel, rxLevel);"
+      ],
+      "fixMsg": "F28P65x UART exposes only coarse FIFO trigger levels; the fine getter (UART_getFIFOLevelFine on F28E12x) is unavailable. Read the coarse fraction and map back approximately. REVIEW: coarse level approximation is a team-review item."
+    },
+    {
+      "code": "SCI_getTxFIFOStatus",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "buffering",
+      "from_signature": "SCI_TxFIFOLevel SCI_getTxFIFOStatus(uint32_t base)",
+      "mapping_type": "partial",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_isSpaceAvailable",
+          "signature": "bool UART_isSpaceAvailable(uint32_t base)",
+          "role": "nearest: boolean TX-not-full"
+        }
+      ],
+      "fix": [
+        "UART_isSpaceAvailable(base);"
+      ],
+      "fixMsg": "No fill-count equivalent; nearest is the boolean space-available check. SCI returns the exact TX FIFO fill count (SCI_TxFIFOLevel); the UART flag register only exposes empty/full/busy flags - no fill count exists. Logic that branches on exact depth must be redesigned around UART_isSpaceAvailable / TX interrupts."
+    },
+    {
+      "code": "SCI_getRxFIFOStatus",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "buffering",
+      "from_signature": "SCI_RxFIFOLevel SCI_getRxFIFOStatus(uint32_t base)",
+      "mapping_type": "partial",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_isDataAvailable",
+          "signature": "bool UART_isDataAvailable(uint32_t base)",
+          "role": "nearest: boolean RX-not-empty"
+        }
+      ],
+      "fix": [
+        "UART_isDataAvailable(base);"
+      ],
+      "fixMsg": "No fill-count equivalent; nearest is the boolean data-available check. Same limitation as TX: no RX fill count on UART; only empty/full flags."
+    },
+    {
+      "code": "SCI_writeCharBlockingFIFO",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "data_transfer",
+      "from_signature": "void SCI_writeCharBlockingFIFO(uint32_t base, uint16_t data)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_writeChar",
+          "signature": "void UART_writeChar(uint32_t base, uint8_t data)",
+          "role": "primary",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            },
+            {
+              "from_arg": "data",
+              "to_arg": "data",
+              "transform": "uint16_t -> uint8_t (SCI frames are max 8 data bits anyway)"
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "UART_writeChar(base, data);"
+      ],
+      "fixMsg": "UART_writeChar blocks until TX FIFO space is available - same behavior."
+    },
+    {
+      "code": "SCI_writeCharBlockingNonFIFO",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "data_transfer",
+      "from_signature": "void SCI_writeCharBlockingNonFIFO(uint32_t base, uint16_t data)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_writeChar",
+          "signature": "void UART_writeChar(uint32_t base, uint8_t data)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_writeChar(base, data);"
+      ],
+      "fixMsg": "Same call for both former variants. UART_writeChar works identically with FIFO enabled or disabled (waits on TXFF flag); the FIFO/non-FIFO split disappears."
+    },
+    {
+      "code": "SCI_writeCharNonBlocking",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "data_transfer",
+      "from_signature": "void SCI_writeCharNonBlocking(uint32_t base, uint16_t data)",
+      "mapping_type": "adapted",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_writeCharNonBlocking",
+          "signature": "bool UART_writeCharNonBlocking(uint32_t base, uint8_t data)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_writeCharNonBlocking(base, data);"
+      ],
+      "fixMsg": "Use the bool return instead of a prior space check. Return convention changes: SCI version returns void (caller must pre-check space); the UART version returns bool false when the FIFO is full - check the return value."
+    },
+    {
+      "code": "SCI_writeCharArray",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "data_transfer",
+      "from_signature": "void SCI_writeCharArray(uint32_t base, constuint16_t*const array, uint16_t length)",
+      "mapping_type": "one_to_many",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_writeChar",
+          "signature": "void UART_writeChar(uint32_t base, uint8_t data)",
+          "role": "per-character blocking write"
+        }
+      ],
+      "fix": [
+        "for (uint16_t i = 0U; i < length; i++)",
+        "{",
+        "    UART_writeChar(base, (uint8_t)array[i]);",
+        "}"
+      ],
+      "fixMsg": "Expand to a per-character loop (or move to DMA). No array API on UART; the loop reproduces SCI_writeCharArray's blocking semantics. Consider UART_enableDMA + a DMA channel for large transfers (UART-only capability)."
+    },
+    {
+      "code": "SCI_readCharBlockingFIFO",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "data_transfer",
+      "from_signature": "uint16_t SCI_readCharBlockingFIFO(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_readChar",
+          "signature": "int32_t UART_readChar(uint32_t base)",
+          "role": "primary",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "UART_readChar(base);"
+      ],
+      "fixMsg": "UART_readChar blocks until data is available - same behavior. Return type changes: SCI returns uint16_t; UART_readChar returns int32_t whose low byte is the data (cast to uint8_t)."
+    },
+    {
+      "code": "SCI_readCharBlockingNonFIFO",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "data_transfer",
+      "from_signature": "uint16_t SCI_readCharBlockingNonFIFO(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_readChar",
+          "signature": "int32_t UART_readChar(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_readChar(base);"
+      ],
+      "fixMsg": "Same call for both former variants. Works identically with FIFO enabled or disabled; the FIFO/non-FIFO split disappears."
+    },
+    {
+      "code": "SCI_readCharNonBlocking",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "data_transfer",
+      "from_signature": "uint16_t SCI_readCharNonBlocking(uint32_t base)",
+      "mapping_type": "adapted",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_readCharNonBlocking",
+          "signature": "int32_t UART_readCharNonBlocking(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_readCharNonBlocking(base);"
+      ],
+      "fixMsg": "Use the -1 sentinel instead of a prior availability check. Return convention changes: SCI version assumes data is present (pre-checked); UART version returns int32_t -1 when the RX FIFO is empty - check for -1 instead of pre-checking."
+    },
+    {
+      "code": "SCI_readCharArray",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "data_transfer",
+      "from_signature": "void SCI_readCharArray(uint32_t base, uint16_t*const array, uint16_t length)",
+      "mapping_type": "one_to_many",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_readChar",
+          "signature": "int32_t UART_readChar(uint32_t base)",
+          "role": "per-character blocking read"
+        }
+      ],
+      "fix": [
+        "for (uint16_t i = 0U; i < length; i++)",
+        "{",
+        "    array[i] = (uint16_t)UART_readChar(base);",
+        "}"
+      ],
+      "fixMsg": "Expand to a per-character loop (or move to DMA). No array API on UART. Consider UART_enableDMA + a DMA channel for large transfers."
+    },
+    {
+      "code": "SCI_isDataAvailableNonFIFO",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "status",
+      "from_signature": "bool SCI_isDataAvailableNonFIFO(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_isDataAvailable",
+          "signature": "bool UART_isDataAvailable(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_isDataAvailable(base);"
+      ],
+      "fixMsg": "Direct counterpart. UART_isDataAvailable works in FIFO and non-FIFO modes alike."
+    },
+    {
+      "code": "SCI_isSpaceAvailableNonFIFO",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "status",
+      "from_signature": "bool SCI_isSpaceAvailableNonFIFO(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_isSpaceAvailable",
+          "signature": "bool UART_isSpaceAvailable(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_isSpaceAvailable(base);"
+      ],
+      "fixMsg": "Direct counterpart. Works in FIFO and non-FIFO modes alike."
+    },
+    {
+      "code": "SCI_isTransmitterBusy",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "status",
+      "from_signature": "bool SCI_isTransmitterBusy(uint32_t base)",
+      "mapping_type": "direct",
+      "compatible": true,
+      "to_targets": [
+        {
+          "symbol": "UART_isBusy",
+          "signature": "bool UART_isBusy(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_isBusy(base);"
+      ],
+      "fixMsg": "Direct counterpart (true while transmitting or TX FIFO non-empty)."
+    },
+    {
+      "code": "SCI_getRxStatus",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "status",
+      "from_signature": "uint16_t SCI_getRxStatus(uint32_t base)",
+      "mapping_type": "partial",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_getRxError",
+          "signature": "uint32_t UART_getRxError(uint32_t base)",
+          "role": "error subset"
+        },
+        {
+          "symbol": "UART_isDataAvailable",
+          "signature": "bool UART_isDataAvailable(uint32_t base)",
+          "role": "READY flag replacement"
+        }
+      ],
+      "fix": [
+        "UART_getRxError(base);",
+        "UART_isDataAvailable(base);"
+      ],
+      "fixMsg": "Split consumers by flag: errors via UART_getRxError, readiness via UART_isDataAvailable. SCI_RXSTATUS_* fans out: PARITY/OVERRUN/FRAMING/BREAK -> UART_RXERROR_* (via UART_getRxError); READY -> UART_isDataAvailable(); WAKE has no UART equivalent (idle-line wake-up not supported); ERROR -> any UART_RXERROR_* bit set. After handling, call UART_clearRxError() - UART error flags latch in RSR/ECR, whereas SCI clears them via software reset."
+    },
+    {
+      "code": "SCI_getOverflowStatus",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "status",
+      "from_signature": "bool SCI_getOverflowStatus(uint32_t base)",
+      "mapping_type": "partial",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_getRxError",
+          "signature": "uint32_t UART_getRxError(uint32_t base)",
+          "role": "check UART_RXERROR_OVERRUN bit"
+        }
+      ],
+      "fix": [
+        "bool overflow = ((UART_getRxError(base) & UART_RXERROR_OVERRUN) != 0U);"
+      ],
+      "fixMsg": "Overrun is one bit of the combined UART RX error status."
+    },
+    {
+      "code": "SCI_clearOverflowStatus",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "status",
+      "from_signature": "void SCI_clearOverflowStatus(uint32_t base)",
+      "mapping_type": "adapted",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_clearRxError",
+          "signature": "void UART_clearRxError(uint32_t base)",
+          "role": "primary"
+        }
+      ],
+      "fix": [
+        "UART_clearRxError(base);"
+      ],
+      "fixMsg": "Clear via the combined RX-error clear. UART_clearRxError clears ALL latched RX errors (overrun, break, parity, framing), not just overrun - read UART_getRxError first if the other bits matter."
+    },
+    {
+      "code": "SCI_enableInterrupt",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "interrupt",
+      "from_signature": "void SCI_enableInterrupt(uint32_t base, uint32_t intFlags)",
+      "mapping_type": "adapted",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_enableInterrupt",
+          "signature": "void UART_enableInterrupt(uint32_t base, uint32_t intFlags)",
+          "role": "primary",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            },
+            {
+              "from_arg": "intFlags",
+              "to_arg": "intFlags",
+              "transform": "Translate flags via the symbols table. Composite/one-to-many flags: SCI_INT_RXERR -> UART_INT_OE|UART_INT_BE|UART_INT_PE|UART_INT_FE; SCI_INT_RXRDY_BRKDT -> UART_INT_RX (+UART_INT_BE for the break-detect half, +UART_INT_RT recommended in FIFO mode so trailing bytes below the trigger level still interrupt)."
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "UART_enableInterrupt(base, intFlags);"
+      ],
+      "fixMsg": "Direct counterpart with symbolic flag translation. SCI TX interrupts: TXRDY (non-FIFO) and TXFF (FIFO) both map to UART_INT_TX; UART chooses FIFO-level vs end-of-transmission semantics via UART_setTxIntMode (UART_TXINT_MODE_FIFO / UART_TXINT_MODE_EOT), not via separate flags."
+    },
+    {
+      "code": "SCI_disableInterrupt",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "interrupt",
+      "from_signature": "void SCI_disableInterrupt(uint32_t base, uint32_t intFlags)",
+      "mapping_type": "adapted",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_disableInterrupt",
+          "signature": "void UART_disableInterrupt(uint32_t base, uint32_t intFlags)",
+          "role": "primary",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            },
+            {
+              "from_arg": "intFlags",
+              "to_arg": "intFlags",
+              "transform": "Translate flags via the symbols table. Composite/one-to-many flags: SCI_INT_RXERR -> UART_INT_OE|UART_INT_BE|UART_INT_PE|UART_INT_FE; SCI_INT_RXRDY_BRKDT -> UART_INT_RX (+UART_INT_BE for the break-detect half, +UART_INT_RT recommended in FIFO mode so trailing bytes below the trigger level still interrupt)."
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "UART_disableInterrupt(base, intFlags);"
+      ],
+      "fixMsg": "Direct counterpart with symbolic flag translation."
+    },
+    {
+      "code": "SCI_getInterruptStatus",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "interrupt",
+      "from_signature": "uint32_t SCI_getInterruptStatus(uint32_t base)",
+      "mapping_type": "adapted",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_getInterruptStatus",
+          "signature": "uint32_t UART_getInterruptStatus(uint32_t base, Uart_IntType masked)",
+          "role": "primary",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            },
+            {
+              "from_arg": null,
+              "to_arg": "masked",
+              "transform": "NEW argument: pass UART_MASKED_INT (post-mask, typical in ISRs) or UART_RAW_INT"
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "UART_getInterruptStatus(base, masked);"
+      ],
+      "fixMsg": "Add the raw/masked selector argument; UART_MASKED_INT matches SCI's enabled-interrupt view. Returned bits are UART_INT_*; back-translate symbolically."
+    },
+    {
+      "code": "SCI_clearInterruptStatus",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "interrupt",
+      "from_signature": "void SCI_clearInterruptStatus(uint32_t base, uint32_t intFlags)",
+      "mapping_type": "adapted",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_clearInterruptStatus",
+          "signature": "void UART_clearInterruptStatus(uint32_t base, uint32_t intFlags)",
+          "role": "primary",
+          "arg_map": [
+            {
+              "from_arg": "base",
+              "to_arg": "base",
+              "transform": null
+            },
+            {
+              "from_arg": "intFlags",
+              "to_arg": "intFlags",
+              "transform": "Translate flags via the symbols table. Composite/one-to-many flags: SCI_INT_RXERR -> UART_INT_OE|UART_INT_BE|UART_INT_PE|UART_INT_FE; SCI_INT_RXRDY_BRKDT -> UART_INT_RX (+UART_INT_BE for the break-detect half, +UART_INT_RT recommended in FIFO mode so trailing bytes below the trigger level still interrupt)."
+            }
+          ]
+        }
+      ],
+      "fix": [
+        "UART_clearInterruptStatus(base, intFlags);"
+      ],
+      "fixMsg": "Direct counterpart with symbolic flag translation. UART clears via write-1-to-ICR. UART_INT_RX/UART_INT_TX FIFO-level conditions also self-clear when the FIFO crosses back over the trigger level (level-sensitive), unlike SCI's latched TXFF/RXFF bits."
+    },
+    {
+      "code": "SCI_setAddrMultiProcessorMode",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "mode",
+      "from_signature": "void SCI_setAddrMultiProcessorMode(uint32_t base)",
+      "mapping_type": "one_to_many",
+      "compatible": false,
+      "to_targets": [
+        {
+          "symbol": "UART_enable9Bit",
+          "signature": "void UART_enable9Bit(uint32_t base)",
+          "role": "enable 9-bit (address-bit) mode"
+        },
+        {
+          "symbol": "UART_set9BitAddress",
+          "signature": "void UART_set9BitAddress(uint32_t base, uint8_t addr, uint8_t mask)",
+          "role": "program own address + mask"
+        },
+        {
+          "symbol": "UART_send9BitAddress",
+          "signature": "void UART_send9BitAddress(uint32_t base, uint8_t addr)",
+          "role": "transmit an address byte (TX side)"
+        }
+      ],
+      "fix": [
+        "UART_enable9Bit(base);",
+        "UART_set9BitAddress(base, ownAddr, addrMask);",
+        "/* TX side: UART_send9BitAddress(base, targetAddr); then normal writes for data */"
+      ],
+      "fixMsg": "Map the address-bit protocol onto UART 9-bit mode. UART 9-bit mode implements the same address-bit multiprocessor protocol, but address RECOGNITION is done in hardware (address + mask match), whereas SCI raised an RX interrupt for every address byte and let software compare. Software address-compare logic should move into the addr/mask configuration. SCI_setWakeFlag/TXWAKE-based address signalling is replaced by UART_send9BitAddress."
+    },
+    {
+      "code": "SCI_CONFIG_PAR_NONE",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_ParityType",
+      "to_group": "UART_CONFIG_PAR_*",
+      "to_targets": [
+        {
+          "symbol": "UART_CONFIG_PAR_NONE"
+        }
+      ],
+      "fix": [
+        "UART_CONFIG_PAR_NONE"
+      ],
+      "fixMsg": "Numeric values differ between peripherals (e.g. PAR_EVEN: SCI 0x60 vs UART 0x6) - translation must be symbolic, never numeric. UART adds stick parity UART_CONFIG_PAR_ONE / UART_CONFIG_PAR_ZERO with no SCI counterpart."
+    },
+    {
+      "code": "SCI_CONFIG_PAR_EVEN",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_ParityType",
+      "to_group": "UART_CONFIG_PAR_*",
+      "to_targets": [
+        {
+          "symbol": "UART_CONFIG_PAR_EVEN"
+        }
+      ],
+      "fix": [
+        "UART_CONFIG_PAR_EVEN"
+      ],
+      "fixMsg": "Numeric values differ between peripherals (e.g. PAR_EVEN: SCI 0x60 vs UART 0x6) - translation must be symbolic, never numeric. UART adds stick parity UART_CONFIG_PAR_ONE / UART_CONFIG_PAR_ZERO with no SCI counterpart."
+    },
+    {
+      "code": "SCI_CONFIG_PAR_ODD",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_ParityType",
+      "to_group": "UART_CONFIG_PAR_*",
+      "to_targets": [
+        {
+          "symbol": "UART_CONFIG_PAR_ODD"
+        }
+      ],
+      "fix": [
+        "UART_CONFIG_PAR_ODD"
+      ],
+      "fixMsg": "Numeric values differ between peripherals (e.g. PAR_EVEN: SCI 0x60 vs UART 0x6) - translation must be symbolic, never numeric. UART adds stick parity UART_CONFIG_PAR_ONE / UART_CONFIG_PAR_ZERO with no SCI counterpart."
+    },
+    {
+      "code": "SCI_CONFIG_WLEN_MASK",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": [
+        {
+          "symbol": "UART_CONFIG_WLEN_MASK"
+        }
+      ],
+      "fix": [
+        "UART_CONFIG_WLEN_MASK"
+      ],
+      "fixMsg": "mask layout differs All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_CONFIG_WLEN_8",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": [
+        {
+          "symbol": "UART_CONFIG_WLEN_8"
+        }
+      ],
+      "fix": [
+        "UART_CONFIG_WLEN_8"
+      ],
+      "fixMsg": "All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_CONFIG_WLEN_7",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": [
+        {
+          "symbol": "UART_CONFIG_WLEN_7"
+        }
+      ],
+      "fix": [
+        "UART_CONFIG_WLEN_7"
+      ],
+      "fixMsg": "All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_CONFIG_WLEN_6",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": [
+        {
+          "symbol": "UART_CONFIG_WLEN_6"
+        }
+      ],
+      "fix": [
+        "UART_CONFIG_WLEN_6"
+      ],
+      "fixMsg": "All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_CONFIG_WLEN_5",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": [
+        {
+          "symbol": "UART_CONFIG_WLEN_5"
+        }
+      ],
+      "fix": [
+        "UART_CONFIG_WLEN_5"
+      ],
+      "fixMsg": "All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_CONFIG_STOP_MASK",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": [
+        {
+          "symbol": "UART_CONFIG_STOP_MASK"
+        }
+      ],
+      "fix": [
+        "UART_CONFIG_STOP_MASK"
+      ],
+      "fixMsg": "mask layout differs All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_CONFIG_STOP_ONE",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": [
+        {
+          "symbol": "UART_CONFIG_STOP_ONE"
+        }
+      ],
+      "fix": [
+        "UART_CONFIG_STOP_ONE"
+      ],
+      "fixMsg": "All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_CONFIG_STOP_TWO",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": [
+        {
+          "symbol": "UART_CONFIG_STOP_TWO"
+        }
+      ],
+      "fix": [
+        "UART_CONFIG_STOP_TWO"
+      ],
+      "fixMsg": "All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_CONFIG_PAR_MASK",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": [
+        {
+          "symbol": "UART_CONFIG_PAR_MASK"
+        }
+      ],
+      "fix": [
+        "UART_CONFIG_PAR_MASK"
+      ],
+      "fixMsg": "mask layout differs All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_INT_RXERR",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "one_to_many",
+      "compatible": false,
+      "group": "SCI_INT",
+      "to_group": "UART_INT_*",
+      "to_targets": [
+        {
+          "symbol": "UART_INT_OE"
+        },
+        {
+          "symbol": "UART_INT_BE"
+        },
+        {
+          "symbol": "UART_INT_PE"
+        },
+        {
+          "symbol": "UART_INT_FE"
+        }
+      ],
+      "fix": [
+        "UART_INT_OE | UART_INT_BE | UART_INT_PE | UART_INT_FE"
+      ],
+      "fixMsg": "composite: SCI summary error interrupt fans out to four UART error interrupts (OR them) Flag values differ; translate symbolically and OR the results. TX semantics: UART has a single UART_INT_TX whose FIFO-level vs end-of-transmission behavior is selected by UART_setTxIntMode, replacing the SCI TXRDY/TXFF split. In FIFO mode also enable UART_INT_RT (receive timeout) so bytes below the RX trigger level still generate an interrupt - SCI had no such gap."
+    },
+    {
+      "code": "SCI_INT_RXRDY_BRKDT",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "one_to_many",
+      "compatible": false,
+      "group": "SCI_INT",
+      "to_group": "UART_INT_*",
+      "to_targets": [
+        {
+          "symbol": "UART_INT_RX"
+        },
+        {
+          "symbol": "UART_INT_BE"
+        }
+      ],
+      "fix": [
+        "UART_INT_RX | UART_INT_BE"
+      ],
+      "fixMsg": "RX-ready half -> UART_INT_RX; break-detect half -> UART_INT_BE; add UART_INT_RT in FIFO mode Flag values differ; translate symbolically and OR the results. TX semantics: UART has a single UART_INT_TX whose FIFO-level vs end-of-transmission behavior is selected by UART_setTxIntMode, replacing the SCI TXRDY/TXFF split. In FIFO mode also enable UART_INT_RT (receive timeout) so bytes below the RX trigger level still generate an interrupt - SCI had no such gap."
+    },
+    {
+      "code": "SCI_INT_TXRDY",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "adapted",
+      "compatible": false,
+      "group": "SCI_INT",
+      "to_group": "UART_INT_*",
+      "to_targets": [
+        {
+          "symbol": "UART_INT_TX"
+        }
+      ],
+      "fix": [
+        "UART_INT_TX"
+      ],
+      "fixMsg": "with UART_setTxIntMode(UART_TXINT_MODE_EOT) for closest non-FIFO semantics Flag values differ; translate symbolically and OR the results. TX semantics: UART has a single UART_INT_TX whose FIFO-level vs end-of-transmission behavior is selected by UART_setTxIntMode, replacing the SCI TXRDY/TXFF split. In FIFO mode also enable UART_INT_RT (receive timeout) so bytes below the RX trigger level still generate an interrupt - SCI had no such gap."
+    },
+    {
+      "code": "SCI_INT_TXFF",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "adapted",
+      "compatible": false,
+      "group": "SCI_INT",
+      "to_group": "UART_INT_*",
+      "to_targets": [
+        {
+          "symbol": "UART_INT_TX"
+        }
+      ],
+      "fix": [
+        "UART_INT_TX"
+      ],
+      "fixMsg": "with UART_setTxIntMode(UART_TXINT_MODE_FIFO) (default) Flag values differ; translate symbolically and OR the results. TX semantics: UART has a single UART_INT_TX whose FIFO-level vs end-of-transmission behavior is selected by UART_setTxIntMode, replacing the SCI TXRDY/TXFF split. In FIFO mode also enable UART_INT_RT (receive timeout) so bytes below the RX trigger level still generate an interrupt - SCI had no such gap."
+    },
+    {
+      "code": "SCI_INT_RXFF",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "adapted",
+      "compatible": false,
+      "group": "SCI_INT",
+      "to_group": "UART_INT_*",
+      "to_targets": [
+        {
+          "symbol": "UART_INT_RX"
+        }
+      ],
+      "fix": [
+        "UART_INT_RX"
+      ],
+      "fixMsg": "Flag values differ; translate symbolically and OR the results. TX semantics: UART has a single UART_INT_TX whose FIFO-level vs end-of-transmission behavior is selected by UART_setTxIntMode, replacing the SCI TXRDY/TXFF split. In FIFO mode also enable UART_INT_RT (receive timeout) so bytes below the RX trigger level still generate an interrupt - SCI had no such gap."
+    },
+    {
+      "code": "SCI_INT_FE",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_INT",
+      "to_group": "UART_INT_*",
+      "to_targets": [
+        {
+          "symbol": "UART_INT_FE"
+        }
+      ],
+      "fix": [
+        "UART_INT_FE"
+      ],
+      "fixMsg": "Flag values differ; translate symbolically and OR the results. TX semantics: UART has a single UART_INT_TX whose FIFO-level vs end-of-transmission behavior is selected by UART_setTxIntMode, replacing the SCI TXRDY/TXFF split. In FIFO mode also enable UART_INT_RT (receive timeout) so bytes below the RX trigger level still generate an interrupt - SCI had no such gap."
+    },
+    {
+      "code": "SCI_INT_OE",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_INT",
+      "to_group": "UART_INT_*",
+      "to_targets": [
+        {
+          "symbol": "UART_INT_OE"
+        }
+      ],
+      "fix": [
+        "UART_INT_OE"
+      ],
+      "fixMsg": "Flag values differ; translate symbolically and OR the results. TX semantics: UART has a single UART_INT_TX whose FIFO-level vs end-of-transmission behavior is selected by UART_setTxIntMode, replacing the SCI TXRDY/TXFF split. In FIFO mode also enable UART_INT_RT (receive timeout) so bytes below the RX trigger level still generate an interrupt - SCI had no such gap."
+    },
+    {
+      "code": "SCI_INT_PE",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_INT",
+      "to_group": "UART_INT_*",
+      "to_targets": [
+        {
+          "symbol": "UART_INT_PE"
+        }
+      ],
+      "fix": [
+        "UART_INT_PE"
+      ],
+      "fixMsg": "Flag values differ; translate symbolically and OR the results. TX semantics: UART has a single UART_INT_TX whose FIFO-level vs end-of-transmission behavior is selected by UART_setTxIntMode, replacing the SCI TXRDY/TXFF split. In FIFO mode also enable UART_INT_RT (receive timeout) so bytes below the RX trigger level still generate an interrupt - SCI had no such gap."
+    },
+    {
+      "code": "SCI_FIFO_TX0",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX0"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX0"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX1",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX1"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX1"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX2",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX2"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX2"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX3",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX3"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX3"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX4",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX4"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX4"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX5",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX5"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX5"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX6",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX6"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX6"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX7",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX7"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX7"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX8",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX8"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX8"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX9",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX9"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX9"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX10",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX10"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX10"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX11",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX11"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX11"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX12",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX12"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX12"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX13",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX13"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX13"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX14",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX14"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX14"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_TX15",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_TX15"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_TX15"
+      ],
+      "fixMsg": "Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_RX1",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX1"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX1"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX2",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX2"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX2"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX3",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX3"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX3"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX4",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX4"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX4"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX5",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX5"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX5"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX6",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX6"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX6"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX7",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX7"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX7"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX8",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX8"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX8"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX9",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX9"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX9"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX10",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX10"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX10"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX11",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX11"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX11"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX12",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX12"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX12"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX13",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX13"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX13"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX14",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX14"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX14"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX15",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "direct",
+      "compatible": true,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RX15"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RX15"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_FIFO_RX16",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28E12x"
+      ],
+      "mapping_type": "adapted",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": [
+        {
+          "symbol": "UART_FIFO_RXFULL"
+        }
+      ],
+      "fix": [
+        "UART_FIFO_RXFULL"
+      ],
+      "fixMsg": "NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_RXSTATUS_PARITY",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "adapted",
+      "compatible": false,
+      "group": "SCI_RXSTATUS",
+      "to_group": "UART_RXERROR_* (via UART_getRxError) + status functions",
+      "to_targets": [
+        {
+          "symbol": "UART_RXERROR_PARITY"
+        }
+      ],
+      "fix": [
+        "UART_RXERROR_PARITY"
+      ],
+      "fixMsg": "SCI packs errors and readiness into one RXST read; UART splits them: latched errors in RSR (UART_getRxError, cleared by UART_clearRxError), readiness in the flag register (UART_isDataAvailable/UART_isBusy)."
+    },
+    {
+      "code": "SCI_RXSTATUS_OVERRUN",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "adapted",
+      "compatible": false,
+      "group": "SCI_RXSTATUS",
+      "to_group": "UART_RXERROR_* (via UART_getRxError) + status functions",
+      "to_targets": [
+        {
+          "symbol": "UART_RXERROR_OVERRUN"
+        }
+      ],
+      "fix": [
+        "UART_RXERROR_OVERRUN"
+      ],
+      "fixMsg": "SCI packs errors and readiness into one RXST read; UART splits them: latched errors in RSR (UART_getRxError, cleared by UART_clearRxError), readiness in the flag register (UART_isDataAvailable/UART_isBusy)."
+    },
+    {
+      "code": "SCI_RXSTATUS_FRAMING",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "adapted",
+      "compatible": false,
+      "group": "SCI_RXSTATUS",
+      "to_group": "UART_RXERROR_* (via UART_getRxError) + status functions",
+      "to_targets": [
+        {
+          "symbol": "UART_RXERROR_FRAMING"
+        }
+      ],
+      "fix": [
+        "UART_RXERROR_FRAMING"
+      ],
+      "fixMsg": "SCI packs errors and readiness into one RXST read; UART splits them: latched errors in RSR (UART_getRxError, cleared by UART_clearRxError), readiness in the flag register (UART_isDataAvailable/UART_isBusy)."
+    },
+    {
+      "code": "SCI_RXSTATUS_BREAK",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "adapted",
+      "compatible": false,
+      "group": "SCI_RXSTATUS",
+      "to_group": "UART_RXERROR_* (via UART_getRxError) + status functions",
+      "to_targets": [
+        {
+          "symbol": "UART_RXERROR_BREAK"
+        }
+      ],
+      "fix": [
+        "UART_RXERROR_BREAK"
+      ],
+      "fixMsg": "SCI packs errors and readiness into one RXST read; UART splits them: latched errors in RSR (UART_getRxError, cleared by UART_clearRxError), readiness in the flag register (UART_isDataAvailable/UART_isBusy)."
+    }
+  ],
+  "removed": [
+    {
+      "code": "SCI_enableTxModule",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "control",
+      "from_signature": "void SCI_enableTxModule(uint32_t base)",
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "to_targets": null,
+      "fixMsg": "No per-direction UART API. Usually the whole-module enable/disable is sufficient; if a design truly gates one direction, it needs a direct register write to UARTCTL.TXE (outside driverlib). UART driverlib exposes no per-direction enable; the hardware bit exists (UARTCTL.TXE) but only whole-module UART_enableModule/UART_disableModule APIs are provided."
+    },
+    {
+      "code": "SCI_disableTxModule",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "control",
+      "from_signature": "void SCI_disableTxModule(uint32_t base)",
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "to_targets": null,
+      "fixMsg": "No per-direction UART API. Usually the whole-module enable/disable is sufficient; if a design truly gates one direction, it needs a direct register write to UARTCTL.TXE (outside driverlib). UART driverlib exposes no per-direction enable; the hardware bit exists (UARTCTL.TXE) but only whole-module UART_enableModule/UART_disableModule APIs are provided."
+    },
+    {
+      "code": "SCI_enableRxModule",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "control",
+      "from_signature": "void SCI_enableRxModule(uint32_t base)",
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "to_targets": null,
+      "fixMsg": "No per-direction UART API. Usually the whole-module enable/disable is sufficient; if a design truly gates one direction, it needs a direct register write to UARTCTL.RXE (outside driverlib). UART driverlib exposes no per-direction enable; the hardware bit exists (UARTCTL.RXE) but only whole-module UART_enableModule/UART_disableModule APIs are provided."
+    },
+    {
+      "code": "SCI_disableRxModule",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "control",
+      "from_signature": "void SCI_disableRxModule(uint32_t base)",
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "to_targets": null,
+      "fixMsg": "No per-direction UART API. Usually the whole-module enable/disable is sufficient; if a design truly gates one direction, it needs a direct register write to UARTCTL.RXE (outside driverlib). UART driverlib exposes no per-direction enable; the hardware bit exists (UARTCTL.RXE) but only whole-module UART_enableModule/UART_disableModule APIs are provided."
+    },
+    {
+      "code": "SCI_setIdleMultiProcessorMode",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "mode",
+      "from_signature": "void SCI_setIdleMultiProcessorMode(uint32_t base)",
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "to_targets": null,
+      "fixMsg": "No equivalent; redesign the bus protocol around 9-bit address mode. The idle-line multiprocessor protocol (wake on bus idle time) does not exist on the UART. Only the address-bit protocol (9-bit mode) is available - a protocol change on ALL bus nodes."
+    },
+    {
+      "code": "SCI_setWakeFlag",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "mode",
+      "from_signature": "void SCI_setWakeFlag(uint32_t base)",
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "to_targets": null,
+      "fixMsg": "For address-bit designs use UART_send9BitAddress; idle-line designs have no equivalent. TXWAKE (idle-line/address-bit wake signalling) is replaced on the UART by explicit UART_send9BitAddress in 9-bit mode; there is no generic wake flag."
+    },
+    {
+      "code": "SCI_enableSleepMode",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "mode",
+      "from_signature": "void SCI_enableSleepMode(uint32_t base)",
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "to_targets": null,
+      "fixMsg": "Rely on 9-bit hardware address matching instead of RX sleep. SCI RX sleep (ignore traffic until wake) has no UART control bit. The equivalent filtering in 9-bit mode is automatic: with UART_set9BitAddress configured, non-matching data is ignored until an address match."
+    },
+    {
+      "code": "SCI_disableSleepMode",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "mode",
+      "from_signature": "void SCI_disableSleepMode(uint32_t base)",
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "to_targets": null,
+      "fixMsg": "Rely on 9-bit mode control instead. See SCI_enableSleepMode; leaving 9-bit mode (UART_disable9Bit) restores receive-everything."
+    },
+    {
+      "code": "SCI_lockAutobaud",
+      "type": "function",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "functionalArea": "mode",
+      "from_signature": "void SCI_lockAutobaud(uint32_t base)",
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "to_targets": null,
+      "fixMsg": "Remove autobaud logic; agree the baud rate up front or implement detection in software. The UART has no autobaud hardware at all (no counterpart to the SCI autobaud detect logic). Baud must be configured explicitly via UART_setConfig."
+    },
+    {
+      "code": "SCI_CONFIG_WLEN_4",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": null,
+      "fixMsg": "UART minimum word length is 5 bits All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_CONFIG_WLEN_3",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": null,
+      "fixMsg": "UART minimum word length is 5 bits All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_CONFIG_WLEN_2",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": null,
+      "fixMsg": "UART minimum word length is 5 bits All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_CONFIG_WLEN_1",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_CONFIG",
+      "to_group": "UART_CONFIG_*",
+      "to_targets": null,
+      "fixMsg": "UART minimum word length is 5 bits All numeric values and field positions differ (SCI 16-bit CCR layout vs UART 32-bit LCRH layout) - symbolic translation only."
+    },
+    {
+      "code": "SCI_FIFO_TX16",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevelFine",
+      "to_targets": null,
+      "fixMsg": "no UART equivalent; nearest UART_FIFO_TX15 Both FIFOs are 16 entries; SCI levels TX0..TX15 map 1:1 onto UART fine levels. SCI_FIFO_TX16 (\"interrupt when full\") has no UART fine level - nearest is UART_FIFO_TX15."
+    },
+    {
+      "code": "SCI_FIFO_RX0",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevelFine",
+      "to_targets": null,
+      "fixMsg": "\"interrupt when empty\" does not exist on UART (RX0 there means FULL - do not use) NAMING TRAP: UART_FIFO_RX0 is an alias of UART_FIFO_RXFULL (value 0 = interrupt when FULL). It is NOT \"empty\". A naive SCI_FIFO_RX0 -> UART_FIFO_RX0 mapping inverts the semantics completely. SCI_FIFO_RX1..RX15 map 1:1; SCI_FIFO_RX16 (full) -> UART_FIFO_RXFULL."
+    },
+    {
+      "code": "SCI_RXSTATUS_WAKE",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RXSTATUS",
+      "to_group": "UART_RXERROR_* (via UART_getRxError) + status functions",
+      "to_targets": null,
+      "fixMsg": "idle-line wake detect - no UART equivalent SCI packs errors and readiness into one RXST read; UART splits them: latched errors in RSR (UART_getRxError, cleared by UART_clearRxError), readiness in the flag register (UART_isDataAvailable/UART_isBusy)."
+    },
+    {
+      "code": "SCI_RXSTATUS_READY",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RXSTATUS",
+      "to_group": "UART_RXERROR_* (via UART_getRxError) + status functions",
+      "to_targets": null,
+      "fixMsg": "use UART_isDataAvailable(base) - a function, not a flag SCI packs errors and readiness into one RXST read; UART splits them: latched errors in RSR (UART_getRxError, cleared by UART_clearRxError), readiness in the flag register (UART_isDataAvailable/UART_isBusy)."
+    },
+    {
+      "code": "SCI_RXSTATUS_ERROR",
+      "type": "mcu_macros",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RXSTATUS",
+      "to_group": "UART_RXERROR_* (via UART_getRxError) + status functions",
+      "to_targets": null,
+      "fixMsg": "use (UART_getRxError(base) != 0U) SCI packs errors and readiness into one RXST read; UART splits them: latched errors in RSR (UART_getRxError, cleared by UART_clearRxError), readiness in the flag register (UART_isDataAvailable/UART_isBusy)."
+    },
+    {
+      "code": "SCI_FIFO_TX0",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX0 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX0.)"
+    },
+    {
+      "code": "SCI_FIFO_TX1",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX1 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX1.)"
+    },
+    {
+      "code": "SCI_FIFO_TX2",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX2 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX2.)"
+    },
+    {
+      "code": "SCI_FIFO_TX3",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX3 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX3.)"
+    },
+    {
+      "code": "SCI_FIFO_TX4",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX4 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX4.)"
+    },
+    {
+      "code": "SCI_FIFO_TX5",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX5 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX5.)"
+    },
+    {
+      "code": "SCI_FIFO_TX6",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX6 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX6.)"
+    },
+    {
+      "code": "SCI_FIFO_TX7",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX7 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX7.)"
+    },
+    {
+      "code": "SCI_FIFO_TX8",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX8 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX8.)"
+    },
+    {
+      "code": "SCI_FIFO_TX9",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX9 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX9.)"
+    },
+    {
+      "code": "SCI_FIFO_TX10",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX10 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX10.)"
+    },
+    {
+      "code": "SCI_FIFO_TX11",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX11 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX11.)"
+    },
+    {
+      "code": "SCI_FIFO_TX12",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX12 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX12.)"
+    },
+    {
+      "code": "SCI_FIFO_TX13",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX13 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX13.)"
+    },
+    {
+      "code": "SCI_FIFO_TX14",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX14 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX14.)"
+    },
+    {
+      "code": "SCI_FIFO_TX15",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_TxFIFOLevel",
+      "to_group": "UART_TxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_TX15 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_TX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_TX15.)"
+    },
+    {
+      "code": "SCI_FIFO_RX1",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX1 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX1.)"
+    },
+    {
+      "code": "SCI_FIFO_RX2",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX2 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX2.)"
+    },
+    {
+      "code": "SCI_FIFO_RX3",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX3 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX3.)"
+    },
+    {
+      "code": "SCI_FIFO_RX4",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX4 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX4.)"
+    },
+    {
+      "code": "SCI_FIFO_RX5",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX5 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX5.)"
+    },
+    {
+      "code": "SCI_FIFO_RX6",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX6 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX6.)"
+    },
+    {
+      "code": "SCI_FIFO_RX7",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX7 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX7.)"
+    },
+    {
+      "code": "SCI_FIFO_RX8",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX8 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX8.)"
+    },
+    {
+      "code": "SCI_FIFO_RX9",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX9 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX9.)"
+    },
+    {
+      "code": "SCI_FIFO_RX10",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX10 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX10.)"
+    },
+    {
+      "code": "SCI_FIFO_RX11",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX11 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX11.)"
+    },
+    {
+      "code": "SCI_FIFO_RX12",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX12 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX12.)"
+    },
+    {
+      "code": "SCI_FIFO_RX13",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX13 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX13.)"
+    },
+    {
+      "code": "SCI_FIFO_RX14",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX14 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX14.)"
+    },
+    {
+      "code": "SCI_FIFO_RX15",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX15 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RX15.)"
+    },
+    {
+      "code": "SCI_FIFO_RX16",
+      "type": "enum",
+      "devices": [
+        "F2807x",
+        "F2837xS",
+        "F2837xD",
+        "F28004x",
+        "F28002x",
+        "F28003x",
+        "F280013x",
+        "F280015x",
+        "F2838x",
+        "F28P55x",
+        "F28P551x",
+        "F28P65x",
+        "F28E12x"
+      ],
+      "to_devices": [
+        "F28P65x"
+      ],
+      "mapping_type": "no_equivalent",
+      "compatible": false,
+      "group": "SCI_RxFIFOLevel",
+      "to_group": "UART_RxFIFOLevel (coarse)",
+      "to_targets": null,
+      "fixMsg": "F28P65x UART has no per-entry fine FIFO level, so SCI_FIFO_RX16 has no exact equivalent. Use the coarse setter UART_setFIFOLevel with the nearest 1/8..7/8 fraction (UART_FIFO_RX1_8/2_8/4_8/6_8/7_8). (On F28E12x this maps to the fine level UART_FIFO_RXFULL.)"
+    }
+  ],
+  "added": [
+    {
+      "code": "UART_enableModuleNonFIFO",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "enable module with FIFOs disabled (character mode)"
+    },
+    {
+      "code": "UART_disableModuleNonFIFO",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "disable module variant for character mode"
+    },
+    {
+      "code": "UART_setTxIntMode",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "select TX interrupt semantics: FIFO-level vs end-of-transmission (see SCI_INT notes)"
+    },
+    {
+      "code": "UART_getTxIntMode",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "getter for TX interrupt mode"
+    },
+    {
+      "code": "UART_setBreakConfig",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "transmit a line-break condition (SCI could only DETECT break, not send it)"
+    },
+    {
+      "code": "UART_registerInterrupt",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "register an ISR with the interrupt controller (PIE) for the UART interrupt"
+    },
+    {
+      "code": "UART_unregisterInterrupt",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "unregister the ISR"
+    },
+    {
+      "code": "UART_clearGlobalInterruptFlag",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "acknowledge the module-level global interrupt flag (required in ISRs)"
+    },
+    {
+      "code": "UART_getGlobalInterruptFlagStatus",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "read the module-level global interrupt flag"
+    },
+    {
+      "code": "UART_enableDMA",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "hardware DMA handshake for TX/RX (UART_DMA_TX/UART_DMA_RX/UART_DMA_ERR_RXSTOP) - no SCI counterpart"
+    },
+    {
+      "code": "UART_disableDMA",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "disable the DMA handshake"
+    },
+    {
+      "code": "UART_enable9Bit",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "enable 9-bit (address-bit) multiprocessor mode - used in the SCI address-mode recipe"
+    },
+    {
+      "code": "UART_disable9Bit",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "leave 9-bit mode"
+    },
+    {
+      "code": "UART_set9BitAddress",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "program own address + match mask (hardware address recognition)"
+    },
+    {
+      "code": "UART_send9BitAddress",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "transmit an address byte (replaces TXWAKE signalling)"
+    },
+    {
+      "code": "UART_configure9BitDataMode",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "prepare LCRH for raw 9-bit data transfers (returns previous LCRH)"
+    },
+    {
+      "code": "UART_stop9BitDataMode",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "restore LCRH after 9-bit data transfers"
+    },
+    {
+      "code": "UART_enableSIR",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "IrDA/SIR serial infrared mode (with optional low-power encoding)"
+    },
+    {
+      "code": "UART_disableSIR",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "disable IrDA/SIR mode"
+    },
+    {
+      "code": "UART_setIrDALPDivisor",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "IrDA low-power baud divisor (UART_CLK_IRLPBAUD16 reference)"
+    },
+    {
+      "code": "UART_clearRxError",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "clear latched RX errors - used in several mappings"
+    },
+    {
+      "code": "UART_getRxError",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "read latched RX errors - target of SCI_getRxStatus"
+    },
+    {
+      "code": "UART_getConfig",
+      "type": "function",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "read back baud + frame config - target of SCI_getConfig and the setBaud recipe"
+    },
+    {
+      "code": "UART_CONFIG_PAR_ONE",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "stick parity: parity bit always 1"
+    },
+    {
+      "code": "UART_CONFIG_PAR_ZERO",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "stick parity: parity bit always 0"
+    },
+    {
+      "code": "UART_INT_RT",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "receive timeout interrupt - recommended companion to UART_INT_RX in FIFO mode"
+    },
+    {
+      "code": "UART_INT_EOT",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "end-of-transmission interrupt condition"
+    },
+    {
+      "code": "UART_INT_9BIT",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "9-bit address match interrupt"
+    },
+    {
+      "code": "UART_INT_DMARX",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "DMA RX done interrupt"
+    },
+    {
+      "code": "UART_INT_DMATX",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "DMA TX done interrupt"
+    },
+    {
+      "code": "UART_INT_BE",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "break error interrupt (also the target of SCI break-detect semantics)"
+    },
+    {
+      "code": "UART_DMA_TX",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "enable DMA handshake for transmit"
+    },
+    {
+      "code": "UART_DMA_RX",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "enable DMA handshake for receive"
+    },
+    {
+      "code": "UART_DMA_ERR_RXSTOP",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "stop RX DMA on error"
+    },
+    {
+      "code": "UART_TXINT_MODE_FIFO",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "TX interrupt on FIFO level (default)"
+    },
+    {
+      "code": "UART_TXINT_MODE_EOT",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "TX interrupt when transmitter goes idle"
+    },
+    {
+      "code": "UART_RAW_INT",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "selector for UART_getInterruptStatus: raw (pre-mask) status"
+    },
+    {
+      "code": "UART_MASKED_INT",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "selector for UART_getInterruptStatus: masked (post-enable) status"
+    },
+    {
+      "code": "UART_CLK_DIVIDER",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "minimum clock/baud ratio constant (8, high-speed mode)"
+    },
+    {
+      "code": "UART_CLK_FREQ",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "UART module clock (SYSCLK) - pass as the uartClk argument"
+    },
+    {
+      "code": "UART_CLK_IRLPBAUD16",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "IrDA low-power reference frequency"
+    },
+    {
+      "code": "UART_SIR_LOWPOWER_ENABLE",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "SIR low-power encoding on"
+    },
+    {
+      "code": "UART_SIR_LOWPOWER_DISABLE",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "SIR low-power encoding off"
+    },
+    {
+      "code": "UART_CUSTOM_FIFO_LEVEL_KEY",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28E12x"
+      ],
+      "fixMsg": "IFLS unlock key used internally by UART_setFIFOLevelFine"
+    },
+    {
+      "code": "UART_FIFO_TX1_8",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "coarse TX trigger 1/8 full"
+    },
+    {
+      "code": "UART_FIFO_TX2_8",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "coarse TX trigger 1/4 full"
+    },
+    {
+      "code": "UART_FIFO_TX4_8",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "coarse TX trigger 1/2 full"
+    },
+    {
+      "code": "UART_FIFO_TX6_8",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "coarse TX trigger 3/4 full"
+    },
+    {
+      "code": "UART_FIFO_TX7_8",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "coarse TX trigger 7/8 full"
+    },
+    {
+      "code": "UART_FIFO_RX1_8",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "coarse RX trigger 1/8 full"
+    },
+    {
+      "code": "UART_FIFO_RX2_8",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "coarse RX trigger 1/4 full"
+    },
+    {
+      "code": "UART_FIFO_RX4_8",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "coarse RX trigger 1/2 full"
+    },
+    {
+      "code": "UART_FIFO_RX6_8",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "coarse RX trigger 3/4 full"
+    },
+    {
+      "code": "UART_FIFO_RX7_8",
+      "type": "mcu_macros",
+      "to_devices": [
+        "F28P65x",
+        "F28E12x"
+      ],
+      "fixMsg": "coarse RX trigger 7/8 full"
+    }
+  ]
+}
