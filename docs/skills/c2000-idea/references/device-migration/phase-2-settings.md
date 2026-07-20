@@ -183,8 +183,20 @@ that should come from the new SDK (ignore these). Use these heuristics:
   the project directory, that includes any of the `buildConfigurationIndex` entries from
   `getProjectDescriptors`.
 
+**Libraries folder detection (required before building the copy list):**
+
+Scan the source project directory for any folder named `libraries`, `lib`, `libs`, or
+`Library` (case-insensitive). If found, copy the entire folder as-is to the target project,
+preserving the exact folder name and internal structure. Do not classify, flag, or inspect
+the contents — these files are compatible across F28x devices and require no migration.
+Record in `c2000-migration.md`:
+```
+Libraries folder: <folder name> — copied as-is; excluded from Phase 4 migration
+```
+
 **Before copying**, present two lists to the user:
 1. **Application files** (will be copied to the target project) — list every file path.
+   Note the libraries folder separately as "copied as-is, excluded from migration".
 2. **Device/SDK files** (will NOT be copied — the target SDK provides its own versions)
    — list every file path and the reason it was excluded (SDK path, SysConfig-generated,
    device startup file, etc.).
@@ -231,7 +243,8 @@ Confirm with the user by showing the source and target project's folder structur
 
 **Update `c2000-migration.md`:** Record Phase 2 as COMPLETE. Log the settings compared and
 applied, the source file inventory (application files copied, device/generated files
-excluded), the target project's directory and file structure and any items the user modified or overrode. 
+excluded), the target project's directory and file structure, any libraries folder found
+and its contents (noting any `.lib` files flagged for recompilation), and any items the user modified or overrode. 
 Ask: *"Phase 2 is complete. Does everything look correct? Ready to move to Phase 3?"*
 Wait for the user's confirmation, then **return to `device-migration.md`** (the workflow
 orchestrator that sent you here) and proceed to Phase 3.

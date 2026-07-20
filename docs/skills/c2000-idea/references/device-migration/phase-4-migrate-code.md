@@ -199,14 +199,19 @@ always fixed: all `.h` files first, then `.c` files in dependency order.
 
 From the target project directory, collect:
 
+> **Libraries folder exclusion:** Check `c2000-migration.md` for a `Libraries folder:` entry
+> (written by Phase 2 Step 2.7). If present, exclude every file under that folder from all
+> lists below — do not run migration reports on them and do not modify them.
+
 1. **`.h` files** — all application header files. Exclude the following header files:
    - Files under `<c2000ware_path>/` (SDK files — do not modify SDK source).
    - Files inside the `sysConfigOutputLocation` folder.
+   - Files inside the libraries folder (recorded in `c2000-migration.md` — see note above).
    - Files that are clearly part of the C2000Ware driverlib (e.g., paths containing
      `/driverlib/` followed by a device family name).
 2. **`.c` files** — all application source files in dependency order. Apply the same
-   exclusions as for `.h` files above. Exclude `device.c` in the `sysConfigOutputLocation`
-   — it is SysConfig-generated. In dependency order:
+   exclusions as for `.h` files above (including the libraries folder). Exclude `device.c`
+   in the `sysConfigOutputLocation` — it is SysConfig-generated. In dependency order:
    - Leaf files first (those that only `#include` SDK headers).
    - Files that include already-migrated project headers next.
    - Files with the most project-internal dependencies last (typically `main.c`).
