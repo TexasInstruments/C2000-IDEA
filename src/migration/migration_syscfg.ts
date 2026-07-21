@@ -8,7 +8,7 @@ import { SysConfigMigrationDatabase } from '../types/syscfg_migration';
  * Each value is the filename stem of the corresponding database at
  * `migration_data/syscfg_data/<value>_syscfg_migration.json`.
  */
-export enum SysConfigMigrationModulePair {
+export enum MigrationSyscfgModulePair {
 	EPWM_MCPWM = "epwm_mcpwm",
 }
 
@@ -28,9 +28,9 @@ export enum SysConfigMigrationModulePair {
  * @param targetDevice Target device family (must be a value from DEVICE_LIST).
  * @returns The source/target-device-filtered database, or `undefined` if a device is unknown, or the file does not exist / cannot be parsed.
  */
-export async function loadSysConfigMigrationDatabase(
+export async function migrationSyscfgLoadDatabase(
 	context: vscode.ExtensionContext,
-	modulePair: SysConfigMigrationModulePair,
+	modulePair: MigrationSyscfgModulePair,
 	sourceDevice: string,
 	targetDevice: string,
 ): Promise<SysConfigMigrationDatabase | undefined> {
@@ -79,13 +79,13 @@ export async function loadSysConfigMigrationDatabase(
  * @returns The combined Markdown string, or `undefined` if the database could not be loaded
  *          (unknown device, or the data file does not exist / cannot be parsed).
  */
-export async function getSysConfigMigrationMarkdown(
+export async function migrationSyscfgGetMarkdown(
 	context: vscode.ExtensionContext,
-	modulePair: SysConfigMigrationModulePair,
+	modulePair: MigrationSyscfgModulePair,
 	sourceDevice: string,
 	targetDevice: string,
 ): Promise<string | undefined> {
-	const database = await loadSysConfigMigrationDatabase(context, modulePair, sourceDevice, targetDevice);
+	const database = await migrationSyscfgLoadDatabase(context, modulePair, sourceDevice, targetDevice);
 	if (!database) {
 		return undefined;
 	}
