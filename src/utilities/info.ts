@@ -29,6 +29,7 @@ export const C2000_IDEA_CMD_EXPORT_MIGRATION_REPORT = "c2000-idea.exportMigratio
 export const C2000_IDEA_CMD_EXPORT_MIGRATION_AGENT_REPORT = "c2000-idea.exportMigrationAgentReport";
 export const C2000_IDEA_CMD_IGNORE_MIGRATION_INCOMPAT = "c2000-idea.ignoreMigrationIncompatibility";
 export const C2000_IDEA_CMD_IGNORE_FOLDER_MIGRATION_INCOMPAT = "c2000-idea.ignoreMigrationFolderIncompatibility";
+export const C2000_IDEA_CMD_GENERATE_SYSCFG_MIGRATION_REPORT = "c2000-idea.generateSyscfgMigrationReport";
 
 
 //

@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
-import { DEVICE_LIST } from '../deviceData';
+import { DEVICE_LIST, MIGRATION_EPWM_RESOLUTION_DEVICE_LIST, MIGRATION_MCPWM_RESOLUTION_DEVICE_LIST } from '../deviceData';
 import { SysConfigMigrationDatabase } from '../types/syscfg_migration';
+import * as info from '../utilities/info';
 
 /**
  * Supported SysConfig peripheral module-to-module migration pairs.
@@ -12,30 +13,31 @@ export enum MigrationSyscfgModulePair {
 	EPWM_MCPWM = "epwm_mcpwm",
 }
 
-/**
- * Load the SysConfig migration database for a given module pair and device pair.
- *
- * `sourceDevice` / `targetDevice` are validated against `DEVICE_LIST`; the function returns
- * `undefined` if either is not a known device family. The returned database is filtered to the
- * config entries applicable to this migration: those whose `devices` list includes `sourceDevice`,
- * and — when the entry has a `to_devices` list — whose `to_devices` includes `targetDevice` (an
- * omitted `to_devices` means the entry applies to all targets). This reads the matching JSON file
- * (if it exists) and casts it to the {@link SysConfigMigrationDatabase} shape.
- *
- * @param context      Extension context, used to locate the bundled `migration_data` folder.
- * @param modulePair   Peripheral module-to-module pair (e.g. EPWM_MCPWM).
- * @param sourceDevice Source device family (must be a value from DEVICE_LIST).
- * @param targetDevice Target device family (must be a value from DEVICE_LIST).
- * @returns The source/target-device-filtered database, or `undefined` if a device is unknown, or the file does not exist / cannot be parsed.
- */
+export interface MigrationSysConfigModuleSupportDevices {
+	sourceDevices: string[];
+	targetDevices: string[];
+}
+
+export const MIGRATION_SYSCFG_MODULE_SUPPORT: Record<MigrationSyscfgModulePair, MigrationSysConfigModuleSupportDevices> = {
+	[MigrationSyscfgModulePair.EPWM_MCPWM]: {
+		sourceDevices: MIGRATION_EPWM_RESOLUTION_DEVICE_LIST,
+		targetDevices: MIGRATION_MCPWM_RESOLUTION_DEVICE_LIST,
+	},
+};
+
+
 export async function migrationSyscfgLoadDatabase(
 	context: vscode.ExtensionContext,
 	modulePair: MigrationSyscfgModulePair,
 	sourceDevice: string,
 	targetDevice: string,
 ): Promise<SysConfigMigrationDatabase | undefined> {
-	// Both devices must be known families from DEVICE_LIST.
-	if (!DEVICE_LIST.includes(sourceDevice) || !DEVICE_LIST.includes(targetDevice)) {
+
+	if (!MIGRATION_SYSCFG_MODULE_SUPPORT[modulePair]) {
+		return undefined;
+	}
+
+	if (!MIGRATION_SYSCFG_MODULE_SUPPORT[modulePair].sourceDevices.includes(sourceDevice) || !MIGRATION_SYSCFG_MODULE_SUPPORT[modulePair].targetDevices.includes(targetDevice)) {
 		return undefined;
 	}
 
@@ -65,20 +67,6 @@ export async function migrationSyscfgLoadDatabase(
 	}
 }
 
-/**
- * Build a combined Markdown document for a SysConfig migration: the companion `.md` guide (same
- * filename stem, if it exists) followed by the source/target-filtered database rendered as a
- * Markdown table. Each row shows the source config and target config (each as its GUI display
- * name with the raw config id in parentheses), the status, the per-option value mapping when the config is enum-like
- * (from `option_map`, including option display names and "no equivalent" options), and the guidance.
- *
- * @param context      Extension context, used to locate the bundled `migration_data` folder.
- * @param modulePair   Peripheral module-to-module pair (e.g. EPWM_MCPWM).
- * @param sourceDevice Source device family (must be a value from DEVICE_LIST).
- * @param targetDevice Target device family (must be a value from DEVICE_LIST).
- * @returns The combined Markdown string, or `undefined` if the database could not be loaded
- *          (unknown device, or the data file does not exist / cannot be parsed).
- */
 export async function migrationSyscfgGetAgentReport(
 	context: vscode.ExtensionContext,
 	modulePair: MigrationSyscfgModulePair,
@@ -106,13 +94,13 @@ export async function migrationSyscfgGetAgentReport(
 	// A cell showing a GUI display name (bold) with the raw config/option id in parentheses when a
 	// display name is present; otherwise just the id.
 	const nameCell = (id: string, displayName?: string | null): string =>
-		displayName ? `**${esc(displayName)}** (\`${esc(id)}\`)` : `\`${esc(id)}\``;
+		displayName ? `**${esc(displayName)}**<br>(\`${esc(id)}\`)` : `(\`${esc(id)}\`)`;
 	// A single option label: "<display name> (`value`)" when a display name exists, else "`value`".
 	const optionLabel = (value: string, displayName?: string | null): string =>
 		displayName ? `${esc(displayName)} (\`${esc(value)}\`)` : `\`${esc(value)}\``;
 
 	const tableRows: string[] = [
-		"| Source config (id) | Target config (id) | Status | Value mapping | Guidance |",
+		"| Source config<br>(id) | Target config<br>(id) | Status | Value mapping | Guidance |",
 		"| --- | --- | --- | --- | --- |",
 	];
 	for (const [configName, entry] of Object.entries(database)) {
@@ -129,10 +117,10 @@ export async function migrationSyscfgGetAgentReport(
 					const to = item.to_option === null
 						? "— (no equivalent)"
 						: optionLabel(item.to_option, item.to_displayName);
-					return `${from} → ${to}`;
+					return `${from} → ${to}<br>`;
 				});
 				if (optionLines.length > 0) {
-					valueMapping = optionLines.join("<br>");
+					valueMapping = optionLines.join("<br><br>");
 				}
 			}
 		}
@@ -142,4 +130,87 @@ export async function migrationSyscfgGetAgentReport(
 	sections.push(tableRows.join("\n"));
 
 	return sections.join("\n\n");
+}
+
+export async function migrationSyscfgGenerateReportForAgent(context: vscode.ExtensionContext): Promise<void> {
+	try {
+		// Build module pair quick pick from enum values
+		const modulePairOptions = Object.entries(MigrationSyscfgModulePair).map(([key, value]) => ({
+			label: key === 'EPWM_MCPWM' ? 'EPWM → MCPWM' : key,
+			description: value,
+		}));
+
+		// Prompt for module pair
+		const moduleSelection = await vscode.window.showQuickPick(modulePairOptions, {
+			title: "Select module pair",
+			placeHolder: "Choose peripheral pair",
+		});
+		if (!moduleSelection) {
+			return; // User cancelled
+		}
+
+		const modulePair = moduleSelection.description as MigrationSyscfgModulePair;
+
+		// Build device quick pick options
+		const sourceDeviceOptions = MIGRATION_SYSCFG_MODULE_SUPPORT[modulePair]?.sourceDevices.map(dev => ({
+			label: dev,
+			picked: false,
+		})) || [];
+		const targetDeviceOptions = MIGRATION_SYSCFG_MODULE_SUPPORT[modulePair]?.targetDevices.map(dev => ({
+			label: dev,
+			picked: false,
+		})) || [];
+
+		// Prompt for source device
+		const sourceSelection = await vscode.window.showQuickPick(sourceDeviceOptions, {
+			title: "Select source device",
+			placeHolder: "Choose source device",
+		});
+		if (!sourceSelection) {
+			return; // User cancelled
+		}
+
+		const sourceDevice = sourceSelection.label;
+
+		// Prompt for target device
+		const targetSelection = await vscode.window.showQuickPick(targetDeviceOptions, {
+			title: "Select target device",
+			placeHolder: "Choose target device",
+		});
+		if (!targetSelection) {
+			return; // User cancelled
+		}
+
+		const targetDevice = targetSelection.label;
+
+		// Get the migration report
+		const report = await migrationSyscfgGetAgentReport(context, modulePair, sourceDevice, targetDevice);
+		if (!report) {
+			vscode.window.showErrorMessage("Failed to generate syscfg migration report. Check device selection and module pair.");
+			return;
+		}
+
+		// Open the report in a new editor tab
+		const doc = await vscode.workspace.openTextDocument({
+			content: report,
+			language: "markdown",
+		});
+		await vscode.window.showTextDocument(doc);
+	} catch (error) {
+		const message = error instanceof Error ? error.message : String(error);
+		vscode.window.showErrorMessage(`Error generating syscfg migration report: ${message}`);
+	}
+}
+
+/**
+ * Register syscfg migration commands.
+ *
+ * @param context Extension context
+ */
+export function migrationSysConfigSetup(context: vscode.ExtensionContext): void {
+	let syscfgReportDisposable = vscode.commands.registerCommand(
+		info.C2000_IDEA_CMD_GENERATE_SYSCFG_MIGRATION_REPORT,
+		() => migrationSyscfgGenerateReportForAgent(context)
+	);
+	context.subscriptions.push(syscfgReportDisposable);
 }

@@ -113,6 +113,11 @@
         "icon": "$(robot)"
       },
       {
+        "command": "c2000-idea.generateSyscfgMigrationReport",
+        "title": "C2000: Generate SysConfig Migration Report for AI Agent",
+        "icon": "$(robot)"
+      },
+      {
         "command": "c2000-idea.runMigrationCheck",
         "title": "C2000: Run Migration Check on File",
         "enablement": "!c2000-idea.isContinuousMigrationCheckMode",
