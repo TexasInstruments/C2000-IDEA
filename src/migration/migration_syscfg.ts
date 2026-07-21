@@ -16,15 +16,16 @@ export enum SysConfigMigrationModulePair {
  * Load the SysConfig migration database for a given module pair and device pair.
  *
  * `sourceDevice` / `targetDevice` are validated against `DEVICE_LIST`; the function returns
- * `undefined` if either is not a known device family. They are otherwise not yet used for
- * filtering the returned database. For now this reads the matching JSON file (if it exists) and
- * casts it to the {@link SysConfigMigrationDatabase} shape.
+ * `undefined` if either is not a known device family. The returned database is filtered to only
+ * the config entries that exist on the source device — those whose `devices` list includes
+ * `sourceDevice`. `targetDevice` is validated but not yet used for filtering. This reads the
+ * matching JSON file (if it exists) and casts it to the {@link SysConfigMigrationDatabase} shape.
  *
  * @param context      Extension context, used to locate the bundled `migration_data` folder.
  * @param modulePair   Peripheral module-to-module pair (e.g. EPWM_MCPWM).
  * @param sourceDevice Source device family (must be a value from DEVICE_LIST).
  * @param targetDevice Target device family (must be a value from DEVICE_LIST).
- * @returns The parsed and cast database, or `undefined` if a device is unknown, or the file does not exist / cannot be parsed.
+ * @returns The source-device-filtered database, or `undefined` if a device is unknown, or the file does not exist / cannot be parsed.
  */
 export async function loadSysConfigMigrationDatabase(
 	context: vscode.ExtensionContext,
@@ -42,7 +43,17 @@ export async function loadSysConfigMigrationDatabase(
 
 	try {
 		const buffer = await vscode.workspace.fs.readFile(fileUri);
-		return JSON.parse(Buffer.from(buffer).toString("utf-8")) as unknown as SysConfigMigrationDatabase;
+		const database = JSON.parse(Buffer.from(buffer).toString("utf-8")) as unknown as SysConfigMigrationDatabase;
+
+		// Keep only the config entries that exist on the source device
+		// (i.e. whose `devices` list includes sourceDevice).
+		const filtered: SysConfigMigrationDatabase = {};
+		for (const [configName, entry] of Object.entries(database)) {
+			if (entry.devices.includes(sourceDevice)) {
+				filtered[configName] = entry;
+			}
+		}
+		return filtered;
 	} catch {
 		// File does not exist or could not be parsed.
 		return undefined;
