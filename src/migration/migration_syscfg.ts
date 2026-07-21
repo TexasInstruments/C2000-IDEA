@@ -16,16 +16,17 @@ export enum SysConfigMigrationModulePair {
  * Load the SysConfig migration database for a given module pair and device pair.
  *
  * `sourceDevice` / `targetDevice` are validated against `DEVICE_LIST`; the function returns
- * `undefined` if either is not a known device family. The returned database is filtered to only
- * the config entries that exist on the source device — those whose `devices` list includes
- * `sourceDevice`. `targetDevice` is validated but not yet used for filtering. This reads the
- * matching JSON file (if it exists) and casts it to the {@link SysConfigMigrationDatabase} shape.
+ * `undefined` if either is not a known device family. The returned database is filtered to the
+ * config entries applicable to this migration: those whose `devices` list includes `sourceDevice`,
+ * and — when the entry has a `to_devices` list — whose `to_devices` includes `targetDevice` (an
+ * omitted `to_devices` means the entry applies to all targets). This reads the matching JSON file
+ * (if it exists) and casts it to the {@link SysConfigMigrationDatabase} shape.
  *
  * @param context      Extension context, used to locate the bundled `migration_data` folder.
  * @param modulePair   Peripheral module-to-module pair (e.g. EPWM_MCPWM).
  * @param sourceDevice Source device family (must be a value from DEVICE_LIST).
  * @param targetDevice Target device family (must be a value from DEVICE_LIST).
- * @returns The source-device-filtered database, or `undefined` if a device is unknown, or the file does not exist / cannot be parsed.
+ * @returns The source/target-device-filtered database, or `undefined` if a device is unknown, or the file does not exist / cannot be parsed.
  */
 export async function loadSysConfigMigrationDatabase(
 	context: vscode.ExtensionContext,
@@ -45,11 +46,15 @@ export async function loadSysConfigMigrationDatabase(
 		const buffer = await vscode.workspace.fs.readFile(fileUri);
 		const database = JSON.parse(Buffer.from(buffer).toString("utf-8")) as unknown as SysConfigMigrationDatabase;
 
-		// Keep only the config entries that exist on the source device
-		// (i.e. whose `devices` list includes sourceDevice).
+		// Keep only the config entries applicable to this migration:
+		//  - source: the entry must exist on sourceDevice (`devices` includes it), and
+		//  - target: an undefined `to_devices` means it applies to all targets, otherwise
+		//    `to_devices` must include targetDevice.
 		const filtered: SysConfigMigrationDatabase = {};
 		for (const [configName, entry] of Object.entries(database)) {
-			if (entry.devices.includes(sourceDevice)) {
+			const onSourceDevice = entry.devices.includes(sourceDevice);
+			const onTargetDevice = entry.to_devices === undefined || entry.to_devices.includes(targetDevice);
+			if (onSourceDevice && onTargetDevice) {
 				filtered[configName] = entry;
 			}
 		}
