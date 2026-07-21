@@ -100,6 +100,18 @@ export interface SysConfigOptionMapItem {
    * FIFO level that exists on F28E12x but not F28P65x.
    */
   to_devices?: SysConfigDevice[];
+  /**
+   * GUI label of the source option, copied from the source schema. Optional:
+   * some options carry no `displayName` in the schema (e.g. numeric word-length
+   * options), in which case this is omitted.
+   */
+  from_displayName?: string;
+  /**
+   * GUI label of the target option (`to_option`), copied from the target schema.
+   * Optional: omitted when `to_option` is null (no target) or the target option
+   * carries no `displayName`.
+   */
+  to_displayName?: string;
 }
 
 /** Map from source option name to its target mapping. */

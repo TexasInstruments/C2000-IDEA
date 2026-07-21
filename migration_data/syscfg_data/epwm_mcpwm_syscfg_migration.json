@@ -1174,7 +1174,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "No change in the output pins",
+        "to_displayName": "No change in the output pins"
       },
       "EPWM_AQ_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_OUTPUT_LOW",
@@ -1191,7 +1193,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to low"
       },
       "EPWM_AQ_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_OUTPUT_HIGH",
@@ -1208,7 +1212,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to High"
       },
       "EPWM_AQ_OUTPUT_TOGGLE": {
         "to_option": "MCPWM_AQ_OUTPUT_TOGGLE",
@@ -1225,7 +1231,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Toggle the output pins",
+        "to_displayName": "Toggle the output pins"
       }
     }
   },
@@ -1269,7 +1277,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "No change in the output pins",
+        "to_displayName": "No change in the output pins"
       },
       "EPWM_AQ_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_OUTPUT_LOW",
@@ -1286,7 +1296,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to low"
       },
       "EPWM_AQ_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_OUTPUT_HIGH",
@@ -1303,7 +1315,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to High"
       },
       "EPWM_AQ_OUTPUT_TOGGLE": {
         "to_option": "MCPWM_AQ_OUTPUT_TOGGLE",
@@ -1320,7 +1334,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Toggle the output pins",
+        "to_displayName": "Toggle the output pins"
       }
     }
   },
@@ -1364,7 +1380,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "No change in the output pins",
+        "to_displayName": "No change in the output pins"
       },
       "EPWM_AQ_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_OUTPUT_LOW",
@@ -1381,7 +1399,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to low"
       },
       "EPWM_AQ_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_OUTPUT_HIGH",
@@ -1398,7 +1418,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to High"
       },
       "EPWM_AQ_OUTPUT_TOGGLE": {
         "to_option": "MCPWM_AQ_OUTPUT_TOGGLE",
@@ -1415,7 +1437,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Toggle the output pins",
+        "to_displayName": "Toggle the output pins"
       }
     }
   },
@@ -1459,7 +1483,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "No change in the output pins",
+        "to_displayName": "No change in the output pins"
       },
       "EPWM_AQ_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_OUTPUT_LOW",
@@ -1476,7 +1502,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to low"
       },
       "EPWM_AQ_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_OUTPUT_HIGH",
@@ -1493,7 +1521,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to High"
       },
       "EPWM_AQ_OUTPUT_TOGGLE": {
         "to_option": "MCPWM_AQ_OUTPUT_TOGGLE",
@@ -1510,7 +1540,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Toggle the output pins",
+        "to_displayName": "Toggle the output pins"
       }
     }
   },
@@ -1554,7 +1586,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "No change in the output pins",
+        "to_displayName": "No change in the output pins"
       },
       "EPWM_AQ_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_OUTPUT_LOW",
@@ -1571,7 +1605,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to low"
       },
       "EPWM_AQ_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_OUTPUT_HIGH",
@@ -1588,7 +1624,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to High"
       },
       "EPWM_AQ_OUTPUT_TOGGLE": {
         "to_option": "MCPWM_AQ_OUTPUT_TOGGLE",
@@ -1605,7 +1643,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Toggle the output pins",
+        "to_displayName": "Toggle the output pins"
       }
     }
   },
@@ -1649,7 +1689,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "No change in the output pins",
+        "to_displayName": "No change in the output pins"
       },
       "EPWM_AQ_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_OUTPUT_LOW",
@@ -1666,7 +1708,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to low"
       },
       "EPWM_AQ_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_OUTPUT_HIGH",
@@ -1683,7 +1727,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to High"
       },
       "EPWM_AQ_OUTPUT_TOGGLE": {
         "to_option": "MCPWM_AQ_OUTPUT_TOGGLE",
@@ -1700,7 +1746,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Toggle the output pins",
+        "to_displayName": "Toggle the output pins"
       }
     }
   },
@@ -1744,7 +1792,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Software forcing disabled",
+        "to_displayName": "SW force Action is disabled"
       },
       "EPWM_AQ_SW_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_SW_CONTINUOUS_LOW",
@@ -1761,7 +1811,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to continuos low"
       },
       "EPWM_AQ_SW_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_SW_CONTINUOUS_HIGH",
@@ -1778,7 +1830,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to continuos High"
       }
     }
   },
@@ -1868,7 +1922,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero",
+        "to_displayName": "Load when counter equals zero"
       },
       "EPWM_AQ_LOAD_ON_CNTR_PERIOD": {
         "to_option": "MCPWM_AQ_LOAD_ON_CNTR_PERIOD",
@@ -1885,7 +1941,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals period",
+        "to_displayName": "Load when counter equals period"
       },
       "EPWM_AQ_LOAD_ON_CNTR_ZERO_PERIOD": {
         "to_option": "MCPWM_AQ_LOAD_ON_CNTR_ZERO_PERIOD",
@@ -1902,7 +1960,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero or period",
+        "to_displayName": "Load when counter equals zero or period"
       },
       "EPWM_AQ_LOAD_FREEZE": {
         "to_option": "MCPWM_AQ_LOAD_FREEZE",
@@ -1919,7 +1979,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Freeze shadow to active load",
+        "to_displayName": "Freeze shadow to active load"
       },
       "EPWM_AQ_LOAD_ON_SYNC_CNTR_ZERO": {
         "to_option": null,
@@ -1936,7 +1998,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals zero"
       },
       "EPWM_AQ_LOAD_ON_SYNC_CNTR_PERIOD": {
         "to_option": null,
@@ -1953,7 +2016,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals period"
       },
       "EPWM_AQ_LOAD_ON_SYNC_CNTR_ZERO_PERIOD": {
         "to_option": null,
@@ -1970,7 +2034,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals zero or period"
       },
       "EPWM_AQ_LOAD_ON_SYNC_ONLY": {
         "to_option": null,
@@ -1987,7 +2052,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync only"
       }
     }
   },
@@ -2217,7 +2283,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "No change in the output pins",
+        "to_displayName": "No change in the output pins"
       },
       "EPWM_AQ_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_OUTPUT_LOW",
@@ -2234,7 +2302,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to low"
       },
       "EPWM_AQ_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_OUTPUT_HIGH",
@@ -2251,7 +2321,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to High"
       },
       "EPWM_AQ_OUTPUT_TOGGLE": {
         "to_option": "MCPWM_AQ_OUTPUT_TOGGLE",
@@ -2268,7 +2340,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Toggle the output pins",
+        "to_displayName": "Toggle the output pins"
       }
     }
   },
@@ -2312,7 +2386,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "No change in the output pins",
+        "to_displayName": "No change in the output pins"
       },
       "EPWM_AQ_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_OUTPUT_LOW",
@@ -2329,7 +2405,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to low"
       },
       "EPWM_AQ_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_OUTPUT_HIGH",
@@ -2346,7 +2424,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to High"
       },
       "EPWM_AQ_OUTPUT_TOGGLE": {
         "to_option": "MCPWM_AQ_OUTPUT_TOGGLE",
@@ -2363,7 +2443,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Toggle the output pins",
+        "to_displayName": "Toggle the output pins"
       }
     }
   },
@@ -2407,7 +2489,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "No change in the output pins",
+        "to_displayName": "No change in the output pins"
       },
       "EPWM_AQ_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_OUTPUT_LOW",
@@ -2424,7 +2508,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to low"
       },
       "EPWM_AQ_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_OUTPUT_HIGH",
@@ -2441,7 +2527,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to High"
       },
       "EPWM_AQ_OUTPUT_TOGGLE": {
         "to_option": "MCPWM_AQ_OUTPUT_TOGGLE",
@@ -2458,7 +2546,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Toggle the output pins",
+        "to_displayName": "Toggle the output pins"
       }
     }
   },
@@ -2502,7 +2592,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "No change in the output pins",
+        "to_displayName": "No change in the output pins"
       },
       "EPWM_AQ_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_OUTPUT_LOW",
@@ -2519,7 +2611,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to low"
       },
       "EPWM_AQ_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_OUTPUT_HIGH",
@@ -2536,7 +2630,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to High"
       },
       "EPWM_AQ_OUTPUT_TOGGLE": {
         "to_option": "MCPWM_AQ_OUTPUT_TOGGLE",
@@ -2553,7 +2649,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Toggle the output pins",
+        "to_displayName": "Toggle the output pins"
       }
     }
   },
@@ -2597,7 +2695,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "No change in the output pins",
+        "to_displayName": "No change in the output pins"
       },
       "EPWM_AQ_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_OUTPUT_LOW",
@@ -2614,7 +2714,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to low"
       },
       "EPWM_AQ_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_OUTPUT_HIGH",
@@ -2631,7 +2733,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to High"
       },
       "EPWM_AQ_OUTPUT_TOGGLE": {
         "to_option": "MCPWM_AQ_OUTPUT_TOGGLE",
@@ -2648,7 +2752,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Toggle the output pins",
+        "to_displayName": "Toggle the output pins"
       }
     }
   },
@@ -2692,7 +2798,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "No change in the output pins",
+        "to_displayName": "No change in the output pins"
       },
       "EPWM_AQ_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_OUTPUT_LOW",
@@ -2709,7 +2817,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to low"
       },
       "EPWM_AQ_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_OUTPUT_HIGH",
@@ -2726,7 +2836,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to High"
       },
       "EPWM_AQ_OUTPUT_TOGGLE": {
         "to_option": "MCPWM_AQ_OUTPUT_TOGGLE",
@@ -2743,7 +2855,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Toggle the output pins",
+        "to_displayName": "Toggle the output pins"
       }
     }
   },
@@ -2787,7 +2901,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Software forcing disabled",
+        "to_displayName": "SW force Action is disabled"
       },
       "EPWM_AQ_SW_OUTPUT_LOW": {
         "to_option": "MCPWM_AQ_SW_CONTINUOUS_LOW",
@@ -2804,7 +2920,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to low",
+        "to_displayName": "Set output pins to continuos low"
       },
       "EPWM_AQ_SW_OUTPUT_HIGH": {
         "to_option": "MCPWM_AQ_SW_CONTINUOUS_HIGH",
@@ -2821,7 +2939,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Set output pins to High",
+        "to_displayName": "Set output pins to continuos High"
       }
     }
   },
@@ -2911,7 +3031,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero",
+        "to_displayName": "Load when counter equals zero"
       },
       "EPWM_AQ_LOAD_ON_CNTR_PERIOD": {
         "to_option": "MCPWM_AQ_LOAD_ON_CNTR_PERIOD",
@@ -2928,7 +3050,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals period",
+        "to_displayName": "Load when counter equals period"
       },
       "EPWM_AQ_LOAD_ON_CNTR_ZERO_PERIOD": {
         "to_option": "MCPWM_AQ_LOAD_ON_CNTR_ZERO_PERIOD",
@@ -2945,7 +3069,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero or period",
+        "to_displayName": "Load when counter equals zero or period"
       },
       "EPWM_AQ_LOAD_FREEZE": {
         "to_option": "MCPWM_AQ_LOAD_FREEZE",
@@ -2962,7 +3088,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Freeze shadow to active load",
+        "to_displayName": "Freeze shadow to active load"
       },
       "EPWM_AQ_LOAD_ON_SYNC_CNTR_ZERO": {
         "to_option": null,
@@ -2979,7 +3107,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals zero"
       },
       "EPWM_AQ_LOAD_ON_SYNC_CNTR_PERIOD": {
         "to_option": null,
@@ -2996,7 +3125,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals period"
       },
       "EPWM_AQ_LOAD_ON_SYNC_CNTR_ZERO_PERIOD": {
         "to_option": null,
@@ -3013,7 +3143,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals zero or period"
       },
       "EPWM_AQ_LOAD_ON_SYNC_ONLY": {
         "to_option": null,
@@ -3030,7 +3161,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync only"
       }
     }
   },
@@ -3736,7 +3868,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero",
+        "to_displayName": "Load when counter equals zero"
       },
       "EPWM_COMP_LOAD_ON_CNTR_PERIOD": {
         "to_option": "MCPWM_COMP_LOAD_ON_CNTR_PERIOD",
@@ -3753,7 +3887,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals period",
+        "to_displayName": "Load when counter equals period"
       },
       "EPWM_COMP_LOAD_ON_CNTR_ZERO_PERIOD": {
         "to_option": "MCPWM_COMP_LOAD_ON_CNTR_ZERO_PERIOD",
@@ -3770,7 +3906,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero or period",
+        "to_displayName": "Load when counter equals zero or period"
       },
       "EPWM_COMP_LOAD_FREEZE": {
         "to_option": "MCPWM_COMP_LOAD_FREEZE",
@@ -3787,7 +3925,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Freeze shadow to active load",
+        "to_displayName": "Freeze shadow to active load"
       },
       "EPWM_COMP_LOAD_ON_SYNC_CNTR_ZERO": {
         "to_option": null,
@@ -3804,7 +3944,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals zero"
       },
       "EPWM_COMP_LOAD_ON_SYNC_CNTR_PERIOD": {
         "to_option": null,
@@ -3821,7 +3962,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals period"
       },
       "EPWM_COMP_LOAD_ON_SYNC_CNTR_ZERO_PERIOD": {
         "to_option": null,
@@ -3838,7 +3980,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals zero or period"
       },
       "EPWM_COMP_LOAD_ON_SYNC_ONLY": {
         "to_option": null,
@@ -3855,7 +3998,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync only"
       }
     }
   },
@@ -3899,7 +4043,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero",
+        "to_displayName": "Load when counter equals zero"
       },
       "EPWM_COMP_LOAD_ON_CNTR_PERIOD": {
         "to_option": "MCPWM_COMP_LOAD_ON_CNTR_PERIOD",
@@ -3916,7 +4062,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals period",
+        "to_displayName": "Load when counter equals period"
       },
       "EPWM_COMP_LOAD_ON_CNTR_ZERO_PERIOD": {
         "to_option": "MCPWM_COMP_LOAD_ON_CNTR_ZERO_PERIOD",
@@ -3933,7 +4081,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero or period",
+        "to_displayName": "Load when counter equals zero or period"
       },
       "EPWM_COMP_LOAD_FREEZE": {
         "to_option": "MCPWM_COMP_LOAD_FREEZE",
@@ -3950,7 +4100,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Freeze shadow to active load",
+        "to_displayName": "Freeze shadow to active load"
       },
       "EPWM_COMP_LOAD_ON_SYNC_CNTR_ZERO": {
         "to_option": null,
@@ -3967,7 +4119,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals zero"
       },
       "EPWM_COMP_LOAD_ON_SYNC_CNTR_PERIOD": {
         "to_option": null,
@@ -3984,7 +4137,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals period"
       },
       "EPWM_COMP_LOAD_ON_SYNC_CNTR_ZERO_PERIOD": {
         "to_option": null,
@@ -4001,7 +4155,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals zero or period"
       },
       "EPWM_COMP_LOAD_ON_SYNC_ONLY": {
         "to_option": null,
@@ -4018,7 +4173,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync only"
       }
     }
   },
@@ -4062,7 +4218,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero",
+        "to_displayName": "Load when counter equals zero"
       },
       "EPWM_COMP_LOAD_ON_CNTR_PERIOD": {
         "to_option": "MCPWM_COMP_LOAD_ON_CNTR_PERIOD",
@@ -4079,7 +4237,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals period",
+        "to_displayName": "Load when counter equals period"
       },
       "EPWM_COMP_LOAD_ON_CNTR_ZERO_PERIOD": {
         "to_option": "MCPWM_COMP_LOAD_ON_CNTR_ZERO_PERIOD",
@@ -4096,7 +4256,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero or period",
+        "to_displayName": "Load when counter equals zero or period"
       },
       "EPWM_COMP_LOAD_FREEZE": {
         "to_option": "MCPWM_COMP_LOAD_FREEZE",
@@ -4113,7 +4275,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Freeze shadow to active load",
+        "to_displayName": "Freeze shadow to active load"
       },
       "EPWM_COMP_LOAD_ON_SYNC_CNTR_ZERO": {
         "to_option": null,
@@ -4130,7 +4294,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals zero"
       },
       "EPWM_COMP_LOAD_ON_SYNC_CNTR_PERIOD": {
         "to_option": null,
@@ -4147,7 +4312,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals period"
       },
       "EPWM_COMP_LOAD_ON_SYNC_CNTR_ZERO_PERIOD": {
         "to_option": null,
@@ -4164,7 +4330,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals zero or period"
       },
       "EPWM_COMP_LOAD_ON_SYNC_ONLY": {
         "to_option": null,
@@ -4181,7 +4348,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync only"
       }
     }
   },
@@ -4225,7 +4393,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero",
+        "to_displayName": "Load when counter equals zero"
       },
       "EPWM_COMP_LOAD_ON_CNTR_PERIOD": {
         "to_option": "MCPWM_COMP_LOAD_ON_CNTR_PERIOD",
@@ -4242,7 +4412,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals period",
+        "to_displayName": "Load when counter equals period"
       },
       "EPWM_COMP_LOAD_ON_CNTR_ZERO_PERIOD": {
         "to_option": "MCPWM_COMP_LOAD_ON_CNTR_ZERO_PERIOD",
@@ -4259,7 +4431,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero or period",
+        "to_displayName": "Load when counter equals zero or period"
       },
       "EPWM_COMP_LOAD_FREEZE": {
         "to_option": "MCPWM_COMP_LOAD_FREEZE",
@@ -4276,7 +4450,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Freeze shadow to active load",
+        "to_displayName": "Freeze shadow to active load"
       },
       "EPWM_COMP_LOAD_ON_SYNC_CNTR_ZERO": {
         "to_option": null,
@@ -4293,7 +4469,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals zero"
       },
       "EPWM_COMP_LOAD_ON_SYNC_CNTR_PERIOD": {
         "to_option": null,
@@ -4310,7 +4487,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals period"
       },
       "EPWM_COMP_LOAD_ON_SYNC_CNTR_ZERO_PERIOD": {
         "to_option": null,
@@ -4327,7 +4505,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync or when counter equals zero or period"
       },
       "EPWM_COMP_LOAD_ON_SYNC_ONLY": {
         "to_option": null,
@@ -4344,7 +4523,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync only"
       }
     }
   },
@@ -4627,7 +4807,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero",
+        "to_displayName": "Load when counter equals zero"
       },
       "EPWM_FED_LOAD_ON_CNTR_PERIOD": {
         "to_option": "MCPWM_FED_LOAD_ON_CNTR_PERIOD",
@@ -4644,7 +4826,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals period",
+        "to_displayName": "Load when counter equals period"
       },
       "EPWM_FED_LOAD_ON_CNTR_ZERO_PERIOD": {
         "to_option": "MCPWM_FED_LOAD_ON_CNTR_ZERO_PERIOD",
@@ -4661,7 +4845,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero or period",
+        "to_displayName": "Load when counter equals zero or period"
       },
       "EPWM_FED_LOAD_FREEZE": {
         "to_option": "MCPWM_FED_LOAD_FREEZE",
@@ -4678,7 +4864,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Freeze shadow to active load",
+        "to_displayName": "Freeze shadow to active load"
       }
     }
   },
@@ -4747,7 +4935,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Input signal is ePWMA",
+        "to_displayName": "Input signal is MCPWMA"
       },
       "EPWM_DB_INPUT_EPWMB": {
         "to_option": "MCPWM_DB_INPUT_MCPWMB",
@@ -4764,7 +4954,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Input signal is ePWMB",
+        "to_displayName": "Input signal is MCPWMB"
       },
       "EPWM_DB_INPUT_DB_RED": {
         "to_option": "MCPWM_DB_INPUT_DB_RED",
@@ -4781,7 +4973,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Input signal is the output of Rising Edge delay",
+        "to_displayName": "Input signal is the output of Rising Edge delay"
       }
     }
   },
@@ -4825,7 +5019,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Input signal is ePWMA",
+        "to_displayName": "Input signal is MCPWMA"
       },
       "EPWM_DB_INPUT_EPWMB": {
         "to_option": "MCPWM_DB_INPUT_MCPWMB",
@@ -4842,7 +5038,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Input signal is ePWMB",
+        "to_displayName": "Input signal is MCPWMB"
       }
     }
   },
@@ -4936,7 +5134,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "DB polarity is not inverted",
+        "to_displayName": "DB polarity is not inverted"
       },
       "EPWM_DB_POLARITY_ACTIVE_LOW": {
         "to_option": "MCPWM_DB_POLARITY_ACTIVE_LOW",
@@ -4953,7 +5153,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "DB polarity is inverted",
+        "to_displayName": "DB polarity is inverted"
       }
     }
   },
@@ -4997,7 +5199,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "DB polarity is not inverted",
+        "to_displayName": "DB polarity is not inverted"
       },
       "EPWM_DB_POLARITY_ACTIVE_LOW": {
         "to_option": "MCPWM_DB_POLARITY_ACTIVE_LOW",
@@ -5014,7 +5218,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "DB polarity is inverted",
+        "to_displayName": "DB polarity is inverted"
       }
     }
   },
@@ -5081,7 +5287,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero",
+        "to_displayName": "Load when counter equals zero"
       },
       "EPWM_RED_LOAD_ON_CNTR_PERIOD": {
         "to_option": "MCPWM_RED_LOAD_ON_CNTR_PERIOD",
@@ -5098,7 +5306,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals period",
+        "to_displayName": "Load when counter equals period"
       },
       "EPWM_RED_LOAD_ON_CNTR_ZERO_PERIOD": {
         "to_option": "MCPWM_RED_LOAD_ON_CNTR_ZERO_PERIOD",
@@ -5115,7 +5325,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter equals zero or period",
+        "to_displayName": "Load when counter equals zero or period"
       },
       "EPWM_RED_LOAD_FREEZE": {
         "to_option": "MCPWM_RED_LOAD_FREEZE",
@@ -5132,7 +5344,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Freeze shadow to active load",
+        "to_displayName": "Freeze shadow to active load"
       }
     }
   },
@@ -6735,7 +6949,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Disabled",
+        "to_displayName": "Disabled"
       },
       "1": {
         "to_option": "1",
@@ -6752,7 +6968,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "1 Event Generates Interrupt",
+        "to_displayName": "1 Event Generates Interrupt"
       },
       "2": {
         "to_option": "2",
@@ -6769,7 +6987,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "2 Events Generates Interrupt",
+        "to_displayName": "2 Events Generates Interrupt"
       },
       "3": {
         "to_option": "3",
@@ -6786,7 +7006,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "3 Events Generates Interrupt",
+        "to_displayName": "3 Events Generates Interrupt"
       },
       "4": {
         "to_option": "4",
@@ -6803,7 +7025,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "4 Events Generates Interrupt",
+        "to_displayName": "4 Events Generates Interrupt"
       },
       "5": {
         "to_option": "5",
@@ -6820,7 +7044,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "5 Events Generates Interrupt",
+        "to_displayName": "5 Events Generates Interrupt"
       },
       "6": {
         "to_option": "6",
@@ -6837,7 +7063,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "6 Events Generates Interrupt",
+        "to_displayName": "6 Events Generates Interrupt"
       },
       "7": {
         "to_option": "7",
@@ -6854,7 +7082,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "7 Events Generates Interrupt",
+        "to_displayName": "7 Events Generates Interrupt"
       },
       "8": {
         "to_option": null,
@@ -6871,7 +7101,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "8 Events Generates Interrupt"
       },
       "9": {
         "to_option": null,
@@ -6888,7 +7119,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "9 Events Generates Interrupt"
       },
       "10": {
         "to_option": null,
@@ -6905,7 +7137,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "10 Events Generates Interrupt"
       },
       "11": {
         "to_option": null,
@@ -6922,7 +7155,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "11 Events Generates Interrupt"
       },
       "12": {
         "to_option": null,
@@ -6939,7 +7173,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "12 Events Generates Interrupt"
       },
       "13": {
         "to_option": null,
@@ -6956,7 +7191,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "13 Events Generates Interrupt"
       },
       "14": {
         "to_option": null,
@@ -6973,7 +7209,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "14 Events Generates Interrupt"
       },
       "15": {
         "to_option": null,
@@ -6990,7 +7227,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "15 Events Generates Interrupt"
       }
     }
   },
@@ -7047,7 +7285,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to zero",
+        "to_displayName": "Time-base counter equal to zero"
       },
       "EPWM_SOC_TBCTR_PERIOD": {
         "to_option": "MCPWM_SOC_TBCTR_PERIOD",
@@ -7064,13 +7304,16 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to period",
+        "to_displayName": "Time-base counter equal to period"
       },
       "EPWM_SOC_TBCTR_ETSOCAMIX": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter based on mixed events (ETSOCAMIX)"
       },
       "EPWM_SOC_TBCTR_U_CMPA": {
         "to_option": "MCPWM_SOC_TBCTR_U_CMP1A",
@@ -7087,7 +7330,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPA when the timer is incrementing",
+        "to_displayName": "Time-base counter equal to CMP1A when the timer is incrementing"
       },
       "EPWM_SOC_TBCTR_U_CMPC": {
         "to_option": "MCPWM_SOC_TBCTR_U_CMPC",
@@ -7104,7 +7349,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPC when the timer is incrementing",
+        "to_displayName": "Time-base counter equal to CMPC when the timer is incrementing"
       },
       "EPWM_SOC_TBCTR_D_CMPA": {
         "to_option": "MCPWM_SOC_TBCTR_D_CMP1A",
@@ -7121,7 +7368,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPA when the timer is decrementing",
+        "to_displayName": "Time-base counter equal to CMP1A when the timer is Decrementing"
       },
       "EPWM_SOC_TBCTR_D_CMPC": {
         "to_option": "MCPWM_SOC_TBCTR_D_CMPC",
@@ -7138,7 +7387,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPC when the timer is decrementing",
+        "to_displayName": "Time-base counter equal to CMPC when the timer is Decrementing"
       },
       "EPWM_SOC_TBCTR_U_CMPB": {
         "to_option": "MCPWM_SOC_TBCTR_U_CMP1B",
@@ -7155,7 +7406,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPB when the timer is incrementing",
+        "to_displayName": "Time-base counter equal to CMP1B when the timer is incrementing"
       },
       "EPWM_SOC_TBCTR_U_CMPD": {
         "to_option": "MCPWM_SOC_TBCTR_U_CMPD",
@@ -7172,7 +7425,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPD when the timer is incrementing",
+        "to_displayName": "Time-base counter equal to CMPD when the timer is incrementing"
       },
       "EPWM_SOC_TBCTR_D_CMPB": {
         "to_option": "MCPWM_SOC_TBCTR_D_CMP1B",
@@ -7189,7 +7444,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPB when the timer is decrementing",
+        "to_displayName": "Time-base counter equal to CMP1B when the timer is Decrementing"
       },
       "EPWM_SOC_TBCTR_D_CMPD": {
         "to_option": "MCPWM_SOC_TBCTR_D_CMPD",
@@ -7206,7 +7463,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPD when the timer is decrementing",
+        "to_displayName": "Time-base counter equal to CMPD when the timer is Decrementing"
       },
       "EPWM_SOC_DCxEVT1": {
         "to_option": null,
@@ -7223,7 +7482,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Event is based on DCxEVT1"
       },
       "EPWM_SOC_TBCTR_ZERO_OR_PERIOD": {
         "to_option": "MCPWM_SOC_TBCTR_ZERO_PERIOD",
@@ -7239,7 +7499,9 @@
           "F2838x",
           "F28P55x",
           "F28P551x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to zero or period",
+        "to_displayName": "Time-base counter equal to zero or period"
       }
     }
   },
@@ -7389,7 +7651,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Disabled",
+        "to_displayName": "Disabled"
       },
       "1": {
         "to_option": "1",
@@ -7406,7 +7670,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "1 Event Generates Interrupt",
+        "to_displayName": "1 Event Generates Interrupt"
       },
       "2": {
         "to_option": "2",
@@ -7423,7 +7689,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "2 Events Generates Interrupt",
+        "to_displayName": "2 Events Generates Interrupt"
       },
       "3": {
         "to_option": "3",
@@ -7440,7 +7708,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "3 Events Generates Interrupt",
+        "to_displayName": "3 Events Generates Interrupt"
       },
       "4": {
         "to_option": "4",
@@ -7457,7 +7727,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "4 Events Generates Interrupt",
+        "to_displayName": "4 Events Generates Interrupt"
       },
       "5": {
         "to_option": "5",
@@ -7474,7 +7746,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "5 Events Generates Interrupt",
+        "to_displayName": "5 Events Generates Interrupt"
       },
       "6": {
         "to_option": "6",
@@ -7491,7 +7765,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "6 Events Generates Interrupt",
+        "to_displayName": "6 Events Generates Interrupt"
       },
       "7": {
         "to_option": "7",
@@ -7508,7 +7784,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "7 Events Generates Interrupt",
+        "to_displayName": "7 Events Generates Interrupt"
       },
       "8": {
         "to_option": null,
@@ -7525,7 +7803,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "8 Events Generates Interrupt"
       },
       "9": {
         "to_option": null,
@@ -7542,7 +7821,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "9 Events Generates Interrupt"
       },
       "10": {
         "to_option": null,
@@ -7559,7 +7839,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "10 Events Generates Interrupt"
       },
       "11": {
         "to_option": null,
@@ -7576,7 +7857,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "11 Events Generates Interrupt"
       },
       "12": {
         "to_option": null,
@@ -7593,7 +7875,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "12 Events Generates Interrupt"
       },
       "13": {
         "to_option": null,
@@ -7610,7 +7893,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "13 Events Generates Interrupt"
       },
       "14": {
         "to_option": null,
@@ -7627,7 +7911,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "14 Events Generates Interrupt"
       },
       "15": {
         "to_option": null,
@@ -7644,7 +7929,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "15 Events Generates Interrupt"
       }
     }
   },
@@ -7701,7 +7987,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to zero",
+        "to_displayName": "Time-base counter equal to zero"
       },
       "EPWM_SOC_TBCTR_PERIOD": {
         "to_option": "MCPWM_SOC_TBCTR_PERIOD",
@@ -7718,13 +8006,16 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to period",
+        "to_displayName": "Time-base counter equal to period"
       },
       "EPWM_SOC_TBCTR_ETSOCBMIX": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter based on mixed events (ETSOCBMIX)"
       },
       "EPWM_SOC_TBCTR_U_CMPA": {
         "to_option": "MCPWM_SOC_TBCTR_U_CMP1A",
@@ -7741,7 +8032,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPA when the timer is incrementing",
+        "to_displayName": "Time-base counter equal to CMP1A when the timer is incrementing"
       },
       "EPWM_SOC_TBCTR_U_CMPC": {
         "to_option": "MCPWM_SOC_TBCTR_U_CMPC",
@@ -7758,7 +8051,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPC when the timer is incrementing",
+        "to_displayName": "Time-base counter equal to CMPC when the timer is incrementing"
       },
       "EPWM_SOC_TBCTR_D_CMPA": {
         "to_option": "MCPWM_SOC_TBCTR_D_CMP1A",
@@ -7775,7 +8070,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPA when the timer is decrementing",
+        "to_displayName": "Time-base counter equal to CMP1A when the timer is Decrementing"
       },
       "EPWM_SOC_TBCTR_D_CMPC": {
         "to_option": "MCPWM_SOC_TBCTR_D_CMPC",
@@ -7792,7 +8089,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPC when the timer is decrementing",
+        "to_displayName": "Time-base counter equal to CMPC when the timer is Decrementing"
       },
       "EPWM_SOC_TBCTR_U_CMPB": {
         "to_option": "MCPWM_SOC_TBCTR_U_CMP1B",
@@ -7809,7 +8108,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPB when the timer is incrementing",
+        "to_displayName": "Time-base counter equal to CMP1B when the timer is incrementing"
       },
       "EPWM_SOC_TBCTR_U_CMPD": {
         "to_option": "MCPWM_SOC_TBCTR_U_CMPD",
@@ -7826,7 +8127,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPD when the timer is incrementing",
+        "to_displayName": "Time-base counter equal to CMPD when the timer is incrementing"
       },
       "EPWM_SOC_TBCTR_D_CMPB": {
         "to_option": "MCPWM_SOC_TBCTR_D_CMP1B",
@@ -7843,7 +8146,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPB when the timer is decrementing",
+        "to_displayName": "Time-base counter equal to CMP1B when the timer is Decrementing"
       },
       "EPWM_SOC_TBCTR_D_CMPD": {
         "to_option": "MCPWM_SOC_TBCTR_D_CMPD",
@@ -7860,7 +8165,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to CMPD when the timer is decrementing",
+        "to_displayName": "Time-base counter equal to CMPD when the timer is Decrementing"
       },
       "EPWM_SOC_DCxEVT1": {
         "to_option": null,
@@ -7877,7 +8184,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Event is based on DCxEVT1"
       },
       "EPWM_SOC_TBCTR_ZERO_OR_PERIOD": {
         "to_option": "MCPWM_SOC_TBCTR_ZERO_PERIOD",
@@ -7893,7 +8201,9 @@
           "F2838x",
           "F28P55x",
           "F28P551x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to zero or period",
+        "to_displayName": "Time-base counter equal to zero or period"
       }
     }
   },
@@ -8067,7 +8377,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter is disabled",
+        "to_displayName": "Event is Disabled"
       },
       "EPWM_INT_TBCTR_ZERO": {
         "to_option": "MCPWM_EVT_TBCTR_ZERO",
@@ -8084,7 +8396,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to zero",
+        "to_displayName": "Time-base counter equal to zero"
       },
       "EPWM_INT_TBCTR_PERIOD": {
         "to_option": "MCPWM_EVT_TBCTR_PERIOD",
@@ -8101,13 +8415,16 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to period",
+        "to_displayName": "Time-base counter equal to period"
       },
       "EPWM_INT_TBCTR_ETINTMIX": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Time-base counter based on mixed events (ETINTMIX)"
       },
       "EPWM_INT_TBCTR_U_CMPA": {
         "to_option": "MCPWM_EVT_TBCTR_U_CMP1A",
@@ -8124,7 +8441,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "time-base counter equal to CMPA when the timer is incrementing",
+        "to_displayName": "Time-base counter equal to CMP1A when the timer is incrementing"
       },
       "EPWM_INT_TBCTR_U_CMPC": {
         "to_option": "MCPWM_EVT_TBCTR_U_CMPC",
@@ -8141,7 +8460,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "time-base counter equal to CMPC when the timer is incrementing",
+        "to_displayName": "Time-base counter equal to CMPC when the timer is incrementing"
       },
       "EPWM_INT_TBCTR_D_CMPA": {
         "to_option": "MCPWM_EVT_TBCTR_D_CMP1A",
@@ -8158,7 +8479,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "time-base counter equal to CMPA when the timer is decrementing",
+        "to_displayName": "Time-base counter equal to CMP1A when the timer is Decrementing"
       },
       "EPWM_INT_TBCTR_D_CMPC": {
         "to_option": "MCPWM_EVT_TBCTR_D_CMPC",
@@ -8175,7 +8498,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "time-base counter equal to CMPC when the timer is decrementing",
+        "to_displayName": "Time-base counter equal to CMPC when the timer is Decrementing"
       },
       "EPWM_INT_TBCTR_U_CMPB": {
         "to_option": "MCPWM_EVT_TBCTR_U_CMP1B",
@@ -8192,7 +8517,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "time-base counter equal to CMPB when the timer is incrementing",
+        "to_displayName": "Time-base counter equal to CMP1B when the timer is incrementing"
       },
       "EPWM_INT_TBCTR_U_CMPD": {
         "to_option": "MCPWM_EVT_TBCTR_U_CMPD",
@@ -8209,7 +8536,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "time-base counter equal to CMPD when the timer is incrementing",
+        "to_displayName": "Time-base counter equal to CMPD when the timer is incrementing"
       },
       "EPWM_INT_TBCTR_D_CMPB": {
         "to_option": "MCPWM_EVT_TBCTR_D_CMP1B",
@@ -8226,7 +8555,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "time-base counter equal to CMPB when the timer is decrementing",
+        "to_displayName": "Time-base counter equal to CMP1B when the timer is Decrementing"
       },
       "EPWM_INT_TBCTR_D_CMPD": {
         "to_option": "MCPWM_EVT_TBCTR_D_CMPD",
@@ -8243,7 +8574,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "time-base counter equal to CMPD when the timer is decrementing",
+        "to_displayName": "Time-base counter equal to CMPD when the timer is Decrementing"
       },
       "EPWM_INT_TBCTR_ZERO_OR_PERIOD": {
         "to_option": "MCPWM_EVT_TBCTR_ZERO_PERIOD",
@@ -8259,7 +8592,9 @@
           "F2838x",
           "F28P55x",
           "F28P551x"
-        ]
+        ],
+        "from_displayName": "Time-base counter equal to zero or period",
+        "to_displayName": "Time-base counter equal to zero or period"
       }
     }
   },
@@ -8378,7 +8713,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter is equal to zero",
+        "to_displayName": "Load when counter is equal to zero"
       },
       "EPWM_GL_LOAD_PULSE_CNTR_PERIOD": {
         "to_option": "MCPWM_GL_LOAD_PULSE_CNTR_PERIOD",
@@ -8395,7 +8732,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter is equal to period",
+        "to_displayName": "Load when counter is equal to period"
       },
       "EPWM_GL_LOAD_PULSE_CNTR_ZERO_PERIOD": {
         "to_option": "MCPWM_GL_LOAD_PULSE_CNTR_ZERO_PERIOD",
@@ -8412,7 +8751,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter is equal to zero or period",
+        "to_displayName": "Load when counter is equal to zero or period"
       },
       "EPWM_GL_LOAD_PULSE_SYNC": {
         "to_option": null,
@@ -8429,7 +8770,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync event"
       },
       "EPWM_GL_LOAD_PULSE_SYNC_OR_CNTR_ZERO": {
         "to_option": null,
@@ -8446,7 +8788,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync event or when counter  is equal to zero"
       },
       "EPWM_GL_LOAD_PULSE_SYNC_OR_CNTR_PERIOD": {
         "to_option": null,
@@ -8463,7 +8806,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync event or when counter  is equal to period"
       },
       "EPWM_GL_LOAD_PULSE_SYNC_CNTR_ZERO_PERIOD": {
         "to_option": null,
@@ -8480,31 +8824,36 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on sync event or when counter is equal to period or zero"
       },
       "EPWM_GL_LOAD_PULSE_CNTR_U_CMPC": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter is equal to CMPC while incrementing"
       },
       "EPWM_GL_LOAD_PULSE_CNTR_D_CMPC": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter is equal to CMPC while decrementing"
       },
       "EPWM_GL_LOAD_PULSE_CNTR_U_CMPD": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter is equal to CMPD while incrementing"
       },
       "EPWM_GL_LOAD_PULSE_CNTR_D_CMPD": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load when counter is equal to CMPD while decrementing"
       },
       "EPWM_GL_LOAD_PULSE_GLOBAL_FORCE": {
         "to_option": "MCPWM_GL_LOAD_PULSE_GLOBAL_FORCE",
@@ -8521,7 +8870,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Load on global force",
+        "to_displayName": "Load on global force"
       }
     }
   },
@@ -9292,7 +9643,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Divide clock by 1",
+        "to_displayName": "Divide clock by 1"
       },
       "EPWM_CLOCK_DIVIDER_2": {
         "to_option": "MCPWM_CLOCK_DIVIDER_2",
@@ -9309,7 +9662,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Divide clock by 2",
+        "to_displayName": "Divide clock by 2"
       },
       "EPWM_CLOCK_DIVIDER_4": {
         "to_option": "MCPWM_CLOCK_DIVIDER_4",
@@ -9326,7 +9681,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Divide clock by 4",
+        "to_displayName": "Divide clock by 4"
       },
       "EPWM_CLOCK_DIVIDER_8": {
         "to_option": "MCPWM_CLOCK_DIVIDER_8",
@@ -9343,7 +9700,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Divide clock by 8",
+        "to_displayName": "Divide clock by 8"
       },
       "EPWM_CLOCK_DIVIDER_16": {
         "to_option": "MCPWM_CLOCK_DIVIDER_16",
@@ -9360,7 +9719,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Divide clock by 16",
+        "to_displayName": "Divide clock by 16"
       },
       "EPWM_CLOCK_DIVIDER_32": {
         "to_option": "MCPWM_CLOCK_DIVIDER_32",
@@ -9377,7 +9738,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Divide clock by 32",
+        "to_displayName": "Divide clock by 32"
       },
       "EPWM_CLOCK_DIVIDER_64": {
         "to_option": "MCPWM_CLOCK_DIVIDER_64",
@@ -9394,7 +9757,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Divide clock by 64",
+        "to_displayName": "Divide clock by 64"
       },
       "EPWM_CLOCK_DIVIDER_128": {
         "to_option": "MCPWM_CLOCK_DIVIDER_128",
@@ -9411,7 +9776,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Divide clock by 128",
+        "to_displayName": "Divide clock by 128"
       }
     }
   },
@@ -9455,7 +9822,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Up - count mode",
+        "to_displayName": "Up - count mode"
       },
       "EPWM_COUNTER_MODE_DOWN": {
         "to_option": null,
@@ -9472,7 +9841,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Down - count mode"
       },
       "EPWM_COUNTER_MODE_UP_DOWN": {
         "to_option": "MCPWM_COUNTER_MODE_UP_DOWN",
@@ -9489,7 +9859,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Up - down - count mode",
+        "to_displayName": "Up - down - count mode"
       },
       "EPWM_COUNTER_MODE_STOP_FREEZE": {
         "to_option": "MCPWM_COUNTER_MODE_STOP_FREEZE",
@@ -9506,7 +9878,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Stop - Freeze counter",
+        "to_displayName": "Stop - Freeze counter"
       }
     }
   },
@@ -9550,7 +9924,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Count down after sync event",
+        "to_displayName": "Count down after sync event"
       },
       "EPWM_COUNT_MODE_UP_AFTER_SYNC": {
         "to_option": "MCPWM_COUNT_MODE_UP_AFTER_SYNC",
@@ -9567,7 +9943,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Count up after sync event",
+        "to_displayName": "Count up after sync event"
       }
     }
   },
@@ -9634,7 +10012,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Stop after next Time Base counter increment or decrement",
+        "to_displayName": "Stop after next Time Base counter increment or decrement"
       },
       "EPWM_EMULATION_STOP_AFTER_FULL_CYCLE": {
         "to_option": "MCPWM_EMULATION_STOP_AFTER_FULL_CYCLE",
@@ -9651,7 +10031,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Stop when counter completes whole cycle",
+        "to_displayName": "Stop when counter completes whole cycle"
       },
       "EPWM_EMULATION_FREE_RUN": {
         "to_option": "MCPWM_EMULATION_FREE_RUN",
@@ -9668,7 +10050,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Free run",
+        "to_displayName": "Free run"
       }
     }
   },
@@ -9873,7 +10257,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "PWM Period register access is through shadow register",
+        "to_displayName": "PWM Active Period register loads from Shadow register at TBCTR=0 event"
       },
       "EPWM_PERIOD_DIRECT_LOAD": {
         "to_option": "MCPWM_PERIOD_SHADOW_LOAD_DISABLE",
@@ -9890,7 +10276,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "PWM Period register access is directly",
+        "to_displayName": "PWM Period register load from Shadow register is disabled"
       }
     }
   },
@@ -9976,7 +10364,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Disable Sync-in",
+        "to_displayName": "Disable Sync-in"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM1": {
         "to_option": "MCPWM_SYNC_IN_PULSE_SRC_SYNCOUT_MCPWM1",
@@ -9989,7 +10379,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM1 sync-out signal",
+        "to_displayName": "Sync-in source is MCPWM1 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM2": {
         "to_option": null,
@@ -10002,7 +10394,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM2 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM3": {
         "to_option": "MCPWM_SYNC_IN_PULSE_SRC_SYNCOUT_MCPWM3",
@@ -10015,7 +10408,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM3 sync-out signal",
+        "to_displayName": "Sync-in source is MCPWM3 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM4": {
         "to_option": null,
@@ -10028,7 +10423,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM4 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM5": {
         "to_option": null,
@@ -10041,7 +10437,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM5 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM6": {
         "to_option": null,
@@ -10054,7 +10451,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM6 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM7": {
         "to_option": null,
@@ -10067,7 +10465,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM7 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM8": {
         "to_option": null,
@@ -10077,7 +10476,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM8 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM9": {
         "to_option": null,
@@ -10086,7 +10486,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM9 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM10": {
         "to_option": null,
@@ -10095,7 +10496,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM10 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM11": {
         "to_option": null,
@@ -10104,7 +10506,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM11 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM12": {
         "to_option": null,
@@ -10113,35 +10516,40 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM12 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM13": {
         "to_option": null,
         "devices": [
           "F2838x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM13 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM14": {
         "to_option": null,
         "devices": [
           "F2838x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM14 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM15": {
         "to_option": null,
         "devices": [
           "F2838x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM15 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM16": {
         "to_option": null,
         "devices": [
           "F2838x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM16 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP1": {
         "to_option": "MCPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP1",
@@ -10154,7 +10562,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is ECAP1 sync-out signal",
+        "to_displayName": "Sync-in source is ECAP1 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP2": {
         "to_option": null,
@@ -10167,7 +10577,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is ECAP2 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP3": {
         "to_option": null,
@@ -10178,35 +10589,40 @@
           "F280015x",
           "F2838x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is ECAP3 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP4": {
         "to_option": null,
         "devices": [
           "F2838x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is ECAP4 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP5": {
         "to_option": null,
         "devices": [
           "F2838x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is ECAP5 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP6": {
         "to_option": null,
         "devices": [
           "F2838x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is ECAP6 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_ECAP7": {
         "to_option": null,
         "devices": [
           "F2838x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is ECAP7 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_INPUTXBAR_OUT5": {
         "to_option": "MCPWM_SYNC_IN_PULSE_SRC_INPUTXBAR_OUT5",
@@ -10219,7 +10635,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is Input XBAR out5 signal",
+        "to_displayName": "Sync-in source is Input XBAR out5 signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_INPUTXBAR_OUT6": {
         "to_option": "MCPWM_SYNC_IN_PULSE_SRC_INPUTXBAR_OUT6",
@@ -10232,63 +10650,74 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is Input XBAR out6 signal",
+        "to_displayName": "Sync-in source is Input XBAR out6 signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_ETHERCAT_SYNC0": {
         "to_option": null,
         "devices": [
           "F2838x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is Ethercat sync0 signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_ETHERCAT_SYNC1": {
         "to_option": null,
         "devices": [
           "F2838x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is Ethercat sync1 signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM17": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM17 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_SYNCOUT_EPWM18": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is EPWM18 sync-out signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_FSIRXA_TRIG1": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is FSI RXA trigger1 signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_FSIRXB_TRIG1": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is FSI RXB trigger1 signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_FSIRXC_TRIG1": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is FSI RXC trigger1 signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_FSIRXD_TRIG1": {
         "to_option": null,
         "devices": [
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is FSI RXD trigger1 signal"
       },
       "EPWM_SYNC_IN_PULSE_SRC_FSIRX_TRIG1": {
         "to_option": null,
         "devices": [
           "F28003x"
-        ]
+        ],
+        "from_displayName": "Sync-in source is FSI RX trigger1 signal"
       }
     }
   },
@@ -10332,7 +10761,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Software force generated EPWM sync-out pulse",
+        "to_displayName": "Sync pulse is generated by software"
       },
       "EPWM_SYNC_OUT_PULSE_ON_CNTR_ZERO": {
         "to_option": "MCPWM_SYNC_OUT_PULSE_ON_COUNTER_ZERO",
@@ -10345,7 +10776,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Counter zero event generates EPWM sync-out pulse",
+        "to_displayName": "Sync pulse is generated when time base counter equals zero"
       },
       "EPWM_SYNC_OUT_PULSE_ON_CNTR_COMPARE_B": {
         "to_option": null,
@@ -10358,7 +10791,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Counter equal to CMPB event generates EPWM sync-out pulse"
       },
       "EPWM_SYNC_OUT_PULSE_ON_CNTR_COMPARE_C": {
         "to_option": "MCPWM_SYNC_OUT_PULSE_ON_COUNTER_COMPARE_C",
@@ -10371,7 +10805,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Counter equal to CMPC event generates EPWM sync-out pulse",
+        "to_displayName": "Sync pulse is generated when time base counter equals compare C value"
       },
       "EPWM_SYNC_OUT_PULSE_ON_CNTR_COMPARE_D": {
         "to_option": "MCPWM_SYNC_OUT_PULSE_ON_COUNTER_COMPARE_D",
@@ -10384,7 +10820,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Counter equal to CMPD event generates EPWM sync-out pulse",
+        "to_displayName": "Sync pulse is generated when time base counter equals compare D value"
       },
       "EPWM_SYNC_OUT_PULSE_ON_DCA_EVT1_SYNC": {
         "to_option": null,
@@ -10397,7 +10835,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "DCA Event 1 Sync signal generates EPWM sync-out pulse"
       },
       "EPWM_SYNC_OUT_PULSE_ON_DCB_EVT1_SYNC": {
         "to_option": null,
@@ -10410,7 +10849,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "DCB Event 1 Sync signal generates EPWM sync-out pulse"
       },
       "EPWM_SYNC_OUT_PULSE_ON_ALL": {
         "to_option": null,
@@ -10423,7 +10863,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Enable all the above sources"
       },
       "EPWM_SYNC_OUT_PULSE_ON_EPWMxSYNCIN": {
         "to_option": null,
@@ -10432,7 +10873,8 @@
           "F2837xS",
           "F2837xD",
           "F28004x"
-        ]
+        ],
+        "from_displayName": "Sync pulse is passed from EPWMxSYNCIN"
       },
       "EPWM_SYNC_OUT_PULSE_ON_COUNTER_ZERO": {
         "to_option": "MCPWM_SYNC_OUT_PULSE_ON_COUNTER_ZERO",
@@ -10441,7 +10883,9 @@
           "F2837xS",
           "F2837xD",
           "F28004x"
-        ]
+        ],
+        "from_displayName": "Sync pulse is generated when time base counter equals zero",
+        "to_displayName": "Sync pulse is generated when time base counter equals zero"
       },
       "EPWM_SYNC_OUT_PULSE_ON_COUNTER_COMPARE_B": {
         "to_option": null,
@@ -10450,7 +10894,8 @@
           "F2837xS",
           "F2837xD",
           "F28004x"
-        ]
+        ],
+        "from_displayName": "Sync pulse is generated when time base counter equals compare B value"
       },
       "EPWM_SYNC_OUT_PULSE_DISABLED": {
         "to_option": "MCPWM_SYNC_OUT_PULSE_DISABLED",
@@ -10459,7 +10904,9 @@
           "F2837xS",
           "F2837xD",
           "F28004x"
-        ]
+        ],
+        "from_displayName": "Sync pulse is disabled",
+        "to_displayName": "Sync pulse is disabled"
       },
       "EPWM_SYNC_OUT_PULSE_ON_COUNTER_COMPARE_C": {
         "to_option": "MCPWM_SYNC_OUT_PULSE_ON_COUNTER_COMPARE_C",
@@ -10468,7 +10915,9 @@
           "F2837xS",
           "F2837xD",
           "F28004x"
-        ]
+        ],
+        "from_displayName": "Sync pulse is generated when time base counter equals compare C value",
+        "to_displayName": "Sync pulse is generated when time base counter equals compare C value"
       },
       "EPWM_SYNC_OUT_PULSE_ON_COUNTER_COMPARE_D": {
         "to_option": "MCPWM_SYNC_OUT_PULSE_ON_COUNTER_COMPARE_D",
@@ -10477,7 +10926,9 @@
           "F2837xS",
           "F2837xD",
           "F28004x"
-        ]
+        ],
+        "from_displayName": "Sync pulse is generated when time base counter equals compare D value",
+        "to_displayName": "Sync pulse is generated when time base counter equals compare D value"
       }
     }
   },
@@ -10613,7 +11064,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "High impedance output",
+        "to_displayName": "High impedance output"
       },
       "EPWM_TZ_ACTION_HIGH": {
         "to_option": "MCPWM_TZ_ACTION_HIGH",
@@ -10630,7 +11083,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "High voltage state",
+        "to_displayName": "High voltage state"
       },
       "EPWM_TZ_ACTION_LOW": {
         "to_option": "MCPWM_TZ_ACTION_LOW",
@@ -10647,7 +11102,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Low voltage state",
+        "to_displayName": "Low voltage state"
       },
       "EPWM_TZ_ACTION_DISABLE": {
         "to_option": "MCPWM_TZ_ACTION_DISABLE",
@@ -10664,7 +11121,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Disable action",
+        "to_displayName": "Disable action"
       }
     }
   },
@@ -10708,7 +11167,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "High impedance output",
+        "to_displayName": "High impedance output"
       },
       "EPWM_TZ_ACTION_HIGH": {
         "to_option": "MCPWM_TZ_ACTION_HIGH",
@@ -10725,7 +11186,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "High voltage state",
+        "to_displayName": "High voltage state"
       },
       "EPWM_TZ_ACTION_LOW": {
         "to_option": "MCPWM_TZ_ACTION_LOW",
@@ -10742,7 +11205,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Low voltage state",
+        "to_displayName": "Low voltage state"
       },
       "EPWM_TZ_ACTION_DISABLE": {
         "to_option": "MCPWM_TZ_ACTION_DISABLE",
@@ -10759,7 +11224,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Disable action",
+        "to_displayName": "Disable action"
       }
     }
   },
@@ -11079,7 +11546,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Clear CBC pulse when counter equals zero",
+        "to_displayName": "Clear CBC pulse when counter equals zero"
       },
       "EPWM_TZ_CBC_PULSE_CLR_CNTR_PERIOD": {
         "to_option": "MCPWM_TZ_CBC_PULSE_CLR_CNTR_PERIOD",
@@ -11096,7 +11565,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Clear CBC pulse when counter equals period",
+        "to_displayName": "Clear CBC pulse when counter equals period"
       },
       "EPWM_TZ_CBC_PULSE_CLR_CNTR_ZERO_PERIOD": {
         "to_option": "MCPWM_TZ_CBC_PULSE_CLR_CNTR_ZERO_PERIOD",
@@ -11113,7 +11584,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Clear CBC pulse when counter equals zero or period",
+        "to_displayName": "Clear CBC pulse when counter equals zero or period"
       }
     }
   },
@@ -11157,7 +11630,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "TZ1 Cycle By Cycle"
       },
       "EPWM_TZ_SIGNAL_CBC2": {
         "to_option": "MCPWM_TZ_SIGNAL_CBC2",
@@ -11174,7 +11648,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "TZ2 Cycle By Cycle"
       },
       "EPWM_TZ_SIGNAL_CBC3": {
         "to_option": "MCPWM_TZ_SIGNAL_CBC3",
@@ -11191,7 +11666,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "TZ3 Cycle By Cycle"
       },
       "EPWM_TZ_SIGNAL_CBC4": {
         "to_option": "MCPWM_TZ_SIGNAL_CBC4",
@@ -11208,7 +11684,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "TZ4 Cycle By Cycle"
       },
       "EPWM_TZ_SIGNAL_CBC5": {
         "to_option": "MCPWM_TZ_SIGNAL_CBC5",
@@ -11225,7 +11702,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "TZ5 Cycle By Cycle"
       },
       "EPWM_TZ_SIGNAL_CBC6": {
         "to_option": "MCPWM_TZ_SIGNAL_CBC6",
@@ -11242,7 +11720,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "TZ6 Cycle By Cycle"
       },
       "EPWM_TZ_SIGNAL_DCAEVT2": {
         "to_option": null,
@@ -11259,7 +11738,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "DCAEVT2 Cycle By Cycle"
       },
       "EPWM_TZ_SIGNAL_DCBEVT2": {
         "to_option": null,
@@ -11276,7 +11756,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "DCBEVT2 Cycle By Cycle"
       }
     }
   },
@@ -11332,7 +11813,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "One-shot TZ1"
       },
       "EPWM_TZ_SIGNAL_OSHT2": {
         "to_option": "MCPWM_TZ_SIGNAL_OSHT2",
@@ -11349,7 +11831,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "One-shot TZ2"
       },
       "EPWM_TZ_SIGNAL_OSHT3": {
         "to_option": "MCPWM_TZ_SIGNAL_OSHT3",
@@ -11366,7 +11849,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "One-shot TZ3"
       },
       "EPWM_TZ_SIGNAL_OSHT4": {
         "to_option": "MCPWM_TZ_SIGNAL_OSHT4",
@@ -11383,7 +11867,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "One-shot TZ4"
       },
       "EPWM_TZ_SIGNAL_OSHT5": {
         "to_option": "MCPWM_TZ_SIGNAL_OSHT5",
@@ -11400,7 +11885,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "One-shot TZ5"
       },
       "EPWM_TZ_SIGNAL_OSHT6": {
         "to_option": "MCPWM_TZ_SIGNAL_OSHT6",
@@ -11417,7 +11903,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "One-shot TZ6"
       },
       "EPWM_TZ_SIGNAL_DCAEVT1": {
         "to_option": null,
@@ -11434,7 +11921,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "One-shot DCAEVT1"
       },
       "EPWM_TZ_SIGNAL_DCBEVT1": {
         "to_option": null,
@@ -11451,7 +11939,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "One-shot DCBEVT1"
       }
     }
   },
@@ -14324,7 +14813,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Counter equals Period",
+        "to_displayName": "Sync Peripheral Signal Pulse is generated when time base counter equals Period"
       },
       "HRPWM_PWMSYNC_SOURCE_ZERO": {
         "to_option": "MCPWM_SYNCPERSEL_SOURCE_ZERO",
@@ -14341,7 +14832,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Counter equals zero",
+        "to_displayName": "Sync Peripheral Signal Pulse is generated when time base counter equals zero"
       },
       "HRPWM_PWMSYNC_SOURCE_COMPC_UP": {
         "to_option": "MCPWM_SYNCPERSEL_SOURCE_CMPC_UP",
@@ -14358,7 +14851,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Counter equals COMPC when counting up",
+        "to_displayName": "Sync Peripheral Signal Pulse is generated when time base counter equals compare C value while counting up"
       },
       "HRPWM_PWMSYNC_SOURCE_COMPC_DOWN": {
         "to_option": "MCPWM_SYNCPERSEL_SOURCE_CMPC_DOWN",
@@ -14375,7 +14870,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Counter equals COMPC when counting down",
+        "to_displayName": "Sync Peripheral Signal Pulse is generated when time base counter equals compare C value while counting down"
       },
       "HRPWM_PWMSYNC_SOURCE_COMPD_UP": {
         "to_option": "MCPWM_SYNCPERSEL_SOURCE_CMPD_UP",
@@ -14392,7 +14889,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Counter equals COMPD when counting up",
+        "to_displayName": "Sync Peripheral Signal Pulse is generated when time base counter equals compare D value while counting up"
       },
       "HRPWM_PWMSYNC_SOURCE_COMPD_DOWN": {
         "to_option": "MCPWM_SYNCPERSEL_SOURCE_CMPD_DOWN",
@@ -14409,7 +14908,9 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "Counter equals COMPD when counting down",
+        "to_displayName": "Sync Peripheral Signal Pulse is generated when time base counter equals compare D value while counting down"
       }
     }
   },
@@ -14539,7 +15040,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "ALL"
       }
     }
   },
@@ -14579,7 +15081,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "EPWM_A"
       },
       "EPWM#_B": {
         "to_option": null,
@@ -14592,7 +15095,8 @@
           "F28P55x",
           "F28P551x",
           "F28P65x"
-        ]
+        ],
+        "from_displayName": "EPWM_B"
       },
       "EPWM#A": {
         "to_option": null,
@@ -14601,7 +15105,8 @@
           "F2837xS",
           "F2837xD",
           "F2838x"
-        ]
+        ],
+        "from_displayName": "EPWMA"
       },
       "EPWM#B": {
         "to_option": null,
@@ -14610,7 +15115,8 @@
           "F2837xS",
           "F2837xD",
           "F2838x"
-        ]
+        ],
+        "from_displayName": "EPWMB"
       }
     }
   }
