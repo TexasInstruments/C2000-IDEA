@@ -68,7 +68,9 @@ export async function loadSysConfigMigrationDatabase(
 /**
  * Build a combined Markdown document for a SysConfig migration: the companion `.md` guide (same
  * filename stem, if it exists) followed by the source/target-filtered database rendered as a
- * Markdown table (one row per config: source config, status, target config, guidance).
+ * Markdown table. Each row shows the source config and target config (each with its GUI display
+ * name over the raw id), the status, the per-option value mapping when the config is enum-like
+ * (from `option_map`, including option display names and "no equivalent" options), and the guidance.
  *
  * @param context      Extension context, used to locate the bundled `migration_data` folder.
  * @param modulePair   Peripheral module-to-module pair (e.g. EPWM_MCPWM).
@@ -101,13 +103,41 @@ export async function getSysConfigMigrationMarkdown(
 
 	// Render the filtered database as a Markdown table.
 	const esc = (value: string): string => value.replace(/\s*\r?\n\s*/g, " ").replace(/\|/g, "\\|").trim();
+	// A cell showing a GUI display name (bold) over the raw config/option id (code) when a
+	// display name is present; otherwise just the id.
+	const nameCell = (id: string, displayName?: string | null): string =>
+		displayName ? `**${esc(displayName)}**<br>\`${esc(id)}\`` : `\`${esc(id)}\``;
+	// A single option label: "<display name> (`value`)" when a display name exists, else "`value`".
+	const optionLabel = (value: string, displayName?: string | null): string =>
+		displayName ? `${esc(displayName)} (\`${esc(value)}\`)` : `\`${esc(value)}\``;
+
 	const tableRows: string[] = [
-		"| Source config | Status | Target config | Guidance |",
-		"| --- | --- | --- | --- |",
+		"| Source config | Target config | Status | Value mapping | Guidance |",
+		"| --- | --- | --- | --- | --- |",
 	];
 	for (const [configName, entry] of Object.entries(database)) {
-		const targetConfig = entry.to_config ?? "—";
-		tableRows.push(`| ${esc(configName)} | ${esc(entry.status)} | ${esc(targetConfig)} | ${esc(entry.fixMsg)} |`);
+		const source = nameCell(configName, entry.from_displayName);
+
+		let target = "—";
+		let valueMapping = "—";
+		// no_equivalent entries have no target config, display name, or option_map.
+		if (entry.status !== 'no_equivalent') {
+			target = nameCell(entry.to_config, entry.to_displayName);
+			if (entry.option_map) {
+				const optionLines = Object.entries(entry.option_map).map(([fromOption, item]) => {
+					const from = optionLabel(fromOption, item.from_displayName);
+					const to = item.to_option === null
+						? "— (no equivalent)"
+						: optionLabel(item.to_option, item.to_displayName);
+					return `${from} → ${to}`;
+				});
+				if (optionLines.length > 0) {
+					valueMapping = optionLines.join("<br>");
+				}
+			}
+		}
+
+		tableRows.push(`| ${source} | ${target} | ${esc(entry.status)} | ${valueMapping} | ${esc(entry.fixMsg)} |`);
 	}
 	sections.push(tableRows.join("\n"));
 
