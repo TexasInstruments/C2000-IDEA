@@ -64,3 +64,52 @@ export async function loadSysConfigMigrationDatabase(
 		return undefined;
 	}
 }
+
+/**
+ * Build a combined Markdown document for a SysConfig migration: the companion `.md` guide (same
+ * filename stem, if it exists) followed by the source/target-filtered database rendered as a
+ * Markdown table (one row per config: source config, status, target config, guidance).
+ *
+ * @param context      Extension context, used to locate the bundled `migration_data` folder.
+ * @param modulePair   Peripheral module-to-module pair (e.g. EPWM_MCPWM).
+ * @param sourceDevice Source device family (must be a value from DEVICE_LIST).
+ * @param targetDevice Target device family (must be a value from DEVICE_LIST).
+ * @returns The combined Markdown string, or `undefined` if the database could not be loaded
+ *          (unknown device, or the data file does not exist / cannot be parsed).
+ */
+export async function getSysConfigMigrationMarkdown(
+	context: vscode.ExtensionContext,
+	modulePair: SysConfigMigrationModulePair,
+	sourceDevice: string,
+	targetDevice: string,
+): Promise<string | undefined> {
+	const database = await loadSysConfigMigrationDatabase(context, modulePair, sourceDevice, targetDevice);
+	if (!database) {
+		return undefined;
+	}
+
+	const sections: string[] = [];
+
+	// Prepend the companion .md guide (same stem) if it exists.
+	const mdUri = vscode.Uri.joinPath(context.extension.extensionUri, "migration_data", "syscfg_data", `${modulePair}_syscfg_migration.md`);
+	try {
+		const mdBuffer = await vscode.workspace.fs.readFile(mdUri);
+		sections.push(Buffer.from(mdBuffer).toString("utf-8").trimEnd());
+	} catch {
+		// No companion .md; skip it.
+	}
+
+	// Render the filtered database as a Markdown table.
+	const esc = (value: string): string => value.replace(/\s*\r?\n\s*/g, " ").replace(/\|/g, "\\|").trim();
+	const tableRows: string[] = [
+		"| Source config | Status | Target config | Guidance |",
+		"| --- | --- | --- | --- |",
+	];
+	for (const [configName, entry] of Object.entries(database)) {
+		const targetConfig = entry.to_config ?? "—";
+		tableRows.push(`| ${esc(configName)} | ${esc(entry.status)} | ${esc(targetConfig)} | ${esc(entry.fixMsg)} |`);
+	}
+	sections.push(tableRows.join("\n"));
+
+	return sections.join("\n\n");
+}
