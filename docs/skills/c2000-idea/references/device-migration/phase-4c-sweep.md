@@ -57,9 +57,11 @@ device) on every `.h` and `.c` file listed in your briefing
 (the files processed in 4A and 4B). In addition, scan the target project directory for
 any `.h` or `.c` files **not** in the 4A/4B list — these may have been added or
 regenerated after Phase 3 (e.g., new source files the user added). If additional files
-are found outside the `sysConfigOutputLocation` folder and outside the SDK path, add
+are found outside the `sysConfigOutputLocation` folder, outside the SDK path, and outside
+the libraries folder (recorded in `c2000-migration.md` as `Libraries folder:`), add
 them to the sweep list and run the migration report on them too. Do **not** run the
-report on files inside `sysConfigOutputLocation` — those are generated outputs.
+report on files inside `sysConfigOutputLocation` or the libraries folder — those are
+generated outputs or device-compatible libraries that require no migration.
 
 > **`.asm` files are excluded from this sweep.** They were listed in the Phase 4 file
 > list with status `MANUAL` during Step 4.1. Do not run `get_device_migration_report`
