@@ -79,7 +79,7 @@ export async function migrationSyscfgLoadDatabase(
  * @returns The combined Markdown string, or `undefined` if the database could not be loaded
  *          (unknown device, or the data file does not exist / cannot be parsed).
  */
-export async function migrationSyscfgGetMarkdown(
+export async function migrationSyscfgGetAgentReport(
 	context: vscode.ExtensionContext,
 	modulePair: MigrationSyscfgModulePair,
 	sourceDevice: string,
