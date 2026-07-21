@@ -7,7 +7,7 @@ import * as deviceData from './deviceData';
 import * as register from './register';
 import path = require('path');
 import { downloadMigrationGuideHtml } from './migrationGuide';
-import { migrationSysConfigSetup } from './migration/migration_syscfg';
+import { migrationSyscfgSetup } from './migration/migration_syscfg';
 
 const outputChannel = vscode.window.createOutputChannel("My Extension Logs");
 const C2000_MIGRATION_DIAGNOSTIC_COLLECTION_NAME = "C2000 Migration";
@@ -236,7 +236,7 @@ export function migrationSetup(context: vscode.ExtensionContext)
 		ignoreMigrationFolderIncompatDisposal
 	);
 
-	migrationSysConfigSetup(context);
+	migrationSyscfgSetup(context);
 
 }
 

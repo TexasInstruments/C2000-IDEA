@@ -13,12 +13,12 @@ export enum MigrationSyscfgModulePair {
 	EPWM_MCPWM = "epwm_mcpwm",
 }
 
-export interface MigrationSysConfigModuleSupportDevices {
+export interface MigrationSyscfgModuleSupportDevices {
 	sourceDevices: string[];
 	targetDevices: string[];
 }
 
-export const MIGRATION_SYSCFG_MODULE_SUPPORT: Record<MigrationSyscfgModulePair, MigrationSysConfigModuleSupportDevices> = {
+export const MIGRATION_SYSCFG_MODULE_SUPPORT: Record<MigrationSyscfgModulePair, MigrationSyscfgModuleSupportDevices> = {
 	[MigrationSyscfgModulePair.EPWM_MCPWM]: {
 		sourceDevices: MIGRATION_EPWM_RESOLUTION_DEVICE_LIST,
 		targetDevices: MIGRATION_MCPWM_RESOLUTION_DEVICE_LIST,
@@ -207,7 +207,7 @@ export async function migrationSyscfgGenerateReportForAgent(context: vscode.Exte
  *
  * @param context Extension context
  */
-export function migrationSysConfigSetup(context: vscode.ExtensionContext): void {
+export function migrationSyscfgSetup(context: vscode.ExtensionContext): void {
 	let syscfgReportDisposable = vscode.commands.registerCommand(
 		info.C2000_IDEA_CMD_GENERATE_SYSCFG_MIGRATION_REPORT,
 		() => migrationSyscfgGenerateReportForAgent(context)
