@@ -81,6 +81,7 @@ AVAILABLE TOOLS:
 - get_device_migration_report() — Run a device-to-device migration check on a single source file. Use this when you need per-file control (e.g. fixing one file at a time after a project report).
 - get_bitfield_to_driverlib_migration_report() — Run a bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register accesses and suggests driverlib function replacements.
 - download_migration_guide() — Download the TI any-to-any driverlib migration-guide HTML for a source→target device pair to an absolute local file path.
+- get_syscfg_module_migration_guide() — Get the SysConfig (.syscfg) config migration guide (Markdown) for a peripheral module-to-module pair; pass the config ids to scope it (highly recommended).
 
 RECOMMENDED FLOW:
 1. Call get_projects() to discover projects, their current devices, migration targets, and current folder exclusions (migrationFolderExceptions).
@@ -261,6 +262,49 @@ Source and target must be different devices, both from list_migration_devices().
 					return { content: [{ type: 'text' as const, text: `Downloaded migration guide (${sourceDevice} → ${targetDevice}) to ${result.filePath} (${result.fileSize} bytes).` }] };
 				}
 				return { content: [{ type: 'text' as const, text: `Error: ${result.error}` }] };
+			}
+		);
+	}
+
+	if (IDEA_MCP_HANDLERS.getSyscfgModuleMigrationGuide && IDEA_MCP_HANDLERS.getSyscfgModuleSupport && IDEA_MCP_HANDLERS.getDeviceList) {
+		const getSyscfgGuide = IDEA_MCP_HANDLERS.getSyscfgModuleMigrationGuide;
+		const syscfgSupport = IDEA_MCP_HANDLERS.getSyscfgModuleSupport() as Record<string, { sourceDevices: string[]; targetDevices: string[] }>;
+		const modulePairs = Object.keys(syscfgSupport);
+		const deviceList = IDEA_MCP_HANDLERS.getDeviceList();
+
+		server.registerTool(
+			'get_syscfg_module_migration_guide',
+			{
+				description: `Get the SysConfig (.syscfg) config migration guide for a peripheral module-to-module migration, as Markdown.
+
+Returns a table mapping each source SysConfig config to its target config (GUI display names, per-option value mappings, and guidance) for the given source→target device pair, plus a companion overview when available.
+
+\`moduleToModule\` is the peripheral pair (e.g. "epwm_mcpwm"). \`ids\` is **optional but highly recommended**: pass the SysConfig config ids you actually need (e.g. the ones present in the project's .syscfg) to scope the result. Omitting \`ids\` returns the ENTIRE module guide, which can be very large (hundreds of rows). Ids not present in the guide are silently ignored.
+
+Not every device pair is supported for a given module. If the device pair is unsupported, the returned error lists the supported source and target devices for that module.`,
+				inputSchema: {
+					moduleToModule: z.enum(modulePairs as [string, ...string[]]).describe('Peripheral module-to-module pair, e.g. "epwm_mcpwm".'),
+					sourceDevice: z.enum(deviceList as [string, ...string[]]).describe('Source device family. Must be a device supported as a source for the chosen moduleToModule pair.'),
+					targetDevice: z.enum(deviceList as [string, ...string[]]).describe('Target device family. Must be a device supported as a target for the chosen moduleToModule pair.'),
+					ids: z.array(z.string()).optional().describe('Optional but highly recommended: the SysConfig config ids to include. Omit to get the full (potentially very large) module guide. Unknown ids are silently ignored.'),
+				} as any,
+			},
+			async ({ moduleToModule, sourceDevice, targetDevice, ids }: any) => {
+				if (!extensionContext) {
+					return { content: [{ type: 'text' as const, text: 'Error: extension context is not available.' }] };
+				}
+				const pairSupport = syscfgSupport[moduleToModule];
+				const supportInfo = `Supported for "${moduleToModule}": source devices [${pairSupport.sourceDevices.join(', ')}], target devices [${pairSupport.targetDevices.join(', ')}].`;
+
+				if (!pairSupport.sourceDevices.includes(sourceDevice) || !pairSupport.targetDevices.includes(targetDevice)) {
+					return { content: [{ type: 'text' as const, text: `Error: ${sourceDevice} → ${targetDevice} is not a supported migration for "${moduleToModule}". ${supportInfo}` }] };
+				}
+
+				const report = await getSyscfgGuide(extensionContext, moduleToModule, sourceDevice, targetDevice, ids);
+				if (!report) {
+					return { content: [{ type: 'text' as const, text: `Error: could not generate the SysConfig migration guide for ${sourceDevice} → ${targetDevice} ("${moduleToModule}"). ${supportInfo}` }] };
+				}
+				return { content: [{ type: 'text' as const, text: report }] };
 			}
 		);
 	}
