@@ -1,0 +1,483 @@
+# Phase 3g — Removed-Submodule Audit
+
+> You are in **Phase 3g** (Removed-Submodule Audit) of the ePWM → MCPWM SysConfig migration —
+> a **read-only** audit. When done, **return to `phase-3-overview.md`**. This sub-phase does
+> not depend on the target MCPWM instances, so it may run any time after Phase 1's grouping is
+> confirmed, independent of 3a–3f's order.
+
+**If any MCP tool call fails, returns an unexpected error, or produces a result you cannot
+interpret — stop and ask the user for help.** Do not guess, retry blindly, or skip the step.
+
+## SysConfig IDs covered by this sub-phase
+
+This sub-phase covers seven feature areas that have **no MCPWM equivalent at all** — every id
+below is expected to come back `no_equivalent`. The point of this sub-phase isn't to migrate
+them (there's nothing to migrate to), it's to check whether the *source* project actually used
+any of them, since that's a real functional gap worth surfacing rather than silently dropping.
+374 ids total across the seven areas — the largest id set of any Phase-3 sub-phase, but the
+cheapest to execute, since it's a read-only scan, not a design decision.
+
+### Chopper (4 ids)
+
+```
+epwmChopper_chopperDuty
+epwmChopper_chopperFirstPulseWidth
+epwmChopper_chopperFreq
+epwmChopper_useChopper
+```
+
+### Digital Compare (60 ids)
+
+```
+epwmDigitalCompare_CAPGATETripInput
+epwmDigitalCompare_CAPGATE_combinationInputConfig
+epwmDigitalCompare_CAPINTripInput
+epwmDigitalCompare_CAPIN_combinationInputConfig
+epwmDigitalCompare_EPWM_DC_MODULE_A_EPWM_DC_EVENT_1_adcTrig
+epwmDigitalCompare_EPWM_DC_MODULE_A_EPWM_DC_EVENT_1_eventSource
+epwmDigitalCompare_EPWM_DC_MODULE_A_EPWM_DC_EVENT_1_eventSync
+epwmDigitalCompare_EPWM_DC_MODULE_A_EPWM_DC_EVENT_1_latchClearEvent
+epwmDigitalCompare_EPWM_DC_MODULE_A_EPWM_DC_EVENT_1_latchMode
+epwmDigitalCompare_EPWM_DC_MODULE_A_EPWM_DC_EVENT_1_syncTrig
+epwmDigitalCompare_EPWM_DC_MODULE_A_EPWM_DC_EVENT_2_eventSource
+epwmDigitalCompare_EPWM_DC_MODULE_A_EPWM_DC_EVENT_2_eventSync
+epwmDigitalCompare_EPWM_DC_MODULE_A_EPWM_DC_EVENT_2_latchClearEvent
+epwmDigitalCompare_EPWM_DC_MODULE_A_EPWM_DC_EVENT_2_latchMode
+epwmDigitalCompare_EPWM_DC_MODULE_B_EPWM_DC_EVENT_1_adcTrig
+epwmDigitalCompare_EPWM_DC_MODULE_B_EPWM_DC_EVENT_1_eventSource
+epwmDigitalCompare_EPWM_DC_MODULE_B_EPWM_DC_EVENT_1_eventSync
+epwmDigitalCompare_EPWM_DC_MODULE_B_EPWM_DC_EVENT_1_latchClearEvent
+epwmDigitalCompare_EPWM_DC_MODULE_B_EPWM_DC_EVENT_1_latchMode
+epwmDigitalCompare_EPWM_DC_MODULE_B_EPWM_DC_EVENT_1_syncTrig
+epwmDigitalCompare_EPWM_DC_MODULE_B_EPWM_DC_EVENT_2_eventSource
+epwmDigitalCompare_EPWM_DC_MODULE_B_EPWM_DC_EVENT_2_eventSync
+epwmDigitalCompare_EPWM_DC_MODULE_B_EPWM_DC_EVENT_2_latchClearEvent
+epwmDigitalCompare_EPWM_DC_MODULE_B_EPWM_DC_EVENT_2_latchMode
+epwmDigitalCompare_EPWM_DC_TYPE_DCAH
+epwmDigitalCompare_EPWM_DC_TYPE_DCAH_combinationInputConfig
+epwmDigitalCompare_EPWM_DC_TYPE_DCAL
+epwmDigitalCompare_EPWM_DC_TYPE_DCAL_combinationInputConfig
+epwmDigitalCompare_EPWM_DC_TYPE_DCBH
+epwmDigitalCompare_EPWM_DC_TYPE_DCBH_combinationInputConfig
+epwmDigitalCompare_EPWM_DC_TYPE_DCBL
+epwmDigitalCompare_EPWM_DC_TYPE_DCBL_combinationInputConfig
+epwmDigitalCompare_EPWM_TZ_DC_OUTPUT_A1
+epwmDigitalCompare_EPWM_TZ_DC_OUTPUT_A2
+epwmDigitalCompare_EPWM_TZ_DC_OUTPUT_B1
+epwmDigitalCompare_EPWM_TZ_DC_OUTPUT_B2
+epwmDigitalCompare_SWVDELVAL
+epwmDigitalCompare_blankingWindowEvent
+epwmDigitalCompare_blankingWindowLength
+epwmDigitalCompare_blankingWindowOffset
+epwmDigitalCompare_configCAPGATE
+epwmDigitalCompare_dCCounterCapturePulse
+epwmDigitalCompare_dCCounterCapturePulseLogic
+epwmDigitalCompare_dCCounterCaptureShadow
+epwmDigitalCompare_dcFilterInput
+epwmDigitalCompare_edgeFilterEdgeCount
+epwmDigitalCompare_edgeFilterMode
+epwmDigitalCompare_enableEdgeFilterDelay
+epwmDigitalCompare_enableEventDetection
+epwmDigitalCompare_enableValleyCapture
+epwmDigitalCompare_invertBlankingWindow
+epwmDigitalCompare_invertCAPIN
+epwmDigitalCompare_startValleyCapture
+epwmDigitalCompare_startValleyCaptureTriggerCount
+epwmDigitalCompare_stopValleyCaptureTriggerCount
+epwmDigitalCompare_useBlankingWindow
+epwmDigitalCompare_useDCCounterCapture
+epwmDigitalCompare_useEdgeFilter
+epwmDigitalCompare_valleyCaptureSource
+epwmDigitalCompare_valleyDelayDivider
+```
+
+### HRPWM (High-Resolution PWM) (41 ids)
+
+```
+hrpwm_DBBOutput
+hrpwm_DBfedHR
+hrpwm_DBredHR
+hrpwm_HRLoadA
+hrpwm_HRLoadB
+hrpwm_autoConv
+hrpwm_calculatedCMPX
+hrpwm_calculatedCMPXHR
+hrpwm_calculatedFED
+hrpwm_calculatedFEDHR
+hrpwm_calculatedRED
+hrpwm_calculatedREDHR
+hrpwm_calculatedTBPRD
+hrpwm_calculatedTBPRDHR
+hrpwm_cmpaHR
+hrpwm_cmpbHR
+hrpwm_coarseSteps
+hrpwm_controlModeA
+hrpwm_controlModeB
+hrpwm_controlModeDBA
+hrpwm_controlModeDBB
+hrpwm_duty
+hrpwm_edgeModeA
+hrpwm_edgeModeB
+hrpwm_edgeModeDB
+hrpwm_enable
+hrpwm_enableCalculator
+hrpwm_epwmclk
+hrpwm_mepSteps
+hrpwm_period
+hrpwm_periodCoarseSteps
+hrpwm_periodEnable
+hrpwm_phaseLoadEnable
+hrpwm_requiredFED
+hrpwm_requiredRED
+hrpwm_scaleFactor
+hrpwm_swapDBOutputs
+hrpwm_syncSource
+hrpwm_tbclk
+hrpwm_tbphsHR
+hrpwm_tbprdHR
+```
+
+### Extended Compare (XCMP) (203 ids)
+
+```
+XCMPA_ACTIVE_OUTPUT_ON_TIMEBASE_XCMP1
+XCMPA_ACTIVE_OUTPUT_ON_TIMEBASE_XCMP2
+XCMPA_ACTIVE_OUTPUT_ON_TIMEBASE_XCMP3
+XCMPA_ACTIVE_OUTPUT_ON_TIMEBASE_XCMP4
+XCMPA_ACTIVE_OUTPUT_ON_TIMEBASE_XCMP5
+XCMPA_ACTIVE_OUTPUT_ON_TIMEBASE_XCMP6
+XCMPA_ACTIVE_OUTPUT_ON_TIMEBASE_XCMP7
+XCMPA_ACTIVE_OUTPUT_ON_TIMEBASE_XCMP8
+XCMPA_SHADOW1_OUTPUT_ON_TIMEBASE_XCMP1
+XCMPA_SHADOW1_OUTPUT_ON_TIMEBASE_XCMP2
+XCMPA_SHADOW1_OUTPUT_ON_TIMEBASE_XCMP3
+XCMPA_SHADOW1_OUTPUT_ON_TIMEBASE_XCMP4
+XCMPA_SHADOW1_OUTPUT_ON_TIMEBASE_XCMP5
+XCMPA_SHADOW1_OUTPUT_ON_TIMEBASE_XCMP6
+XCMPA_SHADOW1_OUTPUT_ON_TIMEBASE_XCMP7
+XCMPA_SHADOW1_OUTPUT_ON_TIMEBASE_XCMP8
+XCMPA_SHADOW2_OUTPUT_ON_TIMEBASE_XCMP1
+XCMPA_SHADOW2_OUTPUT_ON_TIMEBASE_XCMP2
+XCMPA_SHADOW2_OUTPUT_ON_TIMEBASE_XCMP3
+XCMPA_SHADOW2_OUTPUT_ON_TIMEBASE_XCMP4
+XCMPA_SHADOW2_OUTPUT_ON_TIMEBASE_XCMP5
+XCMPA_SHADOW2_OUTPUT_ON_TIMEBASE_XCMP6
+XCMPA_SHADOW2_OUTPUT_ON_TIMEBASE_XCMP7
+XCMPA_SHADOW2_OUTPUT_ON_TIMEBASE_XCMP8
+XCMPA_SHADOW3_OUTPUT_ON_TIMEBASE_XCMP1
+XCMPA_SHADOW3_OUTPUT_ON_TIMEBASE_XCMP2
+XCMPA_SHADOW3_OUTPUT_ON_TIMEBASE_XCMP3
+XCMPA_SHADOW3_OUTPUT_ON_TIMEBASE_XCMP4
+XCMPA_SHADOW3_OUTPUT_ON_TIMEBASE_XCMP5
+XCMPA_SHADOW3_OUTPUT_ON_TIMEBASE_XCMP6
+XCMPA_SHADOW3_OUTPUT_ON_TIMEBASE_XCMP7
+XCMPA_SHADOW3_OUTPUT_ON_TIMEBASE_XCMP8
+XCMPB_ACTIVE_OUTPUT_ON_TIMEBASE_XCMP5
+XCMPB_ACTIVE_OUTPUT_ON_TIMEBASE_XCMP6
+XCMPB_ACTIVE_OUTPUT_ON_TIMEBASE_XCMP7
+XCMPB_ACTIVE_OUTPUT_ON_TIMEBASE_XCMP8
+XCMPB_SHADOW1_OUTPUT_ON_TIMEBASE_XCMP5
+XCMPB_SHADOW1_OUTPUT_ON_TIMEBASE_XCMP6
+XCMPB_SHADOW1_OUTPUT_ON_TIMEBASE_XCMP7
+XCMPB_SHADOW1_OUTPUT_ON_TIMEBASE_XCMP8
+XCMPB_SHADOW2_OUTPUT_ON_TIMEBASE_XCMP5
+XCMPB_SHADOW2_OUTPUT_ON_TIMEBASE_XCMP6
+XCMPB_SHADOW2_OUTPUT_ON_TIMEBASE_XCMP7
+XCMPB_SHADOW2_OUTPUT_ON_TIMEBASE_XCMP8
+XCMPB_SHADOW3_OUTPUT_ON_TIMEBASE_XCMP5
+XCMPB_SHADOW3_OUTPUT_ON_TIMEBASE_XCMP6
+XCMPB_SHADOW3_OUTPUT_ON_TIMEBASE_XCMP7
+XCMPB_SHADOW3_OUTPUT_ON_TIMEBASE_XCMP8
+epwmXCMPHR_setRegisters_XTBPRD
+epwmXCMPHR_setShadowRegisters1_XTBPRD
+epwmXCMPHR_setShadowRegisters2_XTBPRD
+epwmXCMPHR_setShadowRegisters3_XTBPRD
+epwmXCMP_RegisterFrcLoad_enable
+epwmXCMP_RegisterLoad_enable
+epwmXCMP_RegisterSplit_enable
+epwmXCMP_enable
+epwmXCMP_selectAllocationXCMPA_NoSplitorSplit
+epwmXCMP_selectAllocationXCMPB_Split
+epwmXCMP_selectLoadMode
+epwmXCMP_selectNumberShadowRegisterLevels
+epwmXCMP_selectRepeatCountShadowRegisterLevel2
+epwmXCMP_selectRepeatCountShadowRegisterLevel3
+epwmXCMP_selectShadowRegisterLevelLoad
+epwmXCMP_setRegisters_XMAX
+epwmXCMP_setRegisters_XMAX_read
+epwmXCMP_setRegisters_XMIN
+epwmXCMP_setRegisters_XMIN_read
+epwmXCMP_setRegisters_XTBPRD
+epwmXCMP_setShadowRegisters1XCMPC
+epwmXCMP_setShadowRegisters1XCMPD
+epwmXCMP_setShadowRegisters1_XMAX
+epwmXCMP_setShadowRegisters1_XMAX_read
+epwmXCMP_setShadowRegisters1_XMIN
+epwmXCMP_setShadowRegisters1_XMIN_read
+epwmXCMP_setShadowRegisters1_XTBPRD
+epwmXCMP_setShadowRegisters2XCMPC
+epwmXCMP_setShadowRegisters2XCMPD
+epwmXCMP_setShadowRegisters2_XMAX
+epwmXCMP_setShadowRegisters2_XMAX_read
+epwmXCMP_setShadowRegisters2_XMIN
+epwmXCMP_setShadowRegisters2_XMIN_read
+epwmXCMP_setShadowRegisters2_XTBPRD
+epwmXCMP_setShadowRegisters3XCMPC
+epwmXCMP_setShadowRegisters3XCMPD
+epwmXCMP_setShadowRegisters3_XMAX
+epwmXCMP_setShadowRegisters3_XMAX_read
+epwmXCMP_setShadowRegisters3_XMIN
+epwmXCMP_setShadowRegisters3_XMIN_read
+epwmXCMP_setShadowRegisters3_XTBPRD
+epwmXCMP_setXCMPAHR_XCMP1_ACTIVE
+epwmXCMP_setXCMPAHR_XCMP1_SHADOW1
+epwmXCMP_setXCMPAHR_XCMP1_SHADOW2
+epwmXCMP_setXCMPAHR_XCMP1_SHADOW3
+epwmXCMP_setXCMPAHR_XCMP2_ACTIVE
+epwmXCMP_setXCMPAHR_XCMP2_SHADOW1
+epwmXCMP_setXCMPAHR_XCMP2_SHADOW2
+epwmXCMP_setXCMPAHR_XCMP2_SHADOW3
+epwmXCMP_setXCMPAHR_XCMP3_ACTIVE
+epwmXCMP_setXCMPAHR_XCMP3_SHADOW1
+epwmXCMP_setXCMPAHR_XCMP3_SHADOW2
+epwmXCMP_setXCMPAHR_XCMP3_SHADOW3
+epwmXCMP_setXCMPAHR_XCMP4_ACTIVE
+epwmXCMP_setXCMPAHR_XCMP4_SHADOW1
+epwmXCMP_setXCMPAHR_XCMP4_SHADOW2
+epwmXCMP_setXCMPAHR_XCMP4_SHADOW3
+epwmXCMP_setXCMPAHR_XCMP5_ACTIVE
+epwmXCMP_setXCMPAHR_XCMP5_SHADOW1
+epwmXCMP_setXCMPAHR_XCMP5_SHADOW2
+epwmXCMP_setXCMPAHR_XCMP5_SHADOW3
+epwmXCMP_setXCMPAHR_XCMP6_ACTIVE
+epwmXCMP_setXCMPAHR_XCMP6_SHADOW1
+epwmXCMP_setXCMPAHR_XCMP6_SHADOW2
+epwmXCMP_setXCMPAHR_XCMP6_SHADOW3
+epwmXCMP_setXCMPAHR_XCMP7_ACTIVE
+epwmXCMP_setXCMPAHR_XCMP7_SHADOW1
+epwmXCMP_setXCMPAHR_XCMP7_SHADOW2
+epwmXCMP_setXCMPAHR_XCMP7_SHADOW3
+epwmXCMP_setXCMPAHR_XCMP8_ACTIVE
+epwmXCMP_setXCMPAHR_XCMP8_SHADOW1
+epwmXCMP_setXCMPAHR_XCMP8_SHADOW2
+epwmXCMP_setXCMPAHR_XCMP8_SHADOW3
+epwmXCMP_setXCMPA_XCMP1_ACTIVE
+epwmXCMP_setXCMPA_XCMP1_SHADOW1
+epwmXCMP_setXCMPA_XCMP1_SHADOW2
+epwmXCMP_setXCMPA_XCMP1_SHADOW3
+epwmXCMP_setXCMPA_XCMP2_ACTIVE
+epwmXCMP_setXCMPA_XCMP2_SHADOW1
+epwmXCMP_setXCMPA_XCMP2_SHADOW2
+epwmXCMP_setXCMPA_XCMP2_SHADOW3
+epwmXCMP_setXCMPA_XCMP3_ACTIVE
+epwmXCMP_setXCMPA_XCMP3_SHADOW1
+epwmXCMP_setXCMPA_XCMP3_SHADOW2
+epwmXCMP_setXCMPA_XCMP3_SHADOW3
+epwmXCMP_setXCMPA_XCMP4_ACTIVE
+epwmXCMP_setXCMPA_XCMP4_SHADOW1
+epwmXCMP_setXCMPA_XCMP4_SHADOW2
+epwmXCMP_setXCMPA_XCMP4_SHADOW3
+epwmXCMP_setXCMPA_XCMP5_ACTIVE
+epwmXCMP_setXCMPA_XCMP5_SHADOW1
+epwmXCMP_setXCMPA_XCMP5_SHADOW2
+epwmXCMP_setXCMPA_XCMP5_SHADOW3
+epwmXCMP_setXCMPA_XCMP6_ACTIVE
+epwmXCMP_setXCMPA_XCMP6_SHADOW1
+epwmXCMP_setXCMPA_XCMP6_SHADOW2
+epwmXCMP_setXCMPA_XCMP6_SHADOW3
+epwmXCMP_setXCMPA_XCMP7_ACTIVE
+epwmXCMP_setXCMPA_XCMP7_SHADOW1
+epwmXCMP_setXCMPA_XCMP7_SHADOW2
+epwmXCMP_setXCMPA_XCMP7_SHADOW3
+epwmXCMP_setXCMPA_XCMP8_ACTIVE
+epwmXCMP_setXCMPA_XCMP8_SHADOW1
+epwmXCMP_setXCMPA_XCMP8_SHADOW2
+epwmXCMP_setXCMPA_XCMP8_SHADOW3
+epwmXCMP_setXCMPBHR_XCMP5_ACTIVE
+epwmXCMP_setXCMPBHR_XCMP5_SHADOW1
+epwmXCMP_setXCMPBHR_XCMP5_SHADOW2
+epwmXCMP_setXCMPBHR_XCMP5_SHADOW3
+epwmXCMP_setXCMPBHR_XCMP6_ACTIVE
+epwmXCMP_setXCMPBHR_XCMP6_SHADOW1
+epwmXCMP_setXCMPBHR_XCMP6_SHADOW2
+epwmXCMP_setXCMPBHR_XCMP6_SHADOW3
+epwmXCMP_setXCMPBHR_XCMP7_ACTIVE
+epwmXCMP_setXCMPBHR_XCMP7_SHADOW1
+epwmXCMP_setXCMPBHR_XCMP7_SHADOW2
+epwmXCMP_setXCMPBHR_XCMP7_SHADOW3
+epwmXCMP_setXCMPBHR_XCMP8_ACTIVE
+epwmXCMP_setXCMPBHR_XCMP8_SHADOW1
+epwmXCMP_setXCMPBHR_XCMP8_SHADOW2
+epwmXCMP_setXCMPBHR_XCMP8_SHADOW3
+epwmXCMP_setXCMPB_XCMP1_ACTIVE
+epwmXCMP_setXCMPB_XCMP1_SHADOW1
+epwmXCMP_setXCMPB_XCMP1_SHADOW2
+epwmXCMP_setXCMPB_XCMP1_SHADOW3
+epwmXCMP_setXCMPB_XCMP2_ACTIVE
+epwmXCMP_setXCMPB_XCMP2_SHADOW1
+epwmXCMP_setXCMPB_XCMP2_SHADOW2
+epwmXCMP_setXCMPB_XCMP2_SHADOW3
+epwmXCMP_setXCMPB_XCMP3_ACTIVE
+epwmXCMP_setXCMPB_XCMP3_SHADOW1
+epwmXCMP_setXCMPB_XCMP3_SHADOW2
+epwmXCMP_setXCMPB_XCMP3_SHADOW3
+epwmXCMP_setXCMPB_XCMP4_ACTIVE
+epwmXCMP_setXCMPB_XCMP4_SHADOW1
+epwmXCMP_setXCMPB_XCMP4_SHADOW2
+epwmXCMP_setXCMPB_XCMP4_SHADOW3
+epwmXCMP_setXCMPB_XCMP5_ACTIVE
+epwmXCMP_setXCMPB_XCMP5_SHADOW1
+epwmXCMP_setXCMPB_XCMP5_SHADOW2
+epwmXCMP_setXCMPB_XCMP5_SHADOW3
+epwmXCMP_setXCMPB_XCMP6_ACTIVE
+epwmXCMP_setXCMPB_XCMP6_SHADOW1
+epwmXCMP_setXCMPB_XCMP6_SHADOW2
+epwmXCMP_setXCMPB_XCMP6_SHADOW3
+epwmXCMP_setXCMPB_XCMP7_ACTIVE
+epwmXCMP_setXCMPB_XCMP7_SHADOW1
+epwmXCMP_setXCMPB_XCMP7_SHADOW2
+epwmXCMP_setXCMPB_XCMP7_SHADOW3
+epwmXCMP_setXCMPB_XCMP8_ACTIVE
+epwmXCMP_setXCMPB_XCMP8_SHADOW1
+epwmXCMP_setXCMPB_XCMP8_SHADOW2
+epwmXCMP_setXCMPB_XCMP8_SHADOW3
+epwmXCMP_setXCMPC
+epwmXCMP_setXCMPD
+```
+
+### Input Control Logic (ICL) (24 ids)
+
+```
+epwmICL_A_OUTHIGH
+epwmICL_A_OUTLOW
+epwmICL_A_selXBAR
+epwmICL_B_OUTHIGH
+epwmICL_B_OUTLOW
+epwmICL_B_selXBAR
+epwmICL_EnableA
+epwmICL_EnableB
+epwmICL_LUT0A
+epwmICL_LUT0B
+epwmICL_LUT1A
+epwmICL_LUT1B
+epwmICL_LUT2A
+epwmICL_LUT2B
+epwmICL_LUT3A
+epwmICL_LUT3B
+epwmICL_LUT4A
+epwmICL_LUT4B
+epwmICL_LUT5A
+epwmICL_LUT5B
+epwmICL_LUT6A
+epwmICL_LUT6B
+epwmICL_LUT7A
+epwmICL_LUT7B
+```
+
+### Diode Emulation (14 ids)
+
+```
+epwmDiodeEmulation_EPWM_DE_CHANNEL_A_configOutput
+epwmDiodeEmulation_EPWM_DE_CHANNEL_A_selTrip
+epwmDiodeEmulation_EPWM_DE_CHANNEL_B_configOutput
+epwmDiodeEmulation_EPWM_DE_CHANNEL_B_selTrip
+epwmDiodeEmulation_Reentrycnt
+epwmDiodeEmulation_TripHSelect
+epwmDiodeEmulation_TripLSelect
+epwmDiodeEmulation_enableDE
+epwmDiodeEmulation_enableDiodeEmulationModeCounter
+epwmDiodeEmulation_enablePWMTrip
+epwmDiodeEmulation_selExitMode
+epwmDiodeEmulation_stepDecr
+epwmDiodeEmulation_stepIncr
+epwmDiodeEmulation_stepThreshold
+```
+
+### Min Dead-Band (28 ids)
+
+```
+EPWM_MINDB_ICL_LUT_DEC0A
+EPWM_MINDB_ICL_LUT_DEC0B
+EPWM_MINDB_ICL_LUT_DEC1A
+EPWM_MINDB_ICL_LUT_DEC1B
+EPWM_MINDB_ICL_LUT_DEC2A
+EPWM_MINDB_ICL_LUT_DEC2B
+EPWM_MINDB_ICL_LUT_DEC3A
+EPWM_MINDB_ICL_LUT_DEC3B
+EPWM_MINDB_ICL_LUT_DEC4A
+EPWM_MINDB_ICL_LUT_DEC4B
+EPWM_MINDB_ICL_LUT_DEC5A
+EPWM_MINDB_ICL_LUT_DEC5B
+EPWM_MINDB_ICL_LUT_DEC6A
+EPWM_MINDB_ICL_LUT_DEC6B
+EPWM_MINDB_ICL_LUT_DEC7A
+EPWM_MINDB_ICL_LUT_DEC7B
+epwmMinDeadBand_A_configANDOR
+epwmMinDeadBand_A_configBlockSignal
+epwmMinDeadBand_A_inputRefSignal
+epwmMinDeadBand_A_invertInput
+epwmMinDeadBand_A_setDelay
+epwmMinDeadBand_B_configANDOR
+epwmMinDeadBand_B_configBlockSignal
+epwmMinDeadBand_B_inputRefSignal
+epwmMinDeadBand_B_invertInput
+epwmMinDeadBand_B_setDelay
+epwmMinDeadBand_EnableA
+epwmMinDeadBand_EnableB
+```
+
+## What this sub-phase does, and doesn't, do
+
+This sub-phase is **read-only** — it never calls `changeConfiguration`, `addModuleInstances`,
+or `save` on the target file, because there is nothing to write: none of these ids have an
+MCPWM counterpart. Its only output is a report of which of these settings were actually in use
+in the source project, and what functional gap that leaves. It does not run in any particular
+order relative to sub-phases 3a–3f — it doesn't depend on the target MCPWM instances at all, so
+it can run any time after Phase 1's grouping is confirmed.
+
+## Inputs
+
+1. **Source device** and **source `.syscfg` file**.
+2. The confirmed list of source EPWM instances from Phase 1 (this sub-phase doesn't need the
+   target device/file at all, since it never writes anything).
+
+## Step-by-step procedure
+
+### Step 1 — Get descriptive context (recommended, not required)
+
+Call `get_syscfg_module_migration_guide` (idea-mcp) with the source/target device,
+`moduleToModule: "epwm_mcpwm"`, and the ids above, to get a human-readable description of what
+each feature does — useful for explaining *why* something is flagged as a concern, not just that
+a field had a non-default value.
+
+If the tool reports **any** of these ids as `mapped` or `partial` rather than `no_equivalent`,
+stop and re-check before proceeding — that would mean this feature isn't actually fully removed
+on the target device, and the id in question belongs in a different sub-phase (3a–3f), not here.
+
+### Step 2 — Pull the source project's actual values
+
+For every source EPWM instance, call `getInstanceConfiguration` with `changesOnly: true` and
+the id list for each feature area above (split across multiple calls to keep any single call's
+token cost reasonable — this is the largest id set of any sub-phase). `changesOnly` means only
+fields that differ from their default come back at all, so an instance that never touched a
+given feature simply won't appear for it — that's the signal you're looking for, not an omission
+to chase down.
+
+### Step 3 — Report concerns
+
+Organize the report by feature area (the seven headings above), not by instance:
+
+- If no source instance has any non-default value for a feature area, state plainly: "not in
+  use in this project, no migration impact."
+- If one or more instances do have non-default values, name the specific instance, the specific
+  configurable, and its value, and state clearly that there is no way to reproduce this on
+  MCPWM. This is a real functional gap — the user needs to decide how to handle it (drop the
+  feature, find a different mechanism on the target device, or reconsider the migration for that
+  specific instance), not something to resolve unilaterally.
+
+### Step 4 — Stop and confirm
+
+End your turn and present the report, then **return to `phase-3-overview.md`** rather than
+proceeding directly into another sub-phase file. There's no `save` to confirm went cleanly here,
+unlike phases 3a–3f — the confirmation is about whether the user agrees with how any flagged
+concerns should be handled before the overall Phase-3 migration is considered complete.
