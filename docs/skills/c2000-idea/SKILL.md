@@ -1,6 +1,6 @@
 ---
 name: c2000-idea
-description: Step-by-step workflows for C2000 code migration tasks. Supports F28x to F28x and F28x to F29x device migration (F29x not yet implemented), and bitfield-to-driverlib conversion. Uses the IDEA MCP server as the primary tool, with CCS Project MCP, CCS SysConfig MCP, and TI ASM MCP as supporting dependencies.
+description: Step-by-step workflows for C2000 code migration tasks. Supports F28x to F28x and F28x to F29x device migration (F29x not yet implemented), bitfield-to-driverlib conversion, and SysConfig ePWM-to-MCPWM peripheral migration — migrate, port, or consolidate an EPWM-based .syscfg project onto a device's MCPWM peripheral, including checking whether several EPWM instances can share one MCPWM instance and reconciling the sync chain / time-base before migrating. Uses the IDEA MCP server as the primary tool, with CCS Project MCP, CCS SysConfig MCP, and TI ASM MCP as supporting dependencies.
 ---
 
 # C2000 IDEA Migration
@@ -59,6 +59,7 @@ and register them with their agent, then retry.
 | --------------------------------------------- | --------------------------------------------- | --------------------------------------------- |
 | Device-to-device migration (F28x → F28x/F29x) | references/device-migration.md                | get_device_migration_report                   |
 | Bitfield → driverlib conversion               | references/bitfield-to-driverlib-migration.md | get_bitfield_to_driverlib_migration_report    |
+| SysConfig ePWM → MCPWM peripheral migration   | references/epwm-to-mcpwm-sysconfig-migration.md | get_syscfg_module_migration_guide           |
 
 Notes:
 - Device-to-device migration moves code from a source device family to a target device
@@ -75,6 +76,15 @@ Notes:
   (`PeriphRegs.REG.bit.FIELD`) into driverlib calls for the *same* device. There is no
   target device. Run this **before** device-to-device migration when the source uses
   bitfield patterns — it reduces noise in the device migration report.
+- SysConfig ePWM → MCPWM peripheral migration ports an EPWM-based `.syscfg` project onto a
+  device's MCPWM peripheral, consolidating EPWM instances onto MCPWM instances (up to 3 PWM
+  pairs each) across confirmed phases. Field mappings come from the
+  `get_syscfg_module_migration_guide` tool (`moduleToModule: "epwm_mcpwm"`); the live
+  `.syscfg` edits use the **ccs-sysconfig MCP**. The supported source/target device set is
+  whatever that tool validates — don't assume it. This is **distinct** from device-to-device
+  migration: that workflow's SysConfig step (Phase 3) uses SysConfig's *same-peripheral*
+  `migrate()`, which would drop EPWM as absent on an MCPWM-only target. Run the ePWM → MCPWM
+  workflow on its own, not inside a device migration.
 
 ## Extending this skill
 
