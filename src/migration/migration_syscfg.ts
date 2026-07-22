@@ -72,11 +72,16 @@ export async function migrationSyscfgGetAgentReport(
 	modulePair: MigrationSyscfgModulePair,
 	sourceDevice: string,
 	targetDevice: string,
+	configNames?: string[],
 ): Promise<string | undefined> {
 	const database = await migrationSyscfgLoadDatabase(context, modulePair, sourceDevice, targetDevice);
 	if (!database) {
 		return undefined;
 	}
+
+	// Optional allowlist: when provided, only these config names are rendered. Names not present
+	// in the (device-filtered) database simply match nothing and are silently ignored.
+	const nameFilter = configNames !== undefined ? new Set(configNames) : undefined;
 
 	const sections: string[] = [];
 
@@ -104,6 +109,9 @@ export async function migrationSyscfgGetAgentReport(
 		"| --- | --- | --- | --- | --- |",
 	];
 	for (const [configName, entry] of Object.entries(database)) {
+		if (nameFilter !== undefined && !nameFilter.has(configName)) {
+			continue;
+		}
 		const source = nameCell(configName, entry.from_displayName);
 
 		let target = "—";
