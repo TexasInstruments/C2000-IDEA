@@ -94,6 +94,8 @@ export async function migrationSyscfgGetAgentReport(
 		// No companion .md; skip it.
 	}
 
+	sections.push(`## SysConfig Mapping Table ${modulePair} (${sourceDevice} → ${targetDevice})`);
+
 	// Render the filtered database as a Markdown table.
 	const esc = (value: string): string => value.replace(/\s*\r?\n\s*/g, " ").replace(/\|/g, "\\|").trim();
 	// A cell showing a GUI display name (bold) with the raw config/option id in parentheses when a
