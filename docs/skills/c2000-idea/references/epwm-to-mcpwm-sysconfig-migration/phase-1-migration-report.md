@@ -85,6 +85,8 @@ instances found in Step 2 in the `instances` array, with `ids` set to this exact
   "epwmTimebase_clockDiv",
   "epwmTimebase_hsClockDiv",
   "epwmTimebase_counterMode",
+  "epwmTimebase_counterModeAfterSync",
+  "epwmTimebase_emulationMode",
   "epwmTimebase_counterValue",
   "epwmTimebase_periodLoadMode",
   "epwmTimebase_periodLoadEvent",
@@ -112,6 +114,12 @@ you know to expect that. If you need the phase value for an instance that has
 `phaseEnable: true` and it didn't come back (e.g. because this id list changes on a future
 SysConfig version), re-query just that instance with `searchText: "phase"` rather than
 assuming it doesn't exist.
+
+`epwmTimebase_counterModeAfterSync` is conditional the same way — SysConfig only reports it for
+an instance running in up-down-count mode (it's meaningless in a single-direction count mode), so
+its absence on an up-count or down-count instance is expected, not a missing id. Capture it where
+present; it carries a genuine EPWM setting (which direction the counter resumes after a sync
+event) that has a direct MCPWM equivalent, so it matters in Phase 2.
 
 Do this as a single call across all instances rather than one call per instance — it's
 cheaper and makes the values directly comparable.
@@ -209,7 +217,8 @@ confirmed (or not) to have that many available.
 | EPWM instance | `moduleInstanceId` from Step 2 |
 | Period | value from Step 3 |
 | Clock divider(s) | value(s) from Step 3 (`epwmTimebase_clockDiv` / `epwmTimebase_hsClockDiv`) |
-| Counter mode | value from Step 3 |
+| Counter mode | value from Step 3, plus `epwmTimebase_counterModeAfterSync` when present (up-down-count instances only) |
+| Emulation mode | `epwmTimebase_emulationMode` value from Step 3 (debug-halt behavior; carried across in Phase 2) |
 | Period load mode / event | values from Step 3 (`epwmTimebase_periodLoadMode` / `epwmTimebase_periodLoadEvent`) |
 | Sync-in source | value from Step 3, resolved to which instance/external signal it names |
 | Sync-out mode | value from Step 3 |

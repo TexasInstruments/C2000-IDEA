@@ -73,16 +73,22 @@ instance's failure doesn't revert another's). Set, from that group's confirmed s
 | `mcpwmTimebase_period` | `epwmTimebase_period` | direct copy |
 | `mcpwmTimebase_clockDiv` | `epwmTimebase_clockDiv` | direct copy — MCPWM has no separate high-speed divider stage, so if the source used a non-default `epwmTimebase_hsClockDiv` alongside `epwmTimebase_clockDiv`, note that the combined effective divide ratio may not be exactly reproducible by `mcpwmTimebase_clockDiv` alone (flag it, don't silently drop it) |
 | `mcpwmTimebase_counterMode` | `epwmTimebase_counterMode` | direct copy — MCPWM has no down-count-only mode; if the source was down-count-only, this is a real gap to flag, not a silent substitution |
+| `mcpwmTimebase_counterModeAfterSync` | `epwmTimebase_counterModeAfterSync` | direct copy — **only present when the instance is in up-down-count mode** (conditional on both sides), so copy it only for those instances; see the note below the table |
+| `mcpwmTimebase_emulationMode` | `epwmTimebase_emulationMode` | direct copy — debug/emulation-halt behavior; maps 1:1 (stop-after-next / stop-after-cycle / free-run) |
 | `mcpwmTimebase_periodLoadMode` | `epwmTimebase_periodLoadMode` | MCPWM only has two choices (shadow-load-at-TBCTR=0, or disabled) versus EPWM's richer `periodLoadMode` + `periodLoadEvent` pair — if the source's `epwmTimebase_periodLoadEvent` was anything other than "reaches 0" (e.g. "only on SYNC"), that nuance has **no MCPWM equivalent** (confirm via `get_syscfg_module_migration_guide` — it reports `epwmTimebase_periodLoadEvent` as `no_equivalent`) and is lost; flag it |
 | `mcpwmTimebase_forceSyncPulse` | `epwmTimebase_forceSyncPulse` | direct copy |
 
 If `mcpwmTimebase_counterMode` is being set to `"Up - down - count mode"`, expect
 `mcpwmTimebase_counterModeAfterSync` to become newly visible (SysConfig conditional-visibility,
 same mechanism as `epwmTimebase_phaseShift` in Phase 1 — confirm via the `available` array in
-this call's response rather than assuming). This field has **no EPWM source** — EPWM never had
-it — so don't default it silently; ask the user which direction (count up or down after sync)
-is intended if it wasn't already covered by the confirmed report, and set it in a follow-up
-`changeConfiguration` call once you know.
+this call's response rather than assuming). This field **does have an EPWM source**:
+`epwmTimebase_counterModeAfterSync`, which EPWM likewise only exposes in up-down-count mode, and
+which maps 1:1 (`get_syscfg_module_migration_guide` reports it `mapped`). So the normal path is a
+direct copy from the confirmed Phase-1 value, not a fresh decision — set it in the same batch as
+the other time-base fields. Only ask the user which direction (count up or down after sync) is
+intended in the corner case where the target lands in up-down mode but the source instance was
+*not* in up-down mode (so it never exposed `counterModeAfterSync` and there's no source value to
+carry) — and set it in a follow-up `changeConfiguration` call once you know.
 
 `epwmTimebase_counterValue`, `epwmTimebase_periodLink`, and `epwmTimebase_periodGld` have no
 MCPWM counterpart at all (confirm via `get_syscfg_module_migration_guide` — all three come back
@@ -152,9 +158,10 @@ Call `save`. Then present a report with this structure:
 3. **Explicitly flagged gaps and decisions**, gathered from Steps 3–4: dropped EPWM-only fields
    (`hsClockDiv` nuance, `periodLoadEvent`, `periodLink`, `periodGld`, `counterValue`,
    `oneShotSyncOutTrigger`), any `syncOutPulseMode` entries that didn't survive the
-   array→single narrowing, the new-to-MCPWM `counterModeAfterSync` decision if applicable, and
-   the full list of intra-group phase relationships deferred to Phase 3 (name each EPWM instance
-   and its original phase value).
+   array→single narrowing, the `counterModeAfterSync` handling if applicable (normally a direct
+   copy from the source's up-down-mode value — flag it only in the corner case where it had to be
+   asked because the source instance wasn't in up-down mode), and the full list of intra-group
+   phase relationships deferred to Phase 3 (name each EPWM instance and its original phase value).
 4. **Verification result** — confirm `getErrorsAndWarnings` was clean and the file was saved.
 
 ### Step 7 — Stop and confirm before Phase 3
