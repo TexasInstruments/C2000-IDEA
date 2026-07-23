@@ -265,15 +265,56 @@ something actionable, so don't skip it or leave it implicit in the table:
   by name that it needs to be re-expressed via counter-compare rather than an independent
   counter, since the group's pairs all share one `TBCTR`.
 
-### Step 8 — Stop and confirm before going further
+### Step 8 — Initialize the migration log
 
-**End your turn after presenting the report.** Do not, in the same turn or without being
-asked, proceed to open the target device's `.syscfg`, add or configure any MCPWM instance, or
-start writing conversion code — even though the report may make the next step look obvious.
-Ask the user to review the grouping and flagged relationships in section 5 specifically, since
-that's where a judgment call was made (how to partition instances into groups of ≤3) that the
-user may want to override — e.g. a different grouping that keeps a different set of instances
-together, or a decision about how to handle a flagged cross-group sync relationship.
+Before stopping, create the migration log file. The log lives in the **same directory as the
+target `.syscfg` file** and is named `epwm-mcpwm-migration.md`.
+
+Initialize it with this exact structure (fill in bracketed values from your analysis):
+
+```markdown
+# ePWM → MCPWM SysConfig Migration Log
+
+**Source device:** [e.g., F28003x]
+**Source .syscfg file:** [absolute path]
+**Target device:** [e.g., F28P65x]
+**Target .syscfg file:** [absolute path]
+
+## MCPWM Capacity (from TRM)
+[List instances available on target device with their channel counts, e.g.:
+- MCPWM0: 6 channels (3 pairs)
+- MCPWM1: 6 channels (3 pairs)
+- MCPWM2: 4 channels (2 pairs)]
+
+## Phase 1 — Analysis Report
+Status: COMPLETE
+
+**Sync topology:**
+[Copy the topology from your Step 5 analysis]
+
+**Time-base compatibility:**
+[Copy compatibility assessment from your Step 4 report]
+
+**Target capacity check:**
+[Copy capacity findings from your Step 6 analysis]
+
+**Per-instance settings table:**
+[Copy the full table from your Step 7 report section 4]
+
+**Proposed grouping and open flags:**
+[Copy the grouping proposal and flags from your Step 7 report section 5]
+```
+
+### Step 9 — Stop and confirm before going further
+
+**End your turn after initializing the log and presenting the report.** Do not, in the same
+turn or without being asked, proceed to open the target device's `.syscfg`, add or configure
+any MCPWM instance, or start writing conversion code — even though the report may make the
+next step look obvious. Ask the user to review the grouping and flagged relationships in
+section 5 specifically, since that's where a judgment call was made (how to partition
+instances into groups of ≤3) that the user may want to override — e.g. a different grouping
+that keeps a different set of instances together, or a decision about how to handle a flagged
+cross-group sync relationship.
 
 → When the user confirms the report and says to proceed, **return to the orchestrator
 (`references/epwm-to-mcpwm-sysconfig-migration.md`)** and continue with Phase 2.

@@ -475,7 +475,26 @@ Organize the report by feature area (the seven headings above), not by instance:
   feature, find a different mechanism on the target device, or reconsider the migration for that
   specific instance), not something to resolve unilaterally.
 
-### Step 4 — Stop and confirm
+### Step 4 — Update the migration log
+
+Append to `epwm-mcpwm-migration.md`:
+
+```markdown
+### Sub-phase 3g: Removed-Submodules Audit
+Status: COMPLETE
+
+**Audit findings:**
+[Copy from Step 3 report — by feature area, list which (if any) source instances use features
+with no MCPWM equivalent, and identify the specific concerns]
+
+**Features confirmed not in use:**
+[List the feature areas where all source instances have default values — no migration impact]
+
+**Confirmation required from user:**
+[If any concerns were flagged, note that user must decide how to handle these gaps]
+```
+
+### Step 5 — Stop and confirm
 
 End your turn and present the report, then **return to `phase-3-overview.md`** rather than
 proceeding directly into another sub-phase file. There's no `save` to confirm went cleanly here,

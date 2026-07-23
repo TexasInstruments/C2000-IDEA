@@ -44,9 +44,27 @@ Migrates dead-band configuration (rising/falling edge delay, polarity, input/out
 shadow-load settings) from each source EPWM instance onto its assigned MCPWM instance. Does not
 touch counter-compare, action-qualifier, trip-zone, or event-trigger.
 
+**Important:** Dead-band settings are **instance-wide** on MCPWM — shared across all 3 pairs
+in one MCPWM instance. If multiple source EPWM instances in the same group have different
+dead-band settings, a choice must be made about which value to apply to the shared MCPWM
+instance field.
+
+## Pre-sub-phase check: Read the migration log
+
+Before proceeding, **read the `epwm-mcpwm-migration.md` log** and confirm:
+
+1. **Phase 2 is marked COMPLETE** — if not, do not proceed.
+2. **Sub-phases 3a and 3b are marked COMPLETE** — if not, do not proceed.
+3. **The group → MCPWM instance mapping is documented** — you will use this to identify which
+   source EPWM instances map to the same target MCPWM instance (and thus share dead-band
+   settings).
+
+If the log is missing or prior phases are not marked complete, stop and ask the user to
+complete them first.
+
 ## Inputs
 
-From the confirmed Phase-1 report and Phase-2's applied setup, you need:
+From the confirmed Phase-2 mapping (read from the migration log), you need:
 
 1. **Source device** and **source `.syscfg` file**.
 2. **Target device** and **target `.syscfg` file** — already has the MCPWM instances Phase 2
@@ -120,10 +138,33 @@ Call `save`. Then present a report with:
    which source instance's value was kept, and what happened to the others.
 4. **Verification result** — confirm `getErrorsAndWarnings` was clean and the file was saved.
 
-### Step 6 — Stop and confirm before the next sub-phase
+### Step 6 — Update the migration log
 
-**End your turn after presenting the report.** Do not proceed directly to the next Phase-3
-sub-phase file in the same turn — **return to `phase-3-overview.md`** first, which is where the
-next sub-phase gets picked from. Ask the user to review the pair-substitution/reconciliation
-decisions from Step 2 specifically, since that's where a judgment call was made that the user
-may want to override.
+Append to `epwm-mcpwm-migration.md`:
+
+```markdown
+### Sub-phase 3c: Dead-Band
+Status: COMPLETE
+
+**Values applied per target instance:**
+[Copy from Step 5, section 1]
+
+**Fields dropped (no MCPWM equivalent):**
+[Copy from Step 5, section 2 — or "none" if all were present]
+
+**Reconciliation decisions (instance-wide shared fields):**
+[Copy from Step 5, section 3 — name which source instance(s) had conflicting dead-band values
+and which one's value was chosen for the shared MCPWM instance field]
+
+**Verification:**
+- Errors and warnings: none
+- Target .syscfg file: saved
+```
+
+### Step 7 — Stop and confirm before the next sub-phase
+
+**End your turn after updating the log and presenting the report.** Do not proceed directly to
+the next Phase-3 sub-phase file in the same turn — **return to `phase-3-overview.md`** first,
+which is where the next sub-phase gets picked from. Ask the user to review the reconciliation
+decisions from Step 2 specifically, since that's where a judgment call was made (when multiple
+source instances had different dead-band settings) that the user may want to override.

@@ -43,9 +43,20 @@ global-load/link toggles) from each source EPWM instance onto its assigned MCPWM
 pair, per the confirmed Phase-2 grouping. Does not touch action-qualifier, dead-band,
 trip-zone, or event-trigger — those are separate sub-phases.
 
+## Pre-sub-phase check: Read the migration log
+
+Before proceeding, **read the `epwm-mcpwm-migration.md` log** and confirm:
+
+1. **Phase 2 is marked COMPLETE** — if not, do not proceed.
+2. **The group → MCPWM instance mapping is documented** — you will use this to determine which
+   pair slot (1/2/3) each source EPWM instance lands in.
+
+If the log is missing or Phase 2 is not marked complete, stop and ask the user to complete
+Phase 2 first.
+
 ## Inputs
 
-From the confirmed Phase-1 report and Phase-2's applied setup, you need:
+From the confirmed Phase-2 mapping (read from the migration log), you need:
 
 1. **Source device** and **source `.syscfg` file**.
 2. **Target device** and **target `.syscfg` file** — already has the MCPWM instances Phase 2
@@ -122,10 +133,32 @@ Call `save`. Then present a report with:
    which source instance's value was kept, and what happened to the others.
 4. **Verification result** — confirm `getErrorsAndWarnings` was clean and the file was saved.
 
-### Step 6 — Stop and confirm before the next sub-phase
+### Step 6 — Update the migration log
 
-**End your turn after presenting the report.** Do not proceed directly to the next Phase-3
-sub-phase file in the same turn — **return to `phase-3-overview.md`** first, which is where the
-next sub-phase gets picked from. Ask the user to review the pair-substitution/reconciliation
-decisions from Step 2 specifically, since that's where a judgment call was made that the user
-may want to override.
+Append to `epwm-mcpwm-migration.md`:
+
+```markdown
+### Sub-phase 3a: Counter-Compare
+Status: COMPLETE
+
+**Values applied per target instance:**
+[Copy from Step 5, section 1]
+
+**Fields dropped (no MCPWM equivalent):**
+[Copy from Step 5, section 2 — or "none" if all were present]
+
+**Pair-substitution / reconciliation decisions:**
+[Copy from Step 5, section 3]
+
+**Verification:**
+- Errors and warnings: none
+- Target .syscfg file: saved
+```
+
+### Step 7 — Stop and confirm before the next sub-phase
+
+**End your turn after updating the log and presenting the report.** Do not proceed directly to
+the next Phase-3 sub-phase file in the same turn — **return to `phase-3-overview.md`** first,
+which is where the next sub-phase gets picked from. Ask the user to review the
+pair-substitution/reconciliation decisions from Step 2 specifically, since that's where a
+judgment call was made that the user may want to override.

@@ -8,6 +8,22 @@
 **If any MCP tool call fails, returns an unexpected error, or produces a result you cannot
 interpret — stop and ask the user for help.** Do not guess, retry blindly, or skip the step.
 
+## Pre-Phase-3 check: Read the migration log
+
+Before proceeding with any sub-phases, **read the `epwm-mcpwm-migration.md` log** in the
+target `.syscfg` directory. Confirm:
+
+1. **Phase 1 is marked COMPLETE** — if not, do not proceed.
+2. **Phase 2 is marked COMPLETE** — if not, do not proceed.
+3. **The Group → MCPWM instance mapping is documented** — you will need to reference which
+   source EPWM instances map to which target MCPWM instance for per-pair field substitution in
+   sub-phases 3a and 3b.
+
+If the log is missing or Phases 1–2 are not marked complete, stop and ask the user to
+complete earlier phases first.
+
+---
+
 Sections 1–3 below are background — distilled from TI's SPRADL7 application note — explaining
 *why* EPWM and MCPWM differ and what a migration has to account for at a conceptual level.
 Section 4 is the actual procedure: seven sub-phases, each its own reference file, covering
@@ -212,5 +228,29 @@ means:
 ---
 
 → Read the next sub-phase in the table above, execute it fully, then **return here** before
-opening the following one. When all seven sub-phases are complete, the migration is done —
+opening the following one.
+
+## After all sub-phases 3a–3g are complete
+
+Update the migration log with a final Phase 3 completion entry:
+
+```markdown
+## Phase 3 — Submodule Migration
+Status: COMPLETE
+
+**Sub-phases completed:**
+- 3a (counter-compare): [summary of pairs migrated, any gaps flagged]
+- 3b (action-qualifier): [summary of action tables migrated]
+- 3c (dead-band): [summary of dead-band settings applied / conflicts resolved]
+- 3d (trip-zone): [summary of trip-zone configuration migrated]
+- 3e (event-trigger): [summary of interrupt/SOC mapping decided]
+- 3f (global-load): [summary of global-load settings applied]
+- 3g (removed-submodules audit): [modules confirmed absent / no migration issues]
+
+**Verification:**
+- Errors and warnings: [result of final getErrorsAndWarnings]
+- Target .syscfg file: saved
+```
+
+When all seven sub-phases are complete and the log is updated, the migration is done —
 return to the orchestrator (`references/epwm-to-mcpwm-sysconfig-migration.md`).

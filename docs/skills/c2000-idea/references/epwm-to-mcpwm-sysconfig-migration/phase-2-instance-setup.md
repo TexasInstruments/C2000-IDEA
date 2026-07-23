@@ -22,9 +22,22 @@ Do not run this phase against a grouping the user hasn't actually confirmed. If 
 without a confirmed grouping in hand (e.g. the user skipped straight to "set up MCPWM"), run
 Phase 1 first.
 
+## Pre-Phase-2 check: Read the migration log
+
+Before proceeding with any steps, **read the `epwm-mcpwm-migration.md` log** in the target
+`.syscfg` directory. Confirm:
+
+1. **Phase 1 is marked COMPLETE** — if not, do not proceed.
+2. **The proposed grouping is recorded** — extract the group → EPWM instance assignment from
+   the log section "5. Proposed grouping and open flags".
+3. **Target device MCPWM capacity is documented** — for reference when checking capacity.
+
+If the log is missing or Phase 1 is not marked complete, stop and ask the user to confirm
+Phase 1 completion first.
+
 ## Inputs
 
-From the confirmed Phase-1 report, you need:
+From the confirmed Phase-1 report (read from the migration log), you need:
 
 1. **The groups** — which source EPWM `moduleInstanceId`s are assigned to the same target
    MCPWM instance (at most 3 per group, one EPWM per pair slot), and in what order the user
@@ -164,15 +177,37 @@ Call `save`. Then present a report with this structure:
    phase relationships deferred to Phase 3 (name each EPWM instance and its original phase value).
 4. **Verification result** — confirm `getErrorsAndWarnings` was clean and the file was saved.
 
-### Step 7 — Stop and confirm before Phase 3
+### Step 7 — Update the migration log
 
-**End your turn after presenting the Step 6 report.** Do not start on action-qualifier,
-counter-compare, dead-band, trip-zone, or event-trigger configuration in the same turn, even
-though it's the obvious next question — that is Phase 3 and needs its own pass. Ask the user to
-review the mapping and, in particular, the flagged intra-group phase deferrals and any dropped
-fields from section 3, since those are exactly the places a judgment call was made that the
-user may want to revisit before the target instances get any further configuration built on top
-of them.
+Append a new section to `epwm-mcpwm-migration.md`:
+
+```markdown
+## Phase 2 — Instance Setup
+Status: COMPLETE
+
+**Group → MCPWM instance mapping:**
+[Copy the mapping table from Step 6, section 1]
+
+**Applied time-base/sync settings per instance:**
+[Copy the settings table from Step 6, section 2]
+
+**Flagged gaps and decisions:**
+[Copy the list from Step 6, section 3]
+
+**Verification:**
+- Errors and warnings: none
+- Target .syscfg file: saved
+```
+
+### Step 8 — Stop and confirm before Phase 3
+
+**End your turn after updating the log and presenting the Step 6 report.** Do not start on
+action-qualifier, counter-compare, dead-band, trip-zone, or event-trigger configuration in
+the same turn, even though it's the obvious next question — that is Phase 3 and needs its own
+pass. Ask the user to review the mapping and, in particular, the flagged intra-group phase
+deferrals and any dropped fields from section 3, since those are exactly the places a judgment
+call was made that the user may want to revisit before the target instances get any further
+configuration built on top of them.
 
 → When the user confirms and says to proceed, **return to the orchestrator
 (`references/epwm-to-mcpwm-sysconfig-migration.md`)** and continue with Phase 3.

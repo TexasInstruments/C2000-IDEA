@@ -40,6 +40,42 @@ If the pair is not supported for the `epwm_mcpwm` module migration, the tool ret
 error listing the supported source/target devices — notify the user and **stop**. Do not
 hardcode which devices are supported; let the tool decide.
 
+## Migration log file
+
+The target project has a persistent migration log: a file called `epwm-mcpwm-migration.md`
+that lives in **the same directory as the target `.syscfg` file**.
+
+The log is created during Phase 1, once inputs have been validated and the target device's
+MCPWM capacity has been confirmed. From that point on, update it continuously throughout
+the workflow:
+
+- Record migration info (source device, source `.syscfg` path, target device, target `.syscfg`
+  path, MCPWM instance capacity per device).
+- At each phase: record the phase status (`IN PROGRESS` / `COMPLETE` / `SKIPPED`), key
+  findings, and actions taken.
+- In Phase 3: record per-sub-phase status (issues found, configurations migrated, unresolved items).
+- At the end: this file becomes part of the final deliverable for the user.
+
+Always read and update this log throughout the workflow.
+
+**If your context is getting long or you feel disoriented, re-read `epwm-mcpwm-migration.md`
+to recover your position and progress.**
+
+## Resuming a paused migration
+
+> STOP: **If you are resuming:** Read `epwm-mcpwm-migration.md` FIRST — before reading the Phase
+> sequence below. Identify where you left off, then jump directly to the correct phase file.
+> **Do not start from Phase 1 unless Phase 1 is explicitly recorded as incomplete.**
+
+If you are resuming a migration that was started in a previous session:
+
+1. Locate the target `.syscfg` directory's `epwm-mcpwm-migration.md`. Identify which phase
+   is marked as `IN PROGRESS` or incomplete.
+2. Jump directly to that phase file — do not re-run prior phases.
+3. Read that phase's opening section to understand its pre-conditions, then resume from where
+   it left off.
+4. If the log is missing or unclear, ask the user to clarify which phase was interrupted.
+
 ## Dependencies
 
 **idea-mcp** (required):
@@ -61,9 +97,9 @@ hardcode which devices are supported; let the tool decide.
 - `getErrorsAndWarnings` — validate configuration after changes
 - `save` — persist changes and regenerate artifacts
 
-**ti-asm-mcp** (recommended):
-- Device TRM access to confirm register/peripheral intent (e.g. PWM X-BAR routing or
-  device-level sync behavior) when the live tools leave it ambiguous.
+**ti-asm-mcp** (required):
+- Device TRM access via `list_trm_headings()`, `get_trm_section()` to determine MCPWM
+  instance channel counts (Phase 1, Step 6).
 
 ## How to run this workflow
 
