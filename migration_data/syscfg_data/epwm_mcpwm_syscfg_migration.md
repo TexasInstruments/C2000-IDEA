@@ -2,13 +2,15 @@
 
 ## Limitation: this file assumes one EPWM instance maps to pair 1 of one MCPWM instance
 
-This is the one thing to watch for. A single MCPWM instance has **three**
-PWM output pairs (1A/1B, 2A/2B, 3A/3B) sharing one time-base counter, and a
-real migration very often consolidates **multiple** EPWM instances onto
-the pairs of a **single** MCPWM instance (that's the whole reason MCPWM
-exists -- more outputs per instance). This file has no awareness of that
-at all, because -- as noted above -- it's generated from the module
-schemas, not from any project with actual instances and groupings.
+This is the one thing to watch for. A single MCPWM instance can have **up to three**
+PWM output pairs (1A/1B, 2A/2B, 3A/3B when present) sharing one time-base counter.
+The actual channel count per instance depends on the target device and instance number —
+always query the device's Technical Reference Manual via ti-asm-mcp to determine actual
+capacity. A real migration very often consolidates **multiple** EPWM instances
+onto the pairs of a **single** MCPWM instance (that's the whole reason MCPWM exists --
+more outputs per instance). This file has no awareness of that at all, because -- as noted
+above -- it's generated from the module schemas, not from any project with actual instances
+and groupings.
 
 Concretely, verified directly against the data:
 

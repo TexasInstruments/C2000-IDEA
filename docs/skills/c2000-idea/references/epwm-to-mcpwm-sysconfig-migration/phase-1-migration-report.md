@@ -166,26 +166,50 @@ From the values gathered in Steps 3–4, build the sync topology by hand:
 
 ### Step 6 — Determine target-device MCPWM capacity
 
-Each MCPWM instance always exposes exactly three PWM output pairs (the fixed `1A/1B`, `2A/2B`,
-`3A/3B` naming is baked into every MCPWM instance's action-qualifier configurables) — there's
-no separate "number of pairs" setting to query. What does vary by device is how many separate
-MCPWM instances the target device has. To determine that for the target device:
+Each MCPWM instance can expose **up to** three PWM output pairs — when present, they use the
+fixed naming `1A/1B`, `2A/2B`, `3A/3B` in every MCPWM instance's action-qualifier
+configurables. However, some instances may expose only two pairs (4 channels instead of 6),
+depending on the target device and instance number. **Never guess the channel count per
+instance** — always query the device's Technical Reference Manual via ti-asm-mcp to determine
+the actual capacity.
+
+What also varies by device is how many separate MCPWM instances the target device has. To
+determine both the number of instances and the channel count per instance for the target device:
+
+#### Query the TRM for MCPWM base address table (required)
+
+1. Call `list_devices()` to confirm your target device ID (e.g., `F28E12x`).
+
+2. Call `list_trm_headings(device, limit: 2)` and scan the results for the chapter containing
+   "MCPWM" in its title.
+
+3. Once you've identified the MCPWM chapter number (e.g., `N`), call
+   `list_trm_headings(device, chapter: N, limit: 3)` and look for the section named
+   **"[Peripheral] Registers"** or similar (e.g., "MCPWM Registers").
+
+4. Once you've identified the Registers section (e.g., section `N.M`), call
+   `get_trm_section(device, sectionId: "N.M")` and locate the **"Base Address Table"** within
+   that section.
+
+5. Extract instance information from the base address table:
+   - The table lists each MCPWM instance available on the device.
+   - The register structure name in each row indicates the channel count: `MCPWM_6CH_REGS` = 6
+     channels (3 pairs), `MCPWM_4CH_REGS` = 4 channels (2 pairs).
+   - Record both the instance count and the per-instance channel count.
+
+#### Fallback (if TRM query is not possible)
+
+If you cannot access the TRM via ti-asm-mcp, you may probe SysConfig as a secondary method:
 
 - If a `.syscfg` file already targeting the target device is open (or can be opened) in the
   workspace, call `getModuleInstances` with `moduleIds: ["/driverlib/mcpwm.js"]` (the concrete
-  MCPWM module id) to see what's already present, then `addModuleInstances` with
-  `moduleIds: ["/driverlib/mcpwm.js"]` repeated once per extra instance you want to test, and
-  `maxConfigurables: 0` (skip the representative-config payload — you only care whether the
-  add succeeds) to discover how many the device supports. It will return an error instead of
-  an added instance once you exceed the hardware count.
-  **Do not call `save` during this probe** — added test instances stay in-memory only and are
-  discarded once the MCP client disconnects; calling `save` would actually write them into
-  that file, which is a real, user-visible change to a project you were only supposed to be
-  inspecting.
-- If no such file exists yet, note this as a gap in the report rather than guessing a
-  pair/instance count — the target device's data sheet or TRM (via ti-asm-mcp) is the
-  authoritative source, and this phase's job is the EPWM-side analysis, not confirming target
-  hardware limits from scratch.
+  MCPWM module id) to enumerate the instances the device supports. However, this does not
+  directly reveal per-instance channel counts — use the TRM query above as your primary source.
+
+#### Record in the report
+
+Once you've determined the MCPWM capacity (instance count and per-instance channel counts),
+proceed to Step 7.
 
 ### Step 7 — Produce the report
 
