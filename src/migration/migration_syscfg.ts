@@ -95,6 +95,8 @@ export async function migrationSyscfgGetAgentReport(
 	}
 
 	sections.push(`## SysConfig Mapping Table ${modulePair} (${sourceDevice} → ${targetDevice})`);
+	sections.push("Requested ids: [" + (configNames?.join(", ") || "ALL") + "]");
+
 
 	// Render the filtered database as a Markdown table.
 	const esc = (value: string): string => value.replace(/\s*\r?\n\s*/g, " ").replace(/\|/g, "\\|").trim();
