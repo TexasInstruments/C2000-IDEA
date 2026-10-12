@@ -1,7 +1,7 @@
 # Phase 5 — Pin Report
 
 > You are in **Phase 5**, the final phase of the pinout analysis. Re-read `c2000-pinout.md`
-> for the Phase 2–4 results before starting.
+> for the Phase 1–4 results before starting.
 
 ---
 
@@ -24,7 +24,7 @@ Record each finding with its pin, GPIO and sources:
 | `CONFLICT: core` | One GPIO is assigned to two cores. |
 | `FLAG` | Carried from Phases 2–4: not bonded on the package, system-pin overlap, ADC channel without a pin. |
 | `UNRESOLVED` | Carried from Phases 2–3. |
-| `NOTE` | Carried from Phase 4. |
+| `NOTE` | Carried from Phases 1, 2 and 4. |
 
 An analog pin shared by several ADC modules (e.g. `A2/ B6/ C9`) and sampled by more than one
 of them is not a conflict; list each module and channel.
