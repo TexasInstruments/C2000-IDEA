@@ -7,8 +7,8 @@ interpret — stop and ask the user.** Do not guess, retry blindly, or skip the 
 
 ### Rules for this phase
 
-- Do take the device family from `get_projects()` and the package from the `.syscfg` header
-  or the user — never infer a package from a part number.
+- Do take the device family from `get_projects()` and the package from the sources in 1.4 —
+  never infer a package from a part number.
 - Do keep the project unchanged.
 
 ---
@@ -43,15 +43,25 @@ C2000Ware path.
 
 ## 1.4 SysConfig file and package
 
-List the `.syscfg` files in the project `location`.
+List the `.syscfg` files in the project `location`. If there are several, ask the user which
+one the active build configuration uses.
 
-- **One `.syscfg`:** read its header line `@cliArgs` and take the `--package` value. Strip a
-  `<Family>_` prefix if present (`--package "F28004x_100PZ"` → `100PZ`). Record the
-  `--context` value as well when present (`CPU1`, `CPU2`, `system`).
-- **Several `.syscfg` files:** ask the user which one the active build configuration uses.
-- **No `@cliArgs` header, or no `.syscfg`:** list the family's pinout files (1.5) and ask:
-  > *"Which package is this board built with? The available packages for `<family>` are:
-  > `<list>`."*
+Take the package from the first of these that is present — SysConfig applies them in this
+order:
+
+1. `--package` in the `.syscfg` header line `@v2CliArgs`.
+2. The `com.ti.ccstudio.buildDefinitions.sysConfig.PACKAGE` option `value` in
+   `<location>/.cproject`, inside `<configuration … name="<active build configuration>">`.
+3. `--package` in the `.syscfg` header line `@cliArgs`.
+4. None: list the family's pinout files (1.5) and ask:
+   > *"Which package is this board built with? The available packages for `<family>` are:
+   > `<list>`."*
+
+Strip a `<Family>_` prefix (`F28004x_100PZ` → `100PZ`). If two sources give different
+packages, record `NOTE: package <used> from <source>; <other source> gives <other>`.
+
+Record the `--context` value from `@v2CliArgs`, else `@cliArgs`, when present (`CPU1`, `CPU2`,
+`system`).
 
 ## 1.5 Pinout file
 
@@ -99,7 +109,7 @@ Create `c2000-pinout.md` in the project `location`:
 | Project directory | `<location>` |
 | Device family | `<family>` |
 | Device | `<device.name>` |
-| Package | `<package>` (`<from .syscfg header | user>`) |
+| Package | `<package>` (`<@v2CliArgs | .cproject | @cliArgs | user>`) |
 | SysConfig file | `<path>` / none |
 | SysConfig context | `<CPU1 | CPU2 | system | none>` |
 | Active build configuration | `<name>` |
@@ -129,6 +139,7 @@ Create `c2000-pinout.md` in the project `location`:
 
 ---
 
-**Phase 1 complete.** Show the user the device family, package and pinout file, and ask:
+**Phase 1 complete.** Show the user the device family, package, pinout file and any package
+`NOTE`, and ask:
 *"Is `<family>` in the `<package>` package correct? Every pin number depends on it."* Wait for
 confirmation, then return to `pinout-analyzer.md` and proceed to Phase 2.

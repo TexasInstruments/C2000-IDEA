@@ -25,7 +25,7 @@ change or a device migration. It covers:
 1. **Project** — the CCS project to analyze.
 
 The device family and package are derived in Phase 1. Ask only for the package, and only when
-the project has no `.syscfg` that states it.
+neither the `.syscfg` header nor the project's SysConfig settings state it.
 
 ## Dependencies
 
