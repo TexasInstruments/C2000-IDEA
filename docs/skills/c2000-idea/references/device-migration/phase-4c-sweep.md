@@ -9,7 +9,7 @@
 ## Your assignment
 
 Perform a final sweep across all migrated files to confirm zero remaining migration
-issues, then execute a clean rebuild to confirm the full project compiles with no errors.
+issues, then build the project to confirm it compiles with no errors.
 
 **Stop and ask the user** if any MCP tool call fails or returns an unexpected result.
 
@@ -24,7 +24,9 @@ issues, then execute a clean rebuild to confirm the full project compiles with n
 | Source device | `<e.g. F28003x>` |
 | Target device | `<e.g. F28P55x>` |
 | Active build config | `<e.g. CPU1_FLASH>` |
+| `c2000ware_path` | `<absolute path to C2000Ware root>` |
 | `sysConfigOutputLocation` | `<path — do not run migration report on files here>` |
+| Migration guide HTML | `<path, or "DOWNLOAD FAILED">` |
 | All `.h` and `.c` files migrated | `<list from Phase 4A and 4B logs>` |
 
 ---
@@ -154,22 +156,27 @@ symbol inventory (which would be impractical for large files).
    ```
 
 > **Scope:** Only check context windows around lines that were actively fixed. Do not
-> attempt a full-file symbol inventory — the clean build in Step 5 is the authoritative
+> attempt a full-file symbol inventory — the final build in Step 5 is the authoritative
 > final correctness check. This step catches obvious edit artifacts before the build.
 
 ---
 
-## Step 5 — Clean rebuild (required)
+## Step 5 — Final build (required)
 
 WARNING: **This step is mandatory before declaring Phase 4 complete.**
 
-Call `buildProject` on the target project. 
+Call `buildProject` on the target project. If it returns `status: running`, call
+`waitForResult` with the `taskId` until it completes. Record PASS or FAIL only from a
+completed result.
 
 ```
 buildProject(<target project name>) 
 ```
 
 If the build passes: record `Final clean build: PASS` in `c2000-migration.md`.
+
+Search the build output for `#10247-D`. For each, record
+`REVIEW-REQUIRED: linker section <section> — no placement in the target linker command file`.
 
 If the build fails: record `Final clean build: FAIL — <X> errors` in
 `c2000-migration.md`. **Do not attempt further fixes here** — return the FAIL result to
@@ -211,6 +218,8 @@ Final sweep: CLEAN / PARTIAL
 Issues resolved in sweep: <N>
 DEFERRED-MANUAL items: <K>
 Final clean build: PASS / FAIL   ← orchestrator reads this field to decide whether to dispatch Phase 4D
+Build errors: <`errors` array from the final buildProject result, or "none">
+Build log: <outputFilePath from the final buildProject result, or "inline">
 
 Phase 4C overall:
   Files migrated: <total>

@@ -133,10 +133,10 @@ If no write capability is available, stop and tell the user to create the file m
 
 This file is the persistent migration log for this target project.
 
-> **WARNING: `c2000-migration.md` is append-only — never overwrite the prior phase sections:**
-> Every phase appends its results to this file. When updating the log in any phase:
-> - The only exception is the initial creation here in step 1.9 — this is the one and only
->   time the file is created (written from scratch). After this point, all writes are appends.
+> **WARNING: `c2000-migration.md` is append-only — never overwrite it or remove a prior phase's section.**
+> Step 1.9 is the only time the file is written from scratch. After that, add each phase's
+> results as new sections; the only in-place edits are rows of the Phase Status table and the
+> file progress table.
 
 Seed the log using this exact template — fill in every `<placeholder>`:
 
@@ -176,6 +176,8 @@ Seed the log using this exact template — fill in every `<placeholder>`:
 | Phase 2 — Settings | `PENDING` | |
 | Phase 3 — SysConfig | `PENDING` | |
 | Phase 4 — Migrate Code | `PENDING` | |
+| Phase 4C — Sweep | `PENDING` | |
+| Phase 4D — Build Triage | `PENDING` | |
 | Phase 5 — Report | `PENDING` | |
 ```
 

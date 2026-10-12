@@ -34,7 +34,9 @@ orchestrator before proceeding:
 | Target device | `<e.g. F28P55x>` |
 | Migration approach | Approach 1 (`#ifdef`) OR Approach 2 (clean replacement) |
 | Active build config | `<e.g. CPU1_FLASH>` |
+| `c2000ware_path` | `<absolute path to C2000Ware root>` |
 | `sysConfigOutputLocation` | `<path — do not edit any file under this folder>` |
+| Migration guide HTML | `<path, or "DOWNLOAD FAILED">` |
 | List of `.h` files to migrate | `<paths provided by orchestrator>` |
 
 > **REQUIRED: Two checks before touching any file:**

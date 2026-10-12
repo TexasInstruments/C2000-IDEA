@@ -32,9 +32,10 @@ or invent values.
 | `sourceDevice` | Source device name (matches a `list_migration_devices()` entry, e.g. `F28003x`) | Phase 1 |
 | `targetDevice` | Target device name (matches a `list_migration_devices()` entry, e.g. `F28P55x`) | Phase 1 |
 | `c2000ware_path` | Absolute path to the C2000Ware root | Phase 1 (SDK resolution) |
-| `activeBuildConfig` | Active build configuration name (e.g., `CPU1_FLASH`) | Phase 2 (getToolFlags) |
-| `sysConfigOutputLocation` | SysConfig-generated output folder path | Phase 3 (getProjectDescriptors) |
-| `buildErrorOutput` | Full verbatim error output from Phase 4C's final buildProject call | Phase 4C structured result |
+| `activeBuildConfig` | Active build configuration name (e.g., `CPU1_FLASH`) | Phase 2 (getProjectDescriptors) |
+| `sysConfigOutputLocation` | SysConfig-generated output folder path | Phase 2 (getProjectDescriptors) |
+| `buildErrorOutput` | `errors` array from Phase 4C's final buildProject result | Phase 4C structured result |
+| `buildLog` | Copy of Phase 4C's build log, or `inline` | Phase 4 orchestrator (Step 4.5) |
 | `migrationLogSummary` | Phase 4 progress table and deferred-errors list from c2000-migration.md | Phase 4C structured result |
 
 > **`sysConfigOutputLocation` — read-only guard:**
@@ -50,7 +51,7 @@ or invent values.
 The orchestrator provides you with:
 - Target project name
 - Source and target device names
-- The build error output from Phase 4C's final `buildProject()` call
+- The `errors` array from Phase 4C's final `buildProject()` result
 - The current `c2000-migration.md` contents (for context)
 
 ---
@@ -77,10 +78,8 @@ Call `buildProject(<target project name>)` to get the **current** error output.
 > Even if the orchestrator provided a prior error list, call `buildProject()` fresh —
 > Phase 4C may have partially resolved some errors that are no longer present.
 
-Parse the output into individual error entries. For each entry, note:
-- File path and line number
-- Error message text
-- Error code (if provided by the compiler)
+Take the entries with `severity: "error"` from the `errors` array in the result. Each
+carries `uri`, `line` and `message`.
 
 Record the error count:
 ```
@@ -98,7 +97,7 @@ For each error, assign it to one of the four categories below. A single error ma
 exactly one category — use the first matching rule.
 
 ### Category A — Missing include / file not found
-**Pattern:** `fatal error: <header>.h: No such file or directory`
+**Pattern:** `fatal error #1965: cannot open source file "<header>.h"`
 
 **Fix strategy:**
 1. Check whether the missing header name contains the **source device name** (e.g.,
@@ -112,7 +111,10 @@ exactly one category — use the first matching rule.
    `Category A: no replacement found for <header>.h`
 
 ### Category B — Undefined symbol (function or variable)
-**Pattern:** `undefined reference to '<symbol>'` or `error: '<symbol>' undeclared`
+**Pattern:** `error #20: identifier "<symbol>" is undefined`, or
+`error #10234-D: unresolved symbols remain` with `<symbol>` listed under
+`undefined  first referenced` in the build log. If the build log also has
+`warning #225-D: function "<symbol>" declared implicitly`, use Category C.
 
 **Fix strategy:**
 1. Call `get_device_migration_report(<file path>, <source device>, [<target device>])`
@@ -126,8 +128,8 @@ exactly one category — use the first matching rule.
    `Category B: no authoritative replacement for '<symbol>'`
 
 ### Category C — Deprecated or renamed API
-**Pattern:** `error: implicit declaration of function '<api>'` or
-`warning-as-error: '<api>' is deprecated`
+**Pattern:** `warning #225-D: function "<api>" declared implicitly` for a function the
+link reports under `error #10234-D: unresolved symbols remain`
 
 **Fix strategy:**
 1. Call `get_device_migration_report(<file path>, <source device>, [<target device>])`
@@ -140,8 +142,8 @@ exactly one category — use the first matching rule.
    `Category C: peripheral absent on target — <api>`
 
 ### Category D — Linker / memory map error
-**Pattern:** `error: region '<region>' overflowed by <N> bytes` or
-`undefined symbol: <section>` in linker output
+**Pattern:** `error #10099-D: program will not fit into available memory` or
+`error #10080-D: length not specified for memory range <region>`
 
 **Fix strategy:**
 1. This is out of scope for automated symbol replacement. Do **not** modify linker

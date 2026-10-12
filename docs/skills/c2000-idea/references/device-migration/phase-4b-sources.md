@@ -32,6 +32,7 @@ orchestrator before proceeding:
 | Active build config | `<e.g. CPU1_FLASH>` |
 | `c2000ware_path` | `<absolute path to C2000Ware root>` |
 | `sysConfigOutputLocation` | `<path — do not edit any file under this folder>` |
+| Migration guide HTML | `<path, or "DOWNLOAD FAILED">` |
 | Deferred-errors context | Any errors from previous files pointing to this file |
 
 > **REQUIRED: Verify migration approach from `c2000-migration.md` before touching the file:**

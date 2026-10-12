@@ -29,10 +29,15 @@ apply mismatches to the target.
 Call `getProjectDescriptors` with properties `activeBuildConfiguration` and `buildConfigurationIndex` on the **source** project and identify which build configuration it actively uses (typically `CPU1_FLASH` or `Debug`).
 
 Apply all Phase 2 settings to **that same configuration** in the target. Do not apply
-settings to a different build config by mistake.
+settings to a different build config by mistake. Pass that configuration name as
+`configuration` on every `getToolFlags` call, for both projects, and as
+`applicableConfigurations: [<name>]` on every `setToolFlags` call.
 
-**Update `c2000-migration.md`:** with active build configuration info. If the build configuration is tied to RAM or FLASH, make a note of this as
-it will be important when implementing the linker cmd file.
+**Update `c2000-migration.md`:**
+```
+Active build config: <configuration name>
+Active build config memory: <RAM | FLASH | not tied>
+```
 
 **For every step in this phase:** before applying any change, tell the user what you
 found (source value vs. target value) and what you plan to apply.
@@ -95,10 +100,11 @@ You must actively inspect the source SysConfig — do not guess from file names 
 
 1. Call `openFile` (ccs-sysconfig MCP) on the **source** project's `.syscfg` file path
    (obtain it from `getProjectDescriptors`).
-2. Call `getModuleInstances` and look for a module whose name contains `"CMD"` or
-   `"linkerCommandFile"` (exact module ID may vary — match case-insensitively).
-3. If such a module instance exists → **CMD module** style. If not → **Plain `.cmd`** style.
-4. Call `closeFile` on the source syscfg immediately after detection — never leave it open.
+2. Call `getModuleInstances` and look for the `moduleId`
+   `/utilities/cmd_tool/cmd_syscfg/source/CMD`.
+3. If an instance of it exists → **CMD module** style. If not → **Plain `.cmd`** style.
+4. While the file is open, record the source clocks (step 2.11).
+5. Call `closeFile` on the source syscfg immediately after detection — never leave it open.
 
 **If the ccs-sysconfig MCP is not available** (Phase 0 soft-warned it): you cannot inspect
 the source `.syscfg`, and the rule above still holds — do not infer the style from file
@@ -128,9 +134,31 @@ or
 Source linker style: <CMD module | plain .cmd> (user-supplied — ccs-sysconfig MCP unavailable)
 ```
 
-**If the source uses a CMD module:** no linker file work in this phase. The
-target keeps a CMD module in its syscfg, and the sections are reconciled during the SysConfig
-migration (Phase 3). Skip the rest of this step.
+**Source linker sections (both styles):**
+
+Map file: the `-m` / `--map_file` name in the source linker flags (step 2.4), in the source
+project's `buildDirectoryLocation` (`getProjectDescriptors`).
+- Map file exists: use it.
+- Otherwise: call `buildProject` on the source project and `waitForResult` until it
+  completes. If the build fails, change nothing to make it pass. Continue without sizes and
+  record `REVIEW-REQUIRED: source map unavailable — section sizes not checked`.
+
+From `SECTION ALLOCATION MAP`, record every output section with a non-zero length: name, the
+input section names in parentheses, origin, length, and `RUN ADDR` when present. Add
+`.text.1`, `.text.2`, … into one `.text` entry. Classify each origin and `RUN ADDR` by the
+source region that contains it, using `memoryRanges` in
+`<c2000ware_path>/utilities/cmd_tool/cmd_syscfg/source/.meta/<source-device>_memoryInfo.js`.
+
+Record every `.cmd` file the source links in the active build configuration, then:
+```
+## Source linker sections
+Map: <path> / unavailable
+Source linker files: <file>, <file>
+| Section | Input sections | Region (group) | Length | Run region |
+|---|---|---|---|---|
+```
+
+**If the source uses a CMD module:** the sections are placed in Phase 3D. Skip the rest of this step.
 
 **If the source uses a plain `.cmd` file:** set up the target's plain `.cmd` file now, using
 the SDK's target-device reference as the starting point. (Phase 3 will remove the CMD
@@ -141,44 +169,49 @@ module from the target syscfg so it does not generate a competing linker file.)
 The reference cmd files are located at:
 `<c2000ware_path>/device_support/<target-device>/common/cmd/`
 
-List all files in the cmd directory and identify the two key reference files:
-- The **RAM** linker cmd — file name ends with `_generic_ram_lnk.cmd`
-- The **flash** linker cmd — file name ends with `_generic_flash_lnk.cmd`
+The two reference files:
+
+| Target device | RAM linker cmd | Flash linker cmd |
+|---|---|---|
+| f2837xd | `2837xD_RAM_lnk_cpu1.cmd` | `2837xD_FLASH_lnk_cpu1.cmd` |
+| f2837xs | `2837xS_Generic_RAM_lnk.cmd` | `2837xS_Generic_FLASH_lnk.cmd` |
+| f2807x | `2807x_Generic_RAM_lnk.cmd` | `2807x_Generic_FLASH_lnk.cmd` |
+| f2838x | `2838x_RAM_lnk_cpu1.cmd` | `2838x_FLASH_lnk_cpu1.cmd` |
+| f28p65x | `28p65x_generic_ram_lnk_cpu1.cmd` | `28p65x_generic_flash_lnk_cpu1.cmd` |
+| All other devices | name ends with `_generic_ram_lnk.cmd` | name ends with `_generic_flash_lnk.cmd` |
 
 Read both files for context before reconciliation. If the build configuration selected in 2.0 is 
 tied to RAM or FLASH, use mainly the content from that linker cmd file. 
-Otherwise, ask the user for confirmation on which one to prioritize. If user is unused, default to FLASH.
+Otherwise, ask the user for confirmation on which one to prioritize. If user is unsure, default to FLASH.
 
 **Reconciliation:**
 
-Port user customizations from the source cmd onto the target device's cmd file:
-- The sections in the target should match the source project.
-- The memory regions assigned to sections should match as closely as possible.
-- Use the target device's RAM and flash cmd files as the ground truth for valid memory
-  regions and addresses on the target device.
-- **If a source section cannot be mapped** to any memory region in the target cmd file
-  (e.g., a memory block that does not exist on the target device), flag it to the user
-  — do not silently drop the section or invent a region name.
-- Memory regions are based on the Hardware of the source and target device, you cannot
-  add new regions that dont physically exist on the device hardware
-- If on the source device, sections were mapped to regions that dont exist on the target,
-  other similar regions should be used instead
-- Some sections are only relevant because of the presence of a peripheral or certain type of
-  memory, those sections can be dropped but must be noted in the `c2000-migration.md`.
-  Examples are these are MUTLI-CORE memory sections and regions, GSRAM availability, 
-  CAN message RAMs, etc.
+Read `linker-placement.md` and place every source section by its placement rules. Start from
+the reference file and keep its `MEMORY` block. Keep every linker symbol the source `.cmd`
+defines (`LOAD_START`, `RUN_START`, `LOAD_SIZE`, …). Without a CMD module, `Device_init()`
+copies `.TI.ramfunc` using `RamfuncsLoadStart`, `RamfuncsLoadSize` and `RamfuncsRunStart` on
+`_FLASH` builds.
 
 **Write the final CMD file:**
 
 After all decisions are made, write exactly one linker cmd file to the target project —
 the one matching the active build configuration from step 2.0. Do NOT write a second cmd
 file for the other configuration; reading both reference files for context does not mean
-writing both. Delete any other `_generic_ram_lnk.cmd` or `_generic_flash_lnk.cmd` files
-already present in the target project directory — the imported starter ships with both,
-and leaving them causes duplicate MEMORY region errors at link time.
+writing both. Delete any other RAM or flash linker cmd file from the table above already
+present in the target project directory — leaving it causes duplicate MEMORY region errors
+at link time.
 - For the name of the cmd file created in the target project, match the name with the source 
   project's linker cmd file name (replace any device name mentions with the target device 
   name).
+
+**Remove `device_cmd.cmd.genlibs` from the target linker options:**
+
+If the target's linker flags for the active build configuration (`getToolFlags`) contain
+`device_cmd.cmd.genlibs`, delete its `<listOptionValue value="device_cmd.cmd.genlibs"/>` line
+from that configuration in the target project's `.cproject`, then read the flags back with
+`getToolFlags`. If it is still listed, stop and tell the user. Without the CMD module the
+file is not generated, and the link fails with
+`error #10008-D: cannot find file "device_cmd.cmd.genlibs"`.
 
 ## 2.6 Libraries
 
@@ -198,6 +231,7 @@ that should come from the new SDK (ignore these). Use these heuristics:
 - **Files referenced from SDK paths** are device/library files — ignore them.
 - **SDK files copied into the project** — sometimes `device.c`/`device.h` or driverlib
   files are copied into the project. These are easily detectable by name and should be ignored.
+- **Linker command files (`.cmd`)** — do not copy; step 2.5 writes the target's.
 - **SysConfig-generated files** — ignore these; they are regenerated after SysConfig
   migration. Detect them using CCS Project MCP:
   - Use `sysConfigOutputLocation` from `getProjectDescriptors` to find the SysConfig
@@ -264,6 +298,61 @@ Confirm with the user by showing the source and target project's folder structur
    ```
    Phase 2 settings verification: PASS — all applied settings confirmed via read-back.
    ```
+
+## 2.11 Source clock configuration
+
+### Source `.syscfg` has `device_support`
+(`/driverlib/device_support.js` in `getModuleInstances`)
+
+Done in step 2.5 (detection step 4), while the source `.syscfg` is open.
+
+Call `getClockTreeInstances`, then `traceClockSignal` (`toPin: "out"`) on every instance of
+type `NamedConnection`. Read `OSCCLKSRCSEL` and `XTAL_OR_X1` with `getInstanceConfiguration`.
+If the ccs-sysconfig MCP is unavailable, read OSCCLK, SYSCLK and LSPCLK from the
+`clocktree.h` in the source's `sysConfigOutputLocation`.
+
+### Otherwise — find the clock code by content, not by file name
+
+Search every source and header file from the inventory (2.7) and the include paths (2.3) for:
+
+- Calls: `SysCtl_setClock`, `SysCtl_setAuxClock`, `SysCtl_setLowSpeedClock`,
+  `SysCtl_setEPWMClockDivider`, `SysCtl_setMCANClk`, `CAN_selectClockSource`,
+  `SysCtl_setCLBClk`, `SysCtl_setCLBClkDivider`
+- Clock registers: `CLKSRCCTL1`, `CLKSRCCTL2`, `SYSPLLMULT`, `SYSCLKDIVSEL`, `LOSPCP`,
+  `PERCLKDIVSEL`, `AUXCLKDIVSEL`, `CLBCLKCTL`
+
+Use call sites and register writes only. Skip the definitions in driverlib `sysctl.c`/`sysctl.h`.
+Resolve each argument through its `#define`s, taking the `#if` branch that the project's
+predefined symbols (2.2) select.
+
+Frequencies:
+- Oscillator source: from the `SYSCTL_OSCSRC_*` value.
+- Internal oscillator frequency: `SYSCTL_DEFAULT_OSC_FREQ` (`SYSCTL_DEFAULT_SYSOSCDIV4_FREQ`
+  for SYSOSCDIV4) in `<c2000ware_path>/driverlib/<source-device>/driverlib/sysctl.h`.
+- External clock frequency: the macro passed to `SysCtl_getClock` or `DEVICE_OSCSRC_FREQ`.
+  If no macro states it, calculate it from the PLL settings and `DEVICE_SYSCLK_FREQ`.
+- SYSCLK, LSPCLK and the other clocks: calculate them from the oscillator frequency and the
+  resolved multiplier and divider values.
+
+A value the application sets after the main clock setup replaces the earlier value.
+
+### Not determined
+
+If the search finds no clock setup, finds only a precompiled library, or the results
+conflict, ask the user:
+> *"I could not determine the source clock configuration. What are the source oscillator
+> (internal / crystal / external oscillator) and its frequency, SYSCLK, and LSPCLK?"*
+
+Record:
+```
+## Source clock configuration
+Found in: <syscfg | file:line, …>
+Oscillator: <INTOSC2 | SYSOSCDIV4 | XTAL | X1> <f> MHz
+| Clock | Frequency |
+|---|---|
+| SYSCLK | <f> MHz |
+| <clock> | <f> MHz |
+```
 ---
 
 **Update `c2000-migration.md`:** Record Phase 2 as COMPLETE. Log the settings compared and

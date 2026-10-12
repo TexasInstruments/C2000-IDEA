@@ -153,10 +153,11 @@ confirmed present.
 
 **Exclude the build output folder first:** the project-level report walks the whole project,
 including build output. Call `update_project_file_folder_exceptions` with the target project
-name, `operation: "add"`, and `paths: [<buildDirectoryLocation>]` — take
-`buildDirectoryLocation` from `getProjectDescriptors`; it is relative to the project root and
-need not exist yet. Use `"add"`, never `"set"`: `"set"` replaces the entire list and would
-discard exceptions the user configured.
+name, `operation: "add"`, and `paths: [<build directory, relative to the project root>]`.
+`getProjectDescriptors` returns `buildDirectoryLocation` as an absolute path: strip the target
+project directory from the front of it (e.g. `CPU1_RAM`). The folder need not exist yet. Use
+`"add"`, never `"set"`: `"set"` replaces the entire list and would discard exceptions the user
+configured.
 
 Call `get_project_migration_report(<target project name>, <source device>, [<target device>])`,
 passing the source and target devices from `c2000-migration.md` (matching the
@@ -314,7 +315,8 @@ briefing template. Fill out all fields, including the complete deferred-errors l
 
 1. Check whether Phase 4C reported a **clean build (0 errors)** or a **non-passing build**.
 2. Aggregate all totals across 4A + 4B + 4C so far.
-3. If `Final clean build: PASS` → proceed directly to Step 4.6.
+3. If `Final clean build: PASS` → set the `Phase 4D — Build Triage` row to `NOT NEEDED` and
+   proceed directly to Step 4.6.
 4. If `Final clean build: FAIL` → proceed to Step 4.5 (build error triage).
 
 ---
@@ -326,9 +328,12 @@ STOP: **Do not read `phase-4d-build-triage.md` yourself. Send it to the sub-agen
 
 If Phase 4C's final `buildProject()` call returned errors, dispatch a Phase 4D sub-agent:
 
-1. Pass the Phase 4C build error output verbatim in the briefing.
-2. Pass the current `c2000-migration.md` contents for context.
-3. Use the standard sub-agent briefing format from
+1. Pass the `errors` array from Phase 4C's `buildProject` result in the briefing.
+2. If that result has an `outputFilePath`, copy the file to
+   `<targetProjectDir>/phase-4c-build.log` and pass the copy's path in the briefing.
+   Otherwise pass `inline`.
+3. Pass the current `c2000-migration.md` contents for context.
+4. Use the standard sub-agent briefing format from
    [`phase-4-sub-agent-briefing.md`](phase-4-sub-agent-briefing.md), with:
    - Instruction file: `phase-4d-build-triage.md`
    - Target project name, source device, target device (as usual)
@@ -349,7 +354,7 @@ If Phase 4C's final `buildProject()` call returned errors, dispatch a Phase 4D s
 
 Update `c2000-migration.md`:
 ```
-| Phase 4 — Code | COMPLETE | <N files> migrated, <M issues> fixed, clean build <PASS/FAIL with manual items> |
+| Phase 4 — Migrate Code | COMPLETE | <N files> migrated, <M issues> fixed, clean build <PASS/FAIL with manual items> |
 ```
 
 Present a complete summary to the user:

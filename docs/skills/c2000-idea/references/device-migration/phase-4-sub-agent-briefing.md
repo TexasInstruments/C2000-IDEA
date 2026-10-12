@@ -166,8 +166,10 @@ Briefing:
   Active build config      : <e.g. CPU1_FLASH>
   sysConfigOutputLocation  : <path — from getProjectDescriptors; do not edit files here>
 
-  Build error output from Phase 4C (verbatim):
-    <paste the full buildProject error output here>
+  Build errors from Phase 4C:
+    <paste the `errors` array from the buildProject result>
+  Build log from Phase 4C:
+    <path to the copied Phase 4C build log, or "inline">
 
   c2000-migration.md current content (summary):
     <paste the Phase 4 progress table and deferred-errors list>
