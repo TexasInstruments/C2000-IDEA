@@ -26,6 +26,10 @@ Call `getProjectDescriptors` (`nameFilter` = the project name) and record `locat
 From the Phase 0 `get_projects()` result, take the project's `currentDevice` (e.g. `F28P55x`).
 This is the device family used for every file name below.
 
+If the project is not in the result, its `currentDevice` is empty, or it is an F29x family,
+stop and tell the user: *"This workflow covers F28x projects that IDEA detects in the
+workspace."*
+
 Cross-check: the family name without its trailing `x` (e.g. `F28P55`) must appear in
 `device.name` from 1.1 (e.g. `TMS320F28P550SJ9`), case-insensitively. If it does not, stop
 and ask the user which device the project targets.
@@ -55,8 +59,7 @@ The pinout file is `references/pinout/pinout-md/<family>_<package>.md` in the `c
 skill folder, both lowercase (e.g. `f28p55x_100pz.md`).
 
 If it does not exist, list the files that start with `<family>_` and ask the user to pick the
-package. If none exist for the family, tell the user that pins can be reported by GPIO number
-only, without package pin numbers, and continue.
+package.
 
 Read the file. Each row is one package pin:
 
