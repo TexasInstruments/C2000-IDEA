@@ -71,6 +71,8 @@ Read the generated `board.h` and `board.c` the same way as `pinmux.csv` (or from
 | `GPIO_setControllerCore(pin, core)` | Owning core |
 | `GPIO_setInterruptPin(pin, xint)` | External interrupt input |
 | `XBAR_setInputPin(…, input, pin)` | Input X-BAR source |
+| `ADC_setVREF(base, mode, refVoltage)` | ADC reference: `ADC_REFERENCE_INTERNAL` / `_EXTERNAL`, voltage |
+| `ASysCtl_setAnalogReferenceInternal`, `…External`, `…VDDA` | Analog reference mode and the modules it applies to |
 
 ## 2.4 ADC channels
 
@@ -108,8 +110,12 @@ If the file does not exist, record `Pin table: not available` and rely on Phase 
 
 ## 2.7 Clock source
 
-Call `getInstanceConfiguration` for the clock-tree muxes `OSCCLKSRCSEL` and `XTAL_OR_X1`
-(`moduleId: "/driverlib/clocktree/mux.js"`) and record each `inputSelect`:
+Call `getModuleInstances`. If it does not list `/driverlib/device_support.js`, the clock tree
+is not used and its muxes read defaults — record `Clock source: from code (Phase 4)` and go
+to 2.8.
+
+Otherwise call `getInstanceConfiguration` for the clock-tree muxes `OSCCLKSRCSEL` and
+`XTAL_OR_X1` (`moduleId: "/driverlib/clocktree/mux.js"`) and record each `inputSelect`:
 
 | `OSCCLKSRCSEL` | `XTAL_OR_X1` | External clock pins |
 |---|---|---|
@@ -141,7 +147,8 @@ SysConfig errors: <none | list>
 | Module | Base | Field | Pin |
 |---|---|---|---|
 
-Clock source: <internal | crystal on X1/X2 | single-ended on X1>
+ADC reference: <per module: internal | external | VDDA, voltage>
+Clock source: <internal | crystal on X1/X2 | single-ended on X1 | from code (Phase 4)>
 ```
 
 followed by any `FLAG:` lines, and set Phase 2 to COMPLETE in the Phase Status table.

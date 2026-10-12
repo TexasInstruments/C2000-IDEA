@@ -28,11 +28,12 @@ use that GPIO with a signal other than `TDI`/`TDO`, record
 
 Determine the oscillator source:
 
-- **Phase 2 ran:** use its clock source.
-- **Otherwise:** resolve the oscillator in the `SysCtl_setClock(...)` call of the compiled
-  `device.c` — through `DEVICE_SETCLOCK_CFG` in `device.h`, in the branch the predefined
-  symbols select, or the first argument where the call lists the settings directly. Also
-  record calls to `SysCtl_selectXTAL()` and `SysCtl_selectXTALSingleEnded()` in any scanned file.
+- **Phase 2 read the clock tree:** use its clock source.
+- **Otherwise** (no `.syscfg`, or Phase 2 recorded `from code`): resolve the oscillator in the
+  `SysCtl_setClock(...)` call of the compiled `device.c` — through `DEVICE_SETCLOCK_CFG` in
+  `device.h`, in the branch the predefined symbols select, or the first argument where the
+  call lists the settings directly. Also record calls to `SysCtl_selectXTAL()` and
+  `SysCtl_selectXTALSingleEnded()` in any scanned file.
 
 | Oscillator | Pins |
 |---|---|
@@ -64,9 +65,9 @@ If the TI ASM MCP is not live, record `Boot-mode select pins: not determined`.
 
 When Phases 2–3 recorded any ADC channel, find the rows whose `Name` contains `VREFHI` or
 `VREFLO` (including per-module forms such as `VREFHIA`, `VREFLOB`) and record them. Record the
-reference mode from SysConfig `asysctl.analogReference` (Phase 2) or from calls to
+reference mode from the Phase 2 `ADC reference` record and from calls to
 `ASysCtl_setAnalogReferenceInternal`, `ASysCtl_setAnalogReferenceExternal`,
-`ASysCtl_setAnalogReferenceVDDA` or `ADC_setVREF` (Phase 3 files).
+`ASysCtl_setAnalogReferenceVDDA` or `ADC_setVREF` in the Phase 3 files.
 
 Some small packages bond no `VREFHI`/`VREFLO` pin (e.g. F280013x and F280015x 32RHB). Record
 `VREFHI / VREFLO: not bonded on <package>`; if the code selects an external reference, record
