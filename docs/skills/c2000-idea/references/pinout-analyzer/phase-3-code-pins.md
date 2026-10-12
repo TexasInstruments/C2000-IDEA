@@ -93,4 +93,4 @@ No matching row → the channel is internal or not bonded on this package. Recor
 
 followed by every `FLAG:` and `UNRESOLVED:` line, and set Phase 3 to COMPLETE in the Phase
 Status table. Present a short summary (pins, ADC channels, flags, unresolved), return to
-`SKILL.md` and proceed to Phase 4.
+`pinout-analyzer.md` and proceed to Phase 4.

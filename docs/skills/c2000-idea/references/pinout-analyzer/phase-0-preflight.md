@@ -56,4 +56,4 @@ Pre-flight:
   TI ASM MCP:         <live | not available>
 ```
 
-Return to `SKILL.md` and proceed to Phase 1.
+Return to `pinout-analyzer.md` and proceed to Phase 1.

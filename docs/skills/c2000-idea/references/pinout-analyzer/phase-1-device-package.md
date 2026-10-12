@@ -51,9 +51,8 @@ List the `.syscfg` files in the project `location`.
 
 ## 1.5 Pinout file
 
-The pinout file is:
-`<skills root>/c2000-idea/references/pinout/pinout-md/<family>_<package>.md`, both lowercase
-(e.g. `f28p55x_100pz.md`).
+The pinout file is `references/pinout/pinout-md/<family>_<package>.md` in the `c2000-idea`
+skill folder, both lowercase (e.g. `f28p55x_100pz.md`).
 
 If it does not exist, list the files that start with `<family>_` and ask the user to pick the
 package. If none exist for the family, tell the user that pins can be reported by GPIO number
@@ -129,4 +128,4 @@ Create `c2000-pinout.md` in the project `location`:
 
 **Phase 1 complete.** Show the user the device family, package and pinout file, and ask:
 *"Is `<family>` in the `<package>` package correct? Every pin number depends on it."* Wait for
-confirmation, then return to `SKILL.md` and proceed to Phase 2.
+confirmation, then return to `pinout-analyzer.md` and proceed to Phase 2.

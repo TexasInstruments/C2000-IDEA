@@ -1,7 +1,7 @@
 # Phase 2 — SysConfig Pins
 
 > You are in **Phase 2** of the pinout analysis. Skip this phase when Phase 1 recorded
-> `SysConfig file: none` — set its status to `SKIPPED — no .syscfg` and return to `SKILL.md`.
+> `SysConfig file: none` — set its status to `SKIPPED — no .syscfg` and return to `pinout-analyzer.md`.
 
 **If any MCP tool call fails, returns an unexpected error, or produces a result you cannot
 interpret — stop and ask the user.** Do not guess, retry blindly, or skip the step.
@@ -145,5 +145,5 @@ Clock source: <internal | crystal on X1/X2 | single-ended on X1>
 ```
 
 followed by any `FLAG:` lines, and set Phase 2 to COMPLETE in the Phase Status table.
-Present a short summary (pins, ADC channels, analog pins, flags), return to `SKILL.md` and
+Present a short summary (pins, ADC channels, analog pins, flags), return to `pinout-analyzer.md` and
 proceed to Phase 3.

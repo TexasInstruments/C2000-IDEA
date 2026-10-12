@@ -90,4 +90,4 @@ Some small packages bond no `VREFHI`/`VREFLO` pin (e.g. F280013x and F280015x 32
 ```
 
 followed by every `FLAG:` and `NOTE:` line, and set Phase 4 to COMPLETE in the Phase Status
-table. Present a short summary, return to `SKILL.md` and proceed to Phase 5.
+table. Present a short summary, return to `pinout-analyzer.md` and proceed to Phase 5.
