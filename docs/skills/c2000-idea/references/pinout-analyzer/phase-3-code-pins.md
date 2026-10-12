@@ -14,8 +14,13 @@
 
 ## 3.1 Files to scan
 
-1. Every `.c` and `.h` file under the project `location`, except files under
-   `buildDirectoryLocation` and `sysConfigOutputLocation`.
+1. Every `.c` and `.h` file under the project `location`, except:
+   - files under `buildDirectoryLocation` and `sysConfigOutputLocation`;
+   - paths the active build configuration excludes from the build: in `<location>/.cproject`,
+     inside `<configuration … name="<active build configuration>">`, each
+     `<entry … kind="sourcePath" name="<folder>">` lists them in `excluding="…"`,
+     `|`-separated, relative to `<folder>`;
+   - any `device/driverlib` folder — a copy of the driverlib sources.
 2. The `device.c` the project compiles — it configures pins too. In order of precedence:
    a `device.c` in the project, the generated `<sysConfigOutputLocation>/device.c`, or
    `<c2000ware_path>/device_support/<family>/common/source/device.c`.
@@ -25,7 +30,8 @@ Phase 1 (plus `#define`s seen earlier in the same file) exclude.
 
 ## 3.2 Pin calls
 
-Record every call below with its file and line.
+Record every call below with its file and line. Skip function definitions and declarations of
+the same names.
 
 | Call | Pin argument | Records |
 |---|---|---|
