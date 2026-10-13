@@ -70,7 +70,8 @@ are lowercase in its name (e.g. `f28p55x_100pz.md`).
 
 The report lives in **the project directory**: `c2000-pinout.md`. Phase 1 creates it; each
 phase appends its section; Phase 5 adds the final pin tables. Never overwrite an earlier
-phase's section.
+phase's section. In every table, leave a cell empty when nothing set it, and write `|` inside a
+cell as `\|`.
 
 **If your context is getting long or you feel disoriented, re-read `c2000-pinout.md` to recover
 your position.**
@@ -98,6 +99,8 @@ When an orchestrator dispatches this workflow with a briefing (project, device f
 package), the briefing replaces the user:
 
 - Skip the Phase 1 confirmation gate and the 5.4 question.
+- In Phase 0, run all four probes before stopping, so the result names every server that is
+  down.
 - Never ask or wait for the user. Wherever a step says to ask or stop, end the run and return
   the question to the orchestrator, with the phase and step. A message a step says to tell the
   user goes into the result under `Open questions`.
@@ -106,9 +109,11 @@ package), the briefing replaces the user:
 
 ```
 STATUS: COMPLETE | STOPPED AT <phase.step>
-Report file: <path>
+Report file: <path | none>
+Pre-flight: <each MCP: live | not available>
 Device family / package / package source: <…>
 Summary: <the Phase 5 summary table values>
+Clock source / ADC reference: <…>
 Findings: <every CONFLICT, FLAG, UNRESOLVED and NOTE line, verbatim>
 Open questions: <none | list>
 ```

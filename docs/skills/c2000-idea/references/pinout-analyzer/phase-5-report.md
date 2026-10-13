@@ -70,15 +70,19 @@ Append to `c2000-pinout.md`:
 <every CONFLICT, FLAG, UNRESOLVED and NOTE line>
 ```
 
-`Type` is `digital`, `analog` or `system`. `Pinout name` is the pin's `Name` from the pinout
-file. Sort the pin map by package pin. Write `|` inside a table cell as `\|`.
+`Pinout name` is the pin's `Name` from the pinout file. Sort the pin map by package pin.
 
-A pin is used when it carries a mux signal, an ADC channel, an analog function, an analog-mode
-setting from SysConfig, or a system function. System pins are XRSn, the JTAG pins, the X1/X2
-pins the oscillator uses, the default boot-mode select pins and the VREFHI/VREFLO pins.
-Free GPIO pins are the `GPIO`/`AIO` rows not used by anything else; list a JTAG or boot-mode
-GPIO among them with its system role (e.g. `78: GPIO35 (JTAG TDI)`). Crystal pins in use are
-never free.
+A pin is used when it carries a mux signal, digital I/O, an ADC channel, an analog function, an
+analog-mode setting from SysConfig, or one of these system functions: XRSn, a JTAG pin without a
+GPIO, the X1/X2 pins the oscillator uses, VREFHI/VREFLO. A JTAG or default boot-mode select pin
+that is also a GPIO is not used on its own: list it under free GPIO pins with its role (e.g.
+`78: GPIO35 (JTAG TDI)`). Free GPIO pins are the `GPIO`/`AIO` rows of pins not used. Crystal
+pins in use are never free.
+
+Each used pin has one `Type`, the first that applies: `digital` (mux signal or digital I/O),
+`analog` (ADC channel, analog function or analog mode), `system`. Name its other roles in
+`Function used` (e.g. `analog mode; boot mode select 1`). The summary counts each pin once,
+under its `Type`.
 
 Set Phase 5 to COMPLETE in the Phase Status table.
 

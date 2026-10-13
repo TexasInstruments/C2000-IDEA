@@ -88,6 +88,8 @@ Read the generated `board.h` and `board.c` the same way as `pinmux.csv` (or from
 Call `getModuleInstances` with `moduleIds: ["/driverlib/adc.js"]`. For each instance, call
 `getInstanceConfiguration` and record `adcBase` and `enabledSOCs`. For each enabled SOC `<n>`
 record `soc<n>Channel`, `soc<n>Trigger`, `soc<n>ModuleChannelName` and `soc<n>DevicePinName`.
+Request these by name with the `ids` argument — a `searchText` filter can return nothing.
+`enabledSOCs` lists display names (`SOC/EOC number 3`); `<n>` is the number in it.
 
 `soc<n>DevicePinName` takes one of three forms:
 
