@@ -31,9 +31,10 @@ Determine the oscillator source:
 - **Phase 2 read the clock tree:** use its clock source.
 - **Otherwise** (no `.syscfg`, or Phase 2 recorded `from code`): resolve the oscillator in the
   `SysCtl_setClock(...)` call of the compiled `device.c` — through `DEVICE_SETCLOCK_CFG` in
-  `device.h`, in the branch the predefined symbols select, or the first argument where the
-  call lists the settings directly. Also record calls to `SysCtl_selectXTAL()` and
-  `SysCtl_selectXTALSingleEnded()` in any scanned file.
+  the `device.h` 3.3 uses, in the branch the predefined symbols and that file's own `#define`s
+  (e.g. `USE_PLL_SRC_XTAL`) select, or the first argument where the call lists the settings
+  directly. Also record calls to `SysCtl_selectXTAL()` and `SysCtl_selectXTALSingleEnded()` in
+  any scanned file.
 
 | Oscillator | Pins |
 |---|---|

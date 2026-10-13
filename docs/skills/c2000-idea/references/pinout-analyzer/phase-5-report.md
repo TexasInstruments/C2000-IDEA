@@ -21,9 +21,10 @@ Record each finding with its pin, GPIO and sources:
 | `CONFLICT: mux` | One GPIO has two different mux signals (SysConfig vs code, or two code sites). Code may reconfigure the pin at run time — name both sites. |
 | `CONFLICT: shared pin` | A pin bonds two GPIOs (two rows with the same `Pin`) and both are used. |
 | `CONFLICT: analog/digital` | An AGPIO is in analog mode (`GPIO_ANALOG_ENABLED` or a SysConfig analog pin-mux entry) and also has a digital mux signal or is driven/read as digital. |
+| `NOTE: analog mode` | The only digital setting on an AGPIO is `GPIO_setAnalogMode(…, GPIO_ANALOG_DISABLED)` and SysConfig's `Board_init()` enables analog mode after it (`Board_init()` is called after `Device_init()`). Record one line listing the GPIOs: their final mode is analog. |
 | `CONFLICT: core` | One GPIO is assigned to two cores. |
 | `FLAG` | Carried from Phases 2–4: not bonded on the package, system-pin overlap, ADC channel without a pin. |
-| `UNRESOLVED` | Carried from Phases 2–3. |
+| `UNRESOLVED` | Carried from Phases 1–3. |
 | `NOTE` | Carried from Phases 1, 2 and 4. |
 
 An analog pin shared by several ADC modules (e.g. `A2/ B6/ C9`) and sampled by more than one
@@ -63,14 +64,25 @@ Append to `c2000-pinout.md`:
 <Phase 4 table>
 
 ### Free GPIO pins on this package
-<GPIO / AIO rows of the pinout file that no phase used: pin and GPIO>
+<free GPIO / AIO rows, as defined below: pin and GPIO>
 
 ### Findings
 <every CONFLICT, FLAG, UNRESOLVED and NOTE line>
 ```
 
-`Type` is `digital`, `analog` or `system`. `Pinout name` is the pin's `Name` from the pinout
-file. Sort the pin map by package pin.
+`Pinout name` is the pin's `Name` from the pinout file. Sort the pin map by package pin.
+
+A pin is used when it carries a mux signal, digital I/O, an ADC channel, an analog function, an
+analog-mode setting from SysConfig, or one of these system functions: XRSn, a JTAG pin without a
+GPIO, the X1/X2 pins the oscillator uses, VREFHI/VREFLO. A JTAG or default boot-mode select pin
+that is also a GPIO is not used on its own: list it under free GPIO pins with its role (e.g.
+`78: GPIO35 (JTAG TDI)`). Free GPIO pins are the `GPIO`/`AIO` rows of pins not used. Crystal
+pins in use are never free.
+
+Each used pin has one `Type`, the first that applies: `digital` (mux signal or digital I/O),
+`analog` (ADC channel, analog function or analog mode), `system`. Name its other roles in
+`Function used` (e.g. `analog mode; boot mode select 1`). The summary counts each pin once,
+under its `Type`.
 
 Set Phase 5 to COMPLETE in the Phase Status table.
 

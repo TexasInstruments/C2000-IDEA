@@ -1,10 +1,12 @@
 # Phase 2 — SysConfig Pins
 
 > You are in **Phase 2** of the pinout analysis. Skip this phase when Phase 1 recorded
-> `SysConfig file: none` — set its status to `SKIPPED — no .syscfg` and return to `pinout-analyzer.md`.
+> `SysConfig file: none` — set its status to `SKIPPED — no .syscfg`, record
+> `Clock source: from code (Phase 4)` and return to `pinout-analyzer.md`.
 
-**If any MCP tool call fails, returns an unexpected error, or produces a result you cannot
-interpret — stop and ask the user.** Do not guess, retry blindly, or skip the step.
+**If any MCP tool call other than `openFile` (2.1) fails, returns an unexpected error, or
+produces a result you cannot interpret — stop and ask the user.** Do not guess, retry blindly,
+or skip the step.
 
 ### Rules for this phase
 
@@ -18,7 +20,13 @@ interpret — stop and ask the user.** Do not guess, retry blindly, or skip the 
 
 If the CCS SysConfig MCP is not available (Phase 0), go to 2.6.
 
-Call `openFile` with the `.syscfg` path from Phase 1.
+If the `.syscfg` header has no `@v2CliArgs` line, SysConfig asks for the specific device when
+the file opens and adds the header when the user confirms. Tell the user:
+*"SysConfig will show a 'Select Device' dialog. Choose Variant `<device.name>` and Package
+`<package>`, then click CONFIRM. SysConfig adds a header to the `.syscfg`."*
+
+Call `openFile` with the `.syscfg` path from Phase 1. If it fails or times out while the MCP is
+live, record the error and go to 2.6 — do not stop.
 
 ## 2.2 Errors
 
@@ -44,7 +52,9 @@ Record every line whose `Selected Mode` is not empty:
 | Power or ground (`VDD*`, `VSS*`, `VREG*`) or empty | Supply pin | Skip |
 
 The table does not mark the crystal pins X1/X2 as used; Phase 4 adds them from the clock
-settings.
+settings. It does not mark the AIO pins of an analog pin-mux instance either: take every
+`GPIO_setAnalogMode(<n>, GPIO_ANALOG_ENABLED)` in `board.c` (2.3a) and record AIO pins the same
+way as the AGPIO pins the table marks — pin, GPIO/AIO, `analog mode`, instance.
 
 An analog pin-mux instance (`/driverlib/analog.js`) whose `useCase` is `ALL` — the default —
 puts every AGPIO pin in analog mode, so the table lists all of them. Record
@@ -71,14 +81,18 @@ Read the generated `board.h` and `board.c` the same way as `pinmux.csv` (or from
 | `GPIO_setControllerCore(pin, core)` | Owning core |
 | `GPIO_setInterruptPin(pin, xint)` | External interrupt input |
 | `XBAR_setInputPin(…, input, pin)` | Input X-BAR source |
+| `ADC_setupSOC(base, soc, trigger, channel, window)` | ADC module (`base` through `board.h`), SOC, trigger, channel; map the channel to its pin as in 3.4. This is the ADC table when 2.4 does not run. |
 | `ADC_setVREF(base, mode, refVoltage)` | ADC reference: `ADC_REFERENCE_INTERNAL` / `_EXTERNAL`, voltage |
 | `ASysCtl_setAnalogReferenceInternal`, `…External`, `…VDDA` | Analog reference mode and the modules it applies to |
+| `ASysCtl_setAnalogReference2P5`, `…1P65` | Internal reference voltage and the modules it applies to |
 
 ## 2.4 ADC channels
 
 Call `getModuleInstances` with `moduleIds: ["/driverlib/adc.js"]`. For each instance, call
 `getInstanceConfiguration` and record `adcBase` and `enabledSOCs`. For each enabled SOC `<n>`
 record `soc<n>Channel`, `soc<n>Trigger`, `soc<n>ModuleChannelName` and `soc<n>DevicePinName`.
+Request these by name with the `ids` argument — a `searchText` filter can return nothing.
+`enabledSOCs` lists display names (`SOC/EOC number 3`); `<n>` is the number in it.
 
 `soc<n>DevicePinName` takes one of three forms:
 
@@ -103,10 +117,14 @@ Record the module base (`cmpssBase`, `dacBase`, …) with each pin.
 
 ## 2.6 Pin table without the MCP
 
-Use this when the SysConfig MCP is not available or 2.2 found errors. Read
+Use this when the SysConfig MCP is not available, `openFile` failed, or 2.2 found errors. Read
 `<sysConfigOutputLocation>/pinmux.csv` (written by the last build) and apply 2.3. Record:
 `Pin table: from last build (<file modification time>) — may not reflect the current .syscfg`.
 If the file does not exist, record `Pin table: not available` and rely on Phase 3.
+
+If the MCP is not available or `openFile` failed, also read `board.h` and `board.c` from
+`sysConfigOutputLocation` for 2.3a when they exist, skip 2.4, 2.5 and 2.7, and record
+`Clock source: from code (Phase 4)`.
 
 ## 2.7 Clock source
 

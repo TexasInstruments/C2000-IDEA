@@ -25,6 +25,11 @@ to proceed.
 
 - Confirm the user has provided the source project name/path and target device.
 - If either is missing, ask explicitly before proceeding.
+- Ask the PCB goal — Phase 4E rates pin changes by it:
+  > *"Should the migrated design keep the same PCB with minimal changes, or is a new board
+  > expected?"*
+
+  Record the answer as `same PCB` or `new board`.
 
 ## 1.2 Discover the source project
 
@@ -155,6 +160,7 @@ Seed the log using this exact template — fill in every `<placeholder>`:
 | C2000Ware path | `<c2000ware_path>` |
 | SDK version | `<e.g. C2000Ware_5_04_00_00>` |
 | AGENTS.md | `<found at <path> / not found>` |
+| PCB goal | `<same PCB / new board>` |
 
 ## Pre-flight (Phase 0)
 
@@ -178,6 +184,7 @@ Seed the log using this exact template — fill in every `<placeholder>`:
 | Phase 4 — Migrate Code | `PENDING` | |
 | Phase 4C — Sweep | `PENDING` | |
 | Phase 4D — Build Triage | `PENDING` | |
+| Phase 4E — Pin migration | `PENDING` | |
 | Phase 5 — Report | `PENDING` | |
 ```
 

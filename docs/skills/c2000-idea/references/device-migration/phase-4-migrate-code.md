@@ -350,7 +350,38 @@ If Phase 4C's final `buildProject()` call returned errors, dispatch a Phase 4D s
 
 ---
 
-## Step 4.6 — Phase 4 complete
+## Step 4.6 — Dispatch Phase 4E (pin migration check)
+
+STOP: **Do not read `pinout-analyzer.md` or `phase-4e-pin-migration.md` yourself. Send them to
+the sub-agents.**
+
+Phase 4E runs three sub-agents, one after the other, with the templates in
+[`phase-4-sub-agent-briefing.md`](phase-4-sub-agent-briefing.md). It does not depend on the
+build result.
+
+1. **Pin analysis — source project.** Wait for the result.
+2. **Pin analysis — target project.** Wait for the result.
+3. **Pin migration — comparison.** Dispatch only when both pin analyses returned
+   `STATUS: COMPLETE`. Wait for the structured result.
+
+### Orchestrator checkpoint after each pin analysis
+
+- `STATUS: STOPPED AT <step>` → ask the user the returned question, then dispatch the same
+  pin analysis again with the answer added to the briefing. A package answer goes in
+  `Expected package`.
+- `STATUS: COMPLETE` → keep its `Report file`, package and `Open questions` for the
+  comparison briefing and the Phase 4 summary.
+
+### Orchestrator checkpoint after the comparison
+
+1. Confirm `c2000-migration.md` has the `## Phase 4E — Pin Migration` section.
+2. Update the Phase Status table:
+   `| Phase 4E — Pin migration | COMPLETE | BLOCKER <n>, BOARD CHANGE <n>, REVIEW <n> |`
+3. Blockers do not stop the migration — they are reported in Phase 5. Proceed to Step 4.7.
+
+---
+
+## Step 4.7 — Phase 4 complete
 
 Update `c2000-migration.md`:
 ```
@@ -365,6 +396,9 @@ Files migrated: <total>
 Issues found: <total> | Fixed: <total> | Unresolved: <total>
 DEFERRED-MANUAL: <K items — list them>
 Final clean build: <PASS | FAIL — <Z> errors remain, recorded as DEFERRED-MANUAL>
+Pin migration (<PCB goal>): BLOCKER <n> | BOARD CHANGE <n> | REVIEW <n> — <targetProjectDir>/c2000-pin-migration.md
+  <each BLOCKER line>
+  <each pin analysis Open question>
 
 Any items needing manual review have been recorded in c2000-migration.md.
 ```
@@ -386,3 +420,5 @@ If this session was interrupted (context limit, session end, crash):
    last micro-checkpoint line number in the briefing so the sub-agent can
    continue from where it left off.
 5. Do not re-process rows already marked DONE.
+6. Interrupted during Phase 4E: re-dispatch the 4E sub-agent that has not returned. A pin
+   analysis resumes from its own `c2000-pinout.md`.

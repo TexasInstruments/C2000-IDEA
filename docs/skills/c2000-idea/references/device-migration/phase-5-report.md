@@ -65,13 +65,14 @@ user whether to skip — but do **not** skip unilaterally.
 7. **Deferred / manual actions** — anything the user must do before the project is
    production-ready (SysConfig, hardware testing).
 
-   > **Required: enumerate all `REVIEW-REQUIRED` and `FEATURE-ABSENT` items from the log:**
-   > Scan `c2000-migration.md` for every line tagged with `REVIEW-REQUIRED:` or
-   > `FEATURE-ABSENT:` and include them verbatim in this section. These include:
+   > **Required: enumerate all `REVIEW-REQUIRED`, `FEATURE-ABSENT` and `PIN-MIGRATION` items from the log:**
+   > Scan `c2000-migration.md` for every line tagged with `REVIEW-REQUIRED:`,
+   > `FEATURE-ABSENT:` or `PIN-MIGRATION:` and include them verbatim in this section. These include:
    > - `REVIEW-REQUIRED: clock …` (Phase 3C)
    > - `REVIEW-REQUIRED: linker section …` (Phase 2, Phase 3D, Phase 4C)
    > - `REVIEW-REQUIRED: hardcoded GPIO pin <N> — verify target device pinmux` (Phase 4)
    > - `FEATURE-ABSENT: <module> — peripheral not available on <target>` (Phase 3)
+   > - `PIN-MIGRATION: <BLOCKER | BOARD CHANGE | REVIEW> — …` (Phase 4E; full report in `c2000-pin-migration.md`)
    > - Any `DEFERRED-MANUAL:` items from SysConfig version incompatibility
    >
    > Do not omit these — they represent risks of silent runtime failure that the user
@@ -93,8 +94,8 @@ user whether to skip — but do **not** skip unilaterally.
    > |---|-------|---------------|
    > | H1 | **System clock correct** | Halt in CCS debugger immediately after `Device_init()` / `SysCtl_setClock()`. Inspect `PLLSYSCLK` via the `SysCtl` register view or an oscilloscope on a clocked output pin. Compare against `## Phase 3C — Target clock configuration` in `c2000-migration.md`. The target SYSCLK is the target maximum, not the source value. |
    > | H2 | **Peripheral clocks enabled** | Verify `SysCtl_enablePeripheral()` calls in `device.c` / `main.c` for each peripheral used. Confirm peripherals are accessible (no `NMIWDFLG` or bus fault on first register access). |
-   > | H3 | **GPIO pinmux valid for target device** | Review all `REVIEW-REQUIRED: hardcoded GPIO pin` items from item 7. Check the target device's GPIO mux table (TRM) to confirm the pin assignments are available. A pin that existed on the source device may map to a different function or not exist on the target. |
-   > | H4 | **ADC / comparator reference voltage** | If ADC or CMPSS modules are used, verify the reference voltage configuration matches the target board's hardware design. ADC `VREFHI`/`VREFLO` pinout and reference options differ between device families. |
+   > | H3 | **GPIO pinmux valid for target device** | Resolve every BLOCKER and BOARD CHANGE in `c2000-pin-migration.md` (Phase 4E) and the `REVIEW-REQUIRED: hardcoded GPIO pin` items from item 7. On the board, confirm each signal in its Digital pins table is on the target pin listed. |
+   > | H4 | **ADC / comparator reference voltage** | Check the ADC and Clock and references tables of `c2000-pin-migration.md`: each ADC channel's target pin, and that the target reference mode and voltage match the board's VREFHI/VREFLO circuit. |
    > | H5 | **PWM output timing** | For EPWM/HRPWM: verify switching frequency, dead-band, and trip-zone assignments produce the expected waveforms on the target board. EPWM base addresses and clock dividers may differ. |
    > | H6 | **Communication bus loopback / protocol test** | For SPI, I2C, CAN/DCAN, MCAN, or UART (SCI): run a loopback or communicate with a known-good peripheral node to confirm the baud rate and bit-format are correct on the target device. |
    > | H7 | **Interrupt service confirmed** | Trigger at least one interrupt per ISR migrated (ADC EOC, EPWM period, GPIO, etc.) and confirm the CPU enters the ISR. Interrupt vector table offsets and PIE group assignments may have changed between devices. |
