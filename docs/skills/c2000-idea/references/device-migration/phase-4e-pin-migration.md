@@ -50,6 +50,7 @@ Pair by function, never by package pin number:
 | Signal configured in code | Signal name (`EPWM1_A`, `SCIA_TX`) |
 | Digital I/O in code (`GPIO_writePin`, `GPIO_readPin`, …) | GPIO number and source file |
 | ADC conversion | ADC module and SOC (SysConfig instance and SOC when present) |
+| Pin in analog mode (analog pin-mux instance) | The ADC channels in the pin's `Name` (`A2`, `B6`, …), not its GPIO/AIO number |
 | CMPSS / DAC / PGA pin | Module base and field (`asysCMPHPMXSELPinInfo`, `dacDevicePinName`, …) |
 | System pin | Function: XRSn, TCK, TMS, TDI, TDO, X1, X2, VREFHI, VREFLO, boot-mode select 0/1 |
 

@@ -81,6 +81,7 @@ Read the generated `board.h` and `board.c` the same way as `pinmux.csv` (or from
 | `GPIO_setControllerCore(pin, core)` | Owning core |
 | `GPIO_setInterruptPin(pin, xint)` | External interrupt input |
 | `XBAR_setInputPin(…, input, pin)` | Input X-BAR source |
+| `ADC_setupSOC(base, soc, trigger, channel, window)` | ADC module (`base` through `board.h`), SOC, trigger, channel; map the channel to its pin as in 3.4. This is the ADC table when 2.4 does not run. |
 | `ADC_setVREF(base, mode, refVoltage)` | ADC reference: `ADC_REFERENCE_INTERNAL` / `_EXTERNAL`, voltage |
 | `ASysCtl_setAnalogReferenceInternal`, `…External`, `…VDDA` | Analog reference mode and the modules it applies to |
 | `ASysCtl_setAnalogReference2P5`, `…1P65` | Internal reference voltage and the modules it applies to |
