@@ -199,7 +199,7 @@ Phase 4C status: COMPLETE
 ```
 
 > **Do NOT write `Phase 4 status: COMPLETE` here.** That entry is written by the
-> orchestrator in Step 4.6 of `phase-4-migrate-code.md` — after Phase 4D has run
+> orchestrator in Step 4.7 of `phase-4-migrate-code.md` — after Phase 4D has run
 > (if needed). Writing it here prematurely would mark Phase 4 complete before the
 > build triage loop has had a chance to resolve remaining errors.
 
@@ -239,9 +239,9 @@ Your scope ends at the clean build result. Do not read `phase-5-report.md`,
 
 Return your structured result to the **orchestrator** (`phase-4-migrate-code.md`).
 The orchestrator will:
-- If `Final clean build: PASS` → proceed to Step 4.6 (Phase 4 complete summary).
+- If `Final clean build: PASS` → proceed to Step 4.6 (Phase 4E pin migration check).
 - If `Final clean build: FAIL` → dispatch Phase 4D (build error triage) via Step 4.5.
 
 **Do not ask the user "Ready to move to Phase 5?" here.** That question is asked by
-the orchestrator after Phase 4D has run (or been skipped for a passing build), in
-Step 4.6.
+the orchestrator after Phases 4D and 4E have run (4D is skipped for a passing build), in
+Step 4.7.

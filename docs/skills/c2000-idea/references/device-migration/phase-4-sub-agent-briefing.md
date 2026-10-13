@@ -15,6 +15,8 @@ The orchestrator dispatches one sub-agent per task unit:
 | All `.h` files | `phase-4a-headers.md` | All header files in the project |
 | One `.c` file | `phase-4b-sources.md` | Exactly one source file |
 | Final sweep | `phase-4c-sweep.md` | The whole project (sweep + clean build) |
+| Pin analysis | `references/pinout-analyzer.md` | One project (source or target) |
+| Pin migration | `phase-4e-pin-migration.md` | Comparison of the two pin reports |
 
 **One `.c` file per sub-agent dispatch.** If there are 10 `.c` files, there are 10
 separate Phase 4B dispatches. Never bundle multiple `.c` files into one sub-agent.
@@ -180,6 +182,47 @@ Return your structured result when the triage is complete or the convergence lim
 
 ---
 
+## Briefing template — Phase 4E pin analysis (source, then target)
+
+Fill out and send this twice: first for the source project, then for the target project.
+
+```
+You are a sub-agent. Read references/pinout-analyzer.md in the c2000-idea skill folder and
+follow it as a sub-agent.
+
+Briefing:
+  Project name       : <source or target project name from c2000-migration.md>
+  Project directory  : <absolute path>
+  Device family      : <source device | target device>
+  Expected package   : <source: "not known" | target: the package from "migrated to:" in
+                        the Phase 3B section of c2000-migration.md, or "not known">
+
+Return the workflow's sub-agent result.
+```
+
+---
+
+## Briefing template — Phase 4E pin migration (comparison)
+
+Fill out and send this after both pin analyses returned `STATUS: COMPLETE`:
+
+```
+You are a sub-agent. Read phase-4e-pin-migration.md and follow it exactly.
+
+Briefing:
+  Target project directory : <absolute path>
+  Source pin report        : <Report file from the source pin analysis result>
+  Target pin report        : <Report file from the target pin analysis result>
+  Source device / package  : <source device> / <package from the source result>
+  Target device / package  : <target device> / <package from the target result>
+  PCB goal                 : <PCB goal from c2000-migration.md>
+
+Do not read any file other than phase-4e-pin-migration.md and the two pin reports.
+Return your structured result when c2000-pin-migration.md is written.
+```
+
+---
+
 ## Orchestrator sequencing rules
 
 ```
@@ -197,10 +240,15 @@ Phase 4 sequence:
        ↓
   [4C dispatch] → wait for 4C structured result → orchestrator checkpoint
        ↓
-  if 4C build PASS → Present Phase 4 complete summary to user
   if 4C build FAIL → [4D dispatch] → wait for 4D structured result → checkpoint
-                          ↓
-                     Present Phase 4 complete summary to user
+       ↓
+  [4E pin analysis: source] → wait → checkpoint
+       ↓
+  [4E pin analysis: target] → wait → checkpoint
+       ↓
+  [4E pin migration: comparison] → wait → checkpoint
+       ↓
+  Present Phase 4 complete summary to user
        ↓
   Ask for user confirmation
   Return to device-migration.md for Phase 5

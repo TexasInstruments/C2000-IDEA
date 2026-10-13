@@ -104,7 +104,8 @@ package), the briefing replaces the user:
 - Never ask or wait for the user. Wherever a step says to ask or stop, end the run and return
   the question to the orchestrator, with the phase and step. A message a step says to tell the
   user goes into the result under `Open questions`.
-- If the package found in 1.4 differs from the expected package, stop and return both.
+- If 1.4 finds no package, use the expected package. If it finds a different one, stop and
+  return both.
 - Finish with this result:
 
 ```
