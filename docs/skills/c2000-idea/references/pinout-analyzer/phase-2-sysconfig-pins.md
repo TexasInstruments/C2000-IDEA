@@ -52,7 +52,9 @@ Record every line whose `Selected Mode` is not empty:
 | Power or ground (`VDD*`, `VSS*`, `VREG*`) or empty | Supply pin | Skip |
 
 The table does not mark the crystal pins X1/X2 as used; Phase 4 adds them from the clock
-settings.
+settings. It does not mark the AIO pins of an analog pin-mux instance either: take every
+`GPIO_setAnalogMode(<n>, GPIO_ANALOG_ENABLED)` in `board.c` (2.3a) and record AIO pins the same
+way as the AGPIO pins the table marks — pin, GPIO/AIO, `analog mode`, instance.
 
 An analog pin-mux instance (`/driverlib/analog.js`) whose `useCase` is `ALL` — the default —
 puts every AGPIO pin in analog mode, so the table lists all of them. Record
