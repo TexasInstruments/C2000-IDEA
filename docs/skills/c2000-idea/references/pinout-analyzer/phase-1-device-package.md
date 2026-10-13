@@ -23,8 +23,8 @@ Call `getProjectDescriptors` (`nameFilter` = the project name) and record `locat
 
 ## 1.2 Device family
 
-From the Phase 0 `get_projects()` result, take the project's `currentDevice` (e.g. `F28P55x`).
-This is the device family used for every file name below.
+From the Phase 0 `get_projects(rescan: true)` result, take the project's `currentDevice`
+(e.g. `F28P55x`). This is the device family used for every file name below.
 
 If the project is not in the result, its `currentDevice` is empty, or it is an F29x family,
 stop and tell the user: *"This workflow covers F28x projects that IDEA detects in the
@@ -44,14 +44,17 @@ C2000Ware path.
 ## 1.4 SysConfig file and package
 
 List the `.syscfg` files in the project `location`. If there are several, ask the user which
-one the active build configuration uses.
+one the active build configuration uses. A `.syscfg` without any `scripting.addModule(` line is
+an empty template: record `SysConfig file: none (empty template)` and treat the project as
+having no `.syscfg` from here on.
 
 Take the package from the first of these that is present — SysConfig applies them in this
 order:
 
 1. `--package` in the `.syscfg` header line `@v2CliArgs`.
-2. The `com.ti.ccstudio.buildDefinitions.sysConfig.PACKAGE` option `value` in
-   `<location>/.cproject`, inside `<configuration … name="<active build configuration>">`.
+2. The project's SysConfig package option: call `getToolFlags` (`toolType: "sysconfig"`,
+   `configuration`: the active build configuration) and take the value of `-p`
+   (`-p "128PDT"`).
 3. `--package` in the `.syscfg` header line `@cliArgs`.
 4. None: list the family's pinout files (1.5) and ask:
    > *"Which package is this board built with? The available packages for `<family>` are:
@@ -96,6 +99,10 @@ Call `getToolFlags` (`toolType: "compiler"`, `configuration`: the active build c
 Record every `--define=<name>[=<value>]` and `-D<name>`. Phase 3 uses them to select `#if`
 branches in `device.h` and the project sources.
 
+A `--define=${…}` entry is a build variable, not a symbol. If
+`<buildDirectoryLocation>/.clangd/compile_commands.json` exists, take the defines (`-D…`) from
+its entries instead. Otherwise record each variable as `UNRESOLVED: build variable ${…}`.
+
 ## 1.8 Create the pin report
 
 Create `c2000-pinout.md` in the project `location`:
@@ -109,7 +116,7 @@ Create `c2000-pinout.md` in the project `location`:
 | Project directory | `<location>` |
 | Device family | `<family>` |
 | Device | `<device.name>` |
-| Package | `<package>` (`<@v2CliArgs | .cproject | @cliArgs | user>`) |
+| Package | `<package>` (`<@v2CliArgs | project setting | @cliArgs | user>`) |
 | SysConfig file | `<path>` / none |
 | SysConfig context | `<CPU1 | CPU2 | system | none>` |
 | Active build configuration | `<name>` |

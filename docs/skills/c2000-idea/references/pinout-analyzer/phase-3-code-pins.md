@@ -16,10 +16,8 @@
 
 1. Every `.c` and `.h` file under the project `location`, except:
    - files under `buildDirectoryLocation` and `sysConfigOutputLocation`;
-   - paths the active build configuration excludes from the build: in `<location>/.cproject`,
-     inside `<configuration … name="<active build configuration>">`, each
-     `<entry … kind="sourcePath" name="<folder>">` lists them in `excluding="…"`,
-     `|`-separated, relative to `<folder>`;
+   - paths the active build configuration excludes from the build: the `excludedFromBuild`
+     list from `getProjectDescriptors` (paths relative to `location`);
    - any `device/driverlib` folder — a copy of the driverlib sources.
 2. The `device.c` the project compiles — it configures pins too. In order of precedence:
    a `device.c` in the project, the generated `<sysConfigOutputLocation>/device.c`, or
@@ -39,7 +37,7 @@ the same names.
 | `GPIO_setPadConfig(pin, type)` | 1st | Pad: `GPIO_PIN_TYPE_STD`, `_PULLUP`, `_OD`, `_INVERT` (OR-ed) |
 | `GPIO_setDirectionMode(pin, dir)` | 1st | `GPIO_DIR_MODE_IN` / `GPIO_DIR_MODE_OUT` |
 | `GPIO_setQualificationMode(pin, mode)` | 1st | Input qualification |
-| `GPIO_setAnalogMode(pin, mode)` | 1st | `GPIO_ANALOG_ENABLED` = analog use; `_DISABLED` = digital use |
+| `GPIO_setAnalogMode(pin, mode)` | 1st | `GPIO_ANALOG_ENABLED` = analog mode; `_DISABLED` = digital mode. Mode only — on its own it does not make the pin used |
 | `GPIO_setControllerCore(pin, core)`, `GPIO_setMasterCore(pin, core)` | 1st | Owning core (`GPIO_setMasterCore` is an alias) |
 | `GPIO_writePin`, `GPIO_togglePin` | 1st | Driven as digital output |
 | `GPIO_readPin` | 1st | Read as digital input |
@@ -47,6 +45,8 @@ the same names.
 | `XBAR_setInputPin(base, input, pin)` or `XBAR_setInputPin(input, pin)` | last | Input X-BAR `input` |
 | `GPIO_writePortData`, `GPIO_setPortPins`, `GPIO_clearPortPins`, `GPIO_togglePortPins`, `GPIO_readPortData` | port + mask | Port `GPIO_PORT_<X>`: bit `<b>` is GPIO `32 × <port index> + <b>` (A = 0, B = 1, …) |
 | `ADC_setupSOC(base, soc, trigger, channel, window)` | `base`, `channel` | ADC module, SOC, trigger, channel |
+| `ADC_setVREF(base, mode, refVoltage)` | `base` | ADC reference: `ADC_REFERENCE_INTERNAL` / `_EXTERNAL`, voltage |
+| `ASysCtl_setAnalogReferenceInternal`, `…External`, `…VDDA`, `…2P5`, `…1P65` | — | Analog reference mode or voltage and the modules it applies to |
 
 ## 3.3 Resolve arguments
 
@@ -56,7 +56,7 @@ Resolve each argument until it is a number or a `GPIO_<n>_<SIGNAL>` / `ADC_CH_AD
 | Argument | Resolve through |
 |---|---|
 | Literal (`20U`) | — |
-| `DEVICE_GPIO_PIN_*`, `DEVICE_GPIO_CFG_*` | `device.h`, in the `#ifdef` branch the predefined symbols select (e.g. `_LAUNCHXL_F28P55X`; otherwise the `#else` controlCARD branch) |
+| `DEVICE_GPIO_PIN_*`, `DEVICE_GPIO_CFG_*` | The project's own `device.h` if it has one, else `<c2000ware_path>/device_support/<family>/common/include/device.h`; in the `#ifdef` branch the predefined symbols select (e.g. `_LAUNCHXL_F28P55X`; otherwise the `#else` controlCARD branch) |
 | `my<Name>…` (e.g. `myGPIO0`, `myBoardLED0_GPIO`, `my<inst>_<sig>_PIN_CONFIG`) | SysConfig-generated `board.h` in `sysConfigOutputLocation` |
 | Other macro | The `#define` in the project sources or headers it includes |
 | Function parameter (`pin`, `channel`) | Each call site of that function; record one entry per resolved value |
@@ -95,6 +95,8 @@ No matching row → the channel is internal or not bonded on this package. Recor
 
 | ADC | SOC | Channel | Trigger | Pin | Source |
 |---|---|---|---|---|---|
+
+ADC reference: <per module: mode, voltage, source | none in code>
 ```
 
 followed by every `FLAG:` and `UNRESOLVED:` line, and set Phase 3 to COMPLETE in the Phase

@@ -6,7 +6,8 @@
 
 ## Step 0.1 — Probe IDEA MCP
 
-Call `get_projects()`.
+Call `get_projects(rescan: true)` — without `rescan` the result can miss recently imported
+projects.
 
 - **Success** → IDEA MCP is live. Keep the result; Phase 1 uses it.
 - **Failure / unreachable** → **Stop.** Tell the user:
