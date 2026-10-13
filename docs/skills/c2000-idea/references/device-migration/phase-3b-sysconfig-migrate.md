@@ -53,6 +53,8 @@ the full unfiltered list so the user can select the closest available target.
 
 ## 3.7 Migrate (source-has-syscfg only)
 
+Record `getModuleInstances` and the `<instance>_BASE` defines in `board.h` (`readGeneratedArtifact`).
+
 Call `migrate` with the `device`, `package` and `variant` of the user's selected entry. If
 several entries share that device and package, use the first one's `variant`.
  > If the `migrate` tool for SysConfig MCP repeatedly fails. Pause and ask the user to manually
@@ -62,6 +64,14 @@ several entries share that device and package, use the first one's `variant`.
 ## 3.8 Check errors
 
 Call `getErrorsAndWarnings`. Review all errors and warnings.
+
+If it shows zero errors but `listGeneratedArtifacts` has a `blockedByErrors: true` artifact,
+there are errors the MCP does not report:
+1. If the analog pin mux `useCase` is `ALL`, set it to `CUSTOM`. In `useInterfacePins`, list
+   only the pins of ADC channels the project uses, from SysConfig and from `ADC_setupSOC` in
+   the application code.
+2. If anything is still blocked, ask the user for the errors in the SysConfig GUI Problems
+   panel.
 
 ## 3.9 Fix issues iteratively
 
@@ -94,6 +104,14 @@ Call `getErrorsAndWarnings`. Review all errors and warnings.
 >    peripheral does not exist on `<target-device>`. You must implement equivalent
 >    functionality differently or confirm it is not needed for your application."*
 > 5. Re-run `getErrorsAndWarnings` after removal to check for cascading errors.
+
+## 3.10 Compare instances and peripherals (source-has-syscfg only)
+
+Repeat the 3.7 record and compare.
+- Instance missing: `migrate()` dropped it without an error. Record `FEATURE-ABSENT` and tell
+  the user.
+- Peripheral changed: record `REVIEW-REQUIRED: <instance> peripheral <source> → <target>` and
+  tell the user.
 
 ## Phase 3B complete — hand off to Phase 3C
 

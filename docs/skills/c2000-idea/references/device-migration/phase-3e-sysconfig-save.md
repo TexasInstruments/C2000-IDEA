@@ -12,6 +12,14 @@ Call `getErrorsAndWarnings`.
 - **Errors that cannot be resolved:** record them as deferred items in `c2000-migration.md`
   and tell the user before deciding whether to save.
 
+If it shows zero errors but `listGeneratedArtifacts` has a `blockedByErrors: true` artifact,
+there are errors the MCP does not report:
+1. If the analog pin mux `useCase` is `ALL`, set it to `CUSTOM`. In `useInterfacePins`, list
+   only the pins of ADC channels the project uses, from SysConfig and from `ADC_setupSOC` in
+   the application code.
+2. If anything is still blocked, ask the user for the errors in the SysConfig GUI Problems
+   panel.
+
 ## 3E.2 Save
 
 Only after the error gate returns zero errors. Call `save`.
