@@ -66,13 +66,8 @@ several entries share that device and package, use the first one's `variant`.
 Call `getErrorsAndWarnings`. Review all errors and warnings.
 
 If it shows zero errors but `listGeneratedArtifacts` has a `blockedByErrors: true` artifact,
-there are errors the MCP does not report:
-1. If the analog pin mux `useCase` is `ALL`, set it to `CUSTOM`. In `useInterfacePins`, list
-   only the analog pins the project uses: ADC channels and CMPSS, PGA and DAC pins, from
-   SysConfig and from the application code (`ADC_setupSOC`, `ASysCtl_selectCMPHPMux`,
-   `ASysCtl_selectCMPLPMux`).
-2. If anything is still blocked, ask the user for the errors in the SysConfig GUI Problems
-   panel.
+there are errors the MCP does not report. Ask the user for the errors in the SysConfig GUI
+Problems panel.
 
 ## 3.9 Fix issues iteratively
 
