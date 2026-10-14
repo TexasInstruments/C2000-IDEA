@@ -12,6 +12,14 @@ Call `getErrorsAndWarnings`.
 - **Errors that cannot be resolved:** record them as deferred items in `c2000-migration.md`
   and tell the user before deciding whether to save.
 
+If it shows zero errors but `listGeneratedArtifacts` has a `blockedByErrors: true` artifact,
+there are errors the MCP does not report. Ask the user for the errors in the SysConfig GUI
+Problems panel.
+
+If the source had a syscfg, compare the `<instance>_BASE` defines in `board.h` with the Phase 3B
+record in `c2000-migration.md`. For each change, record
+`REVIEW-REQUIRED: <instance> peripheral <source> → <target>` and tell the user.
+
 ## 3E.2 Save
 
 Only after the error gate returns zero errors. Call `save`.
