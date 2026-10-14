@@ -53,7 +53,7 @@ the full unfiltered list so the user can select the closest available target.
 
 ## 3.7 Migrate (source-has-syscfg only)
 
-Record `getModuleInstances` and the `<instance>_BASE` defines in `board.h` (`readGeneratedArtifact`).
+Record `getModuleInstances` and the `<instance>_BASE` defines in `board.h` (`readGeneratedArtifact`) in `c2000-migration.md`.
 
 Call `migrate` with the `device`, `package` and `variant` of the user's selected entry. If
 several entries share that device and package, use the first one's `variant`.
@@ -105,13 +105,10 @@ there are errors the MCP does not report:
 >    functionality differently or confirm it is not needed for your application."*
 > 5. Re-run `getErrorsAndWarnings` after removal to check for cascading errors.
 
-## 3.10 Compare instances and peripherals (source-has-syscfg only)
+## 3.10 Compare instances (source-has-syscfg only)
 
-Repeat the 3.7 record and compare.
-- Instance missing: `migrate()` dropped it without an error. Record `FEATURE-ABSENT` and tell
-  the user.
-- Peripheral changed: record `REVIEW-REQUIRED: <instance> peripheral <source> → <target>` and
-  tell the user.
+Compare `getModuleInstances` with the 3.7 record. A missing instance was dropped by `migrate()`
+without an error. Record `FEATURE-ABSENT` and tell the user.
 
 ## Phase 3B complete — hand off to Phase 3C
 
