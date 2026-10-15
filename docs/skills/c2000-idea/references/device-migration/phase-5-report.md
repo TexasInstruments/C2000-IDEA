@@ -53,7 +53,8 @@ user whether to skip — but do **not** skip unilaterally.
 
    > **Required: enumerate all `REVIEW-REQUIRED`, `FEATURE-ABSENT` and `PIN-MIGRATION` items from the log:**
    > Scan `c2000-migration.md` for every line tagged with `REVIEW-REQUIRED:`,
-   > `FEATURE-ABSENT:` or `PIN-MIGRATION:` and include them verbatim in this section. These include:
+   > `FEATURE-ABSENT:` or `PIN-MIGRATION:` and include them verbatim in this section, except that
+   > each `<file>:<line>` points to the line's current position. These include:
    > - `REVIEW-REQUIRED: clock …` (Phase 3C)
    > - `REVIEW-REQUIRED: linker section …` (Phase 2, Phase 3D, Phase 4C)
    > - `REVIEW-REQUIRED: hardcoded GPIO pin <N> — verify target device pinmux` (Phase 4)
