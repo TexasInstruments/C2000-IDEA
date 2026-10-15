@@ -43,20 +43,6 @@ user whether to skip — but do **not** skip unilaterally.
    present, reconfigure peripherals for the target device to match the source, and normalize
    the CMD module to the source linker style.
 
-   > **Verify SysConfig-generated outputs are part of the build (required):**
-   > After confirming the device-support module is present, verify that the files it
-   > generates are actually compiled and linked by the target CCS project:
-   > Check the output of the 5.1 build (`output`, or the file at `outputFilePath`). These
-   > files are added by CCS at build time and do not appear in `getToolFlags`.
-   > 1. `device.c` is compiled: the output contains `building file: "syscfg/device.c"`.
-   > 2. The generated `.opt` files are passed to the compiler: the compile lines contain
-   >    `--cmd_file="syscfg/board.opt"` and `--cmd_file="syscfg/c2000ware_libraries.opt"`.
-   >    `board.opt` carries the device define (e.g. `--define=F28P55x=1`) and the target
-   >    driverlib include paths.
-   > 3. If either is missing, flag it to the user: *"The SysConfig device-support module
-   >    generated `device.c` and `.opt` files, but they are not in the CCS build. Verify the
-   >    project's SysConfig output path in CCS."*
-
 6. **SDK version change** — source C2000Ware SDK version → target C2000Ware SDK version.
    Obtain these from the source and target projects' SDK paths or from the Phase 1 import
    logs in `c2000-migration.md`. Format: `C2000Ware_<version>` (e.g., `C2000Ware_5.03.00.00
