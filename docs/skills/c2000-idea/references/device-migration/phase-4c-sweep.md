@@ -81,6 +81,10 @@ build → repeat) until clean.
 
 Track the total issue count across two consecutive sweeps.
 
+Leave out a flag on a call that matches the target device's driverlib signature and has no
+`Suggested fix`: the analyser flags every call to a changed function. Record it as
+`REVIEW-REQUIRED: <file>:<line> <symbol> — flagged on every call; matches the target signature`.
+
 If the issue count is **unchanged across two full sweeps** — the agent is stuck:
 - Stop attempting fixes.
 - Compile the complete list of unresolved issues (file, line, symbol, reason).
