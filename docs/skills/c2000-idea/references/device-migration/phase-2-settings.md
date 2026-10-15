@@ -260,11 +260,13 @@ Libraries folder: <folder name> — copied as-is; excluded from Phase 4 migratio
    — list every file path and the reason it was excluded (SDK path, SysConfig-generated,
    device startup file, etc.).
 
-Wait for the user to confirm the lists are correct before copying. After confirmation — **copy the files to the target project** and report the list of files successfully copied. List the application files and folder strucutre in the `c2000-migration.md` file.
-Make sure that the files copied, have the same folder structure in the target project as the source project.
+Wait for the user to confirm the lists are correct before copying.
 
-**Remove the main.c file from the target project**, since the application files from the 
-source project includes the `main()` definition.
+**Before copying, remove the target's starter `main.c`**: the application files from the
+source project include the `main()` definition.
+
+After confirmation — **copy the files to the target project** and report the list of files successfully copied. List the application files and folder strucutre in the `c2000-migration.md` file.
+Make sure that the files copied, have the same folder structure in the target project as the source project.
 
 **Validate the target project directory structure** after the copy is finished.
 Confirm with the user by showing the source and target project's folder structure and files. Once confirmed, move to the next step.
