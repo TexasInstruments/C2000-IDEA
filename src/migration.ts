@@ -966,6 +966,8 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 				...allChangedDriverlibResolution.map(removedChangedResolution => removedChangedResolution.code)
 			]);
 		
+			let removedCodes = new Set([...allRemoved, ...allRemovedDriverlibResolution].map(r => r.code));
+
 			let lineNumbersWithCodeChange =	migrationFindAllLineNumbersWithCodeChange(documentText, allCodesSet);
 			for(let lineNumber of lineNumbersWithCodeChange)
 			{
@@ -1117,6 +1119,14 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 							let code = removedChanged.code;
 
 							if (processedCodes.has(code)){
+								continue;
+							}
+
+							// A branch the source device does not compile was written for the
+							// target, so only symbols removed on the target still apply there.
+							if (currnetContext && !preprocessor.getCombinedParentContext(currnetContext).includes(currentDevice) &&
+								!removedCodes.has(code))
+							{
 								continue;
 							}
 							let msg = "";
