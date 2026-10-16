@@ -381,7 +381,38 @@ build result.
 
 ---
 
-## Step 4.7 — Phase 4 complete
+## Step 4.7 — Dispatch Phase 4F (timing migration check)
+
+STOP: **Do not read `timing-analyzer.md` or `phase-4f-timing-migration.md` yourself. Send them
+to the sub-agents.**
+
+Phase 4F runs three sub-agents, one after the other, with the templates in
+[`phase-4-sub-agent-briefing.md`](phase-4-sub-agent-briefing.md). It does not depend on the
+build result.
+
+1. **Timing analysis — source project.** Wait for the result.
+2. **Timing analysis — target project.** Wait for the result.
+3. **Timing migration — comparison.** Dispatch only when both timing analyses returned
+   `STATUS: COMPLETE`. Wait for the structured result.
+
+### Orchestrator checkpoint after each timing analysis
+
+- `STATUS: STOPPED AT <step> — <reason>` → nothing could be analysed. Set
+  `| Phase 4F — Timing migration | SKIPPED | <reason> |`, report the reason in the Phase 4
+  summary, and proceed to Step 4.8.
+- `STATUS: COMPLETE` → keep its `Report file` and `Decisions` for the comparison briefing and
+  the Phase 4 summary.
+
+### Orchestrator checkpoint after the comparison
+
+1. Confirm `c2000-migration.md` has the `## Phase 4F — Timing Migration` section.
+2. Update the Phase Status table:
+   `| Phase 4F — Timing migration | COMPLETE | <n> changes |`
+3. Timing changes do not stop the migration — they are reported in Phase 5. Proceed to Step 4.8.
+
+---
+
+## Step 4.8 — Phase 4 complete
 
 Update `c2000-migration.md`:
 ```
@@ -399,6 +430,8 @@ Final clean build: <PASS | FAIL — <Z> errors remain, recorded as DEFERRED-MANU
 Pin migration (<PCB goal>): BLOCKER <n> | BOARD CHANGE <n> | REVIEW <n> — <targetProjectDir>/c2000-pin-migration.md
   <each BLOCKER line>
   <each pin analysis Open question>
+Timing migration: <n> changes — <targetProjectDir>/c2000-timing-migration.md
+  <each timing analysis Decision>
 
 Any items needing manual review have been recorded in c2000-migration.md.
 ```
@@ -422,3 +455,5 @@ If this session was interrupted (context limit, session end, crash):
 5. Do not re-process rows already marked DONE.
 6. Interrupted during Phase 4E: re-dispatch the 4E sub-agent that has not returned. A pin
    analysis resumes from its own `c2000-pinout.md`.
+7. Interrupted during Phase 4F: re-dispatch the 4F sub-agent that has not returned. A timing
+   analysis resumes from its own `c2000-timing.md`.

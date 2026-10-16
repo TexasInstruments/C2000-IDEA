@@ -188,6 +188,7 @@ Seed the log using this exact template — fill in every `<placeholder>`:
 | Phase 4C — Sweep | `PENDING` | |
 | Phase 4D — Build Triage | `PENDING` | |
 | Phase 4E — Pin migration | `PENDING` | |
+| Phase 4F — Timing migration | `PENDING` | |
 | Phase 5 — Report | `PENDING` | |
 ```
 

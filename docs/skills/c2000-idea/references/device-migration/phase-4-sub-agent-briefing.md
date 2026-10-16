@@ -17,6 +17,8 @@ The orchestrator dispatches one sub-agent per task unit:
 | Final sweep | `phase-4c-sweep.md` | The whole project (sweep + clean build) |
 | Pin analysis | `references/pinout-analyzer.md` | One project (source or target) |
 | Pin migration | `phase-4e-pin-migration.md` | Comparison of the two pin reports |
+| Timing analysis | `references/timing-analyzer.md` | One project (source or target) |
+| Timing migration | `phase-4f-timing-migration.md` | Comparison of the two timing reports |
 
 **One `.c` file per sub-agent dispatch.** If there are 10 `.c` files, there are 10
 separate Phase 4B dispatches. Never bundle multiple `.c` files into one sub-agent.
@@ -223,6 +225,44 @@ Return your structured result when c2000-pin-migration.md is written.
 
 ---
 
+## Briefing template — Phase 4F timing analysis (source, then target)
+
+Fill out and send this twice: first for the source project, then for the target project.
+
+```
+You are a sub-agent. Read references/timing-analyzer.md in the c2000-idea skill folder and
+follow it as a sub-agent.
+
+Briefing:
+  Project name       : <source or target project name from c2000-migration.md>
+  Project directory  : <absolute path>
+  Device family      : <source device | target device>
+
+Return the workflow's sub-agent result.
+```
+
+---
+
+## Briefing template — Phase 4F timing migration (comparison)
+
+Fill out and send this after both timing analyses returned `STATUS: COMPLETE`:
+
+```
+You are a sub-agent. Read phase-4f-timing-migration.md and follow it exactly.
+
+Briefing:
+  Target project directory : <absolute path>
+  Source timing report     : <Report file from the source timing analysis result>
+  Target timing report     : <Report file from the target timing analysis result>
+  Source device            : <source device>
+  Target device            : <target device>
+
+Do not read any file other than phase-4f-timing-migration.md and the two timing reports.
+Return your structured result when c2000-timing-migration.md is written.
+```
+
+---
+
 ## Orchestrator sequencing rules
 
 ```
@@ -247,6 +287,12 @@ Phase 4 sequence:
   [4E pin analysis: target] → wait → checkpoint
        ↓
   [4E pin migration: comparison] → wait → checkpoint
+       ↓
+  [4F timing analysis: source] → wait → checkpoint
+       ↓
+  [4F timing analysis: target] → wait → checkpoint
+       ↓
+  [4F timing migration: comparison] → wait → checkpoint
        ↓
   Present Phase 4 complete summary to user
        ↓

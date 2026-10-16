@@ -171,7 +171,8 @@ This workflow is split into six phases. **Execute them in strict order.**
    - **4C** `device-migration/phase-4c-sweep.md` — final sweep and build verification (one sub-agent)
    - **4D** `device-migration/phase-4d-build-triage.md` — build error triage (one sub-agent; only if 4C reports a failing build)
    - **4E** `device-migration/phase-4e-pin-migration.md` — pin migration check: the pinout workflow (`pinout-analyzer.md`) runs on the source and the target project (one sub-agent each), then one sub-agent compares the two reports
-   → When Phase 4 is complete (Step 4.7 done), return here.
+   - **4F** `device-migration/phase-4f-timing-migration.md` — timing migration check: the timing workflow (`timing-analyzer.md`) runs on the source and the target project (one sub-agent each), then one sub-agent compares the two reports
+   → When Phase 4 is complete (Step 4.8 done), return here.
 
 5. **Read `device-migration/phase-5-report.md`** — Produce the structured migration
    summary for the user.
