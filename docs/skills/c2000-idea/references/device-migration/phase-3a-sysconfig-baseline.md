@@ -36,6 +36,7 @@ The source `.syscfg` itself stays untouched — work on the copy.
 ## 3.2 Open the target `.syscfg`
 
 Open the target project's `.syscfg` via `openFile` (ccs-sysconfig MCP) — always `<targetProjectName>.syscfg` in the target project directory. Read the `additionalInstructions` field in the result.
+If `openFile` times out, follow the `syscfg-openfile-recovery` skill, then continue. Record the `@v2CliArgs` line it wrote in `c2000-migration.md`.
 
 ## 3.3 Ensure the device-support module is present
 

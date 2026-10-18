@@ -57,10 +57,7 @@ re-deriving or guessing them.
 
 ### Step 1 — Open the target file
 
-Call `openFile` with the target `.syscfg` file's absolute path. Same first-open caveat as
-Phase 1: if `openFile` stalls on a device-selection dialog the first time this specific file
-is opened, stop and ask the user to resolve it in the SysConfig UI rather than retrying with a
-longer timeout.
+Call `openFile` with the target `.syscfg` file's absolute path. If `openFile` times out, follow the `syscfg-openfile-recovery` skill, then continue.
 
 ### Step 2 — Create one MCPWM instance per confirmed group
 

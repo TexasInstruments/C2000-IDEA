@@ -26,6 +26,7 @@ Look for the `Phase 3A: COMPLETE` entry.
 
 If the `c2000-migration.md` checkpoint is missing or unclear, re-derive the path:
 - Open the target project's `.syscfg` via `openFile`, then call `getModuleInstances`.
+  If `openFile` times out, follow the `syscfg-openfile-recovery` skill, then continue. Record the `@v2CliArgs` line it wrote in `c2000-migration.md`.
   Inspect the returned module list contains `device_support` or not. If it is absent notify to user, and terminate the migration mentioning the reason.
 - check the status of whether source-has-syscfg (whether the source project had `.syscfg` file). If it did, then that source has been copied to the target    
   project already. If not then the universal project's syscfg file was kept.
