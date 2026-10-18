@@ -82,6 +82,7 @@ AVAILABLE TOOLS:
 - get_bitfield_to_driverlib_migration_report() — Run a bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register accesses and suggests driverlib function replacements.
 - download_migration_guide() — Download the TI any-to-any driverlib migration-guide HTML for a source→target device pair to an absolute local file path.
 - get_syscfg_module_migration_guide() — Get the SysConfig (.syscfg) config migration guide (Markdown) for a peripheral module-to-module pair; pass the config ids to scope it (highly recommended).
+- close_editor() — Close the editor tabs that show a file; tabs with unsaved changes stay open.
 
 RECOMMENDED FLOW:
 1. Call get_projects() to discover projects, their current devices, migration targets, and current folder exclusions (migrationFolderExceptions).
@@ -167,6 +168,31 @@ function createMcpServerInstance(): McpServer {
 			}
 		);
 	}
+
+	server.registerTool(
+		'close_editor',
+		{
+			description: 'Close the editor tabs that show the given file. Tabs with unsaved changes stay open.',
+			inputSchema: {
+				filePath: z.string().describe('Absolute path of the file.'),
+			} as any,
+		},
+		async ({ filePath }: any) => {
+			const target = path.resolve(filePath);
+			const tabs = vscode.window.tabGroups.all.flatMap(g => g.tabs);
+			// CCS gives its editor tabs no input, only a label: the file name.
+			const matches = tabs.filter(tab => {
+				const uri = (tab.input as { uri?: vscode.Uri } | undefined)?.uri;
+				return uri ? path.resolve(uri.fsPath) === target : tab.label === path.basename(target);
+			});
+			const closable = matches.filter(tab => !tab.isDirty);
+			if (closable.length > 0) {
+				await vscode.window.tabGroups.close(closable);
+			}
+			const result = { closed: closable.length, keptUnsaved: matches.length - closable.length };
+			return { content: [{ type: 'text' as const, text: JSON.stringify(result) }] };
+		}
+	);
 
 	if (IDEA_MCP_HANDLERS.setProjectCurrentDevice && IDEA_MCP_HANDLERS.getAllProjectInfos && IDEA_MCP_HANDLERS.getDeviceList) {
 		const setCurrentDevice = IDEA_MCP_HANDLERS.setProjectCurrentDevice;

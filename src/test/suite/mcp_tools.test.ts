@@ -1,5 +1,9 @@
 import { suite, test, suiteSetup, suiteTeardown } from 'mocha';
 import * as assert from 'assert';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
+import * as vscode from 'vscode';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { getMcpUrl, isRunning } from '../../mcp/idea-mcp';
@@ -25,6 +29,7 @@ const EXPECTED_TOOLS = [
 	'get_project_migration_report',
 	'get_bitfield_to_driverlib_migration_report',
 	'get_migration_guide_section',
+	'close_editor',
 ];
 
 let client: Client;
@@ -111,6 +116,33 @@ suite('idea mcp tools', () => {
 		for (const device of devices) {
 			assert.strictEqual(device.supported, !isDeviceF29x(device.name),
 				`${device.name}: wrong supported flag`);
+		}
+	});
+
+	test('close_editor closes a saved tab and keeps an unsaved one', async () => {
+		const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'close-editor-'));
+		const saved = path.join(dir, 'saved.syscfg');
+		const unsaved = path.join(dir, 'unsaved.syscfg');
+		fs.writeFileSync(saved, '// saved\n');
+		fs.writeFileSync(unsaved, '// unsaved\n');
+		const isOpen = (file: string) => vscode.window.tabGroups.all.flatMap(g => g.tabs)
+			.some(tab => (tab.input as { uri?: vscode.Uri } | undefined)?.uri?.fsPath === file);
+
+		try {
+			await vscode.window.showTextDocument(vscode.Uri.file(saved), { preview: false });
+			const editor = await vscode.window.showTextDocument(vscode.Uri.file(unsaved), { preview: false });
+			await editor.edit(edit => edit.insert(new vscode.Position(0, 0), 'x'));
+
+			assert.deepStrictEqual(JSON.parse(await callText('close_editor', { filePath: saved })),
+				{ closed: 1, keptUnsaved: 0 });
+			assert.ok(!isOpen(saved), 'the saved tab is still open');
+
+			assert.deepStrictEqual(JSON.parse(await callText('close_editor', { filePath: unsaved })),
+				{ closed: 0, keptUnsaved: 1 });
+			assert.ok(isOpen(unsaved), 'the unsaved tab was closed');
+		} finally {
+			await vscode.commands.executeCommand('workbench.action.revertAndCloseActiveEditor');
+			fs.rmSync(dir, { recursive: true, force: true });
 		}
 	});
 

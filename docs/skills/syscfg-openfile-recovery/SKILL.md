@@ -59,9 +59,10 @@ Leave out `--context` when `@cliArgs` has none. Do not add `--variant` or `--boa
 
 ## 3. Reopen
 
-1. Ask the user to close the `.syscfg` editor tab in CCS without clicking CONFIRM. While that
-   tab is open, `openFile` keeps timing out. The dialog's default part is often wrong, and
-   CONFIRM writes it into the file.
-2. Call `openFile` again.
+1. Call IDEA `close_editor` with the `.syscfg` path. While the stuck editor tab is open,
+   `openFile` keeps timing out.
+2. If it closed a tab, call `openFile` again. If it closed none, ask the user to close the
+   `.syscfg` editor tab in CCS without clicking CONFIRM, and call `openFile` after they reply.
+   The dialog's default part is often wrong, and CONFIRM writes it into the file.
 3. Tell the user the line you wrote, and that the package is a guess when `@cliArgs` had none.
    SysConfig keeps the line and generates code for that part.
