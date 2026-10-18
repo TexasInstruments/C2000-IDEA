@@ -6,6 +6,7 @@ import express from 'express';
 import { randomUUID } from 'crypto';
 import { createMcpServer } from '../../submodules/ti_asm_mcp/src/mcp-server';
 import { loadAllIndices } from '../../submodules/ti_asm_mcp/src/index-loader';
+import { setLogSink } from '../../submodules/ti_asm_mcp/src/logger';
 import { DeviceIndex } from '../../submodules/ti_asm_mcp/src/types';
 import { ASM_MCP_AUTH_TOKEN, COMMAND_PREFIX, MCP_VSCODE_CONFIG } from './ti-asm-mcp-config';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
@@ -427,6 +428,11 @@ export async function disableMcpCommand() {
 
 export function tiAsmMcpInit(context: vscode.ExtensionContext) {
 
+	// Before the first enableMcpCommand(): the default sink writes mcp-server.log
+	// into the extension host's working directory.
+	const logChannel = vscode.window.createOutputChannel('TI ASM MCP');
+	setLogSink(line => logChannel.appendLine(line));
+
 	const enableMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.enableTiAsmMcp', async () => {
 		await enableMcpCommand(context);
 	});
@@ -448,6 +454,7 @@ export function tiAsmMcpInit(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(
+		logChannel,
 		enableMcpCmd,
 		disableMcpCmd,
 		checkMcpCmd,
