@@ -13,7 +13,10 @@
 
 ## 2.1 Clock tree (project has a `.syscfg` and SysConfig MCP is live)
 
-Call `openFile` on the project's `.syscfg`, then `getClockTreeInstances`. For each clock below
+Call `openFile` on the project's `.syscfg`. If it times out, follow the
+`syscfg-openfile-recovery` skill and record the `@v2CliArgs` line it wrote as a NOTE; that line
+is the only change allowed. If `openFile` still times out, or the skill would ask the user, use
+2.2. Then call `getClockTreeInstances`. For each clock below
 that the tree names, call `traceClockSignal` (`toPin: "out"`) and take the frequency from the
 first entry of `signalPath`. Multi-core devices name the system clock `CPU1_SYSCLK`; use it
 wherever this file says SYSCLK.

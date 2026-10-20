@@ -99,7 +99,9 @@ CMD-module decision in Phase 3:
 You must actively inspect the source SysConfig — do not guess from file names alone.
 
 1. Call `openFile` (ccs-sysconfig MCP) on the **source** project's `.syscfg` file path
-   (obtain it from `getProjectDescriptors`).
+   (obtain it from `getProjectDescriptors`). If `openFile` times out, follow the
+   `syscfg-openfile-recovery` skill, then continue. Its `@v2CliArgs` line is the only change
+   allowed in the source; record it in `c2000-migration.md`.
 2. Call `getModuleInstances` and look for the `moduleId`
    `/utilities/cmd_tool/cmd_syscfg/source/CMD`.
 3. If an instance of it exists → **CMD module** style. If not → **Plain `.cmd`** style.

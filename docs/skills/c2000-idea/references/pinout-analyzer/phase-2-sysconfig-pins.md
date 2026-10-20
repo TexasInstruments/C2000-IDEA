@@ -20,13 +20,10 @@ or skip the step.
 
 If the CCS SysConfig MCP is not available (Phase 0), go to 2.6.
 
-If the `.syscfg` header has no `@v2CliArgs` line, SysConfig asks for the specific device when
-the file opens and adds the header when the user confirms. Tell the user:
-*"SysConfig will show a 'Select Device' dialog. Choose Variant `<device.name>` and Package
-`<package>`, then click CONFIRM. SysConfig adds a header to the `.syscfg`."*
-
-Call `openFile` with the `.syscfg` path from Phase 1. If it fails or times out while the MCP is
-live, record the error and go to 2.6 — do not stop.
+Call `openFile` with the `.syscfg` path from Phase 1. If it times out, follow the
+`syscfg-openfile-recovery` skill and record the `@v2CliArgs` line it wrote as a NOTE; that line
+is the only change allowed. If `openFile` fails, still times out, or the skill would ask the
+user, record the error and go to 2.6 — do not stop.
 
 ## 2.2 Errors
 

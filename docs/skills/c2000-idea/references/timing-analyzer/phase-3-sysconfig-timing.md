@@ -13,7 +13,8 @@
 
 ## 3.1 Generated `board.c`
 
-With SysConfig MCP live, call `openFile` on the project's `.syscfg`, then:
+With SysConfig MCP live, call `openFile` on the project's `.syscfg`, then (if it times out,
+continue as without SysConfig MCP below):
 
 1. Call `getErrorsAndWarnings` and `listGeneratedArtifacts`. If there is any error, or any
    artifact has `blockedByErrors: true` (a missing field means false), SysConfig is not
