@@ -119,6 +119,9 @@ SysConfig GUI Problems panel.
 
 Compare `getModuleInstances` with the 3.7 record. A missing instance was dropped by `migrate()`
 without an error. Record `FEATURE-ABSENT` and tell the user.
+If a dropped instance is EPWM and `listModules` shows `/driverlib/mcpwm.js`, `save`, then run
+`../epwm-to-mcpwm-sysconfig-migration.md` with the target `.syscfg` as its target. When its
+Phase 3 is complete, `openFile` the target `.syscfg` and continue at Phase 3C.
 
 ## Phase 3B complete — hand off to Phase 3C
 

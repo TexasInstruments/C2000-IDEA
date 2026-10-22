@@ -84,9 +84,7 @@ Notes:
   `get_syscfg_module_migration_guide` tool (`moduleToModule: "epwm_mcpwm"`); the live
   `.syscfg` edits use the **ccs-sysconfig MCP**. The supported source/target device set is
   whatever that tool validates — don't assume it. This is **distinct** from device-to-device
-  migration: that workflow's SysConfig step (Phase 3) uses SysConfig's *same-peripheral*
-  `migrate()`, which would drop EPWM as absent on an MCPWM-only target. Run the ePWM → MCPWM
-  workflow on its own, not inside a device migration.
+  migration, which runs it when its SysConfig `migrate()` drops EPWM on an MCPWM target.
 
 ## Extending this skill
 
