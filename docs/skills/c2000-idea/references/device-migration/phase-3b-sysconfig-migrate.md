@@ -69,9 +69,11 @@ with each such entry replaced by `availableContexts[i][0]`. Otherwise omit `cont
 
 Call `getErrorsAndWarnings`. Review all errors and warnings.
 
-If it shows zero errors but `listGeneratedArtifacts` has a `blockedByErrors: true` artifact,
-there are errors the MCP does not report. Ask the user for the errors in the SysConfig GUI
-Problems panel.
+`getErrorsAndWarnings` misses some errors, e.g. pin resource conflicts. `save`, then run the
+`sysconfig_cli` script in the SysConfig `location` from `getProjectProductReferences`:
+`--script <.syscfg> -s <C2000WARE location>/.metadata/sdk.json -o <temp dir> --compiler ccs`.
+Its `error:` lines are the full list. If it cannot run, ask the user for the errors in the
+SysConfig GUI Problems panel.
 
 ## 3.9 Fix issues iteratively
 

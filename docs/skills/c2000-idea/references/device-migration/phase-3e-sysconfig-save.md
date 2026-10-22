@@ -12,9 +12,11 @@ Call `getErrorsAndWarnings`.
 - **Errors that cannot be resolved:** record them as deferred items in `c2000-migration.md`
   and tell the user before deciding whether to save.
 
-If it shows zero errors but `listGeneratedArtifacts` has a `blockedByErrors: true` artifact,
-there are errors the MCP does not report. Ask the user for the errors in the SysConfig GUI
-Problems panel.
+`getErrorsAndWarnings` misses some errors, e.g. pin resource conflicts. `save`, then run the
+`sysconfig_cli` script in the SysConfig `location` from `getProjectProductReferences`:
+`--script <.syscfg> -s <C2000WARE location>/.metadata/sdk.json -o <temp dir> --compiler ccs`.
+Its `error:` lines are the full list. If it cannot run, ask the user for the errors in the
+SysConfig GUI Problems panel.
 
 If the source had a syscfg, compare the `<instance>_BASE` defines in `board.h` with the Phase 3B
 record in `c2000-migration.md`. For each change, record
