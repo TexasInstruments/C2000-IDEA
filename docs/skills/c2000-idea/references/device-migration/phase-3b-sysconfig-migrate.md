@@ -89,12 +89,14 @@ Problems panel.
 - If an issue cannot be resolved after reasonable investigation, report it to the user.
 - Leave errors whose `moduleId` starts with `/driverlib/clocktree/` to Phase 3C.
 - Leave errors whose `moduleId` starts with `/utilities/cmd_tool/` to Phase 3D.
-- An error ending "Click here to acknowledge and dismiss this error" has no configurable.
-  Clear each one either way, and record it:
-  - Ask the user to click "here" on it in the SysConfig GUI and save.
-  - Or `save`, `closeFile`, delete the line `<x>.<setting> = scripting.invalidAssignment(…)`
-    whose `<x>.$name` is the error's instance and `<setting>` the setting it names, then
-    call IDEA `close_editor` on the `.syscfg` and `openFile`.
+- `save`, then find the `scripting.invalidAssignment(` lines in the `.syscfg`. Each is a source
+  setting the target lacks; `changeConfiguration` cannot clear it, and pin ones are missing from
+  `getErrorsAndWarnings`. For a pin line (ends `["$assign"]`), set the instance's target pin
+  for the same signal to the line's GPIO if it is in `choices`. Record every line. Then clear
+  them either way:
+  - Ask the user to click "here" on each error in the SysConfig GUI and save.
+  - Or `save`, `closeFile`, delete the lines, call IDEA `close_editor` on the `.syscfg`, and
+    `openFile`.
 
 > **WARNING: Peripheral module entirely absent from the target device:**
 > Some errors indicate that a whole peripheral module (e.g., `EPWM`, `CMPSS`, `ADC`, `CLB` tile 
