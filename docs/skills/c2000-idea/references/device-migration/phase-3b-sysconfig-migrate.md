@@ -58,6 +58,8 @@ Record `getModuleInstances` and the `<instance>_BASE` defines in `board.h` (`rea
 
 Call `migrate` with the `device`, `package` and `variant` of the user's selected entry. If
 several entries share that device and package, use the first one's `variant`.
+If the source context is `system` and the selected entry's `availableContexts` is
+`[["CPU1","CPU2"]]`, also pass `contexts: ["CPU1"]`. Otherwise omit `contexts`.
  > If the `migrate` tool for SysConfig MCP repeatedly fails. Pause and ask the user to manually
  > click the migrate button in the SysConfig GUI and confirm that they have clicked the migrate button 
  > and saved the file.
