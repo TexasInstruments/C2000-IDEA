@@ -160,7 +160,9 @@ Source linker files: <file>, <file>
 |---|---|---|---|---|
 ```
 
-**If the source uses a CMD module:** the sections are placed in Phase 3D. Skip the rest of this step.
+**If the source uses a CMD module:** delete any RAM or flash linker cmd file from the table
+below that is in the target project directory; the CMD module generates the linker file. The
+sections are placed in Phase 3D. Skip the rest of this step.
 
 **If the source uses a plain `.cmd` file:** set up the target's plain `.cmd` file now, using
 the SDK's target-device reference as the starting point. (Phase 3 will remove the CMD
