@@ -21,7 +21,7 @@ import {
 import { deployIdeaSkills } from '../skills/idea-skills';
 import { isDeviceF29x } from '../deviceData';
 import { renderMigrationGuideMarkdown } from '../migrationGuide';
-import { normalizeMigrationExceptionPath } from '../utilities/utils';
+import { isSamePath, normalizeMigrationExceptionPath } from '../utilities/utils';
 
 let httpServer: http.Server | null = null;
 let extensionContext: vscode.ExtensionContext | null = null;
@@ -178,12 +178,11 @@ function createMcpServerInstance(): McpServer {
 			} as any,
 		},
 		async ({ filePath }: any) => {
-			const target = path.resolve(filePath);
 			const tabs = vscode.window.tabGroups.all.flatMap(g => g.tabs);
 			// CCS gives its editor tabs no input, only a label: the file name.
 			const matches = tabs.filter(tab => {
 				const uri = (tab.input as { uri?: vscode.Uri } | undefined)?.uri;
-				return uri ? path.resolve(uri.fsPath) === target : tab.label === path.basename(target);
+				return uri ? isSamePath(uri.fsPath, filePath) : tab.label === path.basename(filePath);
 			});
 			const closable = matches.filter(tab => !tab.isDirty);
 			if (closable.length > 0) {

@@ -11,6 +11,7 @@ import { IDEA_MCP_AUTH_TOKEN } from '../../mcp/idea-mcp-config';
 import { migrationSyscfgGetAgentReport, MigrationSyscfgModulePair } from '../../migration/migration_syscfg';
 import * as project from '../../utilities/project';
 import { DEVICE_LIST, isDeviceF29x } from '../../deviceData';
+import { isSamePath } from '../../utilities/utils';
 
 // The server starts itself: ideaMcpInit ends with enableMcpCommand(false). So
 // these connect to the instance activation already brought up rather than
@@ -126,7 +127,10 @@ suite('idea mcp tools', () => {
 		fs.writeFileSync(saved, '// saved\n');
 		fs.writeFileSync(unsaved, '// unsaved\n');
 		const isOpen = (file: string) => vscode.window.tabGroups.all.flatMap(g => g.tabs)
-			.some(tab => (tab.input as { uri?: vscode.Uri } | undefined)?.uri?.fsPath === file);
+			.some(tab => {
+				const uri = (tab.input as { uri?: vscode.Uri } | undefined)?.uri;
+				return !!uri && isSamePath(uri.fsPath, file);
+			});
 
 		try {
 			await vscode.window.showTextDocument(vscode.Uri.file(saved), { preview: false });

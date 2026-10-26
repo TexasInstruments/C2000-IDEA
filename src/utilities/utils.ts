@@ -278,6 +278,15 @@ export function normalizeMigrationExceptionPath(entry: string): string {
 	return entry.trim().replace(/\\/g, "/").replace(/^\.\//, "").replace(/^\/+|\/+$/g, "");
 }
 
+// Whether two file paths name the same file. Windows paths are compared
+// without case: vscode.Uri.fsPath lower-cases the drive letter ("c:\..."),
+// while os and user-supplied paths usually have "C:\...".
+export function isSamePath(a: string, b: string): boolean {
+	const ra = path.resolve(a);
+	const rb = path.resolve(b);
+	return process.platform === 'win32' ? ra.toLowerCase() === rb.toLowerCase() : ra === rb;
+}
+
 export async function getIgnoredProjectCCodeUris(projectUri: vscode.Uri, migrationCheckFolderExceptions: string[]): Promise<vscode.Uri[]> {
 	const projectCCodeUrisIgnored: vscode.Uri[] = [];
 	const outputChannel = vscode.window.createOutputChannel("Ignored Files Output"); // Create output channel
