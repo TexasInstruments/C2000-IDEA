@@ -22,7 +22,7 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"C:/Users/a0225962/AppData/Local/Temp/c2000-idea-ws-wJ6tai",
+				"C:/Users/a0225962/AppData/Local/Temp/c2000-idea-ws-7AB5qm",
 				"--extensionDevelopmentPath=${workspaceFolder}",
 				"--extensionTestsPath=${workspaceFolder}/out/src/test/suite/index",
 				"--disable-extensions",

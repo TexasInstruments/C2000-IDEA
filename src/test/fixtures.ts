@@ -233,14 +233,21 @@ export type BuildReport = {
 };
 
 function runCcs(env: TestEnv, args: string[]): { ok: boolean; output: string } {
-	const r = cp.spawnSync(env.ccsCli!, args, {
+	// Windows batch files cannot be launched directly by spawnSync; route the
+	// invocation through cmd.exe. Keep each CCS argument separate so paths with
+	// spaces (notably the temporary workspace) remain intact.
+	const command = process.platform === 'win32' ? 'cmd.exe' : env.ccsCli!;
+	const commandArgs = process.platform === 'win32'
+		? ['/d', '/s', '/c', 'call', env.ccsCli!, ...args]
+		: args;
+	const r = cp.spawnSync(command, commandArgs, {
 		encoding: 'utf8',
 		maxBuffer: 64 * 1024 * 1024,
 		// A cold SysConfig plus full build takes minutes.
 		timeout: 20 * 60 * 1000,
 	});
-	const output = `${r.stdout ?? ''}${r.stderr ?? ''}`;
-	return { ok: r.status === 0, output };
+	const output = `${r.stdout ?? ''}${r.stderr ?? ''}${r.error ? `\n${r.error.message}` : ''}`;
+	return { ok: r.error === undefined && r.status === 0, output };
 }
 
 function lastLines(s: string, n: number): string {
