@@ -906,7 +906,9 @@ export async function migrationRunMigrationCheckOnUri(context: vscode.ExtensionC
 	{
 
 		let migrationDiagnostics: vscode.Diagnostic[] = [];
-		migrationDiagnosticsCollection.set(uri, migrationDiagnostics);
+		// Not the array filled below: CCS keeps the array set() is given and
+		// freezes it when the collection is read, so later pushes would throw.
+		migrationDiagnosticsCollection.set(uri, []);
 		// Clear per-URI metadata so it stays in sync with the diagnostic collection
 		for (const key of Array.from(migrationDiagnosticMetadata.keys())) {
 			if (key.startsWith(uri.fsPath + ":")) {

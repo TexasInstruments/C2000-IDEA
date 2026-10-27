@@ -155,6 +155,32 @@ suite('migration check on uri', () => {
 		}
 	});
 
+	// CCS (Theia) stores the array a DiagnosticCollection is given and freezes it
+	// on the next read; VS Code copies it. The stand-in freezes at once, as a
+	// read during the check would (opening Quick Fix does one).
+	test('works when the collection freezes the arrays it is given', async () => {
+		const uri = vscode.Uri.file(path.join(workspaceRoot, 'device_migration_frozen.c'));
+		fs.writeFileSync(uri.fsPath, '    ASysCtl_enableDCDC();\n');
+		const exported = migration as any;
+		const real: vscode.DiagnosticCollection = exported.migrationDiagnosticsCollection;
+		// The check only calls set().
+		exported.migrationDiagnosticsCollection = {
+			set: (target: vscode.Uri, diagnostics: vscode.Diagnostic[]) => {
+				real.set(target, diagnostics);
+				Object.freeze(diagnostics);
+			},
+		};
+		try {
+			await migration.migrationRunMigrationCheckOnUri(project.extensionContext, uri, 'F28004x', ['F28003x']);
+			assert.deepStrictEqual(
+				(real.get(uri) ?? []).filter(d => d.message.startsWith('ASysCtl_enableDCDC:')).map(d => d.range.start.line),
+				[0]);
+		} finally {
+			exported.migrationDiagnosticsCollection = real;
+			fs.unlinkSync(uri.fsPath);
+		}
+	});
+
 	test('a pair with no migration data rejects', async function () {
 		const uri = sourceUri('f280013x_adc_ex14_ppb_pwm_trip.c');
 		if (!fs.existsSync(uri.fsPath)) { this.skip(); }
