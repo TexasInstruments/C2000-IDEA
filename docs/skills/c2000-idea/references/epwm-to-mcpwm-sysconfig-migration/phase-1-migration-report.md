@@ -54,13 +54,9 @@ names blindly.
 
 ### Step 1 — Open the source file
 
-Call `openFile` with the source `.syscfg` file's absolute path.
-
-The very first time a specific `.syscfg` file is opened via the MCP, SysConfig may need a
-device/package selection resolved. If `openFile` stalls or hangs on a first-open
-device-selection dialog rather than returning, **stop and ask the user to resolve it in the
-SysConfig UI**, then retry — don't keep re-sending `openFile` with a longer timeout expecting
-it to clear itself.
+Call `openFile` with the source `.syscfg` file's absolute path. If `openFile` times out, follow
+the `syscfg-openfile-recovery` skill, then continue. Its `@v2CliArgs` line is the only change
+allowed in this read-only phase.
 
 ### Step 2 — Enumerate the EPWM instances
 

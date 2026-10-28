@@ -21,7 +21,7 @@ import {
 import { deployIdeaSkills } from '../skills/idea-skills';
 import { isDeviceF29x } from '../deviceData';
 import { renderMigrationGuideMarkdown } from '../migrationGuide';
-import { normalizeMigrationExceptionPath } from '../utilities/utils';
+import { isSamePath, normalizeMigrationExceptionPath } from '../utilities/utils';
 
 let httpServer: http.Server | null = null;
 let extensionContext: vscode.ExtensionContext | null = null;
@@ -63,9 +63,9 @@ export function getMcpUrl(): string {
 
 export function checkMcp() {
 	if (isRunning()) {
-		vscode.window.showInformationMessage(`IDEA MCP server is running on ${getMcpUrl()}.`);
+		vscode.window.showInformationMessage(`IDEA MCP: Server is running on ${getMcpUrl()}.`);
 	} else {
-		vscode.window.showInformationMessage('IDEA MCP server is not running.');
+		vscode.window.showInformationMessage('IDEA MCP: Server is not running.');
 	}
 }
 
@@ -82,6 +82,7 @@ AVAILABLE TOOLS:
 - get_bitfield_to_driverlib_migration_report() — Run a bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register accesses and suggests driverlib function replacements.
 - download_migration_guide() — Download the TI any-to-any driverlib migration-guide HTML for a source→target device pair to an absolute local file path.
 - get_syscfg_module_migration_guide() — Get the SysConfig (.syscfg) config migration guide (Markdown) for a peripheral module-to-module pair; pass the config ids to scope it (highly recommended).
+- close_editor() — Close the editor tabs that show a file; tabs with unsaved changes stay open.
 
 RECOMMENDED FLOW:
 1. Call get_projects() to discover projects, their current devices, migration targets, and current folder exclusions (migrationFolderExceptions).
@@ -167,6 +168,30 @@ function createMcpServerInstance(): McpServer {
 			}
 		);
 	}
+
+	server.registerTool(
+		'close_editor',
+		{
+			description: 'Close the editor tabs that show the given file. Tabs with unsaved changes stay open.',
+			inputSchema: {
+				filePath: z.string().describe('Absolute path of the file.'),
+			} as any,
+		},
+		async ({ filePath }: any) => {
+			const tabs = vscode.window.tabGroups.all.flatMap(g => g.tabs);
+			// CCS gives its editor tabs no input, only a label: the file name.
+			const matches = tabs.filter(tab => {
+				const uri = (tab.input as { uri?: vscode.Uri } | undefined)?.uri;
+				return uri ? isSamePath(uri.fsPath, filePath) : tab.label === path.basename(filePath);
+			});
+			const closable = matches.filter(tab => !tab.isDirty);
+			if (closable.length > 0) {
+				await vscode.window.tabGroups.close(closable);
+			}
+			const result = { closed: closable.length, keptUnsaved: matches.length - closable.length };
+			return { content: [{ type: 'text' as const, text: JSON.stringify(result) }] };
+		}
+	);
 
 	if (IDEA_MCP_HANDLERS.setProjectCurrentDevice && IDEA_MCP_HANDLERS.getAllProjectInfos && IDEA_MCP_HANDLERS.getDeviceList) {
 		const setCurrentDevice = IDEA_MCP_HANDLERS.setProjectCurrentDevice;
@@ -569,7 +594,7 @@ async function upsertJsonServer(
 				root = JSON.parse(raw);
 			} catch {
 				const choice = await vscode.window.showWarningMessage(
-					`${filePath} exists but is not valid JSON (it may contain comments). Overwrite the whole file?`,
+					`IDEA MCP: ${filePath} exists but is not valid JSON (it may contain comments). Overwrite the whole file?`,
 					'Overwrite', 'Cancel'
 				);
 				if (choice !== 'Overwrite') { return; }
@@ -590,7 +615,7 @@ async function upsertJsonServer(
 	const keyExisted = Object.prototype.hasOwnProperty.call(parent, IDEA_MCP_SERVER_NAME);
 	if (keyExisted) {
 		const choice = await vscode.window.showWarningMessage(
-			`"${IDEA_MCP_SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
+			`IDEA MCP: "${IDEA_MCP_SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
 			'Replace', 'Cancel'
 		);
 		if (choice !== 'Replace') { return; }
@@ -603,7 +628,7 @@ async function upsertJsonServer(
 	fs.writeFileSync(filePath, JSON.stringify(root, null, 2) + '\n');
 
 	const verb = keyExisted ? 'Updated' : fileExisted ? `Added ${IDEA_MCP_SERVER_NAME} to` : 'Created';
-	vscode.window.showInformationMessage(`${verb} ${filePath}.`);
+	vscode.window.showInformationMessage(`IDEA MCP: ${verb} ${filePath}.`);
 }
 
 function replaceCodexBlock(content: string, header: string, block: string): string {
@@ -628,7 +653,7 @@ async function upsertCodexToml(filePath: string, url: string): Promise<void> {
 
 	if (keyExisted) {
 		const choice = await vscode.window.showWarningMessage(
-			`"${IDEA_MCP_SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
+			`IDEA MCP: "${IDEA_MCP_SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
 			'Replace', 'Cancel'
 		);
 		if (choice !== 'Replace') { return; }
@@ -644,7 +669,7 @@ async function upsertCodexToml(filePath: string, url: string): Promise<void> {
 
 	const verb = keyExisted ? 'Updated' : fileExisted ? `Added ${IDEA_MCP_SERVER_NAME} to` : 'Created';
 	vscode.window.showInformationMessage(
-		`${verb} ${filePath}. Set IDEA_MCP_AUTH_TOKEN=${IDEA_MCP_AUTH_TOKEN} in your shell environment.`
+		`IDEA MCP: ${verb} ${filePath}. Set IDEA_MCP_AUTH_TOKEN=${IDEA_MCP_AUTH_TOKEN} in your shell environment.`
 	);
 }
 
@@ -675,14 +700,14 @@ export async function registerMcp(toolId?: string) {
 		// A cancelled pick is silent; a bad toolId is a caller error worth saying.
 		if (toolId) {
 			vscode.window.showErrorMessage(
-				`Unknown tool "${toolId}". Expected one of: ${REGISTER_MCP_TOOLS.map(t => t.id).join(', ')}.`);
+				`IDEA MCP: Unknown tool "${toolId}". Expected one of: ${REGISTER_MCP_TOOLS.map(t => t.id).join(', ')}.`);
 		}
 		return;
 	}
 
 	const workspaceFolders = vscode.workspace.workspaceFolders;
 	if (!workspaceFolders) {
-		vscode.window.showErrorMessage('Open a workspace folder first.');
+		vscode.window.showErrorMessage('IDEA MCP: Open a workspace folder first.');
 		return;
 	}
 
@@ -713,7 +738,7 @@ export async function registerMcp(toolId?: string) {
 		await deployIdeaSkills(extensionContext!, tool.id);
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
-		vscode.window.showErrorMessage(`Failed to register IDEA MCP: ${msg}`);
+		vscode.window.showErrorMessage(`IDEA MCP: Failed to register MCP: ${msg}`);
 	}
 }
 
@@ -791,7 +816,7 @@ export async function mcpInstructions() {
 export async function enableMcpCommand(showInfo: boolean = true) {
 	try {
 		if (showInfo) {
-			vscode.window.showInformationMessage('Starting IDEA MCP Server...');
+			vscode.window.showInformationMessage('IDEA MCP: Starting server...');
 		}
 
 		const port = getMcpPort();
@@ -858,7 +883,7 @@ export async function enableMcpCommand(showInfo: boolean = true) {
 
 		httpServer = app.listen(port, host, () => {
 			if (showInfo) {
-				vscode.window.showInformationMessage(`IDEA MCP Server running on http://${host}:${port}/mcp`);
+				vscode.window.showInformationMessage(`IDEA MCP: Server running on http://${host}:${port}/mcp`);
 			}
 			console.log(`[IDEA-MCP] Server started on http://${host}:${port}/mcp`);
 		});
@@ -866,17 +891,17 @@ export async function enableMcpCommand(showInfo: boolean = true) {
 		httpServer.on('error', (err: NodeJS.ErrnoException) => {
 			if (err.code === 'EADDRINUSE') {
 				vscode.window.showErrorMessage(
-					`Port ${port} is already in use. Stop the running server first.`
+					`IDEA MCP: Port ${port} is already in use. Stop the running server first.`
 				);
 			} else {
-				vscode.window.showErrorMessage(`IDEA MCP server error: ${err.message}`);
+				vscode.window.showErrorMessage(`IDEA MCP: Server error: ${err.message}`);
 			}
 			console.error('[IDEA-MCP] HTTP server error:', err);
 		});
 
 	} catch (err) {
 		const message = err instanceof Error ? err.message : String(err);
-		vscode.window.showErrorMessage(`Failed to enable IDEA MCP: ${message}`);
+		vscode.window.showErrorMessage(`IDEA MCP: Failed to enable server: ${message}`);
 		console.error('[IDEA-MCP] Enable error:', err);
 	}
 }
@@ -890,17 +915,17 @@ export async function disableMcpCommand() {
 		if (httpServer) {
 			httpServer.close((err?: NodeJS.ErrnoException | null) => {
 				if (err) {
-					vscode.window.showErrorMessage(`Error stopping IDEA MCP server: ${err.message}`);
+					vscode.window.showErrorMessage(`IDEA MCP: Error stopping server: ${err.message}`);
 					console.error('[IDEA-MCP] Server close error:', err);
 				} else {
-					vscode.window.showInformationMessage('IDEA MCP Server disabled');
+					vscode.window.showInformationMessage('IDEA MCP: Server disabled');
 					console.log('[IDEA-MCP] Server stopped');
 				}
 				httpServer = null;
 				resolve();
 			});
 		} else {
-			vscode.window.showWarningMessage('IDEA MCP Server is not running');
+			vscode.window.showWarningMessage('IDEA MCP: Server is not running');
 			resolve();
 		}
 	});

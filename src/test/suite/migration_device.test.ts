@@ -127,6 +127,60 @@ suite('migration check on uri', () => {
 			found.map(d => d.message.split('\n')[0]).join(' | '));
 	});
 
+	// XBAR_setInputPin is changed and ASysCtl_disableDCDC removed for this pair.
+	// The target branch keeps only the removed finding; the source branch is not
+	// checked and the unwrapped call is.
+	test('a target-only branch flags removed symbols, not changed ones', async () => {
+		const uri = vscode.Uri.file(path.join(workspaceRoot, 'device_migration_branch.c'));
+		fs.writeFileSync(uri.fsPath, [
+			'#if F28004x  //_DEVICE_MIGRATION_',
+			'    XBAR_setInputPin(XBAR_INPUT1, 39U);',
+			'#elif F28003x  //_DEVICE_MIGRATION_',
+			'    XBAR_setInputPin(INPUTXBAR_BASE, XBAR_INPUT1, 39U);',
+			'    ASysCtl_disableDCDC();',
+			'#endif  //_DEVICE_MIGRATION_',
+			'    XBAR_setInputPin(XBAR_INPUT1, 39U);',
+			''
+		].join('\n'));
+		try {
+			const found = await check(uri, 'F28004x', ['F28003x']);
+			const lines = (code: string) => found
+				.filter(d => d.message.startsWith(code + ':'))
+				.map(d => d.range.start.line);
+
+			assert.deepStrictEqual(lines('XBAR_setInputPin'), [6]);
+			assert.deepStrictEqual(lines('ASysCtl_disableDCDC'), [4]);
+		} finally {
+			fs.unlinkSync(uri.fsPath);
+		}
+	});
+
+	// CCS (Theia) stores the array a DiagnosticCollection is given and freezes it
+	// on the next read; VS Code copies it. The stand-in freezes at once, as a
+	// read during the check would (opening Quick Fix does one).
+	test('works when the collection freezes the arrays it is given', async () => {
+		const uri = vscode.Uri.file(path.join(workspaceRoot, 'device_migration_frozen.c'));
+		fs.writeFileSync(uri.fsPath, '    ASysCtl_enableDCDC();\n');
+		const exported = migration as any;
+		const real: vscode.DiagnosticCollection = exported.migrationDiagnosticsCollection;
+		// The check only calls set().
+		exported.migrationDiagnosticsCollection = {
+			set: (target: vscode.Uri, diagnostics: vscode.Diagnostic[]) => {
+				real.set(target, diagnostics);
+				Object.freeze(diagnostics);
+			},
+		};
+		try {
+			await migration.migrationRunMigrationCheckOnUri(project.extensionContext, uri, 'F28004x', ['F28003x']);
+			assert.deepStrictEqual(
+				(real.get(uri) ?? []).filter(d => d.message.startsWith('ASysCtl_enableDCDC:')).map(d => d.range.start.line),
+				[0]);
+		} finally {
+			exported.migrationDiagnosticsCollection = real;
+			fs.unlinkSync(uri.fsPath);
+		}
+	});
+
 	test('a pair with no migration data rejects', async function () {
 		const uri = sourceUri('f280013x_adc_ex14_ppb_pwm_trip.c');
 		if (!fs.existsSync(uri.fsPath)) { this.skip(); }

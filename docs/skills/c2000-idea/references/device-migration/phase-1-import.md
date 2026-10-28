@@ -41,8 +41,11 @@ to proceed.
 
   > **Device name format note:** IDEA MCP device names match the `list_migration_devices()`
   > entries, while CCS Project MCP may return full part numbers (e.g., `TMS320F28003x`). Treat
-  > these as **matching** if the IDEA MCP name appears (case-insensitively) as a substring of
-  > the CCS device string. Only stop if they refer to genuinely different device families.
+  > these as **matching** if the IDEA MCP name, with its `x` standing for any single character,
+  > appears (case-insensitively) in the CCS device string — e.g. `F28004x` matches
+  > `TMS320F280049C`, `F2837xD` matches `TMS320F28379D`. For `F28P55x` and `F28P551x`, use the
+  > digit after `F28P55`: `0` or `9` is F28P55x; `1`, `2` or `8` is F28P551x. Only stop if they
+  > do not match.
 - **Validate source device:** Confirm the discovered source device is in the
   `list_migration_devices()` supported list. If not, notify the user and **terminate**.
 - **Compare device names case-insensitively:** a user-supplied device name may be typed in
@@ -185,6 +188,7 @@ Seed the log using this exact template — fill in every `<placeholder>`:
 | Phase 4C — Sweep | `PENDING` | |
 | Phase 4D — Build Triage | `PENDING` | |
 | Phase 4E — Pin migration | `PENDING` | |
+| Phase 4F — Timing migration | `PENDING` | |
 | Phase 5 — Report | `PENDING` | |
 ```
 

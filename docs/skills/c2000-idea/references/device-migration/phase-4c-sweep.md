@@ -81,6 +81,10 @@ build → repeat) until clean.
 
 Track the total issue count across two consecutive sweeps.
 
+Leave out a flag on a call that matches the target device's driverlib signature and has no
+`Suggested fix`: the analyser flags every call to a changed function. Record it as
+`REVIEW-REQUIRED: <file>:<line> <symbol> — flagged on every call; matches the target signature`.
+
 If the issue count is **unchanged across two full sweeps** — the agent is stuck:
 - Stop attempting fixes.
 - Compile the complete list of unresolved issues (file, line, symbol, reason).
@@ -199,7 +203,7 @@ Phase 4C status: COMPLETE
 ```
 
 > **Do NOT write `Phase 4 status: COMPLETE` here.** That entry is written by the
-> orchestrator in Step 4.7 of `phase-4-migrate-code.md` — after Phase 4D has run
+> orchestrator in Step 4.8 of `phase-4-migrate-code.md` — after Phase 4D has run
 > (if needed). Writing it here prematurely would mark Phase 4 complete before the
 > build triage loop has had a chance to resolve remaining errors.
 
@@ -243,5 +247,5 @@ The orchestrator will:
 - If `Final clean build: FAIL` → dispatch Phase 4D (build error triage) via Step 4.5.
 
 **Do not ask the user "Ready to move to Phase 5?" here.** That question is asked by
-the orchestrator after Phases 4D and 4E have run (4D is skipped for a passing build), in
-Step 4.7.
+the orchestrator after Phases 4D, 4E and 4F have run (4D is skipped for a passing build), in
+Step 4.8.

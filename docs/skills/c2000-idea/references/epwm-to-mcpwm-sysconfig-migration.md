@@ -16,10 +16,10 @@ instances can share one MCPWM instance, or wants the sync chain / time-base sett
 EPWM project checked before such a migration. Trigger even if the user doesn't say "MCPWM"
 explicitly but describes moving a multi-EPWM design onto a device that uses MCPWM.
 
-This is **distinct** from device-to-device migration (`references/device-migration.md`).
-Device migration's SysConfig step (Phase 3) uses SysConfig's *same-peripheral* `migrate()`,
-which would treat EPWM as absent on an MCPWM-only target and drop it. Run this workflow on
-its own for EPWM→MCPWM, not inside a device migration.
+Device migration (`references/device-migration.md`) runs this workflow when its SysConfig
+`migrate()` drops EPWM on an MCPWM target. Take the four inputs below from its
+`c2000-migration.md` (source project `.syscfg`, target project `.syscfg`), and return to
+device migration when Phase 3 here is complete.
 
 ## Required inputs (gathered once, used across phases)
 
@@ -154,4 +154,3 @@ guess a grouping/mapping that was never confirmed.
   EPWM→MCPWM configurable mappings from memory or from any cached data file.
 - Do honor every stop-and-confirm gate; surface each judgment call to the user by name.
 - Don't cascade through phases or sub-phases in a single turn.
-- Don't run this inside a device-to-device migration — it is a standalone workflow.

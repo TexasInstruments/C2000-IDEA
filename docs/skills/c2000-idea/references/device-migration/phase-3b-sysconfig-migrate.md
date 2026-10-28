@@ -26,6 +26,7 @@ Look for the `Phase 3A: COMPLETE` entry.
 
 If the `c2000-migration.md` checkpoint is missing or unclear, re-derive the path:
 - Open the target project's `.syscfg` via `openFile`, then call `getModuleInstances`.
+  If `openFile` times out, follow the `syscfg-openfile-recovery` skill, then continue. Record the `@v2CliArgs` line it wrote in `c2000-migration.md`.
   Inspect the returned module list contains `device_support` or not. If it is absent notify to user, and terminate the migration mentioning the reason.
 - check the status of whether source-has-syscfg (whether the source project had `.syscfg` file). If it did, then that source has been copied to the target    
   project already. If not then the universal project's syscfg file was kept.
@@ -57,6 +58,9 @@ Record `getModuleInstances` and the `<instance>_BASE` defines in `board.h` (`rea
 
 Call `migrate` with the `device`, `package` and `variant` of the user's selected entry. If
 several entries share that device and package, use the first one's `variant`.
+`listMigrationTargets` returns the source's `currentContexts`. If any `currentContexts[i]`
+is not in the selected entry's `availableContexts[i]`, pass `contexts`: `currentContexts`
+with each such entry replaced by `availableContexts[i][0]`. Otherwise omit `contexts`.
  > If the `migrate` tool for SysConfig MCP repeatedly fails. Pause and ask the user to manually
  > click the migrate button in the SysConfig GUI and confirm that they have clicked the migrate button 
  > and saved the file.
@@ -65,9 +69,11 @@ several entries share that device and package, use the first one's `variant`.
 
 Call `getErrorsAndWarnings`. Review all errors and warnings.
 
-If it shows zero errors but `listGeneratedArtifacts` has a `blockedByErrors: true` artifact,
-there are errors the MCP does not report. Ask the user for the errors in the SysConfig GUI
-Problems panel.
+`getErrorsAndWarnings` misses some errors, e.g. pin resource conflicts. `save`, then run the
+`sysconfig_cli` script in the SysConfig `location` from `getProjectProductReferences`:
+`--script <.syscfg> -s <C2000WARE location>/.metadata/sdk.json -o <temp dir> --compiler ccs`.
+Its `error:` lines are the full list. If it cannot run, ask the user for the errors in the
+SysConfig GUI Problems panel.
 
 ## 3.9 Fix issues iteratively
 
@@ -85,6 +91,14 @@ Problems panel.
 - If an issue cannot be resolved after reasonable investigation, report it to the user.
 - Leave errors whose `moduleId` starts with `/driverlib/clocktree/` to Phase 3C.
 - Leave errors whose `moduleId` starts with `/utilities/cmd_tool/` to Phase 3D.
+- `save`, then find the `scripting.invalidAssignment(` lines in the `.syscfg`. Each is a source
+  setting the target lacks; `changeConfiguration` cannot clear it, and pin ones are missing from
+  `getErrorsAndWarnings`. For a pin line (ends `["$assign"]`), set the instance's target pin
+  for the same signal to the line's GPIO if it is in `choices`. Record every line. Then clear
+  them either way:
+  - Ask the user to click "here" on each error in the SysConfig GUI and save.
+  - Or `save`, `closeFile`, delete the lines, call IDEA `close_editor` on the `.syscfg`, and
+    `openFile`.
 
 > **WARNING: Peripheral module entirely absent from the target device:**
 > Some errors indicate that a whole peripheral module (e.g., `EPWM`, `CMPSS`, `ADC`, `CLB` tile 
@@ -105,6 +119,9 @@ Problems panel.
 
 Compare `getModuleInstances` with the 3.7 record. A missing instance was dropped by `migrate()`
 without an error. Record `FEATURE-ABSENT` and tell the user.
+If a dropped instance is EPWM and `listModules` shows `/driverlib/mcpwm.js`, `save`, then run
+`../epwm-to-mcpwm-sysconfig-migration.md` with the target `.syscfg` as its target. When its
+Phase 3 is complete, `openFile` the target `.syscfg` and continue at Phase 3C.
 
 ## Phase 3B complete — hand off to Phase 3C
 

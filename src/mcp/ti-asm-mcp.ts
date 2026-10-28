@@ -6,6 +6,7 @@ import express from 'express';
 import { randomUUID } from 'crypto';
 import { createMcpServer } from '../../submodules/ti_asm_mcp/src/mcp-server';
 import { loadAllIndices } from '../../submodules/ti_asm_mcp/src/index-loader';
+import { setLogSink } from '../../submodules/ti_asm_mcp/src/logger';
 import { DeviceIndex } from '../../submodules/ti_asm_mcp/src/types';
 import { ASM_MCP_AUTH_TOKEN, COMMAND_PREFIX, MCP_VSCODE_CONFIG } from './ti-asm-mcp-config';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
@@ -51,9 +52,9 @@ export function getMcpUrl(): string {
 
 export function checkMcp() {
 	if (isRunning()) {
-		vscode.window.showInformationMessage(`MCP server is running on ${getMcpUrl()}.`);
+		vscode.window.showInformationMessage(`TI ASM MCP: Server is running on ${getMcpUrl()}.`);
 	} else {
-		vscode.window.showInformationMessage('MCP server is not running.');
+		vscode.window.showInformationMessage('TI ASM MCP: Server is not running.');
 	}
 }
 
@@ -83,7 +84,7 @@ async function upsertJsonServer(
 				root = JSON.parse(raw);
 			} catch {
 				const choice = await vscode.window.showWarningMessage(
-					`${filePath} exists but is not valid JSON (it may contain comments). Overwrite the whole file?`,
+					`TI ASM MCP: ${filePath} exists but is not valid JSON (it may contain comments). Overwrite the whole file?`,
 					'Overwrite', 'Cancel'
 				);
 				if (choice !== 'Overwrite') { return; }
@@ -104,7 +105,7 @@ async function upsertJsonServer(
 	const keyExisted = Object.prototype.hasOwnProperty.call(parent, SERVER_NAME);
 	if (keyExisted) {
 		const choice = await vscode.window.showWarningMessage(
-			`"${SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
+			`TI ASM MCP: "${SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
 			'Replace', 'Cancel'
 		);
 		if (choice !== 'Replace') { return; }
@@ -117,7 +118,7 @@ async function upsertJsonServer(
 	fs.writeFileSync(filePath, JSON.stringify(root, null, 2) + '\n');
 
 	const verb = keyExisted ? 'Updated' : fileExisted ? 'Added ti-asm-mcp to' : 'Created';
-	vscode.window.showInformationMessage(`${verb} ${filePath}.`);
+	vscode.window.showInformationMessage(`TI ASM MCP: ${verb} ${filePath}.`);
 }
 
 // Replace the [mcp_servers.ti-asm-mcp] table (header line through the line
@@ -146,7 +147,7 @@ async function upsertCodexToml(filePath: string, url: string): Promise<void> {
 
 	if (keyExisted) {
 		const choice = await vscode.window.showWarningMessage(
-			`"${SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
+			`TI ASM MCP: "${SERVER_NAME}" is already configured in ${filePath}. Replace it?`,
 			'Replace', 'Cancel'
 		);
 		if (choice !== 'Replace') { return; }
@@ -162,7 +163,7 @@ async function upsertCodexToml(filePath: string, url: string): Promise<void> {
 
 	const verb = keyExisted ? 'Updated' : fileExisted ? 'Added ti-asm-mcp to' : 'Created';
 	vscode.window.showInformationMessage(
-		`${verb} ${filePath}. Set ASM_MCP_AUTH_TOKEN=${ASM_MCP_AUTH_TOKEN} in your shell environment.`
+		`TI ASM MCP: ${verb} ${filePath}. Set ASM_MCP_AUTH_TOKEN=${ASM_MCP_AUTH_TOKEN} in your shell environment.`
 	);
 }
 
@@ -180,7 +181,7 @@ export async function registerMcp() {
 
 	const workspaceFolders = vscode.workspace.workspaceFolders;
 	if (!workspaceFolders) {
-		vscode.window.showErrorMessage('Open a workspace folder first.');
+		vscode.window.showErrorMessage('TI ASM MCP: Open a workspace folder first.');
 		return;
 	}
 
@@ -208,7 +209,7 @@ export async function registerMcp() {
 		}
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
-		vscode.window.showErrorMessage(`Failed to register MCP: ${msg}`);
+		vscode.window.showErrorMessage(`TI ASM MCP: Failed to register MCP: ${msg}`);
 	}
 }
 
@@ -286,7 +287,7 @@ export async function mcpInstructions() {
 export async function enableMcpCommand(context: vscode.ExtensionContext, showInfo: boolean = true) {
 	try {
 		if (showInfo) {
-			vscode.window.showInformationMessage('Starting TI ASM MCP Server...');
+			vscode.window.showInformationMessage('TI ASM MCP: Starting server...');
 		}
 
 		// Get MCP configuration from extension settings
@@ -374,7 +375,7 @@ export async function enableMcpCommand(context: vscode.ExtensionContext, showInf
 		// Start HTTP server
 		httpServer = app.listen(port, host, () => {
 			if (showInfo) {
-				vscode.window.showInformationMessage(`TI ASM MCP Server running on http://${host}:${port}/mcp`);
+				vscode.window.showInformationMessage(`TI ASM MCP: Server running on http://${host}:${port}/mcp`);
 			}
 			console.log(`[MCP] Server started with multi-session support on http://${host}:${port}/mcp`);
 		});
@@ -383,17 +384,17 @@ export async function enableMcpCommand(context: vscode.ExtensionContext, showInf
 		httpServer.on('error', (err: NodeJS.ErrnoException) => {
 			if (err.code === 'EADDRINUSE') {
 				vscode.window.showErrorMessage(
-					`TI ASM MCP Port ${port} is already in use. Stop the running server first.`
+					`TI ASM MCP: Port ${port} is already in use. Stop the running server first.`
 				);
 			} else {
-				vscode.window.showErrorMessage(`TI ASM MCP Server error: ${err.message}`);
+				vscode.window.showErrorMessage(`TI ASM MCP: Server error: ${err.message}`);
 			}
 			console.error('[MCP] HTTP server error:', err);
 		});
 
 	} catch (err) {
 		const message = err instanceof Error ? err.message : String(err);
-		vscode.window.showErrorMessage(`TI ASM MCP Failed to enable MCP: ${message}`);
+		vscode.window.showErrorMessage(`TI ASM MCP: Failed to enable server: ${message}`);
 		console.error('[MCP] Enable error:', err);
 	}
 }
@@ -408,10 +409,10 @@ export async function disableMcpCommand() {
 		if (httpServer) {
 			httpServer.close((err?: NodeJS.ErrnoException | null) => {
 				if (err) {
-					vscode.window.showErrorMessage(`Error stopping server: ${err.message}`);
+					vscode.window.showErrorMessage(`TI ASM MCP: Error stopping server: ${err.message}`);
 					console.error('[MCP] Server close error:', err);
 				} else {
-					vscode.window.showInformationMessage('MCP Server disabled');
+					vscode.window.showInformationMessage('TI ASM MCP: Server disabled');
 					console.log('[MCP] Server stopped');
 				}
 				httpServer = null;
@@ -419,13 +420,18 @@ export async function disableMcpCommand() {
 				resolve();
 			});
 		} else {
-			vscode.window.showWarningMessage('MCP Server is not running');
+			vscode.window.showWarningMessage('TI ASM MCP: Server is not running');
 			resolve();
 		}
 	});
 }
 
 export function tiAsmMcpInit(context: vscode.ExtensionContext) {
+
+	// Before the first enableMcpCommand(): the default sink writes mcp-server.log
+	// into the extension host's working directory.
+	const logChannel = vscode.window.createOutputChannel('TI ASM MCP');
+	setLogSink(line => logChannel.appendLine(line));
 
 	const enableMcpCmd = vscode.commands.registerCommand(MCP_VSCODE_CONFIG + '.enableTiAsmMcp', async () => {
 		await enableMcpCommand(context);
@@ -448,6 +454,7 @@ export function tiAsmMcpInit(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(
+		logChannel,
 		enableMcpCmd,
 		disableMcpCmd,
 		checkMcpCmd,

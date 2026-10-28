@@ -29,13 +29,17 @@ If the source project has a `.syscfg`:
 1. Note the filename of the existing `.syscfg` in the target project directory (e.g. `universal_c2000.syscfg`).
 2. Copy the source `.syscfg` into the target project directory and rename the copy to `<targetProjectName>.syscfg` (it does **not** overwrite the universal template because the filenames differ).
 3. Delete the file noted in step 1.
-4. Confirm only one `.syscfg` remains in the target project directory and its name is `<targetProjectName>.syscfg` before continuing.
+4. If the target's `sysconfig` flags (`getToolFlags`) contain `-d` or `--device`, call
+   `setToolFlags` (`sysconfig`, `-d ""`, all configurations) and read them back. A user-supplied
+   starter sets its device family there, and the copied `.syscfg` then fails to open.
+5. Confirm only one `.syscfg` remains in the target project directory and its name is `<targetProjectName>.syscfg` before continuing.
 
 The source `.syscfg` itself stays untouched — work on the copy.
 
 ## 3.2 Open the target `.syscfg`
 
 Open the target project's `.syscfg` via `openFile` (ccs-sysconfig MCP) — always `<targetProjectName>.syscfg` in the target project directory. Read the `additionalInstructions` field in the result.
+If `openFile` times out, follow the `syscfg-openfile-recovery` skill, then continue. Record the `@v2CliArgs` line it wrote in `c2000-migration.md`.
 
 ## 3.3 Ensure the device-support module is present
 
@@ -50,6 +54,10 @@ module is absent.
   `device.c`/`device.h`, `.opt`, and `.cmd.genlibs` are generated for the target.
 - If it is **already present** (the universal template, or a source that already used it),
   no action — this case is already correct.
+
+If the target project has `device/device.c` and `device/device.h` (a user-supplied starter's
+copies), delete them. `device_support` generates both; with the copies, `Device_*` is defined
+twice at link time and the stale `device.h` redefines the `DEVICE_*` clock macros.
 
 
 ## Phase 3A complete — hand off to Phase 3B

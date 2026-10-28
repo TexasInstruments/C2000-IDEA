@@ -52,16 +52,15 @@ Apply its PLL multiplier and dividers. If the oscillator frequency differs from 
 
 ## 3C.4 Match the downstream clocks
 
-For each clock in the source record, follow `inPins` back from the target's named clock
-(`getClockTreeInstances`) to its divider or source mux, and set it so `traceClockSignal`
-reports the source frequency.
+For each clock in the source record whose peripherals the application uses, follow `inPins`
+back from the target's named clock (`getClockTreeInstances`) to its divider or source mux, and
+set it so `traceClockSignal` reports the source frequency.
 
 - No exact match in `choices`: use the closest value that produces no error and record
-  `REVIEW-REQUIRED: clock <name> — source <f> MHz, target <g> MHz`.
+  `REVIEW-REQUIRED: clock <name> — source <f> MHz, target <g> MHz`. On a tie, use the higher
+  frequency.
 - No divider on the target (the clock runs at SYSCLK): record
   `REVIEW-REQUIRED: clock <name> runs at SYSCLK — source <f> MHz, target <g> MHz`.
-
-Record these only for clocks whose peripherals the application uses.
 
 ## 3C.5 Find code that sets or depends on clock values
 
