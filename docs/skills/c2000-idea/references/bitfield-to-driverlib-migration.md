@@ -71,10 +71,15 @@ device Technical Reference Manual. The link is for the user to open in a browser
 fetch it. When the register bit details (shift, mask, description) are not enough to
 construct a correct driverlib call, read the register through `ti-asm-mcp`:
 
-1. `search_trm_keywords(device, "<register name>")` to find the section id.
-2. `get_trm_section(device, sectionId)` to read the register: bit field table, reset
+1. Find the register's section id with `search_trm_keywords(device, "<register name>")`
+   using only the name. Use a result whose section title is "<register name> Register
+   (Offset = …)".
+2. If no result has that title, find the peripheral's chapter number from any result
+   that mentions the peripheral. Then call `list_trm_headings(device, chapter, limit: 4)`
+   and take the id of the heading titled "<register name> Register".
+3. `get_trm_section(device, sectionId)` returns the register: bit field table, reset
    value, access type and allowed values.
-3. Construct the driverlib call using only data from the TRM; do not infer bit values or
+4. Construct the driverlib call using only data from the TRM; do not infer bit values or
    field names that the documentation does not give.
 
 ### 5. Process the report
