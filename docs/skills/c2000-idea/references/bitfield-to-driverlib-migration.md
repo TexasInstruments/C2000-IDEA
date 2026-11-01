@@ -25,18 +25,27 @@ device-migration reference instead if the user is moving between device families
   bitfield tool needs it to look up register-to-function mappings for the
   correct device family.
 
-### 2. Run the bitfield migration report per source file
+### 2. Create the destination project
 
-For each C/H source file to convert:
+Convert in a clone of the source project, not in the source project. Follow
+`bitfield-to-driverlib-migration/destination-project.md`: it clones the project, enables
+SysConfig in the clone and adds driverlib through a SysConfig script. Run the report, edit
+and build in the clone from here on.
+
+### 3. Run the bitfield migration report per source file
+
+For each of the user's own C/H source files to convert (not the device_support library
+files copied from the SDK, which step 6 deletes; a file byte-identical to its copy under
+C2000Ware `device_support/<family>` is one of those):
 
 - Call `get_bitfield_to_driverlib_migration_report(filePath, sourceDevice)`
   with the absolute file path and the device from step 1.
 - The tool returns a structured markdown report and populates VS Code
   diagnostics (squiggly underlines) as a side effect.
-- Work one file at a time: convert it, run the report on it again, then move
-  on to the next file.
+- Work one file at a time: convert it, run the report on it again, build the
+  clone, then move on to the next file.
 
-### 3. Understand the report structure
+### 4. Understand the report structure
 
 The report groups every bitfield register access into one of four fix types:
 
@@ -72,7 +81,7 @@ driverlib call, fetch the TRM link using this protocol:
 7. **Construct the driverlib call** using only data from the TRM — do not infer
    or hallucinate bit values or field names not present in the documentation.
 
-### 4. Process the report
+### 5. Process the report
 
 Work through issues in file order. For each issue:
 
@@ -89,14 +98,19 @@ Work through issues in file order. For each issue:
 5. After editing the file, run the report on it again; only issues on commented-out
    lines should remain.
 
-### 5. Build and fix what remains
+Enum values, base macros and `INT_*` names are in the driverlib headers, in
+`<c2000ware_path>/driverlib/<device in lower case>/driverlib/`. Take `<c2000ware_path>`
+from CCS Project MCP `getProjectProductReferences`.
 
-The report covers register accesses only. The code around them may still use
-device_support names that a driverlib project does not have. Build the driverlib
-project that will hold the converted code and fix each error the compiler
-reports. Legacy integer and float types map to the C99 names, for example
-`Uint16` to `uint16_t`, `int32` to `int32_t` and `float32` to `float32_t`.
-Common ones:
+### 6. Remove the device_support code
+
+The clone keeps its device_support headers, so it builds while files are converted. Once
+every file is converted and the clone builds, ask the user to confirm, then remove the
+device_support code from the clone:
+
+1. Replace the device_support names the report did not cover. Legacy integer and float
+   types map to the C99 names, for example `Uint16` to `uint16_t`, `int32` to `int32_t`
+   and `float32` to `float32_t`. Common ones:
 
 | device_support | driverlib |
 |----------------|-----------|
@@ -111,7 +125,20 @@ Common ones:
 | `PieVectTable.X_INT = &isr;` | `Interrupt_register(INT_X, &isr);` |
 | `IER \|= M_INTn` | `Interrupt_enable(INT_X)` for the interrupt being enabled |
 
-### 6. Report back
+2. Delete the clone's files that are identical to a same-named file in the C2000Ware
+   `device_support/<family>/common/source`, `headers/source` or `headers/cmd` folder, such
+   as `<family>_sysctrl.c` and `<family>_headers_nonBIOS.cmd`. Keep
+   `<family>_codestartbranch.asm`. A file that differs from the SDK copy holds the user's
+   changes: keep it and tell the user. Code that calls `DELAY_US` uses `DEVICE_DELAY_US`
+   from `device.h` instead.
+3. Remove the include paths that point into C2000Ware's `device_support/<family>/common/include`
+   and `headers/include` from the clone's `.cproject`: delete their
+   `<listOptionValue value="..."/>` lines in every `<cconfiguration>`. Without this the
+   SDK's `device.h` is included, not the generated `syscfg/device.h`. Wait for CCS to pick
+   up the edit: poll `getToolFlags(project, "compiler")` until the paths are gone.
+4. Build the clone and fix each error the compiler reports.
+
+### 7. Report back
 
 After processing all files:
 
@@ -126,6 +153,7 @@ After processing all files:
 - Do use Register Bit Details (shift, mask) to construct manual fixes when no
   driverlib function is listed.
 - Do run the report on one source file at a time, and again after editing it.
+- Don't edit the source project; every edit goes in the clone.
 - Don't recall C2000 register-to-driverlib mappings from memory — the MCP is the
   source of truth.
 - Don't confuse this with device-to-device migration — bitfield-to-driverlib stays
