@@ -90,6 +90,9 @@ Work through issues in file order. For each issue:
    field and construct the call with the correct arguments using its signature
    and the register bit details. If the signature is not enough, call
    `get_driverlib_function` (the report shows the exact call).
+   One driverlib function can set several fields the report lists as separate
+   issues. Read the signature of the function you pick and cover every field it sets
+   in one call; re-running the report confirms no issue was missed.
 3. If no function is listed, use the **Raw access** details and the register bit
    details (shift, mask).
 4. For **whole**-register writes with no candidate function, consider whether a
