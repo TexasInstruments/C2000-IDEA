@@ -991,7 +991,6 @@ function registerBitfieldAgentReportMDHeader(device: string): string {
 > This report covers register accesses only. Other device_support code around them (includes, types, Init functions, the PIE vector table) is not listed; build the destination project and fix what the compiler reports.
 > Your goal is to edit each listed file so that no direct bitfield register accesses remain — use driverlib functions or, when unavailable, explicit read-modify-write register operations.
 > **SDK reference:** \`${sdkVersion}\` — all driverlib function names and register definitions must be verified against this SDK version.
-> **File modification protocol:** Present each change as a unified diff with 3 lines of context. For files under 100 lines, you may show the full modified file.
 
 ---
 
@@ -1019,7 +1018,7 @@ Each issue is categorized by fix type. Understanding these helps determine the c
 - **Register Bit Details (shift/mask values) are authoritative** — use the exact shift and mask values provided; do not recalculate from training knowledge or guess register layouts
 - **Do not assume** a driverlib function exists for a given register operation — if no functions are listed, use the **Raw access** details in the issue
 - **TRM links are provided per-issue** — read the linked register page before manually constructing any bit manipulation code
-- **Do not use the \`ti-asm-mcp\` tool results as a substitute for the data already in this report** — MCP data is supplementary context only
+- **Use the data in this report first.** Use the \`ti-asm-mcp\` tool only for register details the report doesn't give.
 
 ### Action Checklist Per Issue
 
