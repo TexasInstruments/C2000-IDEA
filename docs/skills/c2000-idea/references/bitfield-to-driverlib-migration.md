@@ -66,20 +66,16 @@ Each issue includes:
 - **Register Bit Details** — shift, mask, and description for manual fixes
 - **TRM Link** — link to the register documentation
 
-**Reading TRM links:** Each issue may include a `TRM Link` pointing to the register's
-documentation in the device Technical Reference Manual. When the register bit
-details (shift, mask, description) are insufficient to construct a correct
-driverlib call, fetch the TRM link using this protocol:
+**Reading the TRM:** Each issue may include a `TRM Link` to the register's page in the
+device Technical Reference Manual. The link is for the user to open in a browser; do not
+fetch it. When the register bit details (shift, mask, description) are not enough to
+construct a correct driverlib call, read the register through `ti-asm-mcp`:
 
-1. **Do not attempt to retrieve from the web** — These links are only for the user to 
-  read information from the browser when they want to look at documentation.
-2. **If you need the register info**  — Use the ti-asm-mcp to get the register content
-5. **Locate the register section** — find the register name, bit field table, and
-   allowed values.
-6. **Read the full register section** for the specific bit being accessed — name, reset
-   value, access type (R/W/RW), and description.
-7. **Construct the driverlib call** using only data from the TRM — do not infer
-   or hallucinate bit values or field names not present in the documentation.
+1. `search_trm_keywords(device, "<register name>")` to find the section id.
+2. `get_trm_section(device, sectionId)` to read the register: bit field table, reset
+   value, access type and allowed values.
+3. Construct the driverlib call using only data from the TRM; do not infer bit values or
+   field names that the documentation does not give.
 
 ### 5. Process the report
 
