@@ -47,8 +47,11 @@ of those):
 - The tool returns a structured markdown report and populates VS Code
   diagnostics (squiggly underlines) as a side effect.
 - The report lists only accesses that start with `XxxRegs.`. Accesses through a register
-  pointer (`p->CMPA.bit.CMPA`, `&EPwm1Regs`) and `.cla` files are not listed; search the
-  file for `.bit.` and `.all` and convert those too.
+  pointer (`p->CMPA.bit.CMPA`, `&EPwm1Regs`), `.cla` files and macros in device_support
+  headers (for example `*_cla_defines.h`) are not listed; search the file and the
+  device_support headers it includes for `.bit.`, `.all` and `Regs`, and convert those too.
+  A `.cla` file is built by the CLA compiler: use `HWREG`/`HWREGH` with the `inc/hw_*.h`
+  headers, not the other driverlib headers.
 - Work one file at a time: convert it, run the report on it again, then move on to the
   next file. Build the clone after step 6 if the headers clash.
 
@@ -142,10 +145,12 @@ device_support code from the clone:
 | `IER \|= M_INTn` | `Interrupt_enable(INT_X)` for the interrupt being enabled; it also sets the PIEIER bit |
 | `PieCtrlRegs.PIEACK.all = PIEACK_GROUPn` | `Interrupt_clearACKGroup(INTERRUPT_ACK_GROUPn)` |
 | `GPIO_SetupPinMux()`, `InitEPwmNGpio()` and similar | `GPIO_setPinConfig(GPIO_n_X)` with `GPIO_setPadConfig()` |
+| `DMAInitialize()` | `DMA_initController()` and `DMA_setEmulationMode(DMA_EMULATION_FREE_RUN)` (the helper also set `DEBUGCTRL.FREE`) |
+| `SetVREF()`, `AdcSetMode()` | `ADC_setVREF()`, `ADC_setMode()` (not on every device); both also loaded the factory ADC trims from OTP, so read the driverlib function's body and, if it does not load them, call `ADC_setOffsetTrim()` for each ADC the code uses |
 
-Other device_support functions (`AdcSetMode`, the `DMA...` helpers, `InitFlash`) have a
-driverlib equivalent; look for it in the driverlib headers. If there is none, tell the user
-what was dropped.
+Other device_support functions (the other `DMA...` helpers, `InitFlash`) have a driverlib
+equivalent; look for it in the driverlib headers. If there is none, leave a comment where
+the call was and tell the user what was dropped.
 
 2. Delete the clone's files that are identical to a same-named file (the case can differ)
    in the C2000Ware `device_support/<family>/common/source`, `headers/source` or
@@ -163,8 +168,8 @@ what was dropped.
    if the linker options have them. Without this the SDK's `device.h` is included, not the
    generated `syscfg/device.h`. Wait for CCS to pick up the edit: poll
    `getToolFlags(project, "compiler")` until those paths or macros are gone.
-4. Delete the configuration's `.obj` and `.out` files, build the clone and fix each error
-   the compiler reports. Deleted source files can otherwise still appear compiled.
+4. Delete the configuration's `.obj`, `.d` and `.out` files, build the clone and fix each
+   error the compiler reports. Deleted source files can otherwise still appear compiled.
 
 ### 7. Report back
 
