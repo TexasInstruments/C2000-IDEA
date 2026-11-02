@@ -14,6 +14,10 @@ Call CCS Project MCP `copyProject(projectName, newName)` with `newName` set to
 `<sourceProjectName>_driverlib`. Confirm the name with the user first. Work only in the
 clone from here on.
 
+If the clone's `.project` has `<link>` entries for the user's own source files (typical of
+F2807x and F2837x projects), editing the clone's file edits the source. Copy each of those
+files into the clone folder and delete its `<link>` from the clone's `.project`.
+
 ## 2. Enable SysConfig in the clone
 
 No MCP tool does this: `changeSysConfigVersion` answers "project is not SysConfig
@@ -26,6 +30,8 @@ CPU1_FLASH):
 
 1. In the `OPT_TAGS` list, change `PRODUCTS=C2000WARE:<version>;` to
    `PRODUCTS=sysconfig:<sysconfig version>;C2000WARE:<version>;`.
+   If `PRODUCTS=` is empty (legacy projects), set it to the same string; take the
+   C2000Ware version from `getProducts`.
 2. Add this tool immediately before `</toolChain>`. `<n>` is any number not already used
    in the file:
 
@@ -62,14 +68,18 @@ Create `<projectDir>/<newName>.syscfg`:
 
 ```js
 /**
- * @v2CliArgs --device "<device>" --package "<package>" --context "system"
+ * @v2CliArgs --device "<device>" --package "<package>" --context "<context>"
  */
 const device_support = scripting.addModule("/driverlib/device_support.js");
 ```
 
-`<device>` and `<package>` come from the table in the `syscfg-openfile-recovery` skill:
-the family's part number and its largest package. The project does not store the
-package, so tell the user which one you used.
+`<device>` and `<package>` come from the table in the `syscfg-openfile-recovery` skill
+(next to this skill): the family's part number and its largest package. The project does
+not store the package, so tell the user which one you used.
+
+`<context>` is `system`, except on the dual-core F2837xD, F2838x and F28P65x: use `CPU1` or
+`CPU2`, the core the project runs on. With the wrong context SysConfig writes nothing and
+the build stops at a missing `c2000ware_libraries.cmd.genlibs`.
 
 ## 4. Set the linker flags
 
@@ -84,11 +94,14 @@ build configuration:
 
 Call `buildProject` on the clone. It should build with no errors. The SysConfig step
 creates `<configuration>/syscfg/` (for example `CPU1_RAM/syscfg/`) with `device.c`, `device.h`, `board.c`, `board.h`,
-`c2000ware_libraries.c` and `c2000ware_libraries.h`. If the build fails, stop and tell
-the user what it reported.
+`c2000ware_libraries.c` and `c2000ware_libraries.h`. If that folder is missing, the context
+in the `.syscfg` is wrong. If the build fails for another reason, for example the program
+no longer fits in RAM, stop and tell the user what it reported. Read the `output` of
+`buildProject`; the `_build.log` file is not rewritten.
 
 ## 6. Use driverlib in the converted files
 
 Add `#include "driverlib.h"` to each file you convert, next to its device_support
-include. The two headers coexist, so the clone keeps building while files are converted
-one at a time.
+include, and `#include "device.h"` if the file uses `DEVICE_` macros. In some projects the
+two headers clash (for example the macro `ADC_RESOLUTION_12BIT` and the driverlib enum of
+the same name); then the clone builds again only after step 6 of the workflow.

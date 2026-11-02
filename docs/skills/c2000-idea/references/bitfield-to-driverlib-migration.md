@@ -21,6 +21,9 @@ device-migration reference instead if the user is moving between device families
   `deviceVariant`.
 - If the list is empty or the expected project is missing, call
   `get_projects(rescan: true)` once, then retry.
+- If the project is still missing, its device is probably "Generic C28xx" (legacy
+  projects). Take the part from `targetConfigs/*.ccxml` and use its family as the
+  **sourceDevice**.
 - Identify the **sourceDevice** — this is the project's `currentDevice`. The
   bitfield tool needs it to look up register-to-function mappings for the
   correct device family.
@@ -35,15 +38,19 @@ and build in the clone from here on.
 ### 3. Run the bitfield migration report per source file
 
 For each of the user's own C/H source files to convert (not the device_support library
-files copied from the SDK, which step 6 deletes; a file byte-identical to its copy under
-C2000Ware `device_support/<family>` is one of those):
+files copied from the SDK, which step 6 deletes; a file byte-identical to its copy in
+C2000Ware `device_support/<family>/common/source`, `headers/source` or `headers/cmd` is one
+of those):
 
 - Call `get_bitfield_to_driverlib_migration_report(filePath, sourceDevice)`
   with the absolute file path and the device from step 1.
 - The tool returns a structured markdown report and populates VS Code
   diagnostics (squiggly underlines) as a side effect.
-- Work one file at a time: convert it, run the report on it again, build the
-  clone, then move on to the next file.
+- The report lists only accesses that start with `XxxRegs.`. Accesses through a register
+  pointer (`p->CMPA.bit.CMPA`, `&EPwm1Regs`) and `.cla` files are not listed; search the
+  file for `.bit.` and `.all` and convert those too.
+- Work one file at a time: convert it, run the report on it again, then move on to the
+  next file. Build the clone after step 6 if the headers clash.
 
 ### 4. Understand the report structure
 
@@ -62,7 +69,9 @@ Each issue includes:
   listed per register (not per bit); pick the one that matches the field
 - **Function definitions** — the exact `get_driverlib_function` call that returns
   the source, with comments, of the candidates
-- **Raw access** — register width and offset, given when no candidate exists
+- **Raw access** — register width and offset, given when no candidate exists. The
+  offset is within the device_support register structure; driverlib's `hw_*.h` can use a
+  different base
 - **Register Bit Details** — shift, mask, and description for manual fixes
 - **TRM Link** — link to the register documentation
 
@@ -94,8 +103,9 @@ Work through issues in file order. For each issue:
    One driverlib function can set several fields the report lists as separate
    issues. Read the signature of the function you pick and cover every field it sets
    in one call; re-running the report confirms no issue was missed.
-3. If no function is listed, use the **Raw access** details and the register bit
-   details (shift, mask).
+3. If no function is listed, look for one in the matching driverlib header
+   (`<driverlib>/<module>.h`, `interrupt.h`, `sysctl.h`). If there is none, use the
+   **Raw access** details and the register bit details (shift, mask).
 4. For **whole**-register writes with no candidate function, consider whether a
    driverlib peripheral configuration function is more appropriate than a raw
    register write.
@@ -122,25 +132,39 @@ device_support code from the clone:
 | `Uint8`, `Uint16`, `Uint32`, `Uint64`, `int16`, `int32`, `int64` | `uint8_t`, `uint16_t`, `uint32_t`, `uint64_t`, `int16_t`, `int32_t`, `int64_t` |
 | `float32`, `float64` | `float32_t`, `float64_t` |
 | `bool_t`, `status_t` | `bool` |
-| `InitSysCtrl()` | `Device_init()` |
+| `InitSysCtrl()` | `Device_init()` and `Device_enableAllPeripherals()` (`InitSysCtrl` also enabled every peripheral clock) |
 | `InitGpio()` | `Device_initGPIO()` |
 | `InitPieCtrl()` | `Interrupt_initModule()` |
 | `InitPieVectTable()` | `Interrupt_initVectorTable()` |
+| `IER = 0; IFR = 0;` | nothing: `Interrupt_initModule()` clears both |
+| `EINT`, `EnableInterrupts()` | `Interrupt_enableGlobal()` |
 | `PieVectTable.X_INT = &isr;` | `Interrupt_register(INT_X, &isr);` |
-| `IER \|= M_INTn` | `Interrupt_enable(INT_X)` for the interrupt being enabled |
+| `IER \|= M_INTn` | `Interrupt_enable(INT_X)` for the interrupt being enabled; it also sets the PIEIER bit |
+| `PieCtrlRegs.PIEACK.all = PIEACK_GROUPn` | `Interrupt_clearACKGroup(INTERRUPT_ACK_GROUPn)` |
+| `GPIO_SetupPinMux()`, `InitEPwmNGpio()` and similar | `GPIO_setPinConfig(GPIO_n_X)` with `GPIO_setPadConfig()` |
 
-2. Delete the clone's files that are identical to a same-named file in the C2000Ware
-   `device_support/<family>/common/source`, `headers/source` or `headers/cmd` folder, such
-   as `<family>_sysctrl.c` and `<family>_headers_nonBIOS.cmd`. Keep
-   `<family>_codestartbranch.asm`. A file that differs from the SDK copy holds the user's
-   changes: keep it and tell the user. Code that calls `DELAY_US` uses `DEVICE_DELAY_US`
-   from `device.h` instead.
-3. Remove the include paths that point into C2000Ware's `device_support/<family>/common/include`
-   and `headers/include` from the clone's `.cproject`: delete their
-   `<listOptionValue value="..."/>` lines in every `<cconfiguration>`. Without this the
-   SDK's `device.h` is included, not the generated `syscfg/device.h`. Wait for CCS to pick
-   up the edit: poll `getToolFlags(project, "compiler")` until the paths are gone.
-4. Build the clone and fix each error the compiler reports.
+Other device_support functions (`AdcSetMode`, the `DMA...` helpers, `InitFlash`) have a
+driverlib equivalent; look for it in the driverlib headers. If there is none, tell the user
+what was dropped.
+
+2. Delete the clone's files that are identical to a same-named file (the case can differ)
+   in the C2000Ware `device_support/<family>/common/source`, `headers/source` or
+   `headers/cmd` folder, such as `<family>_sysctrl.c` and `<family>_headers_nonBIOS.cmd`.
+   Keep `<family>_codestartbranch.asm` and the project's linker command files
+   (`*_lnk*.cmd`). A file that differs from the SDK copy holds the user's changes: keep it
+   and tell the user. For a file the clone only links to, delete its `<link>` in `.project`
+   instead. Code that calls `DELAY_US` uses `DEVICE_DELAY_US` from `device.h` instead; on
+   CPU2 `device.h` has no `DEVICE_SYSCLK_FREQ`, so define it.
+3. Remove the include paths that point into `device_support/<family>/common/include` and
+   `headers/include` from the clone's `.cproject`: delete their
+   `<listOptionValue value="..."/>` lines in every `<cconfiguration>`. They are often
+   macros such as `${C2000WARE_COMMON_INCLUDE}` or `${INSTALLROOT_<FAMILY>}/common/include`.
+   Also remove the `<family>_Headers_nonBIOS.cmd` library and the `headers/cmd` search path
+   if the linker options have them. Without this the SDK's `device.h` is included, not the
+   generated `syscfg/device.h`. Wait for CCS to pick up the edit: poll
+   `getToolFlags(project, "compiler")` until those paths or macros are gone.
+4. Delete the configuration's `.obj` and `.out` files, build the clone and fix each error
+   the compiler reports. Deleted source files can otherwise still appear compiled.
 
 ### 7. Report back
 
@@ -150,6 +174,11 @@ After processing all files:
 2. List any registers where you could not find a confident driverlib replacement —
    flag these for the user.
 3. List every file you modified so the user can review the diffs.
+4. Say which build configurations you built. Code in `#ifdef _FLASH` blocks and in other
+   configurations is unchecked.
+5. Tell the user that `Device_init()` sets the clock from the SysConfig clock tree, not
+   from the old `InitSysCtrl` settings, and that they should check the crystal and PLL
+   values.
 
 ## Do / Don't
 
