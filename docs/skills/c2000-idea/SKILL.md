@@ -1,6 +1,6 @@
 ---
 name: c2000-idea
-description: Step-by-step workflows for C2000 code migration tasks. Supports F28x to F28x and F28x to F29x device migration (F29x not yet implemented), bitfield-to-driverlib conversion, and SysConfig ePWM-to-MCPWM peripheral migration — migrate, port, or consolidate an EPWM-based .syscfg project onto a device's MCPWM peripheral, including checking whether several EPWM instances can share one MCPWM instance and reconciling the sync chain / time-base before migrating. Also supports pinout analysis — report every pin a project uses on its package (GPIO mux modes and pin settings, ADC modules and channels, CMPSS/DAC/PGA pins, reset/clock/JTAG/boot pins) from its SysConfig and C sources. Also supports peripheral timing analysis — report what each peripheral actually runs at (EPWM frequency and dead band, ADC clock and sample window, SCI/LIN/SPI/I2C/CAN rates, CPU timer periods) from the clock tree, SysConfig and C sources. Uses the IDEA MCP server as the primary tool, with CCS Project MCP, CCS SysConfig MCP, and TI ASM MCP as supporting dependencies.
+description: Step-by-step workflows for C2000 code migration tasks. Supports F28x to F28x and F28x to F29x device migration (F29x not yet implemented), bitfield-to-driverlib conversion, Gen 2 device migration — move a bitfield-based project for a Gen 2 device (F2802x, F2803x, F2805x, F2806x, F2833x/F2823x, or the C28x core of F28M35x/F28M36x) to a newer F28x device in driverlib — and SysConfig ePWM-to-MCPWM peripheral migration — migrate, port, or consolidate an EPWM-based .syscfg project onto a device's MCPWM peripheral, including checking whether several EPWM instances can share one MCPWM instance and reconciling the sync chain / time-base before migrating. Also supports pinout analysis — report every pin a project uses on its package (GPIO mux modes and pin settings, ADC modules and channels, CMPSS/DAC/PGA pins, reset/clock/JTAG/boot pins) from its SysConfig and C sources. Also supports peripheral timing analysis — report what each peripheral actually runs at (EPWM frequency and dead band, ADC clock and sample window, SCI/LIN/SPI/I2C/CAN rates, CPU timer periods) from the clock tree, SysConfig and C sources. Uses the IDEA MCP server as the primary tool, with CCS Project MCP, CCS SysConfig MCP, and TI ASM MCP as supporting dependencies.
 ---
 
 # C2000 IDEA Migration
@@ -59,6 +59,7 @@ and register them with their agent, then retry.
 | --------------------------------------------- | --------------------------------------------- | --------------------------------------------- |
 | Device-to-device migration (F28x → F28x/F29x) | references/device-migration.md                | get_device_migration_report                   |
 | Bitfield → driverlib conversion               | references/bitfield-to-driverlib-migration.md | get_bitfield_to_driverlib_migration_report    |
+| Gen 2 device migration (Gen 2 bitfield → newer F28x driverlib) | references/gen2-device-migration.md | get_driverlib_function |
 | SysConfig ePWM → MCPWM peripheral migration   | references/epwm-to-mcpwm-sysconfig-migration.md | get_syscfg_module_migration_guide           |
 | Pinout analysis (pins, ADC channels, system pins) | references/pinout-analyzer.md               | get_projects                                  |
 | Peripheral timing analysis (PWM, ADC sample window, baud and bit rates, CPU timers) | references/timing-analyzer.md | get_projects |
@@ -78,6 +79,11 @@ Notes:
   (`PeriphRegs.REG.bit.FIELD`) into driverlib calls for the *same* device. There is no
   target device. Run this **before** device-to-device migration when the source uses
   bitfield patterns — it reduces noise in the device migration report.
+- Gen 2 device migration moves a bitfield-based project for a Gen 2 device to a newer F28x
+  device, porting every register access to driverlib (or `HWREG` where driverlib has no function).
+  The user names the source and target families. Gen 2 devices are not in `get_projects()`
+  device detection; the workflow does not need them to be. It uses the TI ASM MCP for both TRMs
+  and the `ti-asm-gen2-register-lookup` skill for the Gen 2 TRMs.
 - SysConfig ePWM → MCPWM peripheral migration ports an EPWM-based `.syscfg` project onto a
   device's MCPWM peripheral, consolidating EPWM instances onto MCPWM instances (pair capacity
   varies per instance and is read from the target device's TRM) across confirmed phases. Field mappings come from the
