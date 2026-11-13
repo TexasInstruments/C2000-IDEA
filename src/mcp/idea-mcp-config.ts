@@ -1,5 +1,5 @@
 import { migrationRunMigrationCheckOnUri, migrationRunMigrationCheckOnProject, exportMigrationAgentReport, exportProjectMigrationAgentReport } from '../migration';
-import { registerBitfieldToDriverlibMigrationOnUri, exportRegisterBitfieldAgentReport } from '../register';
+import { registerBitfieldToDriverlibMigrationOnUri, exportRegisterBitfieldAgentReport, getDriverlibFunctionDefinitions } from '../register';
 import { DEVICE_LIST } from '../deviceData';
 import { getProjects, allProjectInfos, updateProjectCurrentDevice, updateProjectMigrationDevices, addMigrationCheckFolderException, removeMigrationCheckFolderException, setMigrationCheckFolderExceptions } from '../utilities/project';
 import { downloadMigrationGuideHtml } from '../migrationGuide';
@@ -20,6 +20,7 @@ export const IDEA_MCP_HANDLERS = {
 	generateProjectMigrationReport: exportProjectMigrationAgentReport,
 	runBitfieldToDriverlibMigrationCheck: registerBitfieldToDriverlibMigrationOnUri,
 	generateBitfieldToDriverlibMigrationReport: exportRegisterBitfieldAgentReport,
+	getDriverlibFunctionDefinitions: getDriverlibFunctionDefinitions,
 	getDeviceList: () => DEVICE_LIST,
 	getProjects: getProjects,
 	getAllProjectInfos: () => allProjectInfos,

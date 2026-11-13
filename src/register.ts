@@ -40,7 +40,7 @@ interface RegisterDiagnosticMeta {
 	description: string;				// Register description from TRM
 	bitDescription?: string;			// Bit-specific description
 	sourcePattern: string;				// Original: "Regs.ADCCTL2.bit.START"
-	suggestedFix: string;				// Driverlib replacement code
+	rawAccess: string;					// Register width and offset, for a manual access
 	fixType: "read" | "write" | "access" | "whole";
 	device: string;						// Target device (F28379D)
 	trmLink?: string;					// TRM register documentation link
@@ -494,8 +494,13 @@ interface DriverlibFunctionSignature {
 	peripheral: string;
 }
 
-export function getDriverlibFunctionSignatures(device: string): Record<string, DriverlibFunctionSignature> {
-	const sigMap: Record<string, DriverlibFunctionSignature> = {};
+interface DriverlibFunction extends DriverlibFunctionSignature {
+	file: string;
+	functionContent: string;
+}
+
+function getDriverlibFunctions(device: string): Record<string, DriverlibFunction> {
+	const functions: Record<string, DriverlibFunction> = {};
 	try {
 		const dir = path.join(extensionContext.extensionUri.fsPath, 'driverlib_functions', device.toLowerCase());
 		const files = fs.readdirSync(dir).filter((f: string) => f.endsWith('.json'));
@@ -503,18 +508,44 @@ export function getDriverlibFunctionSignatures(device: string): Record<string, D
 			const raw = fs.readFileSync(path.join(dir, file), 'utf-8');
 			const data = JSON.parse(raw);
 			for (const func of (data.functions || [])) {
-				sigMap[func.functionName] = {
+				functions[func.functionName] = {
 					returnType: func.returnType,
 					functionArgs: func.functionArgs,
 					functionArgsTypes: func.functionArgsTypes,
 					peripheral: func.peripheral,
+					file: func.file,
+					functionContent: func.functionContent,
 				};
 			}
 		}
 	} catch (e) {
 		// Device folder not found or parse error — return empty
 	}
-	return sigMap;
+	return functions;
+}
+
+export function getDriverlibFunctionSignatures(device: string): Record<string, DriverlibFunctionSignature> {
+	return getDriverlibFunctions(device);
+}
+
+function getDriverlibFunctionSignatureText(name: string, func: DriverlibFunctionSignature): string {
+	const args = func.functionArgsTypes.map((t, i) => `${t} ${func.functionArgs[i]}`).join(', ');
+	return `${func.returnType} ${name}(${args})`;
+}
+
+export function getDriverlibFunctionDefinitions(device: string, names: string[]): string {
+	const functions = getDriverlibFunctions(device);
+	if (Object.keys(functions).length === 0) {
+		return `No driverlib function data for device ${device}.`;
+	}
+	return names.map(requestedName => {
+		const name = Object.keys(functions).find(key => key.toLowerCase() === requestedName.toLowerCase());
+		if (!name) {
+			return `### ${requestedName}\nNot found in the ${device} driverlib data.\n`;
+		}
+		const func = functions[name];
+		return `### ${name} (${func.file})\n\`\`\`c\n${getDriverlibFunctionSignatureText(name, func)}\n${func.functionContent.trimEnd()}\n\`\`\`\n`;
+	}).join('\n');
 }
 
 function generateRegisterBitCommentsText(registerName: string, registerBits: any[], bitName?: string): string
@@ -550,9 +581,14 @@ function generateRegisterBitDetailsText(registerName: string, registerBits: any[
 	}
 
 	for (const bit of bitsToShow) {
-		details += bit.name + " - description: " + bit.description + ", size: " + bit.size + ", shift: " + bit.shift + "\n";
+		details += bit.name + " - description: " + bit.description + ", size: " + bit.size + ", shift: " + bit.shift + ", mask: " + bit.mask + "\n";
 	}
 	return details;
+}
+
+function generateRegisterRawAccessText(register: Register): string
+{
+	return register.size + "-bit register, offset " + register.offset;
 }
 
 async function registerBitfieldToDriverlibMigration(){
@@ -613,7 +649,7 @@ export async function registerBitfieldToDriverlibMigrationOnUri(uri: vscode.Uri,
 					description: regFound.registerInfo.description || "",
 					bitDescription: regFound.registerBitInfo?.description || undefined,
 					sourcePattern: metaSourcePattern,
-					suggestedFix: "", // Will be populated from code actions
+					rawAccess: generateRegisterRawAccessText(regFound.registerInfo),
 					fixType: "access", // Default, will be updated based on code path
 					device: device || "unknown",
 					trmLink: regFound.registerLink || undefined,
@@ -862,7 +898,7 @@ export async function registerBitfieldToDriverlibMigrationOnUri(uri: vscode.Uri,
 					module: regFound.module,
 					description: regFound.registerInfo.description || "",
 					sourcePattern: wholeSourcePattern,
-					suggestedFix: "", // Will be populated from code actions
+					rawAccess: generateRegisterRawAccessText(regFound.registerInfo),
 					fixType: "whole",
 					device: device || "unknown",
 					trmLink: regFound.registerLink || undefined,
@@ -935,9 +971,8 @@ export async function registerBitfieldToDriverlibMigrationOnUri(uri: vscode.Uri,
 	registerDiagnosticsCollection.set(uri, registerDiagnostics);
 }
 
-function registerBitfieldAgentReportMDHeader(): string {
+function registerBitfieldAgentReportMDHeader(device: string): string {
 	const timestamp = new Date().toISOString();
-	let device = project.projectGetCurrentDevice();
 	
 	let deviceDisplay = device || "unknown";
 	let deviceNote = device ? "" : "\n> ⚠️ **Device could not be determined automatically.** Please infer from file paths, `#include` directives, or ask the user.\n";
@@ -953,9 +988,9 @@ function registerBitfieldAgentReportMDHeader(): string {
 > You are an AI coding agent tasked with migrating Texas Instruments C2000 embedded C code.
 > The source files contain **bitfield register access patterns** (e.g., \`Regs.REGISTER.bit.FIELD\`) that must be replaced with **driverlib API calls** appropriate for device \`${deviceDisplay}\`.
 > The issues in this report were detected by the C2000 IDEA VS Code extension via static analysis.
+> This report covers register accesses only. Other device_support code around them (includes, types, Init functions, the PIE vector table) is not listed; build the destination project and fix what the compiler reports.
 > Your goal is to edit each listed file so that no direct bitfield register accesses remain — use driverlib functions or, when unavailable, explicit read-modify-write register operations.
 > **SDK reference:** \`${sdkVersion}\` — all driverlib function names and register definitions must be verified against this SDK version.
-> **File modification protocol:** Present each change as a unified diff with 3 lines of context. For files under 100 lines, you may show the full modified file.
 
 ---
 
@@ -979,12 +1014,11 @@ Each issue is categorized by fix type. Understanding these helps determine the c
 
 > ⚠️ **This report is the authoritative source. Do not use training knowledge to construct register access code.**
 
-- **If a \`Suggested replacement\` is provided:** use it exactly as written — it is sourced from TI's migration database and register analysis
-- **If no \`Suggested replacement\` is given:** choose **only** from the **Available driverlib functions** listed in the issue. Do not call driverlib functions that are not listed there unless you first verify they exist in the \`${sdkVersion}\` driverlib source
+- **Choose only from the Available driverlib functions** listed in the issue. They are listed per register, not per bit, so pick the one that matches the field. Do not call driverlib functions that are not listed there unless you first verify they exist in the \`${sdkVersion}\` driverlib source
 - **Register Bit Details (shift/mask values) are authoritative** — use the exact shift and mask values provided; do not recalculate from training knowledge or guess register layouts
-- **Do not assume** a driverlib function exists for a given register operation — if neither a replacement nor functions are listed, tell the user: *"I cannot confidently replace this pattern without verification — please confirm the correct driverlib function."*
+- **Do not assume** a driverlib function exists for a given register operation — if no functions are listed, use the **Raw access** details in the issue
 - **TRM links are provided per-issue** — read the linked register page before manually constructing any bit manipulation code
-- **Do not use the \`ti-asm-mcp\` tool results as a substitute for a missing \`Suggested replacement\`** — MCP data is supplementary context only; always prefer the fix data already in this report
+- **Use the data in this report first.** Use the \`ti-asm-mcp\` tool only for register details the report doesn't give.
 
 ### Action Checklist Per Issue
 
@@ -992,11 +1026,10 @@ For each issue listed below, follow these steps:
 - [ ] Open the file at the **absolute path** shown
 - [ ] Navigate to the exact **Line** and **Column** number
 - [ ] Identify the bitfield pattern in the source code
-- [ ] For issues with a **Suggested replacement**, apply it directly
 - [ ] For issues with **Available driverlib functions**, choose the most appropriate function and apply it with correct arguments
 - [ ] For whole-register accesses, determine if a driverlib peripheral configuration function is more appropriate than direct register writes
 - [ ] Use the **Register Bit Details** to understand shift/mask values if manual conversion is needed
-- [ ] After each fix, verify no other references to the same bitfield pattern remain in the file
+- [ ] After editing the file, run this report on it again; only issues on commented-out lines should remain
 
 ### Example: Complete Fix Walkthrough
 
@@ -1008,13 +1041,13 @@ Use this as a reference for how to apply a fix from this report:
 AdcaRegs.ADCCTL2.bit.PRESCALE = 6;
 \`\`\`
 
-**After (driverlib call — taken from "Suggested replacement" field):**
+**After (driverlib call — chosen from the issue's Available driverlib functions):**
 \`\`\`c
-// Driverlib API — sourced verbatim from the Suggested replacement in this report
+// Driverlib API — chosen from the candidate list
 ADC_setPrescaler(ADCA_BASE, ADC_CLK_DIV_4_0);
 \`\`\`
 
-**Why:** The \`Suggested replacement\` field in the issue provided the exact driverlib function and enum constant. The \`Register Bit Details\` confirmed that bit \`PRESCALE\` controls the ADC clock divider. No driverlib function was invented — only the data already in this report was used.
+**Why:** The candidate list for \`ADCCTL2\` included \`ADC_setPrescaler\`, and its signature gave the arguments. The \`Register Bit Details\` confirmed that bit \`PRESCALE\` controls the ADC clock divider. No driverlib function was invented — only the data already in this report was used.
 
 ### Bit Shift & Masking Reference
 
@@ -1045,6 +1078,7 @@ If you encounter compilation errors after applying a fix from this report:
 - Use the **ti-asm-mcp** tool to query register details for the current device (this is an MCP that allows querying register information such as bit shifts, masks, and detailed descriptions)
 - If the MCP is not available, as a backup plan, use the provided TRM links to understand register functionality (however use this as a last resort as it is more time consuming than the MCP and has a lot of noise in the HTML)
 - Refer to **Register Bit Details** provided with each issue for descriptions and sizes
+- To read a function's definition, call **get_driverlib_function** with the exact call shown under the issue's candidates, trimming its names list to the functions you are considering
 - Whenever needed, try to understand the **intent of the code** using the original bitfield access
 - If the SDK is available, search the SDK for driverlib functions whose signature and parameters match the original code's intent
 
@@ -1053,8 +1087,10 @@ If you encounter compilation errors after applying a fix from this report:
 	return header;
 }
 
-export function exportRegisterBitfieldAgentReport(openAfter: boolean = true): string {
-	let device = project.projectGetCurrentDevice();
+// sourceDevice names the device family the report is for. When it is omitted the
+// report uses the active project's device, which is empty outside the editor.
+export function exportRegisterBitfieldAgentReport(openAfter: boolean = true, sourceDevice?: string): string {
+	let device = sourceDevice || project.projectGetCurrentDevice();
 	let deviceDisplay = device || "unknown";
 	const driverlibSigMap = getDriverlibFunctionSignatures(device || '');
 
@@ -1095,7 +1131,7 @@ export function exportRegisterBitfieldAgentReport(openAfter: boolean = true): st
 					module: "unknown",
 					description: diagnostic.message,
 					sourcePattern: "",
-					suggestedFix: "",
+					rawAccess: "",
 					fixType: "access" as const,
 					device: "unknown"
 				};
@@ -1129,11 +1165,11 @@ export function exportRegisterBitfieldAgentReport(openAfter: boolean = true): st
 	}
 
 	// Generate markdown report
-	let md = registerBitfieldAgentReportMDHeader();
+	let md = registerBitfieldAgentReportMDHeader(device);
 
 	// Summary statistics
 	md += `## Summary\n\n`;
-	md += `> **Tip for AI Agent:** Prioritize issues with a **Suggested replacement** — apply those directly. For issues with only **Available driverlib functions**, choose the best-matching function and construct the call. For \`whole\`-register writes, consider whether a driverlib peripheral configuration function is more appropriate than a raw register write.\n\n`;
+	md += `> **Tip for AI Agent:** For each issue, choose the best-matching function from **Available driverlib functions** and construct the call. For \`whole\`-register writes, consider whether a driverlib peripheral configuration function is more appropriate than a raw register write.\n\n`;
 	md += `| Metric | Count |\n|--------|-------|\n`;
 	md += `| Total issues | ${diagnosticCount} |\n`;
 	md += `| Whole-register accesses | ${wholeCount} |\n`;
@@ -1174,11 +1210,6 @@ export function exportRegisterBitfieldAgentReport(openAfter: boolean = true): st
 			}
 
 			md += `- **Original pattern:** \`${issue.meta.sourcePattern}\`\n`;
-			
-			// Emit suggested fix if available
-			if (issue.meta.suggestedFix && issue.meta.suggestedFix !== "") {
-				md += `- **Suggested replacement:**\n  \`\`\`c\n  ${issue.meta.suggestedFix}\n  \`\`\`\n`;
-			}
 
 			// Register bit details with explicit language hint for LLM parsing
 			if (issue.meta.registerBitDetails) {
@@ -1193,25 +1224,13 @@ export function exportRegisterBitfieldAgentReport(openAfter: boolean = true): st
 				md += `- **Available driverlib functions:**\n`;
 				issue.meta.driverLibFunctions.forEach(func => {
 					const sig = driverlibSigMap[func];
-					if (sig) {
-						const args = sig.functionArgsTypes.map((t, i) => `${t} ${sig.functionArgs[i]}`).join(', ');
-						md += `  - \`${sig.returnType} ${func}(${args})\`\n`;
-					} else {
-						md += `  - \`${func}\`\n`;
-					}
+					md += sig ? `  - \`${getDriverlibFunctionSignatureText(func, sig)}\`\n` : `  - \`${func}\`\n`;
 				});
-			}
-			// Per-issue action checklist
-			md += `- **Action checklist:**\n`;
-			md += `  - [ ] Navigate to line ${issue.line}, col ${issue.col} in \`${issueDevice}\`\n`;
-			if (issue.meta.suggestedFix && issue.meta.suggestedFix !== "") {
-				md += `  - [ ] Apply the **Suggested replacement** shown above directly\n`;
-			} else if (issue.meta.driverLibFunctions && issue.meta.driverLibFunctions.length > 0) {
-				md += `  - [ ] Choose the most appropriate function from **Available driverlib functions** and apply with correct arguments\n`;
+				const names = issue.meta.driverLibFunctions.map(func => `"${func}"`).join(', ');
+				md += `- **Function definitions:** \`get_driverlib_function(device: "${issueDevice}", names: [${names}])\`\n`;
 			} else {
-				md += `  - [ ] Use Register Bit Details (shift/mask) to construct a manual read-modify-write operation\n`;
+				md += `- **Raw access:** ${issue.meta.rawAccess}\n`;
 			}
-			md += `  - [ ] Verify no other references to \`${issue.meta.sourcePattern || issue.meta.registerName}\` remain in this file\n`;
 			md += `\n`;
 		});
 	});

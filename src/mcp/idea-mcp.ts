@@ -79,7 +79,8 @@ AVAILABLE TOOLS:
 - list_migration_devices() — Get all supported device families for migration.
 - get_project_migration_report() — Run a device-to-device migration check on ALL files in a project and get a complete multi-file report. Use this for project-level migration.
 - get_device_migration_report() — Run a device-to-device migration check on a single source file. Use this when you need per-file control (e.g. fixing one file at a time after a project report).
-- get_bitfield_to_driverlib_migration_report() — Run a bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register accesses and suggests driverlib function replacements.
+- get_bitfield_to_driverlib_migration_report() — Run a bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register accesses and lists candidate driverlib functions for each.
+- get_driverlib_function() — Get the signature and source of driverlib functions, as Markdown, by name for a device.
 - download_migration_guide() — Download the TI any-to-any driverlib migration-guide HTML for a source→target device pair to an absolute local file path.
 - get_syscfg_module_migration_guide() — Get the SysConfig (.syscfg) config migration guide (Markdown) for a peripheral module-to-module pair; pass the config ids to scope it (highly recommended).
 - close_editor() — Close the editor tabs that show a file; tabs with unsaved changes stay open.
@@ -95,6 +96,7 @@ RECOMMENDED FLOW:
 3. For bitfield-to-driverlib migration:
    a. Use get_projects() to get the project's currentDevice.
    b. Call get_bitfield_to_driverlib_migration_report() with the file path and sourceDevice.
+   c. Call get_driverlib_function() to read the definition of a candidate function (the report shows the exact call).
 
 RULES:
 - Device names are case-insensitive (internally normalized to lowercase).
@@ -505,15 +507,14 @@ Use get_projects() first to discover the project name. By default source and tar
 		server.registerTool(
 			'get_bitfield_to_driverlib_migration_report',
 			{
-				description: `Run a ${IDEA_MCP_PLATFORM} bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register structure accesses (e.g. Regs.FIELD.bit.NAME) and suggests driverlib function replacements.
+				description: `Run a ${IDEA_MCP_PLATFORM} bitfield-to-driverlib migration check on a source file. Scans for legacy bitfield register structure accesses (e.g. Regs.FIELD.bit.NAME) and lists candidate driverlib functions for each.
 
 The report includes:
 - Summary statistics (total issues, read/write/access/whole-register counts)
 - Per-issue details: register name, bit name, module, fix type, original source pattern
-- Suggested driverlib replacement code where available
-- Register bit details (shift, mask, description) for manual fixes
+- Candidate driverlib functions with their signatures, and the get_driverlib_function() call that returns their definitions
+- Register bit details (shift, mask, description) for manual fixes, and the register width and offset when no candidate exists
 - TRM links for register documentation
-- Per-issue action checklists
 
 Pass the sourceDevice from get_projects() to identify the device family for register-to-function mapping.`,
 				inputSchema: {
@@ -530,7 +531,7 @@ Pass the sourceDevice from get_projects() to identify the device family for regi
 
 				try {
 					await runBitfieldToDriverlibCheck(uri, sourceDevice);
-					const report = genBitfieldToDriverlibReport(false);
+					const report = genBitfieldToDriverlibReport(false, sourceDevice);
 
 					if (!report) {
 						return { content: [{ type: 'text' as const, text: 'No bitfield register migration issues found in the specified file.' }] };
@@ -541,6 +542,24 @@ Pass the sourceDevice from get_projects() to identify the device family for regi
 					const msg = err instanceof Error ? err.message : String(err);
 					return { content: [{ type: 'text' as const, text: `Error running bitfield-to-driverlib migration check: ${msg}` }] };
 				}
+			}
+		);
+	}
+
+	if (IDEA_MCP_HANDLERS.getDriverlibFunctionDefinitions) {
+		const getDriverlibFunctionDefinitions = IDEA_MCP_HANDLERS.getDriverlibFunctionDefinitions;
+
+		server.registerTool(
+			'get_driverlib_function',
+			{
+				description: `Get the signature and source, with comments, of driverlib functions by name, as Markdown with the source file of each. Use it to read a function listed in a bitfield-to-driverlib migration report.`,
+				inputSchema: {
+					device: z.string().describe('Device the functions are for (e.g. "F28P551x"), as in the migration report.'),
+					names: z.array(z.string()).describe('Driverlib function names (e.g. ["EPWM_setTimeBaseCounterMode"]).'),
+				} as any,
+			},
+			async ({ device, names }: any) => {
+				return { content: [{ type: 'text' as const, text: getDriverlibFunctionDefinitions(device, names) }] };
 			}
 		);
 	}

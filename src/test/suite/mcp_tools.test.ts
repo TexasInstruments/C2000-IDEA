@@ -29,6 +29,7 @@ const EXPECTED_TOOLS = [
 	'get_device_migration_report',
 	'get_project_migration_report',
 	'get_bitfield_to_driverlib_migration_report',
+	'get_driverlib_function',
 	'get_migration_guide_section',
 	'close_editor',
 ];
@@ -118,6 +119,16 @@ suite('idea mcp tools', () => {
 			assert.strictEqual(device.supported, !isDeviceF29x(device.name),
 				`${device.name}: wrong supported flag`);
 		}
+	});
+
+	test('get_driverlib_function finds a name in any case, and reports an unknown name', async () => {
+		const md = await callText('get_driverlib_function',
+			{ device: 'F28P551x', names: ['epwm_settimebasecountermode', 'NoSuchFunction'] });
+
+		assert.ok(md.includes('### EPWM_setTimeBaseCounterMode (epwm.h)'), 'no heading with the source file');
+		assert.ok(md.includes('EPWM_setTimeBaseCounterMode(uint32_t base, EPWM_TimeBaseCountMode counterMode)'), 'no signature');
+		assert.ok(md.includes('EPWM_TBCTL_CTRMODE_M'), 'no function body');
+		assert.ok(md.includes('### NoSuchFunction\nNot found'), 'the unknown name is not reported');
 	});
 
 	test('close_editor closes a saved tab and keeps an unsaved one', async () => {

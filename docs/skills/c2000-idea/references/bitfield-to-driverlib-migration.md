@@ -21,67 +21,157 @@ device-migration reference instead if the user is moving between device families
   `deviceVariant`.
 - If the list is empty or the expected project is missing, call
   `get_projects(rescan: true)` once, then retry.
+- If the project is still missing, its device is probably "Generic C28xx" (legacy
+  projects). Take the part from `targetConfigs/*.ccxml` and use its family as the
+  **sourceDevice**.
 - Identify the **sourceDevice** — this is the project's `currentDevice`. The
   bitfield tool needs it to look up register-to-function mappings for the
   correct device family.
 
-### 2. Run the bitfield migration report per source file
+### 2. Create the destination project
 
-For each C/H source file to convert:
+Convert in a clone of the source project, not in the source project. Follow
+`bitfield-to-driverlib-migration/destination-project.md`: it clones the project, enables
+SysConfig in the clone and adds driverlib through a SysConfig script. Run the report, edit
+and build in the clone from here on.
+
+### 3. Run the bitfield migration report per source file
+
+For each of the user's own C/H source files to convert (not the device_support library
+files copied from the SDK, which step 6 deletes; a file byte-identical to its copy in
+C2000Ware `device_support/<family>/common/source`, `headers/source` or `headers/cmd` is one
+of those):
 
 - Call `get_bitfield_to_driverlib_migration_report(filePath, sourceDevice)`
   with the absolute file path and the device from step 1.
 - The tool returns a structured markdown report and populates VS Code
   diagnostics (squiggly underlines) as a side effect.
+- The report lists only accesses that start with `XxxRegs.`. Accesses through a register
+  pointer (`p->CMPA.bit.CMPA`, `&EPwm1Regs`), `.cla` files and macros in device_support
+  headers (for example `*_cla_defines.h`) are not listed; search the file and the
+  device_support headers it includes for `.bit.`, `.all` and `Regs`, and convert those too.
+  A `.cla` file is built by the CLA compiler: use `HWREG`/`HWREGH` with the `inc/hw_*.h`
+  headers, not the other driverlib headers.
+- Work one file at a time: convert it, run the report on it again, then move on to the
+  next file. Build the clone after step 6 if the headers clash.
 
-### 3. Understand the report structure
+### 4. Understand the report structure
 
 The report groups every bitfield register access into one of four fix types:
 
 | Fix type | Meaning | Approach |
 |----------|---------|----------|
-| **write** | Bitfield assignment (`Regs.FIELD.bit.NAME = value`) | Apply the suggested driverlib write function |
-| **read** | Bitfield read (`x = Regs.FIELD.bit.NAME`) | Apply the suggested driverlib read function |
+| **write** | Bitfield assignment (`Regs.FIELD.bit.NAME = value`) | Use the matching driverlib write function from the candidates |
+| **read** | Bitfield read (`x = Regs.FIELD.bit.NAME`) | Use the matching driverlib read function from the candidates |
 | **access** | Bitfield access in an expression | Choose the best-matching driverlib function from the available list |
 | **whole** | Whole-register access (`Regs.FIELD.all = value`) | Consider a driverlib peripheral configuration function instead of raw register write |
 
 Each issue includes:
 - **Original pattern** — the exact source line
-- **Suggested replacement** — a concrete driverlib call (when available, apply directly)
-- **Available driverlib functions** — candidate functions (when no single suggestion, pick the best match)
+- **Available driverlib functions** — candidate functions with their signatures,
+  listed per register (not per bit); pick the one that matches the field
+- **Function definitions** — the exact `get_driverlib_function` call that returns
+  the source, with comments, of the candidates
+- **Raw access** — register width and offset, given when no candidate exists. The
+  offset is within the device_support register structure; driverlib's `hw_*.h` can use a
+  different base
 - **Register Bit Details** — shift, mask, and description for manual fixes
 - **TRM Link** — link to the register documentation
 
-**Reading TRM links:** Each issue may include a `TRM Link` pointing to the register's
-documentation in the device Technical Reference Manual. When no `Suggested replacement`
-is available and the register bit details (shift, mask, description) are insufficient
-to construct a correct driverlib call, fetch the TRM link using this protocol:
+**Reading the TRM:** Each issue may include a `TRM Link` to the register's page in the
+device Technical Reference Manual. The link is for the user to open in a browser; do not
+fetch it. When the register bit details (shift, mask, description) are not enough to
+construct a correct driverlib call, read the register through `ti-asm-mcp`:
 
-1. **Do not attempt to retrieve from the web** — These links are only for the user to 
-  read information from the browser when they want to look at documentation.
-2. **If you need the register info**  — Use the ti-asm-mcp to get the register content
-5. **Locate the register section** — find the register name, bit field table, and
-   allowed values.
-6. **Read the full register section** for the specific bit being accessed — name, reset
-   value, access type (R/W/RW), and description.
-7. **Construct the driverlib call** using only data from the TRM — do not infer
-   or hallucinate bit values or field names not present in the documentation.
+1. Find the register's section id with `search_trm_keywords(device, "<register name>")`
+   using only the name. Use a result whose section title is "<register name> Register
+   (Offset = …)".
+2. If no result has that title, find the peripheral's chapter number from any result
+   that mentions the peripheral. Then call `list_trm_headings(device, chapter, limit: 4)`
+   and take the id of the heading titled "<register name> Register".
+3. `get_trm_section(device, sectionId)` returns the register: bit field table, reset
+   value, access type and allowed values.
+4. Construct the driverlib call using only data from the TRM; do not infer bit values or
+   field names that the documentation does not give.
 
-### 4. Process the report
+### 5. Process the report
 
 Work through issues in file order. For each issue:
 
 1. Navigate to the reported line/column.
-2. If a **Suggested replacement** is provided, apply it directly.
-3. If only **Available driverlib functions** are listed, choose the best-matching
-   function and construct the call with the correct arguments using the register
-   bit details.
-4. For **whole**-register writes with no driverlib suggestion, consider whether a
+2. Choose the function from **Available driverlib functions** that matches the
+   field and construct the call with the correct arguments using its signature
+   and the register bit details. If the signature is not enough, call
+   `get_driverlib_function` (the report shows the exact call).
+   One driverlib function can set several fields the report lists as separate
+   issues. Read the signature of the function you pick and cover every field it sets
+   in one call; re-running the report confirms no issue was missed.
+3. If no function is listed, look for one in the matching driverlib header
+   (`<driverlib>/<module>.h`, `interrupt.h`, `sysctl.h`). If there is none, use the
+   **Raw access** details and the register bit details (shift, mask).
+4. For **whole**-register writes with no candidate function, consider whether a
    driverlib peripheral configuration function is more appropriate than a raw
    register write.
-5. Verify no other references to the original bitfield pattern remain in the file.
+5. After editing the file, run the report on it again; only issues on commented-out
+   lines should remain.
 
-### 5. Report back
+Enum values, base macros and `INT_*` names are in the driverlib headers, in
+`<c2000ware_path>/driverlib/<device in lower case>/driverlib/`. Take `<c2000ware_path>`
+from CCS Project MCP `getProjectProductReferences`.
+
+### 6. Remove the device_support code
+
+The clone keeps its device_support headers, so it builds while files are converted. Once
+every file is converted and the clone builds, ask the user to confirm, then remove the
+device_support code from the clone:
+
+1. Replace the device_support names the report did not cover. Legacy integer and float
+   types map to the C99 names, for example `Uint16` to `uint16_t`, `int32` to `int32_t`
+   and `float32` to `float32_t`. Common ones:
+
+| device_support | driverlib |
+|----------------|-----------|
+| `#include "f28x_project.h"` | `#include "driverlib.h"`, `#include "device.h"` |
+| `Uint8`, `Uint16`, `Uint32`, `Uint64`, `int16`, `int32`, `int64` | `uint8_t`, `uint16_t`, `uint32_t`, `uint64_t`, `int16_t`, `int32_t`, `int64_t` |
+| `float32`, `float64` | `float32_t`, `float64_t` |
+| `bool_t`, `status_t` | `bool` |
+| `InitSysCtrl()` | `Device_init()` and `Device_enableAllPeripherals()` (`InitSysCtrl` also enabled every peripheral clock) |
+| `InitGpio()` | `Device_initGPIO()` |
+| `InitPieCtrl()` | `Interrupt_initModule()` |
+| `InitPieVectTable()` | `Interrupt_initVectorTable()` |
+| `IER = 0; IFR = 0;` | nothing: `Interrupt_initModule()` clears both |
+| `EINT`, `EnableInterrupts()` | `Interrupt_enableGlobal()` |
+| `PieVectTable.X_INT = &isr;` | `Interrupt_register(INT_X, &isr);` |
+| `IER \|= M_INTn` | `Interrupt_enable(INT_X)` for the interrupt being enabled; it also sets the PIEIER bit |
+| `PieCtrlRegs.PIEACK.all = PIEACK_GROUPn` | `Interrupt_clearACKGroup(INTERRUPT_ACK_GROUPn)` |
+| `GPIO_SetupPinMux()`, `InitEPwmNGpio()` and similar | `GPIO_setPinConfig(GPIO_n_X)` with `GPIO_setPadConfig()` |
+| `DMAInitialize()` | `DMA_initController()` and `DMA_setEmulationMode(DMA_EMULATION_FREE_RUN)` (the helper also set `DEBUGCTRL.FREE`) |
+| `SetVREF()`, `AdcSetMode()` | `ADC_setVREF()`, `ADC_setMode()` (not on every device); both also loaded the factory ADC trims from OTP, so read the driverlib function's body and, if it does not load them, call `ADC_setOffsetTrim()` for each ADC the code uses |
+
+Other device_support functions (the other `DMA...` helpers, `InitFlash`) have a driverlib
+equivalent; look for it in the driverlib headers. If there is none, leave a comment where
+the call was and tell the user what was dropped.
+
+2. Delete the clone's files that are identical to a same-named file (the case can differ)
+   in the C2000Ware `device_support/<family>/common/source`, `headers/source` or
+   `headers/cmd` folder, such as `<family>_sysctrl.c` and `<family>_headers_nonBIOS.cmd`.
+   Keep `<family>_codestartbranch.asm` and the project's linker command files
+   (`*_lnk*.cmd`). A file that differs from the SDK copy holds the user's changes: keep it
+   and tell the user. For a file the clone only links to, delete its `<link>` in `.project`
+   instead. Code that calls `DELAY_US` uses `DEVICE_DELAY_US` from `device.h` instead; on
+   CPU2 `device.h` has no `DEVICE_SYSCLK_FREQ`, so define it.
+3. Remove the include paths that point into `device_support/<family>/common/include` and
+   `headers/include` from the clone's `.cproject`: delete their
+   `<listOptionValue value="..."/>` lines in every `<cconfiguration>`. They are often
+   macros such as `${C2000WARE_COMMON_INCLUDE}` or `${INSTALLROOT_<FAMILY>}/common/include`.
+   Also remove the `<family>_Headers_nonBIOS.cmd` library and the `headers/cmd` search path
+   if the linker options have them. Without this the SDK's `device.h` is included, not the
+   generated `syscfg/device.h`. Wait for CCS to pick up the edit: poll
+   `getToolFlags(project, "compiler")` until those paths or macros are gone.
+4. Delete the configuration's `.obj`, `.d` and `.out` files, build the clone and fix each
+   error the compiler reports. Deleted source files can otherwise still appear compiled.
+
+### 7. Report back
 
 After processing all files:
 
@@ -89,14 +179,19 @@ After processing all files:
 2. List any registers where you could not find a confident driverlib replacement —
    flag these for the user.
 3. List every file you modified so the user can review the diffs.
+4. Say which build configurations you built. Code in `#ifdef _FLASH` blocks and in other
+   configurations is unchecked.
+5. Tell the user that `Device_init()` sets the clock from the SysConfig clock tree, not
+   from the old `InitSysCtrl` settings, and that they should check the crystal and PLL
+   values.
 
 ## Do / Don't
 
 - Do take file paths and device names from `get_projects()` — never invent them.
-- Do apply suggested replacements directly when they are provided.
 - Do use Register Bit Details (shift, mask) to construct manual fixes when no
-  driverlib function is suggested.
-- Do run the report once per source file you intend to convert.
+  driverlib function is listed.
+- Do run the report on one source file at a time, and again after editing it.
+- Don't edit the source project; every edit goes in the clone.
 - Don't recall C2000 register-to-driverlib mappings from memory — the MCP is the
   source of truth.
 - Don't confuse this with device-to-device migration — bitfield-to-driverlib stays
